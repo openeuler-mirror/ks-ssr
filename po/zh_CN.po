@@ -1,0 +1,103 @@
+# Chinese translations for kiran package
+# kiran 软件包的简体中文翻译.
+# Copyright (C) 2020 THE kiran'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the kiran package.
+# tangjie02 <tangjie02@kylinos.com.cn>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-05-19 17:46+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../lib/base/error.cpp:25
+msgid "The standard type is invalid."
+msgstr "标准类型不合法。"
+
+#: ../lib/base/error.cpp:33
+msgid "Error format for reinforcement standard."
+msgstr "加固标准格式错误。"
+
+#: ../lib/base/error.cpp:38
+msgid "Reinforcement item '{0}' is not found."
+msgstr "加固项'{0}'未找到"
+
+#: ../lib/base/error.cpp:42
+msgid "The job is running, please don't repeat the operation."
+msgstr "任务正在运行，请不要重复操作。"
+
+#: ../lib/base/error.cpp:59
+msgid "Internel error."
+msgstr "内部错误。"
+
+#: ../lib/base/error.cpp:62
+msgid "Unknown error."
+msgstr "未知错误。"
+
+#: ../lib/base/error.cpp:66
+msgid " (error code: 0x{:x})"
+msgstr "（错误码：0x{:x}）"
+
+#: ../src/tool/sse-cmd-parser.cpp:25
+msgid "Output version infomation and exit."
+msgstr "输出版本信息并退出。"
+
+#: ../src/tool/sse-cmd-parser.cpp:31
+msgid "Generate public and private keys for RSA."
+msgstr "生成RSA公钥和私钥。"
+
+#: ../src/tool/sse-cmd-parser.cpp:37
+msgid "Decrypt a file."
+msgstr "解密文件。"
+
+#: ../src/tool/sse-cmd-parser.cpp:44
+msgid "Encrypt a file."
+msgstr "加密文件。"
+
+#: ../src/tool/sse-cmd-parser.cpp:51
+msgid "RSA public file path."
+msgstr "RSA公钥路径。"
+
+#: ../src/tool/sse-cmd-parser.cpp:54
+msgid "RSA private file path."
+msgstr "RSA私钥路径。"
+
+#: ../src/tool/sse-cmd-parser.cpp:57
+msgid "Output file path."
+msgstr "输出文件路径。"
+
+#. namespace Kiran
+#: ../data/sse-categories.ini.in.h:1
+msgid "configuration manager"
+msgstr "配置管理"
+
+#: ../data/sse-categories.ini.in.h:2
+msgid "network manager"
+msgstr "网络管理"
+
+#: ../data/sse-plugin-config.ini.in.h:1
+msgid "config settings"
+msgstr "配置设置"
+
+#: ../data/sse-plugin-config.ini.in.h:2
+msgid ""
+"The user will be locked if the number of login failed exceeds the limit."
+msgstr "登陆失败次数超过限制则锁定用户"
+
+#: ../data/sse-plugin-config.ini.in.h:3
+msgid "User password complexity"
+msgstr "用户密码复杂度"
+
+#: ../data/sse-plugin-config.ini.in.h:4
+msgid "Password expired date for user"
+msgstr "用户密码过期时间"
+
+#~ msgid "Account login failure limit"
+#~ msgstr "账户登陆失败限制"

@@ -1,0 +1,25 @@
+{
+    "head": {
+        "name": "reinforcement-config-1",
+        "version": "1.0.0"
+    },
+    "body": {
+        "item_count": 2,
+        "items": [
+            {
+                "name": "config-login-lock",
+                "custom_args": {
+                    "deny": 4,
+                    "unlock_time": 400
+                }
+            },
+            {
+                "name": "config-password-complexity",
+                "custom_args": {
+                    "dcredit": -10,
+                    "ocredit": -3
+                }
+            }
+        ]
+    }
+}

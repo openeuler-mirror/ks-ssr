@@ -1,0 +1,4 @@
+lib/base/error.cpp
+src/tool/sse-cmd-parser.cpp
+[type: gettext/ini] data/sse-categories.ini.in
+[type: gettext/ini] data/sse-plugin-config.ini.in

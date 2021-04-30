@@ -1,0 +1,18 @@
+[plugin entry]
+name=config
+_label=config settings
+language_type=cpp
+available=true
+items=config-login-lock;config-password-complexity;config-password-expired
+
+[config-login-lock]
+category_name=config
+_label=The user will be locked if the number of login failed exceeds the limit.
+
+[config-password-complexity]
+category_name=config
+_label=User password complexity
+
+[config-password-expired]
+category_name=config
+_label=Password expired date for user
