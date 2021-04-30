@@ -1,0 +1,12 @@
+
+[config]
+_label=configuration manager
+_comment=configuration manager
+icon_name=ksd-configuration-manager
+priority=1
+
+[network]
+_label=network manager
+_comment=network manager
+icon_name=ksd-network-manager
+priority=2
