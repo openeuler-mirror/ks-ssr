@@ -43,7 +43,7 @@ void SSECategories::load()
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s.", e.what().c_str());
     }
 
     auto groups_name = keyfile.get_groups();
@@ -68,7 +68,7 @@ bool SSECategories::add_category(std::shared_ptr<SSECategory> category)
     auto iter = this->categories_.emplace(category->name, category);
     if (!iter.second)
     {
-        LOG_WARNING("The category is already exist. name: %s.", category->name.c_str());
+        KLOG_WARNING("The category is already exist. name: %s.", category->name.c_str());
         return false;
     }
     return true;
