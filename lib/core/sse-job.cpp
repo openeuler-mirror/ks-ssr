@@ -48,7 +48,7 @@ std::shared_ptr<SSEOperation> SSEJob::add_operation(const std::string &plugin_na
     if (!iter.second)
     {
         // 正常不应该执行到这里
-        LOG_WARNING("The operation %d is already exist.", operation->operation_id);
+        KLOG_WARNING("The operation %d is already exist.", operation->operation_id);
         return nullptr;
     }
     return operation;
@@ -56,7 +56,7 @@ std::shared_ptr<SSEOperation> SSEJob::add_operation(const std::string &plugin_na
 
 bool SSEJob::run_sync()
 {
-    LOG_DEBUG("job id: %d.", this->job_id_);
+    KLOG_DEBUG("job id: %d.", this->job_id_);
 
     RETURN_VAL_IF_FALSE(this->state_ == SSEJobState::SSE_JOB_STATE_IDLE, false);
     this->state_ = SSEJobState::SSE_JOB_STATE_RUNNING;
@@ -86,7 +86,7 @@ bool SSEJob::run_sync()
 
 bool SSEJob::run_async()
 {
-    LOG_DEBUG("job id: %d.", this->job_id_);
+    KLOG_DEBUG("job id: %d.", this->job_id_);
 
     RETURN_VAL_IF_FALSE(this->state_ == SSEJobState::SSE_JOB_STATE_IDLE, false);
     this->state_ = SSEJobState::SSE_JOB_STATE_RUNNING;
@@ -133,7 +133,7 @@ void SSEJob::run_operation(std::shared_ptr<SSEOperation> operation)
     SSEOperationResult result;
     result.operation_id = operation->operation_id;
 
-    LOG_DEBUG("running operation: %d, job id: %d.", operation->operation_id, operation->job_id);
+    KLOG_DEBUG("running operation: %d, job id: %d.", operation->operation_id, operation->job_id);
 
     {
         std::lock_guard<std::mutex> guard(this->operations_mutex_);
@@ -147,7 +147,7 @@ void SSEJob::run_operation(std::shared_ptr<SSEOperation> operation)
         result.result = operation->func();
     }
 
-    LOG_DEBUG("finished operation: %d, job id: %d.", operation->operation_id, operation->job_id);
+    KLOG_DEBUG("finished operation: %d, job id: %d.", operation->operation_id, operation->job_id);
 
     {
         std::lock_guard<std::mutex> guard(this->operations_mutex_);
@@ -177,11 +177,11 @@ bool SSEJob::idle_check_operation()
     // 只有任务发生变化才进行处理
     if (tmp_result.queue_is_changed)
     {
-        LOG_DEBUG("sum finished num: %d, finished num: %d, running num: %d, current finished num: %d.",
-                  tmp_result.finished_operation_num,
-                  tmp_result.sum_operation_num,
-                  tmp_result.running_operations.size(),
-                  tmp_result.current_finished_operations.size());
+        KLOG_DEBUG("sum finished num: %d, finished num: %d, running num: %d, current finished num: %d.",
+                   tmp_result.finished_operation_num,
+                   tmp_result.sum_operation_num,
+                   tmp_result.running_operations.size(),
+                   tmp_result.current_finished_operations.size());
 
         if (tmp_result.finished_operation_num == tmp_result.sum_operation_num)
         {

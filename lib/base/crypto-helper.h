@@ -5,6 +5,8 @@
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
+#pragma once
+
 #include <cstdint>
 #include <string>
 

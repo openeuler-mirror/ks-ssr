@@ -34,13 +34,13 @@ private:
 // helper macro for Defer class
 #define SCOPE_EXIT(block) Defer CONNECT(_defer_, __LINE__)([&](std::string _arg_function) block, __FUNCTION__)
 
-#define RETURN_VAL_IF_FALSE(cond, val)            \
-    {                                             \
-        if (!(cond))                              \
-        {                                         \
-            LOG_DEBUG("The condition is false."); \
-            return val;                           \
-        }                                         \
+#define RETURN_VAL_IF_FALSE(cond, val)             \
+    {                                              \
+        if (!(cond))                               \
+        {                                          \
+            KLOG_DEBUG("The condition is false."); \
+            return val;                            \
+        }                                          \
     }
 
 #define RETURN_VAL_IF_TRUE(cond, val) \
@@ -48,13 +48,13 @@ private:
         if (cond) return val;         \
     }
 
-#define RETURN_IF_FALSE(cond)                     \
-    {                                             \
-        if (!(cond))                              \
-        {                                         \
-            LOG_DEBUG("The condition is false."); \
-            return;                               \
-        }                                         \
+#define RETURN_IF_FALSE(cond)                      \
+    {                                              \
+        if (!(cond))                               \
+        {                                          \
+            KLOG_DEBUG("The condition is false."); \
+            return;                                \
+        }                                          \
     }
 
 #define RETURN_IF_TRUE(cond) \
@@ -72,20 +72,20 @@ private:
         if (cond) continue;    \
     }
 
-#define IGNORE_EXCEPTION(expr)                 \
-    {                                          \
-        try                                    \
-        {                                      \
-            expr;                              \
-        }                                      \
-        catch (const Glib::Error &e)           \
-        {                                      \
-            LOG_DEBUG("%s", e.what().c_str()); \
-        }                                      \
-        catch (const std::exception &e)        \
-        {                                      \
-            LOG_DEBUG("%s", e.what());         \
-        }                                      \
+#define IGNORE_EXCEPTION(expr)                  \
+    {                                           \
+        try                                     \
+        {                                       \
+            expr;                               \
+        }                                       \
+        catch (const Glib::Error &e)            \
+        {                                       \
+            KLOG_DEBUG("%s", e.what().c_str()); \
+        }                                       \
+        catch (const std::exception &e)         \
+        {                                       \
+            KLOG_DEBUG("%s", e.what());         \
+        }                                       \
     }
 
 #define POINTER_TO_STRING(p) ((p) ? p : std::string())

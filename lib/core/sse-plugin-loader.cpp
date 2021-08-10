@@ -21,7 +21,7 @@ bool SSEPluginCPPLoader::load()
 
 bool SSEPluginCPPLoader::activate()
 {
-    LOG_DEBUG("is activate: %d, so path: %s.", this->is_activate_, this->so_path_.c_str());
+    KLOG_DEBUG("is activate: %d, so path: %s.", this->is_activate_, this->so_path_.c_str());
 
     // 不能重复激活
     RETURN_VAL_IF_TRUE(this->is_activate_, true);
@@ -31,7 +31,7 @@ bool SSEPluginCPPLoader::activate()
 
 bool SSEPluginCPPLoader::deactivate()
 {
-    SETTINGS_PROFILE("");
+    KLOG_PROFILE("");
 
     // 未激活不能取消激活
     RETURN_VAL_IF_TRUE(!this->is_activate_, true);
@@ -41,7 +41,7 @@ bool SSEPluginCPPLoader::deactivate()
 
 bool SSEPluginCPPLoader::load_module()
 {
-    SETTINGS_PROFILE("load module %s", this->so_path_.c_str());
+    KLOG_PROFILE("load module %s", this->so_path_.c_str());
 
     this->module_ = std::make_shared<Glib::Module>(this->so_path_);
 
@@ -52,13 +52,13 @@ bool SSEPluginCPPLoader::load_module()
 
         if (!this->module_->get_symbol("new_plugin", new_plugin_fun))
         {
-            LOG_WARNING("Not found function 'new_plugin' in module %s.", this->so_path_.c_str());
+            KLOG_WARNING("Not found function 'new_plugin' in module %s.", this->so_path_.c_str());
             return false;
         }
 
         if (!this->module_->get_symbol("delete_plugin", del_plugin_fun))
         {
-            LOG_WARNING("not found function 'delete_plugin' in module %s.", this->so_path_.c_str());
+            KLOG_WARNING("not found function 'delete_plugin' in module %s.", this->so_path_.c_str());
             return false;
         }
 
@@ -67,9 +67,9 @@ bool SSEPluginCPPLoader::load_module()
     }
     else
     {
-        LOG_WARNING("open module %s fail: %s.",
-                    this->so_path_.c_str(),
-                    this->module_ ? this->module_->get_last_error().c_str() : "unknown");
+        KLOG_WARNING("open module %s fail: %s.",
+                     this->so_path_.c_str(),
+                     this->module_ ? this->module_->get_last_error().c_str() : "unknown");
         return false;
     }
 

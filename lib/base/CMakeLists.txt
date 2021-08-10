@@ -14,7 +14,7 @@ target_include_directories(${TARGET_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_BINARY_DIR}
     ${GIOMM_INCLUDE_DIRS}
-    ${ZLOG_INCLUDE_DIRS}
+    ${KLOG_INCLUDE_DIRS}
     ${FMT_INCLUDE_DIRS}
     ${CRYPTOPP_INCLUDE_DIRS}
     ${JSONCPP_INCLUDE_DIRS})
@@ -22,7 +22,7 @@ target_include_directories(${TARGET_NAME} PUBLIC
 
 target_link_libraries(${TARGET_NAME} PUBLIC
     ${GIOMM_LIBRARIES}
-    ${ZLOG_LIBRARIES}
+    ${KLOG_LIBRARIES}
     ${FMT_LIBRARIES}
     ${JSONCPP_LIBRARIES})
 

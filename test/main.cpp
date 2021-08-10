@@ -12,12 +12,8 @@
 
 int main(int argc, char **argv)
 {
-    dzlog_init_ex(NULL, "kylinsec-session", PROJECT_NAME, "sse-tests");
-
+    klog_gtk3_init(std::string(), "kylinsec-session", PROJECT_NAME, "sse-tests");
     Gio::init();
-    Kiran::Log::global_init();
-
     testing::InitGoogleTest(&argc, argv);
-
     return RUN_ALL_TESTS();
 }

@@ -15,9 +15,8 @@
 #include <cryptopp/osrng.h>
 #include <cryptopp/rsa.h>
 
+#include "lib/base/base.h"
 #include "lib/base/crypto-helper.h"
-#include "lib/base/log.h"
-#include "lib/base/str-utils.h"
 
 using namespace CryptoPP;
 
@@ -66,7 +65,7 @@ std::string CryptoHelper::md5_file(const std::string &filename)
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return std::string();
     }
 }
@@ -81,7 +80,7 @@ std::string CryptoHelper::base64_encrypt(const std::string &message)
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return std::string();
     }
 }
@@ -96,7 +95,7 @@ std::string CryptoHelper::base64_decrypt(const std::string &message)
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return std::string();
     }
 }
@@ -122,7 +121,7 @@ void CryptoHelper::generate_rsa_key(uint32_t key_length,
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
     }
 }
 
@@ -139,9 +138,9 @@ std::string CryptoHelper::rsa_encrypt(const std::string &public_filename,
 
         if (message.size() > pub.FixedMaxPlaintextLength())
         {
-            LOG_WARNING("The length(%d) of message is greater than the value(%d) which FixedMaxPlaintextLength return.",
-                        message.size(),
-                        pub.FixedMaxPlaintextLength());
+            KLOG_WARNING("The length(%d) of message is greater than the value(%d) which FixedMaxPlaintextLength return.",
+                         message.size(),
+                         pub.FixedMaxPlaintextLength());
             return std::string();
         }
 
@@ -151,7 +150,7 @@ std::string CryptoHelper::rsa_encrypt(const std::string &public_filename,
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return std::string();
     }
 }
@@ -166,7 +165,7 @@ std::string CryptoHelper::rsa_decrypt(const std::string &private_filename, const
         // 需要先HexDecoder后才能比较大小
         // if (ciphertext.size() > priv.FixedCiphertextLength())
         // {
-        //     LOG_WARNING("The length(%d) of message is greater than the value(%d) which FixedCiphertextLength return.",
+        //     KLOG_WARNING("The length(%d) of message is greater than the value(%d) which FixedCiphertextLength return.",
         //                 ciphertext.size(),
         //                 priv.FixedCiphertextLength());
         //     return std::string();
@@ -178,7 +177,7 @@ std::string CryptoHelper::rsa_decrypt(const std::string &private_filename, const
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return std::string();
     }
 }
@@ -197,7 +196,7 @@ bool CryptoHelper::rsa_sign_file(const std::string &private_filename,
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return false;
     }
 }
@@ -225,7 +224,7 @@ bool CryptoHelper::rsa_verify_file(const std::string &public_filename,
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return false;
     }
 }
@@ -254,7 +253,7 @@ std::string CryptoHelper::des_encrypt(const std::string &message)
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return std::string();
     }
 }
@@ -271,14 +270,14 @@ std::string CryptoHelper::des_decrypt(const std::string &message)
     }
     catch (const CryptoPP::Exception &e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return std::string();
     }
 }
 
 std::string CryptoHelper::sse_encrypt(const std::string &public_filename, const std::string &message)
 {
-    LOG_DEBUG("key filename: %s. message: %s.", public_filename.c_str(), message.c_str());
+    KLOG_DEBUG("key filename: %s. message: %s.", public_filename.c_str(), message.c_str());
 
     std::string result = CryptoHelper::base64_encrypt(message);
     RETURN_VAL_IF_FALSE(!result.empty(), std::string());
@@ -286,13 +285,13 @@ std::string CryptoHelper::sse_encrypt(const std::string &public_filename, const 
     auto message_md5 = CryptoHelper::md5(message);
     RETURN_VAL_IF_FALSE(!message_md5.empty(), std::string());
 
-    LOG_DEBUG("message base64: %s, md5: %s.", result.c_str(), message_md5.c_str());
+    KLOG_DEBUG("message base64: %s, md5: %s.", result.c_str(), message_md5.c_str());
 
     result.push_back('@');
     auto md5_rsa = CryptoHelper::rsa_encrypt(public_filename, message_md5);
     RETURN_VAL_IF_FALSE(!md5_rsa.empty(), std::string());
 
-    LOG_DEBUG("message md5 rsa: %s.", md5_rsa.c_str());
+    KLOG_DEBUG("message md5 rsa: %s.", md5_rsa.c_str());
 
     result.append(md5_rsa);
     return result;
@@ -300,12 +299,12 @@ std::string CryptoHelper::sse_encrypt(const std::string &public_filename, const 
 
 std::string CryptoHelper::sse_decrypt(const std::string &private_filename, const std::string &ciphertext)
 {
-    LOG_DEBUG("key filename: %s. ciphertext: %s.", private_filename.c_str(), ciphertext.c_str());
+    KLOG_DEBUG("key filename: %s. ciphertext: %s.", private_filename.c_str(), ciphertext.c_str());
 
     auto fields = StrUtils::split_with_char(ciphertext, '@');
     RETURN_VAL_IF_FALSE(fields.size() == 2, std::string());
 
-    // LOG_DEBUG("message base64: %s, md5 rsa: %s.", fields[0].c_str(), fields[1].c_str());
+    // KLOG_DEBUG("message base64: %s, md5 rsa: %s.", fields[0].c_str(), fields[1].c_str());
 
     auto plaintext = CryptoHelper::base64_decrypt(fields[0]);
     RETURN_VAL_IF_FALSE(!plaintext.empty(), std::string());
@@ -313,7 +312,7 @@ std::string CryptoHelper::sse_decrypt(const std::string &private_filename, const
     auto plaintext_md5 = CryptoHelper::md5(plaintext);
     auto rsa_md5 = CryptoHelper::rsa_decrypt(private_filename, fields[1]);
 
-    LOG_DEBUG("plaintext md5: %s, rsa md5: %s.", plaintext_md5.c_str(), rsa_md5.c_str());
+    KLOG_DEBUG("plaintext md5: %s, rsa md5: %s.", plaintext_md5.c_str(), rsa_md5.c_str());
 
     if (plaintext_md5 == rsa_md5)
     {
@@ -321,7 +320,7 @@ std::string CryptoHelper::sse_decrypt(const std::string &private_filename, const
     }
     else
     {
-        LOG_WARNING("The ciphertext is invalid.");
+        KLOG_WARNING("The ciphertext is invalid.");
         return std::string();
     }
 }

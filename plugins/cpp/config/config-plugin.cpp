@@ -33,7 +33,7 @@ std::string SSEPluginConfig::execute(const std::string& in_json)
     {
         auto request_id = in_values["head"]["id"].asInt();
 
-        LOG_DEBUG("request id: %d.", request_id);
+        KLOG_DEBUG("request id: %d.", request_id);
 
         out_values["head"]["id"] = SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_UNKNOWN;
 
@@ -42,7 +42,7 @@ std::string SSEPluginConfig::execute(const std::string& in_json)
     auto reinforcement = CRManager::get_instance()->get_reinforcement(name);                                  \
     if (!reinforcement)                                                                                       \
     {                                                                                                         \
-        LOG_DEBUG("The reinforcement %s isn't found.", name.c_str());                                         \
+        KLOG_DEBUG("The reinforcement %s isn't found.", name.c_str());                                        \
         out_values["head"]["error_code"] = int32_t(SSEErrorCode::ERROR_PLUGIN_CONFIG_REINFORCEMENT_NOTFOUND); \
         break;                                                                                                \
     }
@@ -83,7 +83,7 @@ std::string SSEPluginConfig::execute(const std::string& in_json)
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         out_values["head"]["error_code"] = int32_t(SSEErrorCode::ERROR_PLUGIN_CONFIG_JSON_EXCEPTION);
     }
 

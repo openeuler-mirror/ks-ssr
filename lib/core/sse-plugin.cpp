@@ -30,7 +30,7 @@ SSEPlugin::~SSEPlugin()
 
 bool SSEPlugin::init()
 {
-    LOG_DEBUG("plugin config path: %s.", this->conf_path_.c_str());
+    KLOG_DEBUG("plugin config path: %s.", this->conf_path_.c_str());
 
     Glib::KeyFile keyfile;
 
@@ -44,7 +44,7 @@ bool SSEPlugin::init()
         auto available = keyfile.get_boolean(SSE_PLUGIN_GROUP_NAME, SSE_PLUGIN_KEY_AVAILABLE);
         if (!available)
         {
-            LOG_DEBUG("Plugin %s is unavailable.", this->plugin_info_.name.c_str());
+            KLOG_DEBUG("Plugin %s is unavailable.", this->plugin_info_.name.c_str());
             return false;
         }
 
@@ -58,16 +58,16 @@ bool SSEPlugin::init()
             this->plugin_info_.language_type = SSEPluginLanguageType::SSE_PLUGIN_LANGUAGE_TYPE_PYTHON;
             break;
         default:
-            LOG_WARNING("Unsupported language type: %s.", language_type_str.c_str());
+            KLOG_WARNING("Unsupported language type: %s.", language_type_str.c_str());
             return false;
         }
 
         this->plugin_info_.reinforcements_name = keyfile.get_string_list(SSE_PLUGIN_GROUP_NAME, SSE_PLUGIN_KEY_REINFORCEMENT_ITEMS);
-        LOG_DEBUG("the reinforcements of plugin: %s.", StrUtils::join(this->plugin_info_.reinforcements_name, ",").c_str());
+        KLOG_DEBUG("the reinforcements of plugin: %s.", StrUtils::join(this->plugin_info_.reinforcements_name, ",").c_str());
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s", e.what().c_str());
+        KLOG_WARNING("%s", e.what().c_str());
         return false;
     }
 
@@ -85,7 +85,7 @@ bool SSEPlugin::init()
 
 bool SSEPlugin::load_plugin_module()
 {
-    SETTINGS_PROFILE("");
+    KLOG_PROFILE("");
 
     auto dirname = Glib::path_get_dirname(this->conf_path_);
     switch (this->plugin_info_.language_type)
@@ -98,14 +98,14 @@ bool SSEPlugin::load_plugin_module()
     }
     // case SSEPluginLanguageType::SSE_PLUGIN_LANGUAGE_TYPE_PYTHON:
     default:
-        LOG_WARNING("Unsupported language type: %d.", this->plugin_info_.language_type);
+        KLOG_WARNING("Unsupported language type: %d.", this->plugin_info_.language_type);
         return false;
     }
 }
 
 bool SSEPlugin::load_reinforcement(const Glib::KeyFile& keyfile, const std::string& reinforcement_name)
 {
-    SETTINGS_PROFILE("reinforcement name: %s.", reinforcement_name.c_str());
+    KLOG_PROFILE("reinforcement name: %s.", reinforcement_name.c_str());
 
     auto reinforcement = std::make_shared<SSEReinforcement>();
 
@@ -120,7 +120,7 @@ bool SSEPlugin::load_reinforcement(const Glib::KeyFile& keyfile, const std::stri
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s", e.what().c_str());
+        KLOG_WARNING("%s", e.what().c_str());
     }
 
     return false;
@@ -133,7 +133,7 @@ bool SSEPlugin::add_reinforcement(std::shared_ptr<SSEReinforcement> reinforcemen
     auto iter = this->reinforcements_.emplace(reinforcement->name, reinforcement);
     if (!iter.second)
     {
-        LOG_WARNING("The reinforcement is already exist. name: %s.", reinforcement->name.c_str());
+        KLOG_WARNING("The reinforcement is already exist. name: %s.", reinforcement->name.c_str());
         return false;
     }
     return true;
