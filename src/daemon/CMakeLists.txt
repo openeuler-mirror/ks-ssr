@@ -19,8 +19,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
 
 target_link_libraries(${TARGET_NAME} PUBLIC
                       ${JSONCPP_LIBRARIES}
-                      lib-base
-                      lib-core)
+                      lib-base)
 
 install(TARGETS ${TARGET_NAME}
         DESTINATION ${SSE_INSTALL_BINDIR}/)
