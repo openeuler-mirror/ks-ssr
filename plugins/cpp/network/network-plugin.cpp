@@ -38,7 +38,7 @@ std::string SSEPluginNetwork::execute(const std::string& in_json)
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
     }
 
     out_values["head"]["id"] = SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_UNKNOWN;

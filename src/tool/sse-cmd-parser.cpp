@@ -69,7 +69,7 @@ int SSECmdParser::run(int& argc, char**& argv)
     }
     catch (const Glib::Exception& e)
     {
-        LOG_WARNING("%s", e.what().c_str());
+        KLOG_WARNING("%s", e.what().c_str());
         return EXIT_FAILURE;
     }
 
