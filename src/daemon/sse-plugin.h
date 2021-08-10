@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "lib/core/sse-plugin-loader.h"
+#include "src/daemon/sse-plugin-loader.h"
 #include "sse-i.h"
 
 namespace Kiran

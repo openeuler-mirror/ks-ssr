@@ -8,7 +8,7 @@
 #pragma once
 
 #include <sse_dbus_stub.h>
-#include "lib/core/sse-job.h"
+#include "src/daemon/sse-job.h"
 #include "sse-config.h"
 
 namespace Kiran

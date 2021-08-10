@@ -6,7 +6,7 @@
  */
 #pragma once
 
-#include "lib/core/sse-plugin.h"
+#include "src/daemon/sse-plugin.h"
 
 namespace Kiran
 {
