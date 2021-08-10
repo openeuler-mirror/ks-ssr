@@ -48,7 +48,7 @@ SSEStandardType SSEConfiguration::get_standard_type()
 
     if (retval >= SEE_STANDARD_TYPE_LAST || retval < 0)
     {
-        LOG_WARNING("The standard type is invalid. standard type: %d.", retval);
+        KLOG_WARNING("The standard type is invalid. standard type: %d.", retval);
         return SSEStandardType::SSE_STANDARD_TYPE_SYSTEM;
     }
 
@@ -102,7 +102,7 @@ bool SSEConfiguration::set_custom_rs(const std::string& encrypted_rs, SSEErrorCo
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s.", e.what().c_str());
     }
     return false;
 }
@@ -117,14 +117,14 @@ bool SSEConfiguration::set_custom_ra(const std::string& ra)
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s.", e.what().c_str());
     }
     return false;
 }
 
 void SSEConfiguration::init()
 {
-    SETTINGS_PROFILE("");
+    KLOG_PROFILE("");
 
     try
     {
@@ -132,7 +132,7 @@ void SSEConfiguration::init()
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s.", e.what().c_str());
         return;
     }
 
@@ -142,19 +142,19 @@ void SSEConfiguration::init()
 
 void SSEConfiguration::load_rs_files()
 {
-    SETTINGS_PROFILE("");
+    KLOG_PROFILE("");
 
     // 加载加固标准
     this->system_rs_ = this->decrypt_file(SYSTEM_RS_FILEPATH);
     this->custom_rs_ = this->decrypt_file(CUSTOM_RS_FILEPATH);
 
-    // LOG_DEBUG("system rs: %s.", this->system_rs_.c_str());
-    // LOG_DEBUG("custom rs: %s.", this->custom_rs_.c_str());
+    // KLOG_DEBUG("system rs: %s.", this->system_rs_.c_str());
+    // KLOG_DEBUG("custom rs: %s.", this->custom_rs_.c_str());
 }
 
 void SSEConfiguration::load_ra_files()
 {
-    SETTINGS_PROFILE("");
+    KLOG_PROFILE("");
 
     this->custom_ra_.clear();
     RETURN_IF_TRUE(!Glib::file_test(CUSTOM_RA_FILEPATH, Glib::FILE_TEST_IS_REGULAR));
@@ -165,13 +165,13 @@ void SSEConfiguration::load_ra_files()
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s.", e.what().c_str());
     }
 }
 
 std::string SSEConfiguration::decrypt_file(const std::string& filename)
 {
-    SETTINGS_PROFILE("filename: %s.", filename.c_str());
+    KLOG_PROFILE("filename: %s.", filename.c_str());
 
     RETURN_VAL_IF_TRUE(filename.empty(), std::string());
     RETURN_VAL_IF_TRUE(!Glib::file_test(filename, Glib::FILE_TEST_IS_REGULAR), std::string());
@@ -183,7 +183,7 @@ std::string SSEConfiguration::decrypt_file(const std::string& filename)
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
     }
     return std::string();
 }
@@ -229,7 +229,7 @@ bool SSEConfiguration::save_to_file()
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s.", e.what().c_str());
         return false;
     }
 }

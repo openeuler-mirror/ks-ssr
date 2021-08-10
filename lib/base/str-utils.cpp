@@ -6,9 +6,9 @@
  */
 
 #include "lib/base/str-utils.h"
-#include "lib/base/log.h"
-
 #include <algorithm>
+#include "gtk3-log-i.h"
+#include "lib/base/def.h"
 
 namespace Kiran
 {
@@ -115,7 +115,7 @@ std::string StrUtils::json2str(const Json::Value &json)
 
 Json::Value StrUtils::str2json(const std::string &str)
 {
-    LOG_DEBUG("json str: %s.", str.c_str());
+    KLOG_DEBUG("json str: %s.", str.c_str());
     Json::Value result;
     Json::CharReaderBuilder rbuilder;
     std::unique_ptr<Json::CharReader> reader(rbuilder.newCharReader());
@@ -125,7 +125,7 @@ Json::Value StrUtils::str2json(const std::string &str)
 
     if (!reader->parse(str.c_str(), str.c_str() + str.length(), &result, &error))
     {
-        LOG_WARNING("%s", error.c_str());
+        KLOG_WARNING("%s", error.c_str());
         return Json::Value();
     }
     return result;
