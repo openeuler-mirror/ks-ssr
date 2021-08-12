@@ -46,7 +46,10 @@ std::vector<std::string> StrUtils::split_lines(const std::string &s)
             i++;
         }
     }
-    ret.push_back(s.substr(line_start, s.length() - line_start));
+    if (line_start < s.length())
+    {
+        ret.push_back(s.substr(line_start, s.length() - line_start));
+    }
     return ret;
 }
 
