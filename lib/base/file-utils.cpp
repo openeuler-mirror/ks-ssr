@@ -83,7 +83,7 @@ bool FileUtils::write_contents(const std::string &path, const std::string &conte
         }
     });
 
-    fp = open(path.c_str(), O_WRONLY);
+    fp = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0664);
 
     if (fp < 0)
     {

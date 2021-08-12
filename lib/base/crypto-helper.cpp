@@ -244,10 +244,10 @@ std::string CryptoHelper::des_encrypt(const std::string &message)
     {
         std::string result;
         ECB_Mode<DES>::Encryption encoder;
-        encoder.SetKey((const byte *)SSE_DES_KEY, sizeof(SSE_DES_KEY));
+        // 这里的key长度必须为8
+        encoder.SetKey((const byte *)SSE_DES_KEY, DES::DEFAULT_KEYLENGTH);
         // auto key = get_des_key();
         // encoder.SetKey(key, key.size());
-        // fmt::print("key: {0}.", key.size());
         StringSource(message, true, new StreamTransformationFilter(encoder, new Base64Encoder(new StringSink(result))));
         return result;
     }
@@ -264,8 +264,8 @@ std::string CryptoHelper::des_decrypt(const std::string &message)
     {
         std::string result;
         ECB_Mode<DES>::Decryption decoder;
-        decoder.SetKey((const byte *)SSE_DES_KEY, sizeof(SSE_DES_KEY));
-        StringSource(message, true, new StreamTransformationFilter(decoder, new Base64Decoder(new StringSink(result))));
+        decoder.SetKey((const byte *)SSE_DES_KEY, DES::DEFAULT_KEYLENGTH);
+        StringSource(message, true, new Base64Decoder(new StreamTransformationFilter(decoder, new StringSink(result))));
         return result;
     }
     catch (const CryptoPP::Exception &e)

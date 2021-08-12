@@ -15,5 +15,16 @@ int main(int argc, char **argv)
     klog_gtk3_init(std::string(), "kylinsec-session", PROJECT_NAME, "sse-tests");
     Gio::init();
     testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+
+    auto test_result = RUN_ALL_TESTS();
+    auto loop = Glib::MainLoop::create();
+
+    auto timeout = Glib::MainContext::get_default()->signal_timeout();
+    timeout.connect_seconds([loop]() -> bool {
+        loop->quit();
+        return false;
+    },
+                            1);
+    loop->run();
+    return test_result;
 }
