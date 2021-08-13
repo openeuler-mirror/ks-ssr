@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/core/sse-plugin.cpp
+ * @file          /kiran-sse-manager/src/daemon/sse-plugin.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -107,14 +107,13 @@ bool SSEPlugin::load_reinforcement(const Glib::KeyFile& keyfile, const std::stri
 {
     KLOG_PROFILE("reinforcement name: %s.", reinforcement_name.c_str());
 
-    auto reinforcement = std::make_shared<SSEReinforcement>();
-
     try
     {
-        reinforcement->name = reinforcement_name;
-        reinforcement->plugin_name = this->plugin_info_.name;
-        reinforcement->category_name = keyfile.get_string(reinforcement_name, SSE_REINFORCEMENT_KEY_CATEGORY_NAME);
-        reinforcement->label = keyfile.get_locale_string(reinforcement_name, SSE_REINFORCEMENT_KEY_LABEL);
+        auto reinforcement = std::make_shared<SSEReinforcement>(
+            SSEReinforcementInfo{.name = reinforcement_name,
+                                 .plugin_name = this->plugin_info_.name,
+                                 .category_name = keyfile.get_string(reinforcement_name, SSE_REINFORCEMENT_KEY_CATEGORY_NAME),
+                                 .label = keyfile.get_locale_string(reinforcement_name, SSE_REINFORCEMENT_KEY_LABEL)});
 
         return this->add_reinforcement(reinforcement);
     }
@@ -130,10 +129,10 @@ bool SSEPlugin::add_reinforcement(std::shared_ptr<SSEReinforcement> reinforcemen
 {
     RETURN_VAL_IF_FALSE(reinforcement, false);
 
-    auto iter = this->reinforcements_.emplace(reinforcement->name, reinforcement);
+    auto iter = this->reinforcements_.emplace(reinforcement->get_name(), reinforcement);
     if (!iter.second)
     {
-        KLOG_WARNING("The reinforcement is already exist. name: %s.", reinforcement->name.c_str());
+        KLOG_WARNING("The reinforcement is already exist. name: %s.", reinforcement->get_name().c_str());
         return false;
     }
     return true;
