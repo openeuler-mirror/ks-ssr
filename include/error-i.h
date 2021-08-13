@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/include/error_i.h
+ * @file          /kiran-sse-manager/include/error-i.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -49,6 +49,10 @@ extern "C"
         ERROR_DAEMON_CANCEL_NOTFOUND_JOB,
 
         // plugins
+
+        // plugin audit
+        ERROR_PLUGIN_AUDIT_GET_JSON_ERROR,
+        ERROR_PLUGIN_AUDIT_SET_JSON_ERROR,
 
         // plugin config
         ERROR_PLUGIN_CONFIG_REINFORCEMENT_NOTFOUND,

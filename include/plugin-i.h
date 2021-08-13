@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/include/plugin_i.h
+ * @file          /kiran-sse-manager/include/plugin-i.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -26,15 +26,12 @@ enum SSEPluginProtocol
 {
     // 未知
     SSE_PLUGIN_PROTOCOL_UNKNOWN = 0,
-    // 判断加固参数是否符合加固标准
-    SSE_PLUGIN_PROTOCOL_RA_MATCH_RS_REQ,
-    SSE_PLUGIN_PROTOCOL_RA_MATCH_RS_RSP,
-    // 判断系统配置是否符合加固标准
-    SSE_PLUGIN_PROTOCOL_SC_MATCH_RS_REQ,
-    SSE_PLUGIN_PROTOCOL_SC_MATCH_RS_RSP,
+    // 获取系统配置
+    SSE_PLUGIN_PROTOCOL_GET_REQ,
+    SSE_PLUGIN_PROTOCOL_GET_RSP,
     // 根据加固配置进行加固
-    SSE_PLUGIN_PROTOCOL_REINFORCE_REQ,
-    SSE_PLUGIN_PROTOCOL_REINFORCE_RSP,
+    SSE_PLUGIN_PROTOCOL_SET_REQ,
+    SSE_PLUGIN_PROTOCOL_SET_RSP,
     SSE_PLUGIN_PROTOCOL_LAST,
 };
 

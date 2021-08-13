@@ -2,7 +2,7 @@
  * @file          /kiran-sse-manager/plugins/cpp/config/reinforcements/cr-password-complexity.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
- * @copyright (c) 2020 KylinSec. All rights reserved. 
+ * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
 #include "plugins/cpp/config/reinforcements/cr-password-complexity.h"
