@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/include/plugin-i.h
+ * @file          /kiran-ssr-manager/include/plugin-i.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -22,20 +22,20 @@ SC: system configuration
 #endif
 
 // 跟插件交互的协议ID
-enum SSEPluginProtocol
+enum SSRPluginProtocol
 {
     // 未知
-    SSE_PLUGIN_PROTOCOL_UNKNOWN = 0,
+    SSR_PLUGIN_PROTOCOL_UNKNOWN = 0,
     // 获取系统配置
-    SSE_PLUGIN_PROTOCOL_GET_REQ,
-    SSE_PLUGIN_PROTOCOL_GET_RSP,
+    SSR_PLUGIN_PROTOCOL_GET_REQ,
+    SSR_PLUGIN_PROTOCOL_GET_RSP,
     // 根据加固配置进行加固
-    SSE_PLUGIN_PROTOCOL_SET_REQ,
-    SSE_PLUGIN_PROTOCOL_SET_RSP,
-    SSE_PLUGIN_PROTOCOL_LAST,
+    SSR_PLUGIN_PROTOCOL_SET_REQ,
+    SSR_PLUGIN_PROTOCOL_SET_RSP,
+    SSR_PLUGIN_PROTOCOL_LAST,
 };
 
-class DLLEXPORT SSEPluginInterface
+class DLLEXPORT SSRPluginInterface
 {
 public:
     /**
