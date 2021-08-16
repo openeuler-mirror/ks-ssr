@@ -81,8 +81,8 @@ TEST(ConfigTest, KVConfig)
     Glib::file_set_contents(test_filename, login_defs);
 
     auto kv_config1 = ConfigPlain::create(test_filename);
-    kv_config1->update_value("PASS_MAX_DAYS", "8888");
-    kv_config1->update_value("USERGROUPS_ENAB", "no");
+    kv_config1->set_value("PASS_MAX_DAYS", "8888");
+    kv_config1->set_value("USERGROUPS_ENAB", "no");
     kv_config1->delete_key("SYS_GID_MAX");
 
     auto kv_config2 = ConfigPlain::create(test_filename);
