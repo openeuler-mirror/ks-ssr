@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/include/sse-i.h
+ * @file          /kiran-ssr-manager/include/ssr-i.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -12,45 +12,45 @@ extern "C"
 {
 #endif
 
-#define SSE_DBUS_NAME "com.kylinsec.Kiran.SSE"
-#define SSE_DBUS_OBJECT_PATH "/com/kylinsec/Kiran/SSE"
-#define SSE_DBUS_INTERFACE_NAME "com.kylinsec.Kiran.SSE"
+#define SSR_DBUS_NAME "com.kylinsec.Kiran.SSR"
+#define SSR_DBUS_OBJECT_PATH "/com/kylinsec/Kiran/SSR"
+#define SSR_DBUS_INTERFACE_NAME "com.kylinsec.Kiran.SSR"
 
     // 加固标准类型
-    enum SSEStandardType
+    enum SSRStandardType
     {
         // 系统默认标准
-        SSE_STANDARD_TYPE_SYSTEM = 0,
+        SSR_STANDARD_TYPE_SYSTEM = 0,
         // 用户导入的标准（自定义加固标准）
-        SEE_STANDARD_TYPE_CUSTOM,
-        SEE_STANDARD_TYPE_LAST,
+        SSR_STANDARD_TYPE_CUSTOM,
+        SSR_STANDARD_TYPE_LAST,
     };
 
     // 加固项状态
-    enum SSEReinforcementState
+    enum SSRReinforcementState
     {
         // 未知
-        SSE_REINFORCEMENT_STATE_UNKNOWN = 0,
+        SSR_REINFORCEMENT_STATE_UNKNOWN = 0,
         // 符合标准
-        SSE_REINFORCEMENT_STATE_SAFE = (1 << 0),
+        SSR_REINFORCEMENT_STATE_SAFE = (1 << 0),
         // 不符合标准
-        SSE_REINFORCEMENT_STATE_UNSAFE = (1 << 1),
+        SSR_REINFORCEMENT_STATE_UNSAFE = (1 << 1),
         // 未扫描
-        SSE_REINFORCEMENT_STATE_UNSCAN = (1 << 2),
+        SSR_REINFORCEMENT_STATE_UNSCAN = (1 << 2),
         // 扫描中
-        SSE_REINFORCEMENT_STATE_SCANNING = (1 << 3),
+        SSR_REINFORCEMENT_STATE_SCANNING = (1 << 3),
         // 扫描完成
-        SSE_REINFORCEMENT_STATE_SCAN_DONE = (1 << 4),
+        SSR_REINFORCEMENT_STATE_SCAN_DONE = (1 << 4),
         // 未加固
-        SSE_REINFORCEMENT_STATE_UNREINFORCE = (1 << 5),
+        SSR_REINFORCEMENT_STATE_UNREINFORCE = (1 << 5),
         // 加固中
-        SSE_REINFORCEMENT_STATE_REINFORCING = (1 << 6),
+        SSR_REINFORCEMENT_STATE_REINFORCING = (1 << 6),
         // 加固完成
-        SSE_REINFORCEMENT_STATE_REINFORCE_DONE = (1 << 7)
+        SSR_REINFORCEMENT_STATE_REINFORCE_DONE = (1 << 7)
     };
 
     // 加固类型
-    enum SSEReinforceType
+    enum SSRReinforceType
     {
         // 	使用默认方式加固
         SEE_REINFORCE_TYPE_DEFAULT = 0,
@@ -59,16 +59,16 @@ extern "C"
     };
 
     // 任务状态
-    enum SSEJobState
+    enum SSRJobState
     {
         // 空闲
-        SSE_JOB_STATE_IDLE,
+        SSR_JOB_STATE_IDLE,
         // 执行中
-        SSE_JOB_STATE_RUNNING,
+        SSR_JOB_STATE_RUNNING,
         // 执行完成
-        SSE_JOB_STATE_DONE,
+        SSR_JOB_STATE_DONE,
         // 执行完成(中途被取消)
-        SSE_JOB_STATE_CANCEL_DONE,
+        SSR_JOB_STATE_CANCEL_DONE,
     };
 
     /* 加固配置格式：
@@ -118,38 +118,38 @@ extern "C"
         }
     }*/
 
-#define SSE_JSON_HEAD "head"
-#define SSE_JSON_HEAD_NAME "name"
-#define SSE_JSON_HEAD_VERSION "version"
-#define SSE_JSON_HEAD_ERROR_CODE "error_code"
+#define SSR_JSON_HEAD "head"
+#define SSR_JSON_HEAD_NAME "name"
+#define SSR_JSON_HEAD_VERSION "version"
+#define SSR_JSON_HEAD_ERROR_CODE "error_code"
 // 调用插件接口时的协议ID
-#define SSE_JSON_HEAD_PROTOCOL_ID "id"
+#define SSR_JSON_HEAD_PROTOCOL_ID "id"
 
-#define SSE_JSON_BODY "body"
-#define SSE_JSON_BODY_MATCH "match"
+#define SSR_JSON_BODY "body"
+#define SSR_JSON_BODY_MATCH "match"
 // 加固项的数量
-#define SSE_JSON_BODY_REINFORCEMENT_COUNT "item_count"
+#define SSR_JSON_BODY_REINFORCEMENT_COUNT "item_count"
 // 加固项
-#define SSE_JSON_ITEMS "items"
-#define SSE_JSON_BODY_ITEMS "items"
+#define SSR_JSON_ITEMS "items"
+#define SSR_JSON_BODY_ITEMS "items"
 // 加固项信息
-#define SSE_JSON_BODY_REINFORCEMENT_NAME "name"
-#define SSE_JSON_BODY_REINFORCEMENT_CATEGORY_NAME "category_name"
-#define SSE_JSON_BODY_REINFORCEMENT_LABEL "label"
-#define SSE_JSON_BODY_REINFORCEMENT_LAYOUT "layout"
+#define SSR_JSON_BODY_REINFORCEMENT_NAME "name"
+#define SSR_JSON_BODY_REINFORCEMENT_CATEGORY_NAME "category_name"
+#define SSR_JSON_BODY_REINFORCEMENT_LABEL "label"
+#define SSR_JSON_BODY_REINFORCEMENT_LAYOUT "layout"
 // 加固项的加固规则
-#define SSE_JSON_BODY_RULES "rules"
-#define SSE_JSON_BODY_RULES_TYPE "type"
-#define SSE_JSON_BODY_RULES_MIN_VALUE "min_value"
-#define SSE_JSON_BODY_RULES_MAX_VALUE "max_value"
+#define SSR_JSON_BODY_RULES "rules"
+#define SSR_JSON_BODY_RULES_TYPE "type"
+#define SSR_JSON_BODY_RULES_MIN_VALUE "min_value"
+#define SSR_JSON_BODY_RULES_MAX_VALUE "max_value"
 // 加固项的加固参数。如果加固项存在自定义参数，则使用自定义参数，否则使用默认参数
-#define SSE_JSON_BODY_REINFORCEMENT_ARGS "args"
+#define SSR_JSON_BODY_REINFORCEMENT_ARGS "args"
 // 加固项默认参数
-#define SSE_JSON_BODY_REINFORCEMENT_DEFAULT_ARGS "default_args"
+#define SSR_JSON_BODY_REINFORCEMENT_DEFAULT_ARGS "default_args"
 // 加固项自定义参数
-#define SSE_JSON_BODY_REINFORCEMENT_CUSTOM_ARGS "custom_args"
+#define SSR_JSON_BODY_REINFORCEMENT_CUSTOM_ARGS "custom_args"
 // 系统配置参数
-#define SSE_JSON_BODY_REINFORCEMENT_SYSTEM_ARGS "system_args"
+#define SSR_JSON_BODY_REINFORCEMENT_SYSTEM_ARGS "system_args"
 
     /* 扫描JSON格式：
     {
@@ -168,27 +168,27 @@ extern "C"
     {
         "process" : 50,
         "job_id" : 1,
-        "state" : SSE_JOB_STATE_RUNNING,
+        "state" : SSR_JOB_STATE_RUNNING,
         "items":
         [
             {
                 "name" : "xxxx",
-                "state": SSE_REINFORCEMENT_STATE_SCANNING
+                "state": SSR_REINFORCEMENT_STATE_SCANNING
             },
             {
                 "name" : "yyyy",
-                "state": SSE_REINFORCEMENT_STATE_SCANNING
+                "state": SSR_REINFORCEMENT_STATE_SCANNING
             }
         ]
     }
     */
 
-#define SSE_JSON_SCAN_ITEMS "items"
-#define SSE_JSON_SCAN_REINFORCEMENT_NAME "name"
-#define SSE_JSON_SCAN_REINFORCEMENT_STATE "state"
-#define SSE_JSON_SCAN_PROCESS "process"
-#define SSE_JSON_SCAN_JOB_ID "job_id"
-#define SSE_JSON_SCAN_JOB_STATE "job_state"
+#define SSR_JSON_SCAN_ITEMS "items"
+#define SSR_JSON_SCAN_REINFORCEMENT_NAME "name"
+#define SSR_JSON_SCAN_REINFORCEMENT_STATE "state"
+#define SSR_JSON_SCAN_PROCESS "process"
+#define SSR_JSON_SCAN_JOB_ID "job_id"
+#define SSR_JSON_SCAN_JOB_STATE "job_state"
 
 #ifdef __cplusplus
 }

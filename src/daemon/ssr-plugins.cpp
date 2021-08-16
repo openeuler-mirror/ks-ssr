@@ -1,42 +1,42 @@
 /**
- * @file          /kiran-sse-manager/src/daemon/sse-plugins.cpp
+ * @file          /kiran-ssr-manager/src/daemon/ssr-plugins.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/sse-plugins.h"
-#include "src/daemon/sse-configuration.h"
-#include "sse-config.h"
+#include "src/daemon/ssr-plugins.h"
+#include "src/daemon/ssr-configuration.h"
+#include "ssr-config.h"
 
 namespace Kiran
 {
-SSEPlugins::SSEPlugins(SSEConfiguration* configuration) : configuration_(configuration),
+SSRPlugins::SSRPlugins(SSRConfiguration* configuration) : configuration_(configuration),
                                                           thread_pool_(this->configuration_->get_max_thread_num())
 {
 }
 
-SSEPlugins::~SSEPlugins()
+SSRPlugins::~SSRPlugins()
 {
 }
 
-SSEPlugins* SSEPlugins::instance_ = nullptr;
-void SSEPlugins::global_init(SSEConfiguration* configuration)
+SSRPlugins* SSRPlugins::instance_ = nullptr;
+void SSRPlugins::global_init(SSRConfiguration* configuration)
 {
-    instance_ = new SSEPlugins(configuration);
+    instance_ = new SSRPlugins(configuration);
     instance_->init();
 }
 
-std::shared_ptr<SSEReinforcement> SSEPlugins::get_used_reinforcement(const std::string& name)
+std::shared_ptr<SSRReinforcement> SSRPlugins::get_used_reinforcement(const std::string& name)
 {
     auto iter = this->used_reinforcements_.find(name);
     RETURN_VAL_IF_TRUE(iter == this->used_reinforcements_.end(), nullptr);
     return iter->second.lock();
 }
 
-SSEReinforcementVec SSEPlugins::get_used_reinforcements()
+SSRReinforcementVec SSRPlugins::get_used_reinforcements()
 {
-    SSEReinforcementVec result;
+    SSRReinforcementVec result;
     for (auto iter : this->used_reinforcements_)
     {
         auto reinforcement = iter.second.lock();
@@ -48,9 +48,9 @@ SSEReinforcementVec SSEPlugins::get_used_reinforcements()
     return result;
 }
 
-SSEReinforcementVec SSEPlugins::get_used_reinforcements_by_category(const std::string& category_name)
+SSRReinforcementVec SSRPlugins::get_used_reinforcements_by_category(const std::string& category_name)
 {
-    SSEReinforcementVec result;
+    SSRReinforcementVec result;
     for (auto iter : this->used_reinforcements_)
     {
         auto reinforcement = iter.second.lock();
@@ -62,7 +62,7 @@ SSEReinforcementVec SSEPlugins::get_used_reinforcements_by_category(const std::s
     return result;
 }
 
-bool SSEPlugins::set_reinforcement_arguments(const std::string& name, const std::string& custom_args)
+bool SSRPlugins::set_reinforcement_arguments(const std::string& name, const std::string& custom_args)
 {
     auto reinforcement = this->get_used_reinforcement(name);
     RETURN_VAL_IF_FALSE(reinforcement, false);
@@ -70,39 +70,39 @@ bool SSEPlugins::set_reinforcement_arguments(const std::string& name, const std:
     return this->write_ra();
 }
 
-std::shared_ptr<SSEReinforcement> SSEPlugins::get_reinforcement(const std::string& name)
+std::shared_ptr<SSRReinforcement> SSRPlugins::get_reinforcement(const std::string& name)
 {
     auto iter = this->reinforcements_.find(name);
     RETURN_VAL_IF_TRUE(iter == this->reinforcements_.end(), nullptr);
     return iter->second.lock();
 }
 
-void SSEPlugins::init()
+void SSRPlugins::init()
 {
     this->load_plugins();
     this->load_ra();
     this->load_use_reinforcements();
 }
 
-void SSEPlugins::load_plugins()
+void SSRPlugins::load_plugins()
 {
     KLOG_PROFILE("");
 
     try
     {
-        Glib::Dir plugin_dir(SSE_PLUGIN_ROOT_DIR);
+        Glib::Dir plugin_dir(SSR_PLUGIN_ROOT_DIR);
         for (auto iter = plugin_dir.begin(); iter != plugin_dir.end(); ++iter)
         {
             auto basename = *iter;
-            auto filename = Glib::build_filename(SSE_PLUGIN_ROOT_DIR, basename);
+            auto filename = Glib::build_filename(SSR_PLUGIN_ROOT_DIR, basename);
 
             if (!Glib::file_test(filename, Glib::FILE_TEST_IS_REGULAR) ||
-                !Glib::str_has_prefix(basename, "sse-plugin"))
+                !Glib::str_has_prefix(basename, "ssr-plugin"))
             {
                 KLOG_DEBUG("Skip file %s.", filename.c_str());
                 continue;
             }
-            auto plugin = std::make_shared<SSEPlugin>(filename);
+            auto plugin = std::make_shared<SSRPlugin>(filename);
 
             // 初始化->激活->添加插件
             if (plugin->init())
@@ -122,7 +122,7 @@ void SSEPlugins::load_plugins()
     }
 }
 
-bool SSEPlugins::add_plugin(std::shared_ptr<SSEPlugin> plugin)
+bool SSRPlugins::add_plugin(std::shared_ptr<SSRPlugin> plugin)
 {
     RETURN_VAL_IF_FALSE(plugin, false);
 
@@ -156,7 +156,7 @@ bool SSEPlugins::add_plugin(std::shared_ptr<SSEPlugin> plugin)
     return true;
 }
 
-void SSEPlugins::load_use_reinforcements()
+void SSRPlugins::load_use_reinforcements()
 {
     KLOG_PROFILE("");
 
@@ -167,11 +167,11 @@ void SSEPlugins::load_use_reinforcements()
 
     try
     {
-        const auto& rs_items = rs[SSE_JSON_BODY][SSE_JSON_BODY_ITEMS];
+        const auto& rs_items = rs[SSR_JSON_BODY][SSR_JSON_BODY_ITEMS];
         for (uint32_t i = 0; i < rs_items.size(); ++i)
         {
             const auto& rs_item = rs_items[i];
-            auto name = rs_item[SSE_JSON_BODY_REINFORCEMENT_NAME].asString();
+            auto name = rs_item[SSR_JSON_BODY_REINFORCEMENT_NAME].asString();
 
             // 加固标准中的加固项如果没有插件支持，则加载失败
             auto iter = this->reinforcements_.find(name);
@@ -182,9 +182,9 @@ void SSEPlugins::load_use_reinforcements()
                 return;
             }
             auto reinforcement = iter->second.lock();
-            reinforcement->set_rules(rs_item[SSE_JSON_BODY_RULES]);
-            reinforcement->set_default_args(rs_item[SSE_JSON_BODY_REINFORCEMENT_DEFAULT_ARGS]);
-            reinforcement->set_layout(rs_item[SSE_JSON_BODY_REINFORCEMENT_LAYOUT]);
+            reinforcement->set_rules(rs_item[SSR_JSON_BODY_RULES]);
+            reinforcement->set_default_args(rs_item[SSR_JSON_BODY_REINFORCEMENT_DEFAULT_ARGS]);
+            reinforcement->set_layout(rs_item[SSR_JSON_BODY_REINFORCEMENT_LAYOUT]);
             this->used_reinforcements_.emplace(name, reinforcement);
         }
     }
@@ -195,7 +195,7 @@ void SSEPlugins::load_use_reinforcements()
     }
 }
 
-void SSEPlugins::load_ra()
+void SSRPlugins::load_ra()
 {
     // 加载自定义加固参数
     do
@@ -224,7 +224,7 @@ void SSEPlugins::load_ra()
                     continue;
                 }
                 auto reinforcement = iter->second.lock();
-                reinforcement->set_custom_args(ra_item[SSE_JSON_BODY_REINFORCEMENT_CUSTOM_ARGS]);
+                reinforcement->set_custom_args(ra_item[SSR_JSON_BODY_REINFORCEMENT_CUSTOM_ARGS]);
             }
         }
         catch (const std::exception& e)
@@ -234,12 +234,12 @@ void SSEPlugins::load_ra()
     } while (0);
 }
 
-bool SSEPlugins::write_ra()
+bool SSRPlugins::write_ra()
 {
     try
     {
         Json::Value ra_values;
-        ra_values[SSE_JSON_HEAD][SSE_JSON_HEAD_VERSION] = PROJECT_VERSION;
+        ra_values[SSR_JSON_HEAD][SSR_JSON_HEAD_VERSION] = PROJECT_VERSION;
         int32_t item_count = 0;
 
         for (auto iter : this->reinforcements_)
@@ -250,11 +250,11 @@ bool SSEPlugins::write_ra()
                 KLOG_WARNING("The reinforcement %s isn't found.", iter.first.c_str());
                 continue;
             }
-            ra_values[SSE_JSON_BODY][SSE_JSON_BODY_ITEMS][item_count][SSE_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
-            ra_values[SSE_JSON_BODY][SSE_JSON_BODY_ITEMS][item_count][SSE_JSON_BODY_REINFORCEMENT_CUSTOM_ARGS] = reinforcement->get_custom_args();
+            ra_values[SSR_JSON_BODY][SSR_JSON_BODY_ITEMS][item_count][SSR_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
+            ra_values[SSR_JSON_BODY][SSR_JSON_BODY_ITEMS][item_count][SSR_JSON_BODY_REINFORCEMENT_CUSTOM_ARGS] = reinforcement->get_custom_args();
             ++item_count;
         }
-        ra_values[SSE_JSON_BODY][SSE_JSON_BODY_REINFORCEMENT_COUNT] = item_count;
+        ra_values[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_COUNT] = item_count;
         return this->configuration_->set_custom_ra(StrUtils::json2str(ra_values));
     }
     catch (const std::exception& e)

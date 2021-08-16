@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/core/sse-categories.h
+ * @file          /kiran-ssr-manager/src/daemon/ssr-categories.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -11,7 +11,7 @@
 
 namespace Kiran
 {
-struct SSECategory
+struct SSRCategory
 {
     // 分类名
     std::string name;
@@ -25,25 +25,25 @@ struct SSECategory
     int32_t priority;
 };
 
-using SSECategoryVec = std::vector<std::shared_ptr<SSECategory>>;
+using SSRCategoryVec = std::vector<std::shared_ptr<SSRCategory>>;
 
-class SSECategories
+class SSRCategories
 {
 public:
-    SSECategories();
-    virtual ~SSECategories(){};
+    SSRCategories();
+    virtual ~SSRCategories(){};
 
-    static SSECategories* get_instance() { return instance_; };
+    static SSRCategories* get_instance() { return instance_; };
 
     static void global_init();
 
     static void global_deinit() { delete instance_; };
 
     // 获取分类，如果不存在则返回空指针
-    std::shared_ptr<SSECategory> get_category(const std::string& name) { return MapHelper::get_value(this->categories_, name); };
+    std::shared_ptr<SSRCategory> get_category(const std::string& name) { return MapHelper::get_value(this->categories_, name); };
 
     // 获取所有分类
-    SSECategoryVec get_categories() { return MapHelper::get_values(this->categories_); };
+    SSRCategoryVec get_categories() { return MapHelper::get_values(this->categories_); };
 
 private:
     // 初始化
@@ -53,15 +53,15 @@ private:
     void load();
 
     // 添加分类
-    bool add_category(std::shared_ptr<SSECategory> category);
+    bool add_category(std::shared_ptr<SSRCategory> category);
 
 private:
-    static SSECategories* instance_;
+    static SSRCategories* instance_;
 
     // 配置文件路径
     std::string conf_path_;
 
     // 所有分类信息：<分类名，分类>
-    std::map<std::string, std::shared_ptr<SSECategory>> categories_;
+    std::map<std::string, std::shared_ptr<SSRCategory>> categories_;
 };
 }  // namespace Kiran

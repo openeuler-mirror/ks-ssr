@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/config/config-plain.h
+ * @file          /kiran-ssr-manager/lib/config/config-plain.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 

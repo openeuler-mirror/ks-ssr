@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/src/daemon/sse-manager.h
+ * @file          /kiran-ssr-manager/src/daemon/ssr-manager.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,24 +7,24 @@
 
 #pragma once
 
-#include <sse_dbus_stub.h>
-#include "src/daemon/sse-job.h"
-#include "sse-config.h"
+#include <ssr_dbus_stub.h>
+#include "src/daemon/ssr-job.h"
+#include "ssr-config.h"
 
 namespace Kiran
 {
-class SSEConfiguration;
-class SSECategories;
-class SSEPlugins;
-class SSEJob;
+class SSRConfiguration;
+class SSRCategories;
+class SSRPlugins;
+class SSRJob;
 
-class SSEManager : public SSEStub
+class SSRManager : public SSRStub
 {
 public:
-    SSEManager();
-    virtual ~SSEManager();
+    SSRManager();
+    virtual ~SSRManager();
 
-    static SSEManager *get_instance() { return instance_; };
+    static SSRManager *get_instance() { return instance_; };
 
     static void global_init();
 
@@ -68,26 +68,26 @@ private:
     void init();
 
     // 扫描进度信号处理
-    void on_scan_process_changed_cb(const SSEJobResult &job_result);
+    void on_scan_process_changed_cb(const SSRJobResult &job_result);
     // 加固进度信号处理
-    void on_reinfoce_process_changed_cb(const SSEJobResult &job_result);
+    void on_reinfoce_process_changed_cb(const SSRJobResult &job_result);
 
     void on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
     void on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
     void on_name_lost(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
 
 private:
-    static SSEManager *instance_;
+    static SSRManager *instance_;
 
-    SSEConfiguration *configuration_;
-    SSECategories *categories_;
-    SSEPlugins *plugins_;
+    SSRConfiguration *configuration_;
+    SSRCategories *categories_;
+    SSRPlugins *plugins_;
 
     // 扫描任务
-    std::shared_ptr<SSEJob> scan_job_;
+    std::shared_ptr<SSRJob> scan_job_;
 
     // 加固任务
-    std::shared_ptr<SSEJob> reinforce_job_;
+    std::shared_ptr<SSRJob> reinforce_job_;
 
     uint32_t dbus_connect_id_;
     uint32_t object_register_id_;

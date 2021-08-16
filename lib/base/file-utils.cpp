@@ -1,8 +1,8 @@
 /**
- * @file          /kiran-cc-daemon/lib/base/file-utils.cpp
+ * @file          /kiran-ssr-manager/lib/base/file-utils.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
- * @copyright (c) 2020 KylinSec. All rights reserved. 
+ * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
 #include "lib/base/file-utils.h"

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/audit/reinforcements/audit-logrotate.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/audit-logrotate.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -17,11 +17,11 @@ AuditLogrotateRotate::AuditLogrotateRotate()
     this->logrotate_config_ = ConfigPlain::create(LOGROTATE_CONF_PATH);
 }
 
-bool AuditLogrotateRotate::get(std::string &args, SSEErrorCode &error_code)
+bool AuditLogrotateRotate::get(std::string &args, SSRErrorCode &error_code)
 {
     if (!this->logrotate_config_)
     {
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
@@ -36,16 +36,16 @@ bool AuditLogrotateRotate::get(std::string &args, SSEErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 }
 
-bool AuditLogrotateRotate::set(const std::string &args, SSEErrorCode &error_code)
+bool AuditLogrotateRotate::set(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->logrotate_config_)
     {
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
@@ -54,7 +54,7 @@ bool AuditLogrotateRotate::set(const std::string &args, SSEErrorCode &error_code
         Json::Value values = StrUtils::str2json(args);
         if (!values[LOGROTATE_CONF_KEY_ROTATE].isInt())
         {
-            error_code = SSEErrorCode::ERROR_FAILED;
+            error_code = SSRErrorCode::ERROR_FAILED;
             return false;
         }
         auto value = fmt::format("{0}", values[LOGROTATE_CONF_KEY_ROTATE].asInt());
@@ -63,7 +63,7 @@ bool AuditLogrotateRotate::set(const std::string &args, SSEErrorCode &error_code
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;

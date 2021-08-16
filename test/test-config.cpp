@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/test/crypto/test-crypto.cpp
+ * @file          /kiran-ssr-manager/test/crypto/test-crypto.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -52,7 +52,7 @@ SYS_GID_MAX               999
 #
 # If defined, this command is run when removing a user.
 # It should remove any at/cron/print jobs etc. owned by
-# the user to be removed (passed as the first argument).
+# the user to be removed (passrd as the first argument).
 #
 #USERDEL_CMD	/usr/sbin/userdel_local
 

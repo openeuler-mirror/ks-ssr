@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/network/reinforcements/network-sysctl.h
+ * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/network-sysctl.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -34,8 +34,8 @@ public:
     NetworkSysctlRedirect();
     virtual ~NetworkSysctlRedirect(){};
 
-    virtual bool get(std::string &args, SSEErrorCode &error_code);
-    virtual bool set(const std::string &args, SSEErrorCode &error_code);
+    virtual bool get(std::string &args, SSRErrorCode &error_code);
+    virtual bool set(const std::string &args, SSRErrorCode &error_code);
 };
 
 class NetworkSysctlSourceRoute : public NetworkSysctl
@@ -44,8 +44,8 @@ public:
     NetworkSysctlSourceRoute();
     virtual ~NetworkSysctlSourceRoute(){};
 
-    virtual bool get(std::string &args, SSEErrorCode &error_code);
-    virtual bool set(const std::string &args, SSEErrorCode &error_code);
+    virtual bool get(std::string &args, SSRErrorCode &error_code);
+    virtual bool set(const std::string &args, SSRErrorCode &error_code);
 };
 
 }  // namespace Kiran
