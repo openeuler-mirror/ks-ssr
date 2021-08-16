@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/include/error-i.h
+ * @file          /kiran-ssr-manager/include/error-i.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -12,7 +12,7 @@ extern "C"
 {
 #endif
 
-    enum SSEErrorCode
+    enum SSRErrorCode
     {
         // Common
         SUCCESS,

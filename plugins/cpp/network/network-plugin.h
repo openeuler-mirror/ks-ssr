@@ -9,11 +9,11 @@
 
 namespace Kiran
 {
-class SSEPluginNetwork : public SSEPluginInterface
+class SSRPluginNetwork : public SSRPluginInterface
 {
 public:
-    SSEPluginNetwork(){};
-    virtual ~SSEPluginNetwork(){};
+    SSRPluginNetwork(){};
+    virtual ~SSRPluginNetwork(){};
 
     virtual void activate() override;
 

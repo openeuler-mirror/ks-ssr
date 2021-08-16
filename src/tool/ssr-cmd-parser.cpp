@@ -1,24 +1,24 @@
 /**
- * @file          /kiran-sse-manager/src/tool/sse-cmd-parser.cpp
+ * @file          /kiran-ssr-manager/src/tool/ssr-cmd-parser.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/tool/sse-cmd-parser.h"
+#include "src/tool/ssr-cmd-parser.h"
 #include <glib/gi18n.h>
-#include "sse-config.h"
+#include "ssr-config.h"
 
 namespace Kiran
 {
-#define SSE_RSA_LENGTH 1024
+#define SSR_RSA_LENGTH 1024
 
-SSECmdParser::SSECmdParser() : option_group_(PROJECT_NAME, "group options"),
+SSRCmdParser::SSRCmdParser() : option_group_(PROJECT_NAME, "group options"),
                                operation_type_(OperationType::OPERATION_TYPE_NONE)
 {
 }
 
-void SSECmdParser::init()
+void SSRCmdParser::init()
 {
     Glib::OptionEntry entry;
 
@@ -61,7 +61,7 @@ void SSECmdParser::init()
     this->option_context_.set_main_group(this->option_group_);
 }
 
-int SSECmdParser::run(int& argc, char**& argv)
+int SSRCmdParser::run(int& argc, char**& argv)
 {
     try
     {
@@ -83,9 +83,9 @@ int SSECmdParser::run(int& argc, char**& argv)
     }
     case OperationType::OPERATION_TYPE_GENERATE_RSA_KEY:
         // 这里对私钥和公钥进行了互换，因为需要使用私钥进行加密，公钥进行解密。
-        Kiran::CryptoHelper::generate_rsa_key(SSE_RSA_LENGTH,
-                                              "sse-public.key",
-                                              "sse-private.key");
+        Kiran::CryptoHelper::generate_rsa_key(SSR_RSA_LENGTH,
+                                              "ssr-public.key",
+                                              "ssr-private.key");
         break;
     case OperationType::OPERATION_TYPE_DECRYPT_FILE:
         RETURN_VAL_IF_FALSE(this->process_decrypt_file(), EXIT_FAILURE);
@@ -99,7 +99,7 @@ int SSECmdParser::run(int& argc, char**& argv)
     return EXIT_SUCCESS;
 }
 
-bool SSECmdParser::process_decrypt_file()
+bool SSRCmdParser::process_decrypt_file()
 {
     if (this->public_filename_.empty())
     {
@@ -116,7 +116,7 @@ bool SSECmdParser::process_decrypt_file()
     try
     {
         auto message = Glib::file_get_contents(this->decrypt_in_filename_);
-        auto decrypted_message = Kiran::CryptoHelper::sse_decrypt(this->public_filename_, message);
+        auto decrypted_message = Kiran::CryptoHelper::ssr_decrypt(this->public_filename_, message);
         RETURN_VAL_IF_TRUE(decrypted_message.empty(), false);
         Glib::file_set_contents(this->output_filename_, decrypted_message);
         return true;
@@ -128,7 +128,7 @@ bool SSECmdParser::process_decrypt_file()
     }
 }
 
-bool SSECmdParser::process_encrypt_file()
+bool SSRCmdParser::process_encrypt_file()
 {
     if (this->private_filename_.empty())
     {
@@ -145,7 +145,7 @@ bool SSECmdParser::process_encrypt_file()
     try
     {
         auto message = Glib::file_get_contents(this->encrypt_in_filename_);
-        auto encrypted_message = Kiran::CryptoHelper::sse_encrypt(this->private_filename_, message);
+        auto encrypted_message = Kiran::CryptoHelper::ssr_encrypt(this->private_filename_, message);
         // fmt::print("{0}  message: {1} encrypted_message: {2}", this->encrypt_in_filename_, message, encrypted_message);
         RETURN_VAL_IF_TRUE(encrypted_message.empty(), false);
         Glib::file_set_contents(this->output_filename_, encrypted_message);
@@ -158,7 +158,7 @@ bool SSECmdParser::process_encrypt_file()
     }
 }
 
-Glib::OptionEntry SSECmdParser::create_entry(const std::string& long_name,
+Glib::OptionEntry SSRCmdParser::create_entry(const std::string& long_name,
                                              const Glib::ustring& description,
                                              int32_t flags)
 {

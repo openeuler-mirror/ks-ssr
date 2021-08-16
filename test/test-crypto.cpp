@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/test/crypto/test-crypto.cpp
+ * @file          /kiran-ssr-manager/test/test-crypto.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,13 +7,13 @@
 
 #include <gtest/gtest.h>
 #include "lib/base/base.h"
-#include "sse-config.h"
+#include "ssr-config.h"
 
 TEST(RSATest, EncryptAndDecrypt)
 {
     std::string raw_text("Hello world!");
-    auto private_filename = Glib::build_filename(std::vector<std::string>{PROJECT_SOURCE_DIR, "data", "sse-private.key"});
-    auto public_filename = Glib::build_filename(std::vector<std::string>{PROJECT_SOURCE_DIR, "data", "sse-public.key"});
+    auto private_filename = Glib::build_filename(std::vector<std::string>{PROJECT_SOURCE_DIR, "data", "ssr-private.key"});
+    auto public_filename = Glib::build_filename(std::vector<std::string>{PROJECT_SOURCE_DIR, "data", "ssr-public.key"});
 
     auto encrypted_text = Kiran::CryptoHelper::rsa_encrypt(private_filename, raw_text);
     auto decrypted_text = Kiran::CryptoHelper::rsa_decrypt(public_filename, encrypted_text);

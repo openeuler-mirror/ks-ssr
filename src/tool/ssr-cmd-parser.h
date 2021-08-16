@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/src/tool/sse-cmd-parser.h
+ * @file          /kiran-ssr-manager/src/tool/ssr-cmd-parser.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -23,11 +23,11 @@ enum OperationType
 
 };
 
-class SSECmdParser
+class SSRCmdParser
 {
 public:
-    SSECmdParser();
-    virtual ~SSECmdParser(){};
+    SSRCmdParser();
+    virtual ~SSRCmdParser(){};
 
     // 初始化
     void init();

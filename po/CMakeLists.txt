@@ -8,5 +8,5 @@ add_custom_target(ZH_MO ALL
 ${MSGFMT} zh_CN.po -D ${PROJECT_SOURCE_DIR}/po/ -o ${PROJECT_BINARY_DIR}/zh_CN.mo)
 
 install(FILES ${PROJECT_BINARY_DIR}/zh_CN.mo
-        DESTINATION "${SSE_INSTALL_DATADIR}/locale/zh_CN/LC_MESSAGES/"
+        DESTINATION "${SSR_INSTALL_DATADIR}/locale/zh_CN/LC_MESSAGES/"
         RENAME ${PROJECT_NAME}.mo)

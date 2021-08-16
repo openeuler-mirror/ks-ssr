@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/network/network-plugin.h
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/audit-plugin.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,11 +8,11 @@
 
 namespace Kiran
 {
-class SSEPluginAudit : public SSEPluginInterface
+class SSRPluginAudit : public SSRPluginInterface
 {
 public:
-    SSEPluginAudit(){};
-    virtual ~SSEPluginAudit(){};
+    SSRPluginAudit(){};
+    virtual ~SSRPluginAudit(){};
 
     virtual void activate() override;
 
