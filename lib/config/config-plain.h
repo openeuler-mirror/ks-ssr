@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/base/base.h
+ * @file          /kiran-sse-manager/lib/config/config-plain.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -24,7 +24,7 @@ public:
     bool has_key(const std::string &key);
     std::string get_value(const std::string &key);
     // 如果key不存在则自动创建
-    bool update_value(const std::string &key, const std::string &value);
+    bool set_value(const std::string &key, const std::string &value);
     bool delete_key(const std::string &key);
 
     // 提供简单的类型判断和转换函数
@@ -42,10 +42,21 @@ public:
     double get_double(const std::string &key);
 
 public:
-    static std::shared_ptr<ConfigPlain> create(const std::string &conf_path);
+    /**
+     * @brief 为一个配置文件创建ConfigPlain，如果指定的配置之前已经创建过，则直接返回之前创建的配置对象
+     * @param {conf_path}  配置文件路径。
+     * @param {delimiter_pattern}  列分割字符串的正则匹配模式
+     * @param {insert_delimiter}  在插入新行时使用的分割字符串
+     * @return {} 返回ConfigPlain对象
+     */
+    static std::shared_ptr<ConfigPlain> create(const std::string &conf_path,
+                                               std::string delimiter_pattern = "\\s+",
+                                               std::string insert_delimiter = "\t");
 
 private:
-    ConfigPlain(const std::string &conf_path);
+    ConfigPlain(const std::string &conf_path,
+                const std::string &delimiter_pattern,
+                const std::string &insert_delimiter);
 
     void init();
 
@@ -61,6 +72,8 @@ private:
 
 private:
     std::string conf_path_;
+    std::string delimiter_pattern_;
+    std::string insert_delimiter_;
 
     static std::map<std::string, std::shared_ptr<ConfigPlain>> plains_;
 
