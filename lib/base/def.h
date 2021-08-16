@@ -50,6 +50,25 @@ private:
         if (cond) return val;         \
     }
 
+#define RETURN_ERROR_IF_FALSE(cond, error_code_value) \
+    {                                                 \
+        if (!(cond))                                  \
+        {                                             \
+            KLOG_DEBUG("The condition is false.");    \
+            error_code = error_code_value;            \
+            return false;                             \
+        }                                             \
+    }
+
+#define RETURN_ERROR_IF_TRUE(cond, error_code_value) \
+    {                                                \
+        if (!(cond))                                 \
+        {                                            \
+            error_code = error_code_value;           \
+            return false;                            \
+        }                                            \
+    }
+
 #define RETURN_IF_FALSE(cond)                      \
     {                                              \
         if (!(cond))                               \

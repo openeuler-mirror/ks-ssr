@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/base/base.h
+ * @file          /kiran-sse-manager/lib/config/config-plain.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -12,8 +12,12 @@ namespace Kiran
 {
 std::map<std::string, std::shared_ptr<ConfigPlain>> ConfigPlain::plains_ = std::map<std::string, std::shared_ptr<ConfigPlain>>();
 
-ConfigPlain::ConfigPlain(const std::string &conf_path) : conf_path_(conf_path),
-                                                         is_writing_(false)
+ConfigPlain::ConfigPlain(const std::string &conf_path,
+                         const std::string &delimiter_pattern,
+                         const std::string &insert_delimiter) : conf_path_(conf_path),
+                                                                delimiter_pattern_(delimiter_pattern),
+                                                                insert_delimiter_(insert_delimiter),
+                                                                is_writing_(false)
 {
     this->read_from_file();
 
@@ -37,7 +41,7 @@ std::string ConfigPlain::get_value(const std::string &key)
     return iter->second;
 }
 
-bool ConfigPlain::update_value(const std::string &key, const std::string &value)
+bool ConfigPlain::set_value(const std::string &key, const std::string &value)
 {
     KLOG_DEBUG("Key: %s, value: %s.", key.c_str(), value.c_str());
 
@@ -138,7 +142,9 @@ double ConfigPlain::get_double(const std::string &key)
     return value;
 }
 
-std::shared_ptr<ConfigPlain> ConfigPlain::create(const std::string &conf_path)
+std::shared_ptr<ConfigPlain> ConfigPlain::create(const std::string &conf_path,
+                                                 std::string delimiter_pattern,
+                                                 std::string insert_delimiter)
 {
     auto iter = ConfigPlain::plains_.find(conf_path);
     if (iter != ConfigPlain::plains_.end())
@@ -146,7 +152,7 @@ std::shared_ptr<ConfigPlain> ConfigPlain::create(const std::string &conf_path)
         return iter->second;
     }
 
-    std::shared_ptr<ConfigPlain> plain(new ConfigPlain(conf_path));
+    std::shared_ptr<ConfigPlain> plain(new ConfigPlain(conf_path, delimiter_pattern, insert_delimiter));
     auto retval = ConfigPlain::plains_.emplace(conf_path, plain);
     if (!retval.second)
     {
@@ -170,7 +176,7 @@ bool ConfigPlain::read_from_file()
     }
 
     auto lines = StrUtils::split_lines(contents);
-    auto whitespace_regex = Glib::Regex::create("\\s+", Glib::RegexCompileFlags::REGEX_OPTIMIZE);
+    auto split_field_regex = Glib::Regex::create(this->delimiter_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     this->kvs_.clear();
     for (const auto &line : lines)
@@ -178,7 +184,7 @@ bool ConfigPlain::read_from_file()
         auto trim_line = StrUtils::trim(line);
         // 忽略空行和注释行
         CONTINUE_IF_TRUE(trim_line.empty() || trim_line[0] == '#');
-        std::vector<std::string> fields = whitespace_regex->split(trim_line);
+        std::vector<std::string> fields = split_field_regex->split(trim_line);
         // 只考虑两列的行
         CONTINUE_IF_TRUE(fields.size() != 2);
         auto iter = this->kvs_.emplace(fields[0], fields[1]);
@@ -226,12 +232,13 @@ bool ConfigPlain::write_to_file()
 
     auto lines = StrUtils::split_lines(contents);
 
-    auto whitespace_regex = Glib::Regex::create("\\s+", Glib::RegexCompileFlags::REGEX_OPTIMIZE);
-    auto second_field_regex = Glib::Regex::create("(\\s*\\S+\\s+)(\\S+)", Glib::RegexCompileFlags::REGEX_OPTIMIZE);
+    auto split_field_regex = Glib::Regex::create(this->delimiter_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
+    auto second_field_regex = Glib::Regex::create(fmt::format("(\\s*\\S+{0})(\\S+)", this->delimiter_pattern_),
+                                                  Glib::RegexCompileFlags::REGEX_OPTIMIZE);
     for (const auto &line : lines)
     {
         auto trim_line = StrUtils::trim(line);
-        std::vector<std::string> fields = whitespace_regex->split(trim_line);
+        std::vector<std::string> fields = split_field_regex->split(trim_line);
 
         if (trim_line.empty() || trim_line[0] == '#' || fields.size() != 2)
         {
@@ -261,7 +268,7 @@ bool ConfigPlain::write_to_file()
     for (const auto &new_key : keys)
     {
         auto new_value = this->get_value(new_key);
-        auto new_line = new_key + "\t" + new_value + "\n";
+        auto new_line = new_key + this->insert_delimiter_ + new_value + "\n";
         KLOG_DEBUG("New line: %s.", new_line.c_str());
         new_contents.append(new_line);
     }
