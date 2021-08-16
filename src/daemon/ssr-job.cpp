@@ -1,30 +1,30 @@
 /**
- * @file          /kiran-sse-manager/lib/core/sse-job.cpp
+ * @file          /kiran-ssr-manager/src/daemon/ssr-job.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/sse-job.h"
-#include "src/daemon/sse-plugins.h"
+#include "src/daemon/ssr-job.h"
+#include "src/daemon/ssr-plugins.h"
 
 namespace Kiran
 {
-int64_t SSEJob::job_count_ = 0;
+int64_t SSRJob::job_count_ = 0;
 
-std::shared_ptr<SSEJob> SSEJob::create()
+std::shared_ptr<SSRJob> SSRJob::create()
 {
-    std::shared_ptr<SSEJob> job(new SSEJob(++SSEJob::job_count_));
+    std::shared_ptr<SSRJob> job(new SSRJob(++SSRJob::job_count_));
     return job;
 }
 
-SSEJob::SSEJob(int64_t job_id) : job_id_(job_id),
-                                 state_(SSEJobState::SSE_JOB_STATE_IDLE),
+SSRJob::SSRJob(int64_t job_id) : job_id_(job_id),
+                                 state_(SSRJobState::SSR_JOB_STATE_IDLE),
                                  need_cancel_(false)
 {
 }
 
-SSEJob::~SSEJob()
+SSRJob::~SSRJob()
 {
     if (this->idle_handler_)
     {
@@ -32,11 +32,11 @@ SSEJob::~SSEJob()
     }
 }
 
-std::shared_ptr<SSEOperation> SSEJob::add_operation(const std::string &plugin_name,
+std::shared_ptr<SSROperation> SSRJob::add_operation(const std::string &plugin_name,
                                                     const std::string &reinforcement_name,
                                                     std::function<std::string(void)> func)
 {
-    auto operation = std::make_shared<SSEOperation>();
+    auto operation = std::make_shared<SSROperation>();
 
     operation->job_id = this->job_id_;
     operation->operation_id = this->operations_.size() + 1;
@@ -54,18 +54,18 @@ std::shared_ptr<SSEOperation> SSEJob::add_operation(const std::string &plugin_na
     return operation;
 }
 
-bool SSEJob::run_sync()
+bool SSRJob::run_sync()
 {
     KLOG_DEBUG("job id: %d.", this->job_id_);
 
-    RETURN_VAL_IF_FALSE(this->state_ == SSEJobState::SSE_JOB_STATE_IDLE, false);
-    this->state_ = SSEJobState::SSE_JOB_STATE_RUNNING;
+    RETURN_VAL_IF_FALSE(this->state_ == SSRJobState::SSR_JOB_STATE_IDLE, false);
+    this->state_ = SSRJobState::SSR_JOB_STATE_RUNNING;
 
     this->run_init();
 
     for (auto iter : this->operations_)
     {
-        SSEOperationResult result;
+        SSROperationResult result;
         auto operation = iter.second;
         result.operation_id = operation->operation_id;
         result.result = operation->func();
@@ -76,47 +76,47 @@ bool SSEJob::run_sync()
 
         if (this->job_result_.finished_operation_num == this->job_result_.sum_operation_num)
         {
-            this->state_ = SSEJobState::SSE_JOB_STATE_DONE;
+            this->state_ = SSRJobState::SSR_JOB_STATE_DONE;
         }
         this->process_changed_.emit(this->job_result_);
     }
-    this->state_ = SSEJobState::SSE_JOB_STATE_IDLE;
+    this->state_ = SSRJobState::SSR_JOB_STATE_IDLE;
     return true;
 }
 
-bool SSEJob::run_async()
+bool SSRJob::run_async()
 {
     KLOG_DEBUG("job id: %d.", this->job_id_);
 
-    RETURN_VAL_IF_FALSE(this->state_ == SSEJobState::SSE_JOB_STATE_IDLE, false);
-    this->state_ = SSEJobState::SSE_JOB_STATE_RUNNING;
+    RETURN_VAL_IF_FALSE(this->state_ == SSRJobState::SSR_JOB_STATE_IDLE, false);
+    this->state_ = SSRJobState::SSR_JOB_STATE_RUNNING;
 
     this->run_init();
 
     // 空闲时监听任务完成的情况
     auto idle = Glib::MainContext::get_default()->signal_idle();
-    this->idle_handler_ = idle.connect(sigc::mem_fun(this, &SSEJob::idle_check_operation));
+    this->idle_handler_ = idle.connect(sigc::mem_fun(this, &SSRJob::idle_check_operation));
 
-    auto &thread_pool = SSEPlugins::get_instance()->get_thread_pool();
+    auto &thread_pool = SSRPlugins::get_instance()->get_thread_pool();
     {
         std::lock_guard<std::mutex> guard(this->operations_mutex_);
         for (auto iter : this->operations_)
         {
-            thread_pool.enqueue(std::bind(&SSEJob::run_operation, this, iter.second));
+            thread_pool.enqueue(std::bind(&SSRJob::run_operation, this, iter.second));
         }
     }
     return true;
 }
 
-bool SSEJob::cancel()
+bool SSRJob::cancel()
 {
     // 只有在运行中的任务才可以取消
-    RETURN_VAL_IF_FALSE(this->state_ == SSEJobState::SSE_JOB_STATE_RUNNING, false);
+    RETURN_VAL_IF_FALSE(this->state_ == SSRJobState::SSR_JOB_STATE_RUNNING, false);
     this->need_cancel_ = true;
     return true;
 }
 
-void SSEJob::run_init()
+void SSRJob::run_init()
 {
     this->job_result_.job_id = this->job_id_;
     this->job_result_.sum_operation_num = this->operations_.size();
@@ -126,11 +126,11 @@ void SSEJob::run_init()
     this->need_cancel_ = false;
 }
 
-void SSEJob::run_operation(std::shared_ptr<SSEOperation> operation)
+void SSRJob::run_operation(std::shared_ptr<SSROperation> operation)
 {
     RETURN_IF_FALSE(operation);
 
-    SSEOperationResult result;
+    SSROperationResult result;
     result.operation_id = operation->operation_id;
 
     KLOG_DEBUG("running operation: %d, job id: %d.", operation->operation_id, operation->job_id);
@@ -161,9 +161,9 @@ void SSEJob::run_operation(std::shared_ptr<SSEOperation> operation)
     }
 }
 
-bool SSEJob::idle_check_operation()
+bool SSRJob::idle_check_operation()
 {
-    SSEJobResult tmp_result;
+    SSRJobResult tmp_result;
     {
         std::lock_guard<std::mutex> guard(this->operations_mutex_);
         if (this->job_result_.queue_is_changed)
@@ -185,16 +185,16 @@ bool SSEJob::idle_check_operation()
 
         if (tmp_result.finished_operation_num == tmp_result.sum_operation_num)
         {
-            this->state_ = this->need_cancel_ ? SSEJobState::SSE_JOB_STATE_CANCEL_DONE : SSEJobState::SSE_JOB_STATE_DONE;
+            this->state_ = this->need_cancel_ ? SSRJobState::SSR_JOB_STATE_CANCEL_DONE : SSRJobState::SSR_JOB_STATE_DONE;
         }
 
         this->process_changed_.emit(tmp_result);
 
         // 确保前面的信号发送出去后再将状态设置为空闲，这样信号的回调函数能够收到正确的状态值
-        if (this->state_ == SSEJobState::SSE_JOB_STATE_DONE ||
-            this->state_ == SSEJobState::SSE_JOB_STATE_CANCEL_DONE)
+        if (this->state_ == SSRJobState::SSR_JOB_STATE_DONE ||
+            this->state_ == SSRJobState::SSR_JOB_STATE_CANCEL_DONE)
         {
-            this->state_ = SSEJobState::SSE_JOB_STATE_IDLE;
+            this->state_ = SSRJobState::SSR_JOB_STATE_IDLE;
             return false;
         }
     }

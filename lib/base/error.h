@@ -1,8 +1,8 @@
 /**
- * @file          /kiran-sse-manager/lib/base/error.h
+ * @file          /kiran-ssr-manager/lib/base/error.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
- * @copyright (c) 2020 KylinSec. All rights reserved. 
+ * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
 #pragma once
@@ -14,7 +14,7 @@
 
 namespace Kiran
 {
-#define CC_ERROR2STR(error_code) SSEError::get_error_desc(error_code)
+#define CC_ERROR2STR(error_code) SSRError::get_error_desc(error_code)
 
 #define DBUS_ERROR_REPLY(error_code, ...)                                                    \
     {                                                                                        \
@@ -26,13 +26,13 @@ namespace Kiran
     DBUS_ERROR_REPLY(error_code, ##__VA_ARGS__);  \
     return;
 
-class SSEError
+class SSRError
 {
 public:
-    SSEError();
-    virtual ~SSEError(){};
+    SSRError();
+    virtual ~SSRError(){};
 
-    static std::string get_error_desc(SSEErrorCode error_code);
+    static std::string get_error_desc(SSRErrorCode error_code);
 };
 
 }  // namespace Kiran

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/audit/reinforcements/audit-autitd.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/audit-autitd.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -20,7 +20,7 @@ AuditAuditdSwitch::AuditAuditdSwitch()
     this->systemd_proxy_ = DBusSystemdProxy::get_default();
 }
 
-bool AuditAuditdSwitch::get(std::string &args, SSEErrorCode &error_code)
+bool AuditAuditdSwitch::get(std::string &args, SSRErrorCode &error_code)
 {
     Json::Value values;
 
@@ -39,13 +39,13 @@ bool AuditAuditdSwitch::get(std::string &args, SSEErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s.", e.what());
-        error_code = SSEErrorCode::ERROR_PLUGIN_AUDIT_GET_JSON_ERROR;
+        error_code = SSRErrorCode::ERROR_PLUGIN_AUDIT_GET_JSON_ERROR;
         return false;
     }
     return true;
 }
 
-bool AuditAuditdSwitch::set(const std::string &args, SSEErrorCode &error_code)
+bool AuditAuditdSwitch::set(const std::string &args, SSRErrorCode &error_code)
 {
     try
     {
@@ -73,7 +73,7 @@ bool AuditAuditdSwitch::set(const std::string &args, SSEErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s.", e.what());
-        error_code = SSEErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR;
+        error_code = SSRErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR;
         return false;
     }
 }
