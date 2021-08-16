@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/audit/reinforcements/audit-autitd-switch.cpp
+ * @file          /kiran-sse-manager/plugins/cpp/audit/reinforcements/audit-autitd.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include <json/json.h>
 #include <unistd.h>
-#include "plugins/cpp/audit/reinforcements/audit-auditd-switch.h"
+#include "plugins/cpp/audit/reinforcements/audit-auditd.h"
 
 namespace Kiran
 {
@@ -17,6 +17,7 @@ namespace Kiran
 
 AuditAuditdSwitch::AuditAuditdSwitch()
 {
+    this->systemd_proxy_ = DBusSystemdProxy::get_default();
 }
 
 bool AuditAuditdSwitch::get(std::string &args, SSEErrorCode &error_code)
@@ -26,11 +27,11 @@ bool AuditAuditdSwitch::get(std::string &args, SSEErrorCode &error_code)
     try
     {
         // 开机自动启动
-        auto unit_file_state = this->systemd_proxy_.get_unit_file_state(AUDITD_UNIT_NAME);
+        auto unit_file_state = this->systemd_proxy_->get_unit_file_state(AUDITD_UNIT_NAME);
         values[AUDITD_JSON_KEY_ENABLED] = (unit_file_state == "enabled");
 
         // 是否运行
-        auto state_str = this->systemd_proxy_.get_unit_active_state(AUDITD_UNIT_NAME);
+        auto state_str = this->systemd_proxy_->get_unit_active_state(AUDITD_UNIT_NAME);
         values[AUDITD_JSON_KEY_ACTIVE] = (state_str == "active" || state_str == "activating");
 
         args = StrUtils::json2str(values);
@@ -52,7 +53,7 @@ bool AuditAuditdSwitch::set(const std::string &args, SSEErrorCode &error_code)
         if (values[AUDITD_JSON_KEY_ENABLED].isBool())
         {
             auto enabled = values[AUDITD_JSON_KEY_ENABLED].asBool();
-            this->systemd_proxy_.enable_unit_file(AUDITD_UNIT_NAME, enabled);
+            this->systemd_proxy_->enable_unit_file(AUDITD_UNIT_NAME, enabled);
         }
 
         if (values[AUDITD_JSON_KEY_ACTIVE].isBool())
@@ -60,11 +61,11 @@ bool AuditAuditdSwitch::set(const std::string &args, SSEErrorCode &error_code)
             auto active = values[AUDITD_JSON_KEY_ACTIVE].asBool();
             if (active)
             {
-                return this->systemd_proxy_.start_unit(AUDITD_UNIT_NAME);
+                return this->systemd_proxy_->start_unit(AUDITD_UNIT_NAME);
             }
             else
             {
-                return this->systemd_proxy_.stop_unit(AUDITD_UNIT_NAME);
+                return this->systemd_proxy_->stop_unit(AUDITD_UNIT_NAME);
             }
         }
         return true;

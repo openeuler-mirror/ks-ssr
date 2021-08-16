@@ -12,7 +12,9 @@ add_library(${TARGET_NAME} SHARED
 
 
 target_link_libraries(${TARGET_NAME} PRIVATE
-                      lib-base)
+                      lib-base
+                      lib-config
+                      lib-dbus)
 
 install(TARGETS ${TARGET_NAME}
         DESTINATION ${SSE_PLUGIN_ROOT_DIR}/cpp/)
