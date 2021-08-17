@@ -8,6 +8,8 @@
 
 namespace Kiran
 {
+namespace Audit
+{
 class SSRPluginAudit : public SSRPluginInterface
 {
 public:
@@ -20,5 +22,7 @@ public:
 
     virtual std::string execute(const std::string &in_json) override;
 };
+
+}  // namespace Audit
 
 }  // namespace Kiran

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/audit-autitd.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/autitd.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,20 +7,22 @@
 
 #include <json/json.h>
 #include <unistd.h>
-#include "plugins/cpp/audit/reinforcements/audit-auditd.h"
+#include "plugins/cpp/audit/reinforcements/auditd.h"
 
 namespace Kiran
+{
+namespace Audit
 {
 #define AUDITD_UNIT_NAME "auditd.service"
 #define AUDITD_JSON_KEY_ENABLED "enabled"
 #define AUDITD_JSON_KEY_ACTIVE "acitve"
 
-AuditAuditdSwitch::AuditAuditdSwitch()
+AuditdSwitch::AuditdSwitch()
 {
     this->systemd_proxy_ = DBusSystemdProxy::get_default();
 }
 
-bool AuditAuditdSwitch::get(std::string &args, SSRErrorCode &error_code)
+bool AuditdSwitch::get(std::string &args, SSRErrorCode &error_code)
 {
     Json::Value values;
 
@@ -45,7 +47,7 @@ bool AuditAuditdSwitch::get(std::string &args, SSRErrorCode &error_code)
     return true;
 }
 
-bool AuditAuditdSwitch::set(const std::string &args, SSRErrorCode &error_code)
+bool AuditdSwitch::set(const std::string &args, SSRErrorCode &error_code)
 {
     try
     {
@@ -78,4 +80,5 @@ bool AuditAuditdSwitch::set(const std::string &args, SSRErrorCode &error_code)
     }
 }
 
+}  // namespace Audit
 }  // namespace Kiran

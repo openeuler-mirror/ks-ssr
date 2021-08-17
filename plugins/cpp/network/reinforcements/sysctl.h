@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/network-sysctl.h
+ * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/sysctl.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -12,11 +12,13 @@
 
 namespace Kiran
 {
-class NetworkSysctl
+namespace Network
+{
+class Sysctl
 {
 public:
-    NetworkSysctl();
-    virtual ~NetworkSysctl(){};
+    Sysctl();
+    virtual ~Sysctl(){};
 
 protected:
     using SysctlVar = std::pair<std::string, std::string>;
@@ -28,24 +30,26 @@ protected:
     std::shared_ptr<ConfigPlain> sysctl_config_;
 };
 
-class NetworkSysctlRedirect : public NetworkSysctl
+class SysctlRedirect : public Sysctl
 {
 public:
-    NetworkSysctlRedirect();
-    virtual ~NetworkSysctlRedirect(){};
+    SysctlRedirect();
+    virtual ~SysctlRedirect(){};
 
     virtual bool get(std::string &args, SSRErrorCode &error_code);
     virtual bool set(const std::string &args, SSRErrorCode &error_code);
 };
 
-class NetworkSysctlSourceRoute : public NetworkSysctl
+class SysctlSourceRoute : public Sysctl
 {
 public:
-    NetworkSysctlSourceRoute();
-    virtual ~NetworkSysctlSourceRoute(){};
+    SysctlSourceRoute();
+    virtual ~SysctlSourceRoute(){};
 
     virtual bool get(std::string &args, SSRErrorCode &error_code);
     virtual bool set(const std::string &args, SSRErrorCode &error_code);
 };
+
+}  // namespace Network
 
 }  // namespace Kiran
