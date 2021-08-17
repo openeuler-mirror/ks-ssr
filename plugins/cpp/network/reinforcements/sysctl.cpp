@@ -1,13 +1,15 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/network-sysctl.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/sysctl.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
-#include "plugins/cpp/network/reinforcements/network-sysctl.h"
+#include "plugins/cpp/network/reinforcements/sysctl.h"
 
 namespace Kiran
+{
+namespace Network
 {
 #define SYSCTL_COMMAND "/usr/sbin/sysctl"
 #define SYSCTL_JSON_KEY_ENABLED "enabled"
@@ -16,58 +18,34 @@ namespace Kiran
 #define SYSCTL_ACCEPT_REDIRECTS_PATTERN "\"net.ipv(4|6).conf.*.accept_redirects\""
 #define SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN "\"net.ipv(4|6).conf.*.accept_source_route\""
 
-NetworkSysctl::NetworkSysctl()
+Sysctl::Sysctl()
 {
     this->sysctl_config_ = ConfigPlain::create(SYSCTL_CONFI_FILE, "\\s*=\\s*", " = ");
 }
 
-std::vector<NetworkSysctlRedirect::SysctlVar> NetworkSysctl::get_vars_by_pattern(const std::string &pattern)
+std::vector<SysctlRedirect::SysctlVar> Sysctl::get_vars_by_pattern(const std::string &pattern)
 {
     std::vector<SysctlVar> vars;
-    try
-    {
-        std::string standard_output;
-        std::string standard_error;
-        int32_t exit_status = 0;
-        std::vector<std::string> argv = {SYSCTL_COMMAND, "-a", "-r", pattern};
-        Glib::spawn_sync(std::string(),
-                         argv,
-                         Glib::SPAWN_DEFAULT,
-                         Glib::SlotSpawnChildSetup(),
-                         &standard_output,
-                         &standard_error,
-                         &exit_status);
+    std::string standard_output;
+    std::string standard_error;
+    std::vector<std::string> argv = {SYSCTL_COMMAND, "-a", "-r", pattern};
 
-        if (exit_status)
-        {
-            KLOG_WARNING("Failed to exec command %s, exit status: %d.", StrUtils::join(argv, " ").c_str(), exit_status);
-            return vars;
-        }
-
-        auto lines = StrUtils::split_lines(standard_output);
-        for (const auto &line : lines)
-        {
-            auto fields = StrUtils::split_with_char(line, '=');
-            CONTINUE_IF_TRUE(fields.size() != 2);
-            vars.push_back(std::make_pair(fields[0], fields[1]));
-        }
-    }
-    catch (const std::exception &e)
+    RETURN_VAL_IF_TRUE(!Glib2Utils::spawn_sync(argv, &standard_output, &standard_error), vars);
+    auto lines = StrUtils::split_lines(standard_output);
+    for (const auto &line : lines)
     {
-        KLOG_WARNING("%s", e.what());
-    }
-    catch (const Glib::Error &e)
-    {
-        KLOG_WARNING("%s", e.what().c_str());
+        auto fields = StrUtils::split_with_char(line, '=');
+        CONTINUE_IF_TRUE(fields.size() != 2);
+        vars.push_back(std::make_pair(fields[0], fields[1]));
     }
     return vars;
 }
 
-NetworkSysctlRedirect::NetworkSysctlRedirect()
+SysctlRedirect::SysctlRedirect()
 {
 }
 
-bool NetworkSysctlRedirect::get(std::string &args, SSRErrorCode &error_code)
+bool SysctlRedirect::get(std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN);
     RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
@@ -96,7 +74,7 @@ bool NetworkSysctlRedirect::get(std::string &args, SSRErrorCode &error_code)
     return true;
 }
 
-bool NetworkSysctlRedirect::set(const std::string &args, SSRErrorCode &error_code)
+bool SysctlRedirect::set(const std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN);
     RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
@@ -114,22 +92,8 @@ bool NetworkSysctlRedirect::set(const std::string &args, SSRErrorCode &error_cod
         }
 
         // 从文件中刷新
-        int32_t exit_status = 0;
         std::vector<std::string> argv = {SYSCTL_COMMAND, "--load", SYSCTL_CONFI_FILE};
-        Glib::spawn_sync(std::string(),
-                         argv,
-                         Glib::SPAWN_DEFAULT,
-                         Glib::SlotSpawnChildSetup(),
-                         nullptr,
-                         nullptr,
-                         &exit_status);
-
-        if (exit_status)
-        {
-            KLOG_WARNING("Failed to exec command %s, exit status: %d.", StrUtils::join(argv, " ").c_str(), exit_status);
-            error_code = SSRErrorCode::ERROR_FAILED;
-            return false;
-        }
+        RETURN_ERROR_IF_TRUE(!Glib2Utils::spawn_sync(argv, nullptr, nullptr), SSRErrorCode::ERROR_FAILED);
     }
     catch (const std::exception &e)
     {
@@ -137,20 +101,14 @@ bool NetworkSysctlRedirect::set(const std::string &args, SSRErrorCode &error_cod
         error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
-    catch (const Glib::Error &e)
-    {
-        KLOG_WARNING("%s", e.what().c_str());
-        error_code = SSRErrorCode::ERROR_FAILED;
-        return false;
-    }
     return true;
 }
 
-NetworkSysctlSourceRoute::NetworkSysctlSourceRoute()
+SysctlSourceRoute::SysctlSourceRoute()
 {
 }
 
-bool NetworkSysctlSourceRoute::get(std::string &args, SSRErrorCode &error_code)
+bool SysctlSourceRoute::get(std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN);
     RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
@@ -179,7 +137,7 @@ bool NetworkSysctlSourceRoute::get(std::string &args, SSRErrorCode &error_code)
     return true;
 }
 
-bool NetworkSysctlSourceRoute::set(const std::string &args, SSRErrorCode &error_code)
+bool SysctlSourceRoute::set(const std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN);
     RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
@@ -197,22 +155,8 @@ bool NetworkSysctlSourceRoute::set(const std::string &args, SSRErrorCode &error_
         }
 
         // 从文件中刷新
-        int32_t exit_status = 0;
         std::vector<std::string> argv = {SYSCTL_COMMAND, "--load", SYSCTL_CONFI_FILE};
-        Glib::spawn_sync(std::string(),
-                         argv,
-                         Glib::SPAWN_DEFAULT,
-                         Glib::SlotSpawnChildSetup(),
-                         nullptr,
-                         nullptr,
-                         &exit_status);
-
-        if (exit_status)
-        {
-            KLOG_WARNING("Failed to exec command %s, exit status: %d.", StrUtils::join(argv, " ").c_str(), exit_status);
-            error_code = SSRErrorCode::ERROR_FAILED;
-            return false;
-        }
+        RETURN_ERROR_IF_TRUE(!Glib2Utils::spawn_sync(argv, nullptr, nullptr), SSRErrorCode::ERROR_FAILED);
     }
     catch (const std::exception &e)
     {
@@ -229,4 +173,5 @@ bool NetworkSysctlSourceRoute::set(const std::string &args, SSRErrorCode &error_
     return true;
 }
 
+}  // namespace Network
 }  // namespace Kiran

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:simpleType name="LanguageType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="cpp" />
+            <xsd:enumeration value="python" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+     <xsd:simpleType name="WidgetType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="switch" />
+            <xsd:enumeration value="text" />
+            <xsd:enumeration value="datetime" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="ReinforcementArgConfig">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="widget_type" type="WidgetType"/>
+            <xsd:element name="value" type="xsd::string"/>
+            <xsd:element name="label" type="xsd::string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ReinforcementConfig">
+        <xsd:sequence>
+            <xsd:element name="label" type="xsd:string" default="" />
+            <xsd:element name="args" type="ReinforcementArgConfig" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="PluginConfig">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="label" type="xsd:string" />
+            <xsd:element name="language_type" type="LanguageType" />
+            <xsd:element name="available" type="xsd::boolean" />
+            <xsd:element name="reinforcements" type="ReinforcementConfig" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="plugin" type="PluginConfig" />
+
+</xsd:schema>
