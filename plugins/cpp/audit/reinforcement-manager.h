@@ -1,9 +1,10 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/network/network-reinforcement-manager.h
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcement-manager.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
- * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
+ * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
+
 #pragma once
 
 #include "lib/base/base.h"
@@ -13,13 +14,15 @@
 
 namespace Kiran
 {
-class NetworkReinforcementManager
+namespace Audit
+{
+class ReinforcementManager
 {
 public:
-    NetworkReinforcementManager();
-    virtual ~NetworkReinforcementManager(){};
+    ReinforcementManager();
+    virtual ~ReinforcementManager();
 
-    static NetworkReinforcementManager* get_instance() { return instance_; };
+    static ReinforcementManager* get_instance() { return instance_; };
 
     static void global_init();
 
@@ -31,8 +34,9 @@ private:
     void init();
 
 private:
-    static NetworkReinforcementManager* instance_;
+    static ReinforcementManager* instance_;
 
     std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements_;
 };
+}  // namespace Audit
 }  // namespace Kiran
