@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/dbus/dbus-proxy-systemd.cpp
+ * @file          /kiran-ssr-manager/lib/dbus/dbus-proxy-systemd.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -24,23 +24,12 @@ namespace Kiran
 // SDUP: systemd dbus unit property
 #define SDUP_ACTIVE_STATE "ActiveState"
 
-std::shared_ptr<DBusSystemdProxy> DBusSystemdProxy::default_proxy_ = nullptr;
-
 DBusSystemdProxy::DBusSystemdProxy()
 {
     this->systemd_proxy_ = Gio::DBus::Proxy::create_for_bus_sync(Gio::DBus::BUS_TYPE_SYSTEM,
                                                                  SYSTEMD_DBUS_NAME,
                                                                  SYSTEMD_DBUS_OBJECT_PATH,
                                                                  SYSTEMD_DBUS_INTERFACE_MANAGER);
-}
-
-std::shared_ptr<DBusSystemdProxy> DBusSystemdProxy::get_default()
-{
-    if (!default_proxy_)
-    {
-        default_proxy_ = std::make_shared<DBusSystemdProxy>();
-    }
-    return default_proxy_;
 }
 
 std::string DBusSystemdProxy::get_unit_file_state(const std::string &unit_name)

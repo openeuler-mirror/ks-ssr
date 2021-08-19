@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/dbus/dbus-proxy-systemd.h
+ * @file          /kiran-ssr-manager/lib/dbus/dbus-proxy-systemd.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -16,8 +16,6 @@ class DBusSystemdProxy
 public:
     DBusSystemdProxy();
     virtual ~DBusSystemdProxy(){};
-
-    static std::shared_ptr<DBusSystemdProxy> get_default();
 
     // 获取文件启动状态
     std::string get_unit_file_state(const std::string &unit_name);
@@ -37,8 +35,6 @@ private:
     bool call_manager_method_noresult(const std::string &method_name, const Glib::VariantContainerBase &parameters);
 
 private:
-    static std::shared_ptr<DBusSystemdProxy> default_proxy_;
-
     Glib::RefPtr<Gio::DBus::Proxy> systemd_proxy_;
 };
 }  // namespace Kiran
