@@ -9,7 +9,6 @@
 
 #include "lib/base/base.h"
 #include "lib/config/config-plain.h"
-#include "reinforcement-i.h"
 
 namespace Kiran
 {
@@ -28,5 +27,5 @@ private:
     std::shared_ptr<ConfigPlain> logrotate_config_;
 };
 
-}  // namespace Autid
+}  // namespace Audit
 }  // namespace  Kiran
