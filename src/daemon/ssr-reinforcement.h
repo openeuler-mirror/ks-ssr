@@ -8,60 +8,44 @@
 #pragma once
 
 #include "lib/base/base.h"
+#include "src/daemon/ssr-plugin-config.hxx"
+#include "src/daemon/ssr-rs-config.hxx"
 #include "src/daemon/ssr-rule.h"
 
 namespace Kiran
 {
-struct SSRReinforcementInfo
-{
-    // 加固项名称
-    std::string name;
-    // 加固项所属插件名
-    std::string plugin_name;
-    // 加固项所属分类
-    std::string category_name;
-    // 加固项标签
-    std::string label;
-};
-
 class SSRReinforcement
 {
 public:
     SSRReinforcement() = delete;
-    SSRReinforcement(const SSRReinforcementInfo &base_info);
+    SSRReinforcement(const std::string &plugin_name,
+                     const Plugin::ReinforcementConfig &base_info,
+                     const RS::SSRRSReinforcement &rs);
     virtual ~SSRReinforcement(){};
 
-    std::string get_name() { return this->base_info_.name; };
-    std::string get_plugin_name() { return this->base_info_.plugin_name; };
-    std::string get_category_name() { return this->base_info_.category_name; };
-    std::string get_label() { return this->base_info_.label; };
+    std::string get_name() { return this->base_info_.name(); };
+    std::string get_plugin_name() { return this->plugin_name_; };
+    std::string get_category_name();
+    std::string get_label();
 
-    Json::Value get_custom_args() { return this->custom_args_; };
-    Json::Value get_default_args() { return this->default_args_; };
-    Json::Value get_layout() { return this->layout_; };
-
-    // 获取加固参数，优先使用自定义参数，如果不存在自定义则使用默认参数
-    Json::Value get_args();
-
-    void set_rules(const Json::Value &rules);
-    void set_default_args(const Json::Value &default_args) { this->default_args_ = default_args; };
-    void set_custom_args(const Json::Value &custom_args) { this->custom_args_ = custom_args; };
-    void set_layout(const Json::Value &layout) { this->layout_ = layout; };
+    void set_rs(const RS::SSRRSReinforcement &rs);
+    const RS::SSRRSReinforcement &get_rs() { return this->rs_; };
 
     // 判断与规则是否匹配
     bool match_rules(const Json::Value &values);
 
 private:
-    // 基本信息
-    SSRReinforcementInfo base_info_;
+    void update_rules();
+
+private:
+    // 插件所属插件
+    std::string plugin_name_;
+    // 加固项的基本信息
+    Plugin::ReinforcementConfig base_info_;
+    // 加固项的加固标准
+    RS::SSRRSReinforcement rs_;
     // 标准的判断规则
     std::map<std::string, std::shared_ptr<SSRRule>> rules_;
-    // 满足规则的默认参数
-    Json::Value default_args_;
-    // 自定义加固参数
-    Json::Value custom_args_;
-    // 前端显示的UI布局
-    Json::Value layout_;
 };
 
 using SSRReinforcementVec = std::vector<std::shared_ptr<SSRReinforcement>>;

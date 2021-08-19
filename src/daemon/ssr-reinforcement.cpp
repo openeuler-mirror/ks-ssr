@@ -6,48 +6,42 @@
  */
 
 #include "src/daemon/ssr-reinforcement.h"
+#include "src/daemon/ssr-plugins.h"
+#include "src/daemon/ssr-utils.h"
 
 namespace Kiran
 {
-SSRReinforcement::SSRReinforcement(const SSRReinforcementInfo &base_info) : base_info_(base_info)
+SSRReinforcement::SSRReinforcement(const std::string &plugin_name,
+                                   const Plugin::ReinforcementConfig &base_info,
+                                   const RS::SSRRSReinforcement &rs) : plugin_name_(plugin_name),
+                                                                       base_info_(base_info),
+                                                                       rs_(rs)
 {
+    this->update_rules();
 }
 
-Json::Value SSRReinforcement::get_args()
+std::string SSRReinforcement::get_category_name()
 {
-    if (!this->custom_args_.isNull())
+    // 如果加固项指定了分类则使用加固项的分类名，否则使用插件的分类名
+    if (this->base_info_.category().present())
     {
-        return this->custom_args_;
+        return this->base_info_.category().get();
     }
-    return this->default_args_;
+
+    auto plugin = SSRPlugins::get_instance()->get_plugin(this->plugin_name_);
+    RETURN_VAL_IF_FALSE(plugin, std::string());
+    return plugin->get_category_name();
 }
 
-void SSRReinforcement::set_rules(const Json::Value &rules)
+std::string SSRReinforcement::get_label()
 {
-    try
-    {
-        this->rules_.clear();
-        for (auto member : rules.getMemberNames())
-        {
-            auto rule = SSRRule::create(rules[member]);
-            if (rule)
-            {
-                auto iter = this->rules_.emplace(member, rule);
-                if (!iter.second)
-                {
-                    KLOG_WARNING("The rule name %s is repeat.", member.c_str());
-                }
-            }
-            else
-            {
-                KLOG_WARNING("The rule is created failed. name: %s.", member.c_str());
-            }
-        }
-    }
-    catch (const std::exception &e)
-    {
-        KLOG_WARNING("%s.", e.what());
-    }
+    return SSRUtils::get_xsd_local_value(this->base_info_.label());
+}
+
+void SSRReinforcement::set_rs(const RS::SSRRSReinforcement &rs)
+{
+    this->rs_ = rs;
+    this->update_rules();
 }
 
 bool SSRReinforcement::match_rules(const Json::Value &values)
@@ -66,5 +60,28 @@ bool SSRReinforcement::match_rules(const Json::Value &values)
         return false;
     }
     return true;
+}
+
+void SSRReinforcement::update_rules()
+{
+    this->rules_.clear();
+    for (const auto &arg : this->rs_.arg())
+    {
+        CONTINUE_IF_TRUE(!arg.rule().present());
+
+        auto rule = SSRRule::create(arg.rule().get());
+        if (rule)
+        {
+            auto iter = this->rules_.emplace(arg.name(), rule);
+            if (!iter.second)
+            {
+                KLOG_WARNING("The rule name %s is repeat.", arg.name().c_str());
+            }
+        }
+        else
+        {
+            KLOG_WARNING("The rule is created failed. name: %s.", arg.name().c_str());
+        }
+    }
 }
 }  // namespace Kiran
