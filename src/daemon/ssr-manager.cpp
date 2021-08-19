@@ -15,6 +15,9 @@
 
 namespace Kiran
 {
+#define JOB_ERROR_CODE "error_code"
+#define JOB_RETURN_VALUE "return_value"
+
 SSRManager::SSRManager() : dbus_connect_id_(0),
                            object_register_id_(0)
 {
@@ -209,25 +212,25 @@ void SSRManager::Scan(const Glib::ustring& scan_range, MethodInvocation& invocat
                 DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND, name);
             }
 
-            auto plugin = this->plugins_->get_plugin(reinforcement->get_plugin_name());
-            if (!plugin)
+            auto reinforcement_interface = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
+                                                                                      reinforcement->get_name());
+            if (!reinforcement_interface)
             {
-                KLOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
-                             reinforcement->get_plugin_name().c_str(),
-                             reinforcement->get_name().c_str());
                 DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
             }
-            auto interface = plugin->get_loader()->get_interface();
-
-            Json::Value param;
-            param[SSR_JSON_HEAD][SSR_JSON_HEAD_PROTOCOL_ID] = int32_t(SSRPluginProtocol::SSR_PLUGIN_PROTOCOL_GET_REQ);
-            param[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
-            auto param_str = StrUtils::json2str(param);
 
             this->scan_job_->add_operation(reinforcement->get_plugin_name(),
                                            reinforcement->get_name(),
-                                           [interface, param_str]() -> std::string {
-                                               return interface->execute(param_str);
+                                           [reinforcement_interface]() -> std::string {
+                                               Json::Value retval;
+                                               std::string args;
+                                               SSRErrorCode error_code = SSRErrorCode::SUCCESS;
+                                               if (reinforcement_interface->get(args, error_code))
+                                               {
+                                                   retval[JOB_RETURN_VALUE] = StrUtils::str2json(args);
+                                               }
+                                               retval[JOB_ERROR_CODE] = int32_t(error_code);
+                                               return StrUtils::json2str(retval);
                                            });
 
             // 重新扫描时需要清理加固项的安全状态
@@ -254,6 +257,8 @@ void SSRManager::Scan(const Glib::ustring& scan_range, MethodInvocation& invocat
 
 void SSRManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation& invocation)
 {
+    KLOG_PROFILE("");
+
     // 已经在加固则返回错误
     if (this->reinforce_job_ && this->reinforce_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
     {
@@ -275,32 +280,27 @@ void SSRManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation
                 DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND_2, name);
             }
 
-            auto plugin = this->plugins_->get_plugin(reinforcement->get_plugin_name());
-            if (!plugin)
+            auto reinforcement_interface = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
+                                                                                      reinforcement->get_name());
+            if (!reinforcement_interface)
             {
-                KLOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
-                             reinforcement->get_plugin_name().c_str(),
-                             reinforcement->get_name().c_str());
-                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND_2);
+                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
             }
-            auto interface = plugin->get_loader()->get_interface();
 
             Json::Value param;
-            param[SSR_JSON_HEAD][SSR_JSON_HEAD_PROTOCOL_ID] = SSRPluginProtocol::SSR_PLUGIN_PROTOCOL_SET_REQ;
-            param[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
             for (const auto& arg : reinforcement->get_rs().arg())
             {
-                // Json::Value arg_value;
-                // arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_NAME] = arg.name();
-                // arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_VALUE] = arg.value();
-                param[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_ARGS][arg.name()] = StrUtils::str2json(arg.value());
+                param[arg.name()] = StrUtils::str2json(arg.value());
             }
-
             auto param_str = StrUtils::json2str(param);
             this->reinforce_job_->add_operation(reinforcement->get_plugin_name(),
                                                 reinforcement->get_name(),
-                                                [interface, param_str]() -> std::string {
-                                                    return interface->execute(param_str);
+                                                [reinforcement_interface, param_str]() -> std::string {
+                                                    SSRErrorCode error_code = SSRErrorCode::SUCCESS;
+                                                    reinforcement_interface->set(param_str, error_code);
+                                                    Json::Value retval;
+                                                    retval[JOB_ERROR_CODE] = int32_t(error_code);
+                                                    return StrUtils::json2str(retval);
                                                 });
         }
     }
@@ -419,9 +419,10 @@ void SSRManager::on_scan_process_changed_cb(const SSRJobResult& job_result)
 
             auto reinforcement = this->plugins_->get_reinforcement(operation->reinforcement_name);
 
-            if (result_values.isMember(SSR_JSON_BODY) &&
+            if (result_values[JOB_ERROR_CODE].isInt() &&
+                result_values[JOB_ERROR_CODE].asInt() == int32_t(SSRErrorCode::SUCCESS) &&
                 reinforcement &&
-                reinforcement->match_rules(result_values[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_SYSTEM_ARGS]))
+                reinforcement->match_rules(result_values[JOB_RETURN_VALUE]))
             {
                 state = SSRReinforcementState(state | SSRReinforcementState::SSR_REINFORCEMENT_STATE_SAFE);
             }
@@ -481,9 +482,10 @@ void SSRManager::on_reinfoce_process_changed_cb(const SSRJobResult& job_result)
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_REINFORCE_DONE;
             }
 
-            if (result_values["head"].isMember("error_code"))
+            if (result_values[JOB_ERROR_CODE].isInt() &&
+                result_values[JOB_ERROR_CODE].asInt() != int32_t(SSRErrorCode::SUCCESS))
             {
-                SSRErrorCode error_code = SSRErrorCode(result_values["head"]["error_code"].asInt());
+                SSRErrorCode error_code = SSRErrorCode(result_values[JOB_ERROR_CODE].asInt());
                 if (error_code != SSRErrorCode::SUCCESS)
                 {
                     reinforce_result["items"][item_count]["error"] = CC_ERROR2STR(error_code);

@@ -5,6 +5,8 @@
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
+#pragma once
+
 #include <string>
 
 namespace Kiran
@@ -35,6 +37,24 @@ enum SSRPluginProtocol
     SSR_PLUGIN_PROTOCOL_LAST,
 };
 
+class DLLEXPORT SSRReinforcementInterface
+{
+public:
+    /**
+     * @brief 获取系统配置
+     * @param {string} args 系统配置参数
+     * @return {*} 如果系统配置符合加固标准，则返回true，否则返回false
+     */
+    virtual bool get(std::string &args, SSRErrorCode &error_code) = 0;
+
+    /**
+     * @brief 设置系统配置
+     * @param {string} args 系统配置参数
+     * @return {*} 返回加固结果
+     */
+    virtual bool set(const std::string &args, SSRErrorCode &error_code) = 0;
+};
+
 class DLLEXPORT SSRPluginInterface
 {
 public:
@@ -51,11 +71,11 @@ public:
     virtual void deactivate() = 0;
 
     /**
-     * @brief 执行一个操作
-     * @param {string} 操作的输入，json字符串表示
-     * @return {string} 操作的数处，json字符串表示
+     * @brief 获取加固项
+     * @param {string} 加固项的名称
+     * @return {string} 加固项对象
      */
-    virtual std::string execute(const std::string &in_json) = 0;
+    virtual std::shared_ptr<SSRReinforcementInterface> get_reinforcement(const std::string &name) = 0;
 };
 
 using NewPluginFun = void *(*)(void);
