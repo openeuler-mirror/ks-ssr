@@ -11,6 +11,7 @@
 #include "src/daemon/ssr-categories.h"
 #include "src/daemon/ssr-configuration.h"
 #include "src/daemon/ssr-plugins.h"
+#include "src/daemon/ssr-utils.h"
 
 namespace Kiran
 {
@@ -139,7 +140,7 @@ void SSRManager::GetReinforcements(MethodInvocation& invocation)
 
     try
     {
-        auto reinforcements = this->plugins_->get_used_reinforcements();
+        auto reinforcements = this->plugins_->get_reinforcements();
 
         for (uint32_t i = 0; i < reinforcements.size(); ++i)
         {
@@ -148,8 +149,18 @@ void SSRManager::GetReinforcements(MethodInvocation& invocation)
             result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
             result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_CATEGORY_NAME] = reinforcement->get_category_name();
             result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_LABEL] = reinforcement->get_label();
-            result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_ARGS] = reinforcement->get_args();
-            result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_LAYOUT] = reinforcement->get_layout();
+            for (const auto& arg : reinforcement->get_rs().arg())
+            {
+                Json::Value arg_value;
+                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_NAME] = arg.name();
+                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_VALUE] = arg.value();
+                if (arg.layout().present())
+                {
+                    arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_TYPE] = arg.layout().get().widget_type();
+                    arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_LABEL] = SSRUtils::get_xsd_local_value(arg.layout().get().label());
+                }
+                result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_ARGS].append(std::move(arg_value));
+            }
         }
         result_values[SSR_JSON_BODY_REINFORCEMENT_COUNT] = reinforcements.size();
         auto result = Json::writeString(wbuilder, result_values);
@@ -166,7 +177,7 @@ void SSRManager::SetReinforcementArgs(const Glib::ustring& name,
                                       const Glib::ustring& custom_args,
                                       MethodInvocation& invocation)
 {
-    if (!this->plugins_->set_reinforcement_arguments(name, custom_args))
+    if (!this->configuration_->set_custom_ra(name, custom_args))
     {
         DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_ARGS_FAILED);
     }
@@ -191,7 +202,7 @@ void SSRManager::Scan(const Glib::ustring& scan_range, MethodInvocation& invocat
         for (int32_t i = 0; i < (int32_t)range_json[SSR_JSON_SCAN_ITEMS].size(); ++i)
         {
             auto name = range_json[SSR_JSON_SCAN_ITEMS][i][SSR_JSON_SCAN_REINFORCEMENT_NAME].asString();
-            auto reinforcement = this->plugins_->get_used_reinforcement(name);
+            auto reinforcement = this->plugins_->get_reinforcement(name);
 
             if (!reinforcement)
             {
@@ -257,7 +268,7 @@ void SSRManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation
         for (uint32_t i = 0; i < reinforcenments_values["items"].size(); ++i)
         {
             auto name = reinforcenments_values["items"][i]["name"].asString();
-            auto reinforcement = this->plugins_->get_used_reinforcement(name);
+            auto reinforcement = this->plugins_->get_reinforcement(name);
 
             if (!reinforcement)
             {
@@ -277,7 +288,13 @@ void SSRManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation
             Json::Value param;
             param[SSR_JSON_HEAD][SSR_JSON_HEAD_PROTOCOL_ID] = SSRPluginProtocol::SSR_PLUGIN_PROTOCOL_SET_REQ;
             param[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
-            param[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_ARGS] = reinforcement->get_args();
+            for (const auto& arg : reinforcement->get_rs().arg())
+            {
+                // Json::Value arg_value;
+                // arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_NAME] = arg.name();
+                // arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_VALUE] = arg.value();
+                param[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_ARGS][arg.name()] = StrUtils::str2json(arg.value());
+            }
 
             auto param_str = StrUtils::json2str(param);
             this->reinforce_job_->add_operation(reinforcement->get_plugin_name(),
@@ -400,7 +417,7 @@ void SSRManager::on_scan_process_changed_cb(const SSRJobResult& job_result)
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCAN_DONE;
             }
 
-            auto reinforcement = this->plugins_->get_used_reinforcement(operation->reinforcement_name);
+            auto reinforcement = this->plugins_->get_reinforcement(operation->reinforcement_name);
 
             if (result_values.isMember(SSR_JSON_BODY) &&
                 reinforcement &&
