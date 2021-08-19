@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/glib2-utils.h
+ * @file          /kiran-ssr-manager/lib/base/misc-utils.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,15 +11,17 @@
 
 namespace Kiran
 {
-class Glib2Utils
+class MiscUtils
 {
 public:
-    Glib2Utils();
-    virtual ~Glib2Utils(){};
+    MiscUtils();
+    virtual ~MiscUtils(){};
 
     static bool spawn_sync(const std::vector<std::string> &argv,
                            std::string *standard_output = nullptr,
                            std::string *standard_error = nullptr);
+
+    // static std::string get_locale_string(const std::ve);
 };
 
 }  // namespace Kiran

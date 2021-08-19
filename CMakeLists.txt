@@ -20,9 +20,13 @@ pkg_search_module(JSONCPP REQUIRED jsoncpp)
 pkg_search_module(GTEST REQUIRED gtest)
 pkg_search_module(FMT REQUIRED fmt)
 pkg_search_module(CRYPTOPP REQUIRED cryptopp)
+pkg_search_module(XERCES REQUIRED xerces-c)
 
 
 find_program(GDBUS-CODEGEN-GLIBMM-FOUND gdbus-codegen-glibmm3 PATHS ${CMAKE_BINARY_DIR}/bin/)
+find_program(XSDCXX NAMES "xsdcxx" REQUIRED)
+find_program(INTLTOOL-MERGE NAMES "intltool-merge" REQUIRED)
+find_program(SED NAMES "sed" REQUIRED)
 
 
 SET_COMMON_COMPILER_FLAGS()
