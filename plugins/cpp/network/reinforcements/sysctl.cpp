@@ -20,7 +20,7 @@ namespace Network
 
 Sysctl::Sysctl()
 {
-    this->sysctl_config_ = ConfigPlain::create(SYSCTL_CONFI_FILE, "\\s*=\\s*", " = ");
+    this->sysctl_config_ = std::make_shared<ConfigPlain>(SYSCTL_CONFI_FILE, "\\s*=\\s*", " = ");
 }
 
 std::vector<SysctlRedirect::SysctlVar> Sysctl::get_vars_by_pattern(const std::string &pattern)
