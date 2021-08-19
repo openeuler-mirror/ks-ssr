@@ -1,4 +1,5 @@
 lib/base/error.cpp
-src/tool/sse-cmd-parser.cpp
-[type: gettext/ini] data/sse-categories.ini.in
-[type: gettext/ini] data/sse-plugin-config.ini.in
+src/tool/ssr-cmd-parser.cpp
+[type: gettext/ini] data/ssr-categories.ini.in
+data/ssr-system-rs.xml.in
+plugins/cpp/network/ssr-plugin-network.xml.in

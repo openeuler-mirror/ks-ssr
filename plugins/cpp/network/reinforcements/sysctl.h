@@ -9,6 +9,7 @@
 
 #include "lib/base/base.h"
 #include "lib/config/config-plain.h"
+#include "reinforcement-i.h"
 
 namespace Kiran
 {
@@ -30,7 +31,7 @@ protected:
     std::shared_ptr<ConfigPlain> sysctl_config_;
 };
 
-class SysctlRedirect : public Sysctl
+class SysctlRedirect : public Sysctl, public SSRReinforcementInterface
 {
 public:
     SysctlRedirect();
@@ -40,7 +41,7 @@ public:
     virtual bool set(const std::string &args, SSRErrorCode &error_code);
 };
 
-class SysctlSourceRoute : public Sysctl
+class SysctlSourceRoute : public Sysctl, public SSRReinforcementInterface
 {
 public:
     SysctlSourceRoute();

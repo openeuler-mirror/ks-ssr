@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:simpleType name="LanguageType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="cpp" />
+            <xsd:enumeration value="python" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!--<xsd:simpleType name="WidgetType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="switch" />
+            <xsd:enumeration value="text" />
+            <xsd:enumeration value="datetime" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="ReinforcementArgConfig">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="widget_type" type="WidgetType"/>
+            <xsd:element name="label" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>-->
+
+    <xsd:complexType name="ReinforcementConfig">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="category" type="xsd:string" minOccurs="0" />
+            <xsd:element name="label" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <!--<xsd:element name="arg" type="ReinforcementArgConfig" maxOccurs="unbounded" />-->
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="PluginConfig">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="category" type="xsd:string" default="" />
+            <xsd:element name="label" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="language_type" type="LanguageType" />
+            <xsd:element name="available" type="xsd:boolean" default="false" />
+            <xsd:element name="reinforcement" type="ReinforcementConfig" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="plugin_config" type="PluginConfig" />
+
+</xsd:schema>

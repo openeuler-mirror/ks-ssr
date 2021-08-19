@@ -15,13 +15,13 @@ namespace Kiran
 {
 namespace Network
 {
-class NetworkReinforcementManager
+class ReinforcementManager
 {
 public:
-    NetworkReinforcementManager();
-    virtual ~NetworkReinforcementManager(){};
+    ReinforcementManager();
+    virtual ~ReinforcementManager(){};
 
-    static NetworkReinforcementManager* get_instance() { return instance_; };
+    static ReinforcementManager* get_instance() { return instance_; };
 
     static void global_init();
 
@@ -33,7 +33,7 @@ private:
     void init();
 
 private:
-    static NetworkReinforcementManager* instance_;
+    static ReinforcementManager* instance_;
 
     std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements_;
 };

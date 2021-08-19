@@ -8,6 +8,7 @@
 #pragma once
 
 #include "lib/base/base.h"
+#include "src/daemon/ssr-rs-config.hxx"
 
 namespace Kiran
 {
@@ -30,22 +31,28 @@ public:
     // 设置标准类型
     bool set_standard_type(SSRStandardType standard_type);
     // 获取加固标准
-    std::string get_rs();
+    std::shared_ptr<RS::SSRRS> get_rs() { return this->rs_; }
     // 设置自定义加固标准
     bool set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code);
-    // 获取加固参数
-    std::string get_custom_ra() { return this->custom_ra_; };
     // 设置加固参数
-    bool set_custom_ra(const std::string& ra);
+    bool set_custom_ra(const std::string& name, const std::string& custom_ra);
+
+    // 加固标准发生变化
+    sigc::signal<void> signal_rs_changed() { return this->rs_changed_; };
 
 private:
     //
     void init();
 
-    // 加载加固标准文件
-    void load_rs_files();
+    // 重新加载加固标准，这里会发送变化的信号
+    void reload_rs();
+    void load_rs();
+    // 加载加固标准文件(不变化的部分)
+    std::shared_ptr<RS::SSRRS> get_fixed_rs();
     // 加载加固参数文件
-    void load_ra_files();
+    std::shared_ptr<RS::SSRRA> get_ra();
+
+    void join_reinforcement(RS::SSRRSReinforcement& to_r, const RS::SSRRSReinforcement& from_r);
 
     // 解密文件并返回字符串
     std::string decrypt_file(const std::string& filename);
@@ -68,12 +75,9 @@ private:
     // 配置文件内容
     Glib::KeyFile configuration_;
 
-    // 系统加固标准
-    std::string system_rs_;
-    // 用户自定义加固标准
-    std::string custom_rs_;
+    // 加固标准和自定义加固参数的混合
+    std::shared_ptr<RS::SSRRS> rs_;
 
-    // 用户自定义加固参数
-    std::string custom_ra_;
+    sigc::signal<void> rs_changed_;
 };
 }  // namespace Kiran
