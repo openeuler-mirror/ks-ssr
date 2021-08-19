@@ -76,7 +76,7 @@ bool FileUtils::write_contents(const std::string &path, const std::string &conte
 
     int fp = -1;
 
-    SCOPE_EXIT({
+    SSR_SCOPE_EXIT({
         if (fp > 0)
         {
             close(fp);
