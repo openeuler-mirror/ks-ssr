@@ -23,7 +23,7 @@ LoginLock::LoginLock()
 }
 
 
-bool LoginLock::get(const std::string &rs, SSRErrorCode &error_code)
+bool LoginLock::get(const std::string &args, SSRErrorCode &error_code)
 {
     if(!this->password_complextiy_config_)
     {
@@ -48,7 +48,7 @@ bool LoginLock::get(const std::string &rs, SSRErrorCode &error_code)
 }
 
 //XXX：有关操作数的问题，需要对有操作数的内容进行处理。
-bool LoginLock::set(const std::string &ra, SSRErrorCode &error_code)
+bool LoginLock::set(const std::string &args, SSRErrorCode &error_code)
 {
     if(!this->password_complextiy_config_)
     {
@@ -58,8 +58,9 @@ bool LoginLock::set(const std::string &ra, SSRErrorCode &error_code)
 
     try
     {
-        Json::Value values;
+        Json::Value values = StrUtils::str2json(args);
         auto keys = values.getMemberNames();
+
         for(auto iter : keys)
         {
             this->login_lock_config_->set_value(iter, values[iter]);

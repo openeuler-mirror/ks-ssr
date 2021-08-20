@@ -16,7 +16,7 @@ namespace Kiran
 namespace Config
 {
 
-class LoginLock : public SSEReinforcementInterface
+class LoginLock : public SSRReinforcementInterface
 {
 public:
     LoginLock(){};

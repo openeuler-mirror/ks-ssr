@@ -24,7 +24,7 @@ namespace Config
 #define CONFIG_REINFORCEMENT_PASSWORD_EXPIRED "config-password-expired"
 #define CONFIG_REINFORCEMENT_HISTORY_SIZE "config-history-size"
 
-void SSEPluginConfig::activate()
+void SSRPluginConfig::activate()
 {
     this->reinforcements_ = std::map<std::string, std::shared_ptr<SSRReinforcementInterface>>(
         {{CONFIG_REINFORCEMENT_LOGIN_LOCK, std::make_shared<LoginLock>()},

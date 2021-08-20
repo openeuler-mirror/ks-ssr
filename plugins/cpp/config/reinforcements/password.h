@@ -1,7 +1,7 @@
 /**
  * @file          /kiran-sse-manager/plugins/cpp/config/reinforcements/password.h
  * @brief         
- * @author        tangjie02 <tangjie02@kylinos.com.cn>
+ * @author        pengyulong <pengyulong@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 #pragma once
@@ -15,7 +15,7 @@ namespace Kiran
 {
 namespace Config
 {
-class PasswordExpired : public SSEReinforcementInterface
+class PasswordExpired : public SSRReinforcementInterface
 {
 public:
     PasswordExpired(){};
