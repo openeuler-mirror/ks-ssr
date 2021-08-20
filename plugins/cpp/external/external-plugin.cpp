@@ -19,11 +19,13 @@ namespace External
 
 #define EXTERNAL_REINFORCEMENT_LOGIN_RESTRICTIONS "external-login-restrictions"
 #define EXTERNAL_REINFORCEMENT_DEVICES_SWITCH "external-devices-switch"
+#define EXTERNAL_REINFORCEMENT_LOGIN_TIMEOUT "external-login-timeout"
 
 void SSRPluginExternal::activate()
 {
     this->reinforcements_ = std::map<std::string, std::shared_ptr<SSRReinforcementInterface>>(
         {{EXTERNAL_REINFORCEMENT_LOGIN_RESTRICTIONS, std::make_shared<LoginRestrictions>()},
+         {EXTERNAL_REINFORCEMENT_LOGIN_TIMEOUT, std::make_shared<LoginTimeout>()},
          {EXTERNAL_REINFORCEMENT_DEVICES_SWITCH, std::make_shared<DeviceSwitch>()}});
 }
 

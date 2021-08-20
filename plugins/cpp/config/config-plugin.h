@@ -15,8 +15,8 @@ namespace Config
 class SSRPluginConfig : public SSRPluginInterface
 {
 public:
-    SSEPluginConfig(){};
-    virtual ~SSEPluginConfig(){};
+    SSRPluginConfig(){};
+    virtual ~SSRPluginConfig(){};
 
     virtual void activate() override;
 
