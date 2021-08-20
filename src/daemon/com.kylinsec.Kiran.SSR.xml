@@ -24,28 +24,21 @@
             <description>Get the categories information of SSR.</description>
         </method>
 
-        <!--<method name="GetPlugins">
-            <arg type="s" name="plugins" direction="out">
-                <summary>The plugins is a json string.</summary>
-            </arg>
-            <description>Get the plugins information of SSR.</description>
-        </method>
-
-        <method name="GetPluginReinforcements">
-            <arg type="s" name="plugin_name" direction="in">
-                <summary>The plugin name.</summary>
-            </arg>
-            <arg type="s" name="reinforcements" direction="out">
-                <summary>the reinforcements is a json string.</summary>
-            </arg>
-            <description>Get reinforcements information of plugin which was named plugin_name.</description>
-        </method>-->
-
         <method name="GetReinforcements">
             <arg type="s" name="reinforcements" direction="out">
                 <summary>The reinforcements is a json string.</summary>
             </arg>
             <description>Get the reinforcements information of SSR.</description>
+        </method>
+
+        <method name="GetReinforcement">
+            <arg type="s" name="name" direction="in">
+                <summary>The reinforcement name.</summary>
+            </arg>
+            <arg type="s" name="reinforcement" direction="out">
+                <summary>The reinforcement is a json string.</summary>
+            </arg>
+            <description>Get the reinforcement information.</description>
         </method>
 
         <method name="SetReinforcementArgs">
