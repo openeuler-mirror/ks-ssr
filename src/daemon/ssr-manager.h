@@ -43,8 +43,11 @@ protected:
     // 获取插件
     // virtual void GetPlugins(MethodInvocation &invocation);
 
-    // 根据加固标准配置获取加固项
+    // 获取所有加固项的基本信息和加固参数
     virtual void GetReinforcements(MethodInvocation &invocation);
+
+    // 获取指定加固项的基本信息和加固参数
+    virtual void GetReinforcement(const Glib::ustring &name, MethodInvocation &invocation);
 
     // 设置自定义加固参数
     virtual void SetReinforcementArgs(const Glib::ustring &name, const Glib::ustring &custom_args, MethodInvocation &invocation);
@@ -66,6 +69,9 @@ protected:
 
 private:
     void init();
+
+    // 获取加固项信息
+    Json::Value get_reinforcement_json(const std::string &name);
 
     // 扫描进度信号处理
     void on_scan_process_changed_cb(const SSRJobResult &job_result);

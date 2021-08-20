@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+
+<ssr_ra>
+    <reinforcement>
+        <name>network-firewalld-switch</name>
+        <arg>
+            <name>enabled</name>
+            <value>false</value>
+        </arg>
+    </reinforcement>
+    <reinforcement>
+        <name>network-firewalld-icmp-timestamp</name>
+        <arg>
+            <name>disable_timestamp_request</name>
+            <value>false</value>
+        </arg>
+    </reinforcement>
+</ssr_ra>

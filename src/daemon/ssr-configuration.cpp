@@ -167,7 +167,7 @@ void SSRConfiguration::load_rs()
     // 将固定不变的加固标准部分和用户修改的自定义部分进行整合
     for (const auto& custom_r : ra->reinforcement())
     {
-        for (auto fixed_r : this->rs_->body().reinforcement())
+        for (auto& fixed_r : this->rs_->body().reinforcement())
         {
             CONTINUE_IF_TRUE(custom_r.name() != fixed_r.name());
             this->join_reinforcement(fixed_r, custom_r);
@@ -217,11 +217,14 @@ std::shared_ptr<SSRRA> SSRConfiguration::get_ra()
 
 void SSRConfiguration::join_reinforcement(SSRRSReinforcement& to_r, const SSRRSReinforcement& from_r)
 {
+    KLOG_DEBUG("Join reinforcement %s.", from_r.name().c_str());
+
     for (const auto& from_ra : from_r.arg())
     {
         for (auto& to_ra : to_r.arg())
         {
             CONTINUE_IF_TRUE(from_ra.name() != to_ra.name());
+            KLOG_DEBUG("New argument: %s, old argument: %s.", from_ra.value().c_str(), to_ra.value().c_str());
             to_ra.value(from_ra.value());
             break;
         }
