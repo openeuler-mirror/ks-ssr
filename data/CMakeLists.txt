@@ -25,6 +25,8 @@ foreach(XML_IN_FILE IN LISTS XML_IN_FILES)
     execute_process(COMMAND ${INTLTOOL-MERGE} -x ${PROJECT_SOURCE_DIR}/po/ ${XML_IN_FILE} ${PROJECT_BINARY_DIR}/data/${XML_FILE})
 endforeach()
 
+#install (FILES ${PROJECT_SOURCE_DIR}/data/ssr-custom-ra.xml
+#        DESTINATION ${SSR_INSTALL_DATADIR})
 
 # reinforcement stardand
 install(FILES ${PROJECT_SOURCE_DIR}/data/ssr-system-rs.encrypted
