@@ -1,7 +1,7 @@
 /**
  * @file          /kiran-sse-manager/plugins/cpp/config/reinforcements/password.cpp
  * @brief         
- * @author        tangjie02 <tangjie02@kylinos.com.cn>
+ * @author        pengyulong <pengyulong@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 #include "plugins/cpp/config/reinforcements/password.h"
@@ -38,10 +38,10 @@ bool PasswordExpired::get(const std::string &args,  SSRErrorCode &error_code)
     try
     {
         Json::Value values;
-        auto max_days = this->password_expired_config_->get_value(PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS);
-        auto min_days = this->password_expired_config_->get_value(PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS);
-        auto min_len = this->password_expired_config_->get_value(PASSWORD_EXPIRED_CONF_KEY_MIN_LEN);
-        auto warn_age = this->password_expired_config_->get_value(PASSWORD_EXPIRED_CONF_KEY_WARN_AGE);
+        auto max_days = this->password_expired_config_->get_integer(PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS);
+        auto min_days = this->password_expired_config_->get_integer(PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS);
+        auto min_len = this->password_expired_config_->get_integer(PASSWORD_EXPIRED_CONF_KEY_MIN_LEN);
+        auto warn_age = this->password_expired_config_->get_integer(PASSWORD_EXPIRED_CONF_KEY_WARN_AGE);
 
         value[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS] =  max_days;
         value[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS] =  min_days;
@@ -60,7 +60,7 @@ bool PasswordExpired::get(const std::string &args,  SSRErrorCode &error_code)
     }
 }
 
-bool PasswordExpired::set(const std::string &args, SSEErrorCode &error_code)
+bool PasswordExpired::set(const std::string &args, SSRErrorCode &error_code)
 {
     if(!this->password_expired_config_)
     {
@@ -71,12 +71,7 @@ bool PasswordExpired::set(const std::string &args, SSEErrorCode &error_code)
     try
     {
         Json::Value values = StrUtils::str2json(args);
-
-        if(!values[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS].asInt() || !values[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS].asInt() || !values[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN].asInt() || !values[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE].asInt())
-        {
-            error_code = SSRErrorCode::ERROR_FAILED;
-            return false;
-        }
+        RETURN_ERROR_IF_FALSE((values[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS].isInt() || values[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS].isInt() || values[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN].isInt() || values[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE].isInt()), SSRErrorCode::ERROR_FAILED);
 
         auto max_days = fmt::format("{0}", values[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS].asInt());
         auto min_days = fmt::format("{0}", values[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS].asInt());

@@ -70,11 +70,8 @@ bool DeviceSwitch::set(const std::string &args, SSRErrorCode &error_code)
     try
     {
         Json::Value values = StrUtils::str2json(args);
-        if(!values[DEVICE_CONF_KEY].isBool())
-        {
-            error_code = SSRErrorCode::ERROR_FAILED;
-            return false;
-        }
+        RETURN_ERROR_IF_FALSE(values[DEVICE_CONF_KEY].isBool(), SSRErrorCode::ERROR_FAILED);
+
         if(values[DEVICE_CONF_KEY])
         {
             this->device_config_->set_value(DEVICE_CONF_KEY_CONSOLE, DEVICE_CONF_KEY_CONSOLE_VALUE);
