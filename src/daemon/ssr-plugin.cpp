@@ -9,7 +9,7 @@
 
 namespace Kiran
 {
-using namespace Plugin;
+using namespace Protocol;
 
 SSRPlugin::SSRPlugin(const std::string& conf_path) : conf_path_(conf_path)
 {
@@ -25,7 +25,7 @@ bool SSRPlugin::init()
 
     try
     {
-        this->plugin_config_ = plugin_config(this->conf_path_, xml_schema::Flags::dont_validate);
+        this->plugin_config_ = ssr_plugin(this->conf_path_, xml_schema::Flags::dont_validate);
 
         // 判断插件是否启用
         if (!this->plugin_config_->available())
@@ -56,7 +56,7 @@ std::vector<std::string> SSRPlugin::get_reinforcement_names()
     return names;
 }
 
-const ReinforcementConfig* SSRPlugin::get_reinforcement_config(const std::string& name)
+const Protocol::Reinforcement* SSRPlugin::get_reinforcement_config(const std::string& name)
 {
     for (const auto& reinforcement_config : this->plugin_config_->reinforcement())
     {
@@ -72,13 +72,13 @@ bool SSRPlugin::load_plugin_module()
     auto dirname = Glib::path_get_dirname(this->conf_path_);
     switch (this->plugin_config_->language_type())
     {
-    case PluginConfig::Language_typeType::Value::cpp:
+    case Protocol::LanguageType::Value::cpp:
     {
         auto so_filename = Glib::build_filename(dirname, "cpp", "lib" + this->plugin_config_->name() + ".so");
         this->loader_ = std::make_shared<SSRPluginCPPLoader>(so_filename);
         return this->loader_->load();
     }
-    // case PluginConfig::Language_typeType::Value::python:
+    // case Protocol::LanguageType::Value::python:
     default:
         KLOG_WARNING("Unsupported language type: %d.", (int32_t)this->plugin_config_->language_type());
         return false;

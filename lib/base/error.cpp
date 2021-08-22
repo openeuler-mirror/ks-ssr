@@ -33,13 +33,14 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
         error_desc = _("Error format for reinforcement standard.");
         break;
     case SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND:
-    case SSRErrorCode::ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND:
-    case SSRErrorCode::ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND_2:
         error_desc = _("Reinforcement item '{0}' is not found.");
         break;
     case SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING:
     case SSRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING:
         error_desc = _("The job is running, please don't repeat the operation.");
+        break;
+    case SSRErrorCode::ERROR_DAEMON_GET_RS_FAILED:
+        error_desc = _("The standard reinforcement configuration is not found.");
         break;
     case SSRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED:
     case SSRErrorCode::ERROR_DAEMON_CONVERT_PLUGINS2JSON_FAILED:
@@ -55,9 +56,11 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     case SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1:
     case SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2:
     case SSRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB:
-    case SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_ARGS_FAILED:
+    case SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED:
     case SSRErrorCode::ERROR_PLUGIN_AUDIT_GET_JSON_ERROR:
     case SSRErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR:
+    case SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED:
+    case SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENTS_FAILED:
         error_desc = _("Internel error.");
         break;
     default:
