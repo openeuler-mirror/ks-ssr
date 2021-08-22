@@ -44,7 +44,7 @@ public:
     // 获取加固项名称列表
     std::vector<std::string> get_reinforcement_names();
     // 获取加固项配置
-    const Plugin::ReinforcementConfig* get_reinforcement_config(const std::string& name);
+    const Protocol::Reinforcement* get_reinforcement_config(const std::string& name);
 
 private:
     // 使用插件加载器加载插件
@@ -54,7 +54,7 @@ private:
     // 插件配置文件路径
     std::string conf_path_;
     // 插件配置
-    std::unique_ptr<Plugin::PluginConfig> plugin_config_;
+    std::unique_ptr<Protocol::Plugin> plugin_config_;
     // 插件状态
     // SSRPluginState state_;
     // 插件加载器

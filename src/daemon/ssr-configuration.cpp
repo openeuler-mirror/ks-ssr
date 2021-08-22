@@ -23,7 +23,7 @@ namespace Kiran
 #define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.xml"
 #define RSA_PUBLIC_KEY_FILEPATH SSR_INSTALL_DATADIR "/ssr-public.key"
 
-using namespace RS;
+using namespace Protocol;
 
 SSRConfiguration::SSRConfiguration(const std::string& config_path) : config_path_(config_path)
 {
@@ -100,20 +100,20 @@ bool SSRConfiguration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCo
     return true;
 }
 
-bool SSRConfiguration::set_custom_ra(const std::string& name, const std::string& custom_ra)
+bool SSRConfiguration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcement)
 {
     auto ra = this->get_ra();
-    auto custom_ra_values = StrUtils::str2json(custom_ra);
 
     for (auto& reinforcement : ra->reinforcement())
     {
-        CONTINUE_IF_TRUE(reinforcement.name() != name);
-        for (const auto& arg_name : custom_ra_values.getMemberNames())
+        CONTINUE_IF_TRUE(reinforcement.name() != rs_reinforcement.name());
+
+        for (auto& new_arg : rs_reinforcement.arg())
         {
-            for (auto& arg : reinforcement.arg())
+            for (auto& old_arg : reinforcement.arg())
             {
-                CONTINUE_IF_TRUE(arg.name() != arg_name);
-                arg.value(StrUtils::json2str(custom_ra_values[arg_name]));
+                CONTINUE_IF_TRUE(old_arg.name() != new_arg.name());
+                old_arg.value(new_arg.value());
                 break;
             }
         }
@@ -175,7 +175,7 @@ void SSRConfiguration::load_rs()
     }
 }
 
-std::shared_ptr<SSRRS> SSRConfiguration::get_fixed_rs()
+std::shared_ptr<RS> SSRConfiguration::get_fixed_rs()
 {
     KLOG_PROFILE("");
 
@@ -186,8 +186,7 @@ std::shared_ptr<SSRRS> SSRConfiguration::get_fixed_rs()
     {
         auto rs_decrypted = this->decrypt_file(rs_file_path);
         KLOG_DEBUG("%s", rs_decrypted.c_str());
-        std::stringbuf rs_stringbuf(rs_decrypted);
-        std::istream rs_istream(&rs_stringbuf);
+        std::istringstream rs_istream(rs_decrypted);
         return ssr_rs(rs_istream, xml_schema::Flags::dont_validate);
     }
     catch (const std::exception& e)
@@ -197,12 +196,12 @@ std::shared_ptr<SSRRS> SSRConfiguration::get_fixed_rs()
     return nullptr;
 }
 
-std::shared_ptr<SSRRA> SSRConfiguration::get_ra()
+std::shared_ptr<RA> SSRConfiguration::get_ra()
 {
     KLOG_PROFILE("");
 
     RETURN_VAL_IF_TRUE(!Glib::file_test(CUSTOM_RA_FILEPATH, Glib::FILE_TEST_IS_REGULAR),
-                       std::make_shared<SSRRA>());
+                       std::make_shared<RA>());
 
     try
     {
@@ -212,10 +211,10 @@ std::shared_ptr<SSRRA> SSRConfiguration::get_ra()
     {
         KLOG_WARNING("%s", e.what());
     }
-    return std::make_shared<SSRRA>();
+    return std::make_shared<RA>();
 }
 
-void SSRConfiguration::join_reinforcement(SSRRSReinforcement& to_r, const SSRRSReinforcement& from_r)
+void SSRConfiguration::join_reinforcement(Reinforcement& to_r, const Reinforcement& from_r)
 {
     KLOG_DEBUG("Join reinforcement %s.", from_r.name().c_str());
 

@@ -40,8 +40,8 @@ protected:
     // 获取分类
     virtual void GetCategories(MethodInvocation &invocation);
 
-    // 获取插件
-    // virtual void GetPlugins(MethodInvocation &invocation);
+    // 获取加固标准配置
+    virtual void GetRS(MethodInvocation &invocation);
 
     // 获取所有加固项的基本信息和加固参数
     virtual void GetReinforcements(MethodInvocation &invocation);
@@ -50,13 +50,13 @@ protected:
     virtual void GetReinforcement(const Glib::ustring &name, MethodInvocation &invocation);
 
     // 设置自定义加固参数
-    virtual void SetReinforcementArgs(const Glib::ustring &name, const Glib::ustring &custom_args, MethodInvocation &invocation);
+    virtual void SetReinforcement(const Glib::ustring &reinforcement_xml, MethodInvocation &invocation);
 
     // 扫描指定加固项
-    virtual void Scan(const Glib::ustring &scan_range, MethodInvocation &invocation);
+    virtual void Scan(const std::vector<Glib::ustring> &names, MethodInvocation &invocation);
 
     // 对加固项进行加固
-    virtual void Reinforce(const Glib::ustring &reinforcements, MethodInvocation &invocation);
+    virtual void Reinforce(const std::vector<Glib::ustring> &names, MethodInvocation &invocation);
 
     // 取消一个任务
     virtual void Cancel(gint64 job_id, MethodInvocation &invocation);
