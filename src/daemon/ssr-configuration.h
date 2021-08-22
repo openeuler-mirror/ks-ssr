@@ -8,7 +8,7 @@
 #pragma once
 
 #include "lib/base/base.h"
-#include "src/daemon/ssr-rs-config.hxx"
+#include "src/daemon/ssr-protocol.hxx"
 
 namespace Kiran
 {
@@ -31,11 +31,11 @@ public:
     // 设置标准类型
     bool set_standard_type(SSRStandardType standard_type);
     // 获取加固标准
-    std::shared_ptr<RS::SSRRS> get_rs() { return this->rs_; }
+    std::shared_ptr<Protocol::RS> get_rs() { return this->rs_; }
     // 设置自定义加固标准
     bool set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code);
     // 设置加固参数
-    bool set_custom_ra(const std::string& name, const std::string& custom_ra);
+    bool set_custom_ra(const Protocol::Reinforcement& rs_reinforcement);
 
     // 加固标准发生变化
     sigc::signal<void> signal_rs_changed() { return this->rs_changed_; };
@@ -48,11 +48,11 @@ private:
     void reload_rs();
     void load_rs();
     // 加载加固标准文件(不变化的部分)
-    std::shared_ptr<RS::SSRRS> get_fixed_rs();
+    std::shared_ptr<Protocol::RS> get_fixed_rs();
     // 加载加固参数文件
-    std::shared_ptr<RS::SSRRA> get_ra();
+    std::shared_ptr<Protocol::RA> get_ra();
 
-    void join_reinforcement(RS::SSRRSReinforcement& to_r, const RS::SSRRSReinforcement& from_r);
+    void join_reinforcement(Protocol::Reinforcement& to_r, const Protocol::Reinforcement& from_r);
 
     // 解密文件并返回字符串
     std::string decrypt_file(const std::string& filename);
@@ -76,7 +76,7 @@ private:
     Glib::KeyFile configuration_;
 
     // 加固标准和自定义加固参数的混合
-    std::shared_ptr<RS::SSRRS> rs_;
+    std::shared_ptr<Protocol::RS> rs_;
 
     sigc::signal<void> rs_changed_;
 };

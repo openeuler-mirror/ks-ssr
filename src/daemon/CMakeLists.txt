@@ -7,36 +7,25 @@ set (TARGET_NAME kiran-ssr-daemon)
 file(GLOB_RECURSE DAEMON_H_FILES ./*.h)
 file(GLOB_RECURSE DAEMON_CPP_FILES ./*.cpp)
 
-set(PLUGIN_CONFIG_OUTPUT ${PROJECT_BINARY_DIR}/src/daemon/ssr-plugin-config.hxx
-                         ${PROJECT_BINARY_DIR}/src/daemon/ssr-plugin-config.cxx)
+set(SSR_PROTOCOL_OUTPUT ${PROJECT_BINARY_DIR}/src/daemon/ssr-protocol.hxx
+                        ${PROJECT_BINARY_DIR}/src/daemon/ssr-protocol.cxx)
 
-set(RS_CONFIG_OUTPUT ${PROJECT_BINARY_DIR}/src/daemon/ssr-rs-config.hxx
-                     ${PROJECT_BINARY_DIR}/src/daemon/ssr-rs-config.cxx)
-
-add_custom_command(OUTPUT ${PLUGIN_CONFIG_OUTPUT}
+add_custom_command(OUTPUT ${SSR_PROTOCOL_OUTPUT}
                    COMMAND ${XSDCXX} cxx-tree --std c++11 
-                                              --namespace-map =Kiran::Plugin
-                                              --type-naming ucc
-                                              ${PROJECT_SOURCE_DIR}/src/daemon/ssr-plugin-config.xsd
-                   COMMENT "generate the c++ file by ssr-plugin-config.xsd")
-
-add_custom_command(OUTPUT ${RS_CONFIG_OUTPUT}
-                   COMMAND ${XSDCXX} cxx-tree --std c++11 
-                                              --namespace-map =Kiran::RS
+                                              --namespace-map =Kiran::Protocol
                                               --type-naming ucc
                                               --generate-serialization
-                                              --root-element ssr_rs
-                                              --root-element ssr_ra
-                                              ${PROJECT_SOURCE_DIR}/src/daemon/ssr-rs-config.xsd
-                   COMMENT "generate the c++ file by ssr-rs-config.xsd")
+                                              --root-element-all
+                                              ${PROJECT_SOURCE_DIR}/src/daemon/ssr-protocol.xsd
+                   DEPENDS ${PROJECT_SOURCE_DIR}/src/daemon/ssr-protocol.xsd
+                   COMMENT "generate the c++ file by ssr-protocol.xsd")
 
 
 add_executable(${TARGET_NAME}
                ${DAEMON_H_FILES}
                ${DAEMON_CPP_FILES}
                ${SSR_GENERATED_CPP_FILES}
-               ${PLUGIN_CONFIG_OUTPUT}
-               ${RS_CONFIG_OUTPUT})
+               ${SSR_PROTOCOL_OUTPUT})
 
 target_include_directories(${TARGET_NAME} PRIVATE
                            ${PROJECT_BINARY_DIR}/generated
