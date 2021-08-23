@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <error-i.h>
+#include <plugin-i.h>
+
 #ifdef __cplusplus
 extern "C"
 {
