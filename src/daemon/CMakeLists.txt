@@ -1,25 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
 
 GEN_DBUS_CPP(SSR ssr com.kylinsec. ${CMAKE_SOURCE_DIR}/src/daemon/com.kylinsec.Kiran.SSR.xml)
+GEN_PROTOCOL()
 
 set (TARGET_NAME kiran-ssr-daemon)
 
 file(GLOB_RECURSE DAEMON_H_FILES ./*.h)
 file(GLOB_RECURSE DAEMON_CPP_FILES ./*.cpp)
-
-set(SSR_PROTOCOL_OUTPUT ${PROJECT_BINARY_DIR}/src/daemon/ssr-protocol.hxx
-                        ${PROJECT_BINARY_DIR}/src/daemon/ssr-protocol.cxx)
-
-add_custom_command(OUTPUT ${SSR_PROTOCOL_OUTPUT}
-                   COMMAND ${XSDCXX} cxx-tree --std c++11 
-                                              --namespace-map =Kiran::Protocol
-                                              --type-naming ucc
-                                              --generate-serialization
-                                              --root-element-all
-                                              ${PROJECT_SOURCE_DIR}/src/daemon/ssr-protocol.xsd
-                   DEPENDS ${PROJECT_SOURCE_DIR}/src/daemon/ssr-protocol.xsd
-                   COMMENT "generate the c++ file by ssr-protocol.xsd")
-
 
 add_executable(${TARGET_NAME}
                ${DAEMON_H_FILES}

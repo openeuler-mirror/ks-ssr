@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:simpleType name="RuleType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="NONE" />
+            <xsd:enumeration value="FIXED" />
+            <xsd:enumeration value="RANGE" />
+            <xsd:enumeration value="ENUM" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="WidgetType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="DEFAULT" />
+            <xsd:enumeration value="SWITCH" />
+            <xsd:enumeration value="TEXT" />
+            <xsd:enumeration value="DATETIME" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="LanguageType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="cpp" />
+            <xsd:enumeration value="python" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:complexType name="RSHead">
+        <xsd:sequence>
+            <!-- 安全加固标准的名字 -->
+            <xsd:element name="name" type="xsd:string" />
+            <!-- 用于在界面中显示的名字 -->
+            <xsd:element name="label" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <!-- 版本号 -->
+            <xsd:element name="version" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RuleRange">
+        <xsd:sequence>
+            <xsd:element name="min_value" type="xsd:string" minOccurs="0" />
+            <xsd:element name="max_value" type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RuleEnum">
+        <xsd:sequence>
+            <xsd:element name="values" type="xsd:string" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Rule">
+        <xsd:sequence>
+            <!-- 规则类型，对于的规则结构体必须填写，否则会出现错误，例如type为FIXED，则value_fixed字段必须填写 -->
+            <xsd:element name="type" type="RuleType" />
+            <!-- 限定数值相等的规则，如果数值和value_fiexed相等，则该数值满足规则 -->
+            <xsd:element name="value_fixed" type="xsd:string" minOccurs="0" />
+            <!-- 限定数值范围的规则，如果数值在[min_value, max_value]中，则该数值满足规则 -->
+            <xsd:element name="value_range" type="RuleRange" minOccurs="0" />
+            <!-- 限定数值在一个枚举集合中的规则，如果数值在values集合中，则该数值满足规则 -->
+            <xsd:element name="value_enum" type="RuleEnum" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Layout">
+        <xsd:sequence>
+            <!-- 使用何种控件来显示和设置参数，如果设置为默认，则会根据参数的类型(bool/integer/string）来选择合适的控件 -->
+            <xsd:element name="widget_type" type="WidgetType" default="DEFAULT" />
+            <!-- 参数说明，每个参数在设置界面对应一行和两列，第一列为参数说明，第二列为控件 -->
+            <xsd:element name="label" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ReinforcementArg">
+        <xsd:sequence>
+            <!-- 参数名称 -->
+            <xsd:element name="name" type="xsd:string" />
+            <!-- 在加固时该参数应该设置的值 -->
+            <xsd:element name="value" type="xsd:string" />
+            <!-- 如果所有系统设置参数都满足规则，则该加固项扫描合法，否则不合法 -->
+            <xsd:element name="rule" type="Rule" minOccurs="0" />
+            <!-- 参数在设置界面的布局 -->
+            <xsd:element name="layout" type="Layout" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Reinforcement">
+        <xsd:sequence>
+            <!-- 加固项名称 -->
+            <xsd:element name="name" type="xsd:string" />
+            <!-- 加固项分类 -->
+            <xsd:element name="category" type="xsd:string" minOccurs="0" />
+            <!-- 加固项标签 -->
+            <xsd:element name="label" maxOccurs="unbounded" minOccurs="0">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <!-- 加固项参数 -->
+            <xsd:element name="arg" type="ReinforcementArg" maxOccurs="unbounded" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RSBody">
+        <xsd:sequence>
+            <!-- 加固项 -->
+            <xsd:element name="reinforcement" type="Reinforcement" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RS">
+        <xsd:sequence>
+            <xsd:element name="head" type="RSHead" />
+            <xsd:element name="body" type="RSBody" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RA">
+        <xsd:sequence>
+            <!-- 加固项 -->
+            <xsd:element name="reinforcement" type="Reinforcement" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Reinforcements">
+        <xsd:sequence>
+            <!-- 加固项 -->
+            <xsd:element name="reinforcement" type="Reinforcement" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Plugin">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="category" type="xsd:string" default="" />
+            <xsd:element name="label" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="language_type" type="LanguageType" />
+            <xsd:element name="available" type="xsd:boolean" default="false" />
+            <xsd:element name="reinforcement" type="Reinforcement" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ReinforcementResult">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="state" type="xsd:integer" />
+            <xsd:element name="error" type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="JobResult">
+        <xsd:sequence>
+            <xsd:element name="process" type="xsd:double" />
+            <xsd:element name="job_id" type="xsd:integer" />
+            <xsd:element name="job_state" type="xsd:integer" />
+            <xsd:element name="reinforcement" type="ReinforcementResult" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- 加固标准 -->
+    <xsd:element name="ssr_rs" type="RS" />
+    <!-- 加固项 -->
+    <xsd:element name="ssr_reinforcement" type="Reinforcement" />
+    <!-- 加固项集合 -->
+    <xsd:element name="ssr_reinforcements" type="Reinforcements" />
+    <!-- 自定义加固参数 -->
+    <xsd:element name="ssr_ra" type="RA" />
+    <!-- 插件配置 -->
+    <xsd:element name="ssr_plugin" type="Plugin" />
+    <!-- 任务执行结果 -->
+    <xsd:element name="ssr_job_result" type="JobResult" />
+</xsd:schema>
