@@ -16,6 +16,30 @@ namespace Kiran
 
 std::map<std::string, std::shared_ptr<ConfigPlain>> ConfigPlain::plains_ = std::map<std::string, std::shared_ptr<ConfigPlain>>();
 
+std::shared_ptr<ConfigPlain> ConfigPlain::create(const std::string &conf_path,
+                                                 const std::string &delimiter_pattern,
+                                                 const std::string &insert_delimiter)
+{
+    static std::mutex mutex;
+    {
+        std::unique_lock<std::mutex> lck(mutex);
+        auto iter = ConfigPlain::plains_.find(conf_path);
+        if (iter != ConfigPlain::plains_.end())
+        {
+            return iter->second;
+        }
+
+        std::shared_ptr<ConfigPlain> plain(new ConfigPlain(conf_path, delimiter_pattern, insert_delimiter));
+        auto retval = ConfigPlain::plains_.emplace(conf_path, plain);
+        if (!retval.second)
+        {
+            KLOG_WARNING("Failed to insert config %s.", conf_path.c_str());
+            return nullptr;
+        }
+        return plain;
+    }
+}
+
 ConfigPlain::ConfigPlain(const std::string &conf_path,
                          const std::string &delimiter_pattern,
                          const std::string &insert_delimiter) : conf_path_(conf_path),
@@ -152,26 +176,6 @@ double ConfigPlain::get_double(const std::string &key)
     RETURN_VAL_IF_TRUE(value_str.empty(), 0);
     auto value = std::strtod(value_str.c_str(), nullptr);
     return value;
-}
-
-std::shared_ptr<ConfigPlain> ConfigPlain::create(const std::string &conf_path,
-                                                 const std::string &delimiter_pattern,
-                                                 const std::string &insert_delimiter)
-{
-    auto iter = ConfigPlain::plains_.find(conf_path);
-    if (iter != ConfigPlain::plains_.end())
-    {
-        return iter->second;
-    }
-
-    std::shared_ptr<ConfigPlain> pam(new ConfigPlain(conf_path, delimiter_pattern, insert_delimiter));
-    auto retval = ConfigPlain::plains_.emplace(conf_path, pam);
-    if (!retval.second)
-    {
-        KLOG_WARNING("Failed to insert config %s.", conf_path.c_str());
-        return nullptr;
-    }
-    return pam;
 }
 
 bool ConfigPlain::read_from_file()
