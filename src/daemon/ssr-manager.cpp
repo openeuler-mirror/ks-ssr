@@ -422,6 +422,8 @@ Json::Value SSRManager::get_reinforcement_json(const std::string& name)
 
 void SSRManager::on_scan_process_changed_cb(const SSRJobResult& job_result)
 {
+    KLOG_PROFILE("");
+
     Protocol::JobResult scan_result(0, 0, 0);
 
     try
@@ -492,6 +494,8 @@ void SSRManager::on_scan_process_changed_cb(const SSRJobResult& job_result)
 
 void SSRManager::on_reinfoce_process_changed_cb(const SSRJobResult& job_result)
 {
+    KLOG_PROFILE("");
+
     Protocol::JobResult reinforce_result(0, 0, 0);
 
     try

@@ -4,7 +4,8 @@
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
-#include "plugin-i.h"
+
+#include "lib/base/base.h"
 
 namespace Kiran
 {
@@ -20,7 +21,10 @@ public:
 
     virtual void deactivate() override;
 
-    virtual std::string execute(const std::string &in_json) override;
+    virtual std::shared_ptr<SSRReinforcementInterface> get_reinforcement(const std::string &name) { return MapHelper::get_value(this->reinforcements_, name); };
+
+private:
+    std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements_;
 };
 
 }  // namespace Audit
