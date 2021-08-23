@@ -14,6 +14,9 @@ namespace Kiran
 class DBusSystemdProxy
 {
 public:
+    static std::shared_ptr<DBusSystemdProxy> get_default();
+
+public:
     DBusSystemdProxy();
     virtual ~DBusSystemdProxy(){};
 
@@ -35,6 +38,8 @@ private:
     bool call_manager_method_noresult(const std::string &method_name, const Glib::VariantContainerBase &parameters);
 
 private:
+    static std::shared_ptr<DBusSystemdProxy> instance_;
+    std::mutex mutex_;
     Glib::RefPtr<Gio::DBus::Proxy> systemd_proxy_;
 };
 }  // namespace Kiran
