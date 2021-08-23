@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-18 16:14+0800\n"
+"POT-Creation-Date: 2021-08-23 11:39+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,23 +25,27 @@ msgstr "标准类型不合法。"
 msgid "Error format for reinforcement standard."
 msgstr "加固标准格式错误。"
 
-#: ../lib/base/error.cpp:38
+#: ../lib/base/error.cpp:36
 msgid "Reinforcement item '{0}' is not found."
 msgstr "加固项'{0}'未找到"
 
-#: ../lib/base/error.cpp:42
+#: ../lib/base/error.cpp:40
 msgid "The job is running, please don't repeat the operation."
 msgstr "任务正在运行，请不要重复操作。"
 
-#: ../lib/base/error.cpp:61
+#: ../lib/base/error.cpp:43
+msgid "The standard reinforcement configuration is not found."
+msgstr "加固标准配置未找到"
+
+#: ../lib/base/error.cpp:64
 msgid "Internel error."
 msgstr "内部错误。"
 
-#: ../lib/base/error.cpp:64
+#: ../lib/base/error.cpp:67
 msgid "Unknown error."
 msgstr "未知错误。"
 
-#: ../lib/base/error.cpp:68
+#: ../lib/base/error.cpp:71
 msgid " (error code: 0x{:x})"
 msgstr "（错误码：0x{:x}）"
 
@@ -82,29 +86,51 @@ msgstr "配置管理"
 msgid "network manager"
 msgstr "网络管理"
 
+#: ../data/ssr-categories.ini.in.h:3
+msgid "audit manager"
+msgstr "审计管理"
+
 #: ../data/ssr-system-rs.xml.in.h:1
 msgid "Level I safety standard"
 msgstr "一级安全标准"
+
+#: ../data/ssr-system-rs.xml.in.h:2
+#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:2
+msgid "Turn on system firewall service"
+msgstr "开启系统防火墙服务"
+
+#: ../data/ssr-system-rs.xml.in.h:3
+#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:3
+msgid "Disable ICMP timestamp query"
+msgstr "禁止ICMP时间戳请求"
+
+#: ../data/ssr-system-rs.xml.in.h:4
+#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:4
+msgid "Disable ICMP redirection"
+msgstr "禁止ICMP重定向"
+
+#: ../data/ssr-system-rs.xml.in.h:5
+#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:5
+msgid "Disable IP source routing"
+msgstr "禁止IP源路由"
+
+#: ../data/ssr-system-rs.xml.in.h:6
+#: ../plugins/cpp/audit/ssr-plugin-audit.xml.in.h:2
+msgid "Turn on system auditd service"
+msgstr "开启系统审计服务"
+
+#: ../data/ssr-system-rs.xml.in.h:7
+#: ../plugins/cpp/audit/ssr-plugin-audit.xml.in.h:3
+msgid "System log save cycle"
+msgstr "系统日志保存周期"
 
 #: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:1
 msgid "network settings"
 msgstr "网络设置"
 
-#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:2
-msgid "Turn on system firewall service"
-msgstr "开启系统防火墙服务"
-
-#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:3
-msgid "Disable ICMP timestamp query"
-msgstr "禁止ICMP时间戳请求"
-
-#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:4
-msgid "Disable ICMP redirection"
-msgstr "禁止ICMP重定向"
-
-#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:5
-msgid "Disable IP source routing"
-msgstr "禁止IP源路由"
+#: ../plugins/cpp/audit/ssr-plugin-audit.xml.in.h:1
+msgid "audit settings"
+msgstr "审计设置"
 
 #~ msgid ""
 #~ "The user will be locked if the number of login failed exceeds the limit."

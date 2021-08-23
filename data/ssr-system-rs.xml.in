@@ -6,6 +6,7 @@
         <version>1.0.0</version>
     </head>
     <body>
+        <!-- 网络类 -->
         <reinforcement>
             <name>network-firewalld-switch</name>
             <arg>
@@ -20,14 +21,6 @@
                     <_label>Turn on system firewall service</_label>
                 </layout>
             </arg>
-            <arg>
-                <name>active</name>
-                <value>true</value>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
-                </rule>
-            </arg>
         </reinforcement>
         <reinforcement>
             <name>network-firewalld-icmp-timestamp</name>
@@ -38,6 +31,10 @@
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
                 </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Disable ICMP timestamp query</_label>
+                </layout>
             </arg>
         </reinforcement>
         <reinforcement>
@@ -49,6 +46,10 @@
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
                 </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Disable ICMP redirection</_label>
+                </layout>
             </arg>
         </reinforcement>
         <reinforcement>
@@ -60,6 +61,43 @@
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
                 </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Disable IP source routing</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <!-- 审计类 -->
+        <reinforcement>
+            <name>audit-auditd-switch</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on system auditd service</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>audit-logrotate-rotate</name>
+            <arg>
+                <name>rotate</name>
+                <value>8</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>8</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>System log save cycle</_label>
+                </layout>
             </arg>
         </reinforcement>
     </body>

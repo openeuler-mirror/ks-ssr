@@ -2,17 +2,17 @@
 
 <ssr_ra>
     <reinforcement>
-        <name>network-firewalld-switch</name>
+        <name>audit-auditd-switch</name>
         <arg>
             <name>enabled</name>
-            <value>false</value>
+            <value>true</value>
         </arg>
     </reinforcement>
     <reinforcement>
-        <name>network-firewalld-icmp-timestamp</name>
+        <name>audit-logrotate-rotate</name>
         <arg>
-            <name>disable_timestamp_request</name>
-            <value>false</value>
+            <name>rotate</name>
+            <value>9</value>
         </arg>
     </reinforcement>
 </ssr_ra>

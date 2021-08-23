@@ -3,3 +3,4 @@ src/tool/ssr-cmd-parser.cpp
 [type: gettext/ini] data/ssr-categories.ini.in
 data/ssr-system-rs.xml.in
 plugins/cpp/network/ssr-plugin-network.xml.in
+plugins/cpp/audit/ssr-plugin-audit.xml.in
