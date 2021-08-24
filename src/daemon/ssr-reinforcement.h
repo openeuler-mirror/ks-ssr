@@ -33,6 +33,7 @@ public:
     bool match_rules(const Json::Value &values);
 
 private:
+    void reload();
     void update_rules();
 
 private:
