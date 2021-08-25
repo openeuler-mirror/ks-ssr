@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-manager.h
+ * @file          /kiran-ssr-manager/src/daemon/manager.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,22 +8,24 @@
 #pragma once
 
 #include <ssr_dbus_stub.h>
-#include "src/daemon/ssr-job.h"
+#include "src/daemon/job.h"
 
 namespace Kiran
 {
-class SSRConfiguration;
-class SSRCategories;
-class SSRPlugins;
-class SSRJob;
+namespace Daemon
+{
+class Configuration;
+class Categories;
+class Plugins;
+class Job;
 
-class SSRManager : public SSRStub
+class Manager : public SSRStub
 {
 public:
-    SSRManager();
-    virtual ~SSRManager();
+    Manager();
+    virtual ~Manager();
 
-    static SSRManager *get_instance() { return instance_; };
+    static Manager *get_instance() { return instance_; };
 
     static void global_init();
 
@@ -73,28 +75,29 @@ private:
     Json::Value get_reinforcement_json(const std::string &name);
 
     // 扫描进度信号处理
-    void on_scan_process_changed_cb(const SSRJobResult &job_result);
+    void on_scan_process_changed_cb(const JobResult &job_result);
     // 加固进度信号处理
-    void on_reinfoce_process_changed_cb(const SSRJobResult &job_result);
+    void on_reinfoce_process_changed_cb(const JobResult &job_result);
 
     void on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
     void on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
     void on_name_lost(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
 
 private:
-    static SSRManager *instance_;
+    static Manager *instance_;
 
-    SSRConfiguration *configuration_;
-    SSRCategories *categories_;
-    SSRPlugins *plugins_;
+    Configuration *configuration_;
+    Categories *categories_;
+    Plugins *plugins_;
 
     // 扫描任务
-    std::shared_ptr<SSRJob> scan_job_;
+    std::shared_ptr<Job> scan_job_;
 
     // 加固任务
-    std::shared_ptr<SSRJob> reinforce_job_;
+    std::shared_ptr<Job> reinforce_job_;
 
     uint32_t dbus_connect_id_;
     uint32_t object_register_id_;
 };
+}  // namespace Daemon
 }  // namespace Kiran

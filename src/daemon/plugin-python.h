@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-plugin-python.h
+ * @file          /kiran-ssr-manager/src/daemon/plugin-python.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -14,11 +14,13 @@ typedef struct _object PyObject;
 
 namespace Kiran
 {
-class SSRReinforcementPython : public SSRReinforcementInterface
+namespace Daemon
+{
+class ReinforcementPython : public SSRReinforcementInterface
 {
 public:
-    SSRReinforcementPython(const std::string &package_name, const std::string &module_name);
-    virtual ~SSRReinforcementPython();
+    ReinforcementPython(const std::string &package_name, const std::string &module_name);
+    virtual ~ReinforcementPython();
 
     virtual bool get(std::string &args, SSRErrorCode &error_code) override;
     virtual bool set(const std::string &args, SSRErrorCode &error_code) override;
@@ -36,11 +38,11 @@ private:
     bool valid_;
 };
 
-class SSRPluginPython : public SSRPluginInterface
+class PluginPython : public SSRPluginInterface
 {
 public:
-    SSRPluginPython(PyObject *module);
-    virtual ~SSRPluginPython();
+    PluginPython(PyObject *module);
+    virtual ~PluginPython();
 
     virtual void activate() override;
     virtual void deactivate() override;
@@ -52,4 +54,5 @@ private:
 
     std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements_;
 };
+}  // namespace Daemon
 }  // namespace Kiran

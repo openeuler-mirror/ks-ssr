@@ -1,13 +1,15 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-categories.cpp
+ * @file          /kiran-ssr-manager/src/daemon/categories.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/ssr-categories.h"
+#include "src/daemon/categories.h"
 
 namespace Kiran
+{
+namespace Daemon
 {
 #define SSR_CATEGORIES_BASENAME "ssr-categories.ini"
 #define SSR_CATEGORY_KEY_LABEL "label"
@@ -15,24 +17,24 @@ namespace Kiran
 #define SSR_CATEGORY_KEY_ICON_NAME "icon_name"
 #define SSR_CATEGORY_KEY_PRIORITY "priority"
 
-SSRCategories::SSRCategories()
+Categories::Categories()
 {
     this->conf_path_ = Glib::build_filename(SSR_INSTALL_DATADIR, SSR_CATEGORIES_BASENAME);
 }
 
-SSRCategories* SSRCategories::instance_ = nullptr;
-void SSRCategories::global_init()
+Categories* Categories::instance_ = nullptr;
+void Categories::global_init()
 {
-    instance_ = new SSRCategories();
+    instance_ = new Categories();
     instance_->init();
 }
 
-void SSRCategories::init()
+void Categories::init()
 {
     this->load();
 }
 
-void SSRCategories::load()
+void Categories::load()
 {
     Glib::KeyFile keyfile;
 
@@ -49,7 +51,7 @@ void SSRCategories::load()
 
     for (const auto& group_name : groups_name)
     {
-        auto category = std::make_shared<SSRCategory>();
+        auto category = std::make_shared<Category>();
         category->name = group_name;
         IGNORE_EXCEPTION(category->label = keyfile.get_locale_string(group_name, SSR_CATEGORY_KEY_LABEL));
         IGNORE_EXCEPTION(category->comment = keyfile.get_locale_string(group_name, SSR_CATEGORY_KEY_COMMENT));
@@ -60,7 +62,7 @@ void SSRCategories::load()
     }
 }
 
-bool SSRCategories::add_category(std::shared_ptr<SSRCategory> category)
+bool Categories::add_category(std::shared_ptr<Category> category)
 {
     RETURN_VAL_IF_FALSE(category, false);
 
@@ -72,4 +74,5 @@ bool SSRCategories::add_category(std::shared_ptr<SSRCategory> category)
     }
     return true;
 }
+}  // namespace Daemon
 }  // namespace Kiran
