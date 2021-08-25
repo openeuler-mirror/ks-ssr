@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/core/ssr-plugin-loader.h
+ * @file          /kiran-ssr-manager/src/daemon/ssr-plugin-loader.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,7 +7,6 @@
 #pragma once
 
 #include "lib/base/base.h"
-#include "plugin-i.h"
 
 namespace Kiran
 {
@@ -41,7 +40,6 @@ private:
 private:
     // so文件路径
     std::string so_path_;
-
     // 是否已经激活
     bool is_activate_;
 
@@ -49,14 +47,24 @@ private:
     std::shared_ptr<SSRPluginInterface> interface_;
 };
 
-// TODO：暂不支持
 class SSRPluginPythonLoader : public SSRPluginLoader
 {
 public:
-    virtual bool load() override { return false; };
-    virtual bool activate() override { return false; };
-    virtual bool deactivate() override { return false; };
-    virtual std::shared_ptr<SSRPluginInterface> get_interface() override { return nullptr; };
+    SSRPluginPythonLoader(const std::string &package_name);
+    virtual ~SSRPluginPythonLoader(){};
+
+public:
+    virtual bool load() override;
+    virtual bool activate() override;
+    virtual bool deactivate() override;
+    virtual std::shared_ptr<SSRPluginInterface> get_interface() override { return this->interface_; };
+
+private:
+    // 包名
+    std::string package_name_;
+    // 是否已经激活
+    bool is_activate_;
+    std::shared_ptr<SSRPluginInterface> interface_;
 };
 
 }  // namespace Kiran

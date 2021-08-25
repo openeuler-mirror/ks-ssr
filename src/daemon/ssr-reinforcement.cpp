@@ -11,8 +11,8 @@
 
 namespace Kiran
 {
-SSRReinforcement::SSRReinforcement(const std::string &plugin_name,
-                                   const Protocol::Reinforcement &rs) : plugin_name_(plugin_name),
+SSRReinforcement::SSRReinforcement(const std::string &plugin_id,
+                                   const Protocol::Reinforcement &rs) : plugin_id_(plugin_id),
                                                                         config_(rs)
 {
     this->reload();
@@ -20,15 +20,11 @@ SSRReinforcement::SSRReinforcement(const std::string &plugin_name,
 
 std::string SSRReinforcement::get_category_name()
 {
-    // 如果加固项指定了分类则使用加固项的分类名，否则使用插件的分类名
     if (this->config_.category().present())
     {
         return this->config_.category().get();
     }
-
-    auto plugin = SSRPlugins::get_instance()->get_plugin(this->plugin_name_);
-    RETURN_VAL_IF_FALSE(plugin, std::string());
-    return plugin->get_category_name();
+    return std::string();
 }
 
 std::string SSRReinforcement::get_label()
@@ -65,7 +61,7 @@ void SSRReinforcement::reload()
     // 如果加固项未指定分类，则使用插件的分类名
     if (!this->config_.category().present())
     {
-        auto plugin = SSRPlugins::get_instance()->get_plugin(this->plugin_name_);
+        auto plugin = SSRPlugins::get_instance()->get_plugin(this->plugin_id_);
         this->config_.category(plugin->get_category_name());
     }
     this->update_rules();
