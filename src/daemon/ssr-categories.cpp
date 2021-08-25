@@ -6,7 +6,6 @@
  */
 
 #include "src/daemon/ssr-categories.h"
-#include "ssr-config.h"
 
 namespace Kiran
 {
