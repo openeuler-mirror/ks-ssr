@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-plugin.h
+ * @file          /kiran-ssr-manager/src/daemon/plugin.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,28 +7,18 @@
 
 #pragma once
 
-#include "src/daemon/ssr-plugin-loader.h"
-#include "src/daemon/ssr-reinforcement.h"
+#include "src/daemon/plugin-loader.h"
+#include "src/daemon/reinforcement.h"
 
 namespace Kiran
 {
-// enum SSRPluginState
-// {
-//     // 未初始化
-//     SSR_PLUGIN_STATE_UNINIT,
-//     // 插件已初始化
-//     SSR_PLUGIN_STATE_INITED,
-//     // 插件已激活
-//     SSR_PLUGIN_STATE_ACTIVED,
-//     // 插件不可用
-//     SSR_PLUGIN_STATE_UNAVAILABLE
-// };
-
-class SSRPlugin
+namespace Daemon
+{
+class Plugin
 {
 public:
-    SSRPlugin(const std::string& conf_path);
-    virtual ~SSRPlugin();
+    Plugin(const std::string& conf_path);
+    virtual ~Plugin();
 
     // 初始化
     bool init();
@@ -40,7 +30,7 @@ public:
     // 插件所属分类
     std::string get_category_name() { return this->plugin_config_->category(); };
     // 获取插件加载器
-    std::shared_ptr<SSRPluginLoader> get_loader() { return this->loader_; };
+    std::shared_ptr<PluginLoader> get_loader() { return this->loader_; };
     // 获取加固项名称列表
     std::vector<std::string> get_reinforcement_names();
     // 获取加固项配置
@@ -58,11 +48,12 @@ private:
     // 插件状态
     // SSRPluginState state_;
     // 插件加载器
-    std::shared_ptr<SSRPluginLoader> loader_;
+    std::shared_ptr<PluginLoader> loader_;
 
     // 属于该插件的加固项信息：<加固项名称，加固项信息>
     // std::map<std::string, std::shared_ptr<SSRReinforcement>> reinforcements_;
 };
 
-using SSRPluginVec = std::vector<std::shared_ptr<SSRPlugin>>;
+using SSRPluginVec = std::vector<std::shared_ptr<Plugin>>;
+}  // namespace Daemon
 }  // namespace Kiran

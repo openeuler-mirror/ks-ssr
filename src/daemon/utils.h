@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-utils.h
+ * @file          /kiran-ssr-manager/src/daemon/utils.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,16 +7,17 @@
 
 #pragma once
 
-#include <glib.h>
-#include <glib/gi18n.h>
 #include <xsd/cxx/tree/containers.hxx>
+#include "lib/base/base.h"
 
 struct _object;
 typedef struct _object PyObject;
 
 namespace Kiran
 {
-class SSRUtils
+namespace Daemon
+{
+class Utils
 {
 public:
     template <typename T>
@@ -48,4 +49,5 @@ public:
     static std::string PyUnicode_AsString(PyObject *unicode);
 };
 
+}  // namespace Daemon
 }  // namespace Kiran
