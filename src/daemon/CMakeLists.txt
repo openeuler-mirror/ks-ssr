@@ -14,12 +14,15 @@ add_executable(${TARGET_NAME}
                ${SSR_GENERATED_CPP_FILES}
                ${SSR_PROTOCOL_OUTPUT})
 
+
 target_include_directories(${TARGET_NAME} PRIVATE
                            ${PROJECT_BINARY_DIR}/generated
-                           ${XERCES_INCLUDE_DIR})
+                           ${XERCES_INCLUDE_DIRS}
+                           ${PYTHON3_INCLUDE_DIRS})
 
 target_link_libraries(${TARGET_NAME} PUBLIC
                       ${XERCES_LIBRARIES}
+                      ${PYTHON3_LIBRARIES}
                       lib-base)
 
 install(TARGETS ${TARGET_NAME}

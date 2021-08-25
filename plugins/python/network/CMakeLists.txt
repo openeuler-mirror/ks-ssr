@@ -1,0 +1,8 @@
+
+
+
+GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-network.xml.in)
+
+install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}
+        FILES_MATCHING REGEX ".*\\.py")
