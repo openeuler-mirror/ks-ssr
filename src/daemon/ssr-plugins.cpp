@@ -5,8 +5,11 @@
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/ssr-plugins.h"
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+
 #include "src/daemon/ssr-configuration.h"
+#include "src/daemon/ssr-plugins.h"
 #include "ssr-config.h"
 
 namespace Kiran
@@ -77,6 +80,12 @@ std::shared_ptr<SSRReinforcementInterface> SSRPlugins::get_reinfocement_interfac
 
 void SSRPlugins::init()
 {
+    auto import_package_path = fmt::format("sys.path.append('{0}')", SSR_PLUGIN_PYTHON_ROOT_DIR);
+
+    Py_Initialize();
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString(import_package_path.c_str());
+
     this->load_plugins();
     this->load_reinforcements();
 
@@ -86,14 +95,19 @@ void SSRPlugins::init()
 void SSRPlugins::load_plugins()
 {
     KLOG_PROFILE("");
+    this->load_plugins_from_dir(SSR_PLUGIN_CPP_ROOT_DIR);
+    this->load_plugins_from_dir(SSR_PLUGIN_PYTHON_ROOT_DIR);
+}
 
+void SSRPlugins::load_plugins_from_dir(const std::string& dirname)
+{
     try
     {
-        Glib::Dir plugin_dir(SSR_PLUGIN_ROOT_DIR);
+        Glib::Dir plugin_dir(dirname);
         for (auto iter = plugin_dir.begin(); iter != plugin_dir.end(); ++iter)
         {
             auto basename = *iter;
-            auto filename = Glib::build_filename(SSR_PLUGIN_ROOT_DIR, basename);
+            auto filename = Glib::build_filename(dirname, basename);
 
             if (!Glib::file_test(filename, Glib::FILE_TEST_IS_REGULAR) ||
                 !Glib::str_has_prefix(basename, "ssr-plugin"))
@@ -125,12 +139,12 @@ bool SSRPlugins::add_plugin(std::shared_ptr<SSRPlugin> plugin)
 {
     RETURN_VAL_IF_FALSE(plugin, false);
 
-    KLOG_DEBUG("plugin name: %s.", plugin->get_name().c_str());
+    KLOG_DEBUG("plugin id: %s.", plugin->get_id().c_str());
 
-    auto iter = this->plugins_.emplace(plugin->get_name(), plugin);
+    auto iter = this->plugins_.emplace(plugin->get_id(), plugin);
     if (!iter.second)
     {
-        KLOG_WARNING("The plugin is already exist. name: %s.", plugin->get_name().c_str());
+        KLOG_WARNING("The plugin is already exist. id: %s.", plugin->get_id().c_str());
         return false;
     }
 
@@ -142,8 +156,8 @@ bool SSRPlugins::add_plugin(std::shared_ptr<SSRPlugin> plugin)
         {
             KLOG_WARNING("The reinforcement %s is conflicted with other plugin. old plugin: %s, cur plugin: %s.",
                          reinforcement_name.c_str(),
-                         old_plugin->get_name().c_str(),
-                         plugin->get_name().c_str());
+                         old_plugin->get_id().c_str(),
+                         plugin->get_id().c_str());
         }
         else
         {
@@ -191,7 +205,7 @@ void SSRPlugins::load_reinforcements()
             }
             reinforcement_arg.label(reinforcement_noarg->label());
 
-            auto reinforcement = std::make_shared<SSRReinforcement>(plugin->get_name(),
+            auto reinforcement = std::make_shared<SSRReinforcement>(plugin->get_id(),
                                                                     reinforcement_arg);
 
             this->reinforcements_.emplace(reinforcement_name, reinforcement);
