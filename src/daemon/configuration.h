@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-configuration.h
+ * @file          /kiran-ssr-manager/src/daemon/configuration.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -12,13 +12,15 @@
 
 namespace Kiran
 {
-class SSRConfiguration
+namespace Daemon
+{
+class Configuration
 {
 public:
-    SSRConfiguration(const std::string& config_path);
-    virtual ~SSRConfiguration();
+    Configuration(const std::string& config_path);
+    virtual ~Configuration();
 
-    static SSRConfiguration* get_instance() { return instance_; };
+    static Configuration* get_instance() { return instance_; };
 
     static void global_init(const std::string& config_path);
 
@@ -68,7 +70,7 @@ private:
     bool save_to_file();
 
 private:
-    static SSRConfiguration* instance_;
+    static Configuration* instance_;
 
     // 配置文件路径
     std::string config_path_;
@@ -80,4 +82,5 @@ private:
 
     sigc::signal<void> rs_changed_;
 };
+}  // namespace Daemon
 }  // namespace Kiran

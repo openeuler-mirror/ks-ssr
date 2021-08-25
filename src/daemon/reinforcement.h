@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-reinforcement.h
+ * @file          /kiran-ssr-manager/src/daemon/reinforcement.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -8,18 +8,20 @@
 #pragma once
 
 #include "lib/base/base.h"
+#include "src/daemon/rule.h"
 #include "src/daemon/ssr-protocol.hxx"
-#include "src/daemon/ssr-rule.h"
 
 namespace Kiran
 {
-class SSRReinforcement
+namespace Daemon
+{
+class Reinforcement
 {
 public:
-    SSRReinforcement() = delete;
-    SSRReinforcement(const std::string &plugin_id,
-                     const Protocol::Reinforcement &rs);
-    virtual ~SSRReinforcement(){};
+    Reinforcement() = delete;
+    Reinforcement(const std::string &plugin_id,
+                  const Protocol::Reinforcement &rs);
+    virtual ~Reinforcement(){};
 
     std::string get_name() { return this->config_.name(); };
     std::string get_plugin_name() { return this->plugin_id_; };
@@ -42,8 +44,10 @@ private:
     // 加固项的加固标准
     Protocol::Reinforcement config_;
     // 标准的判断规则
-    std::map<std::string, std::shared_ptr<SSRRule>> rules_;
+    std::map<std::string, std::shared_ptr<Rule>> rules_;
 };
 
-using SSRReinforcementVec = std::vector<std::shared_ptr<SSRReinforcement>>;
+using SSRReinforcementVec = std::vector<std::shared_ptr<Reinforcement>>;
+
+}  // namespace Daemon
 }  // namespace Kiran
