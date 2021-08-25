@@ -21,6 +21,7 @@ pkg_search_module(GTEST REQUIRED gtest)
 pkg_search_module(FMT REQUIRED fmt)
 pkg_search_module(CRYPTOPP REQUIRED cryptopp)
 pkg_search_module(XERCES REQUIRED xerces-c)
+pkg_search_module(PYTHON3 REQUIRED python3)
 
 
 find_program(GDBUS-CODEGEN-GLIBMM-FOUND gdbus-codegen-glibmm3 PATHS ${CMAKE_BINARY_DIR}/bin/)
@@ -46,6 +47,7 @@ add_subdirectory(lib)
 add_subdirectory(src/daemon)
 add_subdirectory(src/tool)
 add_subdirectory(plugins/cpp)
+add_subdirectory(plugins/python)
 add_subdirectory(test)
 
 

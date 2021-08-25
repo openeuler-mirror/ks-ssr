@@ -74,11 +74,15 @@ bool SSRPlugin::load_plugin_module()
     {
     case Protocol::LanguageType::Value::cpp:
     {
-        auto so_filename = Glib::build_filename(dirname, "cpp", "lib" + this->plugin_config_->name() + ".so");
-        this->loader_ = std::make_shared<SSRPluginCPPLoader>(so_filename);
+        auto so_path = Glib::build_filename(dirname, "lib" + this->plugin_config_->name() + ".so");
+        this->loader_ = std::make_shared<SSRPluginCPPLoader>(so_path);
         return this->loader_->load();
     }
-    // case Protocol::LanguageType::Value::python:
+    case Protocol::LanguageType::Value::python:
+    {
+        this->loader_ = std::make_shared<SSRPluginPythonLoader>(this->plugin_config_->name());
+        return this->loader_->load();
+    }
     default:
         KLOG_WARNING("Unsupported language type: %d.", (int32_t)this->plugin_config_->language_type());
         return false;

@@ -16,7 +16,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE
                       lib-config
                       lib-dbus)
 
-GEN_AND_INSTALL_PLUGIN_XML(ssr-plugin-network.xml.in)
+GEN_AND_INSTALL_PLUGIN_CPP_XML(ssr-plugin-network.xml.in)
 
 install(TARGETS ${TARGET_NAME}
         DESTINATION ${SSR_PLUGIN_ROOT_DIR}/cpp/)

@@ -61,6 +61,7 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     case SSRErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR:
     case SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED:
     case SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENTS_FAILED:
+    case SSRErrorCode::ERROR_DAEMON_PLUGIN_CALL_PYTHON_FUNC_FAILED:
         error_desc = _("Internel error.");
         break;
     default:

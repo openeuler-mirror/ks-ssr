@@ -17,12 +17,12 @@ class SSRReinforcement
 {
 public:
     SSRReinforcement() = delete;
-    SSRReinforcement(const std::string &plugin_name,
+    SSRReinforcement(const std::string &plugin_id,
                      const Protocol::Reinforcement &rs);
     virtual ~SSRReinforcement(){};
 
     std::string get_name() { return this->config_.name(); };
-    std::string get_plugin_name() { return this->plugin_name_; };
+    std::string get_plugin_name() { return this->plugin_id_; };
     std::string get_category_name();
     std::string get_label();
 
@@ -37,8 +37,8 @@ private:
     void update_rules();
 
 private:
-    // 插件所属插件
-    std::string plugin_name_;
+    // 加固项所属插件ID
+    std::string plugin_id_;
     // 加固项的加固标准
     Protocol::Reinforcement config_;
     // 标准的判断规则
