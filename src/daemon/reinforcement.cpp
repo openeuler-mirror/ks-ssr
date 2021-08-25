@@ -1,24 +1,26 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-reinforcement.cpp
+ * @file          /kiran-ssr-manager/src/daemon/reinforcement.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
-#include "src/daemon/ssr-reinforcement.h"
-#include "src/daemon/ssr-plugins.h"
-#include "src/daemon/ssr-utils.h"
+#include "src/daemon/reinforcement.h"
+#include "src/daemon/plugins.h"
+#include "src/daemon/utils.h"
 
 namespace Kiran
 {
-SSRReinforcement::SSRReinforcement(const std::string &plugin_id,
-                                   const Protocol::Reinforcement &rs) : plugin_id_(plugin_id),
-                                                                        config_(rs)
+namespace Daemon
+{
+Reinforcement::Reinforcement(const std::string &plugin_id,
+                             const Protocol::Reinforcement &rs) : plugin_id_(plugin_id),
+                                                                  config_(rs)
 {
     this->reload();
 }
 
-std::string SSRReinforcement::get_category_name()
+std::string Reinforcement::get_category_name()
 {
     if (this->config_.category().present())
     {
@@ -27,18 +29,18 @@ std::string SSRReinforcement::get_category_name()
     return std::string();
 }
 
-std::string SSRReinforcement::get_label()
+std::string Reinforcement::get_label()
 {
-    return SSRUtils::get_xsd_local_value(this->config_.label());
+    return Utils::get_xsd_local_value(this->config_.label());
 }
 
-void SSRReinforcement::set_rs(const Protocol::Reinforcement &rs)
+void Reinforcement::set_rs(const Protocol::Reinforcement &rs)
 {
     this->config_ = rs;
     this->reload();
 }
 
-bool SSRReinforcement::match_rules(const Json::Value &values)
+bool Reinforcement::match_rules(const Json::Value &values)
 {
     try
     {
@@ -56,25 +58,25 @@ bool SSRReinforcement::match_rules(const Json::Value &values)
     return true;
 }
 
-void SSRReinforcement::reload()
+void Reinforcement::reload()
 {
     // 如果加固项未指定分类，则使用插件的分类名
     if (!this->config_.category().present())
     {
-        auto plugin = SSRPlugins::get_instance()->get_plugin(this->plugin_id_);
+        auto plugin = Plugins::get_instance()->get_plugin(this->plugin_id_);
         this->config_.category(plugin->get_category_name());
     }
     this->update_rules();
 }
 
-void SSRReinforcement::update_rules()
+void Reinforcement::update_rules()
 {
     this->rules_.clear();
     for (const auto &arg : this->config_.arg())
     {
         CONTINUE_IF_TRUE(!arg.rule().present());
 
-        auto rule = SSRRule::create(arg.rule().get());
+        auto rule = Rule::create(arg.rule().get());
         if (rule)
         {
             auto iter = this->rules_.emplace(arg.name(), rule);
@@ -89,4 +91,5 @@ void SSRReinforcement::update_rules()
         }
     }
 }
+}  // namespace Daemon
 }  // namespace Kiran

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-plugin-python.cpp
+ * @file          /kiran-ssr-manager/src/daemon/plugin-python.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -8,23 +8,25 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "src/daemon/ssr-plugin-python.h"
-#include "src/daemon/ssr-utils.h"
+#include "src/daemon/plugin-python.h"
+#include "src/daemon/utils.h"
 
 namespace Kiran
+{
+namespace Daemon
 {
 #define PYTHON_PLUGIN_VAR_REINFORCEMENTS "reinforcements"
 
 #define PYTHON_REINFORCEMENT_FUNC_GET "r_get"
 #define PYTHON_REINFORCEMENT_FUNC_SET "r_set"
 
-SSRReinforcementPython::SSRReinforcementPython(const std::string &package_name,
-                                               const std::string &module_name) : package_name_(package_name),
-                                                                                 module_name_(module_name),
-                                                                                 module_(NULL),
-                                                                                 get_method_(NULL),
-                                                                                 set_method_(NULL),
-                                                                                 valid_(false)
+ReinforcementPython::ReinforcementPython(const std::string &package_name,
+                                         const std::string &module_name) : package_name_(package_name),
+                                                                           module_name_(module_name),
+                                                                           module_(NULL),
+                                                                           get_method_(NULL),
+                                                                           set_method_(NULL),
+                                                                           valid_(false)
 {
     auto module_fullname = fmt::format("{0}.{1}", this->package_name_, this->module_name_);
     this->module_ = PyImport_ImportModule(module_fullname.c_str());
@@ -50,12 +52,12 @@ SSRReinforcementPython::SSRReinforcementPython(const std::string &package_name,
     this->valid_ = true;
 }
 
-SSRReinforcementPython::~SSRReinforcementPython()
+ReinforcementPython::~ReinforcementPython()
 {
     Py_XDECREF(this->module_);
 }
 
-bool SSRReinforcementPython::get(std::string &args, SSRErrorCode &error_code)
+bool ReinforcementPython::get(std::string &args, SSRErrorCode &error_code)
 {
     auto py_retval = PyObject_CallObject(this->get_method_, NULL);
     SCOPE_EXIT({
@@ -68,11 +70,11 @@ bool SSRReinforcementPython::get(std::string &args, SSRErrorCode &error_code)
         return false;
     }
 
-    args = SSRUtils::PyUnicode_AsString(py_retval);
+    args = Utils::PyUnicode_AsString(py_retval);
     return true;
 }
 
-bool SSRReinforcementPython::set(const std::string &args, SSRErrorCode &error_code)
+bool ReinforcementPython::set(const std::string &args, SSRErrorCode &error_code)
 {
     auto py_args = Py_BuildValue("(s)", args.c_str());
     SCOPE_EXIT({
@@ -94,16 +96,16 @@ bool SSRReinforcementPython::set(const std::string &args, SSRErrorCode &error_co
     return true;
 }
 
-SSRPluginPython::SSRPluginPython(PyObject *module) : module_(module)
+PluginPython::PluginPython(PyObject *module) : module_(module)
 {
 }
 
-SSRPluginPython::~SSRPluginPython()
+PluginPython::~PluginPython()
 {
     Py_XDECREF(this->module_);
 }
 
-void SSRPluginPython::activate()
+void PluginPython::activate()
 {
     PyObject *reinforcements = NULL;
     PyObject *key = NULL;
@@ -124,10 +126,10 @@ void SSRPluginPython::activate()
     auto package_name = PyModule_GetName(this->module_);
     while (PyDict_Next(reinforcements, &pos, &key, &value))
     {
-        auto reinforcement_name = SSRUtils::PyUnicode_AsString(key);
-        auto module_name = SSRUtils::PyUnicode_AsString(value);
+        auto reinforcement_name = Utils::PyUnicode_AsString(key);
+        auto module_name = Utils::PyUnicode_AsString(value);
 
-        auto reinforcement = std::make_shared<SSRReinforcementPython>(package_name, module_name);
+        auto reinforcement = std::make_shared<ReinforcementPython>(package_name, module_name);
         CONTINUE_IF_FALSE(reinforcement->is_valid());
 
         auto iter = this->reinforcements_.emplace(reinforcement_name, reinforcement);
@@ -138,8 +140,10 @@ void SSRPluginPython::activate()
     }
 }
 
-void SSRPluginPython::deactivate()
+void PluginPython::deactivate()
 {
     this->reinforcements_.clear();
 }
+
+}  // namespace Daemon
 }  // namespace Kiran

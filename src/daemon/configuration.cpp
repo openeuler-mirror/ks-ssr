@@ -1,14 +1,16 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-configuration.cpp
+ * @file          /kiran-ssr-manager/src/daemon/configuration.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/ssr-configuration.h"
+#include "src/daemon/configuration.h"
 #include <fstream>
 
 namespace Kiran
+{
+namespace Daemon
 {
 #define SSR_GROUP_NAME "base"
 #define SSR_BASE_KEY_MAX_THREAD_NUM "max_thread_num"
@@ -24,27 +26,27 @@ namespace Kiran
 
 using namespace Protocol;
 
-SSRConfiguration::SSRConfiguration(const std::string& config_path) : config_path_(config_path)
+Configuration::Configuration(const std::string& config_path) : config_path_(config_path)
 {
 }
 
-SSRConfiguration::~SSRConfiguration()
+Configuration::~Configuration()
 {
 }
 
-SSRConfiguration* SSRConfiguration::instance_ = nullptr;
-void SSRConfiguration::global_init(const std::string& config_path)
+Configuration* Configuration::instance_ = nullptr;
+void Configuration::global_init(const std::string& config_path)
 {
-    instance_ = new SSRConfiguration(config_path);
+    instance_ = new Configuration(config_path);
     instance_->init();
 }
 
-uint32_t SSRConfiguration::get_max_thread_num()
+uint32_t Configuration::get_max_thread_num()
 {
     return this->get_integer(SSR_GROUP_NAME, SSR_BASE_KEY_MAX_THREAD_NUM, MAX_THREAD_NUM_DEFAULT);
 }
 
-SSRStandardType SSRConfiguration::get_standard_type()
+SSRStandardType Configuration::get_standard_type()
 {
     auto retval = this->get_integer(SSR_GROUP_NAME,
                                     SSR_BASE_KEY_STANDARD_TYPE,
@@ -59,7 +61,7 @@ SSRStandardType SSRConfiguration::get_standard_type()
     return SSRStandardType(retval);
 }
 
-bool SSRConfiguration::set_standard_type(SSRStandardType standard_type)
+bool Configuration::set_standard_type(SSRStandardType standard_type)
 {
     RETURN_VAL_IF_FALSE(standard_type < SSRStandardType::SSR_STANDARD_TYPE_LAST, false);
     RETURN_VAL_IF_TRUE(standard_type == this->get_standard_type(), true);
@@ -73,7 +75,7 @@ bool SSRConfiguration::set_standard_type(SSRStandardType standard_type)
     return true;
 }
 
-bool SSRConfiguration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code)
+bool Configuration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code)
 {
     // 判断自定义加固标准
     auto decrypted_rs = CryptoHelper::rsa_decrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_rs);
@@ -99,7 +101,7 @@ bool SSRConfiguration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCo
     return true;
 }
 
-bool SSRConfiguration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcement)
+bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcement)
 {
     auto ra = this->get_ra();
 
@@ -134,7 +136,7 @@ bool SSRConfiguration::set_custom_ra(const Protocol::Reinforcement& rs_reinforce
     return true;
 }
 
-void SSRConfiguration::init()
+void Configuration::init()
 {
     KLOG_PROFILE("");
 
@@ -151,13 +153,13 @@ void SSRConfiguration::init()
     this->load_rs();
 }
 
-void SSRConfiguration::reload_rs()
+void Configuration::reload_rs()
 {
     this->load_rs();
     this->rs_changed_.emit();
 }
 
-void SSRConfiguration::load_rs()
+void Configuration::load_rs()
 {
     this->rs_ = this->get_fixed_rs();
     RETURN_IF_FALSE(this->rs_);
@@ -174,7 +176,7 @@ void SSRConfiguration::load_rs()
     }
 }
 
-std::shared_ptr<RS> SSRConfiguration::get_fixed_rs()
+std::shared_ptr<RS> Configuration::get_fixed_rs()
 {
     KLOG_PROFILE("");
 
@@ -195,7 +197,7 @@ std::shared_ptr<RS> SSRConfiguration::get_fixed_rs()
     return nullptr;
 }
 
-std::shared_ptr<RA> SSRConfiguration::get_ra()
+std::shared_ptr<RA> Configuration::get_ra()
 {
     KLOG_PROFILE("");
 
@@ -213,7 +215,7 @@ std::shared_ptr<RA> SSRConfiguration::get_ra()
     return std::make_shared<RA>();
 }
 
-void SSRConfiguration::join_reinforcement(Reinforcement& to_r, const Reinforcement& from_r)
+void Configuration::join_reinforcement(Reinforcement& to_r, const Reinforcement& from_r)
 {
     KLOG_DEBUG("Join reinforcement %s.", from_r.name().c_str());
 
@@ -229,7 +231,7 @@ void SSRConfiguration::join_reinforcement(Reinforcement& to_r, const Reinforceme
     }
 }
 
-std::string SSRConfiguration::decrypt_file(const std::string& filename)
+std::string Configuration::decrypt_file(const std::string& filename)
 {
     KLOG_PROFILE("filename: %s.", filename.c_str());
 
@@ -248,40 +250,40 @@ std::string SSRConfiguration::decrypt_file(const std::string& filename)
     return std::string();
 }
 
-int32_t SSRConfiguration::get_integer(const std::string& group_name, const std::string& key, int32_t default_value)
+int32_t Configuration::get_integer(const std::string& group_name, const std::string& key, int32_t default_value)
 {
     int32_t retval = default_value;
     IGNORE_EXCEPTION(retval = this->configuration_.get_integer(group_name, key));
     return retval;
 }
 
-std::string SSRConfiguration::get_string(const std::string& group_name, const std::string& key)
+std::string Configuration::get_string(const std::string& group_name, const std::string& key)
 {
     std::string retval;
     IGNORE_EXCEPTION(retval = this->configuration_.get_string(group_name, key));
     return retval;
 }
 
-std::string SSRConfiguration::get_datadir_filename(const std::string& group_name, const std::string& key)
+std::string Configuration::get_datadir_filename(const std::string& group_name, const std::string& key)
 {
     auto basename = this->get_string(group_name, key);
     RETURN_VAL_IF_TRUE(basename.empty(), std::string());
     return Glib::build_filename(SSR_INSTALL_DATADIR, basename);
 }
 
-bool SSRConfiguration::set_integer(const std::string& group_name, const std::string& key, int32_t value)
+bool Configuration::set_integer(const std::string& group_name, const std::string& key, int32_t value)
 {
     this->configuration_.set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_STANDARD_TYPE, value);
     return this->save_to_file();
 }
 
-bool SSRConfiguration::set_string(const std::string& group_name, const std::string& key, const std::string& value)
+bool Configuration::set_string(const std::string& group_name, const std::string& key, const std::string& value)
 {
     this->configuration_.set_string(group_name, key, value);
     return this->save_to_file();
 }
 
-bool SSRConfiguration::save_to_file()
+bool Configuration::save_to_file()
 {
     try
     {
@@ -294,4 +296,5 @@ bool SSRConfiguration::save_to_file()
     }
 }
 
+}  // namespace Daemon
 }  // namespace Kiran

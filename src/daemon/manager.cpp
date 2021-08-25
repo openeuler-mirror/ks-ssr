@@ -1,31 +1,33 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-manager.cpp
+ * @file          /kiran-ssr-manager/src/daemon/manager.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/ssr-manager.h"
+#include "src/daemon/manager.h"
 #include <json/json.h>
 #include <iostream>
 #include "lib/base/base.h"
-#include "src/daemon/ssr-categories.h"
-#include "src/daemon/ssr-configuration.h"
-#include "src/daemon/ssr-plugins.h"
+#include "src/daemon/categories.h"
+#include "src/daemon/configuration.h"
+#include "src/daemon/plugins.h"
 #include "src/daemon/ssr-protocol.hxx"
-#include "src/daemon/ssr-utils.h"
+#include "src/daemon/utils.h"
 
 namespace Kiran
+{
+namespace Daemon
 {
 #define JOB_ERROR_CODE "error_code"
 #define JOB_RETURN_VALUE "return_value"
 
-SSRManager::SSRManager() : dbus_connect_id_(0),
-                           object_register_id_(0)
+Manager::Manager() : dbus_connect_id_(0),
+                     object_register_id_(0)
 {
 }
 
-SSRManager::~SSRManager()
+Manager::~Manager()
 {
     if (this->dbus_connect_id_)
     {
@@ -33,14 +35,14 @@ SSRManager::~SSRManager()
     }
 }
 
-SSRManager* SSRManager::instance_ = nullptr;
-void SSRManager::global_init()
+Manager* Manager::instance_ = nullptr;
+void Manager::global_init()
 {
-    instance_ = new SSRManager();
+    instance_ = new Manager();
     instance_->init();
 }
 
-void SSRManager::SetStandardType(guint32 standard_type, MethodInvocation& invocation)
+void Manager::SetStandardType(guint32 standard_type, MethodInvocation& invocation)
 {
     KLOG_PROFILE("standard type: %d.", standard_type);
 
@@ -62,7 +64,7 @@ void SSRManager::SetStandardType(guint32 standard_type, MethodInvocation& invoca
     invocation.ret();
 }
 
-void SSRManager::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvocation& invocation)
+void Manager::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvocation& invocation)
 {
     KLOG_PROFILE("encoded standard: %s.", encoded_standard.c_str());
 
@@ -74,7 +76,7 @@ void SSRManager::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInv
     invocation.ret();
 }
 
-void SSRManager::GetCategories(MethodInvocation& invocation)
+void Manager::GetCategories(MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -106,7 +108,7 @@ void SSRManager::GetCategories(MethodInvocation& invocation)
     }
 }
 
-void SSRManager::GetRS(MethodInvocation& invocation)
+void Manager::GetRS(MethodInvocation& invocation)
 {
     std::ostringstream ostring_stream;
     auto rs = this->configuration_->get_rs();
@@ -128,7 +130,7 @@ void SSRManager::GetRS(MethodInvocation& invocation)
     }
 }
 
-void SSRManager::GetReinforcements(MethodInvocation& invocation)
+void Manager::GetReinforcements(MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -153,7 +155,7 @@ void SSRManager::GetReinforcements(MethodInvocation& invocation)
     }
 }
 
-void SSRManager::GetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
+void Manager::GetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -177,7 +179,7 @@ void SSRManager::GetReinforcement(const Glib::ustring& name, MethodInvocation& i
     }
 }
 
-void SSRManager::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvocation& invocation)
+void Manager::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -198,7 +200,7 @@ void SSRManager::SetReinforcement(const Glib::ustring& reinforcement_xml, Method
     invocation.ret();
 }
 
-void SSRManager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
+void Manager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
@@ -210,7 +212,7 @@ void SSRManager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation&
 
     try
     {
-        this->scan_job_ = SSRJob::create();
+        this->scan_job_ = Job::create();
 
         for (auto& name : names)
         {
@@ -252,7 +254,7 @@ void SSRManager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation&
         DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID);
     }
 
-    this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &SSRManager::on_scan_process_changed_cb));
+    this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &Manager::on_scan_process_changed_cb));
 
     if (!this->scan_job_->run_async())
     {
@@ -264,7 +266,7 @@ void SSRManager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation&
     }
 }
 
-void SSRManager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
+void Manager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
@@ -276,7 +278,7 @@ void SSRManager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvoca
 
     try
     {
-        this->reinforce_job_ = SSRJob::create();
+        this->reinforce_job_ = Job::create();
 
         for (auto& name : names)
         {
@@ -317,7 +319,7 @@ void SSRManager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvoca
         DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID);
     }
 
-    this->reinforce_job_->signal_process_changed().connect(sigc::mem_fun(this, &SSRManager::on_reinfoce_process_changed_cb));
+    this->reinforce_job_->signal_process_changed().connect(sigc::mem_fun(this, &Manager::on_reinfoce_process_changed_cb));
 
     if (!this->reinforce_job_->run_async())
     {
@@ -329,7 +331,7 @@ void SSRManager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvoca
     }
 }
 
-void SSRManager::Cancel(gint64 job_id, MethodInvocation& invocation)
+void Manager::Cancel(gint64 job_id, MethodInvocation& invocation)
 {
     KLOG_PROFILE("job id: %d.", job_id);
 
@@ -365,30 +367,30 @@ void SSRManager::Cancel(gint64 job_id, MethodInvocation& invocation)
     invocation.ret();
 }
 
-bool SSRManager::standard_type_setHandler(guint32 value)
+bool Manager::standard_type_setHandler(guint32 value)
 {
     return this->configuration_->set_standard_type(SSRStandardType(value));
 }
 
-guint32 SSRManager::standard_type_get()
+guint32 Manager::standard_type_get()
 {
     return this->configuration_->get_standard_type();
 }
 
-void SSRManager::init()
+void Manager::init()
 {
-    this->configuration_ = SSRConfiguration::get_instance();
-    this->categories_ = SSRCategories::get_instance();
-    this->plugins_ = SSRPlugins::get_instance();
+    this->configuration_ = Configuration::get_instance();
+    this->categories_ = Categories::get_instance();
+    this->plugins_ = Plugins::get_instance();
 
     this->dbus_connect_id_ = Gio::DBus::own_name(Gio::DBus::BUS_TYPE_SYSTEM,
                                                  SSR_DBUS_NAME,
-                                                 sigc::mem_fun(this, &SSRManager::on_bus_acquired),
-                                                 sigc::mem_fun(this, &SSRManager::on_name_acquired),
-                                                 sigc::mem_fun(this, &SSRManager::on_name_lost));
+                                                 sigc::mem_fun(this, &Manager::on_bus_acquired),
+                                                 sigc::mem_fun(this, &Manager::on_name_acquired),
+                                                 sigc::mem_fun(this, &Manager::on_name_lost));
 }
 
-Json::Value SSRManager::get_reinforcement_json(const std::string& name)
+Json::Value Manager::get_reinforcement_json(const std::string& name)
 {
     Json::Value retval;
 
@@ -407,7 +409,7 @@ Json::Value SSRManager::get_reinforcement_json(const std::string& name)
             if (arg.layout().present())
             {
                 arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_TYPE] = arg.layout().get().widget_type();
-                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_LABEL] = SSRUtils::get_xsd_local_value(arg.layout().get().label());
+                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_LABEL] = Utils::get_xsd_local_value(arg.layout().get().label());
             }
             retval[SSR_JSON_BODY_REINFORCEMENT_ARGS].append(std::move(arg_value));
         }
@@ -420,7 +422,7 @@ Json::Value SSRManager::get_reinforcement_json(const std::string& name)
     return retval;
 }
 
-void SSRManager::on_scan_process_changed_cb(const SSRJobResult& job_result)
+void Manager::on_scan_process_changed_cb(const JobResult& job_result)
 {
     KLOG_PROFILE("");
 
@@ -492,7 +494,7 @@ void SSRManager::on_scan_process_changed_cb(const SSRJobResult& job_result)
     }
 }
 
-void SSRManager::on_reinfoce_process_changed_cb(const SSRJobResult& job_result)
+void Manager::on_reinfoce_process_changed_cb(const JobResult& job_result)
 {
     KLOG_PROFILE("");
 
@@ -560,7 +562,7 @@ void SSRManager::on_reinfoce_process_changed_cb(const SSRJobResult& job_result)
     }
 }
 
-void SSRManager::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
+void Manager::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
     KLOG_PROFILE("name: %s", name.c_str());
     if (!connect)
@@ -578,14 +580,15 @@ void SSRManager::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& conn
     }
 }
 
-void SSRManager::on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
+void Manager::on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
     KLOG_DEBUG("Success to register dbus name: %s", name.c_str());
 }
 
-void SSRManager::on_name_lost(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
+void Manager::on_name_lost(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
     KLOG_WARNING("Failed to register dbus name: %s", name.c_str());
 }
 
+}  // namespace Daemon
 }  // namespace Kiran

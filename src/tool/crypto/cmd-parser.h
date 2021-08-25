@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/ssr-cmd-parser.h
+ * @file          /kiran-ssr-manager/src/tool/crypto/ssr-cmd-parser.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,6 +8,8 @@
 #include "lib/base/base.h"
 
 namespace Kiran
+{
+namespace Crypto
 {
 enum OperationType
 {
@@ -23,11 +25,11 @@ enum OperationType
 
 };
 
-class SSRCmdParser
+class CmdParser
 {
 public:
-    SSRCmdParser();
-    virtual ~SSRCmdParser(){};
+    CmdParser();
+    virtual ~CmdParser(){};
 
     // 初始化
     void init();
@@ -63,4 +65,5 @@ private:
     // 输出文件
     std::string output_filename_;
 };
+}  // namespace Crypto
 }  // namespace Kiran

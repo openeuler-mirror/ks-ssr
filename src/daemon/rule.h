@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-rule.h
+ * @file          /kiran-ssr-manager/src/daemon/rule.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -13,16 +13,9 @@
 
 namespace Kiran
 {
-// enum RuleType
-// {
-//     SSR_RULE_TYPE_NONE = 0,
-//     // 值是否在一个连续范围内
-//     SSR_RULE_TYPE_RANGE,
-//     // 值是否在枚举集合中
-//     SSR_RULE_TYPE_ENUM,
-// };
-
-class SSRRule
+namespace Daemon
+{
+class Rule
 {
 public:
     // 规则类型
@@ -30,8 +23,8 @@ public:
     // 判断该值是否符合规则
     virtual bool match(const Json::Value &value) { return false; };
 
-    static std::shared_ptr<SSRRule> create(const Json::Value &rule);
-    static std::shared_ptr<SSRRule> create(const Protocol::Rule &rule);
+    static std::shared_ptr<Rule> create(const Json::Value &rule);
+    static std::shared_ptr<Rule> create(const Protocol::Rule &rule);
 
 protected:
     enum JsonCmpResult
@@ -49,15 +42,15 @@ protected:
     JsonCmpResult json_value_cmp(const Json::Value &v1, const Json::Value &v2);
 };
 
-using SSRRuleVec = std::vector<std::shared_ptr<SSRRule>>;
+using RuleVec = std::vector<std::shared_ptr<Rule>>;
 
-class SSRRuleRange : public SSRRule
+class RuleRange : public Rule
 {
 public:
     // 如果min_value为空，则表示无限小，如果max_value为空，则表示无限大
-    SSRRuleRange(const Json::Value &min_value,
-                 const Json::Value &max_value);
-    virtual ~SSRRuleRange(){};
+    RuleRange(const Json::Value &min_value,
+              const Json::Value &max_value);
+    virtual ~RuleRange(){};
 
     // 规则类型
     virtual Protocol::RuleType get_type() override { return Protocol::RuleType::Value::RANGE; };
@@ -70,22 +63,22 @@ private:
     Json::ValueType value_type_;
 };
 
-class SSRRuleFixed : public SSRRuleRange
+class RuleFixed : public RuleRange
 {
 public:
     // 如果min_value为空，则表示无限小，如果max_value为空，则表示无限大
-    SSRRuleFixed(const Json::Value &value);
-    virtual ~SSRRuleFixed(){};
+    RuleFixed(const Json::Value &value);
+    virtual ~RuleFixed(){};
 
     // 规则类型
     virtual Protocol::RuleType get_type() override { return Protocol::RuleType::Value::RANGE; };
 };
 
-class SSRRuleEnum : public SSRRule
+class RuleEnum : public Rule
 {
 public:
-    SSRRuleEnum(const std::vector<Json::Value> &values);
-    virtual ~SSRRuleEnum(){};
+    RuleEnum(const std::vector<Json::Value> &values);
+    virtual ~RuleEnum(){};
 
     // 规则类型
     virtual Protocol::RuleType get_type() override { return Protocol::RuleType::Value::ENUM; };
@@ -96,4 +89,5 @@ private:
     std::vector<Json::Value> enum_values_;
 };
 
+}  // namespace Daemon
 }  // namespace Kiran
