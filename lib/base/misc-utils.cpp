@@ -45,4 +45,31 @@ bool MiscUtils::spawn_sync(const std::vector<std::string> &argv,
     return true;
 }
 
+Glib::OptionEntry MiscUtils::create_option_entry(const char &short_name,
+                                                 const Glib::ustring &long_name,
+                                                 const Glib::ustring &description,
+                                                 const Glib::ustring &arg_description,
+                                                 int32_t flags)
+{
+    Glib::OptionEntry result;
+    result.set_short_name(short_name);
+    result.set_long_name(long_name);
+    result.set_description(description);
+    result.set_arg_description(arg_description);
+    result.set_flags(flags);
+    return result;
+}
+
+Glib::OptionEntry MiscUtils::create_option_entry(const Glib::ustring &long_name,
+                                                 const Glib::ustring &description,
+                                                 const Glib::ustring &arg_description,
+                                                 int32_t flags)
+{
+    Glib::OptionEntry result;
+    result.set_long_name(long_name);
+    result.set_description(description);
+    result.set_arg_description(arg_description);
+    result.set_flags(flags);
+    return result;
+}
 }  // namespace Kiran

@@ -21,7 +21,17 @@ public:
                            std::string *standard_output = nullptr,
                            std::string *standard_error = nullptr);
 
-    // static std::string get_locale_string(const std::ve);
-};
+    static Glib::OptionEntry create_option_entry(const char &short_name,
+                                                 const Glib::ustring &long_name,
+                                                 const Glib::ustring &description,
+                                                 const Glib::ustring &arg_description = Glib::ustring(),
+                                                 int32_t flags = 0);
+
+    static Glib::OptionEntry create_option_entry(const Glib::ustring &long_name,
+                                                 const Glib::ustring &description,
+                                                 const Glib::ustring &arg_description = Glib::ustring(),
+                                                 int32_t flags = 0);
+
+};  // namespace Kiran
 
 }  // namespace Kiran

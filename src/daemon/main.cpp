@@ -11,8 +11,8 @@
 #include "src/daemon/ssr-configuration.h"
 #include "src/daemon/ssr-manager.h"
 #include "src/daemon/ssr-plugins.h"
-#include "ssr-config.h"
 
+// TODO: 去除ssr前缀
 int main(int argc, char* argv[])
 {
     Gio::init();

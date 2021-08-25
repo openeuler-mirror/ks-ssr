@@ -9,7 +9,6 @@
 
 #include <ssr_dbus_stub.h>
 #include "src/daemon/ssr-job.h"
-#include "ssr-config.h"
 
 namespace Kiran
 {
