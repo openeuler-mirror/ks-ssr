@@ -15,7 +15,11 @@ extern "C"
 {
 #endif
 
+#if PY_MAJOR_VERSION >= 3
     PyMODINIT_FUNC PyInit_log(void);
+#else
+void PyInit_log(void);
+#endif
 
 #ifdef __cplusplus
 }

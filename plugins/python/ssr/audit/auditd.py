@@ -1,6 +1,7 @@
+#--coding:utf8 --
+
 import json
 import ssr.systemd
-from ssr import log
 
 
 class Switch:
