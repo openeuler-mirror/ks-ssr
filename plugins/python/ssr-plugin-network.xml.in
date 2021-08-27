@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<ssr_plugin>
+    <name>network</name>
+    <category>network</category>
+    <_label>network settings</_label>
+    <language_type>python</language_type>
+    <available>true</available>
+    <reinforcement>
+        <name>network-firewalld-switch</name>
+        <_label>Turn on system firewall service</_label>
+    </reinforcement>
+     <reinforcement>
+        <name>network-firewalld-icmp-timestamp</name>
+        <_label>Disable ICMP timestamp query</_label>
+    </reinforcement>
+     <reinforcement>
+        <name>network-sysctl-redirect</name>
+        <_label>Disable ICMP redirection</_label>
+    </reinforcement>
+     <reinforcement>
+        <name>network-sysctl-source-route</name>
+        <_label>Disable IP source routing</_label>
+    </reinforcement>
+</ssr_plugin>
