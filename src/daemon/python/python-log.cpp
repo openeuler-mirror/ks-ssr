@@ -8,14 +8,16 @@
 #include "src/daemon/python/python-log.h"
 #include "lib/base/base.h"
 
-static PyObject *
-log_debug(PyObject *self, PyObject *args)
+// TODO: info/warn
+static PyObject *log_debug(PyObject *self, PyObject *args)
 {
     const char *msg = NULL;
     PyArg_ParseTuple(args, "s", &msg);
     KLOG_DEBUG("%s", msg);
     Py_RETURN_NONE;
 }
+
+#if PY_MAJOR_VERSION >= 3
 
 static PyMethodDef log_methods[] = {
     {"debug", (PyCFunction)log_debug, METH_VARARGS,
@@ -24,13 +26,25 @@ static PyMethodDef log_methods[] = {
 
 static struct PyModuleDef logmodule = {
     PyModuleDef_HEAD_INIT,
-    "ssr.log",
+    "log",
     NULL,
     -1,
     log_methods};
 
-PyMODINIT_FUNC
-PyInit_log(void)
+PyMODINIT_FUNC PyInit_log(void)
 {
     return PyModule_Create(&logmodule);
 }
+
+#else
+
+static PyMethodDef log_methods[] = {
+    {"debug", (PyCFunction)log_debug, METH_NOARGS, NULL},
+    {NULL, NULL}};
+
+void PyInit_log(void)
+{
+    Py_InitModule("log", log_methods);
+}
+
+#endif

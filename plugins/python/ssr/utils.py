@@ -1,9 +1,9 @@
 import subprocess
-from ssr import log
+#from ssr import log
 
 
 def subprocess_not_output(args):
-    log.debug(args)
+    #log.debug(args)
     child_process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
     exit_code = child_process.wait()
@@ -12,7 +12,7 @@ def subprocess_not_output(args):
 
 
 def subprocess_has_output(args):
-    log.debug(args)
+    #log.debug(args)
     child_process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
     exit_code = child_process.wait()
