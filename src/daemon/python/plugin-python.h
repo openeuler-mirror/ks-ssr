@@ -20,7 +20,7 @@ class ReinforcementPython : public SSRReinforcementInterface
 {
 public:
     ReinforcementPython(PyObject *module,
-                        const std::string &function_prefix);
+                        const std::string &class_name);
     virtual ~ReinforcementPython();
 
     virtual bool get(std::string &args, std::string &error) override;
@@ -33,12 +33,11 @@ private:
 
 private:
     PyObject *module_;
-    std::string function_prefix_;
-
-    std::string get_method_name_;
-    std::string set_method_name_;
-    PyObject *get_method_;
-    PyObject *set_method_;
+    std::string class_name_;
+    // python类
+    PyObject *class_;
+    // python对象
+    PyObject *class_instance_;
 
     bool valid_;
 };

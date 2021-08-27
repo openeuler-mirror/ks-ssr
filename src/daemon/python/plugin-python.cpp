@@ -18,48 +18,50 @@ namespace Daemon
 #define PYTHON_PLUGIN_VAR_REINFORCEMENTS "reinforcements"
 
 ReinforcementPython::ReinforcementPython(PyObject *module,
-                                         const std::string &function_prefix) : module_(module),
-                                                                               function_prefix_(function_prefix),
-                                                                               get_method_(NULL),
-                                                                               set_method_(NULL),
-                                                                               valid_(false)
+                                         const std::string &class_name) : module_(module),
+                                                                          class_name_(class_name),
+                                                                          class_(NULL),
+                                                                          class_instance_(NULL),
+                                                                          valid_(false)
 {
     Py_XINCREF(this->module_);
 
-    this->get_method_name_ = fmt::format("{0}_get", function_prefix);
-    this->set_method_name_ = fmt::format("{0}_set", function_prefix);
-
-    this->get_method_ = PyObject_GetAttrString(this->module_, this->get_method_name_.c_str());
-    if (!this->get_method_ || !PyCallable_Check(this->get_method_))
+    this->class_ = PyObject_GetAttrString(this->module_, this->class_name_.c_str());
+    if (!this->class_ || !PyCallable_Check(this->class_))
     {
-        KLOG_WARNING("Failed to get '%s' function.", this->get_method_name_.c_str());
+        KLOG_WARNING("Failed to get class %s.%s. class: %p.", PyModule_GetName(module), this->class_name_.c_str(), this->class_);
         return;
     }
 
-    this->set_method_ = PyObject_GetAttrString(this->module_, this->set_method_name_.c_str());
-    if (!this->set_method_ || !PyCallable_Check(this->set_method_))
+    this->class_instance_ = PyObject_CallObject(this->class_, NULL);
+
+    if (!this->class_instance_)
     {
-        KLOG_WARNING("Failed to get '%s' function.", this->set_method_name_.c_str());
+        KLOG_WARNING("Failed to create object for class %s. class instance: %p",
+                     this->class_name_.c_str(),
+                     this->class_instance_);
         return;
     }
+
     this->valid_ = true;
 }
 
 ReinforcementPython::~ReinforcementPython()
 {
     Py_XDECREF(this->module_);
+    Py_XDECREF(this->class_);
 }
 
 bool ReinforcementPython::get(std::string &args, std::string &error)
 {
-    KLOG_DEBUG("Call method %s. ", this->get_method_name_.c_str());
+    KLOG_DEBUG("Call get method in class %s.", this->class_name_.c_str());
 
-    auto py_retval = PyObject_CallObject(this->get_method_, NULL);
+    auto py_retval = PyObject_CallMethod(this->class_instance_, "get", NULL);
     SCOPE_EXIT({
         Py_XDECREF(py_retval);
     });
 
-    RETURN_VAL_IF_FALSE(this->check_call_result(py_retval, this->get_method_name_, error), false);
+    RETURN_VAL_IF_FALSE(this->check_call_result(py_retval, this->class_name_ + ".get", error), false);
 
     auto successed = PyTuple_GetItem(py_retval, 0);
     if (successed == Py_True)
@@ -76,16 +78,11 @@ bool ReinforcementPython::get(std::string &args, std::string &error)
 
 bool ReinforcementPython::set(const std::string &args, std::string &error)
 {
-    KLOG_DEBUG("Call method %s. ", this->set_method_name_.c_str());
+    KLOG_DEBUG("Call set method in class %s.", this->class_name_.c_str());
 
-    auto py_args = Py_BuildValue("(s)", args.c_str());
-    SCOPE_EXIT({
-        Py_XDECREF(py_args);
-    });
+    auto py_retval = PyObject_CallMethod(this->class_instance_, "set", "(s)", args.c_str());
 
-    auto py_retval = PyObject_CallObject(this->set_method_, py_args);
-
-    RETURN_VAL_IF_FALSE(this->check_call_result(py_retval, this->set_method_name_, error), false);
+    RETURN_VAL_IF_FALSE(this->check_call_result(py_retval, this->class_name_ + ".set", error), false);
 
     auto successed = PyTuple_GetItem(py_retval, 0);
     if (successed == Py_False)
@@ -170,7 +167,7 @@ void PluginPython::activate()
 
         std::string reinforcement_name;
         std::string module_name;
-        std::string function_prefix;
+        std::string class_name;
         PyObject *py_key = NULL;
         PyObject *py_value = NULL;
         Py_ssize_t py_pos = 0;
@@ -190,8 +187,8 @@ void PluginPython::activate()
             case "module"_hash:
                 module_name = value;
                 break;
-            case "function_prefix"_hash:
-                function_prefix = value;
+            case "class"_hash:
+                class_name = value;
                 break;
             default:
                 KLOG_WARNING("Unknown key: %s.", key.c_str());
@@ -208,11 +205,11 @@ void PluginPython::activate()
 
         CHECK_KEY_NOT_EMPTY(reinforcement_name, name)
         CHECK_KEY_NOT_EMPTY(module_name, module)
-        CHECK_KEY_NOT_EMPTY(function_prefix, function_prefix)
+        CHECK_KEY_NOT_EMPTY(class_name, class)
 
 #undef CHECK_KEY_NOT_EMPTY
 
-        this->add_reinforcement(package_name, module_name, reinforcement_name, function_prefix);
+        this->add_reinforcement(package_name, module_name, reinforcement_name, class_name);
     }
 }
 
