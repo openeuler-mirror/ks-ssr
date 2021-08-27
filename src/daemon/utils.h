@@ -46,7 +46,7 @@ public:
         return std::string();
     }
 
-    static std::string PyUnicode_AsString(PyObject *unicode);
+    static std::string pyobject_as_string(PyObject *pyobject);
     // 检查json脚本执行是否存在异常，如果返回值为空表示不存在异常
     static std::string catch_exception();
 };
