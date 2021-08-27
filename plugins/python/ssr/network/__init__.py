@@ -2,21 +2,21 @@ reinforcements = (
     {
         'name': 'network-firewalld-switch',
         'module': 'firewalld',
-        'function_prefix': 'switch'
+        'class': 'Switch'
     },
     {
         'name': 'network-firewalld-icmp-timestamp',
         'module': 'firewalld',
-        'function_prefix': 'icmp_timestamp'
+        'class': 'IcmpTimestamp'
     },
     {
         'name': 'network-sysctl-redirect',
         'module': 'sysctl',
-        'function_prefix': 'redirect'
+        'class': 'Redirect'
     },
     {
         'name': 'network-sysctl-source-route',
         'module': 'sysctl',
-        'function_prefix': 'source_route'
+        'class': 'SourceRoute'
     },
 )
