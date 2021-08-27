@@ -21,57 +21,57 @@ def sysctl_get_items_by_pattern(partten):
     return retval
 
 
-def redirect_get():
-    retdata = dict()
-    redirect_items = sysctl_get_items_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN)
+class Redirect:
+    def get(self):
+        retdata = dict()
+        redirect_items = sysctl_get_items_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN)
 
-    enabled = False
-    for redirect_item in redirect_items:
-        if redirect_item[1] == "1":
-            enabled = True
-            break
+        enabled = False
+        for redirect_item in redirect_items:
+            if redirect_item[1] == "1":
+                enabled = True
+                break
 
-    retdata['enabled'] = enabled
-    return (True, json.dumps(retdata))
+        retdata['enabled'] = enabled
+        return (True, json.dumps(retdata))
 
+    def set(self, args_json):
+        args = json.loads(args_json)
+        redirect_items = sysctl_get_items_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN)
+        sysctl_config = ssr.config.Plain(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN)
+        enabled = args['enabled']
 
-def redirect_set(args_json):
-    args = json.loads(args_json)
-    redirect_items = sysctl_get_items_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN)
-    sysctl_config = ssr.config.Plain(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN)
-    enabled = args['enabled']
+        for redirect_item in redirect_items:
+            sysctl_config.set_value(redirect_item, "1" if enabled else "0")
 
-    for redirect_item in redirect_items:
-        sysctl_config.set_value(redirect_item, "1" if enabled else "0")
-
-    # 从文件中刷新
-    ssr.utils.subprocess_not_output('{0} --load'.format(SYSCTL_PATH))
-    return (True, '')
-
-
-def source_route_get():
-    retdata = dict()
-    redirect_items = sysctl_get_items_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN)
-
-    enabled = False
-    for redirect_item in redirect_items:
-        if redirect_item[1] == "1":
-            enabled = True
-            break
-
-    retdata['enabled'] = enabled
-    return (True, json.dumps(retdata))
+        # 从文件中刷新
+        ssr.utils.subprocess_not_output('{0} --load'.format(SYSCTL_PATH))
+        return (True, '')
 
 
-def source_route_set(args_json):
-    args = json.loads(args_json)
-    redirect_items = sysctl_get_items_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN)
-    sysctl_config = ssr.config.Plain(SYSCTL_CONFI_FILE)
-    enabled = args['enabled']
+class SourceRoute:
+    def get(self):
+        retdata = dict()
+        redirect_items = sysctl_get_items_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN)
 
-    for redirect_item in redirect_items:
-        sysctl_config.set_value(redirect_item, "1" if enabled else "0")
+        enabled = False
+        for redirect_item in redirect_items:
+            if redirect_item[1] == "1":
+                enabled = True
+                break
 
-    # 从文件中刷新
-    ssr.utils.subprocess_not_output('{0} --load'.format(SYSCTL_PATH))
-    return (True, '')
+        retdata['enabled'] = enabled
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+        redirect_items = sysctl_get_items_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN)
+        sysctl_config = ssr.config.Plain(SYSCTL_CONFI_FILE)
+        enabled = args['enabled']
+
+        for redirect_item in redirect_items:
+            sysctl_config.set_value(redirect_item, "1" if enabled else "0")
+
+        # 从文件中刷新
+        ssr.utils.subprocess_not_output('{0} --load'.format(SYSCTL_PATH))
+        return (True, '')
