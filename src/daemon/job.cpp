@@ -179,9 +179,9 @@ bool Job::idle_check_operation()
     // 只有任务发生变化才进行处理
     if (tmp_result.queue_is_changed)
     {
-        KLOG_DEBUG("sum finished num: %d, finished num: %d, running num: %d, current finished num: %d.",
-                   tmp_result.finished_operation_num,
+        KLOG_DEBUG("sum num: %d, finished num: %d, running num: %d, current finished num: %d.",
                    tmp_result.sum_operation_num,
+                   tmp_result.finished_operation_num,
                    tmp_result.running_operations.size(),
                    tmp_result.current_finished_operations.size());
 
