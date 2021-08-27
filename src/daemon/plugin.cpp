@@ -80,7 +80,7 @@ bool Plugin::load_plugin_module()
     }
     case Protocol::LanguageType::Value::python:
     {
-        this->loader_ = std::make_shared<PluginPythonLoader>(this->plugin_config_->name());
+        this->loader_ = std::make_shared<PluginPythonLoader>(fmt::format("ssr.{0}", this->plugin_config_->name()));
         return this->loader_->load();
     }
     default:

@@ -19,13 +19,13 @@ class Categories;
 class Plugins;
 class Job;
 
-class Manager : public SSRStub
+class Daemon : public SSRStub
 {
 public:
-    Manager();
-    virtual ~Manager();
+    Daemon();
+    virtual ~Daemon();
 
-    static Manager *get_instance() { return instance_; };
+    static Daemon *get_instance() { return instance_; };
 
     static void global_init();
 
@@ -71,9 +71,6 @@ protected:
 private:
     void init();
 
-    // 获取加固项信息
-    Json::Value get_reinforcement_json(const std::string &name);
-
     // 扫描进度信号处理
     void on_scan_process_changed_cb(const JobResult &job_result);
     // 加固进度信号处理
@@ -84,7 +81,7 @@ private:
     void on_name_lost(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
 
 private:
-    static Manager *instance_;
+    static Daemon *instance_;
 
     Configuration *configuration_;
     Categories *categories_;

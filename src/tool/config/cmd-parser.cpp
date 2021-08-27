@@ -96,7 +96,11 @@ int CmdParser::process_plain()
 
     if (!this->options_.set_key.empty())
     {
-        return plain.set(this->options_.set_key, this->options_.set_value);
+        if (!plain.set(this->options_.set_key, this->options_.set_value))
+        {
+            fmt::print(stderr, _("Failed to set value for {0}"), this->options_.set_key);
+            return EXIT_FAILURE;
+        }
     }
 
     return EXIT_SUCCESS;

@@ -61,6 +61,7 @@ struct JobResult
     std::vector<OperationResult> current_finished_operations;
 };
 
+// TODO: 同一个加固项放在同一个线程执行
 class Job
 {
 public:

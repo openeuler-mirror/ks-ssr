@@ -1,3 +1,13 @@
 
 
-add_subdirectory(network)
+
+#install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.py
+#         DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}/ssr)
+
+
+install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ssr
+         DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}
+         FILES_MATCHING REGEX ".*\\.py")
+
+GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-audit.xml.in)
+GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-network.xml.in)

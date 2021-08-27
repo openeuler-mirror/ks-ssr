@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/plugin-python.h
+ * @file          /kiran-ssr-manager/src/daemon/python/plugin-python.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -19,19 +19,24 @@ namespace Daemon
 class ReinforcementPython : public SSRReinforcementInterface
 {
 public:
-    ReinforcementPython(const std::string &package_name, const std::string &module_name);
+    ReinforcementPython(PyObject *module,
+                        const std::string &function_prefix);
     virtual ~ReinforcementPython();
 
-    virtual bool get(std::string &args, SSRErrorCode &error_code) override;
-    virtual bool set(const std::string &args, SSRErrorCode &error_code) override;
+    virtual bool get(std::string &args, std::string &error) override;
+    virtual bool set(const std::string &args, std::string &error) override;
 
     bool is_valid() { return valid_; };
 
 private:
-    std::string package_name_;
-    std::string module_name_;
+    bool check_call_result(PyObject *py_retval, const std::string &function_name, std::string &error);
 
+private:
     PyObject *module_;
+    std::string function_prefix_;
+
+    std::string get_method_name_;
+    std::string set_method_name_;
     PyObject *get_method_;
     PyObject *set_method_;
 
@@ -50,9 +55,19 @@ public:
     virtual std::shared_ptr<SSRReinforcementInterface> get_reinforcement(const std::string &name) override { return MapHelper::get_value(this->reinforcements_, name); };
 
 private:
+    void add_reinforcement(const std::string &package_name,
+                           const std::string &module_name,
+                           const std::string &reinforcement_name,
+                           const std::string &function_prefix);
+
+    PyObject *get_reinforcement_module(const std::string &module_fullname) { return MapHelper::get_value(this->reinforcements_modules_, module_fullname); };
+
+private:
     PyObject *module_;
 
     std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements_;
+
+    std::map<std::string, PyObject *> reinforcements_modules_;
 };
 }  // namespace Daemon
 }  // namespace Kiran

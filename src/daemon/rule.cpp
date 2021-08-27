@@ -11,32 +11,6 @@ namespace Kiran
 {
 namespace Daemon
 {
-std::shared_ptr<Rule> Rule::create(const Json::Value &rule)
-{
-    RETURN_VAL_IF_TRUE(!rule[SSR_JSON_BODY_RULES_TYPE].isInt(), nullptr);
-    auto type = rule[SSR_JSON_BODY_RULES_TYPE].asInt();
-
-    switch (type)
-    {
-        // TODO: 实现FIXED/ENUM
-    case Protocol::RuleType::Value::RANGE:
-    {
-        RETURN_VAL_IF_TRUE(!rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) && !rule.isMember(SSR_JSON_BODY_RULES_MAX_VALUE), nullptr);
-        if (rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) &&
-            rule.isMember(SSR_JSON_BODY_RULES_MAX_VALUE) &&
-            rule[SSR_JSON_BODY_RULES_MIN_VALUE].type() != rule[SSR_JSON_BODY_RULES_MAX_VALUE].type())
-        {
-            KLOG_WARNING("The type of min_value and max_value is not equal.");
-            return nullptr;
-        }
-        return std::make_shared<RuleRange>(rule[SSR_JSON_BODY_RULES_MIN_VALUE], rule[SSR_JSON_BODY_RULES_MAX_VALUE]);
-    }
-    default:
-        break;
-    }
-    return nullptr;
-}
-
 std::shared_ptr<Rule> Rule::create(const Protocol::Rule &rule)
 {
     switch (rule.type())
