@@ -18,21 +18,19 @@ namespace Kiran
 {
 namespace Config
 {
-
-
 class Plain
 {
 public:
     /**
      * @brief 为一个配置文件创建ConfigPlain
      * @param {conf_path}  配置文件路径。
-     * @param {delimiter_pattern}  列分割字符串的正则匹配模式
-     * @param {join_string}  在插入新行时使用的连接字符串
+     * @param {kv_split_pattern}  分割键值对的正则表达式
+     * @param {kv_join_str}  拼接键值对的字符串
      * @return {} 返回ConfigPlain对象
      */
     Plain(const std::string &conf_path,
-          const std::string &delimiter_pattern,
-          const std::string &join_string);
+          const std::string &kv_split_pattern,
+          const std::string &kv_join_str);
 
 public:
     virtual ~Plain();
@@ -44,8 +42,8 @@ public:
 
 private:
     std::string conf_path_;
-    std::string delimiter_pattern_;
-    std::string join_string_;
+    std::string kv_split_pattern_;
+    std::string kv_join_str_;
 };
 }  // namespace Config
 }  // namespace Kiran
