@@ -8,9 +8,11 @@
     <reinforcement>
         <name>audit-auditd-switch</name>
         <_label>Turn on system auditd service</_label>
+        <_description>Write audit records to the log file. This includes recording system calls and file access. Administrator can check these logs to determine whether there are security vulnerabilities.</_description>
     </reinforcement>
     <reinforcement>
         <name>audit-logrotate-rotate</name>
         <_label>System log save cycle</_label>
+        <_description>Log files are rotated before being removed</_description>
     </reinforcement>
 </ssr_plugin>
