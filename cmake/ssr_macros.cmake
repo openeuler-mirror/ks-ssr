@@ -69,12 +69,12 @@ endmacro()
 
 macro(GEN_AND_INSTALL_PLUGIN_XML XML_IN_FILE INSTALL_DIR)
     string(REGEX REPLACE "(.+)\\..*" "\\1" XML_FILE ${XML_IN_FILE})
-    execute_process(COMMAND ${INTLTOOL-MERGE} -x ${PROJECT_SOURCE_DIR}/po/
+    add_custom_target(${XML_IN_FILE} ALL
+                       COMMAND ${INTLTOOL-MERGE} -x ${PROJECT_SOURCE_DIR}/po/
                                                  ${CMAKE_CURRENT_SOURCE_DIR}/${XML_IN_FILE}
-                                                 ${CMAKE_CURRENT_BINARY_DIR}/${XML_FILE})
-
-    execute_process(COMMAND ${SED} -i -e "s/xml:lang/lang/g" ${CMAKE_CURRENT_BINARY_DIR}/${XML_FILE})
-
+                                                 ${CMAKE_CURRENT_BINARY_DIR}/${XML_FILE}
+                       COMMAND ${SED} -i -e "s/xml:lang/lang/g" ${CMAKE_CURRENT_BINARY_DIR}/${XML_FILE}
+                       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${XML_IN_FILE})
 
     install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${XML_FILE}
              DESTINATION ${INSTALL_DIR})

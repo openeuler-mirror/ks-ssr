@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/manager.h
+ * @file          /kiran-ssr-manager/src/daemon/dbus.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -19,13 +19,13 @@ class Categories;
 class Plugins;
 class Job;
 
-class Daemon : public SSRStub
+class DBus : public SSRStub
 {
 public:
-    Daemon();
-    virtual ~Daemon();
+    DBus();
+    virtual ~DBus();
 
-    static Daemon *get_instance() { return instance_; };
+    static DBus *get_instance() { return instance_; };
 
     static void global_init();
 
@@ -81,7 +81,7 @@ private:
     void on_name_lost(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
 
 private:
-    static Daemon *instance_;
+    static DBus *instance_;
 
     Configuration *configuration_;
     Categories *categories_;
