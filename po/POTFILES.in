@@ -1,8 +1,9 @@
 lib/base/error.cpp
-src/tool/crypto/ssr-cmd-parser.cpp
+src/tool/crypto/cmd-parser.cpp
 src/tool/config/main.cpp
 src/tool/config/cmd-parser.cpp
 src/tool/config/plain.cpp
+src/tool/config/pam.cpp
 [type: gettext/ini] data/ssr-categories.ini.in
 data/ssr-system-rs.xml.in
 plugins/cpp/network/ssr-plugin-network.xml.in

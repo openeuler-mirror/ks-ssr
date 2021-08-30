@@ -6,10 +6,10 @@
  */
 
 #include "lib/base/file-utils.h"
-
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include "lib/base/file-lock.h"
 
 namespace Kiran
 {
@@ -68,6 +68,49 @@ Glib::RefPtr<Gio::FileMonitor> FileUtils::make_monitor_directory(const std::stri
     }
 
     return Glib::RefPtr<Gio::FileMonitor>();
+}
+
+bool FileUtils::read_contents_with_lock(const std::string &path, std::string &contents)
+{
+    auto file_lock = FileLock::create_share_lock(path, O_RDONLY, 0);
+    if (!file_lock)
+    {
+        KLOG_DEBUG("Failed to create share lock for %s.", path.c_str());
+        return false;
+    }
+
+    try
+    {
+        contents = Glib::file_get_contents(path);
+    }
+    catch (const Glib::FileError &e)
+    {
+        KLOG_WARNING("Failed to get file contents: %s.", path.c_str());
+        return false;
+    }
+    return true;
+}
+
+bool FileUtils::write_contents_with_lock(const std::string &path, const std::string &contents)
+{
+    auto file_lock = FileLock::create_excusive_lock(path, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
+    if (!file_lock)
+    {
+        KLOG_WARNING("Failed to lock file %s.", path.c_str());
+        return false;
+    }
+
+    try
+    {
+        KLOG_DEBUG("Write contents: %s.", contents.c_str());
+        FileUtils::write_contents(path, contents);
+    }
+    catch (const Glib::Error &e)
+    {
+        KLOG_WARNING("Failed to write file contents: %s.", path.c_str());
+        return false;
+    }
+    return true;
 }
 
 bool FileUtils::write_contents(const std::string &path, const std::string &contents)
