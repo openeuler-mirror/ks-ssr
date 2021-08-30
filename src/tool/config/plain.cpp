@@ -9,30 +9,29 @@
 #include <fcntl.h>
 #include <set>
 #include "lib/base/file-lock.h"
+#include "lib/base/file-utils.h"
 
 namespace Kiran
 {
 namespace Config
 {
-#define CONF_FILE_PERMISSION 0644
-
 #define DEFAULT_SPLIT_REGEX "\\s+"
 #define DEFAULT_JOIN_STRING "\t"
 
 Plain::Plain(const std::string &conf_path,
-             const std::string &delimiter_pattern,
-             const std::string &join_string) : conf_path_(conf_path),
-                                               delimiter_pattern_(delimiter_pattern),
-                                               join_string_(join_string)
+             const std::string &kv_split_pattern,
+             const std::string &kv_join_str) : conf_path_(conf_path),
+                                               kv_split_pattern_(kv_split_pattern),
+                                               kv_join_str_(kv_join_str)
 {
-    if (this->delimiter_pattern_.empty())
+    if (this->kv_split_pattern_.empty())
     {
-        this->delimiter_pattern_ = DEFAULT_SPLIT_REGEX;
+        this->kv_split_pattern_ = DEFAULT_SPLIT_REGEX;
     }
 
-    if (this->join_string_.empty())
+    if (this->kv_join_str_.empty())
     {
-        this->join_string_ = DEFAULT_JOIN_STRING;
+        this->kv_join_str_ = DEFAULT_JOIN_STRING;
     }
 }
 
@@ -43,28 +42,10 @@ Plain::~Plain()
 bool Plain::get(const std::string &key, std::string &value)
 {
     std::string contents;
-
-    {
-        auto file_lock = FileLock::create_share_lock(this->conf_path_, O_RDONLY, 0);
-        if (!file_lock)
-        {
-            KLOG_DEBUG("Failed to create share lock for %s.", this->conf_path_.c_str());
-            return false;
-        }
-
-        try
-        {
-            contents = Glib::file_get_contents(this->conf_path_);
-        }
-        catch (const Glib::FileError &e)
-        {
-            KLOG_WARNING("Failed to get file contents: %s.", this->conf_path_.c_str());
-            return false;
-        }
-    }
+    RETURN_VAL_IF_FALSE(FileUtils::read_contents_with_lock(this->conf_path_, contents), false);
 
     auto lines = StrUtils::split_lines(contents);
-    auto split_field_regex = Glib::Regex::create(this->delimiter_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
+    auto split_field_regex = Glib::Regex::create(this->kv_split_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     for (const auto &line : lines)
     {
@@ -91,6 +72,7 @@ bool Plain::set(const std::string &key, const std::string &value)
 {
     std::string new_contents;
 
+    // 在读写期间都不应该让其他进程改动该文件，否则可能会导致结果不一致。
     auto file_lock = FileLock::create_excusive_lock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
     if (!file_lock)
     {
@@ -101,8 +83,8 @@ bool Plain::set(const std::string &key, const std::string &value)
     auto contents = Glib::file_get_contents(this->conf_path_);
     auto lines = StrUtils::split_lines(contents);
 
-    auto split_field_regex = Glib::Regex::create(this->delimiter_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
-    auto second_field_regex = Glib::Regex::create(fmt::format("(\\s*\\S+{0})(\\S+)", this->delimiter_pattern_),
+    auto split_field_regex = Glib::Regex::create(this->kv_split_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
+    auto second_field_regex = Glib::Regex::create(fmt::format("(\\s*\\S+{0})(\\S+)", this->kv_split_pattern_),
                                                   Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     bool replaced = false;
@@ -137,7 +119,7 @@ bool Plain::set(const std::string &key, const std::string &value)
     // 如果不存在该key且设置的值不为空，则在最后添加一行
     if (!replaced && !value.empty())
     {
-        auto new_line = key + this->join_string_ + value + "\n";
+        auto new_line = key + this->kv_join_str_ + value + "\n";
         KLOG_DEBUG("New line: %s.", new_line.c_str());
         new_contents.append(new_line);
     }
