@@ -119,6 +119,16 @@
                     </xsd:simpleContent>
                 </xsd:complexType>
             </xsd:element>
+            <!-- 加固项描述 -->
+            <xsd:element name="description" maxOccurs="unbounded" minOccurs="0">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
             <!-- 加固项参数 -->
             <xsd:element name="arg" type="ReinforcementArg" maxOccurs="unbounded" minOccurs="0" />
         </xsd:sequence>
