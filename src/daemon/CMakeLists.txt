@@ -18,11 +18,11 @@ add_executable(${TARGET_NAME}
 target_include_directories(${TARGET_NAME} PRIVATE
                            ${PROJECT_BINARY_DIR}/generated
                            ${XERCES_INCLUDE_DIRS}
-                           ${PYTHON3_INCLUDE_DIRS})
+                           ${PYTHON_INCLUDE_DIRS})
 
 target_link_libraries(${TARGET_NAME} PUBLIC
                       ${XERCES_LIBRARIES}
-                      ${PYTHON3_LIBRARIES}
+                      ${PYTHON_LIBRARIES}
                       lib-base)
 
 install(TARGETS ${TARGET_NAME}
