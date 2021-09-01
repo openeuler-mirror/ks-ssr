@@ -10,4 +10,6 @@ install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ssr
          FILES_MATCHING REGEX ".*\\.py")
 
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-audit.xml.in)
+GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-config.xml.in)
+GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-external.xml.in)
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-network.xml.in)

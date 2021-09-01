@@ -5,6 +5,9 @@
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+
 #include "src/daemon/job.h"
 #include "src/daemon/plugins.h"
 
