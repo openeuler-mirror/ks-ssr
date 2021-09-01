@@ -2,49 +2,115 @@
 
 import json
 import ssr.systemd
-from ssr import log
+import ssr.log
 
 FIREWALL_CMD_PATH = '/usr/bin/firewall-cmd'
 
 
-class Switch:
+class Firewalld:
+    def has_port(self, port):
+        command = '{0} --query-port={1} --permanent'.format(FIREWALL_CMD_PATH, port)
+        output = ssr.utils.subprocess_has_output(command)
+        return (output == 'yes')
+
+    def add_port(self, port):
+        if self.has_port(port):
+            return
+        command = '{0} --add-port={1} --permanent'.format(FIREWALL_CMD_PATH, port)
+        ssr.utils.subprocess_not_output(command)
+
+    def remove_port(self, port):
+        if not self.has_port(port):
+            return
+        command = '{0} --remove-port={1} --permanent'.format(FIREWALL_CMD_PATH, port)
+        ssr.utils.subprocess_not_output(command)
+
+    def list_ports(self):
+        command = '{0} --list-ports --permanent'.format(FIREWALL_CMD_PATH)
+        return ssr.utils.subprocess_has_output(command).split()
+
+    def set_ports(self, ports):
+        old_ports = self.list_ports()
+        common_ports = set(ports).intersection(set(old_ports))
+
+        for port in ports:
+            if not common_ports.__contains__(port):
+                self.add_port(port)
+
+        for port in old_ports:
+            if not common_ports.__contains__(port):
+                self.remove_port(port)
+
+    def clear_ports(self):
+        ports = self.list_ports()
+        for port in ports:
+            self.remove_port(port)
+
+    def reload(self):
+        command = '{0} --reload'.format(FIREWALL_CMD_PATH)
+        return ssr.utils.subprocess_not_output(command)
+
+    def list_icmp_blocks(self):
+        command = '{0} --list-icmp-blocks --permanent'.format(FIREWALL_CMD_PATH)
+        return ssr.utils.subprocess_has_output(command)
+
+    def add_icmp_blocks(self, block):
+        command = '{0} --add-icmp-block={1} --permanent'.format(FIREWALL_CMD_PATH, block)
+        ssr.utils.subprocess_not_output(command)
+
+    def remove_icmp_blocks(self, block):
+        command = '{0} --remove-icmp-block={1} --permanent'.format(FIREWALL_CMD_PATH, block)
+        ssr.utils.subprocess_not_output(command)
+
+
+class Switch(Firewalld):
+    def __init__(self):
+        self.firewalld_systemd = ssr.systemd.Proxy('firewalld')
+
     def get(self):
-        systemd_proxy = ssr.systemd.Proxy('firewalld')
         retdata = dict()
-        retdata['enabled'] = systemd_proxy.is_active()
+        retdata['enabled'] = self.firewalld_systemd.is_active()
+        retdata['ports'] = ';'.join(self.list_ports())
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        systemd_proxy = ssr.systemd.Proxy('firewalld')
 
         # 也可以不用捕获异常，后台框架会对异常进行处理
         try:
             if args['enabled']:
-                systemd_proxy.enable()
-                systemd_proxy.start()
+                self.firewalld_systemd.enable()
+                self.firewalld_systemd.start()
             else:
-                systemd_proxy.disable()
-                systemd_proxy.stop()
-            return (True, '')
+                if self.firewalld_systemd.exist():
+                    self.firewalld_systemd.disable()
+                    self.firewalld_systemd.stop()
         except Exception as e:
             return (False, e)
 
+        if len(args['ports']) == 0:
+            self.clear_ports()
+        else:
+            self.set_ports(args['ports'].split(';'))
+        self.reload()
+        return (True, '')
 
-class IcmpTimestamp:
+
+class IcmpTimestamp(Firewalld):
     def get(self):
         retdata = dict()
-        command = '{0} --list-icmp-blocks'.format(FIREWALL_CMD_PATH)
-        command_output = ssr.utils.subprocess_has_output(command)
-        log.debug(command_output)
+        command_output = self.list_icmp_blocks()
+        ssr.log.debug(command_output)
         icmp_blocks = command_output.split()
         retdata['disable_timestamp_request'] = icmp_blocks.__contains__('timestamp-request')
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        set_command = '{0} --{1}-icmp-block=timestamp-request'.format(FIREWALL_CMD_PATH, 'add' if args['disable_timestamp_request'] else 'remove')
-        ssr.utils.subprocess_not_output(set_command)
-        reload_command = '{0} --reload'.format(FIREWALL_CMD_PATH)
-        ssr.utils.subprocess_not_output(reload_command)
+
+        if args['disable_timestamp_request']:
+            self.add_icmp_blocks('timestamp-request')
+        else:
+            self.remove_icmp_blocks('timestamp-request')
+        self.reload()
         return (True, '')

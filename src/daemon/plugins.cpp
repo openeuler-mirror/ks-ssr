@@ -10,7 +10,8 @@
 
 #include "src/daemon/configuration.h"
 #include "src/daemon/plugins.h"
-#include "src/daemon/python/python-log.h"
+#include "src/daemon/python/python-klog.h"
+#include "src/daemon/utils.h"
 
 namespace Kiran
 {
@@ -23,6 +24,7 @@ Plugins::Plugins(Configuration* configuration) : configuration_(configuration),
 
 Plugins::~Plugins()
 {
+    Py_Finalize();
 }
 
 Plugins* Plugins::instance_ = nullptr;
@@ -83,15 +85,31 @@ std::shared_ptr<SSRReinforcementInterface> Plugins::get_reinfocement_interface(c
 void Plugins::init()
 {
     // 内建模块的名称不支持package.module格式，因此这里不加ssr前缀了
-    PyImport_AppendInittab("log", PyInit_log);
+    PyImport_AppendInittab("klog", PyInit_klog);
 
     auto import_package_path = fmt::format("sys.path.append('{0}')", SSR_PLUGIN_PYTHON_ROOT_DIR);
+    /* Python解析器不是线程安全的，Python解析器维护了一个全局锁(GIL)，多线程环境下，线程在执行Python的C API时需要先获取GIL，
+       否则会导致数据异常。程序调用PyEval_InitThreads函数初始化时默认获取GIL，因此最开始是主线程拥有GIL，如果主线程未调用Python的C API，
+       应该要释放掉GIL，否则其他线程在运行前无法获取到GIL，当主线程再次调用Python的C API时可以再去请求GIL。
+       
+       特别说明：当线程/主线程获取到GIL后，如果此时正在python脚本中执行IO/sleep等操作，Python解析器会负责对锁进行释放，等IO操作完成后重新请求GIL，
+       相当于Python会自动执行如下代码：
+       Py_BEGIN_ALLOW_THREADS // 释放锁
+        ... Do some blocking I/O operation ...
+       Py_END_ALLOW_THREADS   // 请求锁
+       
+       因此，虽然Python解析器同时只能有一个线程在运行，但不用担心线程获取到GIL后其他线程无法执行，Python解析器会根据实际情况进行优化，
+       保证多个线程运行时可以进行切换。*/
+    PyEval_InitThreads();
     Py_Initialize();
     PyRun_SimpleString("import sys");
     PyRun_SimpleString(import_package_path.c_str());
 
     this->load_plugins();
     this->load_reinforcements();
+
+    // 这里对锁进行释放，确保其他线程可以获取到锁，如果主线程还需要操作Python解析器，则需要重新获取锁
+    Utils::py_gi_unlock();
 
     this->configuration_->signal_rs_changed().connect(sigc::mem_fun(this, &Plugins::on_rs_changed_cb));
 }

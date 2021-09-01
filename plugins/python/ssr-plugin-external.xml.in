@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<ssr_plugin>
+    <name>external</name>
+    <category>external</category>
+    <_label>external settings</_label>
+    <language_type>python</language_type>
+    <available>true</available>
+    <reinforcement>
+        <name>external-radio-switch</name>
+        <_label>Disable radio network</_label>
+    </reinforcement>
+</ssr_plugin>

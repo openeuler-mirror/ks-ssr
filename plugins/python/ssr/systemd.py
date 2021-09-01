@@ -1,9 +1,17 @@
+#--coding:utf8 --
+import json
 import ssr.utils
 
 
 class Proxy:
     def __init__(self, service):
         self.service = service
+
+    # 判断服务是否存在
+    def exist(self):
+        command = 'systemctl list-unit-files {0}.service | grep {0} | wc -l'
+        num = ssr.utils.subprocess_has_output(command)
+        return (num == '1')
 
     def is_active(self):
         actived = self.__call_result('is-active')
@@ -40,3 +48,30 @@ class Proxy:
     def __call_result(self, action):
         command = 'systemctl {0} {1}.service'.format(action, self.service)
         return ssr.utils.subprocess_has_output(command)
+
+
+class SwitchBase(object):
+    def __init__(self, service, key='enabled'):
+        self.systemd_proxy = Proxy(service)
+        self.key = key
+
+    def get(self):
+        retdata = dict()
+        retdata[self.key] = self.systemd_proxy.is_active()
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+
+        # 也可以不用捕获异常，后台框架会对异常进行处理
+        try:
+            if args[self.key]:
+                self.systemd_proxy.enable()
+                self.systemd_proxy.start()
+            else:
+                if self.systemd_proxy.exist():
+                    self.systemd_proxy.disable()
+                    self.systemd_proxy.stop()
+            return (True, '')
+        except Exception as e:
+            return (False, e)

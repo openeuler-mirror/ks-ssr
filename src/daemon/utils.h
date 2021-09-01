@@ -13,6 +13,9 @@
 struct _object;
 typedef struct _object PyObject;
 
+struct _ts;
+typedef struct _ts PyThreadState;
+
 namespace Kiran
 {
 namespace Daemon
@@ -48,7 +51,15 @@ public:
 
     static std::string pyobject_as_string(PyObject *pyobject);
     // 检查json脚本执行是否存在异常，如果返回值为空表示不存在异常
-    static std::string catch_exception();
+    static std::string py_catch_exception();
+    // 获取python GIL（只能主线程执行)
+    static void py_gi_lock();
+    // 释放python GIL
+    static void py_gi_unlock();
+
+private:
+    // python主线程状态
+    static PyThreadState *main_thread_state_;
 };
 
 }  // namespace Daemon
