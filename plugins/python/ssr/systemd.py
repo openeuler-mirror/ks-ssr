@@ -9,7 +9,7 @@ class Proxy:
 
     # 判断服务是否存在
     def exist(self):
-        command = 'systemctl list-unit-files {0}.service | grep {0} | wc -l'
+        command = 'systemctl list-unit-files {0}.service | grep {1} | wc -l'.format(self.service, self.service)
         num = ssr.utils.subprocess_has_output(command)
         return (num == '1')
 
@@ -74,4 +74,4 @@ class SwitchBase(object):
                     self.systemd_proxy.stop()
             return (True, '')
         except Exception as e:
-            return (False, e)
+            return (False, str(e))
