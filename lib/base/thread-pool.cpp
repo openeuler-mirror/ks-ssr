@@ -15,12 +15,13 @@ ThreadPool::ThreadPool(size_t thread_num) : thread_num_(thread_num),
 {
     for (size_t i = 0; i < this->thread_num_; ++i)
     {
-        workers_[i].thread = std::thread(
+        this->workers_[i].thread = std::thread(
             [this, i] {
                 while (true)
                 {
                     std::packaged_task<void()> task;
                     auto &private_tasks = this->workers_[i].tasks;
+                    // static std::chrono::microseconds du(500);
 
                     {
                         std::unique_lock<std::mutex> lock(this->queue_mutex_);
@@ -43,7 +44,10 @@ ThreadPool::ThreadPool(size_t thread_num) : thread_num_(thread_num),
                         }
                     }
 
-                    task();
+                    if (task.valid())
+                    {
+                        task();
+                    }
                 }
             });
     }
