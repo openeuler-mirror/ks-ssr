@@ -38,18 +38,22 @@ extern "C"
         SSR_REINFORCEMENT_STATE_SAFE = (1 << 0),
         // 不符合标准
         SSR_REINFORCEMENT_STATE_UNSAFE = (1 << 1),
-        // 未扫描
+        // 未扫描，加固项还未扫描任务就被取消则会变为该状态
         SSR_REINFORCEMENT_STATE_UNSCAN = (1 << 2),
         // 扫描中
         SSR_REINFORCEMENT_STATE_SCANNING = (1 << 3),
+        // 扫描错误
+        SSR_REINFORCEMENT_STATE_SCAN_ERROR = (1 << 4),
         // 扫描完成
-        SSR_REINFORCEMENT_STATE_SCAN_DONE = (1 << 4),
-        // 未加固
-        SSR_REINFORCEMENT_STATE_UNREINFORCE = (1 << 5),
+        SSR_REINFORCEMENT_STATE_SCAN_DONE = (1 << 5),
+        // 未加固，加固项还未加固任务就被取消则会变为该状态
+        SSR_REINFORCEMENT_STATE_UNREINFORCE = (1 << 6),
+        // 加固错误
+        SSR_REINFORCEMENT_STATE_REINFORCE_ERROR = (1 << 7),
         // 加固中
-        SSR_REINFORCEMENT_STATE_REINFORCING = (1 << 6),
+        SSR_REINFORCEMENT_STATE_REINFORCING = (1 << 8),
         // 加固完成
-        SSR_REINFORCEMENT_STATE_REINFORCE_DONE = (1 << 7)
+        SSR_REINFORCEMENT_STATE_REINFORCE_DONE = (1 << 9)
     };
 
     // 加固类型
