@@ -6,13 +6,12 @@
  */
 
 #include "lib/base/base.h"
-#include "plugin-i.h"
+#include "ssr-plugin-i.h"
 
 namespace Kiran
 {
 namespace External
 {
-
 class SSRPluginExternal : public SSRPluginInterface
 {
 public:

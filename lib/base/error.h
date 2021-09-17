@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-#include "error-i.h"
+#include "ssr-error-i.h"
 
 namespace Kiran
 {
