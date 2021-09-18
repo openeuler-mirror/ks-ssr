@@ -134,7 +134,7 @@ bool ReinforcementPython::check_call_result(PyObject *py_retval, const std::stri
     }
 
     auto retval_num = PyTuple_Size(py_retval);
-    if (retval_num < 2)
+    if (int32_t(retval_num) < 2)
     {
         error = fmt::format(_("The number of tuple returned by {0} is less than 2."), function_name);
         return false;
@@ -190,7 +190,7 @@ void PluginPython::activate()
 
     KLOG_DEBUG("Package name: %s, reinforcement number: %d.", package_name, reinforcement_num);
 
-    for (uint32_t i = 0; i < reinforcement_num; ++i)
+    for (int32_t i = 0; i < int32_t(reinforcement_num); ++i)
     {
         auto py_reinforcement = PyTuple_GetItem(py_reinforcements, i);
         if (!py_reinforcement || !PyDict_Check(py_reinforcement))
