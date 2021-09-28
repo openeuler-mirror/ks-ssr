@@ -88,7 +88,7 @@ void DBus::GetCategories(MethodInvocation& invocation)
 
     try
     {
-        values["item_count"] = categories.size();
+        values["item_count"] = int32_t(categories.size());
         for (uint32_t i = 0; i < categories.size(); ++i)
         {
             auto category = categories[i];
