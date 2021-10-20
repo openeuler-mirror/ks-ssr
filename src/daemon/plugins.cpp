@@ -193,7 +193,7 @@ void Plugins::load_reinforcements()
 {
     KLOG_PROFILE("");
 
-    // TODO: 更新优化，现有的加固项调用更新函数
+    // TODO: 更新优化，现有的加固项调用更新函数，这里更新后应该需要通过DBUS发送信号
     this->reinforcements_.clear();
 
     auto rs = this->configuration_->get_rs();
