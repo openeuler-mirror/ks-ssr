@@ -103,7 +103,7 @@ bool Configuration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCode&
 
 bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcement)
 {
-    auto ra = this->get_ra();
+    auto ra = this->read_ra_from_file();
 
     for (auto& reinforcement : ra->reinforcement())
     {
@@ -121,19 +121,39 @@ bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcemen
         break;
     }
 
-    try
+    return this->write_ra_to_file(ra);
+}
+
+void Configuration::del_custom_ra(const std::string& name)
+{
+    auto ra = this->read_ra_from_file();
+    bool is_del = false;
+
+    for (auto iter = ra->reinforcement().begin(); iter != ra->reinforcement().end(); ++iter)
     {
-        std::ofstream ofs(CUSTOM_RA_FILEPATH, std::ios_base::out);
-        ssr_ra(ofs, *ra.get());
-        ofs.close();
+        if (iter->name() == name)
+        {
+            ra->reinforcement().erase(iter);
+            is_del = true;
+            break;
+        }
     }
-    catch (const std::exception& e)
+
+    if (is_del)
     {
-        KLOG_WARNING("%s", e.what());
-        return false;
+        this->write_ra_to_file(ra);
     }
-    this->reload_rs();
-    return true;
+}
+
+void Configuration::del_all_custom_ra()
+{
+    auto ra = this->read_ra_from_file();
+
+    if (ra->reinforcement().size() > 0)
+    {
+        ra->reinforcement().clear();
+        this->write_ra_to_file(ra);
+    }
 }
 
 void Configuration::init()
@@ -164,7 +184,7 @@ void Configuration::load_rs()
     this->rs_ = this->get_fixed_rs();
     RETURN_IF_FALSE(this->rs_);
 
-    auto ra = this->get_ra();
+    auto ra = this->read_ra_from_file();
     // 将固定不变的加固标准部分和用户修改的自定义部分进行整合
     for (const auto& custom_r : ra->reinforcement())
     {
@@ -197,7 +217,7 @@ std::shared_ptr<RS> Configuration::get_fixed_rs()
     return nullptr;
 }
 
-std::shared_ptr<RA> Configuration::get_ra()
+std::shared_ptr<RA> Configuration::read_ra_from_file()
 {
     KLOG_PROFILE("");
 
@@ -213,6 +233,23 @@ std::shared_ptr<RA> Configuration::get_ra()
         KLOG_WARNING("%s", e.what());
     }
     return std::make_shared<RA>();
+}
+
+bool Configuration::write_ra_to_file(std::shared_ptr<Protocol::RA> ra)
+{
+    try
+    {
+        std::ofstream ofs(CUSTOM_RA_FILEPATH, std::ios_base::out);
+        ssr_ra(ofs, *ra.get());
+        ofs.close();
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+        return false;
+    }
+    this->reload_rs();
+    return true;
 }
 
 void Configuration::join_reinforcement(Reinforcement& to_r, const Reinforcement& from_r)
