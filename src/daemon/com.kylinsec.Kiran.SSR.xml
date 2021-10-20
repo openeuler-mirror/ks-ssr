@@ -38,6 +38,10 @@
             <description>Get the reinforcements information of SSR.</description>
         </method>
 
+        <method name="ResetReinforcements">
+            <description>Reset all reinforcemnt info to default value.</description>
+        </method>
+
         <method name="GetReinforcement">
             <arg type="s" name="name" direction="in">
                 <summary>The reinforcement name.</summary>
@@ -53,6 +57,13 @@
                 <summary>The reinforcement info.</summary>
             </arg>
             <description>Set the custom reinforcement.</description>
+        </method>
+
+        <method name="ResetReinforcement">
+            <arg type="s" name="name" direction="in">
+                <summary>The reinforcement name.</summary>
+            </arg>
+            <description>Reset the reinforcemnt info to default value.</description>
         </method>
 
         <method name="Scan">
