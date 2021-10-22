@@ -105,10 +105,13 @@ bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcemen
 {
     auto ra = this->read_ra_from_file();
 
+    bool match_reinforcement = false;
+
     for (auto& reinforcement : ra->reinforcement())
     {
         CONTINUE_IF_TRUE(reinforcement.name() != rs_reinforcement.name());
 
+        match_reinforcement = true;
         for (auto& new_arg : rs_reinforcement.arg())
         {
             for (auto& old_arg : reinforcement.arg())
@@ -119,6 +122,20 @@ bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcemen
             }
         }
         break;
+    }
+
+    // 如果配置中不存在加固项的自定义配置，则添加该加固项的自定义配置
+    if (!match_reinforcement)
+    {
+        Protocol::Reinforcement used_reinforcement(rs_reinforcement.name());
+
+        for (auto& arg : rs_reinforcement.arg())
+        {
+            Protocol::ReinforcementArg used_arg(arg.name(), arg.value());
+            used_reinforcement.arg().push_back(used_arg);
+        }
+
+        ra->reinforcement().push_back(used_reinforcement);
     }
 
     return this->write_ra_to_file(ra);
