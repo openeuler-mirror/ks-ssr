@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-30 17:23+0800\n"
+"POT-Creation-Date: 2021-11-08 16:02+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -167,38 +167,91 @@ msgid "Level I safety standard"
 msgstr "一级安全标准"
 
 #: ../data/ssr-system-rs.xml.in.h:2
-#: ../plugins/python/ssr-plugin-network.xml.in.h:2
 msgid "Turn on system firewall service"
 msgstr "开启系统防火墙服务"
 
 #: ../data/ssr-system-rs.xml.in.h:3
-#: ../plugins/python/ssr-plugin-network.xml.in.h:3
-msgid "Disable ICMP timestamp query"
-msgstr "禁止ICMP时间戳请求"
+msgid "Opened ports"
+msgstr "开放端口"
 
 #: ../data/ssr-system-rs.xml.in.h:4
-#: ../plugins/python/ssr-plugin-network.xml.in.h:4
-msgid "Disable ICMP redirection"
-msgstr "禁止ICMP重定向"
+msgid "Turn on ICMP redirection"
+msgstr "开启ICMP重定向"
 
 #: ../data/ssr-system-rs.xml.in.h:5
-#: ../plugins/python/ssr-plugin-network.xml.in.h:5
-msgid "Disable IP source routing"
-msgstr "禁止IP源路由"
+msgid "Prevent syn flood attacks"
+msgstr "防止syn flood攻击"
 
 #: ../data/ssr-system-rs.xml.in.h:6
+msgid "Turn on IP source routing"
+msgstr "开启IP源路由"
+
+#: ../data/ssr-system-rs.xml.in.h:7
+msgid "Allow ICMP timestamp query"
+msgstr "允许ICMP时间戳请求"
+
+#: ../data/ssr-system-rs.xml.in.h:8
+msgid "Turn off sendmail service"
+msgstr "关闭系统审计服务"
+
+#: ../data/ssr-system-rs.xml.in.h:9
 #: ../plugins/python/ssr-plugin-audit.xml.in.h:2
 msgid "Turn on system auditd service"
 msgstr "开启系统审计服务"
 
-#: ../data/ssr-system-rs.xml.in.h:7
+#: ../data/ssr-system-rs.xml.in.h:10
 #: ../plugins/python/ssr-plugin-audit.xml.in.h:4
 msgid "System log save cycle"
 msgstr "系统日志保存周期"
 
+#: ../data/ssr-system-rs.xml.in.h:11
+msgid "Disable radio network"
+msgstr ""
+
 #: ../plugins/python/ssr-plugin-network.xml.in.h:1
 msgid "network settings"
 msgstr "网络设置"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:2
+msgid "System firewall service"
+msgstr "系统防火墙服务"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:3
+msgid "Provides dynamically managed firewall"
+msgstr "提供动态管理的防火墙"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:4
+msgid "ICMP redirection"
+msgstr "ICMP重定向"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:5
+msgid "Protect against ICMP redirection attacks"
+msgstr "防止受到ICMP重定向攻击"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:6
+msgid "Syn flood attacks"
+msgstr "Syn flood攻击"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:7
+msgid "Protect against syn flood attacks"
+msgstr "防止受到syn flood攻击"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:8
+msgid "IP source routing"
+msgstr "IP源路由"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:9
+msgid "Prevent source address spoofing"
+msgstr "防止源地址欺骗"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:10
+msgid "ICMP timestamp query"
+msgstr "ICMP时间戳请求"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:11
+msgid ""
+"Prevent attackers from attacking some time authentication based protocols"
+msgstr "防止攻击者攻击一些基于时间认证的协议"
 
 #: ../plugins/python/ssr-plugin-audit.xml.in.h:1
 msgid "audit settings"
@@ -217,17 +270,8 @@ msgstr ""
 msgid "Log files are rotated before being removed"
 msgstr "日志文件在被删除之前进行滚动"
 
-#~ msgid "network manager"
-#~ msgstr "网络管理"
-
-#~ msgid "audit manager"
-#~ msgstr "审计管理"
-
-#~ msgid "Specify regular expression to match lines"
-#~ msgstr "匹配行的"
-
-#~ msgid "Network test"
-#~ msgstr "网络测试"
+#~ msgid "Turn on ICMP timestamp query"
+#~ msgstr "开启ICMP时间戳请求"
 
 #~ msgid "The configuration file path"
 #~ msgstr "配置文件路径"

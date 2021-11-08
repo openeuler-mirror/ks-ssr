@@ -2,10 +2,11 @@
 
 import json
 import ssr.configuration
+import ssr.log
 
 SYSCTL_PATH = '/usr/sbin/sysctl'
 
-SYSCTL_CONFI_FILE = "/etc/sysctl.d/10-sysctl-ssr.conf"
+SYSCTL_CONFI_FILE = "/etc/sysctl.d/90-sysctl-ssr.conf"
 SYSCTL_CONFIG_FIELD_PARTTERN = "\\s*=\\s*"
 SYSCTL_ACCEPT_REDIRECTS_PATTERN = "net.ipv4.conf.*.accept_redirects"
 SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN = "net.ipv4.conf.*.accept_source_route"
@@ -17,14 +18,18 @@ class Sysctl:
         lines = output.split('\n')
         retval = list()
         for line in lines:
-            fields = line.split()
+            fields = line.split('=')
             if len(fields) != 2:
                 continue
-            retval.append((fields[0], fields[1]))
+            retval.append((fields[0].strip(), fields[1].strip()))
         return retval
 
+    def load_from_system(self):
+        ssr.utils.subprocess_not_output('{0} --system'.format(SYSCTL_PATH))
 
-class Redirect(Sysctl):
+
+# 开启ICMP重定向
+class IcmpRedirect(Sysctl):
     def get(self):
         retdata = dict()
         redirect_items = self.get_items_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN)
@@ -41,25 +46,25 @@ class Redirect(Sysctl):
     def set(self, args_json):
         args = json.loads(args_json)
         redirect_items = self.get_items_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN)
-        sysctl_config = ssr.configuration.Plain(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN)
+        sysctl_config = ssr.configuration.Plain(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN, ' = ')
         enabled = args['enabled']
 
         for redirect_item in redirect_items:
-            sysctl_config.set_value(redirect_item, "1" if enabled else "0")
+            sysctl_config.set_value(redirect_item[0], "1" if enabled else "0")
 
         # 从文件中刷新
-        ssr.utils.subprocess_not_output('{0} --load'.format(SYSCTL_PATH))
+        self.load_from_system()
         return (True, '')
 
 
 class SourceRoute(Sysctl):
     def get(self):
         retdata = dict()
-        redirect_items = self.get_items_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN)
+        source_route_items = self.get_items_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN)
 
         enabled = False
-        for redirect_item in redirect_items:
-            if redirect_item[1] == "1":
+        for source_route_item in source_route_items:
+            if source_route_item[1] == "1":
                 enabled = True
                 break
 
@@ -69,12 +74,29 @@ class SourceRoute(Sysctl):
     def set(self, args_json):
         args = json.loads(args_json)
         redirect_items = self.get_items_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN)
-        sysctl_config = ssr.configuration.Plain(SYSCTL_CONFI_FILE)
+        sysctl_config = ssr.configuration.Plain(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN, ' = ')
         enabled = args['enabled']
 
         for redirect_item in redirect_items:
-            sysctl_config.set_value(redirect_item, "1" if enabled else "0")
+            sysctl_config.set_value(redirect_item[0], "1" if enabled else "0")
 
         # 从文件中刷新
-        ssr.utils.subprocess_not_output('{0} --load'.format(SYSCTL_PATH))
+        self.load_from_system()
+        return (True, '')
+
+
+class SynFlood(Sysctl):
+    def get(self):
+        retdata = dict()
+        retdata['enabled'] = (ssr.utils.subprocess_has_output('sysctl -a -r net.ipv4.tcp_syncookies -n') == '1')
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+        sysctl_config = ssr.configuration.Plain(SYSCTL_CONFI_FILE)
+        enabled = args['enabled']
+        sysctl_config.set_value("net.ipv4.tcp_syncookies", "1" if enabled else "0")
+
+        # 从文件中刷新
+        self.load_from_system()
         return (True, '')
