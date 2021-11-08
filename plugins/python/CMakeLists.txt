@@ -5,9 +5,15 @@
 #         DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}/ssr)
 
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ssr/vars.py.in ${CMAKE_BINARY_DIR}/ssr/vars.py)
+
 install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ssr
          DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}
-         FILES_MATCHING REGEX ".*\\.py")
+         FILES_MATCHING REGEX ".*\\.(py|ini)$")
+
+install (FILES ${CMAKE_BINARY_DIR}/ssr/vars.py
+         DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}/ssr)
+
 
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-audit.xml.in)
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-config.xml.in)
