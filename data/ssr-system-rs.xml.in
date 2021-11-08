@@ -31,22 +31,7 @@
             </arg>
         </reinforcement>
         <reinforcement>
-            <name>network-firewalld-icmp-timestamp</name>
-            <arg>
-                <name>disable_timestamp_request</name>
-                <value>true</value>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Disable ICMP timestamp query</_label>
-                </layout>
-            </arg>
-        </reinforcement>
-        <reinforcement>
-            <name>network-sysctl-redirect</name>
+            <name>network-sysctl-icmp-redirect</name>
             <arg>
                 <name>enabled</name>
                 <value>false</value>
@@ -56,7 +41,22 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Disable ICMP redirection</_label>
+                    <_label>Turn on ICMP redirection</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>network-sysctl-syn-flood</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Prevent syn flood attacks</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -71,7 +71,22 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Disable IP source routing</_label>
+                    <_label>Turn on IP source routing</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>network-firewalld-icmp-timestamp</name>
+            <arg>
+                <name>timestamp_request</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow ICMP timestamp query</_label>
                 </layout>
             </arg>
         </reinforcement>

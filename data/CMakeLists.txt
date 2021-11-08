@@ -62,7 +62,7 @@ endif()
 install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.Kiran.SSR.conf
         DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d/)
 
-install (FILES ${PROJECT_SOURCE_DIR}/data/10-sysctl-ssr.conf
+install (FILES ${PROJECT_SOURCE_DIR}/data/90-sysctl-ssr.conf
          DESTINATION /etc/sysctl.d/)
 
 # pc file
