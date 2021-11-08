@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-08 16:02+0800\n"
+"POT-Creation-Date: 2021-11-08 17:58+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -195,16 +195,22 @@ msgid "Turn off sendmail service"
 msgstr "关闭系统审计服务"
 
 #: ../data/ssr-system-rs.xml.in.h:9
-#: ../plugins/python/ssr-plugin-audit.xml.in.h:2
 msgid "Turn on system auditd service"
 msgstr "开启系统审计服务"
 
 #: ../data/ssr-system-rs.xml.in.h:10
-#: ../plugins/python/ssr-plugin-audit.xml.in.h:4
 msgid "System log save cycle"
 msgstr "系统日志保存周期"
 
 #: ../data/ssr-system-rs.xml.in.h:11
+msgid "The maximum permission of log files and configurations is set to 0644"
+msgstr "日志文件和配置的最大权限为0644"
+
+#: ../data/ssr-system-rs.xml.in.h:12
+msgid "Log files can only be appended"
+msgstr "日志文件仅能被添加"
+
+#: ../data/ssr-system-rs.xml.in.h:13
 msgid "Disable radio network"
 msgstr ""
 
@@ -257,6 +263,10 @@ msgstr "防止攻击者攻击一些基于时间认证的协议"
 msgid "audit settings"
 msgstr "审计设置"
 
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:2
+msgid "Auditd service"
+msgstr "审计服务"
+
 #: ../plugins/python/ssr-plugin-audit.xml.in.h:3
 msgid ""
 "Write audit records to the log file. This includes recording system calls "
@@ -266,31 +276,18 @@ msgstr ""
 "将审计记录写入日志文件。包括记录系统调用和文件访问。管理员可以检查这些日志，"
 "确定是否存在安全漏洞。"
 
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:4
+msgid "Log save cycle"
+msgstr "日志保存周期"
+
 #: ../plugins/python/ssr-plugin-audit.xml.in.h:5
 msgid "Log files are rotated before being removed"
 msgstr "日志文件在被删除之前进行滚动"
 
-#~ msgid "Turn on ICMP timestamp query"
-#~ msgstr "开启ICMP时间戳请求"
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:6
+msgid "Log file permissions"
+msgstr "日志文件权限"
 
-#~ msgid "The configuration file path"
-#~ msgstr "配置文件路径"
-
-#~ msgid "Get the value of a key"
-#~ msgstr "获取键的值"
-
-#~ msgid "Set the value of a key"
-#~ msgstr "设置键的值"
-
-#~ msgid ""
-#~ "The user will be locked if the number of login failed exceeds the limit."
-#~ msgstr "登陆失败次数超过限制则锁定用户"
-
-#~ msgid "User password complexity"
-#~ msgstr "用户密码复杂度"
-
-#~ msgid "Password expired date for user"
-#~ msgstr "用户密码过期时间"
-
-#~ msgid "Account login failure limit"
-#~ msgstr "账户登陆失败限制"
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:7
+msgid "Avoid changes to log files at will"
+msgstr "避免随意改动日志文件"
