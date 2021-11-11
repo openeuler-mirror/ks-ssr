@@ -2,14 +2,17 @@ import subprocess
 import ssr.log
 
 
-def subprocess_not_output(args):
+def subprocess_not_output(args, ignore_exception=False):
     ssr.log.debug(args)
     child_process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
     exit_code = child_process.wait()
     error = child_process.stderr.read().strip().decode('utf-8')
     if exit_code != 0 and len(error) > 0:
-        raise Exception(error)
+        if ignore_exception:
+            ssr.log.debug(error)
+        else:
+            raise Exception(error)
 
 
 def subprocess_has_output(args):
