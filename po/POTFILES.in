@@ -2,9 +2,9 @@ lib/base/error.cpp
 src/tool/crypto/cmd-parser.cpp
 src/tool/config/main.cpp
 src/tool/config/cmd-parser.cpp
-src/tool/config/plain.cpp
-src/tool/config/pam.cpp
 [type: gettext/ini] data/ssr-categories.ini.in
 data/ssr-system-rs.xml.in
-plugins/python/ssr-plugin-network.xml.in
 plugins/python/ssr-plugin-audit.xml.in
+plugins/python/ssr-plugin-config.xml.in
+plugins/python/ssr-plugin-external.xml.in
+plugins/python/ssr-plugin-network.xml.in

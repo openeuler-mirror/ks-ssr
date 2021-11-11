@@ -19,10 +19,11 @@ struct CommandOptions
     Glib::ustring file_path;
     Glib::ustring get_key;
     Glib::ustring set_key;
+    Glib::ustring del_key;
     Glib::ustring set_value;
     Glib::ustring line_match_pattern;
-    Glib::ustring kv_split_pattern;
-    Glib::ustring kv_join_str;
+    Glib::ustring split_pattern;
+    Glib::ustring join_str;
 };
 
 class CmdParser
@@ -37,8 +38,12 @@ public:
     int run(int& argc, char**& argv);
 
 private:
-    int process_plain();
+    int process_kv();
     int process_pam();
+    int process_table();
+
+    // 将字符串转化为列值列表，例如"1=aa;2=bb"->[(1,"aa"), (2, "bb")]
+    std::vector<std::pair<int32_t, std::string>> str2cols(const std::string& str);
 
 private:
     Glib::OptionContext option_context_;
