@@ -6,7 +6,7 @@ import ssr.log
 
 SYSCTL_PATH = '/usr/sbin/sysctl'
 
-SYSCTL_CONFI_FILE = "/etc/sysctl.d/90-sysctl-ssr.conf"
+SYSCTL_CONFI_FILE = "/etc/sysctl.d/90-ssr.conf"
 SYSCTL_CONFIG_FIELD_PARTTERN = "\\s*=\\s*"
 SYSCTL_ACCEPT_REDIRECTS_PATTERN = "net.ipv4.conf.*.accept_redirects"
 SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN = "net.ipv4.conf.*.accept_source_route"
@@ -28,7 +28,7 @@ class Sysctl:
         ssr.utils.subprocess_not_output('{0} --system'.format(SYSCTL_PATH))
 
 
-# 开启ICMP重定向
+# ICMP重定向
 class IcmpRedirect(Sysctl):
     def get(self):
         retdata = dict()
@@ -46,7 +46,7 @@ class IcmpRedirect(Sysctl):
     def set(self, args_json):
         args = json.loads(args_json)
         redirect_items = self.get_items_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN)
-        sysctl_config = ssr.configuration.Plain(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN, ' = ')
+        sysctl_config = ssr.configuration.KV(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN, ' = ')
         enabled = args['enabled']
 
         for redirect_item in redirect_items:
@@ -57,6 +57,7 @@ class IcmpRedirect(Sysctl):
         return (True, '')
 
 
+# IP源路由
 class SourceRoute(Sysctl):
     def get(self):
         retdata = dict()
@@ -74,7 +75,7 @@ class SourceRoute(Sysctl):
     def set(self, args_json):
         args = json.loads(args_json)
         redirect_items = self.get_items_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN)
-        sysctl_config = ssr.configuration.Plain(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN, ' = ')
+        sysctl_config = ssr.configuration.KV(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN, ' = ')
         enabled = args['enabled']
 
         for redirect_item in redirect_items:
@@ -85,6 +86,7 @@ class SourceRoute(Sysctl):
         return (True, '')
 
 
+# Syn flood攻击
 class SynFlood(Sysctl):
     def get(self):
         retdata = dict()
@@ -93,7 +95,7 @@ class SynFlood(Sysctl):
 
     def set(self, args_json):
         args = json.loads(args_json)
-        sysctl_config = ssr.configuration.Plain(SYSCTL_CONFI_FILE)
+        sysctl_config = ssr.configuration.KV(SYSCTL_CONFI_FILE)
         enabled = args['enabled']
         sysctl_config.set_value("net.ipv4.tcp_syncookies", "1" if enabled else "0")
 

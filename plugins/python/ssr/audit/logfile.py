@@ -1,3 +1,5 @@
+#--coding:utf8 --
+
 try:
     import configparser
 except:
@@ -21,6 +23,7 @@ PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
 PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT = "append-permissions-limit"
 
 
+# 系统日志文件和配置的权限控制
 class Permissions:
     def __init__(self):
         self.conf = configparser.ConfigParser()

@@ -141,6 +141,7 @@ bool PAM::set(const std::string &key,
 
 bool PAM::del(const std::string &key, const std::string &kv_split_regex)
 {
+    // TODO:
     return true;
 }
 
