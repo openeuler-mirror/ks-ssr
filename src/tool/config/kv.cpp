@@ -1,11 +1,11 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/config/plain.cpp
+ * @file          /kiran-ssr-manager/src/tool/config/kv.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/tool/config/plain.h"
+#include "src/tool/config/kv.h"
 #include <fcntl.h>
 #include <set>
 #include "lib/base/file-lock.h"
@@ -18,11 +18,11 @@ namespace Config
 #define DEFAULT_SPLIT_REGEX "\\s+"
 #define DEFAULT_JOIN_STRING "\t"
 
-Plain::Plain(const std::string &conf_path,
-             const std::string &kv_split_pattern,
-             const std::string &kv_join_str) : conf_path_(conf_path),
-                                               kv_split_pattern_(kv_split_pattern),
-                                               kv_join_str_(kv_join_str)
+KV::KV(const std::string &conf_path,
+       const std::string &kv_split_pattern,
+       const std::string &kv_join_str) : conf_path_(conf_path),
+                                         kv_split_pattern_(kv_split_pattern),
+                                         kv_join_str_(kv_join_str)
 {
     if (this->kv_split_pattern_.empty())
     {
@@ -35,11 +35,11 @@ Plain::Plain(const std::string &conf_path,
     }
 }
 
-Plain::~Plain()
+KV::~KV()
 {
 }
 
-bool Plain::get(const std::string &key, std::string &value)
+bool KV::get(const std::string &key, std::string &value)
 {
     std::string contents;
     RETURN_VAL_IF_FALSE(FileUtils::read_contents_with_lock(this->conf_path_, contents), false);
@@ -68,7 +68,7 @@ bool Plain::get(const std::string &key, std::string &value)
     return true;
 }
 
-bool Plain::set(const std::string &key, const std::string &value)
+bool KV::set(const std::string &key, const std::string &value)
 {
     std::string new_contents;
 
@@ -137,7 +137,7 @@ bool Plain::set(const std::string &key, const std::string &value)
     return true;
 }
 
-bool Plain::del(const std::string &key)
+bool KV::del(const std::string &key)
 {
     KLOG_DEBUG("Key: %s.", key.c_str());
     return this->set(key, std::string());

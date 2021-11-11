@@ -66,6 +66,7 @@ class Firewalld:
         ssr.utils.subprocess_not_output(command)
 
 
+# 系统防火墙服务
 class Switch(Firewalld):
     def get(self):
         retdata = dict()
@@ -101,6 +102,7 @@ class Switch(Firewalld):
         return (True, '')
 
 
+# ICMP时间戳请求
 class IcmpTimestamp(Firewalld):
     def get(self):
         retdata = dict()
