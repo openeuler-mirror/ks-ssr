@@ -17,12 +17,15 @@ namespace Config
 {
 #define DEFAULT_SPLIT_REGEX "\\s+"
 #define DEFAULT_JOIN_STRING "\t"
+#define DEFAULT_COMMENT_STRING "#"
 
 KV::KV(const std::string &conf_path,
        const std::string &kv_split_pattern,
-       const std::string &kv_join_str) : conf_path_(conf_path),
-                                         kv_split_pattern_(kv_split_pattern),
-                                         kv_join_str_(kv_join_str)
+       const std::string &kv_join_str,
+       const std::string &comment) : conf_path_(conf_path),
+                                     kv_split_pattern_(kv_split_pattern),
+                                     kv_join_str_(kv_join_str),
+                                     comment_(comment)
 {
     if (this->kv_split_pattern_.empty())
     {
@@ -32,6 +35,11 @@ KV::KV(const std::string &conf_path,
     if (this->kv_join_str_.empty())
     {
         this->kv_join_str_ = DEFAULT_JOIN_STRING;
+    }
+
+    if (this->comment_.empty())
+    {
+        this->comment_ = DEFAULT_COMMENT_STRING;
     }
 }
 
@@ -87,41 +95,74 @@ bool KV::set(const std::string &key, const std::string &value)
     auto second_field_regex = Glib::Regex::create(fmt::format("(\\s*\\S+{0})(\\S+)", this->kv_split_pattern_),
                                                   Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
-    bool replaced = false;
+    int32_t match_pos = 0;
+    bool is_match_comment = false;
+    std::string match_line;
+
+    // 寻找匹配key的行，如果没有匹配的非注释行可用，则使用匹配的注释行（注释将被去掉）
 
     for (const auto &line : lines)
     {
-        auto trim_line = StrUtils::trim(line);
-        std::vector<std::string> fields = split_field_regex->split(trim_line);
+        std::vector<std::string> fields;
 
-        if (trim_line.empty() || trim_line[0] == '#' || fields.size() != 2 || fields[0] != key)
-        {
-            new_contents.append(line);
-            new_contents.push_back('\n');
-            continue;
-        }
+        // 注释行判断需要包括前面的空白字符
+        bool is_comment = StrUtils::startswith(line, this->comment_);
 
-        if (!value.empty())
+        if (is_comment)
         {
-            auto replace_line = second_field_regex->replace(line, 0, "\\g<1>" + value, static_cast<Glib::RegexMatchFlags>(0));
-            KLOG_DEBUG("Replace line: %s with %s.", line.c_str(), replace_line.c_str());
-            new_contents.append(replace_line);
-            new_contents.push_back('\n');
+            auto trim_line = StrUtils::trim(line.substr(this->comment_.size()));
+            fields = split_field_regex->split(trim_line);
         }
         else
         {
-            // 值为空则直接删除该行
-            KLOG_DEBUG("Delete line: %s.", line.c_str());
+            auto trim_line = StrUtils::trim(line);
+            fields = split_field_regex->split(trim_line);
         }
-        replaced = true;
+
+        if (fields.size() == 2 &&
+            fields[0] == key &&
+            (match_line.size() == 0 || (int32_t(is_comment) <= int32_t(is_match_comment))))
+        {
+            match_pos = new_contents.size();
+            match_line = line;
+            is_match_comment = is_comment;
+        }
+
+        new_contents.append(line);
+        new_contents.push_back('\n');
     }
 
-    // 如果不存在该key且设置的值不为空，则在最后添加一行
-    if (!replaced && !value.empty())
+    KLOG_DEBUG("match line: %s is comment: %d.", match_line.c_str(), is_match_comment);
+
+    if (match_line.size() > 0)
     {
-        auto new_line = key + this->kv_join_str_ + value + "\n";
-        KLOG_DEBUG("New line: %s.", new_line.c_str());
-        new_contents.append(new_line);
+        if (value.empty())
+        {
+            // 如果不是注释行，则进行注释，否则不处理
+            if (!is_match_comment)
+            {
+                new_contents.replace(match_pos, match_line.size(), this->comment_ + match_line);
+                KLOG_DEBUG("Comment line: %s with %s.", match_line.c_str(), this->comment_.c_str());
+            }
+        }
+        else
+        {
+            // 如果存在注释则去掉，然后对value进行修改
+            auto uncomment_line = is_match_comment ? match_line.substr(this->comment_.size()) : match_line;
+            auto replace_line = second_field_regex->replace(uncomment_line, 0, "\\g<1>" + value, static_cast<Glib::RegexMatchFlags>(0));
+            new_contents.replace(match_pos, match_line.size(), replace_line);
+            KLOG_DEBUG("Replace line: %s with %s.", match_line.c_str(), replace_line.c_str());
+        }
+    }
+    else
+    {
+        // 如果不存在匹配行且value不为空，则在最后添加一行
+        if (!value.empty())
+        {
+            auto new_line = key + this->kv_join_str_ + value + "\n";
+            KLOG_DEBUG("New line: %s.", new_line.c_str());
+            new_contents.append(new_line);
+        }
     }
 
     try
@@ -139,6 +180,7 @@ bool KV::set(const std::string &key, const std::string &value)
 
 bool KV::del(const std::string &key)
 {
+    // 这里偷了一个懒，合理做法是需要单独实现删除逻辑，set函数不应该执行删除操作
     KLOG_DEBUG("Key: %s.", key.c_str());
     return this->set(key, std::string());
 }

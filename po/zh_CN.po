@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-11 09:43+0800\n"
+"POT-Creation-Date: 2021-11-12 18:00+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,73 +90,64 @@ msgid "The configuration file type"
 msgstr "配置文件类型"
 
 #: ../src/tool/config/cmd-parser.cpp:29
+msgid "The Operation method"
+msgstr "操作方法"
+
+#: ../src/tool/config/cmd-parser.cpp:30
 msgid "Specify the key or rule to get value"
 msgstr "指定键或者规则用于获取对应的值"
 
-#: ../src/tool/config/cmd-parser.cpp:30
-msgid "Specify the key or rule to set value"
-msgstr "指定键或者规则用于设置对应的值"
-
 #: ../src/tool/config/cmd-parser.cpp:31
-msgid "Specify the key or rule to delete record"
-msgstr "指定键或者规则用于删除对应的记录"
-
-#: ../src/tool/config/cmd-parser.cpp:32
 msgid "Specify the set value"
 msgstr "指定设置的值"
 
-#: ../src/tool/config/cmd-parser.cpp:33
+#: ../src/tool/config/cmd-parser.cpp:32
 msgid ""
 "Specify regular expression to match the line. If many lines is matched, then "
 "the first matched line is used only"
 msgstr ""
 "指定一个正则表达式用于匹配行。如果多行被匹配，则值由第一个被匹配的行被使用"
 
-#: ../src/tool/config/cmd-parser.cpp:34
+#: ../src/tool/config/cmd-parser.cpp:33
 msgid "Specify regular expression to split line"
 msgstr "指定查找时用于划分列的正则表达式"
 
-#: ../src/tool/config/cmd-parser.cpp:35
+#: ../src/tool/config/cmd-parser.cpp:34
 msgid "Specify string for joining fields to line"
 msgstr "指定用于拼接列的字符串"
 
-#: ../src/tool/config/cmd-parser.cpp:51
+#: ../src/tool/config/cmd-parser.cpp:35
+msgid "Specify comment string"
+msgstr "指定注释字符串"
+
+#: ../src/tool/config/cmd-parser.cpp:36
+msgid "Add new line when the speficied line pattern is dismatch in PAM"
+msgstr "指定未匹配到模式行时添加的新行"
+
+#: ../src/tool/config/cmd-parser.cpp:52
 msgid "Failed to parse command arguments"
 msgstr "解析命令行参数失败"
 
-#: ../src/tool/config/cmd-parser.cpp:57
+#: ../src/tool/config/cmd-parser.cpp:58
 msgid "The file path is not specified"
 msgstr "文件路径未指定"
 
-#: ../src/tool/config/cmd-parser.cpp:64
+#: ../src/tool/config/cmd-parser.cpp:65
 msgid "The file {0} doesn't exist"
 msgstr "文件{0}不存在"
 
-#: ../src/tool/config/cmd-parser.cpp:70
+#: ../src/tool/config/cmd-parser.cpp:71
 msgid "No specify file type"
 msgstr "文件类型未指定"
 
-#: ../src/tool/config/cmd-parser.cpp:83
+#: ../src/tool/config/cmd-parser.cpp:84
 msgid "Unknown file type"
 msgstr "未知文件类型"
 
-#: ../src/tool/config/cmd-parser.cpp:98 ../src/tool/config/cmd-parser.cpp:138
-#: ../src/tool/config/cmd-parser.cpp:187
-msgid "Failed to get value for {0}"
-msgstr "获取键{0}的值失败"
-
-#: ../src/tool/config/cmd-parser.cpp:110 ../src/tool/config/cmd-parser.cpp:152
-#: ../src/tool/config/cmd-parser.cpp:200
-msgid "Failed to set value for {0}"
-msgstr "设置匹配{0}键的值失败"
-
-#: ../src/tool/config/cmd-parser.cpp:120
-msgid "Failed to delete value for {0}"
-msgstr "删除匹配{0}键的值失败"
-
-#: ../src/tool/config/cmd-parser.cpp:211
-msgid "Failed to delete record for rule {0}"
-msgstr "删除匹配{0}规则的记录失败"
+#: ../src/tool/config/cmd-parser.cpp:120 ../src/tool/config/cmd-parser.cpp:172
+#: ../src/tool/config/cmd-parser.cpp:223
+msgid "Exec method {0} failed"
+msgstr "执行方法{0}失败"
 
 #. namespace Config
 #. namespace Kiran
@@ -251,7 +242,25 @@ msgid "Disable null password user present"
 msgstr "禁止空密码用户出现"
 
 #: ../data/ssr-system-rs.xml.in.h:19
-#: ../plugins/python/ssr-plugin-external.xml.in.h:12
+msgid "Allow remote login of root user via SSH"
+msgstr "允许通过ssh远程登陆root用户"
+
+#: ../data/ssr-system-rs.xml.in.h:20
+msgid "Allow SSH password free login"
+msgstr "允许SSH免密登陆"
+
+#: ../data/ssr-system-rs.xml.in.h:21
+msgid "Allow to use SSH weak encryption algorithm"
+msgstr "允许使用SSH弱加密算法"
+
+#: ../data/ssr-system-rs.xml.in.h:22
+#: ../plugins/python/ssr-plugin-external.xml.in.h:19
+msgid ""
+"Users outside the wheel group are prohibited from using the 'su root' command"
+msgstr "禁止wheel组以外的用户使用'su root'命令"
+
+#: ../data/ssr-system-rs.xml.in.h:23
+#: ../plugins/python/ssr-plugin-external.xml.in.h:20
 msgid "Disable radio network"
 msgstr ""
 
@@ -332,6 +341,36 @@ msgstr "检测空密码"
 msgid "Avoid null password user in the system"
 msgstr "避免系统中存在空密码用户"
 
+#: ../plugins/python/ssr-plugin-external.xml.in.h:12
+msgid "Remote login restrictions for root user"
+msgstr "root用户远程登陆限制"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:13
+msgid "Restrict remote login of root user through SSH connection"
+msgstr "限制通过ssh远程登陆root用户"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:14
+msgid "SSH password free login"
+msgstr "SSH免密登陆"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:15
+msgid "Password free login by storing public key"
+msgstr "通过存放公钥的方式进行免密登陆"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:16
+msgid "SSH weak encryption algorithm"
+msgstr "SSH弱加密算法"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:17
+msgid ""
+"Enhance the security of SSH data transmission and prevent data from being "
+"cracked"
+msgstr "增强SSH数据传输的安全性，防止数据被破解"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:18
+msgid "su command limit"
+msgstr "su命令限制"
+
 #: ../plugins/python/ssr-plugin-network.xml.in.h:1
 msgid "network settings"
 msgstr "网络设置"
@@ -376,3 +415,21 @@ msgstr "ICMP时间戳请求"
 msgid ""
 "Prevent attackers from attacking some time authentication based protocols"
 msgstr "防止攻击者攻击一些基于时间认证的协议"
+
+#~ msgid "Specify the key or rule to set value"
+#~ msgstr "指定键或者规则用于设置对应的值"
+
+#~ msgid "Specify the key or rule to delete record"
+#~ msgstr "指定键或者规则用于删除对应的记录"
+
+#~ msgid "Failed to get value for {0}"
+#~ msgstr "获取键{0}的值失败"
+
+#~ msgid "Failed to set value for {0}"
+#~ msgstr "设置匹配{0}键的值失败"
+
+#~ msgid "Failed to delete value for {0}"
+#~ msgstr "删除匹配{0}键的值失败"
+
+#~ msgid "Failed to delete record for rule {0}"
+#~ msgstr "删除匹配{0}规则的记录失败"

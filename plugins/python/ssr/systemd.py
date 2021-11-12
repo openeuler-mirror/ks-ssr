@@ -27,6 +27,9 @@ class Proxy:
             return
         self.__call_noresult('stop')
 
+    def restart(self):
+        self.__call_noresult('restart')
+
     def is_enable(self):
         actived = self.__call_result('is-enabled')
         return actived == 'enabled'

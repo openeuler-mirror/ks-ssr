@@ -26,11 +26,13 @@ public:
      * @param {conf_path}  配置文件路径。
      * @param {kv_split_pattern}  分割键值对的正则表达式
      * @param {kv_join_str}  拼接键值对的字符串
+     * @param {comment} 注释字符串
      * @return {} 
      */
     KV(const std::string &conf_path,
        const std::string &kv_split_pattern,
-       const std::string &kv_join_str);
+       const std::string &kv_join_str,
+       const std::string &comment);
 
 public:
     virtual ~KV();
@@ -44,6 +46,7 @@ private:
     std::string conf_path_;
     std::string kv_split_pattern_;
     std::string kv_join_str_;
+    std::string comment_;
 };
 }  // namespace Config
 }  // namespace Kiran
