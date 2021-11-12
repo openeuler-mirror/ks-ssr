@@ -25,6 +25,26 @@ reinforcements = (
         'class': 'NullPassword'
     },
     {
+        'name': 'external-sshd-root-login',
+        'module': 'sshd',
+        'class': 'RootLogin'
+    },
+    {
+        'name': 'external-sshd-pubkey-auth',
+        'module': 'sshd',
+        'class': 'PubkeyAuth'
+    },
+    {
+        'name': 'external-sshd-weak-encryption',
+        'module': 'sshd',
+        'class': 'WeakEncryption'
+    },
+    {
+        'name': 'external-pam-su-wheel',
+        'module': 'pam',
+        'class': 'SuWheel'
+    },
+    {
         'name': 'external-radio-switch',
         'module': 'nm',
         'class': 'Switch'
