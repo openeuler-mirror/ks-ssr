@@ -49,6 +49,13 @@ KV::~KV()
 
 bool KV::get(const std::string &key, std::string &value)
 {
+    // 文件如果不存在则返回空字符串
+    if (!Glib::file_test(this->conf_path_, Glib::FILE_TEST_EXISTS))
+    {
+        value = std::string();
+        return true;
+    }
+
     std::string contents;
     RETURN_VAL_IF_FALSE(FileUtils::read_contents_with_lock(this->conf_path_, contents), false);
 
