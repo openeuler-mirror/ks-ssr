@@ -1,7 +1,7 @@
 import json
 import ssr.configuration
 
-UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-ssr.rules"
+UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-ssr-external.rules"
 
 DISABLE_CDROM_RULE = "KERNEL==\\\"sr0\\\", ENV{UDISKS_IGNORE}=\\\"1\\\""
 DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", RUN+=\\\"/bin/sh -c 'for host in /sys/bus/usb/devices/usb*; do echo 0 > $host/authorized_default; done'\\\""

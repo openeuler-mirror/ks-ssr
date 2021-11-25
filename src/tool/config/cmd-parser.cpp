@@ -60,11 +60,11 @@ int CmdParser::run(int& argc, char**& argv)
     }
     this->options_.file_path = POINTER_TO_STRING(argv[1]);
 
-    if (!Glib::file_test(this->options_.file_path, Glib::FILE_TEST_EXISTS))
-    {
-        fmt::print(stderr, _("The file {0} doesn't exist"), this->options_.file_path);
-        return EXIT_FAILURE;
-    }
+    // if (!Glib::file_test(this->options_.file_path, Glib::FILE_TEST_EXISTS))
+    // {
+    //     fmt::print(stderr, _("The file {0} doesn't exist"), this->options_.file_path);
+    //     return EXIT_FAILURE;
+    // }
 
     if (this->options_.type.empty())
     {

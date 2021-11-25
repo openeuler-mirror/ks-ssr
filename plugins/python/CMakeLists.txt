@@ -14,13 +14,17 @@ install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ssr
 install (FILES ${CMAKE_BINARY_DIR}/ssr/vars.py
          DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}/ssr)
 
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-sysctl-ssr.conf
-         RENAME "90-ssr.conf"
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-ssr-network-sysctl.conf
+         RENAME "90-ssr-network.conf"
          DESTINATION /etc/sysctl.d/)
 
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-udev-ssr.rules
-         RENAME "90-ssr.rules"
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-ssr-external-udev.rules
+         RENAME "90-ssr-external.rules"
          DESTINATION /etc/udev/rules.d/)
+
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/ssr-external-profile.sh
+         RENAME "ssr-external.sh"
+         DESTINATION /etc/profile.d/)
 
 
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-audit.xml.in)
