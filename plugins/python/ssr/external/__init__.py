@@ -40,6 +40,11 @@ reinforcements = (
         'class': 'WeakEncryption'
     },
     {
+        'name': 'external-sshd-banner-info',
+        'module': 'sshd',
+        'class': 'BannerInfo'
+    },
+    {
         'name': 'external-pam-su-wheel',
         'module': 'pam',
         'class': 'SuWheel'
@@ -50,7 +55,7 @@ reinforcements = (
         'class': 'RemoteLogin'
     },
     {
-        'name': 'external-profile-session-timeout',
+        'name': 'external-profile-tmout',
         'module': 'profile',
         'class': 'SessionTimeout'
     },
