@@ -35,7 +35,7 @@ bool PAM::get_value(const std::string &key, const std::string &kv_split_pattern,
     }
     else
     {
-        kv_pattern = fmt::format("{0}{1}(\\S+)", key, kv_split_pattern);
+        kv_pattern = fmt::format("({0}[\\s]*{1}[\\s]*)(\\S+)", key, kv_split_pattern);
     }
     auto kv_regex = Glib::Regex::create(kv_pattern);
 
@@ -73,7 +73,7 @@ bool PAM::set_value(const std::string &key,
 
     if (match_info.match_line.size() > 0 && !match_info.is_match_comment)
     {
-        auto kv_pattern = kv_split_pattern.empty() ? fmt::format("({0})", key) : fmt::format("({0}{1})(\\S+)", key, kv_split_pattern);
+        auto kv_pattern = kv_split_pattern.empty() ? fmt::format("({0})", key) : fmt::format("({0}[\\s]*{1}[\\s]*)(\\S+)", key, kv_split_pattern);
         auto kv_regex = Glib::Regex::create(kv_pattern);
         std::string replace_line = match_info.match_line;
 
@@ -119,7 +119,7 @@ bool PAM::del_value(const std::string &key, const std::string &kv_split_pattern)
         return false;
     }
     auto match_info = this->get_match_line();
-    auto kv_pattern = kv_split_pattern.empty() ? fmt::format("({0})", key) : fmt::format("({0}{1})(\\S+)", key, kv_split_pattern);
+    auto kv_pattern = kv_split_pattern.empty() ? fmt::format("({0})", key) : fmt::format("({0}[\\s]*{1}[\\s]*)(\\S+)", key, kv_split_pattern);
     auto kv_regex = Glib::Regex::create(kv_pattern);
 
     if (match_info.match_line.size() > 0 && !match_info.is_match_comment && kv_regex->match(match_info.match_line))
