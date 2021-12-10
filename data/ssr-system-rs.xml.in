@@ -106,6 +106,417 @@
                 </layout>
             </arg>
         </reinforcement>
+        <reinforcement>
+            <name>config-history-size</name>
+            <arg>
+                <name>HISTSIZE</name>
+                <value>5</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>5</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Number of historical commands</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-file-permissions</name>
+            <arg>
+                <name>passwd</name>
+                <value>"0644"</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"0644"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Passwd file permissionse</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>bashrc</name>
+                <value>"0644"</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"0644"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Bashrc file permissionse</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>shadow</name>
+                <value>"0644"</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"0644"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Shadow file permissionse</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>group</name>
+                <value>"0644"</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"0644"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Group file permissionse</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>services</name>
+                <value>"0644"</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"0644"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Services file permissionse</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>xinetd</name>
+                <value>"0644"</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"0644"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Xinetd directory permissions</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>security</name>
+                <value>"0644"</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"0644"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Security directory permissions</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-key-reboot</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on composite key reboot</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-login-lock</name>
+            <arg>
+                <name>deny</name>
+                <value>3</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>3</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Password error times</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>lock_time</name>
+                <value>300</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>300</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Lock time</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>unlock_time</name>
+                <value>300</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>300</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Automatic unlocking time after locking</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>even_deny_root</name>
+                <value>300</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>300</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Root login failed lock</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>root_unlock_time</name>
+                <value>300</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>300</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Unlock time after root user locks</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-password-expired</name>
+            <arg>
+                <name>PASS_MAX_DAYS</name>
+                <value>180</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>180</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Maximum number of days a password may be used</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>PASS_MIN_DAYS</name>
+                <value>1</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>1</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Minimum number of days allowed between password changes</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>PASS_MIN_LEN</name>
+                <value>8</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>8</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Minimum acceptable password length</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>PASS_WARN_AGE</name>
+                <value>28</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>28</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Number of days warning given before a password expires</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-password-complexity</name>
+            <arg>
+                <name>minlen</name>
+                <value>8</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>8</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Minimum password length</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>ucredit</name>
+                <value>-1</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>-1</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Number of capital letters</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>lcredit</name>
+                <value>-1</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>-1</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Number of lowercase letters</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>dcredit</name>
+                <value>-1</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>-1</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Number of digits</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>ocredit</name>
+                <value>-1</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>-1</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Number of special characters</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>maxsequence</name>
+                <value>3</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>3</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Maximum number of consecutive characters</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>reject_username</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow user names</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-resource-limits</name>
+            <arg>
+                <name>stack</name>
+                <value>10240</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>10240</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Max stack size</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>rss</name>
+                <value>10000</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>10000</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Max resident set size</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-sak-key</name>
+            <arg>
+                <name>kernel.sysrq</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on SAK key</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-umask-limit</name>
+            <arg>
+                <name>umask</name>
+                <value>"027"</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"027"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>File directory default permission</_label>
+                </layout>
+            </arg>
+        </reinforcement>
         <!-- 审计类 -->
         <reinforcement>
             <name>audit-auditd-switch</name>
@@ -292,6 +703,21 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Allow to use SSH weak encryption algorithm</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-sshd-banner-info</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow hiding operating system version information</_label>
                 </layout>
             </arg>
         </reinforcement>
