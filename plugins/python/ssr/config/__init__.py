@@ -6,7 +6,7 @@ reinforcements = (
     },
     {
         'name': 'config-history-size',
-        'module': 'history',
+        'module': 'resource',
         'class': 'HistorySizeLimit'
     },
     {
@@ -26,27 +26,27 @@ reinforcements = (
     },
     {
         'name': 'config-file-permissions',
-        'module': 'filepermissions',
+        'module': 'permissions',
         'class': 'PermissionSetting'
     },
     {
         'name': 'config-key-reboot',
-        'module': 'keyreboot',
+        'module': 'sysctl',
         'class': 'KeyRebootSwitch'
     },
     {
         'name': 'config-resource-limits',
-        'module': 'resourcelimits',
+        'module': 'resource',
         'class': 'ResourceLimits'
     },
     {
         'name': 'config-sak-key',
-        'module': 'sak-key',
+        'module': 'sysctl',
         'class': 'SAKKey'
     },
     {
         'name': 'config-umask-limit',
-        'module': 'umask',
+        'module': 'permissions',
         'class': 'UmaskLimit'
     },
 )
