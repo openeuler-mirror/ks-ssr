@@ -9,7 +9,7 @@ PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS = "PASS_MIN_DAYS"
 PASSWORD_EXPIRED_CONF_KEY_MIN_LEN  = "PASS_MIN_LEN"
 PASSWORD_EXPIRED_CONF_KEY_WARN_AGE = "PASS_WARN_AGE"
 
-PASSWORD_COMPLEXTIY_CONF_PATH  = "/etc/security/pwquality.conf"
+PASSWORD_COMPLEXTIY_CONF_PATH  = "/etc/security/pwquality.conf.d/90-ssr-config-password"
 #PASSWORD_COMPLEXTIY_CONF_KEY_PWQUALITY = "password    requisite                                    pam_pwquality.so try_first_pass local_users_only"
 PASSWORD_COMPLEXITY_CONF_KEY_MINLEN  = "minlen"
 PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL = "ucredit"
