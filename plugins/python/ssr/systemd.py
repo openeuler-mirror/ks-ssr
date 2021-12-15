@@ -69,8 +69,9 @@ class SwitchBase(object):
         # 也可以不用捕获异常，后台框架会对异常进行处理
         try:
             if args[self.key]:
-                self.systemd_proxy.enable()
-                self.systemd_proxy.start()
+                if self.systemd_proxy.exist():
+                    self.systemd_proxy.enable()
+                    self.systemd_proxy.start()
             else:
                 if self.systemd_proxy.exist():
                     self.systemd_proxy.disable()
