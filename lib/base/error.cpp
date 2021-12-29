@@ -42,6 +42,12 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     case SSRErrorCode::ERROR_DAEMON_GET_RS_FAILED:
         error_desc = _("The standard reinforcement configuration is not found.");
         break;
+    case SSRErrorCode::ERROR_DAEMON_MACHINE_CODE_TRANS_FAILED:
+        error_desc = _("Machine code error.");
+        break;
+    case SSRErrorCode::ERROR_DAEMON_ACTIVATION_CODE_INVALID:
+        error_desc = _("Activation code error.");
+        break;
     case SSRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED:
     case SSRErrorCode::ERROR_DAEMON_CONVERT_PLUGINS2JSON_FAILED:
     case SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND:
@@ -63,6 +69,9 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     case SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENTS_FAILED:
     case SSRErrorCode::ERROR_DAEMON_PLUGIN_CALL_PYTHON_FUNC_FAILED:
         error_desc = _("Internel error.");
+        break;
+    case SSRErrorCode::ERROR_DAEMON_SOFTWARE_UNACTIVATED:
+        error_desc = _("The software is not activated.");
         break;
     default:
         error_desc = _("Unknown error.");

@@ -93,6 +93,20 @@
             <description>Cancel a job.</description>
         </method>
 
+        <method name="GetLicense">
+            <arg name="license_json" direction="out" type="s">
+                <summary>The license info contain activation status, service status, activation code, machine code and activation type etc..</summary>
+            </arg>
+            <description>Get the license info.</description>
+        </method>
+
+        <method name="ActivateByActivationCode">
+            <arg name="activation_code" direction="in" type="s">
+                <summary>The activation code.</summary>
+            </arg>
+            <description>Activate by activation code.</description>
+        </method>
+
         <property name="version" type="s" access="read">
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
             <description>The SSR version.</description>
@@ -115,6 +129,13 @@
                 <summary>The progress is a json string.</summary>
             </arg>
             <description>Emit when the reinforcement progress is changed.</description>
+        </signal>
+
+        <signal name="LicenseChanged">
+            <arg name="placeholder" type="b">
+                <summary>The placeholder.</summary>
+            </arg>
+            <description>The license info is changed, you need call function GetLicense to get the newest license info.</description>
         </signal>
 
     </interface>

@@ -10,6 +10,9 @@
 #include <ssr_dbus_stub.h>
 #include "src/daemon/job.h"
 
+#include "license_manager_dbus_proxy.h"
+#include "license_object_dbus_proxy.h"
+
 namespace Kiran
 {
 namespace Daemon
@@ -18,6 +21,7 @@ class Configuration;
 class Categories;
 class Plugins;
 class Job;
+class LicenseObject;
 
 class DBus : public SSRStub
 {
@@ -68,6 +72,12 @@ protected:
     // 取消一个任务
     virtual void Cancel(gint64 job_id, MethodInvocation &invocation);
 
+    // 获取授权信息
+    virtual void GetLicense(MethodInvocation &invocation);
+
+    // 通过激活码注册
+    virtual void ActivateByActivationCode(const Glib::ustring &activation_code, MethodInvocation &invocation);
+
     virtual bool version_setHandler(const Glib::ustring &value) { return true; };
     virtual bool standard_type_setHandler(guint32 value);
 
@@ -77,10 +87,15 @@ protected:
 private:
     void init();
 
+    // 更新激活信息
+    void update_license_info();
+
     // 扫描进度信号处理
     void on_scan_process_changed_cb(const JobResult &job_result);
     // 加固进度信号处理
     void on_reinfoce_process_changed_cb(const JobResult &job_result);
+    // 授权发生变化
+    void on_license_info_changed_cb(bool placeholder);
 
     void on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
     void on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
@@ -95,9 +110,14 @@ private:
 
     // 扫描任务
     std::shared_ptr<Job> scan_job_;
-
     // 加固任务
     std::shared_ptr<Job> reinforce_job_;
+
+    Glib::RefPtr<Kiran::LicenseManagerProxy> license_manager_proxy_;
+    Glib::RefPtr<Kiran::LicenseObjectProxy> license_object_proxy_;
+
+    // 激活信息
+    Json::Value license_values;
 
     uint32_t dbus_connect_id_;
     uint32_t object_register_id_;
