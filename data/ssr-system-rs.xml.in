@@ -672,7 +672,7 @@
         <reinforcement>
             <name>external-profile-tmout</name>
             <arg>
-                <name>tmout</name>
+                <name>ClientAliveInterval</name>
                 <value>300</value>
                 <rule>
                     <type>RANGE</type>
