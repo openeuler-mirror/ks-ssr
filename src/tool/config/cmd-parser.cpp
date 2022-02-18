@@ -34,6 +34,7 @@ void CmdParser::init()
     this->option_group_.add_entry(MiscUtils::create_option_entry("join-str", N_("Specify string for joining fields to line")), this->options_.join_str);
     this->option_group_.add_entry(MiscUtils::create_option_entry("comment", N_("Specify comment string")), this->options_.comment);
     this->option_group_.add_entry(MiscUtils::create_option_entry("new-line", N_("Add new line when the speficied line pattern is dismatch in PAM")), this->options_.new_line);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("next-line-match-pattern", N_("Specifies a regular expression to match the next row of the inserted row. If multiple rows are matched, the value is used by the first matched row")), this->options_.next_line_match_pattern);
 
     this->option_group_.set_translation_domain(PROJECT_NAME);
     this->option_context_.set_translation_domain(PROJECT_NAME);
@@ -148,7 +149,7 @@ int CmdParser::process_pam()
         retval = pam.del_value(this->options_.key, this->options_.split_pattern);
         break;
     case "SETLINE"_hash:
-        retval = pam.add_line(this->options_.new_line);
+        retval = pam.add_line(this->options_.new_line, this->options_.next_line_match_pattern);
         break;
     case "DELLINE"_hash:
         retval = pam.del_line();

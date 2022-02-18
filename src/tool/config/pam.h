@@ -52,7 +52,7 @@ public:
     bool del_value(const std::string &key, const std::string &kv_split_pattern);
 
     // 如果没有找到匹配行，则将fallback_line添加到末尾
-    bool add_line(const std::string &fallback_line);
+    bool add_line(const std::string &fallback_line, const std::string &next_line_match_regex);
     // 删除匹配行
     bool del_line();
     // 获取匹配行
@@ -60,6 +60,7 @@ public:
 
 private:
     PAM::MatchLineInfo get_match_line();
+    PAM::MatchLineInfo add_behind(const std::string &fallback_line, const std::string &next_line_match_regex);
 
     // 将内容写入文件
     bool write_to_file(const std::string &content);
