@@ -25,6 +25,7 @@ struct CommandOptions
     Glib::ustring join_str;
     Glib::ustring comment;
     Glib::ustring new_line;
+    Glib::ustring next_line_match_pattern;
 };
 
 class CmdParser

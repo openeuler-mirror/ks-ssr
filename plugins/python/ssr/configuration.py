@@ -70,9 +70,9 @@ class PAM:
         output = ssr.utils.subprocess_has_output(command)
         return (output == 'true')
 
-    def set_line(self, newline):
-        command = '{0} --type=PAM --method=SETLINE --line-match-pattern="{1}" --new-line="{2}" {3}'.format(
-            SSR_CONFIG_PATH, self.line_match_pattern, newline, self.config_path)
+    def set_line(self, newline, next_line_match_pattern):
+        command = '{0} --type=PAM --method=SETLINE --line-match-pattern="{1}" --new-line="{2}" --next-line-match-pattern="{3}" {4}'.format(
+            SSR_CONFIG_PATH, self.line_match_pattern, newline, next_line_match_pattern ,self.config_path)
         ssr.utils.subprocess_not_output(command)
 
     def del_line(self):
