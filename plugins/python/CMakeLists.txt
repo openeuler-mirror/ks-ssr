@@ -26,13 +26,13 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/ssr-external-profile.sh
          RENAME "ssr-external.sh"
          DESTINATION /etc/profile.d/)
 
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/ssr-config-profile.sh
+         RENAME "ssr-config.sh"
+         DESTINATION /etc/profile.d/)
+
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-ssr-config-sysctl.conf
          RENAME "90-ssr-config.conf"
          DESTINATION /etc/sysctl.d/)
-
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-ssr-config-password.conf
-         RENAME "90-ssr-config.conf"
-         DESTINATION /etc/security/pwquality.conf.d/)
 
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-ssr-config-resource.conf
          RENAME "90-ssr-config.conf"

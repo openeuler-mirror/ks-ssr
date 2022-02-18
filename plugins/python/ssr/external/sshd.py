@@ -85,12 +85,15 @@ class WeakEncryption(SSHD):
 class BannerInfo(SSHD):
     def get(self):
         retdata = dict()
-        retdata[BANNER_INFO_ARG_ENABLED] = (self.conf.get_value("Banner") == "/etc/issue.net")
+        retdata[BANNER_INFO_ARG_ENABLED] = (self.conf.get_value("Banner") != "none")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        self.conf.set_value("Banner", "/etc/issue.net" if args[ROOT_LOGIN_ARG_ENABLED] else "none")
+        #self.conf.set_value("Banner", "/etc/issue.net" if args[ROOT_LOGIN_ARG_ENABLED] else "none")
+        #只对开启后关闭做处理
+        if args[ROOT_LOGIN_ARG_ENABLED]:
+            self.conf.set_value("Banner", "none")
         # 重启服务生效
         self.service.restart()
         return (True, '')
