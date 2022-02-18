@@ -6,7 +6,10 @@ UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-ssr-external.rules"
 
 DISABLE_CDROM_RULE = "KERNEL==\\\"sr0\\\", ENV{UDISKS_IGNORE}=\\\"1\\\""
 DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", DRIVERS==\\\"usb-storage|uas\\\", ATTR{authorized}=\\\"0\\\""
-DISABLE_TTYPS_RULE = "KERNEL==\\\"ttyS[0-9]*\\\", SUBSYSTEM==\\\"tty\\\", MODE=\\\"0000\\\""
+
+TTYPS_CMD_STR = "setserial /dev/ttyS"
+TTYPS_STATUS_CMD = "setserial -g /dev/ttyS"
+TTYPS_SUM_DEV_CMD = "ls /dev/ttyS* |wc -l"
 
 CDROM_ARG_ENABLED = "enabled"
 USB_ARG_ENABLED = "enabled"
@@ -60,19 +63,59 @@ class USB(UDev):
 
 
 class TTYS(UDev):
+
     def get(self):
         retdata = dict()
-        value = self.conf.get_value("1=KERNEL==\\\"ttyS[0-9]*\\\";3=MODE=\\\"0000\\\"")
-        retdata[TTYS_ARG_ENABLED] = (len(value) == 0)
+        index_get = 0
+        list_get = []
+        nums_command_get = '{0}'.format(TTYPS_SUM_DEV_CMD)
+        output_get = ssr.utils.subprocess_has_output(nums_command_get)
+        output_nums_get = int(output_get) 
+        while int(index_get) < output_nums_get: 
+            flag_cmd = TTYPS_STATUS_CMD + str(index_get)
+            command_status = '{0} | grep unknown'.format(flag_cmd)
+            flag = ssr.utils.subprocess_has_output(command_status)
+            if len(flag) != 0:
+                list_get.append("disabled")
+            else:
+                list_get.append("enabled")
+            index_get += 1
+
+        if list_get.index("enabled"):
+            retdata[TTYS_ARG_ENABLED] = True
+        else:
+            retdata[TTYS_ARG_ENABLED] = False
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
 
+        open_index = 0
+        close_index = 0
+        nums_command = '{0}'.format(TTYPS_SUM_DEV_CMD)
+        output = ssr.utils.subprocess_has_output(nums_command)
+        output_nums = int(output)
+
         if args[TTYS_ARG_ENABLED]:
-            self.conf.del_record("1=KERNEL==\\\"ttyS[0-9]*\\\"")
+            while open_index < output_nums: 
+                flag_open_cmd = TTYPS_STATUS_CMD + str(open_index)
+                command_open_status = '{0} | grep unknown'.format(flag_open_cmd)
+                flag_open = ssr.utils.subprocess_has_output(command_open_status)
+                if len(flag_open) != 0:
+                    ttys_open_cmd = TTYPS_CMD_STR + str(open_index) + "  " + "-a autoconfig"
+                    ttys_open_command = '{0}'.format(ttys_open_cmd)
+                    open_output = ssr.utils.subprocess_not_output(ttys_open_command)
+                open_index += 1
         else:
-            self.conf.set_value("1=KERNEL==\\\"ttyS[0-9]*\\\"", DISABLE_TTYPS_RULE)
+            while close_index < output_nums:
+                flag_close_cmd = TTYPS_STATUS_CMD + str(close_index)
+                command_close_status = '{0} | grep unknown'.format(flag_close_cmd)
+                flag_close = ssr.utils.subprocess_has_output(command_close_status)
+                if len(flag_close) == 0:
+                    ttys_close_cmd = TTYPS_CMD_STR + str(close_index) + "  " + "uart none"
+                    ttys_close_command = '{0}'.format(ttys_close_cmd)
+                    close_output = ssr.utils.subprocess_not_output(ttys_close_command)
+                close_index += 1
 
         self.reload()
         return (True, '')
