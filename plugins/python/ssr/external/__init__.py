@@ -56,7 +56,7 @@ reinforcements = (
     },
     {
         'name': 'external-profile-tmout',
-        'module': 'profile',
+        'module': 'sshd',
         'class': 'SessionTimeout'
     },
     {
