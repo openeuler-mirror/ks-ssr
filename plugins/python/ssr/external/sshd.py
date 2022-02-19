@@ -103,15 +103,12 @@ class BannerInfo(SSHD):
         return (True, '')
 
 class SessionTimeout(SSHD):
-    def __init__(self):
-        self.conf = ssr.configuration.KV(SSHD_CONF_PATH, "", "=")
-
     def get(self):
         retdata = dict()
         tmout = self.conf.get_value(PROFILE_CLIENT_TMOUT)
         count = self.conf.get_value(PROFILE_CLIENT_COUNT)
 
-        retdata[PROFILE_CLIENT_TMOUT] = tmout
+        retdata[PROFILE_CLIENT_TMOUT] = int(tmout)
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
