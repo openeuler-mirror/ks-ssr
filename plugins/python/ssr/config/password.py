@@ -18,7 +18,8 @@ PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL = "ucredit"
 PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES = "lcredit"
 PASSWORD_COMPLEXITY_CONF_KEY_NUMBER  =  "dcredit"
 PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL = "ocredit"
-PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION = "maxsequence"
+PASSWORD_COMPLEXITY_CONF_KEY_MINCLASS = "minclass"
+PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION = "maxclassrepeat"
 PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK = "usercheck"
 
 PASSWORD_COMPLEXITY_CONF_NEXT_MATCH_LINE_PATTERN = "password\\s+sufficient\\s+pam_unix.so"
@@ -55,16 +56,19 @@ class PasswordComplexity:
         retdata[PASSWORD_COMPLEXITY_CONF_KEY_MINLEN] = int(minlen_value)
 
         capital_value = self.system_conf.get_value(PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL, '=')
-        retdata[PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL] = int(capital_value)
+        retdata[PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL] = -(int(capital_value))
 
         minuscules_value = self.system_conf.get_value(PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES, '=')
-        retdata[PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES] = int(minuscules_value)
+        retdata[PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES] = -(int(minuscules_value))
 
         number_value = self.system_conf.get_value(PASSWORD_COMPLEXITY_CONF_KEY_NUMBER, '=')
-        retdata[PASSWORD_COMPLEXITY_CONF_KEY_NUMBER] = int(number_value)
+        retdata[PASSWORD_COMPLEXITY_CONF_KEY_NUMBER] = -(int(number_value))
 
         special_value = self.system_conf.get_value(PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL, '=')
-        retdata[PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL] = int(special_value)
+        retdata[PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL] = -(int(special_value))
+
+        minclass_value = self.system_conf.get_value(PASSWORD_COMPLEXITY_CONF_KEY_MINCLASS, '=')
+        retdata[PASSWORD_COMPLEXITY_CONF_KEY_MINCLASS] = int(minclass_value)
 
         succession_value = self.system_conf.get_value(PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION, '=')
         retdata[PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION] = int(succession_value)
@@ -81,10 +85,11 @@ class PasswordComplexity:
                 self.system_conf.set_line(PASSWORD_COMPLEXTIY_CONF_KEY_PWQUALITY, PASSWORD_COMPLEXITY_CONF_NEXT_MATCH_LINE_PATTERN)
 
         self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_MINLEN, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_MINLEN], '=')
-        self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL], '=')
-        self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES], '=')
-        self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_NUMBER, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_NUMBER], '=')
-        self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL], '=')
+        self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL, '=', -args[PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL], '=')
+        self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES, '=', -args[PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES], '=')
+        self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_NUMBER, '=', -args[PASSWORD_COMPLEXITY_CONF_KEY_NUMBER], '=')
+        self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL, '=', -args[PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL], '=')
+        self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_MINCLASS, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_MINCLASS], '=')
         self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION], '=')
         self.system_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK, '=', '0' if args[PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK] else '1', '=')
 
@@ -92,10 +97,11 @@ class PasswordComplexity:
                 self.password_conf.set_line(PASSWORD_COMPLEXTIY_CONF_KEY_PWQUALITY, PASSWORD_COMPLEXITY_CONF_NEXT_MATCH_LINE_PATTERN)
 
         self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_MINLEN, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_MINLEN], '=')
-        self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL], '=')
-        self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES], '=')
-        self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_NUMBER, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_NUMBER], '=')
-        self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL], '=')
+        self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL, '=', -args[PASSWORD_COMPLEXITY_CONF_KEY_CAPITAL], '=')
+        self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES, '=', -args[PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES], '=')
+        self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_NUMBER, '=', -args[PASSWORD_COMPLEXITY_CONF_KEY_NUMBER], '=')
+        self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL, '=', -args[PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL], '=')
+        self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_MINCLASS, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_MINCLASS], '=')
         self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION], '=')
         self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK, '=', '0' if args[PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK] else '1', '=')
 
