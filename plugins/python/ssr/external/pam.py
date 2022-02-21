@@ -10,6 +10,7 @@ SU_WHEEL_ARG_ENABLED = "enabled"
 # 如果没有匹配到对应的行，则使用该默认行进行设置
 SU_WHEEL_FALLBACK_LINE = "auth           required        pam_wheel.so use_uid"
 
+SU_WHEEL_NEXT_MATCH_LINE = "auth\\s+substack\\s+system-auth"
 
 class SuWheel:
     def __init__(self):
@@ -24,7 +25,7 @@ class SuWheel:
         args = json.loads(args_json)
 
         if (args[SU_WHEEL_ARG_ENABLED]):
-            self.conf.set_line(SU_WHEEL_FALLBACK_LINE)
+            self.conf.set_line(SU_WHEEL_FALLBACK_LINE, SU_WHEEL_NEXT_MATCH_LINE)
         else:
             self.conf.del_line()
         return (True, '')

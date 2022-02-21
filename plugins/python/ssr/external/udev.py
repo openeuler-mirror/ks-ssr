@@ -70,8 +70,8 @@ class TTYS(UDev):
         list_get = []
         nums_command_get = '{0}'.format(TTYPS_SUM_DEV_CMD)
         output_get = ssr.utils.subprocess_has_output(nums_command_get)
-        output_nums_get = int(output_get) 
-        while int(index_get) < output_nums_get: 
+        output_nums_get = int(output_get)
+        while int(index_get) < output_nums_get:
             flag_cmd = TTYPS_STATUS_CMD + str(index_get)
             command_status = '{0} | grep unknown'.format(flag_cmd)
             flag = ssr.utils.subprocess_has_output(command_status)
@@ -81,10 +81,8 @@ class TTYS(UDev):
                 list_get.append("enabled")
             index_get += 1
 
-        if list_get.index("enabled"):
-            retdata[TTYS_ARG_ENABLED] = True
-        else:
-            retdata[TTYS_ARG_ENABLED] = False
+        retdata[TTYS_ARG_ENABLED] = "enabled" in list_get
+
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
@@ -97,7 +95,7 @@ class TTYS(UDev):
         output_nums = int(output)
 
         if args[TTYS_ARG_ENABLED]:
-            while open_index < output_nums: 
+            while open_index < output_nums:
                 flag_open_cmd = TTYPS_STATUS_CMD + str(open_index)
                 command_open_status = '{0} | grep unknown'.format(flag_open_cmd)
                 flag_open = ssr.utils.subprocess_has_output(command_open_status)
