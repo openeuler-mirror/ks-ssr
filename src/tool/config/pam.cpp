@@ -39,6 +39,8 @@ bool PAM::get_value(const std::string &key, const std::string &kv_split_pattern,
     }
     auto kv_regex = Glib::Regex::create(kv_pattern);
 
+    auto split_field_regex = Glib::Regex::create(kv_split_pattern, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
+
     for (const auto &line : lines)
     {
         Glib::MatchInfo match_info;
@@ -50,7 +52,16 @@ bool PAM::get_value(const std::string &key, const std::string &kv_split_pattern,
         if (kv_regex->match(line, match_info) &&
             match_info.matches())
         {
-            value = kv_split_pattern.empty() ? "true" : match_info.fetch(1);
+            if(!kv_split_pattern.empty())
+            {
+                std::vector<std::string> fields = split_field_regex->split(match_info.fetch(0));
+                value = fields[1].c_str();
+                KLOG_DEBUG("Read Line: key: %s, value: %s.", fields[0].c_str(), fields[1].c_str());
+            }
+            else
+            {
+                value = "true";
+            }
             return true;
         }
     }
