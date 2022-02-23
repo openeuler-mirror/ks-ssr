@@ -16,6 +16,11 @@ class KV:
             SSR_CONFIG_PATH, key, value, self.split_pattern, self.join_string, self.comment, self.config_path)
         ssr.utils.subprocess_not_output(command)
 
+    def set_all_value(self, key, value):
+        command = '{0} --type=KV --method=SETVALALL --key="{1}" --value="{2}" --split-pattern="{3}" --join-str="{4}" --comment="{5}" {6}'.format(
+            SSR_CONFIG_PATH, key, value, self.split_pattern, self.join_string, self.comment, self.config_path)
+        ssr.utils.subprocess_not_output(command)
+
     def get_value(self, key):
         command = '{0} --type=KV --method=GETVAL --key="{1}" --split-pattern="{2}" --comment="{3}" {4}'.format(
             SSR_CONFIG_PATH, key, self.split_pattern, self.comment, self.config_path)
