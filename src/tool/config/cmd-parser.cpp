@@ -26,7 +26,7 @@ CmdParser::CmdParser() : option_context_(N_("FILE")),
 void CmdParser::init()
 {
     this->option_group_.add_entry(MiscUtils::create_option_entry("type", N_("The configuration file type"), CONFIG_TYPE_KV "|" CONFIG_TYPE_PAM "|" CONFIG_TYPE_TABLE), this->options_.type);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("method", N_("The Operation method"), "GETVAL|SETVAL|DELVAL|GETLINE|SETLINE|DELLINE"), this->options_.method);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("method", N_("The Operation method"), "GETVAL|SETVAL|SETVALALL|DELVAL|GETLINE|SETLINE|DELLINE"), this->options_.method);
     this->option_group_.add_entry(MiscUtils::create_option_entry("key", N_("Specify the key or rule to get value"), "KEY"), this->options_.key);
     this->option_group_.add_entry(MiscUtils::create_option_entry("value", N_("Specify the set value")), this->options_.value);
     this->option_group_.add_entry(MiscUtils::create_option_entry("line-match-pattern", N_("Specify regular expression to match the line. If many lines is matched, then the first matched line is used only")), this->options_.line_match_pattern);
@@ -108,6 +108,9 @@ int CmdParser::process_kv()
     }
     case "SETVAL"_hash:
         retval = kv.set(this->options_.key, this->options_.value);
+        break;
+    case "SETVALALL"_hash:
+        retval = kv.set_all(this->options_.key, this->options_.value);
         break;
     case "DELVAL"_hash:
         retval = kv.del(this->options_.key);

@@ -40,6 +40,8 @@ public:
     bool get(const std::string &key, std::string &value);
     // 如果key不存在则自动创建
     bool set(const std::string &key, const std::string &value);
+    // 设置所有key值匹配项
+    bool set_all(const std::string &key, const std::string &value);
     bool del(const std::string &key);
 
 private:
