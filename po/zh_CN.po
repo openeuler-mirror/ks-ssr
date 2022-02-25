@@ -184,8 +184,8 @@ msgid "Turn on system firewall service"
 msgstr "开启系统防火墙服务"
 
 #: ../data/ssr-system-rs.xml.in.h:3
-msgid "Opened ports"
-msgstr "开放端口"
+msgid "Opened ports (Split with semicolon)"
+msgstr "开放端口 (分号分割)"
 
 #: ../data/ssr-system-rs.xml.in.h:4
 msgid "Turn on ICMP redirection"
@@ -229,20 +229,20 @@ msgid "Password error times"
 msgstr "密码错误次数"
 
 #: ../data/ssr-system-rs.xml.in.h:14
-msgid "Automatic unlocking time after locking"
-msgstr "锁定后自动解锁时间"
+msgid "Automatic unlocking time after locking (Sec)"
+msgstr "锁定后自动解锁时间(秒)"
 
 #: ../data/ssr-system-rs.xml.in.h:15
 msgid "Root login failed lock"
 msgstr "root用户登录失败锁定"
 
 #: ../data/ssr-system-rs.xml.in.h:16
-msgid "Unlock time after root user locks"
-msgstr "root用户锁定后的解锁时间"
+msgid "Unlock time after root user locks (Sec)"
+msgstr "root用户锁定后的解锁时间(秒)"
 
 #: ../data/ssr-system-rs.xml.in.h:17
 msgid "Maximum number of days a password may be used"
-msgstr "可使用密码的最大有效期"
+msgstr "可使用密码的最大有效天数"
 
 #: ../data/ssr-system-rs.xml.in.h:18
 msgid "Minimum number of days allowed between password changes"
@@ -336,8 +336,8 @@ msgid "Restrict system independent user login"
 msgstr "限制系统无关用户登陆"
 
 #: ../data/ssr-system-rs.xml.in.h:40
-msgid "Allow account retention"
-msgstr "允许保留账号"
+msgid "Allow account retention (Split with semicolon)"
+msgstr "允许保留账号 (分号分割)"
 
 #: ../data/ssr-system-rs.xml.in.h:41
 msgid "Disable null password user present"
@@ -366,12 +366,12 @@ msgid ""
 msgstr "禁止wheel组以外的用户使用'su root'命令"
 
 #: ../data/ssr-system-rs.xml.in.h:47
-msgid "List of IP addresses that allow remote access (comma separated)"
+msgid "List of IP addresses that allow remote access (Split with comma)"
 msgstr "允许远程访问的IP列表（逗号分割）"
 
 #: ../data/ssr-system-rs.xml.in.h:48
 msgid ""
-"List of IP addresses for which remote access is prohibited (comma separated)"
+"List of IP addresses for which remote access is prohibited (Split with comma)"
 msgstr "禁止远程访问的IP列表（逗号分割）"
 
 #: ../data/ssr-system-rs.xml.in.h:49
