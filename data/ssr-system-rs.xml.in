@@ -12,6 +12,7 @@
             <arg>
                 <name>enabled</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -24,9 +25,10 @@
             <arg>
                 <name>ports</name>
                 <value>""</value>
+                <value_limits>((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))((\/tcp)|(\/udp))(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))((\/tcp)|(\/udp)))*</value_limits>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Opened ports</_label>
+                    <_label>Opened ports (Split with semicolon)</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -35,6 +37,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -50,6 +53,7 @@
             <arg>
                 <name>enabled</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -65,6 +69,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -80,6 +85,7 @@
             <arg>
                 <name>timestamp_request</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -96,6 +102,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -111,6 +118,7 @@
             <arg>
                 <name>HISTSIZE</name>
                 <value>5</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -127,8 +135,9 @@
             <name>config-file-permissions</name>
             <arg>
                 <name>mode-permissions-limit</name>
-		<value>true</value>
-		<rule>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
                 </rule>
@@ -143,6 +152,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -158,6 +168,7 @@
             <arg>
                 <name>deny</name>
                 <value>3</value>
+                <value_limits>1</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -172,6 +183,7 @@
             <arg>
                 <name>unlock_time</name>
                 <value>300</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -180,14 +192,15 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Automatic unlocking time after locking</_label>
+                    <_label>Automatic unlocking time after locking (Sec)</_label>
                 </layout>
             </arg>
             <arg>
                 <name>even_deny_root</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
-                    <type>RANGE</type>
+                    <type>FIXED</type>
                     <value_fixed>true</value_fixed>
                 </rule>
                 <layout>
@@ -198,6 +211,7 @@
             <arg>
                 <name>root_unlock_time</name>
                 <value>300</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -206,7 +220,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Unlock time after root user locks</_label>
+                    <_label>Unlock time after root user locks (Sec)</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -215,6 +229,7 @@
             <arg>
                 <name>PASS_MAX_DAYS</name>
                 <value>180</value>
+                <value_limits>-1</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -229,6 +244,7 @@
             <arg>
                 <name>PASS_MIN_DAYS</name>
                 <value>1</value>
+                <value_limits>-1</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -243,6 +259,7 @@
             <arg>
                 <name>PASS_MIN_LEN</name>
                 <value>8</value>
+                <value_limits>6</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -257,6 +274,7 @@
             <arg>
                 <name>PASS_WARN_AGE</name>
                 <value>28</value>
+                <value_limits>-1</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -274,6 +292,7 @@
             <arg>
                 <name>minlen</name>
                 <value>8</value>
+                <value_limits>6</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -288,6 +307,7 @@
             <arg>
                 <name>ucredit</name>
                 <value>0</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -302,6 +322,7 @@
             <arg>
                 <name>lcredit</name>
                 <value>0</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -316,6 +337,7 @@
             <arg>
                 <name>dcredit</name>
                 <value>1</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -330,6 +352,7 @@
             <arg>
                 <name>ocredit</name>
                 <value>1</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -344,6 +367,7 @@
             <arg>
                 <name>minclass</name>
                 <value>3</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -358,6 +382,7 @@
             <arg>
                 <name>maxclassrepeat</name>
                 <value>3</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -372,6 +397,7 @@
             <arg>
                 <name>usercheck</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -387,6 +413,7 @@
             <arg>
                 <name>stack</name>
                 <value>10240</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -401,6 +428,7 @@
             <arg>
                 <name>rss</name>
                 <value>10000</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -418,6 +446,7 @@
             <arg>
                 <name>kernel.sysrq</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -433,6 +462,7 @@
             <arg>
                 <name>umask</name>
                 <value>"027"</value>
+                <value_limits>[0-7]{3}</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>"027"</value_fixed>
@@ -449,6 +479,7 @@
             <arg>
                 <name>enabled</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -463,11 +494,12 @@
             <name>audit-logrotate-rotate</name>
             <arg>
                 <name>rotate</name>
-                <value>8</value>
+                <value>24</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
-                        <min_value>8</min_value>
+                        <min_value>24</min_value>
                     </value_range>
                 </rule>
                 <layout>
@@ -481,6 +513,7 @@
             <arg>
                 <name>mode-permissions-limit</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -492,7 +525,8 @@
             </arg>
             <arg>
                 <name>append-permissions-limit</name>
-		<value>true</value>
+                <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -509,6 +543,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -524,6 +559,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -539,6 +575,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -554,6 +591,7 @@
             <arg>
                 <name>enabled</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -566,9 +604,10 @@
             <arg>
                 <name>permission-users</name>
                 <value>""</value>
+                <value_limits>[a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?([;][a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?)*</value_limits>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow account retention</_label>
+                    <_label>Allow account retention (Split with semicolon)</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -577,6 +616,7 @@
             <arg>
                 <name>enabled</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -592,6 +632,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -607,6 +648,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -622,6 +664,7 @@
             <arg>
                 <name>enabled</name>
                 <value>false</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>false</value_fixed>
@@ -637,6 +680,7 @@
             <arg>
                 <name>enabled</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -652,6 +696,7 @@
             <arg>
                 <name>enabled</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
@@ -667,17 +712,19 @@
             <arg>
                 <name>allow-hosts</name>
                 <value>""</value>
+                <value_limits>((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?)*</value_limits>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>List of IP addresses that allow remote access (comma separated)</_label>
+                    <_label>List of IP addresses that allow remote access (Split with comma)</_label>
                 </layout>
             </arg>
             <arg>
                 <name>deny-hosts</name>
                 <value>""</value>
+                <value_limits>((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?)*</value_limits>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>List of IP addresses for which remote access is prohibited (comma separated)</_label>
+                    <_label>List of IP addresses for which remote access is prohibited (Split with comma)</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -686,6 +733,7 @@
             <arg>
                 <name>ClientAliveInterval</name>
                 <value>300</value>
+                <value_limits>0</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
@@ -703,6 +751,7 @@
             <arg>
                 <name>enabled</name>
                 <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
