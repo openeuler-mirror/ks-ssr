@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/sysctl.h
+ * @file          /ks-ssr-manager/plugins/cpp/network/reinforcements/sysctl.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -10,7 +10,7 @@
 #include "lib/base/base.h"
 #include "lib/config/config-plain.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Network
 {
@@ -52,4 +52,4 @@ public:
 
 }  // namespace Network
 
-}  // namespace Kiran
+}  // namespace KS

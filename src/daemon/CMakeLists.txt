@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 
-GEN_DBUS_CPP(SSR ssr com.kylinsec. ${CMAKE_SOURCE_DIR}/src/daemon/com.kylinsec.Kiran.SSR.xml)
+GEN_DBUS_CPP(SSR ssr com. ${CMAKE_SOURCE_DIR}/src/daemon/com.kylinsec.SSR.xml)
 GEN_DBUS_CPP(LICENSE_MANAGER license_manager com.kylinsec. ${CMAKE_SOURCE_DIR}/src/daemon/com.kylinsec.Kiran.LicenseManager.xml)
 GEN_DBUS_CPP(LICENSE_OBJECT license_object com.kylinsec. ${CMAKE_SOURCE_DIR}/src/daemon/com.kylinsec.Kiran.LicenseObject.xml)
 GEN_PROTOCOL()
 
-set (TARGET_NAME kiran-ssr-daemon)
+set (TARGET_NAME ks-ssr-daemon)
 
 file(GLOB_RECURSE DAEMON_H_FILES ./*.h)
 file(GLOB_RECURSE DAEMON_CPP_FILES ./*.cpp)

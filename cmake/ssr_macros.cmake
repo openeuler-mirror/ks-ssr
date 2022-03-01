@@ -57,7 +57,7 @@ macro(GEN_PROTOCOL)
 
     add_custom_command(OUTPUT ${SSR_PROTOCOL_OUTPUT}
                        COMMAND ${XSDCXX} cxx-tree --std c++11 
-                                                   --namespace-map =Kiran::Protocol
+                                                   --namespace-map =KS::Protocol
                                                    --type-naming ucc
                                                    --generate-serialization
                                                    --root-element-all

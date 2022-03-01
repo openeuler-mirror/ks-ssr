@@ -1,7 +1,7 @@
-# Chinese translations for kiran package
-# kiran 软件包的简体中文翻译.
-# Copyright (C) 2020 THE kiran'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the kiran package.
+# Chinese translations for Kylinsec package
+# Kylinsec 软件包的简体中文翻译.
+# Copyright (C) 2020 THE Kylinsec'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Kylinsec package.
 # tangjie02 <tangjie02@kylinos.com.cn>, 2020.
 #
 msgid ""
@@ -90,8 +90,8 @@ msgid "Output file path."
 msgstr "输出文件路径。"
 
 #: ../src/tool/config/main.cpp:26
-msgid "Command 'kiran-ssr-config' can only be run as root!"
-msgstr "命令 'kiran-ssr-config' 只能在root用户下运行！"
+msgid "Command 'ks-ssr-config' can only be run as root!"
+msgstr "命令 'ks-ssr-config' 只能在root用户下运行！"
 
 #: ../src/tool/config/cmd-parser.cpp:21
 msgid "FILE"
@@ -158,7 +158,7 @@ msgid "Exec method {0} failed"
 msgstr "执行方法{0}失败"
 
 #. namespace Config
-#. namespace Kiran
+#. namespace KS
 #: ../data/ssr-categories.ini.in.h:1
 msgid "configuration class"
 msgstr "配置类"

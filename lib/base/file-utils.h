@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/file-utils.h
+ * @file          /ks-ssr-manager/lib/base/file-utils.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -9,7 +9,7 @@
 
 #include "lib/base/base.h"
 
-namespace Kiran
+namespace KS
 {
 using FileMonitorCallBack = sigc::slot<void, const Glib::RefPtr<Gio::File> &, const Glib::RefPtr<Gio::File> &, Gio::FileMonitorEvent>;
 class FileUtils
@@ -38,4 +38,4 @@ public:
     static bool write_contents(const std::string &path, const std::string &contents);
 };
 
-}  // namespace Kiran
+}  // namespace KS

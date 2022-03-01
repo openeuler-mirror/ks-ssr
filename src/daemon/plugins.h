@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/plugins.h
+ * @file          /ks-ssr-manager/src/daemon/plugins.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,7 +8,7 @@
 
 #include "src/daemon/plugin.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -74,4 +74,4 @@ private:
     std::map<std::string, std::weak_ptr<Plugin>> reinforcements_plugins_;
 };
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

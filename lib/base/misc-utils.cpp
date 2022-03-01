@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/misc-utils.cpp
+ * @file          /ks-ssr-manager/lib/base/misc-utils.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -8,7 +8,7 @@
 #include "lib/base/misc-utils.h"
 #include "lib/base/base.h"
 
-namespace Kiran
+namespace KS
 {
 MiscUtils::MiscUtils()
 {
@@ -72,4 +72,4 @@ Glib::OptionEntry MiscUtils::create_option_entry(const Glib::ustring &long_name,
     result.set_flags(flags);
     return result;
 }
-}  // namespace Kiran
+}  // namespace KS

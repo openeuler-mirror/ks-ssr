@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/reinforcements/history.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/config/reinforcements/history.cpp
  * @brief         
  * @author        pengyulong <pengyulong@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,21 +8,19 @@
 #include <json/json.h>
 #include <unistd.h>
 
-namespace Kiran
+namespace KS
 {
-
 #define HISTORY_SIZE_LIMIT_CONF_PATH "/etc/profile"
 #define HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE "HISTSIZE"
-
 
 HistorySizeLimit::HistorySizeLimit()
 {
     this->history_size_limit_config_ = ConfigPlain::create(HISTORY_SIZE_LIMIT_CONF_PATH, "=");
 }
 
-bool HistorySizeLimit::get(const std::string &args,  SSRErrorCode &error_code)
+bool HistorySizeLimit::get(const std::string &args, SSRErrorCode &error_code)
 {
-    if(!this->history_size_limit_config_)
+    if (!this->history_size_limit_config_)
     {
         RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
     }
@@ -31,11 +29,11 @@ bool HistorySizeLimit::get(const std::string &args,  SSRErrorCode &error_code)
     {
         Json::Value values;
         auto histsize = this->history_size_limit_config_->get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE);
-        value[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] =  histsize;
+        value[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = histsize;
         args = StrUtils::json2str(values);
         return true;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
         RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
@@ -44,7 +42,7 @@ bool HistorySizeLimit::get(const std::string &args,  SSRErrorCode &error_code)
 
 bool HistorySizeLimit::set(const std::string &args, SSRErrorCode &error_code)
 {
-    if(!this->history_size_limit_config_)
+    if (!this->history_size_limit_config_)
     {
         RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
     }
@@ -52,7 +50,7 @@ bool HistorySizeLimit::set(const std::string &args, SSRErrorCode &error_code)
     try
     {
         Json::Value values = StrUtils::str2json(args);
-        
+
         RETURN_ERROR_IF_FALSE(values[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE].isInt(), SSRErrorCode::ERROR_FAILED);
 
         auto histsize = fmt::format("{0}", values[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE].asInt());
@@ -60,11 +58,11 @@ bool HistorySizeLimit::set(const std::string &args, SSRErrorCode &error_code)
 
         return true;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
         RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
     }
 }
 
-}  // namespace Kiran
+}  // namespace KS
