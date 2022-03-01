@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/job.h
+ * @file          /ks-ssr-manager/src/daemon/job.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,7 +10,7 @@
 #include <mutex>
 #include "lib/base/base.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -128,4 +128,4 @@ private:
 
 using SSRJobVec = std::vector<std::shared_ptr<Job>>;
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

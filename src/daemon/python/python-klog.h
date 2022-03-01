@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/python/python-klog.h
+ * @file          /ks-ssr-manager/src/daemon/python/python-klog.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/sysctl.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/network/reinforcements/sysctl.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "plugins/cpp/network/reinforcements/sysctl.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Network
 {
@@ -177,4 +177,4 @@ bool SysctlSourceRoute::set(const std::string &args, SSRErrorCode &error_code)
 }
 
 }  // namespace Network
-}  // namespace Kiran
+}  // namespace KS

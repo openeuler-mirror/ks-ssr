@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/python/plugin-python.cpp
+ * @file          /ks-ssr-manager/src/daemon/python/plugin-python.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,7 +11,7 @@
 #include "src/daemon/python/plugin-python.h"
 #include "src/daemon/utils.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -288,4 +288,4 @@ void PluginPython::add_reinforcement(const std::string &package_name,
 }
 
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/str-utils.cpp
+ * @file          /ks-ssr-manager/lib/base/str-utils.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -10,7 +10,7 @@
 #include "gtk3-log-i.h"
 #include "lib/base/def.h"
 
-namespace Kiran
+namespace KS
 {
 std::vector<std::string> StrUtils::split_lines(const std::string &s)
 {
@@ -157,4 +157,4 @@ std::vector<std::string> StrUtils::intersect(const std::vector<std::string> &a1,
 
     return result;
 }
-}  // namespace Kiran
+}  // namespace KS

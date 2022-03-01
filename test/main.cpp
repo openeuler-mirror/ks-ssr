@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/test/main.cpp
+ * @file          /ks-ssr-manager/test/main.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 

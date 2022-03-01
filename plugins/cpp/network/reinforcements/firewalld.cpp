@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/firewalld.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/network/reinforcements/firewalld.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "plugins/cpp/network/reinforcements/firewalld.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Network
 {
@@ -134,4 +134,4 @@ bool FirewalldICMPTimestamp::set(const std::string &args, SSRErrorCode &error_co
 }
 
 }  // namespace Network
-}  // namespace Kiran
+}  // namespace KS
