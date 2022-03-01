@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/logrotate.h
+ * @file          /ks-ssr-manager/plugins/cpp/audit/reinforcements/logrotate.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -10,7 +10,7 @@
 #include "lib/base/base.h"
 #include "lib/config/config-plain.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Audit
 {
@@ -28,4 +28,4 @@ private:
 };
 
 }  // namespace Audit
-}  // namespace  Kiran
+}  // namespace KS

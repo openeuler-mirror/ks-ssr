@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/network/network-plugin.h
+ * @file          /ks-ssr-manager/plugins/cpp/network/network-plugin.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -8,7 +8,7 @@
 #include "lib/base/base.h"
 #include "ssr-plugin-i.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Network
 {
@@ -29,4 +29,4 @@ private:
 };
 }  // namespace Network
 
-}  // namespace Kiran
+}  // namespace KS

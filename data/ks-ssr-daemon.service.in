@@ -1,0 +1,10 @@
+[Unit]
+Description=KylinSec SSR Daemon Service
+
+[Service]
+Type=dbus
+BusName=com.kylinsec.SSR
+ExecStart=@SSR_INSTALL_BINDIR@/ks-ssr-daemon
+
+[Install]
+WantedBy=multi-user.target

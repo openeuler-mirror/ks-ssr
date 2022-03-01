@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/config/cmd-parser.cpp
+ * @file          /ks-ssr-manager/src/tool/config/cmd-parser.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "src/tool/cmd/cmd-parser.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Cmd
 {
@@ -69,7 +69,7 @@ int CmdParser::run(int& argc, char**& argv)
         return EXIT_FAILURE;
     }
 
-    switch (Kiran::shash(this->options_.type.c_str()))
+    switch (KS::shash(this->options_.type.c_str()))
     {
     case CONNECT(CONFIG_TYPE_KV, _hash):
         return this->process_kv();
@@ -241,6 +241,6 @@ std::vector<std::pair<int32_t, std::string>> CmdParser::str2cols(const std::stri
     }
     return retval;
 }
-}  // namespace Config
+}  // namespace Cmd
 
-}  // namespace Kiran
+}  // namespace KS

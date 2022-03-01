@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/config/kv.cpp
+ * @file          /ks-ssr-manager/src/tool/config/kv.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -11,7 +11,7 @@
 #include "lib/base/file-lock.h"
 #include "lib/base/file-utils.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
@@ -127,15 +127,15 @@ bool KV::set(const std::string &key, const std::string &value)
             fields = split_field_regex->split(trim_line);
         }
 
-        if (!is_matched&&
-	    fields.size() == 2 &&
+        if (!is_matched &&
+            fields.size() == 2 &&
             fields[0] == key &&
             (match_line.size() == 0 || (int32_t(is_comment) <= int32_t(is_match_comment))))
         {
             match_pos = new_contents.size();
             match_line = line;
             is_match_comment = is_comment;
-	    is_matched = true;
+            is_matched = true;
         }
 
         new_contents.append(line);
@@ -268,7 +268,7 @@ bool KV::set_all(const std::string &key, const std::string &value)
         }
     }
 
-    if(!is_matching)
+    if (!is_matching)
     {
         // 如果不存在匹配行且value不为空，则在最后添加一行
         if (!value.empty())
@@ -300,4 +300,4 @@ bool KV::del(const std::string &key)
 }
 
 }  // namespace Config
-}  // namespace Kiran
+}  // namespace KS

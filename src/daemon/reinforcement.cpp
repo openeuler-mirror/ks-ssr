@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/reinforcement.cpp
+ * @file          /ks-ssr-manager/src/daemon/reinforcement.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -9,7 +9,7 @@
 #include "src/daemon/plugins.h"
 #include "src/daemon/utils.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -92,4 +92,4 @@ void Reinforcement::update_rules()
     }
 }
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

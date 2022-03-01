@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/str-utils.h
+ * @file          /ks-ssr-manager/lib/base/str-utils.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -30,7 +30,7 @@ struct formatter<Glib::ustring>
 };
 }  // namespace fmt
 
-namespace Kiran
+namespace KS
 {
 class StrUtils
 {
@@ -77,4 +77,4 @@ std::string StrUtils::join(const std::vector<T> &vec, const std::string &join_ch
     }
     return str;
 }
-}  // namespace Kiran
+}  // namespace KS

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/dbus/dbus-proxy-systemd.cpp
+ * @file          /ks-ssr-manager/lib/dbus/dbus-proxy-systemd.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "lib/dbus/dbus-proxy-systemd.h"
 
-namespace Kiran
+namespace KS
 {
 #define SYSTEMD_DBUS_NAME "org.freedesktop.systemd1"
 #define SYSTEMD_DBUS_OBJECT_PATH "/org/freedesktop/systemd1"
@@ -166,4 +166,4 @@ bool DBusSystemdProxy::call_manager_method_noresult(const std::string &method_na
     }
     return false;
 }
-}  // namespace Kiran
+}  // namespace KS

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/include/ssr-i.h
+ * @file          /ks-ssr-manager/include/ssr-i.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -15,9 +15,12 @@ extern "C"
 {
 #endif
 
-#define SSR_DBUS_NAME "com.kylinsec.Kiran.SSR"
-#define SSR_DBUS_OBJECT_PATH "/com/kylinsec/Kiran/SSR"
-#define SSR_DBUS_INTERFACE_NAME "com.kylinsec.Kiran.SSR"
+#define SSR_DBUS_NAME "com.kylinsec.SSR"
+#define SSR_DBUS_OBJECT_PATH "/com/kylinsec/SSR"
+#define SSR_DBUS_INTERFACE_NAME "com.kylinsec.SSR"
+
+// 激活对象名称
+#define LICENSE_OBJECT_SSR_NAME "KSSSRManager"
 
     // 加固标准类型
     enum SSRStandardType

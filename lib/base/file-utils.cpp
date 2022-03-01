@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/file-utils.cpp
+ * @file          /ks-ssr-manager/lib/base/file-utils.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,7 +11,7 @@
 #include <sys/types.h>
 #include "lib/base/file-lock.h"
 
-namespace Kiran
+namespace KS
 {
 Glib::RefPtr<Gio::FileMonitor> FileUtils::make_monitor(const std::string &path,
                                                        const FileMonitorCallBack &callback,
@@ -142,4 +142,4 @@ bool FileUtils::write_contents(const std::string &path, const std::string &conte
 
     return true;
 }
-}  // namespace Kiran
+}  // namespace KS

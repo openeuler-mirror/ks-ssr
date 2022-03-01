@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/crypto/cmd-parser.cpp
+ * @file          /ks-ssr-manager/src/tool/crypto/cmd-parser.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,7 +8,7 @@
 #include "src/tool/crypto/cmd-parser.h"
 #include <glib/gi18n.h>
 
-namespace Kiran
+namespace KS
 {
 namespace Crypto
 {
@@ -84,9 +84,9 @@ int CmdParser::run(int& argc, char**& argv)
     }
     case OperationType::OPERATION_TYPE_GENERATE_RSA_KEY:
         // 这里对私钥和公钥进行了互换，因为需要使用私钥进行加密，公钥进行解密。
-        Kiran::CryptoHelper::generate_rsa_key(SSR_RSA_LENGTH,
-                                              "ssr-public.key",
-                                              "ssr-private.key");
+        KS::CryptoHelper::generate_rsa_key(SSR_RSA_LENGTH,
+                                           "ssr-public.key",
+                                           "ssr-private.key");
         break;
     case OperationType::OPERATION_TYPE_DECRYPT_FILE:
         RETURN_VAL_IF_FALSE(this->process_decrypt_file(), EXIT_FAILURE);
@@ -117,7 +117,7 @@ bool CmdParser::process_decrypt_file()
     try
     {
         auto message = Glib::file_get_contents(this->decrypt_in_filename_);
-        auto decrypted_message = Kiran::CryptoHelper::ssr_decrypt(this->public_filename_, message);
+        auto decrypted_message = KS::CryptoHelper::ssr_decrypt(this->public_filename_, message);
         RETURN_VAL_IF_TRUE(decrypted_message.empty(), false);
         Glib::file_set_contents(this->output_filename_, decrypted_message);
         return true;
@@ -146,7 +146,7 @@ bool CmdParser::process_encrypt_file()
     try
     {
         auto message = Glib::file_get_contents(this->encrypt_in_filename_);
-        auto encrypted_message = Kiran::CryptoHelper::ssr_encrypt(this->private_filename_, message);
+        auto encrypted_message = KS::CryptoHelper::ssr_encrypt(this->private_filename_, message);
         // fmt::print("{0}  message: {1} encrypted_message: {2}", this->encrypt_in_filename_, message, encrypted_message);
         RETURN_VAL_IF_TRUE(encrypted_message.empty(), false);
         Glib::file_set_contents(this->output_filename_, encrypted_message);
@@ -171,4 +171,4 @@ Glib::OptionEntry CmdParser::create_entry(const std::string& long_name,
 }
 
 }  // namespace Crypto
-}  // namespace Kiran
+}  // namespace KS

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/configuration.h
+ * @file          /ks-ssr-manager/src/daemon/configuration.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,7 +10,7 @@
 #include "lib/base/base.h"
 #include "src/daemon/ssr-protocol.hxx"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -88,4 +88,4 @@ private:
     sigc::signal<void> rs_changed_;
 };
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

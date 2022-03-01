@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/audit-plugin.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/audit/audit-plugin.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,9 +10,9 @@
 #include "plugins/cpp/audit/reinforcements/auditd.h"
 #include "plugins/cpp/audit/reinforcements/logrotate.h"
 
-PLUGIN_EXPORT_FUNC_DEF(Kiran::Audit::SSRPluginAudit);
+PLUGIN_EXPORT_FUNC_DEF(KS::Audit::SSRPluginAudit);
 
-namespace Kiran
+namespace KS
 {
 #define AUDIT_REINFORCEMENT_AUDITD_SWITCH "audit-auditd-switch"
 #define AUDIT_REINFORCEMENT_LOGROTATE_ROTATE "audit-logrotate-rotate"
@@ -32,4 +32,4 @@ void SSRPluginAudit::deactivate()
 }
 
 }  // namespace Audit
-}  // namespace Kiran
+}  // namespace KS

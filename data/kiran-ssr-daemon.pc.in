@@ -1,4 +1,0 @@
-Name: Kiran SSR Daemon
-Description: Development files for communicating with kiran system security reinforcement daemon
-Version: 2.2
-Cflags: -I@SSR_INSTALL_INCLUDE@

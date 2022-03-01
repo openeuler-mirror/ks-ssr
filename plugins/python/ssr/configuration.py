@@ -1,7 +1,7 @@
 #--coding:utf8 --
 import ssr.utils
 
-SSR_CONFIG_PATH = '/usr/bin/kiran-ssr-config'
+SSR_CONFIG_PATH = '/usr/bin/ks-ssr-config'
 
 
 class KV:

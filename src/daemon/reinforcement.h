@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/reinforcement.h
+ * @file          /ks-ssr-manager/src/daemon/reinforcement.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,7 +11,7 @@
 #include "src/daemon/rule.h"
 #include "src/daemon/ssr-protocol.hxx"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -50,4 +50,4 @@ private:
 using SSRReinforcementVec = std::vector<std::shared_ptr<Reinforcement>>;
 
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

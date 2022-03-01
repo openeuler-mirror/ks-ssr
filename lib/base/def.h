@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/def.h
+ * @file          /ks-ssr-manager/lib/base/def.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -13,7 +13,7 @@
 #include <cstdio>
 #include <functional>
 
-namespace Kiran
+namespace KS
 {
 #define EPS 1e-6
 
@@ -142,4 +142,4 @@ constexpr StringHash operator"" _hash(char const *p, size_t)
     return hash_compile_time(p);
 }
 
-}  // namespace Kiran
+}  // namespace KS

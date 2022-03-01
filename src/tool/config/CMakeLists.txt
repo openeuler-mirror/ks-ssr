@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set (TARGET_NAME kiran-ssr-config)
+set (TARGET_NAME ks-ssr-config)
 
 file(GLOB_RECURSE CONFIG_H_FILES ./*.h)
 file(GLOB_RECURSE CONFIG_CPP_FILES ./*.cpp)

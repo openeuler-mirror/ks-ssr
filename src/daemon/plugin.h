@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/plugin.h
+ * @file          /ks-ssr-manager/src/daemon/plugin.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,7 +10,7 @@
 #include "src/daemon/plugin-loader.h"
 #include "src/daemon/reinforcement.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -56,4 +56,4 @@ private:
 
 using SSRPluginVec = std::vector<std::shared_ptr<Plugin>>;
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

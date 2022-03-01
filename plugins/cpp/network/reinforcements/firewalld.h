@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/firewalld.h
+ * @file          /ks-ssr-manager/plugins/cpp/network/reinforcements/firewalld.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,7 +11,7 @@
 #include "lib/dbus/dbus-proxy-systemd.h"
 #include "ssr-plugin-i.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Network
 {
@@ -39,4 +39,4 @@ public:
 };
 
 }  // namespace Network
-}  // namespace Kiran
+}  // namespace KS

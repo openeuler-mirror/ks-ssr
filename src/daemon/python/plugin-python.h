@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/python/plugin-python.h
+ * @file          /ks-ssr-manager/src/daemon/python/plugin-python.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -12,7 +12,7 @@
 struct _object;
 typedef struct _object PyObject;
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -70,4 +70,4 @@ private:
     std::map<std::string, PyObject *> reinforcements_modules_;
 };
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

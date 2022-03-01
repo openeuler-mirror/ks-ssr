@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-SSR-manager/plugins/cpp/config/external-plugin.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/config/external-plugin.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,13 +10,12 @@
 #include "plugins/cpp/external/reinforcements/devices.cpp"
 #include "plugins/cpp/external/reinforcements/login-restrictions.cpp"
 
-PLUGIN_EXPORT_FUNC_DEF(Kiran::External::SSRPluginExternal);
+PLUGIN_EXPORT_FUNC_DEF(KS::External::SSRPluginExternal);
 
-namespace Kiran
+namespace KS
 {
 namespace External
 {
-
 #define EXTERNAL_REINFORCEMENT_LOGIN_RESTRICTIONS "external-login-restrictions"
 #define EXTERNAL_REINFORCEMENT_DEVICES_SWITCH "external-devices-switch"
 #define EXTERNAL_REINFORCEMENT_LOGIN_TIMEOUT "external-login-timeout"
@@ -35,4 +34,4 @@ void SSRPluginExternal::deactivate()
 }
 
 }  // namespace External
-}  // namespace Kiran
+}  // namespace KS

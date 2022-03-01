@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/config/pam.h
+ * @file          /ks-ssr-manager/src/tool/config/pam.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -9,7 +9,7 @@
 
 #include "lib/base/base.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
@@ -74,4 +74,4 @@ private:
 };
 }  // namespace Config
 
-}  // namespace Kiran
+}  // namespace KS
