@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/plugin-loader.h
+ * @file          /ks-ssr-manager/src/daemon/plugin-loader.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,7 +8,7 @@
 
 #include "lib/base/base.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -70,4 +70,4 @@ private:
 };
 
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

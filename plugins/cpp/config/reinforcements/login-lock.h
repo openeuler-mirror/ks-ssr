@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/reinforcements/login-lock.h
+ * @file          /ks-ssr-manager/plugins/cpp/config/reinforcements/login-lock.h
  * @brief         
  * @author        pengyulong <pengyulong@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,11 +11,10 @@
 #include "lib/config/config-pam.h"
 #include "reinforcement-i.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
-
 class LoginLock : public SSRReinforcementInterface
 {
 public:
@@ -30,4 +29,4 @@ private:
 };
 
 }  // namespace Config
-}  // namespace Kiran
+}  // namespace KS

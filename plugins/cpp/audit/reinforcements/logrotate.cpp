@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/logrotate.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/audit/reinforcements/logrotate.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "plugins/cpp/audit/reinforcements/logrotate.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Audit
 {
@@ -72,4 +72,4 @@ bool LogrotateRotate::set(const std::string &args, SSRErrorCode &error_code)
 }
 
 }  // namespace Audit
-}  // namespace Kiran
+}  // namespace KS

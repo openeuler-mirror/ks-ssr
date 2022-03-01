@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/thread-pool.cpp
+ * @file          /ks-ssr-manager/lib/base/thread-pool.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "lib/base/thread-pool.h"
 
-namespace Kiran
+namespace KS
 {
 ThreadPool::ThreadPool(size_t thread_num) : thread_num_(thread_num),
                                             workers_(thread_num),
@@ -53,4 +53,4 @@ ThreadPool::ThreadPool(size_t thread_num) : thread_num_(thread_num),
     }
 }
 
-}  // namespace Kiran
+}  // namespace KS

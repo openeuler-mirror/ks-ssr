@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/base.h
+ * @file          /ks-ssr-manager/lib/base/base.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 

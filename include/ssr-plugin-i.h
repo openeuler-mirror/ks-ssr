@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/include/ssr-plugin-i.h
+ * @file          /ks-ssr-manager/include/ssr-plugin-i.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -11,7 +11,7 @@
 #include <memory>
 #include <string>
 
-namespace Kiran
+namespace KS
 {
 /*
 RS: reinforcements standard
@@ -85,7 +85,7 @@ public:
 using NewPluginFun = void *(*)(void);
 using DelPluginFun = void (*)(void *);
 
-}  // namespace Kiran
+}  // namespace KS
 
 #define PLUGIN_EXPORT_FUNC_DEF(plugin_name)               \
     extern "C" DLLEXPORT void *new_plugin()               \

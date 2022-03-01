@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/crypto-helper.h
+ * @file          /ks-ssr-manager/lib/base/crypto-helper.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,7 +10,7 @@
 #include <cstdint>
 #include <string>
 
-namespace Kiran
+namespace KS
 {
 #define SSR_DES_KEY "kylinsec"
 
@@ -53,4 +53,4 @@ public:
     static std::string ssr_encrypt(const std::string &public_filename, const std::string &message);
     static std::string ssr_decrypt(const std::string &private_filename, const std::string &ciphertext);
 };
-}  // namespace Kiran
+}  // namespace KS

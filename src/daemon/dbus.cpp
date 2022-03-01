@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/dbus.cpp
+ * @file          /ks-ssr-manager/src/daemon/dbus.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -16,14 +16,12 @@
 #include "src/daemon/ssr-protocol.hxx"
 #include "src/daemon/utils.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
 #define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
-
-#define LICENSE_OBJECT_SSR_NAME "KiranSSRManager"
 
 DBus::DBus() : dbus_connect_id_(0),
                object_register_id_(0)
@@ -672,4 +670,4 @@ void DBus::on_name_lost(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib
 }
 
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS
