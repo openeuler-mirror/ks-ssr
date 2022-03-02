@@ -12,14 +12,17 @@ LOGIN_LOCK_PASSWORD_CONF_PATH = "/etc/pam.d/password-auth"
 LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH = "auth        requisite                                    pam_faillock.so preauth audit"
 LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL = "auth        [default=die]                                pam_faillock.so authfail audit"
 LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC = "auth        sufficient                                   pam_faillock.so authsucc audit"
+LOGIN_LOCK_CONF_KEY_FAILLOCK = "account     required                                     pam_faillock.so"
 
 LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH_REGEX = "auth\\s+requisite\\s+pam_faillock.so"
 LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL_REGEX = "auth\\s+\[default=die\]\\s+pam_faillock.so"
 LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC_REGEX = "auth\\s+sufficient\\s+pam_faillock.so"
+LOGIN_LOCK_CONF_KEY_FAILLOCK_REGEX = "account\\s+required\\s+pam_faillock.so"
 
 LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN = "auth\\s+required\\s+pam_faildelay.so"
 LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN = "auth\\s+requisite\\s+pam_succeed_if.so"
 LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN = "auth\\s+requisite\\s+pam_succeed_if.so"
+LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN = "account\\s+required\\s+pam_unix.so"
 
 LOGIN_LOCK_CONF_KEY_FAILURES = "deny"
 LOGIN_LOCK_CONF_KEY_UNLOCK_TIME = "unlock_time"
@@ -31,10 +34,12 @@ class LoginLock:
         self.system_faillock_preauth = ssr.configuration.PAM(LOGIN_LOCK_SYSTEM_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH_REGEX)
         self.system_faillock_authfail = ssr.configuration.PAM(LOGIN_LOCK_SYSTEM_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL_REGEX)
         self.system_faillock_authsucc = ssr.configuration.PAM(LOGIN_LOCK_SYSTEM_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC_REGEX)
+        self.system_faillock_account = ssr.configuration.PAM(LOGIN_LOCK_SYSTEM_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_REGEX)
 
         self.password_faillock_preauth = ssr.configuration.PAM(LOGIN_LOCK_PASSWORD_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH_REGEX)
         self.password_faillock_authfail = ssr.configuration.PAM(LOGIN_LOCK_PASSWORD_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL_REGEX)
         self.password_faillock_authsucc = ssr.configuration.PAM(LOGIN_LOCK_PASSWORD_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC_REGEX)
+        self.password_faillock_account = ssr.configuration.PAM(LOGIN_LOCK_PASSWORD_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_REGEX)
 
     def get(self):
         retdata = dict()
@@ -79,6 +84,9 @@ class LoginLock:
         self.system_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK], "")
         self.system_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME], "=")
 
+        if len(self.system_faillock_account.get_line()) == 0:
+            self.system_faillock_account.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK,LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN)
+
         ##password-auth
         if len(self.password_faillock_preauth.get_line()) == 0:
             self.password_faillock_preauth.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH, LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN)
@@ -103,5 +111,8 @@ class LoginLock:
         self.password_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME], "=")
         self.password_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK], "")
         self.password_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME], "=")
+
+        if len(self.password_faillock_account.get_line()) == 0:
+            self.password_faillock_account.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK,LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN)
 
         return (True, '')
