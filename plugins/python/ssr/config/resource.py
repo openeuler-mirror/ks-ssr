@@ -13,6 +13,7 @@ HISTORY_SIZE_LIMIT_CONF_PATH = "/etc/profile.d/ssr-config.sh"
 HISTORY_SIZE_LIMIT_CONF_PROFILE_PATH = "/etc/profile"
 HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH = "/etc/bashrc"
 HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE = "HISTSIZE"
+HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT = "export HISTSIZE"
 
 class ResourceLimits:
     def get(self):
@@ -76,6 +77,8 @@ class HistorySizeLimit:
             retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = int(self.conf.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE))
         else:
             retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = False
+
+        retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT] =  int(self.conf_bashrc.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE)) 
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
@@ -83,6 +86,7 @@ class HistorySizeLimit:
         self.conf.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
         self.conf_profile.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
         self.conf_bashrc.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
+        self.conf_bashrc.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
 
         # 使配置生效
         cmd = "source" + " " + HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH + " " + HISTORY_SIZE_LIMIT_CONF_PROFILE_PATH + " " + HISTORY_SIZE_LIMIT_CONF_PATH
