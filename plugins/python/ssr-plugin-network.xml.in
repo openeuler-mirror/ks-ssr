@@ -30,4 +30,9 @@
         <_label>ICMP timestamp query</_label>
         <_description>Prevent attackers from attacking some time authentication based protocols</_description>
     </reinforcement>
+    <reinforcement>
+        <name>network-sysctl-high-risk-vulnerability</name>
+        <_label>High risk vulnerability</_label>
+        <_description>Disable high risk vulnerability services</_description>
+    </reinforcement>
 </ssr_plugin>
