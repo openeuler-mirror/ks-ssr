@@ -24,4 +24,9 @@ reinforcements = (
         'module': 'sysctl',
         'class': 'SourceRoute'
     },
+    {
+        'name': 'network-sysctl-high-risk-vulnerability',
+        'module': 'vulnerability',
+        'class': 'VulnerabilitySysctl'
+    },
 )
