@@ -26,6 +26,11 @@ class Proxy:
         if not self.is_active():
             return
         self.__call_noresult('stop')
+    
+    def kill(self):
+        if not self.is_active():
+            return
+        self.__call_noresult('kill')
 
     def restart(self):
         self.__call_noresult('restart')
@@ -74,6 +79,7 @@ class SwitchBase(object):
                     self.systemd_proxy.start()
             else:
                 if self.systemd_proxy.exist():
+                    self.systemd_proxy.kill()
                     self.systemd_proxy.disable()
                     self.systemd_proxy.stop()
             return (True, '')
