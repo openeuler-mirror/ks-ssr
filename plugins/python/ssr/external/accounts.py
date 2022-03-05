@@ -17,6 +17,9 @@ BUILTIN_IGNORE_USRES = ("bin", "daemon", "adm", "lp", "sync", "shutdown", "halt"
                         "nfsnobody", "pcap", "mysql", "ftp", "games", "man", "at", "gdm", "gnome-initial-setup")
 BUILTIN_PERMISSION_USERS = ("root")
 
+# 移除三权账户的空密码检测
+THREE_RIGHTS_USERS = ("sysadm","secadm","audadm")
+
 ACCOUNTS_INI_FILEPATH = ssr.vars.SSR_PLUGIN_PYTHON_ROOT_DIR + "/ssr/external/accounts.ini"
 ACCOUNTS_GROUP_LOGIN_LIMIT = "LoginLimit"
 # LPK: Accounts LoginLimit Key
@@ -106,7 +109,7 @@ class NullPassword(Accounts):
         retdata[NULL_PASSWORD_ARG_ENABLED] = True
 
         for pwdent in pwd.getpwall():
-            if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)):
+            if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
                 continue
             if self.is_null_password(pwdent.pw_name):
                 retdata[NULL_PASSWORD_ARG_ENABLED] = False
@@ -119,8 +122,12 @@ class NullPassword(Accounts):
 
         if args[NULL_PASSWORD_ARG_ENABLED]:
             for pwdent in pwd.getpwall():
-                if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)):
+                if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
                     continue
                 if self.is_null_password(pwdent.pw_name) and pwdent.pw_uid != 0:
                     ssr.utils.subprocess_not_output("userdel {0}".format(pwdent.pw_name))
+                    # 删除空密码用户的家目录
+                    cmd = "rm -rf" + " " + "/home/" + str(pwdent.pw_name)
+                    remove_cmd = '{0}'.format(cmd)
+                    output = ssr.utils.subprocess_not_output(remove_cmd)
         return (True, '')
