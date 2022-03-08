@@ -90,7 +90,7 @@ PluginPythonLoader::PluginPythonLoader(const std::string &package_name) : packag
 bool PluginPythonLoader::load()
 {
     auto module = PyImport_ImportModule(this->package_name_.c_str());
-    SCOPE_EXIT({
+    SSR_SCOPE_EXIT({
         Py_XDECREF(module);
     });
 
