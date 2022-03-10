@@ -78,7 +78,7 @@ bool Configuration::set_standard_type(SSRStandardType standard_type)
 bool Configuration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code)
 {
     // 判断自定义加固标准
-    auto decrypted_rs = CryptoHelper::rsa_decrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_rs);
+    auto decrypted_rs = CryptoHelper::ssr_decrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_rs);
     if (decrypted_rs.empty())
     {
         error_code = SSRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED;
