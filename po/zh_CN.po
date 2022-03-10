@@ -137,7 +137,6 @@ msgid "Add new line when the speficied line pattern is dismatch in PAM"
 msgstr "指定未匹配到模式行时添加的新行"
 
 #: ../src/tool/config/cmd-parser.cpp:37
-#, fuzzy
 msgid ""
 "Specifies a regular expression to match the next row of the inserted row. If "
 "multiple rows are matched, the value is used by the first matched row"
@@ -318,12 +317,8 @@ msgid "Allow user names"
 msgstr "允许包含用户名"
 
 #: ../data/ssr-system-rs.xml.in.h:33
-msgid "Max stack size"
-msgstr "最大栈空间大小"
-
-#: ../data/ssr-system-rs.xml.in.h:34
-msgid "Max resident set size"
-msgstr "最大常驻内存集"
+msgid "Stack and RSS sizes are limited (10240)"
+msgstr "限制Stack和Rss的大小(10240)"
 
 #: ../data/ssr-system-rs.xml.in.h:35
 #: ../plugins/python/ssr-plugin-config.xml.in.h:18
@@ -389,8 +384,8 @@ msgid "Allow to use SSH weak encryption algorithm"
 msgstr "允许使用SSH弱加密算法"
 
 #: ../data/ssr-system-rs.xml.in.h:50
-msgid "Allow hiding operating system version information"
-msgstr "允许隐藏操作系统版本信息"
+msgid "Hiding operating system version information"
+msgstr "隐藏操作系统版本信息"
 
 #: ../data/ssr-system-rs.xml.in.h:51
 #: ../plugins/python/ssr-plugin-external.xml.in.h:21

@@ -98,6 +98,8 @@
             <xsd:element name="value" type="xsd:string" />
             <!-- 前端自定参数输入的正则限制 -->
             <xsd:element name="value_limits" type="xsd:string" minOccurs="0" />
+            <!-- QT暗注释，输入示例 -->
+            <xsd:element name="input_example" type="xsd:string" minOccurs="0" />
             <!-- 如果所有系统设置参数都满足规则，则该加固项扫描合法，否则不合法 -->
             <xsd:element name="rule" type="Rule" minOccurs="0" />
             <!-- 参数在设置界面的布局 -->
