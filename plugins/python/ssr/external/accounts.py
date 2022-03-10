@@ -33,8 +33,9 @@ LOGIN_LIMIT_ARG_PERMISSION_USERS = "permission-users"
 # 禁止存在空密码账号
 NULL_PASSWORD_ARG_ENABLED = "enabled"
 
-GET_USER_NAME_CMD = "eval getent passwd {$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)..$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)} | cut -d: -f1"
-
+# GET_USER_NAME_CMD = "eval getent passwd {$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)..$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)} | cut -d: -f1"
+GET_MINIMUM_UID = "awk '/^UID_MIN/ {print $2}' /etc/login.defs"
+GET_MAXIMUM_UID = "awk '/^UID_MAX/ {print $2}' /etc/login.defs"
 class Accounts:
     def is_nologin_shell(self, shell):
         basename = os.path.basename(shell)
@@ -43,11 +44,14 @@ class Accounts:
         return False
 
     def is_human(self, uid, username, shell):
-        if BUILTIN_IGNORE_USRES.__contains__(username):
-            return False
         if self.is_nologin_shell(shell):
             return False
-        return uid >= MINIMUM_UID
+
+        MINIMUM_UID = ssr.utils.subprocess_has_output(GET_MINIMUM_UID)
+        MAXIMUM_UID = ssr.utils.subprocess_has_output(GET_MAXIMUM_UID)
+
+        return (uid < MINIMUM_UID) or (uid > MAXIMUM_UID)
+
 
     def is_null_password(self, username):
         spwdent = spwd.getspnam(username)
@@ -57,10 +61,10 @@ class Accounts:
         except:
             return (spwdent.sp_pwdp == "" or spwdent.sp_pwdp == "!!")
 
-    def get_user_name(self, permission_users):
-        output = ssr.utils.subprocess_has_output(GET_USER_NAME_CMD)
-        permission_users += output.encode().split('\n')
-        ssr.log.debug(list(permission_users))
+    # def get_user_name(self, permission_users):
+    #     output = ssr.utils.subprocess_has_output(GET_USER_NAME_CMD)
+    #     permission_users += output.encode().split('\n')
+    #     ssr.log.debug(list(permission_users))
 
 class LoginLimit(Accounts):
     def __init__(self):
@@ -72,7 +76,6 @@ class LoginLimit(Accounts):
         retdata[LOGIN_LIMIT_ARG_ENABLED] = True
         retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS] = self.conf.get(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS)
         permission_users = retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS].split(";")
-        self.get_user_name(permission_users)
 
         for pwdent in pwd.getpwall():
             if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell) or BUILTIN_PERMISSION_USERS.__contains__(pwdent.pw_name)
@@ -88,8 +91,8 @@ class LoginLimit(Accounts):
         args = json.loads(args_json)
 
         self.conf.set(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS, args[LOGIN_LIMIT_ARG_PERMISSION_USERS])
+        self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
         permission_users = args[LOGIN_LIMIT_ARG_PERMISSION_USERS].split(";")
-        self.get_user_name(permission_users)
 
         if args[LOGIN_LIMIT_ARG_ENABLED]:
             for pwdent in pwd.getpwall():

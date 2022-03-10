@@ -13,6 +13,8 @@ PUBKEY_AUTH_ARG_ENABLED = "enabled"
 WEAK_ENCRYPT_ARG_ENABLED = "enabled"
 BANNER_INFO_ARG_ENABLED = "enabled"
 
+BANNER_INFO_KEY = "Banner"
+
 # 会话登录后超过指定时间未操作则自动退出
 PROFILE_CLIENT_TMOUT = "ClientAliveInterval"
 PROFILE_CLIENT_COUNT = "ClientAliveCountMax"
@@ -93,15 +95,15 @@ class WeakEncryption(SSHD):
 class BannerInfo(SSHD):
     def get(self):
         retdata = dict()
-        retdata[BANNER_INFO_ARG_ENABLED] = (self.conf.get_value("Banner") == "none") or (self.conf.get_value("Banner") == "")
+        retdata[BANNER_INFO_KEY] = self.conf.get_value("Banner")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
         #self.conf.set_value("Banner", "/etc/issue.net" if args[ROOT_LOGIN_ARG_ENABLED] else "none")
         #只对开启后关闭做处理
-        if args[ROOT_LOGIN_ARG_ENABLED]:
-            self.conf.set_value("Banner", "none")
+        # if args[ROOT_LOGIN_ARG_ENABLED]:
+        self.conf.set_value("Banner", args[BANNER_INFO_KEY])
         # 重启服务生效
         self.service.restart()
         return (True, '')

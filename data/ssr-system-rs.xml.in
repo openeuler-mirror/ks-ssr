@@ -26,6 +26,7 @@
                 <name>ports</name>
                 <value>""</value>
                 <value_limits>((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))((\/tcp)|(\/udp))(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))((\/tcp)|(\/udp)))*</value_limits>
+                <input_example>0~60999/(tcp|udp)</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Opened ports (Split with semicolon)</_label>
@@ -324,7 +325,7 @@
                     <_label>Minimum number of days allowed between password changes</_label>
                 </layout>
             </arg>
-            <arg>
+            <!-- <arg>
                 <name>PASS_MIN_LEN</name>
                 <value>8</value>
                 <value_limits>6</value_limits>
@@ -338,7 +339,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>Minimum acceptable password length</_label>
                 </layout>
-            </arg>
+            </arg> -->
             <arg>
                 <name>PASS_WARN_AGE</name>
                 <value>28</value>
@@ -448,7 +449,7 @@
                 </layout>
             </arg>
             <arg>
-                <name>maxclassrepeat</name>
+                <name>maxsequence</name>
                 <value>3</value>
                 <value_limits>0</value_limits>
                 <rule>
@@ -479,33 +480,16 @@
         <reinforcement>
             <name>config-resource-limits</name>
             <arg>
-                <name>stack</name>
-                <value>10240</value>
+                <name>enabled</name>
+                <value>true</value>
                 <value_limits>""</value_limits>
                 <rule>
-                    <type>RANGE</type>
-                    <value_range>
-                        <max_value>10240</max_value>
-                    </value_range>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
                 </rule>
                 <layout>
-                    <widget_type>TEXT</widget_type>
-                    <_label>Max stack size</_label>
-                </layout>
-            </arg>
-            <arg>
-                <name>rss</name>
-                <value>10000</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>RANGE</type>
-                    <value_range>
-                        <max_value>10000</max_value>
-                    </value_range>
-                </rule>
-                <layout>
-                    <widget_type>TEXT</widget_type>
-                    <_label>Max resident set size</_label>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Stack and RSS sizes are limited (10240)</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -528,12 +512,12 @@
         <reinforcement>
             <name>config-umask-limit</name>
             <arg>
-                <name>umask</name>
-                <value>"027"</value>
-                <value_limits>[0-7]{3}</value_limits>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>"027"</value_fixed>
+                    <value_fixed>true</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
@@ -673,6 +657,7 @@
                 <name>permission-users</name>
                 <value>""</value>
                 <value_limits>[a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?([;][a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?)*</value_limits>
+                <input_example>name1;name2...</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Allow account retention (Split with semicolon)</_label>
@@ -746,16 +731,17 @@
         <reinforcement>
             <name>external-sshd-banner-info</name>
             <arg>
-                <name>enabled</name>
-                <value>true</value>
+                <name>Banner</name>
+                <value>"none"</value>
                 <value_limits>""</value_limits>
+                <input_example>none || /etc/issue.net</input_example>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
+                    <value_fixed>"none"</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow hiding operating system version information</_label>
+                    <_label>Hiding operating system version information</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -781,6 +767,7 @@
                 <name>allow-hosts</name>
                 <value>""</value>
                 <value_limits>((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?)*</value_limits>
+                <input_example>(xxx.yyy.|xxx.yyy.zzz|ip),...</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>List of IP addresses that allow remote access (Split with comma)</_label>
@@ -790,6 +777,7 @@
                 <name>deny-hosts</name>
                 <value>""</value>
                 <value_limits>((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?)*</value_limits>
+                <input_example>(xxx.yyy.|xxx.yyy.zzz|ip),...</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>List of IP addresses for which remote access is prohibited (Split with comma)</_label>
