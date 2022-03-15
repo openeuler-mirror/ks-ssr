@@ -1,15 +1,23 @@
 import json
 import ssr.configuration
 import ssr.utils
+import ssr.log
 
 UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-ssr-external.rules"
 
-DISABLE_CDROM_RULE = "KERNEL==\\\"sr0\\\", ENV{UDISKS_IGNORE}=\\\"1\\\""
+#DISABLE_CDROM_RULE = "KERNEL==\\\"sr0\\\", ENV{UDISKS_IGNORE}=\\\"1\\\""
 DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", DRIVERS==\\\"usb-storage|uas\\\", ATTR{authorized}=\\\"0\\\""
 
 TTYPS_CMD_STR = "setserial /dev/ttyS"
 TTYPS_STATUS_CMD = "setserial -g /dev/ttyS"
 TTYPS_SUM_DEV_CMD = "ls /dev/ttyS* |wc -l"
+
+CDROM_STATUS_CMD = " cat /proc/modules |grep "
+CDROM_DRIVE = "cdrom"
+SR_MOD_DRIVE = "sr_mod"
+FIND_DRIVE_CMD = "find /lib/modules/ -name"
+UNINSTALL_DRIVE = "rmmod"
+INSTALL_DRIVE = "insmod"
 
 CDROM_ARG_ENABLED = "enabled"
 USB_ARG_ENABLED = "enabled"
@@ -24,22 +32,56 @@ class UDev:
         command =  'udevadm control --reload'
         outpur = ssr.utils.subprocess_has_output(command)
 
-class CDROM(UDev):
+class CDROM():
+    def find_drive(self,key):
+        command = '{0} {1}.ko*'.format(FIND_DRIVE_CMD,key)
+        output = ssr.utils.subprocess_has_output(command)
+        return str(output)
+
+    def open(self):
+        try:
+            if not self.status():
+                cmd_cdrom = '{0} {1}'.format(INSTALL_DRIVE,self.find_drive(CDROM_DRIVE))
+                cmd_sr_mod = '{0} {1}'.format(INSTALL_DRIVE,self.find_drive(SR_MOD_DRIVE))
+                output_cdrom = ssr.utils.subprocess_has_output(cmd_cdrom)
+                output_sr_mod = ssr.utils.subprocess_has_output(cmd_sr_mod)
+        except Exception as e:
+            ssr.log.debug(e)
+            return (False,str(e))
+
+    def close(self):
+        try:
+            if self.status():
+                cmd_cdrom = '{0} {1}'.format(UNINSTALL_DRIVE,CDROM_DRIVE)
+                cmd_sr_mod = '{0} {1}'.format(UNINSTALL_DRIVE,SR_MOD_DRIVE)
+                output_sr_mod = ssr.utils.subprocess_has_output(cmd_sr_mod)
+                output_cdrom = ssr.utils.subprocess_has_output(cmd_cdrom)
+        except Exception as e:
+            ssr.log.debug(e)
+            return (False,str(e))
+
+    def status(self):
+        cmd_sr_mod = '{0} {1}'.format(CDROM_STATUS_CMD,SR_MOD_DRIVE)
+        output_sr_mod = ssr.utils.subprocess_has_output(cmd_sr_mod)
+        return len(output_sr_mod) != 0
+
     def get(self):
         retdata = dict()
-        value = self.conf.get_value("1=KERNEL==\\\"sr0\\\"")
-        retdata[CDROM_ARG_ENABLED] = (len(value) == 0)
+        retdata[CDROM_ARG_ENABLED] = self.status()
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
 
-        if args[CDROM_ARG_ENABLED]:
-            self.conf.del_record("1=KERNEL==\\\"sr0\\\"")
+        if not args[CDROM_ARG_ENABLED]:
+            output = self.close()
+            if output:
+                return (False,"Device busy , please pop up! \t")
         else:
-            self.conf.set_value("1=KERNEL==\\\"sr0\\\"", DISABLE_CDROM_RULE)
+            output = self.open()
+            if output:
+                return (False,"Please contact the admin.  \t")
 
-        self.reload()
         return (True, '')
 
 
