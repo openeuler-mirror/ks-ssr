@@ -23,9 +23,11 @@ class Proxy:
         self.__call_noresult('start')
 
     def stop(self):
-        if not self.is_active():
-            return
-        self.__call_noresult('stop')
+        try:
+            ssr.log.debug(output)
+        except Exception as e:
+            ssr.log.debug(e)
+            return (False,str(e))
     
     def kill(self):
         if not self.is_active():
@@ -81,7 +83,8 @@ class SwitchBase(object):
                 if self.systemd_proxy.exist():
                     self.systemd_proxy.kill()
                     self.systemd_proxy.disable()
-                    self.systemd_proxy.stop()
+                    if self.systemd_proxy.stop():
+                        return (False, 'Unable to stop service! \t\n')
             return (True, '')
         except Exception as e:
             return (False, str(e))

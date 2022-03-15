@@ -131,6 +131,10 @@ class NullPassword(Accounts):
                     ssr.utils.subprocess_not_output("userdel {0}".format(pwdent.pw_name))
                     # 删除空密码用户的家目录
                     cmd = "rm -rf" + " " + "/home/" + str(pwdent.pw_name)
+                    # 删除空密码用户的系统信箱
+                    cmd_mail = "rm -rf" + " " + "/var/spool/mail/" + str(pwdent.pw_name)
                     remove_cmd = '{0}'.format(cmd)
+                    output = ssr.utils.subprocess_not_output(remove_cmd)
+                    remove_cmd = '{0}'.format(cmd_mail)
                     output = ssr.utils.subprocess_not_output(remove_cmd)
         return (True, '')
