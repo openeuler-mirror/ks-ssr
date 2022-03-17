@@ -76,11 +76,11 @@ class CDROM():
         if not args[CDROM_ARG_ENABLED]:
             output = self.close()
             if output:
-                return (False,"Device busy , please pop up! \t")
+                return (False,"Device busy , please pop up! \t\t")
         else:
             output = self.open()
             if output:
-                return (False,"Please contact the admin.  \t")
+                return (False,"Please contact the admin. \t\t")
 
         return (True, '')
 

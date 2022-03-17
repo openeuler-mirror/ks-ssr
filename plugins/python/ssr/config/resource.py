@@ -89,10 +89,16 @@ class HistorySizeLimit:
     def set(self, args_json):
         args = json.loads(args_json)
         self.conf.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
-        self.conf_profile.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
-        self.conf_bashrc.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
-        self.conf_bashrc.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
-
+        # /etc/profile 或 /etc/bashrc 存在值则修改，不存在不填加
+        if self.conf_profile.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE):
+            self.conf_profile.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
+        if self.conf_bashrc.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE):
+            self.conf_bashrc.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
+        # 如果存在export HISTSIZE的值才进行改动，不存在则不添加
+        if self.conf_profile.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT):
+            self.conf_profile.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
+        if self.conf_bashrc.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT):
+            self.conf_bashrc.set_all_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT, args[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE])
         # 使配置生效
         cmd = "source" + " " + HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH + " " + HISTORY_SIZE_LIMIT_CONF_PROFILE_PATH + " " + HISTORY_SIZE_LIMIT_CONF_PATH
         limit_open_command = '{0}'.format(cmd)
