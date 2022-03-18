@@ -47,8 +47,9 @@ class Accounts:
         if self.is_nologin_shell(shell):
             return False
 
-        MINIMUM_UID = ssr.utils.subprocess_has_output(GET_MINIMUM_UID)
-        MAXIMUM_UID = ssr.utils.subprocess_has_output(GET_MAXIMUM_UID)
+        ssr.log.debug("name = ", username, "uid = ", uid)
+        MINIMUM_UID = int(ssr.utils.subprocess_has_output(GET_MINIMUM_UID))
+        MAXIMUM_UID = int(ssr.utils.subprocess_has_output(GET_MAXIMUM_UID))
 
         return (uid < MINIMUM_UID) or (uid > MAXIMUM_UID)
 
