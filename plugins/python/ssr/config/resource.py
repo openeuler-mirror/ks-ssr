@@ -41,7 +41,13 @@ class ResourceLimits:
         stack = self.conf.get_value(RESOURCE_LIMITS_KEY_STACK_HARD)
         rss  = self.conf.get_value(RESOURCE_LIMITS_KEY_RSS_HARD)
 
-        if (stack_cmd == "unlimited" and rss_output == "unlimited") and (stack == "unlimited" and rss == "unlimited"):
+        stack_file_output = ssr.utils.subprocess_has_output('grep -r \"unlimited\" {0} | grep stack'.format(RESOURCE_LIMITS_CONF_PATH))
+        rss_file_ouput = ssr.utils.subprocess_has_output('grep -r \"unlimited\" {0} | grep rss'.format(RESOURCE_LIMITS_CONF_PATH))
+
+        # stack = self.conf.get_value(RESOURCE_LIMITS_KEY_STACK_HARD)
+        # rss  = self.conf.get_value(RESOURCE_LIMITS_KEY_RSS_HARD)
+
+        if (stack_output == "unlimited" and rss_output == "unlimited" and len(stack_file_output) != 0 and len(rss_file_ouput) != 0):
             retdata['enabled'] = False
         else:
             retdata['enabled'] = True
@@ -57,15 +63,20 @@ class ResourceLimits:
         self.conf.del_record(RESOURCE_LIMITS_KEY_RSS_HARD)
 
         if args['enabled']:
-            self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, '8190')
+            self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, '8192')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, '10240')
+            ssr.utils.subprocess_not_output('ulimit -s {0}'.format('10240'))
+            ssr.utils.subprocess_not_output('ulimit -m {0}'.format('10240'))
         else:
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, 'unlimited')
+            ssr.utils.subprocess_not_output('ulimit -s {0}'.format('unlimited'))
+            ssr.utils.subprocess_not_output('ulimit -m {0}'.format('unlimited'))
+
 
         return (True, '')
 
