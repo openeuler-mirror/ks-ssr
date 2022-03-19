@@ -53,6 +53,15 @@ class Accounts:
 
         return (uid < MINIMUM_UID) or (uid > MAXIMUM_UID)
 
+    def is_null_pw_human(self, uid, username, shell):
+        if self.is_nologin_shell(shell):
+            return False
+
+        MINIMUM_UID = ssr.utils.subprocess_has_output(GET_MINIMUM_UID)
+        MAXIMUM_UID = ssr.utils.subprocess_has_output(GET_MAXIMUM_UID)
+        ssr.log.debug("MINIMUM_UID = ", MINIMUM_UID, "MAXIMUM_UID = ", MAXIMUM_UID)
+
+        return (uid < MINIMUM_UID) or (uid > MAXIMUM_UID)
 
     def is_null_password(self, username):
         spwdent = spwd.getspnam(username)
@@ -113,7 +122,8 @@ class NullPassword(Accounts):
         retdata[NULL_PASSWORD_ARG_ENABLED] = True
 
         for pwdent in pwd.getpwall():
-            if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
+            if (not self.is_null_pw_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
+                #ssr.log.debug("pwdent.pw_name = ", pwdent.pw_name, "is_human = ", self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell))
                 continue
             if self.is_null_password(pwdent.pw_name):
                 retdata[NULL_PASSWORD_ARG_ENABLED] = False
@@ -126,16 +136,11 @@ class NullPassword(Accounts):
 
         if args[NULL_PASSWORD_ARG_ENABLED]:
             for pwdent in pwd.getpwall():
-                if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
+                if (not self.is_null_pw_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
+                    ssr.log.debug("pop  pwdent.pw_name = ", pwdent.pw_name, "pw_uid = ", pwdent.pw_uid)
                     continue
                 if self.is_null_password(pwdent.pw_name) and pwdent.pw_uid != 0:
-                    ssr.utils.subprocess_not_output("userdel {0}".format(pwdent.pw_name))
-                    # 删除空密码用户的家目录
-                    cmd = "rm -rf" + " " + "/home/" + str(pwdent.pw_name)
-                    # 删除空密码用户的系统信箱
-                    cmd_mail = "rm -rf" + " " + "/var/spool/mail/" + str(pwdent.pw_name)
-                    remove_cmd = '{0}'.format(cmd)
-                    output = ssr.utils.subprocess_not_output(remove_cmd)
-                    remove_cmd = '{0}'.format(cmd_mail)
-                    output = ssr.utils.subprocess_not_output(remove_cmd)
+                    ssr.log.debug("del  pwdent.pw_name = ", pwdent.pw_name, "pw_uid = ", pwdent.pw_uid)
+                    ssr.utils.subprocess_not_output("userdel -r {0}".format(pwdent.pw_name))
+
         return (True, '')
