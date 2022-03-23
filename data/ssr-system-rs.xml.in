@@ -767,7 +767,7 @@
                 <name>allow-hosts</name>
                 <value>""</value>
                 <value_limits>((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?)*</value_limits>
-                <input_example>(xxx.yyy.|xxx.yyy.zzz|ip),...</input_example>
+                <input_example>192.168.|192.168.1|192.168.1.1</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>List of IP addresses that allow remote access (Split with comma)</_label>
@@ -777,7 +777,7 @@
                 <name>deny-hosts</name>
                 <value>""</value>
                 <value_limits>((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?)*</value_limits>
-                <input_example>(xxx.yyy.|xxx.yyy.zzz|ip),...</input_example>
+                <input_example>192.168.|192.168.1|192.168.1.1</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>List of IP addresses for which remote access is prohibited (Split with comma)</_label>
