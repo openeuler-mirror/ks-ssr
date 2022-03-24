@@ -35,6 +35,16 @@ class Proxy:
             return
         self.__call_noresult('kill')
 
+    def service_stop(self):
+        output = self.__call_service_result('stop')
+        if str(output).find('FAILED') < 0:
+            return True
+        else:
+            return False
+
+    def service_restart(self):
+        self.__call_service_noresult('restart')
+
     def restart(self):
         self.__call_noresult('restart')
 
@@ -51,6 +61,14 @@ class Proxy:
         if not self.is_enable():
             return
         self.__call_noresult('disable')
+
+    def __call_service_noresult(self, action):
+        command = 'service {0} {1}'.format(self.service,action)
+        ssr.utils.subprocess_not_output(command)
+
+    def __call_service_result(self, action):
+        command = 'service {0} {1}'.format(self.service,action)
+        ssr.utils.subprocess_has_output(command)
 
     def __call_noresult(self, action):
         command = 'systemctl {0} {1}.service'.format(action, self.service)
@@ -83,7 +101,8 @@ class SwitchBase(object):
             else:
                 if self.systemd_proxy.exist():
                     if self.systemd_proxy.stop():
-                        return (False, 'Unable to stop service! \t\n')
+                        if not self.systemd_proxy.service_stop():
+                            return (False, 'Unable to stop service! \t\t')
                     #self.systemd_proxy.kill()
                     self.systemd_proxy.disable()
             return (True, '')
