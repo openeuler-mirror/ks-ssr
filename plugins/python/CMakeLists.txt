@@ -34,6 +34,10 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-ssr-config-resource.conf
          RENAME "90-ssr-config.conf"
          DESTINATION /etc/security/limits.d/)
 
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/98-ssr-config.gschema.override
+         RENAME "98-ssr-config.gschema.override"
+         DESTINATION /usr/share/glib-2.0/schemas/)
+
 
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-audit.xml.in)
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-config.xml.in)
