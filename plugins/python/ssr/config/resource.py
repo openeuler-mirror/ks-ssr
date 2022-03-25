@@ -4,6 +4,7 @@ import json
 import re
 import ssr.utils
 import ssr.configuration
+import ssr.log
 
 RESOURCE_LIMITS_CONF_PATH = "/etc/security/limits.d/90-ssr-config.conf"
 RESOURCE_LIMITS_KEY_STACK_SOFT  = "*                soft    stack"
@@ -81,14 +82,34 @@ class HistorySizeLimit:
 
     def get(self):
         retdata = dict()
-        # 三个文件的 HISTSIZE值相等，且值为默认值才为加固成功
-        if int(self.conf.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE)) == int(self.conf_bashrc.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE)) and int(self.conf.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE)) == int(self.conf_profile.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE)):
-            retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = int(self.conf.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE))
-        else:
-            retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = False
 
-        retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT] =  int(self.conf_bashrc.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE))
-        return (True, json.dumps(retdata))
+        # 获取HISTSIZE的值
+        get_ssr_config = self.conf.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE)
+        get_profile = self.conf_profile.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE)
+        get_profile_export =  self.conf_profile.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT)
+        get_bashrc = self.conf_bashrc.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE)
+        get_bashrc_export = self.conf_bashrc.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT)
+
+        if len(get_profile) == 0:
+            get_profile = '0'
+        if len(get_profile_export) == 0:
+            get_profile_export = '0'
+        if len(get_bashrc) == 0:
+            get_bashrc = '0'
+        if len(get_bashrc_export) == 0:
+            get_bashrc_export = '0'
+
+        ssr.log.debug('get_ssr_config',get_ssr_config,'get_profile = ',get_profile,'get_profile_export = ',get_profile_export,'get_bashrc = ',get_bashrc,'get_bashrc_export = ',get_bashrc_export)
+        ssr.log.debug('int(get_profile)|int(get_profile_export)|int(get_bashrc_export)|int(get_bashrc) = ',int(get_profile)|int(get_profile_export)|int(get_bashrc_export)|int(get_bashrc))
+        if int(get_ssr_config) == int(get_profile)|int(get_profile_export)|int(get_bashrc_export)|int(get_bashrc):
+            retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = int(get_ssr_config)
+            return (True, json.dumps(retdata))
+        else:
+            if int(get_profile)|int(get_profile_export)|int(get_bashrc_export)|int(get_bashrc) == 0:
+                retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = int(get_ssr_config)
+                return (True, json.dumps(retdata)) 
+            retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = False
+            return (False, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
