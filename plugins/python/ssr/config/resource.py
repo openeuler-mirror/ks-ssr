@@ -47,8 +47,10 @@ class ResourceLimits:
 
         # stack = self.conf.get_value(RESOURCE_LIMITS_KEY_STACK_HARD)
         # rss  = self.conf.get_value(RESOURCE_LIMITS_KEY_RSS_HARD)
+        ssr.log.debug(rss_output)
+        ssr.log.debug(stack_output)
 
-        if (stack_output == "unlimited" and rss_output == "unlimited" and len(stack_file_output) != 0 and len(rss_file_ouput) != 0):
+        if len(stack_file_output) != 0 or len(rss_file_ouput) != 0:
             retdata['enabled'] = False
         else:
             retdata['enabled'] = True
