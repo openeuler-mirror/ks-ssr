@@ -78,11 +78,11 @@ class KeyRebootSwitch:
     def get(self):
         retdata = dict()
         if self.status_exist():
-            retdata['enabled'] = self.status() 
+            retdata['enabled'] = self.status()
         if self.status_bak():
             retdata['enabled'] = False
         return (True, json.dumps(retdata))
- 
+
     def set(self, args_json):
         args = json.loads(args_json)
         if self.status_exist():
