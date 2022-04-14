@@ -29,11 +29,11 @@ LOGFILE_ROTETE_CONF = '### KSSRManager ###\n\
     missingok\n\
     sharedscripts\n\
     prerotate\n\
-        /usr/bin/chattr -a /var/log/messages\n\
+        sudo /usr/bin/chattr -a /var/log/messages\n\
     endscript\n\
     postrotate\n\
-        /usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true\n\
-        /usr/bin/chattr +a /var/log/messages\n\
+        sudo /usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true\n\
+        sudo /usr/bin/chattr +a /var/log/messages\n\
     endscript\n\
 }\n\
 ### KSSRManager ###'
@@ -99,10 +99,10 @@ class Permissions:
                     continue
                 mode = os.stat(mode_file).st_mode
                 if mode != (mode & ~EXCLUDE_MODE):
-                    ssr.utils.subprocess_not_output('chattr -a {0}'.format(mode_file))
+                    ssr.utils.subprocess_not_output('sudo chattr -a {0}'.format(mode_file))
                     os.chmod(mode_file, mode & ~EXCLUDE_MODE)
                     if args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT]:
-                        ssr.utils.subprocess_not_output('chattr +a {0}'.format(mode_file))
+                        ssr.utils.subprocess_not_output('sudo chattr +a {0}'.format(mode_file))
 
         # if args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT]:
         #     for append_file in self.append_filelist:
@@ -118,6 +118,8 @@ class Permissions:
             elif len(output_kssrmanager) == 0 and len(output) != 0:
                 ssr.utils.subprocess_not_output('sed -i \'s/{0}/ /g\' {1}'.format("\/var\/log\/messages", LOGFILE_CONF_FILEPATH))
                 ssr.utils.subprocess_not_output('echo \'{0}\'    >> {1}'.format( LOGFILE_ROTETE_CONF, LOGFILE_CONF_FILEPATH))
+
+            ssr.utils.subprocess_not_output('sudo chattr +a {0}'.format('/var/log/messages'))
         else:
             output = ssr.utils.subprocess_has_output('grep -rn "{0}" {1} | cut -f1 -d:'.format('### KSSRManager ###', LOGFILE_CONF_FILEPATH))
             if len(output) != 0:
@@ -125,6 +127,6 @@ class Permissions:
                 ssr.utils.subprocess_not_output('sed -i \'{0},{1}d\' {2}'.format(line[0], line[1], LOGFILE_CONF_FILEPATH))
                 ssr.utils.subprocess_not_output('sed -i "1i{0}" {1}'.format('/var/log/messages', LOGFILE_CONF_FILEPATH))
 
-            ssr.utils.subprocess_not_output('chattr -a {0}'.format('/var/log/messages'))
+            ssr.utils.subprocess_not_output('sudo chattr -a {0}'.format('/var/log/messages'))
 
         return (True, '')
