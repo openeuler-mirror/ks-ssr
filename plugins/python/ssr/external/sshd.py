@@ -60,7 +60,6 @@ class PubkeyAuth(SSHD):
         self.service.restart()
         return (True, '')
 
-
 class WeakEncryption(SSHD):
     def get(self):
         retdata = dict()
