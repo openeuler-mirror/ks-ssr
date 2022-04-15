@@ -352,7 +352,7 @@ msgstr "允许使用光驱设备（首次加固时间长，请耐心等待）"
 
 #: ../data/ssr-system-rs.xml.in.h:42
 msgid "Allow to use USB device"
-msgstr "允许使用USB设备（重启后生效）"
+msgstr "允许使用USB设备（请移除设备后操作）"
 
 #: ../data/ssr-system-rs.xml.in.h:43
 msgid "Allow to use serial port device"
