@@ -4,6 +4,7 @@ import ssr.utils
 import ssr.log
 
 UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-ssr-external.rules"
+DRIVER_BLACKLIST_PATH = "/etc/modprobe.d/ssr-blacklist.conf"
 
 #DISABLE_CDROM_RULE = "KERNEL==\\\"sr0\\\", ENV{UDISKS_IGNORE}=\\\"1\\\""
 DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", DRIVERS==\\\"usb-storage|uas\\\", ATTR{authorized}=\\\"0\\\""
@@ -32,7 +33,11 @@ class UDev:
         command =  'udevadm control --reload'
         outpur = ssr.utils.subprocess_has_output(command)
 
-class CDROM:
+class DRIVERS:
+    def __init__(self):
+        self.conf = ssr.configuration.Table(DRIVER_BLACKLIST_PATH, ",\\s+")
+        self.flag = False
+
     def find_drive(self,key):
         command = '{0}{1}  -name {2}.ko*'.format(FIND_DRIVE_CMD,str(self.get_kernel_version()),key)
         drivers = ssr.utils.subprocess_has_output(command)
@@ -45,6 +50,17 @@ class CDROM:
         kernel_version = str(output).split(' ')
         return kernel_version[2]
 
+    def reload_drive(self,kernel_version):
+        ssr.log.debug('kernel_version = ',kernel_version)
+        initramfs_name = 'initramfs-' + kernel_version + '.img'
+        reload_initramfs = 'cd /boot/ ; {0} {1} ; cd -'.format(RELOAD_INITRAMFS,initramfs_name)
+        output = ssr.utils.subprocess_not_output(reload_initramfs)
+
+    def ignore_drive(self,opt_1 = '',opt_2 = '',opt_3 = ''):
+        cmd = '{0}  {1}  {2} {3}'.format(RELOAD_INITRAMFS,opt_1,opt_2,opt_3)
+        output = ssr.utils.subprocess_not_output(cmd)
+
+class CDROM(DRIVERS):
     def open(self):
         try:
             if not self.status():
@@ -66,7 +82,7 @@ class CDROM:
                     output = ssr.utils.subprocess_not_output(mv_sr_mod)
 
                 # reload initramfs
-                self.reload_drive(self.get_kernel_version())
+                #self.reload_drive(self.get_kernel_version())
 
         except Exception as e:
             ssr.log.debug('Exception_open',e)
@@ -93,17 +109,11 @@ class CDROM:
                     output = ssr.utils.subprocess_not_output(mv_sr_mod)
 
                 # reload initramfs
-                self.reload_drive(self.get_kernel_version())
+                #self.reload_drive(self.get_kernel_version())
 
         except Exception as e:
             ssr.log.debug('Exception_close',e)
             return (False,str(e))
-
-    def reload_drive(self,kernel_version):
-        ssr.log.debug('kernel_version = ',kernel_version)
-        initramfs_name = 'initramfs-' + kernel_version + '.img'
-        reload_initramfs = 'cd /boot/ ; {0} {1} ; cd -'.format(RELOAD_INITRAMFS,initramfs_name)
-        output = ssr.utils.subprocess_not_output(reload_initramfs)
 
     def status(self):
         cmd_sr_mod = '{0} {1}'.format(CDROM_STATUS_CMD,SR_MOD_DRIVE)
@@ -117,12 +127,19 @@ class CDROM:
 
     def set(self, args_json):
         args = json.loads(args_json)
+        if not self.flag:
+            self.ignore_drive("-o cdrom","-o sr_mod")
+            self.flag = True
 
         if not args[CDROM_ARG_ENABLED]:
+            self.conf.set_value("1=blacklist cdrom","blacklist cdrom")
+            self.conf.set_value("1=blacklist sr_mod","blacklist sr_mod")
             output = self.close()
             if output:
                 return (False,"Device busy , please pop up! \t\t\nYou can use the eject command to eject the device. \t\t")
         else:
+            self.conf.del_record("1=blacklist cdrom")
+            self.conf.del_record("1=blacklist sr_mod")
             output = self.open()
             if output:
                 return (False,"Please contact the admin. \t\t")
