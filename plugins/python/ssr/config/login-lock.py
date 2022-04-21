@@ -25,7 +25,7 @@ LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN = "auth\\s+requisite\\s+pam_suc
 LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN = "auth\\s+requisite\\s+pam_succeed_if.so"
 LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN = "account\\s+required\\s+pam_unix.so"
 
-LIGHTDM_CONF_REGEX = "auth\\s+required\\pam_tally2.so"
+LIGHTDM_CONF_REGEX = "auth\\s+required\\s+pam_tally2.so"
 
 LOGIN_LOCK_CONF_KEY_FAILURES = "deny"
 LOGIN_LOCK_CONF_KEY_UNLOCK_TIME = "unlock_time"
