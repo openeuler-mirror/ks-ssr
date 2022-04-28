@@ -98,9 +98,7 @@ class Switch(Firewalld):
             if len(args['ports']) == 0:
                 self.clear_ports()
             else:
-                if(args['ports'].endswith(';')):
-                    ports = args['ports'].strip(';')
-                self.set_ports(ports.split(';'))
+                self.set_ports(args['ports'].split(';'))
             self.reload()
         return (True, '')
 
