@@ -1,5 +1,5 @@
 /**
- * @file          /ks-ssr-manager/src/tool/crypto/ssr-cmd-parser.h
+ * @file          /ks-ssr-manager/src/tool/crypto/cmd-parser.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -14,15 +14,29 @@ namespace Crypto
 enum OperationType
 {
     OPERATION_TYPE_NONE = 0,
-    // 打印版本号
     OPERATION_TYPE_PRINT_VERSION,
-    // 生成密钥对
     OPERATION_TYPE_GENERATE_RSA_KEY,
-    // 解密文件
     OPERATION_TYPE_DECRYPT_FILE,
-    // 加密文件
     OPERATION_TYPE_ENCRYPT_FILE,
 
+};
+
+struct CommandOptions
+{
+    CommandOptions() : show_version(false) {}
+    // 打印版本号
+    bool show_version;
+    // 生成密钥对
+    bool generate_rsa_key;
+    // 解密文件
+    Glib::ustring decrypted_file;
+    // 加密文件
+    Glib::ustring encrypted_file;
+    // rsa公钥和私钥文件
+    Glib::ustring public_filename;
+    Glib::ustring private_filename;
+    // 输出文件
+    Glib::ustring output_filename;
 };
 
 class CmdParser
@@ -53,17 +67,7 @@ private:
     Glib::OptionContext option_context_;
     Glib::OptionGroup option_group_;
 
-    // 执行的操作
-    OperationType operation_type_;
-    // rsa公钥和私钥文件
-    std::string public_filename_;
-    std::string private_filename_;
-    // 加密的文件
-    std::string decrypt_in_filename_;
-    // 需要加密的文件
-    std::string encrypt_in_filename_;
-    // 输出文件
-    std::string output_filename_;
+    CommandOptions options_;
 };
 }  // namespace Crypto
 }  // namespace KS

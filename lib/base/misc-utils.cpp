@@ -25,8 +25,8 @@ bool MiscUtils::spawn_sync(const std::vector<std::string> &argv,
         int32_t exit_status = 0;
         Glib::spawn_sync(std::string(),
                          argv,
-                         Glib::SPAWN_DEFAULT,
-                         Glib::SlotSpawnChildSetup(),
+                         Glib::SpawnFlags(0),
+                         sigc::slot<void>(),
                          standard_output,
                          standard_error,
                          &exit_status);

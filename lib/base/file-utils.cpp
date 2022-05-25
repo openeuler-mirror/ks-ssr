@@ -117,29 +117,34 @@ bool FileUtils::write_contents(const std::string &path, const std::string &conte
 {
     KLOG_PROFILE("path: %s", path.c_str());
 
+    bool retval = true;
     int fp = -1;
 
-    SSR_SCOPE_EXIT({
-        if (fp > 0)
+    do
+    {
+        fp = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0664);
+
+        if (fp < 0)
         {
-            close(fp);
+            KLOG_WARNING("Failed to open file %s: %s.", path.c_str(), strerror(errno));
+            retval = false;
+            break;
         }
-    });
 
-    fp = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0664);
+        if (write(fp, contents.c_str(), contents.length()) < 0)
+        {
+            KLOG_WARNING("Failed to write file %s: %s.", path.c_str(), strerror(errno));
+            retval = false;
+            break;
+        }
 
-    if (fp < 0)
+    } while (0);
+
+    if (fp > 0)
     {
-        KLOG_WARNING("Failed to open file %s: %s.", path.c_str(), strerror(errno));
-        return false;
+        close(fp);
     }
 
-    if (write(fp, contents.c_str(), contents.length()) < 0)
-    {
-        KLOG_WARNING("Failed to write file %s: %s.", path.c_str(), strerror(errno));
-        return false;
-    }
-
-    return true;
+    return retval;
 }
 }  // namespace KS

@@ -17,6 +17,12 @@ namespace KS
 {
 namespace Daemon
 {
+#define PYTHON_CHECK_VERSION(major, minor, micro)                   \
+    (PY_MAJOR_VERSION > (major) ||                                  \
+     (PY_MAJOR_VERSION == (major) && PY_MINOR_VERSION > (minor)) || \
+     (PY_MAJOR_VERSION == (major) && PY_MINOR_VERSION == (minor) && \
+      PY_MICRO_VERSION >= (micro)))
+
 Plugins::Plugins(Configuration* configuration) : configuration_(configuration),
                                                  thread_pool_(this->configuration_->get_max_thread_num())
 {
@@ -27,7 +33,7 @@ Plugins::~Plugins()
     Py_Finalize();
 }
 
-Plugins* Plugins::instance_ = nullptr;
+Plugins* Plugins::instance_ = NULL;
 void Plugins::global_init(Configuration* configuration)
 {
     instance_ = new Plugins(configuration);
@@ -37,18 +43,18 @@ void Plugins::global_init(Configuration* configuration)
 std::shared_ptr<Plugin> Plugins::get_plugin_by_reinforcement(const std::string& name)
 {
     auto iter = this->reinforcements_plugins_.find(name);
-    RETURN_VAL_IF_TRUE(iter == this->reinforcements_plugins_.end(), nullptr);
+    RETURN_VAL_IF_TRUE(iter == this->reinforcements_plugins_.end(), std::shared_ptr<Plugin>());
     return iter->second.lock();
 }
 
 SSRReinforcementVec Plugins::get_reinforcements_by_category(const std::string& category_name)
 {
     SSRReinforcementVec result;
-    for (auto iter : this->reinforcements_)
+    for (auto iter = this->reinforcements_.begin(); iter != this->reinforcements_.end(); ++iter)
     {
-        if (iter.second->get_category_name() == category_name)
+        if (iter->second->get_category_name() == category_name)
         {
-            result.push_back(iter.second);
+            result.push_back(iter->second);
         }
     }
     return result;
@@ -63,21 +69,21 @@ std::shared_ptr<SSRReinforcementInterface> Plugins::get_reinfocement_interface(c
         KLOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
                      plugin_name.c_str(),
                      reinforcement_name.c_str());
-        return nullptr;
+        return std::shared_ptr<SSRReinforcementInterface>();
     }
 
     auto plugin_interface = plugin->get_loader()->get_interface();
     if (!plugin_interface)
     {
-        KLOG_WARNING("The Plugin interface for %s is nullptr.", plugin_name.c_str());
-        return nullptr;
+        KLOG_WARNING("The Plugin interface for %s is NULL.", plugin_name.c_str());
+        return std::shared_ptr<SSRReinforcementInterface>();
     }
 
     auto reinforcement_interface = plugin_interface->get_reinforcement(reinforcement_name);
     if (!reinforcement_interface)
     {
-        KLOG_WARNING("The reinforcement interface for %s is nullptr.", reinforcement_name.c_str());
-        return nullptr;
+        KLOG_WARNING("The reinforcement interface for %s is NULL.", reinforcement_name.c_str());
+        return std::shared_ptr<SSRReinforcementInterface>();
     }
     return reinforcement_interface;
 }
@@ -100,7 +106,9 @@ void Plugins::init()
        
        因此，虽然Python解析器同时只能有一个线程在运行，但不用担心线程获取到GIL后其他线程无法执行，Python解析器会根据实际情况进行优化，
        保证多个线程运行时可以进行切换。*/
+#if !PYTHON_CHECK_VERSION(3, 9, 0)
     PyEval_InitThreads();
+#endif
     Py_Initialize();
     PyRun_SimpleString("import sys");
     PyRun_SimpleString(import_package_path.c_str());
@@ -163,16 +171,20 @@ bool Plugins::add_plugin(std::shared_ptr<Plugin> plugin)
 
     KLOG_DEBUG("plugin id: %s.", plugin->get_id().c_str());
 
-    auto iter = this->plugins_.emplace(plugin->get_id(), plugin);
-    if (!iter.second)
+    if (this->plugins_.find(plugin->get_id()) != this->plugins_.end())
     {
         KLOG_WARNING("The plugin is already exist. id: %s.", plugin->get_id().c_str());
         return false;
     }
+    else
+    {
+        this->plugins_[plugin->get_id()] = plugin;
+    }
 
     auto reinforcement_names = plugin->get_reinforcement_names();
-    for (auto reinforcement_name : reinforcement_names)
+    for (auto iter = reinforcement_names.begin(); iter != reinforcement_names.end(); ++iter)
     {
+        auto& reinforcement_name = (*iter);
         auto old_plugin = this->get_plugin_by_reinforcement(reinforcement_name);
         if (old_plugin)
         {
@@ -201,8 +213,10 @@ void Plugins::load_reinforcements()
 
     try
     {
-        for (auto reinforcement_arg : rs->body().reinforcement())
+        auto& reinforcements = rs->body().reinforcement();
+        for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
         {
+            auto& reinforcement_arg = (*iter);
             auto reinforcement_name = reinforcement_arg.name();
             auto plugin = this->get_plugin_by_reinforcement(reinforcement_name);
 
@@ -231,7 +245,7 @@ void Plugins::load_reinforcements()
             auto reinforcement = std::make_shared<Reinforcement>(plugin->get_id(),
                                                                  reinforcement_arg);
 
-            this->reinforcements_.emplace(reinforcement_name, reinforcement);
+            this->reinforcements_[reinforcement_name] = reinforcement;
         }
     }
     catch (const std::exception& e)
