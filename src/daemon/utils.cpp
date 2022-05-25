@@ -17,35 +17,37 @@ PyThreadState *Utils::main_thread_state_ = NULL;
 
 std::string Utils::pyobject_as_string(PyObject *pyobject)
 {
-    if (PyUnicode_Check(pyobject))
+    std::string retval;
+
+    do
     {
-        auto bytes = PyUnicode_AsASCIIString(pyobject);
-        RETURN_VAL_IF_FALSE(bytes, std::string());
-        SSR_SCOPE_EXIT({
-            Py_XDECREF(bytes);
-        });
-        auto str = PyBytes_AsString(bytes);
-        return POINTER_TO_STRING(str);
-    }
-#if PY_MAJOR_VERSION < 3
-    else if (PyString_Check(pyobject))
-    {
-        auto str = PyString_AsString(pyobject);
-        return POINTER_TO_STRING(str);
-    }
-#endif
-    else if (PyExceptionInstance_Check(pyobject))
-    {
-        auto args = PyObject_GetAttrString(pyobject, "args");
-        SSR_SCOPE_EXIT({
-            Py_XDECREF(args);
-        });
-        if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0)
+        if (PyUnicode_Check(pyobject))
         {
-            return Utils::pyobject_as_string(PyTuple_GetItem(args, 0));
+            auto bytes = PyUnicode_AsASCIIString(pyobject);
+            BREAK_IF_FALSE(bytes);
+            auto str = PyBytes_AsString(bytes);
+            retval = POINTER_TO_STRING(str);
+            Py_XDECREF(bytes);
         }
-    }
-    return std::string();
+#if PY_MAJOR_VERSION < 3
+        else if (PyString_Check(pyobject))
+        {
+            auto str = PyString_AsString(pyobject);
+            retval = POINTER_TO_STRING(str);
+        }
+#endif
+        else if (PyExceptionInstance_Check(pyobject))
+        {
+            auto args = PyObject_GetAttrString(pyobject, "args");
+            if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0)
+            {
+                retval = Utils::pyobject_as_string(PyTuple_GetItem(args, 0));
+            }
+            Py_XDECREF(args);
+        }
+    } while (0);
+
+    return retval;
 }
 
 std::string Utils::py_catch_exception()
@@ -55,51 +57,51 @@ std::string Utils::py_catch_exception()
     PyObject *type = NULL;
     PyObject *value = NULL;
     PyObject *traceback = NULL;
+    PyObject *trace_module = NULL;
     std::string retval;
 
-    SSR_SCOPE_EXIT({
-        Py_XDECREF(type);
-        Py_XDECREF(value);
-        Py_XDECREF(traceback);
-    });
-
-    PyErr_Fetch(&type, &value, &traceback);
-    RETURN_VAL_IF_TRUE(value == NULL, std::string());
-
-    PyErr_NormalizeException(&type, &value, 0);
-    retval = Utils::pyobject_as_string(value);
-
-    if (traceback != NULL)
+    do
     {
-        retval += "Traceback:";
+        PyErr_Fetch(&type, &value, &traceback);
+        BREAK_IF_TRUE(value == NULL);
 
-        auto trace_module = PyImport_ImportModule("traceback");
+        PyErr_NormalizeException(&type, &value, 0);
+        retval = Utils::pyobject_as_string(value);
 
-        SSR_SCOPE_EXIT({
-            Py_XDECREF(trace_module);
-        });
-
-        if (trace_module != NULL)
+        if (traceback != NULL)
         {
-            auto trace_module_dict = PyModule_GetDict(trace_module);
-            if (trace_module_dict != NULL)
+            retval += "Traceback:";
+
+            trace_module = PyImport_ImportModule("traceback");
+
+            if (trace_module != NULL)
             {
-                auto format_func = PyDict_GetItemString(trace_module_dict, "format_exception");
-                if (format_func != NULL)
+                auto trace_module_dict = PyModule_GetDict(trace_module);
+                if (trace_module_dict != NULL)
                 {
-                    auto error_list = PyObject_CallFunctionObjArgs(format_func, type, value, traceback, NULL);
-                    if (error_list != NULL)
+                    auto format_func = PyDict_GetItemString(trace_module_dict, "format_exception");
+                    if (format_func != NULL)
                     {
-                        auto list_size = PyList_Size(error_list);
-                        for (int i = 0; i < list_size; ++i)
+                        auto error_list = PyObject_CallFunctionObjArgs(format_func, type, value, traceback, NULL);
+                        if (error_list != NULL)
                         {
-                            retval += Utils::pyobject_as_string(PyList_GetItem(error_list, i));
+                            auto list_size = PyList_Size(error_list);
+                            for (int i = 0; i < list_size; ++i)
+                            {
+                                retval += Utils::pyobject_as_string(PyList_GetItem(error_list, i));
+                            }
                         }
                     }
                 }
             }
         }
-    }
+    } while (0);
+
+    Py_XDECREF(type);
+    Py_XDECREF(value);
+    Py_XDECREF(traceback);
+    Py_XDECREF(trace_module);
+
     return retval;
 }
 

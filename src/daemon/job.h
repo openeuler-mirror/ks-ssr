@@ -21,7 +21,7 @@ struct OperationResult
     // 操作结果
     std::string result;
 };
-using OperationResultVec = std::vector<std::shared_ptr<OperationResult>>;
+typedef std::vector<std::shared_ptr<OperationResult>> OperationResultVec;
 
 struct Operation
 {
@@ -36,7 +36,7 @@ struct Operation
     // 执行的函数
     std::function<std::string(void)> func;
 };
-using OperationVec = std::vector<std::shared_ptr<Operation>>;
+typedef std::vector<std::shared_ptr<Operation>> OperationVec;
 
 // 任务返回的结果
 struct JobResult
@@ -126,6 +126,6 @@ private:
     sigc::signal<void, const JobResult &> process_changed_;
 };
 
-using SSRJobVec = std::vector<std::shared_ptr<Job>>;
+typedef std::vector<std::shared_ptr<Job>> SSRJobVec;
 }  // namespace Daemon
 }  // namespace KS
