@@ -18,8 +18,8 @@ public:
     virtual ~MiscUtils(){};
 
     static bool spawn_sync(const std::vector<std::string> &argv,
-                           std::string *standard_output = nullptr,
-                           std::string *standard_error = nullptr);
+                           std::string *standard_output = NULL,
+                           std::string *standard_error = NULL);
 
     static Glib::OptionEntry create_option_entry(const char &short_name,
                                                  const Glib::ustring &long_name,

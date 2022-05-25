@@ -62,9 +62,9 @@ bool KV::get(const std::string &key, std::string &value)
     auto lines = StrUtils::split_lines(contents);
     auto split_field_regex = Glib::Regex::create(this->kv_split_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
-    for (const auto &line : lines)
+    for (auto iter = lines.begin(); iter != lines.end(); ++iter)
     {
-        auto trim_line = StrUtils::trim(line);
+        auto trim_line = StrUtils::trim(*iter);
         // 忽略空行和注释行
         CONTINUE_IF_TRUE(trim_line.empty() || trim_line[0] == '#');
         std::vector<std::string> fields = split_field_regex->split(trim_line);

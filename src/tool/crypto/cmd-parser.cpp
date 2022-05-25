@@ -14,49 +14,32 @@ namespace Crypto
 {
 #define SSR_RSA_LENGTH 1024
 
-CmdParser::CmdParser() : option_group_(PROJECT_NAME, "group options"),
-                         operation_type_(OperationType::OPERATION_TYPE_NONE)
+CmdParser::CmdParser() : option_group_(PROJECT_NAME, "group options")
 {
 }
 
 void CmdParser::init()
 {
-    Glib::OptionEntry entry;
+    this->option_group_.add_entry(MiscUtils::create_option_entry("version", N_("Output version infomation and exit.")),
+                                  this->options_.show_version);
 
-    entry = this->create_entry("version", N_("Output version infomation and exit."), Glib::OptionEntry::FLAG_NO_ARG);
-    this->option_group_.add_entry(entry, [this](const Glib::ustring& option_name, const Glib::ustring& value, bool has_value) -> bool {
-        this->operation_type_ = OperationType::OPERATION_TYPE_PRINT_VERSION;
-        return true;
-    });
+    this->option_group_.add_entry(MiscUtils::create_option_entry("generate-rsa-key", N_("Generate public and private keys for RSA.")),
+                                  this->options_.generate_rsa_key);
 
-    entry = this->create_entry("generate-rsa-key", N_("Generate public and private keys for RSA."), Glib::OptionEntry::FLAG_NO_ARG);
-    this->option_group_.add_entry(entry, [this](const Glib::ustring& option_name, const Glib::ustring& value, bool has_value) -> bool {
-        this->operation_type_ = OperationType::OPERATION_TYPE_GENERATE_RSA_KEY;
-        return true;
-    });
+    this->option_group_.add_entry(MiscUtils::create_option_entry("decrypt-file", N_("Decrypt a file.")),
+                                  this->options_.decrypted_file);
 
-    entry = this->create_entry("decrypt-file", N_("Decrypt a file."));
-    this->option_group_.add_entry(entry, [this](const Glib::ustring& option_name, const Glib::ustring& value, bool has_value) -> bool {
-        this->operation_type_ = OperationType::OPERATION_TYPE_DECRYPT_FILE;
-        this->decrypt_in_filename_ = value;
-        return true;
-    });
+    this->option_group_.add_entry(MiscUtils::create_option_entry("encrypt-file", N_("Encrypt a file.")),
+                                  this->options_.encrypted_file);
 
-    entry = this->create_entry("encrypt-file", N_("Encrypt a file."));
-    this->option_group_.add_entry(entry, [this](const Glib::ustring& option_name, const Glib::ustring& value, bool has_value) -> bool {
-        this->operation_type_ = OperationType::OPERATION_TYPE_ENCRYPT_FILE;
-        this->encrypt_in_filename_ = value;
-        return true;
-    });
+    this->option_group_.add_entry(MiscUtils::create_option_entry("public-key", N_("RSA public file path.")),
+                                  this->options_.public_filename);
 
-    entry = this->create_entry("public-key", N_("RSA public file path."));
-    this->option_group_.add_entry_filename(entry, this->public_filename_);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("private-key", N_("RSA private file path.")),
+                                  this->options_.private_filename);
 
-    entry = this->create_entry("private-key", N_("RSA private file path."));
-    this->option_group_.add_entry_filename(entry, this->private_filename_);
-
-    entry = this->create_entry("output-file", N_("Output file path."));
-    this->option_group_.add_entry_filename(entry, this->output_filename_);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("output-file", N_("Output file path.")),
+                                  this->options_.output_filename);
 
     this->option_group_.set_translation_domain(PROJECT_NAME);
     this->option_context_.set_main_group(this->option_group_);
@@ -74,41 +57,36 @@ int CmdParser::run(int& argc, char**& argv)
         return EXIT_FAILURE;
     }
 
-    switch (this->operation_type_)
+    if (this->options_.generate_rsa_key)
     {
-    case OperationType::OPERATION_TYPE_PRINT_VERSION:
+        KS::CryptoHelper::generate_rsa_key(SSR_RSA_LENGTH, "ssr-public.key", "ssr-private.key");
+    }
+    else if (!this->options_.decrypted_file.empty())
     {
+        RETURN_VAL_IF_FALSE(this->process_decrypt_file(), EXIT_FAILURE);
+    }
+    else if (!this->options_.encrypted_file.empty())
+    {
+        RETURN_VAL_IF_FALSE(this->process_encrypt_file(), EXIT_FAILURE);
+    }
+    else
+    {
+        // 默认显示版本
         auto program_name = Glib::path_get_basename(argv[0]);
         fmt::print("%s: %s\n", program_name.c_str(), PROJECT_VERSION);
-        break;
-    }
-    case OperationType::OPERATION_TYPE_GENERATE_RSA_KEY:
-        // 这里对私钥和公钥进行了互换，因为需要使用私钥进行加密，公钥进行解密。
-        KS::CryptoHelper::generate_rsa_key(SSR_RSA_LENGTH,
-                                           "ssr-public.key",
-                                           "ssr-private.key");
-        break;
-    case OperationType::OPERATION_TYPE_DECRYPT_FILE:
-        RETURN_VAL_IF_FALSE(this->process_decrypt_file(), EXIT_FAILURE);
-        break;
-    case OperationType::OPERATION_TYPE_ENCRYPT_FILE:
-        RETURN_VAL_IF_FALSE(this->process_encrypt_file(), EXIT_FAILURE);
-        break;
-    default:
-        break;
     }
     return EXIT_SUCCESS;
 }
 
 bool CmdParser::process_decrypt_file()
 {
-    if (this->public_filename_.empty())
+    if (this->options_.public_filename.empty())
     {
         fmt::print(stderr, "RSA public file isn't provided.");
         return false;
     }
 
-    if (this->output_filename_.empty())
+    if (this->options_.output_filename.empty())
     {
         fmt::print(stderr, "Output file isn't provided.");
         return false;
@@ -116,10 +94,10 @@ bool CmdParser::process_decrypt_file()
 
     try
     {
-        auto message = Glib::file_get_contents(this->decrypt_in_filename_);
-        auto decrypted_message = KS::CryptoHelper::ssr_decrypt(this->public_filename_, message);
+        auto message = Glib::file_get_contents(this->options_.decrypted_file);
+        auto decrypted_message = KS::CryptoHelper::ssr_decrypt(this->options_.public_filename.raw(), message);
         RETURN_VAL_IF_TRUE(decrypted_message.empty(), false);
-        Glib::file_set_contents(this->output_filename_, decrypted_message);
+        Glib::file_set_contents(this->options_.output_filename.raw(), decrypted_message);
         return true;
     }
     catch (const Glib::Error& e)
@@ -131,13 +109,13 @@ bool CmdParser::process_decrypt_file()
 
 bool CmdParser::process_encrypt_file()
 {
-    if (this->private_filename_.empty())
+    if (this->options_.private_filename.empty())
     {
         fmt::print(stderr, "RSA private file isn't provided.");
         return false;
     }
 
-    if (this->output_filename_.empty())
+    if (this->options_.output_filename.empty())
     {
         fmt::print(stderr, "Output file isn't provided.");
         return false;
@@ -145,11 +123,11 @@ bool CmdParser::process_encrypt_file()
 
     try
     {
-        auto message = Glib::file_get_contents(this->encrypt_in_filename_);
-        auto encrypted_message = KS::CryptoHelper::ssr_encrypt(this->private_filename_, message);
+        auto message = Glib::file_get_contents(this->options_.encrypted_file);
+        auto encrypted_message = KS::CryptoHelper::ssr_encrypt(this->options_.private_filename.raw(), message);
         // fmt::print("{0}  message: {1} encrypted_message: {2}", this->encrypt_in_filename_, message, encrypted_message);
         RETURN_VAL_IF_TRUE(encrypted_message.empty(), false);
-        Glib::file_set_contents(this->output_filename_, encrypted_message);
+        Glib::file_set_contents(this->options_.output_filename.raw(), encrypted_message);
         return true;
     }
     catch (const Glib::Error& e)

@@ -1,5 +1,5 @@
 /**
- * @file          /ks-ssr-manager/src/tool/config/cmd-parser.cpp
+ * @file          /ks-ssr-manager/src/tool/command/cmd-parser.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -69,15 +69,20 @@ int CmdParser::run(int& argc, char**& argv)
         return EXIT_FAILURE;
     }
 
-    switch (KS::shash(this->options_.type.c_str()))
+    if (this->options_.type == CONFIG_TYPE_KV)
     {
-    case CONNECT(CONFIG_TYPE_KV, _hash):
         return this->process_kv();
-    case CONNECT(CONFIG_TYPE_PAM, _hash):
+    }
+    else if (this->options_.type == CONFIG_TYPE_PAM)
+    {
         return this->process_pam();
-    case CONNECT(CONFIG_TYPE_TABLE, _hash):
+    }
+    else if (this->options_.type == CONFIG_TYPE_TABLE)
+    {
         return this->process_table();
-    default:
+    }
+    else
+    {
         fmt::print(stderr, _("Unknown file type"));
         return EXIT_FAILURE;
     }
@@ -90,9 +95,7 @@ int CmdParser::process_kv()
     auto kv = KV(this->options_.file_path, this->options_.split_pattern, this->options_.join_str, this->options_.comment);
     bool retval = false;
 
-    switch (shash(this->options_.method.c_str()))
-    {
-    case "GETVAL"_hash:
+    if (this->options_.method == "GETVAL")
     {
         std::string value;
         retval = kv.get(this->options_.key, value);
@@ -100,16 +103,14 @@ int CmdParser::process_kv()
         {
             fmt::print("{0}", value);
         }
-        break;
     }
-    case "SETVAL"_hash:
+    else if (this->options_.method == "SETVAL")
+    {
         retval = kv.set(this->options_.key, this->options_.value);
-        break;
-    case "DELVAL"_hash:
+    }
+    else if (this->options_.method == "DELVAL")
+    {
         retval = kv.del(this->options_.key);
-        break;
-    default:
-        break;
     }
 
     if (!retval)
@@ -126,9 +127,7 @@ int CmdParser::process_pam()
 
     bool retval = false;
 
-    switch (shash(this->options_.method.c_str()))
-    {
-    case "GETVAL"_hash:
+    if (this->options_.method == "GETVAL")
     {
         std::string value;
         retval = pam.get_value(this->options_.key, this->options_.split_pattern, value);
@@ -136,21 +135,24 @@ int CmdParser::process_pam()
         {
             fmt::print("{0}", value);
         }
-        break;
     }
-    case "SETVAL"_hash:
+    else if (this->options_.method == "SETVAL")
+    {
         retval = pam.set_value(this->options_.key, this->options_.split_pattern, this->options_.value, this->options_.join_str);
-        break;
-    case "DELVAL"_hash:
+    }
+    else if (this->options_.method == "DELVAL")
+    {
         retval = pam.del_value(this->options_.key, this->options_.split_pattern);
-        break;
-    case "SETLINE"_hash:
+    }
+    else if (this->options_.method == "SETLINE")
+    {
         retval = pam.add_line(this->options_.new_line);
-        break;
-    case "DELLINE"_hash:
+    }
+    else if (this->options_.method == "DELLINE")
+    {
         retval = pam.del_line();
-        break;
-    case "GETLINE"_hash:
+    }
+    else if (this->options_.method == "GETLINE")
     {
         std::string line;
         retval = pam.get_line(line);
@@ -158,10 +160,6 @@ int CmdParser::process_pam()
         {
             fmt::print("{0}", line);
         }
-        break;
-    }
-    default:
-        break;
     }
 
     if (!retval)
@@ -178,12 +176,12 @@ int CmdParser::process_table()
     auto table = Table(this->options_.file_path, this->options_.split_pattern, this->options_.join_str);
     std::vector<std::pair<int32_t, std::string>> cols = this->str2cols(this->options_.key);
     std::function<bool(std::vector<std::string>)> pred = [&cols](std::vector<std::string> fields) -> bool {
-        for (auto& col : cols)
+        for (auto iter = cols.begin(); iter != cols.end(); ++iter)
         {
             // 列不存在则直接返回不匹配
-            RETURN_VAL_IF_TRUE(col.first - 1 >= (int32_t)fields.size(), false);
+            RETURN_VAL_IF_TRUE(iter->first - 1 >= (int32_t)fields.size(), false);
 
-            if (col.second != fields[col.first - 1])
+            if (iter->second != fields[iter->first - 1])
             {
                 return false;
             }
@@ -193,9 +191,7 @@ int CmdParser::process_table()
 
     bool retval = false;
 
-    switch (shash(this->options_.method.c_str()))
-    {
-    case "GETVAL"_hash:
+    if (this->options_.method == "GETVAL")
     {
         std::string value;
         retval = table.get(pred, value);
@@ -203,16 +199,14 @@ int CmdParser::process_table()
         {
             fmt::print("{0}", value);
         }
-        break;
     }
-    case "SETVAL"_hash:
+    else if (this->options_.method == "SETVAL")
+    {
         retval = table.set(this->options_.value, pred);
-        break;
-    case "DELVAL"_hash:
+    }
+    else if (this->options_.method == "DELVAL")
+    {
         retval = table.del(pred);
-        break;
-    default:
-        break;
     }
 
     if (!retval)
@@ -235,7 +229,7 @@ std::vector<std::pair<int32_t, std::string>> CmdParser::str2cols(const std::stri
         auto pos = field.find('=');
         if (pos != std::string::npos)
         {
-            auto colunm_index = std::strtol(field.substr(0, pos).c_str(), nullptr, 0);
+            auto colunm_index = std::strtol(field.substr(0, pos).c_str(), NULL, 0);
             retval.push_back(std::make_pair(int32_t(colunm_index), field.substr(pos + 1)));
         }
     }

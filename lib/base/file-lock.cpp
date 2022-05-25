@@ -62,9 +62,9 @@ std::shared_ptr<FileLock> FileLock::create_share_lock(const std::string &path,
                                                       int mode)
 {
     auto file_descriptor = open(path.c_str(), flags, mode);
-    RETURN_VAL_IF_FALSE(file_descriptor > 0, nullptr);
+    RETURN_VAL_IF_FALSE(file_descriptor > 0, std::shared_ptr<FileLock>());
     auto file_lock = std::make_shared<FileLock>(file_descriptor, FileLockType::FILE_LOCK_TYPE_SHARE);
-    RETURN_VAL_IF_FALSE(file_lock->is_valid(), nullptr);
+    RETURN_VAL_IF_FALSE(file_lock->is_valid(), std::shared_ptr<FileLock>());
     return file_lock;
 }
 
@@ -73,9 +73,9 @@ std::shared_ptr<FileLock> FileLock::create_excusive_lock(const std::string &path
                                                          int mode)
 {
     auto file_descriptor = open(path.c_str(), flags, mode);
-    RETURN_VAL_IF_FALSE(file_descriptor > 0, nullptr);
+    RETURN_VAL_IF_FALSE(file_descriptor > 0, std::shared_ptr<FileLock>());
     auto file_lock = std::make_shared<FileLock>(file_descriptor, FileLockType::FILE_LOCK_TYPE_EXCLUSIVE);
-    RETURN_VAL_IF_FALSE(file_lock->is_valid(), nullptr);
+    RETURN_VAL_IF_FALSE(file_lock->is_valid(), std::shared_ptr<FileLock>());
     return file_lock;
 }
 }  // namespace KS

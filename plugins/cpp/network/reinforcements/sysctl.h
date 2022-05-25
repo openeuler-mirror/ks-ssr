@@ -21,7 +21,7 @@ public:
     virtual ~Sysctl(){};
 
 protected:
-    using SysctlVar = std::pair<std::string, std::string>;
+    typedef std::pair<std::string, std::string> SysctlVar;
 
 protected:
     std::vector<SysctlVar> get_vars_by_pattern(const std::string &pattern);

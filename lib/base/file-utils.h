@@ -11,7 +11,8 @@
 
 namespace KS
 {
-using FileMonitorCallBack = sigc::slot<void, const Glib::RefPtr<Gio::File> &, const Glib::RefPtr<Gio::File> &, Gio::FileMonitorEvent>;
+typedef sigc::slot<void, const Glib::RefPtr<Gio::File> &, const Glib::RefPtr<Gio::File> &, Gio::FileMonitorEvent> FileMonitorCallBack;
+
 class FileUtils
 {
 public:

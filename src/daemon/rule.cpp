@@ -17,13 +17,13 @@ std::shared_ptr<Rule> Rule::create(const Protocol::Rule &rule)
     {
     case Protocol::RuleType::Value::FIXED:
     {
-        RETURN_VAL_IF_FALSE(rule.value_fixed().present(), nullptr);
+        RETURN_VAL_IF_FALSE(rule.value_fixed().present(), std::shared_ptr<Rule>());
         auto value = StrUtils::str2json(rule.value_fixed().get());
         return std::make_shared<RuleFixed>(value);
     }
     case Protocol::RuleType::Value::RANGE:
     {
-        RETURN_VAL_IF_FALSE(rule.value_range().present(), nullptr);
+        RETURN_VAL_IF_FALSE(rule.value_range().present(), std::shared_ptr<Rule>());
         auto &value_range = rule.value_range().get();
         Json::Value min_value;
         Json::Value max_value;
@@ -39,7 +39,7 @@ std::shared_ptr<Rule> Rule::create(const Protocol::Rule &rule)
     }
     case Protocol::RuleType::Value::ENUM:
     {
-        RETURN_VAL_IF_FALSE(rule.value_enum().present(), nullptr);
+        RETURN_VAL_IF_FALSE(rule.value_enum().present(), std::shared_ptr<Rule>());
         auto &value_enum = rule.value_enum().get();
         std::vector<Json::Value> values;
         for (const auto &enum_value : value_enum.values())
@@ -48,12 +48,11 @@ std::shared_ptr<Rule> Rule::create(const Protocol::Rule &rule)
             values.push_back(value);
         }
         return std::make_shared<RuleEnum>(values);
-        break;
     }
     default:
         break;
     }
-    return nullptr;
+    return std::shared_ptr<Rule>();
 }
 
 Rule::JsonCmpResult Rule::json_value_cmp(const Json::Value &v1, const Json::Value &v2)

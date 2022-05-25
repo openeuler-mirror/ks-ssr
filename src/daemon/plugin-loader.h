@@ -31,10 +31,10 @@ public:
     PluginCPPLoader(const std::string &so_path);
     virtual ~PluginCPPLoader(){};
 
-    virtual bool load() override;
-    virtual bool activate() override;
-    virtual bool deactivate() override;
-    virtual std::shared_ptr<SSRPluginInterface> get_interface() override { return this->interface_; };
+    virtual bool load();
+    virtual bool activate();
+    virtual bool deactivate();
+    virtual std::shared_ptr<SSRPluginInterface> get_interface() { return this->interface_; };
 
 private:
     bool load_module();
@@ -56,10 +56,10 @@ public:
     virtual ~PluginPythonLoader(){};
 
 public:
-    virtual bool load() override;
-    virtual bool activate() override;
-    virtual bool deactivate() override;
-    virtual std::shared_ptr<SSRPluginInterface> get_interface() override { return this->interface_; };
+    virtual bool load();
+    virtual bool activate();
+    virtual bool deactivate();
+    virtual std::shared_ptr<SSRPluginInterface> get_interface() { return this->interface_; };
 
 private:
     // 包名

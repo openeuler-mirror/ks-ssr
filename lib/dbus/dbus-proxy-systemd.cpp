@@ -24,7 +24,7 @@ namespace KS
 // SDUP: systemd dbus unit property
 #define SDUP_ACTIVE_STATE "ActiveState"
 
-std::shared_ptr<DBusSystemdProxy> DBusSystemdProxy::instance_ = nullptr;
+std::shared_ptr<DBusSystemdProxy> DBusSystemdProxy::instance_ = std::shared_ptr<DBusSystemdProxy>();
 
 std::shared_ptr<DBusSystemdProxy> DBusSystemdProxy::get_default()
 {

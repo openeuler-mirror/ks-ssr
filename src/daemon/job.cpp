@@ -49,13 +49,13 @@ std::shared_ptr<Operation> Job::add_operation(const std::string &plugin_name,
     operation->reinforcement_name = reinforcement_name;
     operation->func = std::move(func);
 
-    auto iter = this->operations_.emplace(operation->operation_id, operation);
-    if (!iter.second)
+    if (this->operations_.find(operation->operation_id) != this->operations_.end())
     {
         // 正常不应该执行到这里
         KLOG_WARNING("The operation %d is already exist.", operation->operation_id);
-        return nullptr;
+        return std::shared_ptr<Operation>();
     }
+    this->operations_[operation->operation_id] = operation;
     return operation;
 }
 

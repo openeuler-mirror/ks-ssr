@@ -9,7 +9,6 @@
 #include <json/json.h>
 #include <kylin-license/license-i.h>
 #include <iostream>
-#include "lib/base/base.h"
 #include "src/daemon/categories.h"
 #include "src/daemon/configuration.h"
 #include "src/daemon/plugins.h"
@@ -23,61 +22,51 @@ namespace Daemon
 #define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
 
-DBus::DBus() : dbus_connect_id_(0),
-               object_register_id_(0)
+DBus::DBus(::DBus::Connection& connection) : ::DBus::ObjectAdaptor(connection, SSR_DBUS_OBJECT_PATH),
+                                             dbus_connection_(connection)
 {
 }
 
 DBus::~DBus()
 {
-    if (this->dbus_connect_id_)
-    {
-        Gio::DBus::unown_name(this->dbus_connect_id_);
-    }
 }
 
-DBus* DBus::instance_ = nullptr;
-void DBus::global_init()
+DBus* DBus::instance_ = NULL;
+void DBus::global_init(::DBus::Connection& connection)
 {
-    instance_ = new DBus();
+    instance_ = new DBus(connection);
     instance_->init();
 }
 
-void DBus::SetStandardType(guint32 standard_type, MethodInvocation& invocation)
+void DBus::SetStandardType(const uint32_t& standard_type)
 {
     KLOG_PROFILE("standard type: %d.", standard_type);
 
     if (standard_type >= SSRStandardType::SSR_STANDARD_TYPE_LAST)
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID);
     }
 
-    if (standard_type == this->configuration_->get_standard_type())
+    RETURN_IF_TRUE(standard_type == this->configuration_->get_standard_type())
+
+    if (!this->configuration_->set_standard_type(SSRStandardType(standard_type)))
     {
-        invocation.ret();
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SET_STANDARD_TYPE_FAILED);
     }
-
-    if (!this->standard_type_set(standard_type))
-    {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SET_STANDARD_TYPE_FAILED);
-    }
-
-    invocation.ret();
 }
 
-void DBus::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvocation& invocation)
+void DBus::ImportCustomRS(const std::string& encoded_standard)
 {
     KLOG_PROFILE("encoded standard: %s.", encoded_standard.c_str());
 
     SSRErrorCode error_code = SSRErrorCode::SUCCESS;
     if (!this->configuration_->set_custom_rs(encoded_standard, error_code))
     {
-        DBUS_ERROR_REPLY_AND_RET(error_code);
+        THROW_DBUSCXX_ERROR(error_code);
     }
-    invocation.ret();
 }
 
-void DBus::GetCategories(MethodInvocation& invocation)
+std::string DBus::GetCategories()
 {
     KLOG_PROFILE("");
 
@@ -100,96 +89,97 @@ void DBus::GetCategories(MethodInvocation& invocation)
             values["items"][i]["icon_name"] = category->icon_name;
         }
 
-        auto result = Json::writeString(wbuilder, values);
-        invocation.ret(result);
+        return Json::writeString(wbuilder, values);
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED);
     }
+
+    return std::string();
 }
 
-void DBus::GetRS(MethodInvocation& invocation)
+std::string DBus::GetRS()
 {
     std::ostringstream ostring_stream;
     auto rs = this->configuration_->get_rs();
 
     if (!rs)
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_GET_RS_FAILED);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_GET_RS_FAILED);
     }
 
     try
     {
         Protocol::ssr_rs(ostring_stream, *rs.get());
-        invocation.ret(ostring_stream.str());
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_GET_RS_FAILED);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_GET_RS_FAILED);
     }
+    return ostring_stream.str();
 }
 
-void DBus::GetReinforcements(MethodInvocation& invocation)
+std::string DBus::GetReinforcements()
 {
     KLOG_PROFILE("");
 
+    std::ostringstream ostring_stream;
     Protocol::Reinforcements protocol_reinforcements;
 
-    for (auto reinforcement : this->plugins_->get_reinforcements())
+    auto reinforcements = this->plugins_->get_reinforcements();
+    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        auto& rs_reinforcement = reinforcement->get_rs();
+        auto& rs_reinforcement = (*iter)->get_rs();
         protocol_reinforcements.reinforcement().push_back(rs_reinforcement);
     }
 
     try
     {
-        std::ostringstream ostring_stream;
         Protocol::ssr_reinforcements(ostring_stream, protocol_reinforcements);
-        invocation.ret(ostring_stream.str());
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED);
     }
+    return ostring_stream.str();
 }
 
-void DBus::ResetReinforcements(MethodInvocation& invocation)
+void DBus::ResetReinforcements()
 {
     KLOG_PROFILE("");
 
     this->configuration_->del_all_custom_ra();
-    invocation.ret();
 }
 
-void DBus::GetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
+std::string DBus::GetReinforcement(const std::string& name)
 {
     KLOG_PROFILE("");
 
+    std::ostringstream ostring_stream;
     auto reinforcement = this->plugins_->get_reinforcement(name);
     if (!reinforcement)
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND);
     }
     auto& rs_reinforcement = reinforcement->get_rs();
 
     try
     {
-        std::ostringstream ostring_stream;
         Protocol::ssr_reinforcement(ostring_stream, rs_reinforcement);
-        invocation.ret(ostring_stream.str());
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED);
     }
+    return ostring_stream.str();
 }
 
-void DBus::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvocation& invocation)
+void DBus::SetReinforcement(const std::string& reinforcement_xml)
 {
     KLOG_PROFILE("");
 
@@ -199,53 +189,51 @@ void DBus::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvoca
         auto rs_reinforcement = Protocol::ssr_reinforcement(istring_stream, xml_schema::Flags::dont_validate);
         if (!this->configuration_->set_custom_ra(*rs_reinforcement.get()))
         {
-            DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED);
+            THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED);
         }
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED);
     }
-    invocation.ret();
 }
 
-void DBus::ResetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
+void DBus::ResetReinforcement(const std::string& name)
 {
     KLOG_PROFILE("");
-
     this->configuration_->del_custom_ra(name);
-    invocation.ret();
 }
 
-void DBus::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
+int64_t DBus::Scan(const std::vector<std::string>& names)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
     // 已经在扫描则返回错误
     if (this->scan_job_ && this->scan_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING);
     }
 
     try
     {
         this->scan_job_ = Job::create();
 
-        for (auto& name : names)
+        for (auto iter = names.begin(); iter != names.end(); ++iter)
         {
+            auto& name = (*iter);
             auto reinforcement = this->plugins_->get_reinforcement(name);
 
             if (!reinforcement)
             {
-                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND, name);
+                THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND, name);
             }
 
             auto reinforcement_interface = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
                                                                                       reinforcement->get_name());
             if (!reinforcement_interface)
             {
-                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
+                THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
             }
 
             this->scan_job_->add_operation(reinforcement->get_plugin_name(),
@@ -272,22 +260,20 @@ void DBus::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& invoc
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID);
     }
 
     this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &DBus::on_scan_process_changed_cb));
 
     if (!this->scan_job_->run_async())
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED);
     }
-    else
-    {
-        invocation.ret(this->scan_job_->get_id());
-    }
+
+    return this->scan_job_->get_id();
 }
 
-void DBus::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
+int64_t DBus::Reinforce(const std::vector<std::string>& names)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
@@ -296,39 +282,41 @@ void DBus::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& 
         this->license_values[LICENSE_JK_ACTIVATION_STATUS].isNull() ||
         this->license_values[LICENSE_JK_ACTIVATION_STATUS].asInt() != LicenseActivationStatus::LAS_ACTIVATED)
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SOFTWARE_UNACTIVATED);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SOFTWARE_UNACTIVATED);
     }
 
     // 已经在加固则返回错误
     if (this->reinforce_job_ && this->reinforce_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING);
     }
 
     try
     {
         this->reinforce_job_ = Job::create();
 
-        for (auto& name : names)
+        for (auto iter = names.begin(); iter != names.end(); ++iter)
         {
+            auto& name = (*iter);
             auto reinforcement = this->plugins_->get_reinforcement(name);
 
             if (!reinforcement)
             {
-                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND, name);
+                THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND, name);
             }
 
             auto reinforcement_interface = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
                                                                                       reinforcement->get_name());
             if (!reinforcement_interface)
             {
-                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
+                THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
             }
 
             Json::Value param;
-            for (const auto& arg : reinforcement->get_rs().arg())
+            auto& args = reinforcement->get_rs().arg();
+            for (auto arg_iter = args.begin(); arg_iter != args.end(); ++arg_iter)
             {
-                param[arg.name()] = StrUtils::str2json(arg.value());
+                param[arg_iter->name()] = StrUtils::str2json(arg_iter->value());
             }
             auto param_str = StrUtils::json2str(param);
             this->reinforce_job_->add_operation(reinforcement->get_plugin_name(),
@@ -352,22 +340,20 @@ void DBus::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& 
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID);
     }
 
     this->reinforce_job_->signal_process_changed().connect(sigc::mem_fun(this, &DBus::on_reinfoce_process_changed_cb));
 
     if (!this->reinforce_job_->run_async())
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED);
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED);
     }
-    else
-    {
-        invocation.ret(this->reinforce_job_->get_id());
-    }
+
+    return this->reinforce_job_->get_id();
 }
 
-void DBus::Cancel(gint64 job_id, MethodInvocation& invocation)
+void DBus::Cancel(const int64_t& job_id)
 {
     KLOG_PROFILE("job id: %d.", job_id);
 
@@ -398,51 +384,71 @@ void DBus::Cancel(gint64 job_id, MethodInvocation& invocation)
 
     if (error_code != SSRErrorCode::SUCCESS)
     {
-        DBUS_ERROR_REPLY_AND_RET(error_code);
+        THROW_DBUSCXX_ERROR(error_code);
     }
-    invocation.ret();
 }
 
-void DBus::GetLicense(MethodInvocation& invocation)
+std::string DBus::GetLicense()
 {
+    std::string retval;
     try
     {
-        auto license_info = this->license_object_proxy_->GetLicense_sync();
-        invocation.ret(license_info);
+        retval = this->license_object_proxy_->GetLicense();
     }
-    catch (const Glib::Error& e)
+    catch (const ::DBus::Error& e)
     {
-        KLOG_WARNING("%s.", e.what().c_str());
-        invocation.ret(Glib::Error(G_DBUS_ERROR, G_DBUS_ERROR_FAILED, e.what().c_str()));
-        return;
+        KLOG_WARNING("%s.", e.what());
+        throw e;
     }
+    return retval;
 }
 
-void DBus::ActivateByActivationCode(const Glib::ustring& activation_code, MethodInvocation& invocation)
+void DBus::ActivateByActivationCode(const std::string& activation_code)
 {
     KLOG_PROFILE("Activation code: %s.", activation_code.c_str());
 
     try
     {
-        this->license_object_proxy_->ActivateByActivationCode_sync(activation_code);
+        this->license_object_proxy_->ActivateByActivationCode(activation_code);
     }
-    catch (const Glib::Error& e)
+    catch (const ::DBus::Error& e)
     {
-        KLOG_WARNING("%s.", e.what().c_str());
-        invocation.ret(Glib::Error(G_DBUS_ERROR, G_DBUS_ERROR_FAILED, e.what().c_str()));
-        return;
+        KLOG_WARNING("%s: %s.", e.name(), e.message());
+        throw e;
     }
-    invocation.ret();
 }
 
-bool DBus::standard_type_setHandler(guint32 value)
+void DBus::on_get_property(::DBus::InterfaceAdaptor& interface, const std::string& property, ::DBus::Variant& value)
 {
-    return this->configuration_->set_standard_type(SSRStandardType(value));
+    if (property == "version")
+    {
+        value.writer().append_string(PROJECT_VERSION);
+    }
+    else if (property == "standard_type")
+    {
+        value.writer().append_uint32(this->configuration_->get_standard_type());
+    }
+    else
+    {
+        KLOG_WARNING("Unknown property: %s.", property.c_str());
+    }
 }
 
-guint32 DBus::standard_type_get()
+void DBus::on_set_property(::DBus::InterfaceAdaptor& interface, const std::string& property, const ::DBus::Variant& value)
 {
-    return this->configuration_->get_standard_type();
+    if (property == "version")
+    {
+        KLOG_WARNING("Unsupport to set property 'version'.");
+    }
+    else if (property == "standard_type")
+    {
+        uint32_t standard_type = value;
+        this->configuration_->set_standard_type(SSRStandardType(standard_type));
+    }
+    else
+    {
+        KLOG_WARNING("Unknown property: %s.", property.c_str());
+    }
 }
 
 void DBus::init()
@@ -451,32 +457,25 @@ void DBus::init()
     this->categories_ = Categories::get_instance();
     this->plugins_ = Plugins::get_instance();
 
-    this->dbus_connect_id_ = Gio::DBus::own_name(Gio::DBus::BUS_TYPE_SYSTEM,
-                                                 SSR_DBUS_NAME,
-                                                 sigc::mem_fun(this, &DBus::on_bus_acquired),
-                                                 sigc::mem_fun(this, &DBus::on_name_acquired),
-                                                 sigc::mem_fun(this, &DBus::on_name_lost));
-
     try
     {
-        this->license_manager_proxy_ = Kiran::LicenseManagerProxy::createForBus_sync(Gio::DBus::BUS_TYPE_SYSTEM,
-                                                                                     Gio::DBus::PROXY_FLAGS_NONE,
-                                                                                     LICENSE_MANAGER_DBUS_NAME,
-                                                                                     LICENSE_MANAGER_OBJECT_PATH);
+        this->license_manager_proxy_ = std::make_shared<LicenseManagerProxy>(this->dbus_connection_,
+                                                                             LICENSE_MANAGER_OBJECT_PATH,
+                                                                             LICENSE_MANAGER_DBUS_NAME);
 
-        auto object_path = this->license_manager_proxy_->GetLicenseObject_sync(LICENSE_OBJECT_SSR_NAME);
-        this->license_object_proxy_ = Kiran::LicenseObjectProxy::createForBus_sync(Gio::DBus::BUS_TYPE_SYSTEM,
-                                                                                   Gio::DBus::PROXY_FLAGS_NONE,
-                                                                                   LICENSE_MANAGER_DBUS_NAME,
-                                                                                   object_path);
+        auto object_path = this->license_manager_proxy_->GetLicenseObject(LICENSE_OBJECT_SSR_NAME);
 
-        this->license_object_proxy_->LicenseChanged_signal.connect(sigc::mem_fun(this, &DBus::on_license_info_changed_cb));
+        this->license_object_proxy_ = std::make_shared<LicenseObjectProxy>(this->dbus_connection_,
+                                                                           object_path,
+                                                                           LICENSE_MANAGER_DBUS_NAME);
+
+        this->license_object_proxy_->signal_license_changed().connect(sigc::mem_fun(this, &DBus::on_license_info_changed_cb));
 
         this->update_license_info();
     }
-    catch (const Glib::Error& e)
+    catch (const ::DBus::Error& e)
     {
-        KLOG_WARNING("%s", e.what().c_str());
+        KLOG_WARNING("%s: %s.", e.name(), e.message());
     }
 }
 
@@ -486,12 +485,12 @@ void DBus::update_license_info()
 
     try
     {
-        auto license_info = this->license_object_proxy_->GetLicense_sync();
+        auto license_info = this->license_object_proxy_->GetLicense();
         this->license_values = StrUtils::str2json(license_info);
     }
-    catch (const Glib::Error& e)
+    catch (const ::DBus::Error& e)
     {
-        KLOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s: %s.", e.name(), e.message());
     }
 }
 
@@ -508,9 +507,9 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
         scan_result.job_state(this->scan_job_->get_state());
 
         int32_t item_count = 0;
-        for (auto operation_id : job_result.running_operations)
+        for (auto iter = job_result.running_operations.begin(); iter != job_result.running_operations.end(); ++iter)
         {
-            auto operation = this->scan_job_->get_operation(operation_id);
+            auto operation = this->scan_job_->get_operation((*iter));
 
             Protocol::ReinforcementResult reinforcement_result(std::string(), 0);
             reinforcement_result.name(operation->reinforcement_name);
@@ -519,8 +518,9 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
             ++item_count;
         }
 
-        for (const auto& operation_result : job_result.current_finished_operations)
+        for (auto iter = job_result.current_finished_operations.begin(); iter != job_result.current_finished_operations.end(); ++iter)
         {
+            auto& operation_result = (*iter);
             auto operation = this->scan_job_->get_operation(operation_result.operation_id);
             Protocol::ReinforcementResult reinforcement_result(std::string(), 0);
 
@@ -563,7 +563,7 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
 
         std::ostringstream ostring_stream;
         Protocol::ssr_job_result(ostring_stream, scan_result);
-        this->ScanProgress_signal.emit(ostring_stream.str());
+        this->ScanProgress(ostring_stream.str());
     }
     catch (const std::exception& e)
     {
@@ -585,9 +585,9 @@ void DBus::on_reinfoce_process_changed_cb(const JobResult& job_result)
         reinforce_result.job_state(this->reinforce_job_->get_state());
 
         int32_t item_count = 0;
-        for (auto operation_id : job_result.running_operations)
+        for (auto iter = job_result.running_operations.begin(); iter != job_result.running_operations.end(); ++iter)
         {
-            auto operation = this->reinforce_job_->get_operation(operation_id);
+            auto operation = this->reinforce_job_->get_operation(*iter);
             Protocol::ReinforcementResult reinforcement_result(std::string(), 0);
 
             reinforcement_result.name(operation->reinforcement_name);
@@ -596,8 +596,9 @@ void DBus::on_reinfoce_process_changed_cb(const JobResult& job_result)
             ++item_count;
         }
 
-        for (const auto& operation_result : job_result.current_finished_operations)
+        for (auto iter = job_result.current_finished_operations.begin(); iter != job_result.current_finished_operations.end(); ++iter)
         {
+            auto& operation_result = (*iter);
             auto operation = this->reinforce_job_->get_operation(operation_result.operation_id);
             Protocol::ReinforcementResult reinforcement_result(std::string(), 0);
 
@@ -626,7 +627,7 @@ void DBus::on_reinfoce_process_changed_cb(const JobResult& job_result)
 
         std::ostringstream ostring_stream;
         Protocol::ssr_job_result(ostring_stream, reinforce_result);
-        this->ReinforceProgress_signal.emit(ostring_stream.str());
+        this->ReinforceProgress(ostring_stream.str());
     }
     catch (const std::exception& e)
     {
@@ -638,35 +639,7 @@ void DBus::on_reinfoce_process_changed_cb(const JobResult& job_result)
 void DBus::on_license_info_changed_cb(bool placeholder)
 {
     this->update_license_info();
-    this->LicenseChanged_signal.emit(placeholder);
-}
-
-void DBus::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
-{
-    KLOG_PROFILE("name: %s", name.c_str());
-    if (!connect)
-    {
-        KLOG_WARNING("Failed to connect dbus. name: %s", name.c_str());
-        return;
-    }
-    try
-    {
-        this->object_register_id_ = this->register_object(connect, SSR_DBUS_OBJECT_PATH);
-    }
-    catch (const Glib::Error& e)
-    {
-        KLOG_WARNING("Register object_path %s fail: %s.", SSR_DBUS_OBJECT_PATH, e.what().c_str());
-    }
-}
-
-void DBus::on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
-{
-    KLOG_DEBUG("Success to register dbus name: %s", name.c_str());
-}
-
-void DBus::on_name_lost(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
-{
-    KLOG_WARNING("Failed to register dbus name: %s", name.c_str());
+    this->LicenseChanged(placeholder);
 }
 
 }  // namespace Daemon

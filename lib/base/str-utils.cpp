@@ -92,15 +92,20 @@ std::vector<std::string> StrUtils::split_with_char(const std::string &s, char de
     return v;
 }
 
+static bool is_space(char c)
+{
+    return (std::isspace(c) == 0);
+}
+
 std::string StrUtils::ltrim(const std::string &s)
 {
-    auto iter = std::find_if(s.begin(), s.end(), [](char c) -> bool { return (std::isspace(c) == 0); });
+    auto iter = std::find_if(s.begin(), s.end(), is_space);
     return std::string(iter, s.end());
 }
 
 std::string StrUtils::rtrim(const std::string &s)
 {
-    auto iter = std::find_if(s.rbegin(), s.rend(), [](char c) -> bool { return (std::isspace(c) == 0); });
+    auto iter = std::find_if(s.rbegin(), s.rend(), is_space);
     return std::string(s.begin(), iter.base());
 }
 
@@ -144,13 +149,13 @@ std::vector<std::string> StrUtils::intersect(const std::vector<std::string> &a1,
 {
     std::vector<std::string> result;
 
-    for (const auto &s1 : a1)
+    for (uint32_t i = 0; i < a1.size(); ++i)
     {
-        for (const auto &s2 : a2)
+        for (uint32_t j = 0; j < a2.size(); ++j)
         {
-            if (s1 == s2)
+            if (a1[i] == a2[j])
             {
-                result.push_back(s1);
+                result.push_back(a1[i]);
             }
         }
     }
