@@ -23,8 +23,8 @@ public:
                         const std::string &class_name);
     virtual ~ReinforcementPython();
 
-    virtual bool get(std::string &args, std::string &error) override;
-    virtual bool set(const std::string &args, std::string &error) override;
+    virtual bool get(std::string &args, std::string &error);
+    virtual bool set(const std::string &args, std::string &error);
 
     bool is_valid() { return valid_; };
 
@@ -49,10 +49,10 @@ public:
     PluginPython(PyObject *module);
     virtual ~PluginPython();
 
-    virtual void activate() override;
-    virtual void deactivate() override;
+    virtual void activate();
+    virtual void deactivate();
 
-    virtual std::shared_ptr<SSRReinforcementInterface> get_reinforcement(const std::string &name) override { return MapHelper::get_value(this->reinforcements_, name); };
+    virtual std::shared_ptr<SSRReinforcementInterface> get_reinforcement(const std::string &name) { return MapHelper::get_value(this->reinforcements_, name); };
 
 private:
     void add_reinforcement(const std::string &package_name,

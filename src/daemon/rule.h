@@ -41,7 +41,7 @@ protected:
     JsonCmpResult json_value_cmp(const Json::Value &v1, const Json::Value &v2);
 };
 
-using RuleVec = std::vector<std::shared_ptr<Rule>>;
+typedef std::vector<std::shared_ptr<Rule>> RuleVec;
 
 class RuleRange : public Rule
 {
@@ -52,9 +52,9 @@ public:
     virtual ~RuleRange(){};
 
     // 规则类型
-    virtual Protocol::RuleType get_type() override { return Protocol::RuleType::Value::RANGE; };
+    virtual Protocol::RuleType get_type() { return Protocol::RuleType::Value::RANGE; };
     // 判断该值是否符合规则
-    virtual bool match(const Json::Value &value) override;
+    virtual bool match(const Json::Value &value);
 
 private:
     Json::Value min_value_;
@@ -70,7 +70,7 @@ public:
     virtual ~RuleFixed(){};
 
     // 规则类型
-    virtual Protocol::RuleType get_type() override { return Protocol::RuleType::Value::RANGE; };
+    virtual Protocol::RuleType get_type() { return Protocol::RuleType::Value::RANGE; };
 };
 
 class RuleEnum : public Rule
@@ -80,9 +80,9 @@ public:
     virtual ~RuleEnum(){};
 
     // 规则类型
-    virtual Protocol::RuleType get_type() override { return Protocol::RuleType::Value::ENUM; };
+    virtual Protocol::RuleType get_type() { return Protocol::RuleType::Value::ENUM; };
     // 判断该值是否符合规则
-    virtual bool match(const Json::Value &value) override;
+    virtual bool match(const Json::Value &value);
 
 private:
     std::vector<Json::Value> enum_values_;
