@@ -297,12 +297,12 @@
             <name>config-password-expired</name>
             <arg>
                 <name>PASS_MAX_DAYS</name>
-                <value>180</value>
+                <value>90</value>
                 <value_limits>-1</value_limits>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
-                        <max_value>180</max_value>
+                        <max_value>90</max_value>
                     </value_range>
                 </rule>
                 <layout>
@@ -681,6 +681,32 @@
             </arg>
         </reinforcement>
         <reinforcement>
+            <name>external-accounts-surplus-user</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Delete lp, games, operator and adm by default</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>delete-users</name>
+                <value>""</value>
+                <value_limits>[a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?([;][a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?)*</value_limits>
+                <input_example>name1;name2...</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Add users to delete (Split with semicolon)</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
             <name>external-sshd-root-login</name>
             <arg>
                 <name>enabled</name>
@@ -742,6 +768,61 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Hiding operating system version information</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-sshd-service</name>
+            <arg>
+                <name>protocol</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Enforce V2 security protocol</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>permitEmpty</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Prohibit SSH users with empty password from logging in</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>port</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Modify the default SSH port</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>pam</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Enable PAM login mechanism</_label>
                 </layout>
             </arg>
         </reinforcement>
