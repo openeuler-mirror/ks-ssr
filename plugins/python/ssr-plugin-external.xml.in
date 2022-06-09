@@ -66,6 +66,11 @@
         <_description>Users outside the wheel group are prohibited from using the 'su root' command</_description>
     </reinforcement>
     <reinforcement>
+        <name>external-pam-sudo-limits</name>
+        <_label>Sudo command permissions</_label>
+        <_description>Restrict sudo command permissions</_description>
+    </reinforcement>
+    <reinforcement>
         <name>external-hosts-login-limit</name>
         <_label>Remote IP access restrictions</_label>
         <_description>Set the remote IP that can and cannot access this machine</_description>
