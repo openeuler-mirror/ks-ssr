@@ -98,6 +98,22 @@
             </arg>
         </reinforcement>
         <reinforcement>
+            <name>network-firewalld-icmp-traceroute</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Prohibit the host from being detected by traceroute</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
             <name>network-sysctl-high-risk-vulnerability</name>
             <arg>
                 <name>bluetooth</name>
@@ -213,6 +229,22 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>The maximum permissions of important configuration files in the system is set to 0644</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-directory-permissions</name>
+            <arg>
+                <name>directory--permissions-limit</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>The maximum permission of key directories in the system is 0755</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -353,6 +385,34 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Number of days warning given before a password expires</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>accounts_expiration</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Whether to set the expiration time for the current existing account</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>accounts</name>
+                <value>90</value>
+                <value_limits>-1</value_limits>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>90</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>The account setting expiration time already exists</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -506,6 +566,22 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Turn on SAK key</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-dmesg</name>
+            <arg>
+                <name>kernel.dmesg_restrict</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow administrators to view dmesg only</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -839,6 +915,22 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Users outside the wheel group are prohibited from using the 'su root' command</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-pam-sudo-limits</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Only root is allowed to use sudo command</_label>
                 </layout>
             </arg>
         </reinforcement>
