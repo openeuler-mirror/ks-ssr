@@ -16,10 +16,15 @@ PERMISSIONS_INI_FILEPATH = ssr.vars.SSR_PLUGIN_PYTHON_ROOT_DIR + "/ssr/config/pe
 FILE_GROUP_PERMISSIONS = "Permissions"
 # FPK: File Permissions Key
 FPK_MODE_FILE_LIST = "ModeFileList"
+# FPK: Directory Permissions Key
+FPK_MODE_DIRECTORY_LIST = "ModeDirectoryList"
 
 EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH | stat.S_IXUSR
 
+EXCLUDE_DIRECTORY_MODE = stat.S_IRWXU | stat.S_IXGRP | stat.S_IRGRP | stat.S_IROTH | stat.S_IXOTH
+
 PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
+PERMISSIONS_ARG_MODE_DIRECTORY_PERMISSIONS_LIMIT = "directory--permissions-limit"
 
 UMASK_LIMIT_PROFILE_PATH = '/etc/profile'
 UMASK_LIMIT_BASHRC_PATH  = '/etc/bashrc'
@@ -65,6 +70,48 @@ class PermissionSetting:
                 mode = os.stat(mode_file).st_mode
                 if mode != (mode & ~EXCLUDE_MODE):
                     os.chmod(mode_file, mode & ~EXCLUDE_MODE)
+
+        return (True, '')
+
+class DirectoryPermissionSetting:
+    def __init__(self):
+        self.conf = configparser.ConfigParser()
+        self.conf.read(PERMISSIONS_INI_FILEPATH)
+        try:
+            self.mode_filelist = self.conf.get(FILE_GROUP_PERMISSIONS, FPK_MODE_DIRECTORY_LIST).split(';')
+        except Exception as e:
+            self.mode_filelist = list()
+            ssr.log.debug(str(e))
+
+    def get(self):
+        retdata = dict()
+
+        mode_permissions_limit = True
+
+        for mode_file in self.mode_filelist:
+            if not os.access(mode_file, os.F_OK):
+                continue
+            mode = os.stat(mode_file).st_mode
+            if (mode & EXCLUDE_DIRECTORY_MODE) != EXCLUDE_DIRECTORY_MODE:
+                mode_permissions_limit = False
+                break
+        retdata[PERMISSIONS_ARG_MODE_DIRECTORY_PERMISSIONS_LIMIT] = mode_permissions_limit
+
+        ssr.log.debug(str(self.mode_filelist))
+
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+
+        if args[PERMISSIONS_ARG_MODE_DIRECTORY_PERMISSIONS_LIMIT]:
+            for mode_file in self.mode_filelist:
+                ssr.log.debug(str(mode_file))
+                if not os.access(mode_file, os.F_OK):
+                    continue
+                mode = os.stat(mode_file).st_mode
+                if mode != (mode & EXCLUDE_DIRECTORY_MODE):
+                    os.chmod(mode_file, EXCLUDE_DIRECTORY_MODE)
 
         return (True, '')
 
