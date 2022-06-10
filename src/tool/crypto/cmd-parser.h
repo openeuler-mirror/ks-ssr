@@ -25,9 +25,9 @@ struct CommandOptions
 {
     CommandOptions() : show_version(false) {}
     // 打印版本号
-    bool show_version;
+    bool show_version = false;
     // 生成密钥对
-    bool generate_rsa_key;
+    bool generate_rsa_key = false;
     // 解密文件
     Glib::ustring decrypted_file;
     // 加密文件
