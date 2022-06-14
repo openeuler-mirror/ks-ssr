@@ -23,7 +23,7 @@ enum OperationType
 
 struct CommandOptions
 {
-    CommandOptions() : show_version(false) {}
+    CommandOptions() {}
     // 打印版本号
     bool show_version = false;
     // 生成密钥对
