@@ -127,23 +127,28 @@ class UmaskLimit:
         bashrc_vale = self.conf_bashrc.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
 
         if profile_value == bashrc_vale and profile_value == '027':
-            retdata['enabled'] = True
-        else:
-            retdata['enabled'] = False
+            retdata['enabled'] = 027
+        # else:
+        #     retdata['enabled'] = False
 
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-
+        ssr.log.debug("args['enabled'] = ")
+        ssr.log.debug(args['enabled'])
         profile_value = self.conf_profile.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
         bashrc_vale = self.conf_bashrc.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
-        if args['enabled']:
+        if args['enabled'] == 27:
             self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
             self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
         else:
-            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
-            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
+            if args['enabled'] == 22:
+                self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+                self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+            if args['enabled'] == 77:
+                self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
+                self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
 
         cmd = "source" + " " + UMASK_LIMIT_BASHRC_PATH + " " + UMASK_LIMIT_PROFILE_PATH
         limit_open_command = '{0}'.format(cmd)
