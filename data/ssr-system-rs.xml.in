@@ -603,6 +603,54 @@
                 </layout>
             </arg>
         </reinforcement>
+        <reinforcement>
+            <name>config-nouser-files</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>No master file in the scanning system</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-authority-files</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Scanning system files with 777 permissions</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-suid-sgid-files</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Scan system important directory suid-sgid file</_label>
+                </layout>
+            </arg>
+        </reinforcement>
         <!-- 审计类 -->
         <reinforcement>
             <name>audit-auditd-switch</name>
