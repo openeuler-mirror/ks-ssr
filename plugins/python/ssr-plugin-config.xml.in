@@ -65,4 +65,19 @@
         <_label>File directory default permission</_label>
         <_description>Restrict file directory default permissions</_description>
     </reinforcement>
+    <reinforcement>
+        <name>config-nouser-files</name>
+        <_label>Scan for non owned master files</_label>
+        <_description>Check whether there are files in the important directory that the user does not belong to</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>config-authority-files</name>
+        <_label>Scan 777 permission file</_label>
+        <_description>Check whether there is a file with permission 777 under the important directory</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>config-suid-sgid-files</name>
+        <_label>Scan suid-sgid permission file</_label>
+        <_description>Check whether there is a file with suid-sgid permission under the important directory</_description>
+    </reinforcement>
 </ssr_plugin>
