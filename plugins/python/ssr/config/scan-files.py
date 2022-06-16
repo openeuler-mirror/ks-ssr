@@ -28,6 +28,8 @@ class NouserFiles:
         args = json.loads(args_json)
         scan_output = ""
         # 无属文件
+        rm_cmd = 'rm -rf {0}'.format(SCAN_NOUSER_FILES_RESULT_PATH)
+        ssr.utils.subprocess_not_output(rm_cmd)
         if args["enabled"]:
             for path in SCAN_FILES_PATH:
                 scan_cmd = '{0} {1} -nouser'.format(SCAN_FILES_CMD,path)
@@ -54,6 +56,8 @@ class AuthorityFiles:
         args = json.loads(args_json)
         scan_output = ""
         # 查找指定目录下有777权限的文件
+        rm_cmd = 'rm -rf {0}'.format(SCAN_AUTHORITY_FILES_RESULT_PATH)
+        ssr.utils.subprocess_not_output(rm_cmd)
         if args["enabled"]:
             for path in SCAN_FILES_PATH:
                 scan_cmd = '{0} {1} -perm 777'.format(SCAN_FILES_CMD,path)
@@ -81,6 +85,8 @@ class SuidSgidFiles:
         scan_suid_output = ""
         scan_guid_output = ""
         # /4000表示SUID权限 ，/2000表示GUID权限
+        rm_cmd = 'rm -rf {0}'.format(SCAN_SUID_SGID_FILES_RESULT_PATH)
+        ssr.utils.subprocess_not_output(rm_cmd)
         if args["enabled"]:
             for path in SCAN_FILES_PATH:
                 scan_suid_cmd = '{0} {1} -perm /4000'.format(SCAN_FILES_CMD,path)
