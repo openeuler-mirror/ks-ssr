@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 17:07+0800\n"
+"POT-Creation-Date: 2022-06-17 15:22+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -465,7 +465,11 @@ msgid ""
 msgstr "超过以下时间（秒）未操作则会话退出"
 
 #: ../data/ssr-system-rs.xml.in.h:68
-#: ../plugins/python/ssr-plugin-external.xml.in.h:32
+msgid "Whether to configure sftpuser special account"
+msgstr "是否配置sftpuser用户（请自行设置用户密码）"
+
+#: ../data/ssr-system-rs.xml.in.h:69
+#: ../plugins/python/ssr-plugin-external.xml.in.h:34
 msgid "Disable radio network"
 msgstr "禁用无线网络"
 
@@ -736,7 +740,15 @@ msgid ""
 "will exit automatically"
 msgstr "如果登陆后在指定时间内会话未操作则会话自动退出"
 
+#: ../plugins/python/ssr-plugin-external.xml.in.h:32
+msgid "Limit SFTP"
+msgstr "限制SFTP"
+
 #: ../plugins/python/ssr-plugin-external.xml.in.h:33
+msgid "Restrict SFTP users' upward cross directory access"
+msgstr "限制SFTP用户向上跨目录访问"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:35
 msgid "Restrict wireless network connections"
 msgstr "限制无线网络连接"
 
