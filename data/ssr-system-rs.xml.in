@@ -557,11 +557,11 @@
             <name>config-sak-key</name>
             <arg>
                 <name>kernel.sysrq</name>
-                <value>true</value>
+                <value>false</value>
                 <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
+                    <value_fixed>false</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
