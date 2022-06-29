@@ -8,6 +8,86 @@
     <body>
         <!-- 网络类 -->
         <reinforcement>
+            <name>network-sysctl-icmp-redirect</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on ICMP redirection</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>network-sysctl-syn-flood</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Prevent syn flood attacks</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>network-sysctl-source-route</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on IP source routing</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>network-firewalld-icmp-timestamp</name>
+            <arg>
+                <name>timestamp_request</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow ICMP timestamp query</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>network-firewalld-icmp-traceroute</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Prohibit the host from being detected by traceroute</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
             <name>network-firewalld-switch</name>
             <arg>
                 <name>enabled</name>
@@ -154,86 +234,6 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>disable output ports (Split with semicolon)</_label>
-                </layout>
-            </arg>
-        </reinforcement>
-        <reinforcement>
-            <name>network-sysctl-icmp-redirect</name>
-            <arg>
-                <name>enabled</name>
-                <value>false</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Turn on ICMP redirection</_label>
-                </layout>
-            </arg>
-        </reinforcement>
-        <reinforcement>
-            <name>network-sysctl-syn-flood</name>
-            <arg>
-                <name>enabled</name>
-                <value>true</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Prevent syn flood attacks</_label>
-                </layout>
-            </arg>
-        </reinforcement>
-        <reinforcement>
-            <name>network-sysctl-source-route</name>
-            <arg>
-                <name>enabled</name>
-                <value>false</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Turn on IP source routing</_label>
-                </layout>
-            </arg>
-        </reinforcement>
-        <reinforcement>
-            <name>network-firewalld-icmp-timestamp</name>
-            <arg>
-                <name>timestamp_request</name>
-                <value>false</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Allow ICMP timestamp query</_label>
-                </layout>
-            </arg>
-        </reinforcement>
-        <reinforcement>
-            <name>network-firewalld-icmp-traceroute</name>
-            <arg>
-                <name>enabled</name>
-                <value>true</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Prohibit the host from being detected by traceroute</_label>
                 </layout>
             </arg>
         </reinforcement>

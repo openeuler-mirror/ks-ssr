@@ -1,5 +1,3 @@
-#--coding:utf8 --
-
 import subprocess
 import ssr.log
 
@@ -28,7 +26,6 @@ def subprocess_has_output(args):
 
     return child_process.stdout.read().strip().decode('utf-8')
 
-# 针对部分执行成功没有输出，执行失败报错的命令(iptables -C)
 def subprocess_has_output_ignore_error_handling(args):
     ssr.log.debug(args)
     child_process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
