@@ -149,7 +149,7 @@ class NullPassword(Accounts):
                     continue
                 if self.is_null_password(pwdent.pw_name) and pwdent.pw_uid != 0:
                     ssr.log.debug("del  pwdent.pw_name = ", pwdent.pw_name, "pw_uid = ", pwdent.pw_uid)
-                    ssr.utils.subprocess_not_output("userdel -r {0}".format(pwdent.pw_name))
+                    ssr.utils.subprocess_not_output("userdel -r {0} &> /dev/null ||: ".format(pwdent.pw_name))
 
         return (True, '')
 
@@ -187,7 +187,7 @@ class SurplusUser():
                     or delete_users.__contains__(pwdent.pw_name)):
                     ssr.log.debug(str(pwdent.pw_name))
                     if pwdent.pw_uid != 0:
-                        ssr.utils.subprocess_not_output("userdel -r {0}".format(pwdent.pw_name))
+                        ssr.utils.subprocess_not_output("userdel -r {0}  &> /dev/null ||: ".format(pwdent.pw_name))
                 else:
                     continue
 
