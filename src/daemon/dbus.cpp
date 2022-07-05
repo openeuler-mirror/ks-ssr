@@ -22,6 +22,9 @@ namespace Daemon
 #define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
 
+std::shared_ptr<SSRReinforcementInterface> reinforcement_interface_;
+std::string param_str_ = "";
+
 DBus::DBus(::DBus::Connection& connection) : ::DBus::ObjectAdaptor(connection, SSR_DBUS_OBJECT_PATH),
                                              dbus_connection_(connection)
 {
@@ -205,6 +208,22 @@ void DBus::ResetReinforcement(const std::string& name)
     this->configuration_->del_custom_ra(name);
 }
 
+static std::string ReinforcementInterfaceScanFun()
+{
+    Json::Value retval;
+    std::string args;
+    std::string error;
+    if (reinforcement_interface_->get(args, error))
+    {
+        retval[JOB_RETURN_VALUE] = StrUtils::str2json(args);
+    }
+    else
+    {
+        retval[JOB_ERROR_STR] = error;
+    }
+    return StrUtils::json2str(retval);
+}
+
 int64_t DBus::Scan(const std::vector<std::string>& names)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
@@ -229,29 +248,15 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
                 THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND, name);
             }
 
-            auto reinforcement_interface = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
+            reinforcement_interface_ = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
                                                                                       reinforcement->get_name());
-            if (!reinforcement_interface)
+            if (!reinforcement_interface_)
             {
                 THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
             }
 
-            this->scan_job_->add_operation(reinforcement->get_plugin_name(),
-                                           reinforcement->get_name(),
-                                           [reinforcement_interface]() -> std::string {
-                                               Json::Value retval;
-                                               std::string args;
-                                               std::string error;
-                                               if (reinforcement_interface->get(args, error))
-                                               {
-                                                   retval[JOB_RETURN_VALUE] = StrUtils::str2json(args);
-                                               }
-                                               else
-                                               {
-                                                   retval[JOB_ERROR_STR] = error;
-                                               }
-                                               return StrUtils::json2str(retval);
-                                           });
+            std::function<std::string(void)> func = ReinforcementInterfaceScanFun;
+            this->scan_job_->add_operation(reinforcement->get_plugin_name(), reinforcement->get_name(), func);
 
             // 重新扫描时需要清理加固项的安全状态
             // reinforcement->state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNKNOWN;
@@ -271,6 +276,22 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
     }
 
     return this->scan_job_->get_id();
+}
+
+static std::string ReinforcementInterfaceReinforceFun()
+{
+    std::string error;
+    Json::Value retval;
+    if (!reinforcement_interface_->set(param_str_, error))
+    {
+        retval[JOB_ERROR_STR] = error;
+    }
+    else
+    {
+    // 设置为空字符串，这里主要是为了区分加固成功和取消加固两种状态，后续可能会调整改逻辑
+    retval[JOB_RETURN_VALUE] = std::string();
+    }
+    return StrUtils::json2str(retval);
 }
 
 int64_t DBus::Reinforce(const std::vector<std::string>& names)
@@ -305,9 +326,9 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
                 THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND, name);
             }
 
-            auto reinforcement_interface = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
+            reinforcement_interface_ = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
                                                                                       reinforcement->get_name());
-            if (!reinforcement_interface)
+            if (!reinforcement_interface_)
             {
                 THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
             }
@@ -318,23 +339,9 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
             {
                 param[arg_iter->name()] = StrUtils::str2json(arg_iter->value());
             }
-            auto param_str = StrUtils::json2str(param);
-            this->reinforce_job_->add_operation(reinforcement->get_plugin_name(),
-                                                reinforcement->get_name(),
-                                                [reinforcement_interface, param_str]() -> std::string {
-                                                    std::string error;
-                                                    Json::Value retval;
-                                                    if (!reinforcement_interface->set(param_str, error))
-                                                    {
-                                                        retval[JOB_ERROR_STR] = error;
-                                                    }
-                                                    else
-                                                    {
-                                                        // 设置为空字符串，这里主要是为了区分加固成功和取消加固两种状态，后续可能会调整改逻辑
-                                                        retval[JOB_RETURN_VALUE] = std::string();
-                                                    }
-                                                    return StrUtils::json2str(retval);
-                                                });
+            param_str_ = StrUtils::json2str(param);
+            std::function<std::string(void)> func = ReinforcementInterfaceReinforceFun;
+            this->reinforce_job_->add_operation(reinforcement->get_plugin_name(), reinforcement->get_name(), func);
         }
     }
     catch (const std::exception& e)
@@ -456,7 +463,6 @@ void DBus::init()
     this->configuration_ = Configuration::get_instance();
     this->categories_ = Categories::get_instance();
     this->plugins_ = Plugins::get_instance();
-
     try
     {
         this->license_manager_proxy_ = std::make_shared<LicenseManagerProxy>(this->dbus_connection_,

@@ -23,11 +23,11 @@ enum OperationType
 
 struct CommandOptions
 {
-    CommandOptions() {}
+    CommandOptions() : show_version(false) ,generate_rsa_key(false) {}
     // 打印版本号
-    bool show_version = false;
+    bool show_version;
     // 生成密钥对
-    bool generate_rsa_key = false;
+    bool generate_rsa_key;
     // 解密文件
     Glib::ustring decrypted_file;
     // 加密文件

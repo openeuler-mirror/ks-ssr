@@ -96,6 +96,7 @@ protected:
     // 重置指定的加固项
     virtual void ResetReinforcement(const std::string &name);
 
+//    std::string reinforcement_interface_fun();
     // 扫描指定加固项
     virtual int64_t Scan(const std::vector<std::string> &names);
 
