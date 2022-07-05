@@ -68,10 +68,10 @@ bool Job::run_sync()
 
     this->run_init();
 
-    for (auto iter : this->operations_)
+    for (auto iter = this->operations_.begin(); iter != this->operations_.end(); ++iter)
     {
         OperationResult result;
-        auto operation = iter.second;
+        auto operation = iter->second;
         result.operation_id = operation->operation_id;
         result.result = operation->func();
         ++this->job_result_.finished_operation_num;
@@ -103,10 +103,10 @@ bool Job::run_async()
     auto &thread_pool = Plugins::get_instance()->get_thread_pool();
     {
         std::lock_guard<std::mutex> guard(this->operations_mutex_);
-        for (auto iter : this->operations_)
+        for (auto iter = this->operations_.begin(); iter != this->operations_.end(); ++iter)
         {
-            thread_pool.enqueue_by_idx(std::hash<std::string>()(iter.second->reinforcement_name),
-                                       std::bind(&Job::run_operation, this, iter.second));
+            thread_pool.enqueue_by_idx(std::hash<std::string>()(iter->second->reinforcement_name),
+                                       std::bind(&Job::run_operation, this, iter->second));
         }
     }
     return true;
