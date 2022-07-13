@@ -7,8 +7,8 @@
     <available>true</available>
     <reinforcement>
         <name>network-firewalld-switch</name>
-        <_label>System firewall service</_label>
-        <_description>Provides dynamically managed firewall</_description>
+        <_label>Firewall configuration</_label>
+        <_description>Configure system firewall rules</_description>
     </reinforcement>
     <reinforcement>
         <name>network-sysctl-icmp-redirect</name>
@@ -26,12 +26,12 @@
         <_description>Prevent source address spoofing</_description>
     </reinforcement>
     <reinforcement>
-        <name>network-firewalld-icmp-timestamp</name>
+        <name>network-icmp-timestamp</name>
         <_label>ICMP timestamp query</_label>
         <_description>Prevent attackers from attacking some time authentication based protocols</_description>
     </reinforcement>
     <reinforcement>
-        <name>network-firewalld-icmp-traceroute</name>
+        <name>network-icmp-traceroute</name>
         <_label>Traceroute probe</_label>
         <_description>Preventing threats to hosts detected by traceroute</_description>
     </reinforcement>

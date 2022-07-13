@@ -188,6 +188,7 @@ class SurplusUser():
                     ssr.log.debug(str(pwdent.pw_name))
                     if pwdent.pw_uid != 0:
                         ssr.utils.subprocess_not_output("userdel -r {0}  &> /dev/null ||: ".format(pwdent.pw_name))
+                        ssr.utils.subprocess_not_output("groupdel {0}  &> /dev/null ||: ".format(pwdent.pw_name))
                 else:
                     continue
 

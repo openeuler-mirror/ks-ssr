@@ -215,8 +215,8 @@ msgid "Whether to set TCP (otherwise UDP)"
 msgstr "是否设置TCP（否则为UDP）"
 
 #: ../data/ssr-system-rs.xml.in.h:9
-msgid "Disable FTP, SMTP and other ports that may threaten the system"
-msgstr "禁用FTP、SMTP等可能威胁系统的端口"
+msgid "Disable ports that may threaten the system by default"
+msgstr "默认禁用可能威胁系统的端口"
 
 #: ../data/ssr-system-rs.xml.in.h:10
 msgid "clear iptables configuration"
@@ -256,7 +256,7 @@ msgstr "开放输出端口 (分号分割)"
 
 #: ../data/ssr-system-rs.xml.in.h:19
 msgid "disable output ports (Split with semicolon)"
-msgstr "禁用输入端口 (分号分割)"
+msgstr "禁用输出端口 (分号分割)"
 
 #: ../data/ssr-system-rs.xml.in.h:20
 msgid "Turn on system bluetooth service"
@@ -336,8 +336,8 @@ msgid "Whether to set the expiration time for the current existing account"
 msgstr "是否设置现有用户的到期时间（三权及root用户除外）"
 
 #: ../data/ssr-system-rs.xml.in.h:38
-msgid "The account setting expiration time already exists"
-msgstr "现有用户设置过期时间"
+msgid "Existing users set expiration days"
+msgstr "现有用户设置过期天数"
 
 #: ../data/ssr-system-rs.xml.in.h:39
 msgid "Minimum password length"
@@ -801,12 +801,12 @@ msgid "network settings"
 msgstr "网络设置"
 
 #: ../plugins/python/ssr-plugin-network.xml.in.h:2
-msgid "System firewall service"
-msgstr "系统防火墙服务"
+msgid "Firewall configuration"
+msgstr "防火墙配置"
 
 #: ../plugins/python/ssr-plugin-network.xml.in.h:3
-msgid "Provides dynamically managed firewall"
-msgstr "提供动态管理的防火墙"
+msgid "Configure system firewall rules"
+msgstr "配置系统防火墙规则"
 
 #: ../plugins/python/ssr-plugin-network.xml.in.h:4
 msgid "ICMP redirection"
