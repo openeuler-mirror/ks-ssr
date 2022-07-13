@@ -5,12 +5,12 @@ reinforcements = (
         'class': 'Switch'
     },
     {
-        'name': 'network-firewalld-icmp-timestamp',
+        'name': 'network-icmp-timestamp',
         'module': 'firewalld',
         'class': 'IcmpTimestamp'
     },
     {
-        'name': 'network-firewalld-icmp-traceroute',
+        'name': 'network-icmp-traceroute',
         'module': 'firewalld',
         'class': 'Traceroute'
     },
