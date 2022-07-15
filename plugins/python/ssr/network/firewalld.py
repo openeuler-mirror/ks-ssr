@@ -44,7 +44,7 @@ CLEAR_IPTABLES = "iptables -F; iptables -X"
 CLEAR_IPTABLES_INPUT = "iptables -F INPUT"
 CLEAR_IPTABLES_OUTPUT = "iptables -F OUTPUT"
 
-FIND_IPTABLES_INPUT = "iptables -L INPUT -n --line-numbers"
+FIND_IPTABLES_INPUT = "iptables -L"
 
 # 禁止主机被Traceroute检测 time-exceeded
 TRACEROUTE_DETAIL = "time-exceeded -j DROP"
@@ -116,6 +116,16 @@ class Firewall:
         if len(ssr.utils.subprocess_has_output_ignore_error_handling(check_cmd)) == 0:
             ssr.utils.subprocess_not_output(set_cmd)
 
+    def del_iptables_history(self,target,iptablestype = "INPUT"):
+        count = 0
+        output_result = str(ssr.utils.subprocess_has_output(FIND_IPTABLES_INPUT  + " {0} -n --line-numbers".format(iptablestype) + " |grep {0} ".format(target)))
+        for line in output_result.splitlines():
+            ssr.log.debug("output_result.splitlines() = ",line)
+            count = count + 1
+        for i in range(count):
+            ssr.log.debug("index = ",str(ssr.utils.subprocess_has_output(FIND_IPTABLES_INPUT  + " {0} -n --line-numbers".format(iptablestype) + " |grep {0} ".format(target))).splitlines()[0].split(' ')[0])
+            ssr.utils.subprocess_not_output('iptables -D {0} {1}'.format(iptablestype,str(ssr.utils.subprocess_has_output(FIND_IPTABLES_INPUT   + " {0} -n --line-numbers".format(iptablestype) + " |grep {0} ".format(target))).splitlines()[0].split(' ')[0]))
+
 
 # 系统防火墙服务
 class Switch(Firewall):
@@ -146,15 +156,9 @@ class Switch(Firewall):
         # ssr.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
         
         if args['input-ports-connect-nums']  == 0:
-            count = 0
-            output_result = str(ssr.utils.subprocess_has_output(FIND_IPTABLES_INPUT + " |grep 1:60999"))
-            for line in output_result.splitlines():
-                ssr.log.debug("output_result.splitlines() = ",line)
-                count = count + 1
-            for i in range(count):
-                ssr.log.debug("index = ",str(ssr.utils.subprocess_has_output(FIND_IPTABLES_INPUT + " |grep 1:60999")).splitlines()[0].split(' ')[0])
-                ssr.utils.subprocess_not_output('iptables -D INPUT {0}'.format(str(ssr.utils.subprocess_has_output(FIND_IPTABLES_INPUT + " |grep 1:60999")).splitlines()[0].split(' ')[0]))
+            self.del_iptables_history('1:60999')
         else:
+            self.del_iptables_history('1:60999')
             self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j DROP")
             self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j DROP")
  
@@ -170,11 +174,11 @@ class Switch(Firewall):
         else:
             for port in IPTABLES_LIMITS_PORTS.split(","):
                 if args['tcp-udp']:
-                    self.set_iptables(DELETE_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
-                    self.set_iptables(DELETE_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
+                    self.del_iptables(DELETE_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
+                    self.del_iptables(DELETE_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
                 else:
-                    self.set_iptables(DELETE_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
-                    self.set_iptables(DELETE_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
+                    self.del_iptables(DELETE_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
+                    self.del_iptables(DELETE_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
         # 允许网段
         # if len(args['allow-network-segment']) != 0:
         #     for network_segment in args['allow-network-segment'].split(","):
@@ -184,11 +188,14 @@ class Switch(Firewall):
         #             self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"-s " + network_segment ,"-j ACCEPT")
         # 禁用网段
         if len(args['disable-network-segment']) != 0:
+            # self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999")
             for network_segment in args['disable-network-segment'].split(","):
                 if args['tcp-udp']:
                     self.set_iptables(ADD_IPTABLES_INPUT_TCP,CHECK_IPTABLES_INPUT_TCP,"-s " + network_segment ,"-j DROP")
                 else:
                     self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP,"-s " + network_segment ,"-j DROP")
+        else:
+            self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999")
         # 开放端口
         # if len(args['ports']) != 0:
         #     for port in args['ports'].split(";"):
@@ -203,6 +210,8 @@ class Switch(Firewall):
                     self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
                 else:
                     self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
+        else:
+            self.del_iptables_history("dpt: |grep DROP |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")))
 
        # 允许网段 output
         # if len(args['allow-network-segment-output']) != 0:
@@ -213,11 +222,14 @@ class Switch(Firewall):
         #             self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"-s " + network_segment ,"-j ACCEPT")
         # 禁用网段 output
         if len(args['disable-network-segment-output']) != 0:
+            # self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
             for network_segment in args['disable-network-segment-output'].split(","):
                 if args['tcp-udp']:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_TCP,CHECK_IPTABLES_OUTPUT_TCP,"-s " + network_segment ,"-j DROP")
                 else:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP,"-s " + network_segment ,"-j DROP")
+        else:
+            self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
         # 开放端口 output
         # if len(args['ports-output']) != 0:
         #     for port in args['ports'].split(";"):
@@ -227,11 +239,14 @@ class Switch(Firewall):
         #             self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j ACCEPT")
         # 禁用端口 output
         if len(args['disable-ports-output']) != 0:
-            for port in args['disable-ports'].split(";"):
+            for port in args['disable-ports-output'].split(";"):
                 if args['tcp-udp']:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
                 else:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
+        else:
+            self.del_iptables_history("dpt: |grep DROP |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")), "OUTPUT")
+
         if args['clear-configuration']:
             ssr.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
             ssr.utils.subprocess_not_output(CLEAR_IPTABLES)

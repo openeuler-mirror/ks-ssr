@@ -40,7 +40,7 @@ SSHD_CONF_PORT = "Port"
 SSHD_CONF_PAM = "UsePAM"
 
 SET_SFTP_USER_CMD = "useradd sftpuser"
-SET_SFTP_USER_CONFIG = "Match User sftpuser\nChrootDirectory /home\nX11Forwarding no\nAllowTcpForwarding no\nForceCommand internal-sftp"
+SET_SFTP_USER_CONFIG = "Match User sftpuser\n\tChrootDirectory /home\n\tX11Forwarding no\n\tAllowTcpForwarding no\n\tForceCommand internal-sftp"
 
 class SSHD:
     def __init__(self):
@@ -179,19 +179,25 @@ class SshdService(SSHD):
     def get(self):
         retdata = dict()
         retdata[SSHD_CONF_PROTOCOL_KEY] = (self.conf.get_value(SSHD_CONF_PROTOCOL) == "2")
-        retdata[SSHD_CONF_PERMIT_EMPTY_KEY] = (not (self.conf.get_value(SSHD_CONF_PERMIT_EMPTY) == "no"))
+        retdata[SSHD_CONF_PERMIT_EMPTY_KEY] = self.conf.get_value(SSHD_CONF_PERMIT_EMPTY) == "no"
         retdata[SSHD_CONF_PORT_KEY] = (self.conf.get_value(SSHD_CONF_PORT) == "1022")
         retdata[SSHD_CONF_PAM_KEY] = (not (self.conf.get_value(SSHD_CONF_PAM) == "no"))
+        # ssr.log.debug("arg['pam'] : ",args[SSHD_CONF_PAM_KEY] )
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        args = json.loads(args_json)
         if not self.service.is_active():
             return (False,'sshd.services is not running! \t\t')
-        args = json.loads(args_json)
+
+        if args[SSHD_CONF_PAM_KEY] :
+            self.conf.set_value(SSHD_CONF_PAM, "yes")
+        else:
+            return (False,'UsePAM is not recommended to be closed, \t\nwhich will cause many problems! \t')
+        
         self.conf.set_value(SSHD_CONF_PROTOCOL, "2" if args[SSHD_CONF_PROTOCOL_KEY] else "")
-        self.conf.set_value(SSHD_CONF_PERMIT_EMPTY, "yes" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "no")
+        self.conf.set_value(SSHD_CONF_PERMIT_EMPTY, "no" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "yes")
         self.conf.set_value(SSHD_CONF_PORT, "1022" if args[SSHD_CONF_PORT_KEY] else "")
-        self.conf.set_value(SSHD_CONF_PAM, "yes" if args[SSHD_CONF_PAM_KEY] else "no")
 
         # 重启服务生效
         self.service.reload()
@@ -213,17 +219,31 @@ class SftpUser(SSHD):
     def set(self, args_json):
         if not self.service.is_active():
             return (False,'sshd.services is not running! \t\t')
-        self.conf_table = ssr.configuration.Table(SSHD_CONF_PATH, ",\\s+")
+        self.conf_match = ssr.configuration.PAM(SSHD_CONF_PATH, "Match\\s+User\\s+sftpuser")
+        self.conf_chroot = ssr.configuration.PAM(SSHD_CONF_PATH, "\tChrootDirectory\\s+/home")
+        self.conf_x11 = ssr.configuration.PAM(SSHD_CONF_PATH, "\tX11Forwarding\\s+no")
+        self.conf_allowtcp = ssr.configuration.PAM(SSHD_CONF_PATH, "\tAllowTcpForwarding\\s+no")
+        self.conf_force = ssr.configuration.PAM(SSHD_CONF_PATH, "\tForceCommand\\s+internal-sftp")
         args = json.loads(args_json)
         if args["enabled"]:
             if not self.user_exist("sftpuser"):
                 ssr.utils.subprocess_not_output(SET_SFTP_USER_CMD)
-            self.conf_table.set_value("Match User",SET_SFTP_USER_CONFIG)
+
+            self.conf_force.set_line("\tForceCommand internal-sftp","#\\s+PermitTTY\\s+no")
+            self.conf_allowtcp.set_line("\tAllowTcpForwarding no","\tForceCommand internal-sftp")
+            self.conf_x11.set_line("\tX11Forwarding no","\tAllowTcpForwarding\\s+no")
+            self.conf_chroot.set_line("\tChrootDirectory /home","\tX11Forwarding\\s+no")
+            self.conf_match.set_line("Match User sftpuser","\tChrootDirectory\\s+/home")
+
         else:
             if self.user_exist("sftpuser"):
                 rm_cmd = "userdel -r sftpuser"
                 ssr.utils.subprocess_not_output(rm_cmd)
-            self.conf_table.del_record("Match User")
+            self.conf_match.del_line()
+            self.conf_chroot.del_line()
+            self.conf_x11.del_line()
+            self.conf_allowtcp.del_line()
+            self.conf_force.del_line()
 
         # 重启服务生效
         self.service.reload()
