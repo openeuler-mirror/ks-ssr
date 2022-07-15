@@ -220,7 +220,7 @@ msgstr "默认禁用可能威胁系统的端口"
 
 #: ../data/ssr-system-rs.xml.in.h:10
 msgid "clear iptables configuration"
-msgstr "清除iptables配置"
+msgstr "清空iptables配置"
 
 #: ../data/ssr-system-rs.xml.in.h:11
 msgid "allow network segment (Split with comma)"
@@ -473,7 +473,7 @@ msgstr "强制使用V2安全协议"
 
 #: ../data/ssr-system-rs.xml.in.h:71
 msgid "Prohibit SSH users with empty password from logging in"
-msgstr "禁止密码为空的SSH用户登录"
+msgstr "禁止主机密码为空的用户SSH登录"
 
 #: ../data/ssr-system-rs.xml.in.h:72
 msgid "Modify the default SSH port(SELinux needs to be turned off for use)"
@@ -491,7 +491,7 @@ msgstr "禁止wheel组以外的用户使用'su root'命令"
 
 #: ../data/ssr-system-rs.xml.in.h:75
 msgid "Only root is allowed to use sudo command"
-msgstr "仅允许root用户使用sudo命令"
+msgstr "仅允许root用户使用sudo命令(开启selinux失效)"
 
 #: ../data/ssr-system-rs.xml.in.h:76
 msgid "List of IP addresses that allow remote access (Split with comma)"
