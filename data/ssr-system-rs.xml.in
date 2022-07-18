@@ -1059,7 +1059,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Modify the default SSH port(SELinux needs to be turned off for use)</_label>
+                    <_label>Modify the default SSH port</_label>
                 </layout>
             </arg>
             <arg>
