@@ -7,6 +7,8 @@ import ssr.configuration
 import ssr.log
 
 RESOURCE_LIMITS_CONF_PATH = "/etc/security/limits.d/90-ssr-config.conf"
+SELINUX_MODULES_ULIMIT_PATH = "/usr/share/ks-ssr-manager/ssr-ulimit.pp"
+
 RESOURCE_LIMITS_KEY_STACK_SOFT  = "*                soft    stack"
 RESOURCE_LIMITS_KEY_STACK_HARD  = "*                hard    stack"
 RESOURCE_LIMITS_KEY_RSS_SOFT = "*                soft    rss"
@@ -28,6 +30,14 @@ HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT = "export HISTSIZE"
 class ResourceLimits:
     def __init__(self):
         self.conf = ssr.configuration.KV(RESOURCE_LIMITS_CONF_PATH)
+
+    def get_selinux_status(self):
+        output = ssr.utils.subprocess_has_output("getenforce")
+        ssr.log.debug(output)
+        if str(output) == "Enforcing":
+            return True
+        else:
+            return False
 
     def get(self):
         retdata = dict()
@@ -63,11 +73,15 @@ class ResourceLimits:
         ssr.utils.subprocess_not_output('echo \' \' > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
 
         if args['enabled']:
+            if self.get_selinux_status():
+                ssr.utils.subprocess_not_output("semodule -r ssr-ulimit &> /dev/null")
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, '8192')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, '10240')
         else:
+            if self.get_selinux_status():
+                ssr.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_ULIMIT_PATH))
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, 'unlimited')
