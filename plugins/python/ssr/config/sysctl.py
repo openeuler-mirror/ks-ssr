@@ -3,7 +3,7 @@
 import json
 import ssr.configuration
 import ssr.utils
-
+import os
 
 SYSCTL_PATH = '/usr/sbin/sysctl'
 #修改schemas默认值
@@ -91,10 +91,14 @@ class KeyRebootSwitch:
     def open(self):
         command = '{0}'.format(COMPOSITE_KEY_REBOOT_ENABLE_CMD)
         output = ssr.utils.subprocess_not_output(command)
+        if not os.path.exists('/etc/systemd/system/ctrl-alt-del.target'):
+            ssr.utils.subprocess_not_output("ln -s /usr/lib/systemd/system/reboot.target /etc/systemd/system/ctrl-alt-del.target")
 
     def close(self):
-         command = '{0}'.format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
-         output = ssr.utils.subprocess_not_output(command)
+        if  os.path.exists('/etc/systemd/system/ctrl-alt-del.target'):
+            ssr.utils.subprocess_not_output("rm -rf /etc/systemd/system/ctrl-alt-del.target")
+        command = '{0}'.format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
+        output = ssr.utils.subprocess_not_output(command)
 
     def get(self):
         retdata = dict()
