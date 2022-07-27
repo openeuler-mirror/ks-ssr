@@ -6,38 +6,40 @@ import ssr.log
 
 FIREWALL_CMD_PATH = '/usr/bin/firewall-cmd'
 
+#iptables -w参数防止进程抢占
+
 # 开放443端口(HTTPS)
-OPEN_IPTABLES_PORTS = 'iptables -I INPUT -p tcp --dport 443 -j ACCEPT'
-CHECK_IPTABLES_PORTS = 'iptables -C INPUT -p tcp --dport 443 -j ACCEPT'
-CLOSE_IPTABLES_PORTS = 'iptables -D INPUT -p tcp --dport 443 -j ACCEPT'
+OPEN_IPTABLES_PORTS = 'iptables -w 0.05 -I INPUT -p tcp --dport 443 -j ACCEPT'
+CHECK_IPTABLES_PORTS = 'iptables -w 0.05 -C INPUT -p tcp --dport 443 -j ACCEPT'
+CLOSE_IPTABLES_PORTS = 'iptables -w 0.05 -D INPUT -p tcp --dport 443 -j ACCEPT'
 
 IPTABLES_LIMITS_PORTS = "21,25,110,137,138,67,68,161,162,139,389,873,445,631"
 
 # iptables INPUT icmp  DROP
-DISABLE_IPTABLES_INPUT_ICMP = "iptables -I INPUT -p ICMP --icmp-type"
-CHECK_IPTABLES_INPUT_ICMP = "iptables -C INPUT -p ICMP --icmp-type"
-OPEN_IPTABLES_INPUT_ICMP = "iptables -D INPUT -p ICMP --icmp-type"
+DISABLE_IPTABLES_INPUT_ICMP = "iptables -w 0.05 -I INPUT -p ICMP --icmp-type"
+CHECK_IPTABLES_INPUT_ICMP = "iptables -w 0.05 -C INPUT -p ICMP --icmp-type"
+OPEN_IPTABLES_INPUT_ICMP = "iptables -w 0.05 -D INPUT -p ICMP --icmp-type"
 # iptables OUTPUT icmp  DROP
-DISABLE_IPTABLES_OUTPUT_ICMP = "iptables -I OUTPUT -p ICMP --icmp-type"
-CHECK_IPTABLES_OUTPUT_ICMP = "iptables -C OUTPUT -p ICMP --icmp-type"
-OPEN_IPTABLES_OUTPUT_ICMP = "iptables -D OUTPUT -p ICMP --icmp-type"
+DISABLE_IPTABLES_OUTPUT_ICMP = "iptables -w 0.05 -I OUTPUT -p ICMP --icmp-type"
+CHECK_IPTABLES_OUTPUT_ICMP = "iptables -w 0.05 -C OUTPUT -p ICMP --icmp-type"
+OPEN_IPTABLES_OUTPUT_ICMP = "iptables -w 0.05 -D OUTPUT -p ICMP --icmp-type"
 # iptables INPUT tcp 
-ADD_IPTABLES_INPUT_TCP = "iptables -I INPUT -p tcp"
-CHECK_IPTABLES_INPUT_TCP = "iptables -C INPUT -p tcp"
-DELETE_IPTABLES_INPUT_TCP = "iptables -D INPUT -p tcp"
+ADD_IPTABLES_INPUT_TCP = "iptables -w 0.05 -I INPUT -p tcp"
+CHECK_IPTABLES_INPUT_TCP = "iptables -w 0.05 -C INPUT -p tcp"
+DELETE_IPTABLES_INPUT_TCP = "iptables -w 0.05 -D INPUT -p tcp"
 # iptables OUTPUT tcp 
-ADD_IPTABLES_OUTPUT_TCP = "iptables -I OUTPUT -p tcp"
-CHECK_IPTABLES_OUTPUT_TCP = "iptables -C OUTPUT -p tcp"
-DELETE_IPTABLES_OUTPUT_TCP = "iptables -D OUTPUT -p tcp"
+ADD_IPTABLES_OUTPUT_TCP = "iptables -w 0.05 -I OUTPUT -p tcp"
+CHECK_IPTABLES_OUTPUT_TCP = "iptables -w 0.05 -C OUTPUT -p tcp"
+DELETE_IPTABLES_OUTPUT_TCP = "iptables -w 0.05 -D OUTPUT -p tcp"
 
 # iptables INPUT udp 
-ADD_IPTABLES_INPUT_UDP = "iptables -I INPUT -p udp"
-CHECK_IPTABLES_INPUT_UDP = "iptables -C INPUT -p udp"
-DELETE_IPTABLES_INPUT_UDP = "iptables -D INPUT -p udp"
+ADD_IPTABLES_INPUT_UDP = "iptables -w 0.05 -I INPUT -p udp"
+CHECK_IPTABLES_INPUT_UDP = "iptables -w 0.05 -C INPUT -p udp"
+DELETE_IPTABLES_INPUT_UDP = "iptables -w 0.05 -D INPUT -p udp"
 # iptables OUTPUT udp 
-ADD_IPTABLES_OUTPUT_UDP = "iptables -I OUTPUT -p udp"
-CHECK_IPTABLES_OUTPUT_UDP = "iptables -C OUTPUT -p udp"
-DELETE_IPTABLES_OUTPUT_UDP = "iptables -D OUTPUT -p udp"
+ADD_IPTABLES_OUTPUT_UDP = "iptables -w 0.05 -I OUTPUT -p udp"
+CHECK_IPTABLES_OUTPUT_UDP = "iptables -w 0.05 -C OUTPUT -p udp"
+DELETE_IPTABLES_OUTPUT_UDP = "iptables -w 0.05 -D OUTPUT -p udp"
 
 # 清空链规则； 清空子链规则
 CLEAR_IPTABLES = "iptables -F; iptables -X"
@@ -133,9 +135,9 @@ class Switch(Firewall):
     def get(self):
         retdata = dict()
         # retdata['enabled'] = self.iptables_systemd.is_active()
-        retdata['threat-port'] = len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_TCP + " --dport 21 -j DROP")) == 0
+        retdata['threat-port'] = len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_TCP + " --dport 21 -j DROP")) == 0 or len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_UDP + " --dport 21 -j DROP")) == 0
         # 设置tcp或udp都符合
-        retdata['tcp-udp'] = True
+        retdata['tcp-udp'] = "tcp"
         # 是否清空规则与最大连接数由用户决定，默认为否,都为符合
         retdata['clear-configuration'] = False
         retdata['input-ports-connect-nums'] = 0
@@ -165,13 +167,13 @@ class Switch(Firewall):
             self.del_iptables_history('1:60999')
         else:
             self.del_iptables_history('1:60999')
-            self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j DROP")
-            self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j DROP")
+            self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j REJECT")
+            self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j REJECT")
  
         # Disable FTP, SMTP and other ports that may threaten the system
         if args['threat-port']:
             for port in IPTABLES_LIMITS_PORTS.split(","):
-                if args['tcp-udp']:
+                if args['tcp-udp'] == "tcp":
                     self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
                     self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
                 else:
@@ -179,7 +181,7 @@ class Switch(Firewall):
                     self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
         else:
             for port in IPTABLES_LIMITS_PORTS.split(","):
-                if args['tcp-udp']:
+                if args['tcp-udp'] == "tcp":
                     self.del_iptables(DELETE_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
                     self.del_iptables(DELETE_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
                 else:
@@ -193,10 +195,10 @@ class Switch(Firewall):
         #         else:
         #             self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"-s " + network_segment ,"-j ACCEPT")
         # 禁用网段
-        if len(args['disable-network-segment']) != 0:
-            # self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999")
-            for network_segment in args['disable-network-segment'].split(","):
-                if args['tcp-udp']:
+        if len(args['disable-network-segment-output']) != 0:
+            self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999")
+            for network_segment in args['disable-network-segment-output'].split(","):
+                if args['tcp-udp'] == "tcp":
                     self.set_iptables(ADD_IPTABLES_INPUT_TCP,CHECK_IPTABLES_INPUT_TCP,"-s " + network_segment ,"-j DROP")
                 else:
                     self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP,"-s " + network_segment ,"-j DROP")
@@ -211,8 +213,9 @@ class Switch(Firewall):
         #             self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j ACCEPT")
         # 禁用端口
         if len(args['disable-ports']) != 0:
+            self.del_iptables_history("dpt: |grep DROP |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")))
             for port in args['disable-ports'].split(";"):
-                if args['tcp-udp']:
+                if args['tcp-udp'] == "tcp":
                     self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
                 else:
                     self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
@@ -227,10 +230,10 @@ class Switch(Firewall):
         #         else:
         #             self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"-s " + network_segment ,"-j ACCEPT")
         # 禁用网段 output
-        if len(args['disable-network-segment-output']) != 0:
-            # self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
-            for network_segment in args['disable-network-segment-output'].split(","):
-                if args['tcp-udp']:
+        if len(args['disable-network-segment']) != 0:
+            self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
+            for network_segment in args['disable-network-segment'].split(","):
+                if args['tcp-udp'] == "tcp":
                     self.set_iptables(ADD_IPTABLES_OUTPUT_TCP,CHECK_IPTABLES_OUTPUT_TCP,"-s " + network_segment ,"-j DROP")
                 else:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP,"-s " + network_segment ,"-j DROP")
@@ -245,8 +248,9 @@ class Switch(Firewall):
         #             self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j ACCEPT")
         # 禁用端口 output
         if len(args['disable-ports-output']) != 0:
+            self.del_iptables_history("dpt: |grep DROP |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")), "OUTPUT")
             for port in args['disable-ports-output'].split(";"):
-                if args['tcp-udp']:
+                if args['tcp-udp'] == "tcp":
                     self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
                 else:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
