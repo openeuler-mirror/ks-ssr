@@ -35,13 +35,13 @@ PASSWORD_EXPIRED_ACCOUNTS_KEY = "accounts"
 PASSWORD_EXPIRED_ACCOUNTS_EXPIRATION_KEY = "accounts_expiration"
 
 # 获取当前时间
-CURRENT_TIME_CMD = "date -d \"`date '+%Y-%m-%d %H:%M'`\" +%s"
+CURRENT_TIME_CMD = "date -d \"`date '+%Y-%m-%d'`\" +%s"
 
 class PasswordExpired:
     def __init__(self):
         self.conf = ssr.configuration.KV(PASSWORD_EXPIRED_CONF_PATH)
         self.curtime =  ssr.utils.subprocess_has_output(CURRENT_TIME_CMD)
-        ssr.log.debug(1111)
+        # ssr.log.debug(1111)
 
     def get(self):
         retdata = dict()
@@ -49,7 +49,7 @@ class PasswordExpired:
         retdata[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS] = int(self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS))
         # retdata[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN]  = int(self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_MIN_LEN))
         retdata[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE] = int(self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_WARN_AGE))
-        ssr.log.debug(22222)
+        # ssr.log.debug(22222)
         for pwdent in pwd.getpwall():
             cmd = 'chage -l {0} |grep 帐户过期时间 |grep 从不'.format(pwdent.pw_name)
             if THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
@@ -71,8 +71,8 @@ class PasswordExpired:
         # self.conf.set_value(PASSWORD_EXPIRED_CONF_KEY_MIN_LEN, args[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN])
         self.conf.set_value(PASSWORD_EXPIRED_CONF_KEY_WARN_AGE, args[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE])
         
-        # -1s，表示到前一天的23:59:59过期
-        set_expiration_time = 'date -d @{0} "+%Y-%m-%d"'.format(args[PASSWORD_EXPIRED_ACCOUNTS_KEY] * 86400 + int(self.curtime) - 1)
+        # +86399s，表示到当天的23:59:59过期
+        set_expiration_time = 'date -d @{0} "+%Y-%m-%d"'.format(args[PASSWORD_EXPIRED_ACCOUNTS_KEY] * 86400 + int(self.curtime) + 86399)
         expiration_time = ssr.utils.subprocess_has_output(set_expiration_time)
 
         cmd_sums = ""
@@ -82,7 +82,7 @@ class PasswordExpired:
             else:
                 if args[PASSWORD_EXPIRED_ACCOUNTS_EXPIRATION_KEY] == True:
                     set_acc_expired_cmd = 'chage -E {0} {1}'.format(expiration_time,pwdent.pw_name)
-                    ssr.log.debug(args[PASSWORD_EXPIRED_ACCOUNTS_KEY] * 86400)
+                    # ssr.log.debug(args[PASSWORD_EXPIRED_ACCOUNTS_KEY] * 86400)
                     cmd_sums = cmd_sums + set_acc_expired_cmd + ";"
                     # ssr.utils.subprocess_not_output(set_acc_expired_cmd)
                 else:
