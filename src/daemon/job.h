@@ -111,7 +111,7 @@ private:
 private:
     int64_t job_id_;
     SSRJobState state_;
-    sigc::connection idle_handler_;
+    sigc::connection timeout_handler_;
     // 操作集合
     std::map<int32_t, std::shared_ptr<Operation>> operations_;
     // 任务执行的结果

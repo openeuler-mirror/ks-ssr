@@ -31,9 +31,9 @@ Job::Job(int64_t job_id) : job_id_(job_id),
 
 Job::~Job()
 {
-    if (this->idle_handler_)
+    if (this->timeout_handler_)
     {
-        this->idle_handler_.disconnect();
+        this->timeout_handler_.disconnect();
     }
 }
 
@@ -96,9 +96,9 @@ bool Job::run_async()
 
     this->run_init();
 
-    // 空闲时监听任务完成的情况
-    auto idle = Glib::MainContext::get_default()->signal_idle();
-    this->idle_handler_ = idle.connect(sigc::mem_fun(this, &Job::idle_check_operation));
+    // 定时监听任务完成的情况
+    auto timeout = Glib::MainContext::get_default()->signal_timeout();
+    this->timeout_handler_ = timeout.connect(sigc::mem_fun(this, &Job::idle_check_operation), 100);
 
     auto &thread_pool = Plugins::get_instance()->get_thread_pool();
     {
