@@ -50,7 +50,7 @@ class IcmpRedirect(Sysctl):
         enabled = args['enabled']
 
         for redirect_item in redirect_items:
-            sysctl_config.set_value(redirect_item[0], "1" if enabled else "0")
+            sysctl_config.set_all_value(redirect_item[0], "1" if enabled else "0")
 
         # 从文件中刷新
         self.load_from_system()
@@ -79,7 +79,7 @@ class SourceRoute(Sysctl):
         enabled = args['enabled']
 
         for redirect_item in redirect_items:
-            sysctl_config.set_value(redirect_item[0], "1" if enabled else "0")
+            sysctl_config.set_all_value(redirect_item[0], "1" if enabled else "0")
 
         # 从文件中刷新
         self.load_from_system()
@@ -97,7 +97,7 @@ class SynFlood(Sysctl):
         args = json.loads(args_json)
         sysctl_config = ssr.configuration.KV(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN, ' = ')
         enabled = args['enabled']
-        sysctl_config.set_value("net.ipv4.tcp_syncookies", "1" if enabled else "0")
+        sysctl_config.set_all_value("net.ipv4.tcp_syncookies", "1" if enabled else "0")
 
         # 从文件中刷新
         self.load_from_system()
