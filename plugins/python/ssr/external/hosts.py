@@ -87,5 +87,8 @@ class RemoteLogin(Hosts):
                 self.conf.set_value(SSHD_DENYUSERS_KEY, hosts[1:])
             else:
                 self.conf_deny.del_line()
+
+            if self.conf.get_value(SSHD_ALLOWUSERS_KEY) == 'ssr':
+                self.conf_allow.del_line()
             self.service.reload()
         return (True, '')
