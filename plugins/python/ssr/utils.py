@@ -10,7 +10,7 @@ def subprocess_not_output(args, ignore_exception=False):
 
     exit_code = child_process.wait()
     # 暂时通过添加sleep方式解决cpu占用率过高的问题（#57871）
-    time.sleep(0.05)
+    # time.sleep(0.05)
 
     error = child_process.stderr.read().strip().decode('utf-8')
     if exit_code != 0 and len(error) > 0:
@@ -26,7 +26,7 @@ def subprocess_has_output(args):
 
     exit_code = child_process.wait()
     # 暂时通过添加sleep方式解决cpu占用率过高的问题（#57871）
-    time.sleep(0.05)
+    # time.sleep(0.05)
 
     error = child_process.stderr.read().strip().decode('utf-8')
     if exit_code != 0 and len(error) > 0:
@@ -40,7 +40,7 @@ def subprocess_has_output_ignore_error_handling(args):
 
     exit_code = child_process.wait()
     # 暂时通过添加sleep方式解决cpu占用率过高的问题（#57871）
-    time.sleep(0.05)
+    # time.sleep(0.05)
 
     error = child_process.stderr.read().strip().decode('utf-8')
     if exit_code != 0 and len(error) > 0:

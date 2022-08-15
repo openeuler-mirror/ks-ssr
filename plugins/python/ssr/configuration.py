@@ -94,6 +94,6 @@ class PAM:
         return ssr.utils.subprocess_has_output(command)
 
     # 为了避免设置值时匹配行不存在，这里先设置一个默认行，如果不存在则使用默认行
-    def set_value_with_line(self, key, split_pattern, value, join_string, newline):
-        self.set_line(newline)
-        self.set_value(key, split_pattern, value, join_string)
+    # def set_value_with_line(self, key, split_pattern, value, join_string, newline):
+    #     self.set_line(newline)
+    #     self.set_value(key, split_pattern, value, join_string)
