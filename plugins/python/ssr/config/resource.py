@@ -76,24 +76,24 @@ class ResourceLimits:
         ssr.utils.subprocess_not_output('echo \' \' > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
 
         if args['enabled']:
-            if self.get_selinux_status():
-                ssr.utils.subprocess_not_output("semodule -r ssr-ulimit &> /dev/null")
+            # if self.get_selinux_status():
+            #     ssr.utils.subprocess_not_output("semodule -r ssr-ulimit &> /dev/null")
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, '8192')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, '10240')
-            if not os.path.exists(PAM_CHECK_PATH):
+            if not os.path.exists(PAM_CHECK_PATH) or self.get_selinux_status():
                 ssr.utils.subprocess_not_output("sed -i '/{0}/d' {1}".format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
                 self.conf_stack.set_value(RESOURCE_LIMITS_STACK_CMD, '8192')
                 self.conf_stack.set_value(RESOURCE_LIMITS_RSS_CMD, '10240')
         else:
-            if self.get_selinux_status():
+            if self.get_selinux_status() and len(ssr.utils.subprocess_has_output("semodule -l |grep ssr-ulimit")) == 0:
                 ssr.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_ULIMIT_PATH))
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, 'unlimited')
-            if not os.path.exists(PAM_CHECK_PATH):
+            if not os.path.exists(PAM_CHECK_PATH) or self.get_selinux_status():
                 ssr.utils.subprocess_not_output("sed -i '/{0}/d' {1}".format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
                 self.conf_stack.set_value(RESOURCE_LIMITS_STACK_CMD, 'unlimited')
                 self.conf_stack.set_value(RESOURCE_LIMITS_RSS_CMD, 'unlimited')
