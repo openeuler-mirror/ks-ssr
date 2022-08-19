@@ -213,14 +213,14 @@ class Switch(Firewall):
         #             self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j ACCEPT")
         # 禁用端口
         if len(args['disable-ports']) != 0:
-            self.del_iptables_history("dpt: |grep DROP |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")))
+            self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")))
             for port in args['disable-ports'].split(";"):
                 if args['tcp-udp'] == "tcp":
                     self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j REJECT")
                 else:
                     self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j REJECT")
         else:
-            self.del_iptables_history("dpt: |grep DROP |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")))
+            self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")))
 
        # 允许网段 output
         # if len(args['allow-network-segment-output']) != 0:
@@ -248,14 +248,14 @@ class Switch(Firewall):
         #             self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j ACCEPT")
         # 禁用端口 output
         if len(args['disable-ports-output']) != 0:
-            self.del_iptables_history("dpt: |grep DROP |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")), "OUTPUT")
+            self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")), "OUTPUT")
             for port in args['disable-ports-output'].split(";"):
                 if args['tcp-udp'] == "tcp":
                     self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j REJECT")
                 else:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j REJECT")
         else:
-            self.del_iptables_history("dpt: |grep DROP |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")), "OUTPUT")
+            self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")), "OUTPUT")
 
         if args['clear-configuration']:
             ssr.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
