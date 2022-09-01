@@ -15,6 +15,7 @@ namespace Daemon
 #define SSR_GROUP_NAME "base"
 #define SSR_BASE_KEY_MAX_THREAD_NUM "max_thread_num"
 #define SSR_BASE_KEY_STANDARD_TYPE "standard_type"
+#define SSR_BASE_KEY_STRATEGY_TYPE "strategy_type"
 
 #define MAX_THREAD_NUM_DEFAULT 1
 
@@ -22,6 +23,7 @@ namespace Daemon
 #define CUSTOM_RS_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-rs"
 
 #define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.xml"
+#define CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra-strategy.xml"
 #define RSA_PUBLIC_KEY_FILEPATH SSR_INSTALL_DATADIR "/ssr-public.key"
 
 using namespace Protocol;
@@ -75,6 +77,64 @@ bool Configuration::set_standard_type(SSRStandardType standard_type)
     return true;
 }
 
+SSRStrategyType Configuration::get_strategy_type()
+{
+    auto retval = this->get_integer(SSR_GROUP_NAME,
+                                    SSR_BASE_KEY_STRATEGY_TYPE,
+                                    SSRStrategyType::SSR_STRATEGY_TYPE_SYSTEM);
+
+    if (retval >= SSR_STRATEGY_TYPE_LAST || retval < 0)
+    {
+        KLOG_WARNING("The strategy type is invalid. strategy type: %d.", retval);
+        return SSRStrategyType::SSR_STRATEGY_TYPE_SYSTEM;
+    }
+
+    return SSRStrategyType(retval);
+}
+
+bool Configuration::set_strategy_type(SSRStrategyType strategy_type)
+{
+    RETURN_VAL_IF_FALSE(strategy_type < SSRStrategyType::SSR_STRATEGY_TYPE_LAST, false);
+    RETURN_VAL_IF_TRUE(strategy_type == this->get_strategy_type(), true);
+
+    if (!this->set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_STRATEGY_TYPE, int32_t(strategy_type)))
+    {
+        KLOG_WARNING("Failed to set strategy type.");
+        return false;
+    }
+    // this->reload_strategy();
+    return true;
+}
+
+bool Configuration::check_ra_strategy()
+{
+    KLOG_PROFILE("");
+
+    try
+    {
+         std::make_shared<Protocol::RA>(*ssr_ra(CUSTOM_RA_STRATEGY_FILEPATH, xml_schema::Flags::dont_validate));
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+        return false;
+    }
+
+    return true;
+}
+
+void Configuration::set_ra_checkbox(const std::string &name, const std::string &status)
+{
+    auto ra = this->read_ra_from_file();
+    auto& reinforcements = ra->reinforcement();
+    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
+    {
+        if (name == iter->name())
+            iter->checkbox().set(status);
+    }
+    write_ra_to_file(ra);
+}
+
 bool Configuration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code)
 {
     // 判断自定义加固标准
@@ -111,7 +171,7 @@ bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcemen
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
         CONTINUE_IF_TRUE(iter->name() != rs_reinforcement.name());
-
+        // iter->checkbox().set("unchecked");
         match_reinforcement = true;
         auto& new_args = rs_reinforcement.arg();
         for (auto new_arg_iter = new_args.begin(); new_arg_iter != new_args.end(); ++new_arg_iter)
@@ -139,8 +199,9 @@ bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcemen
             auto& arg = (*iter);
             Protocol::ReinforcementArg used_arg(arg.name(), arg.value());
             used_reinforcement.arg().push_back(used_arg);
+            // used_reinforcement.checkbox().set("unchecked");
         }
-
+//        ra->reinforcement().
         ra->reinforcement().push_back(used_reinforcement);
     }
 
@@ -149,6 +210,7 @@ bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcemen
 
 void Configuration::del_custom_ra(const std::string& name)
 {
+    KLOG_PROFILE("del_custom_ra name = %s", name.c_str());
     auto ra = this->read_ra_from_file();
     bool is_del = false;
 
@@ -220,6 +282,26 @@ void Configuration::load_rs()
         }
     }
 }
+
+// void Configuration::reload_strategy()
+// {
+//     this->rs_ = this->get_fixed_rs();
+//     RETURN_IF_FALSE(this->rs_);
+
+//     auto ra_strategy = this->read_ra_from_file(CUSTOM_RA_STRATEGY_FILEPATH);
+//     // 将固定不变的加固标准部分和用户修改的自定义部分进行整合
+//     auto& custom_reinforcements = ra_strategy->reinforcement();
+//     for (auto custom_iter = custom_reinforcements.begin(); custom_iter != custom_reinforcements.end(); ++custom_iter)
+//     {
+//         auto& fixed_reinforcements = this->rs_->body().reinforcement();
+//         for (auto fixed_iter = fixed_reinforcements.begin(); fixed_iter != fixed_reinforcements.end(); ++fixed_iter)
+//         {
+//             CONTINUE_IF_TRUE(custom_iter->name() != fixed_iter->name());
+//             this->join_reinforcement((*fixed_iter), (*custom_iter));
+//         }
+//     }
+//     this->rs_changed_.emit();
+// }
 
 std::shared_ptr<Protocol::RS> Configuration::get_fixed_rs()
 {
@@ -337,7 +419,7 @@ std::string Configuration::get_datadir_filename(const std::string& group_name, c
 
 bool Configuration::set_integer(const std::string& group_name, const std::string& key, int32_t value)
 {
-    this->configuration_.set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_STANDARD_TYPE, value);
+    this->configuration_.set_integer(group_name, key, value);
     return this->save_to_file();
 }
 
