@@ -75,6 +75,15 @@ protected:
     // 设置自定义加固标准
     virtual void ImportCustomRS(const std::string &encoded_standard);
 
+    // 设置策略类型
+    virtual void SetStrategyType(const uint32_t &strategy_type);
+
+    // 设置自定义加固策略
+    virtual void ImportCustomRA(const std::string &encoded_strategy);
+
+    // 设置复选框状态
+    virtual void SetCheckBox(const std::string &reinforcement_name, const std::string &checkbox_status);
+
     // 获取分类
     virtual std::string GetCategories();
 
