@@ -29,7 +29,7 @@ extern "C"
         SSR_STANDARD_TYPE_SYSTEM = 0,
         // 用户导入的标准（自定义加固标准）
         SSR_STANDARD_TYPE_CUSTOM,
-        SSR_STANDARD_TYPE_LAST,
+        SSR_STANDARD_TYPE_LAST
     };
 
     // 加固策略类型
@@ -39,7 +39,7 @@ extern "C"
         SSR_STRATEGY_TYPE_SYSTEM = 0,
         // 用户导入的策略（自定义加固策略）
         SSR_STRATEGY_TYPE_CUSTOM,
-        SSR_STRATEGY_TYPE_LAST,
+        SSR_STRATEGY_TYPE_LAST
     };
 
     // 加固项状态
@@ -88,7 +88,7 @@ extern "C"
         // 执行完成
         SSR_JOB_STATE_DONE,
         // 执行完成(中途被取消)
-        SSR_JOB_STATE_CANCEL_DONE,
+        SSR_JOB_STATE_CANCEL_DONE
     };
 
 #ifdef __cplusplus
