@@ -74,4 +74,9 @@ reinforcements = (
         'module': 'scan-files',
         'class': 'SuidSgidFiles'
     },
+    {
+        'name': 'config-vulnerability-scanning',
+        'module': 'vulnerability',
+        'class': 'VulnerabilityScan'
+    }
 )
