@@ -91,6 +91,17 @@ extern "C"
         SSR_JOB_STATE_CANCEL_DONE
     };
 
+    // 资源监控
+    enum SSRResourceMonitor
+    {
+        // 关闭
+        SSR_RESOURCE_MONITOR_CLOSE = 0,
+        // 开启
+        SSR_RESOURCE_MONITOR_OPEN,
+        // 其它
+        SSR_RESOURCE_MONITOR_OR
+    };
+
 #ifdef __cplusplus
 }
 #endif

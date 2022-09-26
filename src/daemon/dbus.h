@@ -8,6 +8,7 @@
 #pragma once
 
 #include "src/daemon/job.h"
+#include "src/daemon/resource-monitor.h"
 
 #include "license_manager_dbus_proxy.h"
 #include "license_object_dbus_proxy.h"
@@ -136,15 +137,25 @@ private:
     void on_reinfoce_process_changed_cb(const JobResult &job_result);
     // 授权发生变化
     void on_license_info_changed_cb(bool placeholder);
+    // 资源监控开启/关闭
+    bool on_resource_monitor();
+
+    void homeFreeSpaceRatio(const float space_ratio);
+    void rootFreeSpaceRatio(const float space_ratio);
+    void cpuAverageLoadRatio(const float load_ratio);
+    void vmstatSiSo(const std::vector<std::string> results);
 
 private:
     static DBus *instance_;
 
     ::DBus::Connection dbus_connection_;
 
+    sigc::connection timeout_handler_;
+
     Configuration *configuration_;
     Categories *categories_;
     Plugins *plugins_;
+    ResourceMonitor *resource_monitor_;
 
     // 扫描任务
     std::shared_ptr<Job> scan_job_;

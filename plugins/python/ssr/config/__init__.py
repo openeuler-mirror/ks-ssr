@@ -78,5 +78,10 @@ reinforcements = (
         'name': 'config-vulnerability-scanning',
         'module': 'vulnerability',
         'class': 'VulnerabilityScan'
+    },
+    {
+        'name': 'config-resource-monitor',
+        'module': 'resource',
+        'class': 'ResourceMonitor'
     }
 )
