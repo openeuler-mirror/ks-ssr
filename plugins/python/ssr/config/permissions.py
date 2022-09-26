@@ -54,6 +54,7 @@ class PermissionSetting:
                 mode_permissions_limit = False
                 break
         retdata[PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT] = mode_permissions_limit
+        # retdata[INVALID_FILE_LISTS] = ['ABC.txt']
 
         ssr.log.debug(str(self.mode_filelist))
 
