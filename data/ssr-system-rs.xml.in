@@ -791,6 +791,19 @@
                     <_label>Built in common vulnerability version version number scanning</_label>
                 </layout>
             </arg>
+            <!-- <arg>
+                <name>invalid_rpms</name>
+                <value>"openssh;openssl;"</value>
+                <value_limits>[^\\\/\^]*</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"tcp"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>contents</_label>
+                </layout>
+            </arg> -->
         </reinforcement>
         <reinforcement>
             <name>config-resource-monitor</name>
