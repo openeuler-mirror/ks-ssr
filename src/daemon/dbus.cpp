@@ -641,10 +641,12 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
             if (result_values.isNull())
             {
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNSCAN;
+                reinforcement_result.args("");
             }
             else if (result_values[JOB_ERROR_STR].isString())
             {
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCAN_ERROR;
+                reinforcement_result.args("");
                 reinforcement_result.error(result_values[JOB_ERROR_STR].asString());
             }
             else
