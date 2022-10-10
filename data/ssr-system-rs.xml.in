@@ -797,7 +797,7 @@
                 <value_limits>[^\\\/\^]*</value_limits>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>"tcp"</value_fixed>
+                    <value_fixed>"openssh;openssl;"</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>

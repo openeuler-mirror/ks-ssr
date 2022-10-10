@@ -76,7 +76,7 @@ reinforcements = (
     },
     {
         'name': 'config-vulnerability-scanning',
-        'module': 'vulnerability',
+        'module': 'vulnerability-scan',
         'class': 'VulnerabilityScan'
     },
     {
