@@ -50,6 +50,14 @@ public:
     void del_custom_ra(const std::string& name);
     void del_all_custom_ra();
 
+
+    // 加载历史加固参数文件
+    std::shared_ptr<Protocol::ReinforcementHistory> read_rh_from_file(const std::string path);
+    // 写历史加固参数文件
+    bool write_rh_to_file(std::shared_ptr<Protocol::ReinforcementHistory> rh, const std::string path);
+    // 设置历史加固参数
+    bool set_custom_rh(const Protocol::Reinforcement& rs_reinforcement, const std::string path);
+
     SSRResourceMonitor get_resource_monitor_status();
 
     // 加固标准发生变化
