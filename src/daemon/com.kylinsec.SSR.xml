@@ -131,6 +131,13 @@
             <description>Activate by activation code.</description>
         </method>
 
+        <method name="SetFallback">
+            <arg type="u" name="snapshot_status" direction="in">
+                <summary>The security reinforcement snapshot status.</summary>
+            </arg>
+            <description>Set fallback function.</description>
+        </method>
+
         <property name="version" type="s" access="read">
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
             <description>The SSR version.</description>
@@ -196,6 +203,10 @@
                 <summary>The vmstat so.</summary>
             </arg>
             <description>The vmstat swap page si or so is not 0.</description>
+        </signal>
+
+        <signal name="ProgressFinished">
+            <description>Scan or reinforce finished.</description>
         </signal>
 
     </interface>

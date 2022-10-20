@@ -96,6 +96,9 @@ public:
     // 任务进度变化的信号
     sigc::signal<void, const JobResult &> &signal_process_changed() { return this->process_changed_; };
 
+    // 任务完成信号
+    sigc::signal<void> &signal_process_finished() { return this->process_finished_; };
+
 private:
     Job(int64_t job_id);
 
@@ -124,6 +127,7 @@ private:
     static int64_t job_count_;
 
     sigc::signal<void, const JobResult &> process_changed_;
+    sigc::signal<void> process_finished_;
 };
 
 typedef std::vector<std::shared_ptr<Job>> SSRJobVec;
