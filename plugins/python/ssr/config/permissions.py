@@ -126,10 +126,10 @@ class UmaskLimit:
         profile_value = self.conf_profile.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
         bashrc_vale = self.conf_bashrc.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
 
-        if profile_value == bashrc_vale and profile_value == '027':
-            retdata['enabled'] = 027
-        # else:
-        #     retdata['enabled'] = False
+        if profile_value == bashrc_vale and profile_value == '022':
+            retdata['enabled'] = int(222)
+        else:
+            retdata['enabled'] = int(profile_value)
 
         return (True, json.dumps(retdata))
 

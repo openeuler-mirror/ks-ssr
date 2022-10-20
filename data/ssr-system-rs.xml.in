@@ -719,7 +719,7 @@
                 <rule>
                     <type>RANGE</type>
                     <value_range>
-                        <max_value>077</max_value>
+                        <max_value>027</max_value>
                     </value_range>
                 </rule>
                 <layout>

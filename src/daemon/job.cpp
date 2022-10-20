@@ -80,6 +80,7 @@ bool Job::run_sync()
         if (this->job_result_.finished_operation_num == this->job_result_.sum_operation_num)
         {
             this->state_ = SSRJobState::SSR_JOB_STATE_DONE;
+            this->process_finished_.emit();
         }
         this->process_changed_.emit(this->job_result_);
     }
@@ -190,6 +191,7 @@ bool Job::idle_check_operation()
         if (tmp_result.finished_operation_num == tmp_result.sum_operation_num)
         {
             this->state_ = this->need_cancel_ ? SSRJobState::SSR_JOB_STATE_CANCEL_DONE : SSRJobState::SSR_JOB_STATE_DONE;
+            this->process_finished_.emit();
         }
 
         this->process_changed_.emit(tmp_result);

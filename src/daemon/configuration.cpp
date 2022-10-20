@@ -25,6 +25,7 @@ namespace Daemon
 
 #define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.xml"
 #define CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra-strategy.xml"
+#define RH_SSR_DATDIR SSR_INSTALL_DATADIR "/ReinforcementHistory"
 #define RSA_PUBLIC_KEY_FILEPATH SSR_INSTALL_DATADIR "/ssr-public.key"
 
 using namespace Protocol;
@@ -373,6 +374,88 @@ bool Configuration::write_ra_to_file(std::shared_ptr<Protocol::RA> ra)
     }
     this->reload_rs();
     return true;
+}
+
+std::shared_ptr<Protocol::ReinforcementHistory> Configuration::read_rh_from_file(const std::string path)
+{
+    KLOG_PROFILE("");
+
+    RETURN_VAL_IF_TRUE(!Glib::file_test(path , Glib::FILE_TEST_IS_REGULAR),
+                       std::make_shared<ReinforcementHistory>());
+
+    try
+    {
+        return std::make_shared<Protocol::ReinforcementHistory>(*ssr_rh(path, xml_schema::Flags::dont_validate));
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+    }
+    return std::make_shared<Protocol::ReinforcementHistory>();
+}
+
+bool Configuration::write_rh_to_file(std::shared_ptr<Protocol::ReinforcementHistory> rh, const std::string path)
+{
+    try
+    {
+        std::ofstream ofs(path, std::ios_base::out);
+        ssr_rh(ofs, *rh.get());
+        ofs.close();
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+        return false;
+    }
+//    this->reload_rs();
+    return true;
+}
+
+bool Configuration::set_custom_rh(const Reinforcement &rs_reinforcement, const std::string path)
+{
+    auto rh = this->read_rh_from_file(path);
+
+    bool match_reinforcement = false;
+
+    auto& reinforcements = rh->reinforcement();
+    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
+    {
+        CONTINUE_IF_TRUE(iter->name() != rs_reinforcement.name());
+
+        match_reinforcement = true;
+        auto& new_args = rs_reinforcement.arg();
+        for (auto new_arg_iter = new_args.begin(); new_arg_iter != new_args.end(); ++new_arg_iter)
+        {
+            auto& old_args = iter->arg();
+            for (auto old_arg_iter = old_args.begin(); old_arg_iter != old_args.end(); ++old_arg_iter)
+            {
+                CONTINUE_IF_TRUE(old_arg_iter->name() != new_arg_iter->name());
+                old_arg_iter->value(new_arg_iter->value());
+                break;
+            }
+        }
+        break;
+    }
+
+    // 如果配置中不存在加固项的自定义配置，则添加该加固项的自定义配置
+    if (!match_reinforcement)
+    {
+        Protocol::Reinforcement used_reinforcement(rs_reinforcement.name());
+
+        const auto& args = rs_reinforcement.arg();
+
+        for (auto iter = args.begin(); iter != args.end(); ++iter)
+        {
+            auto& arg = (*iter);
+            Protocol::ReinforcementArg used_arg(arg.name(), arg.value());
+            used_reinforcement.arg().push_back(used_arg);
+            // used_reinforcement.checkbox().set("unchecked");
+        }
+//        ra->reinforcement().
+        rh->reinforcement().push_back(used_reinforcement);
+    }
+
+    return this->write_rh_to_file(rh, path);
 }
 
 void Configuration::join_reinforcement(Reinforcement& to_r, const Reinforcement& from_r)
