@@ -146,6 +146,9 @@ class UmaskLimit:
             if args['enabled'] == 22:
                 self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
                 self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+            if args['enabled'] == 222:
+                self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+                self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
             if args['enabled'] == 77:
                 self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
                 self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
