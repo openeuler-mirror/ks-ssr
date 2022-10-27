@@ -42,6 +42,7 @@ class SuWheel:
 class SudoLimits:
     def __init__(self):
         self.conf = ssr.configuration.PAM(SUDO_LIMIT_PATH, "%wheel\\s+ALL")
+        # 三权用户权限，之后若需要限制可将注释关闭
         # self.conf_sys = ssr.configuration.PAM(SUDO_LIMIT_PATH, "sysadm\\s+ALL")
         # self.conf_sec = ssr.configuration.PAM(SUDO_LIMIT_PATH, "secadm\\s+ALL")
         # self.conf_aud = ssr.configuration.PAM(SUDO_LIMIT_PATH, "audadm\\s+ALL")
