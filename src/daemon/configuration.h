@@ -39,7 +39,7 @@ public:
     // 检测导入ra文件是否正确
     bool check_ra_strategy();
     // 前台复选框勾选调用，checkbox后台默认为false
-    void set_ra_checkbox(const std::string &name, const std::string &status);
+    void set_ra_checkbox(const std::string &name, const bool &status);
     // 获取加固标准
     std::shared_ptr<Protocol::RS> get_rs() { return this->rs_; }
     // 设置自定义加固标准
