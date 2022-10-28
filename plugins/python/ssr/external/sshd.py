@@ -172,13 +172,13 @@ class SessionTimeout(SSHD):
             self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
         else:
             # 如果/etc/profile /etc/bashrc 中有TMOUT的值，则进行修改
-            if self.conf_profile.get_value(PROFILE_TMOUT):
+            if self.conf_profile.get_value(PROFILE_TMOUT) or len(ssr.utils.subprocess_has_output("cat /etc/profile |grep '#{0}'".format(PROFILE_TMOUT))):
                 self.conf_profile.set_all_value(PROFILE_TMOUT,args[PROFILE_CLIENT_TMOUT])
-            if self.conf_profile.get_value(PROFILE_TMOUT_RXPORT):
+            if self.conf_profile.get_value(PROFILE_TMOUT_RXPORT) or len(ssr.utils.subprocess_has_output("cat /etc/profile |grep '#{0}'".format(PROFILE_TMOUT_RXPORT))):
                 self.conf_profile.set_all_value(PROFILE_TMOUT_RXPORT,args[PROFILE_CLIENT_TMOUT])
-            if self.conf_bashrc.get_value(PROFILE_TMOUT):
+            if self.conf_bashrc.get_value(PROFILE_TMOUT) or len(ssr.utils.subprocess_has_output("cat /etc/bashrc |grep '#{0}'".format(PROFILE_TMOUT))):
                 self.conf_bashrc.set_all_value(PROFILE_TMOUT,args[PROFILE_CLIENT_TMOUT])
-            if self.conf_bashrc.get_value(PROFILE_TMOUT_RXPORT):
+            if self.conf_bashrc.get_value(PROFILE_TMOUT_RXPORT) or len(ssr.utils.subprocess_has_output("cat /etc/bashrc |grep '#{0}'".format(PROFILE_TMOUT_RXPORT))):
                 self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,args[PROFILE_CLIENT_TMOUT])
             #self.conf_bashrc.set_all_value(PROFILE_TMOUT,"")
             #self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
