@@ -16,24 +16,21 @@ IPTABLES_LIMITS_PORTS = "21,25,110,137,138,67,68,161,162,139,389,873,445,631"
 
 # iptables INPUT icmp  DROP
 IPTABLES_INPUT_ICMP = "ipv4 filter INPUT 0 -p ICMP --icmp-type"
-CHECK_IPTABLES_INPUT_ICMP = "iptables -w 0.05 -C INPUT -p ICMP --icmp-type"
+
 # iptables OUTPUT icmp  DROP
 IPTABLES_OUTPUT_ICMP = "ipv4 filter OUTPUT 0 -p ICMP --icmp-type"
-CHECK_IPTABLES_OUTPUT_ICMP = "iptables -w 0.05 -C OUTPUT -p ICMP --icmp-type"
 
 # iptables INPUT tcp 
 IPTABLES_INPUT_TCP = "ipv4 filter INPUT 0 -p tcp"
-CHECK_IPTABLES_INPUT_TCP = "iptables -w 0.05 -C INPUT -p tcp"
+
 # iptables OUTPUT tcp 
 IPTABLES_OUTPUT_TCP = "ipv4 filter OUTPUT 0 -p tcp"
-CHECK_IPTABLES_OUTPUT_TCP = "iptables -w 0.05 -C OUTPUT -p tcp"
 
 # iptables INPUT udp 
 IPTABLES_INPUT_UDP = "ipv4 filter INPUT 0 -p udp"
-CHECK_IPTABLES_INPUT_UDP = "iptables -w 0.05 -C INPUT -p udp"
+
 # iptables OUTPUT udp 
 IPTABLES_OUTPUT_UDP = "ipv4 filter INPUT 0 -p udp"
-CHECK_IPTABLES_OUTPUT_UDP = "iptables -w 0.05 -C OUTPUT -p udp"
 
 # 清空链规则； 清空子链规则
 CLEAR_IPTABLES = "iptables -F; iptables -X"
@@ -48,10 +45,6 @@ TRACEROUTE_DETAIL = "time-exceeded -j REJECT"
 # ICMP时间戳请求 time-exceeded
 TIMESTAMP_REQUEST_DETAIL = "timestamp-request -j REJECT"
 TIMESTAMP_REPLY_DETAIL = "timestamp-reply -j REJECT"
-
-# 开放所有端口
-OPEN_IPTABLES_ALL_PORTS = "iptables -P INPUT ACCEPT; iptables -P OUTPUT ACCEPT; iptables -P FORWARD ACCEPT"
-
 
 class Firewall:
     def __init__(self):
@@ -73,7 +66,7 @@ class Switch(Firewall):
     def get(self):
         retdata = dict()
         retdata['enabled'] = self.firewalld_systemd.is_active()
-        retdata['threat-port'] = len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_TCP + " --dport 21 -j REJECT")) == 0 or len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_UDP + " --dport 21 -j REJECT")) == 0
+        retdata['threat-port'] = len(ssr.utils.subprocess_has_output_ignore_error_handling("{0} |grep '{1} --dport 21 -j REJECT'".format(FIREWALL_FIND_RULE_CMD, IPTABLES_INPUT_TCP))) != 0 or len(ssr.utils.subprocess_has_output_ignore_error_handling("{0} |grep '{1} --dport 21 -j REJECT'".format(FIREWALL_FIND_RULE_CMD, IPTABLES_INPUT_UDP))) != 0
         # 设置tcp或udp都符合
         retdata['tcp-udp'] = "tcp"
         # 是否清空规则与最大连接数由用户决定，默认为否,都为符合
@@ -186,13 +179,13 @@ class Switch(Firewall):
 class IcmpTimestamp(Firewall):
     def get(self):
         retdata = dict()
-        iptable_input = ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_ICMP + " " + TIMESTAMP_REQUEST_DETAIL)
-        iptable_output = ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_ICMP + " " + TIMESTAMP_REPLY_DETAIL)
+        iptable_input = ssr.utils.subprocess_has_output_ignore_error_handling("{0} |grep '{1} {2}'".format(FIREWALL_FIND_RULE_CMD, IPTABLES_INPUT_ICMP, TIMESTAMP_REQUEST_DETAIL))
+        iptable_output = ssr.utils.subprocess_has_output_ignore_error_handling("{0} |grep '{1} {2}'".format(FIREWALL_FIND_RULE_CMD, IPTABLES_INPUT_ICMP, TIMESTAMP_REPLY_DETAIL))
         # ssr.log.debug(command_output)
         if len(iptable_output) == 0 and len(iptable_input) == 0:
-            retdata['timestamp_request'] = False
-        else:
             retdata['timestamp_request'] = True
+        else:
+            retdata['timestamp_request'] = False
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
@@ -214,10 +207,10 @@ class IcmpTimestamp(Firewall):
 class Traceroute(Firewall):
     def get(self):
         retdata = dict()
-        iptable_input = ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_ICMP + " " + TRACEROUTE_DETAIL)
-        iptable_output = ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_OUTPUT_ICMP + " " + TRACEROUTE_DETAIL)
+        iptable_input = ssr.utils.subprocess_has_output_ignore_error_handling("{0} |grep '{1} {2}'".format(FIREWALL_FIND_RULE_CMD, IPTABLES_INPUT_ICMP, TRACEROUTE_DETAIL))
+        iptable_output = ssr.utils.subprocess_has_output_ignore_error_handling("{0} |grep '{1} {2}'".format(FIREWALL_FIND_RULE_CMD, IPTABLES_OUTPUT_ICMP, TRACEROUTE_DETAIL))
         # ssr.log.debug(command_output)
-        retdata['enabled'] = len(iptable_output) == 0 and len(iptable_input) == 0
+        retdata['enabled'] = len(iptable_output) != 0 and len(iptable_input) != 0
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
