@@ -789,7 +789,7 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
                 auto& iter_args = rh_reinforcement.arg();
                 for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                 {
-                    if (result_values[JOB_RETURN_VALUE][iter_arg->name()])
+                    if (result_values[JOB_RETURN_VALUE][iter_arg->name()].asString() != "")
                        iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
                     KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]).c_str());
                     KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
@@ -822,7 +822,7 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
                         for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                         {
 
-                            if (result_values[JOB_RETURN_VALUE][iter_arg->name()])
+                            if (result_values[JOB_RETURN_VALUE][iter_arg->name()].asString() != "")
                                iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
 //                            KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]).c_str());
 //                            KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
