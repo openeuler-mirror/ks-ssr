@@ -175,7 +175,6 @@ private:
     Json::Value license_values;
 
     // 首次加固 全盘扫描
-    bool is_frist_scan_ = true; //是否首次扫描
     bool is_frist_reinfoce_ = true; //是否首次加固
     bool is_frist_reinfoce_finish_ = false; //首次加固是否完成
 
