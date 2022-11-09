@@ -340,15 +340,15 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
         THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID);
     }
 
-    this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &DBus::on_scan_process_changed_cb));
     this->scan_job_->signal_process_finished().connect(sigc::mem_fun(this, &DBus::scan_progress_finished));
+    this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &DBus::on_scan_process_changed_cb));
 
     if (!this->scan_job_->run_async())
     {
         THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED);
     }
 
-    is_frist_scan_ = false;
+//    is_frist_scan_ = false;
     return this->scan_job_->get_id();
 }
 
@@ -371,7 +371,6 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
 int64_t DBus::Reinforce(const std::vector<std::string>& names)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
-    is_scan_flag_ = false;
     // 未授权不允许加固
     if (this->license_values.isNull() ||
         this->license_values[LICENSE_JK_ACTIVATION_STATUS].isNull() ||
@@ -380,6 +379,7 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
         THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SOFTWARE_UNACTIVATED);
     }
 
+    is_scan_flag_ = false;
     // 已经在加固则返回错误
     if (this->reinforce_job_ && this->reinforce_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
     {
@@ -396,7 +396,6 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
         if (is_frist_reinfoce_)
         {
             std::vector<std::string> names_rh;
-
             auto rh = this->configuration_->read_rh_from_file(RH_SSR_OPERATE_DATA_FIRST);
             if (rh->reinforcement().empty())
             {
@@ -411,15 +410,15 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
 
                 is_frist_reinfoce_finish_ = true;
                 Scan(names_rh);
-                // 此处需等待扫描进程完成后置为false
-                is_frist_reinfoce_ = false;
             }
-
+            // 此处需等待扫描进程完成后置为false
+            is_frist_reinfoce_ = false;
         }
         else
         {
-            if (snapshot_status_ != SSR_INITIAL_STATUS)
-                Scan(names);
+            KLOG_DEBUG("Reinforce is_scan_flag_ = %d", is_scan_flag_);
+//            if (snapshot_status_ != SSR_INITIAL_STATUS)
+            Scan(names);
         }
 
         for (auto iter = names.begin(); iter != names.end(); ++iter)
@@ -783,13 +782,13 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
             auto reinforcement = this->plugins_->get_reinforcement(operation->reinforcement_name);
 
             // 上一次历史操作存入rh文件
-            if (!is_frist_scan_)
+            if (!is_scan_flag_)
             {
                 auto rh_reinforcement = reinforcement->get_rs();
                 auto& iter_args = rh_reinforcement.arg();
                 for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                 {
-                    if (result_values[JOB_RETURN_VALUE][iter_arg->name()].asString() != "")
+                    if (!result_values[JOB_RETURN_VALUE][iter_arg->name()].asString().empty())
                        iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
                     KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]).c_str());
                     KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
@@ -822,7 +821,7 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
                         for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                         {
 
-                            if (result_values[JOB_RETURN_VALUE][iter_arg->name()].asString() != "")
+                            if (!result_values[JOB_RETURN_VALUE][iter_arg->name()].asString().empty())
                                iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
 //                            KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]).c_str());
 //                            KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
