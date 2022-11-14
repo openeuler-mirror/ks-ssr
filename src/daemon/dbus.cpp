@@ -20,8 +20,8 @@ namespace KS
 {
 namespace Daemon
 {
-// 十分钟
-#define RESOURCEMONITORMS 1000 * 60 * 10
+// 一分钟
+#define RESOURCEMONITORMS 1000 * 60 * 1
 
 #define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
@@ -618,9 +618,10 @@ void DBus::SetFallback(const uint32_t &snapshot_status)
 //    is_reinfoce_flag_ = true;
 }
 
-void DBus::ActivateByActivationCode(const std::string& activation_code)
+std::string DBus::ActivateByActivationCode(const std::string& activation_code)
 {
     KLOG_PROFILE("Activation code: %s.", activation_code.c_str());
+    std::string retval = "";
 
     try
     {
@@ -629,8 +630,11 @@ void DBus::ActivateByActivationCode(const std::string& activation_code)
     catch (const ::DBus::Error& e)
     {
         KLOG_WARNING("%s: %s.", e.name(), e.message());
+        retval = e.message();
         throw e;
     }
+
+    return retval;
 }
 
 void DBus::on_get_property(::DBus::InterfaceAdaptor& interface, const std::string& property, ::DBus::Variant& value)
