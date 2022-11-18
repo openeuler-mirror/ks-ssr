@@ -11,10 +11,6 @@ RESOURCE_LIMITS_CONF_PATH = "/etc/security/limits.d/90-ssr-config.conf"
 SELINUX_MODULES_ULIMIT_PATH = "/usr/share/ks-ssr-manager/ssr-ulimit.pp"
 PAM_CHECK_PATH = "/etc/security/limits.d/20-nproc.conf"
 
-RESOURCE_MONITOR_CONF_PATH = "/usr/share/ks-ssr-manager/ssr.ini"
-RESOURCE_MONITOR_KEY = "resource_monitor"
-
-
 RESOURCE_LIMITS_KEY_STACK_SOFT  = "*                soft    stack"
 RESOURCE_LIMITS_KEY_STACK_HARD  = "*                hard    stack"
 RESOURCE_LIMITS_KEY_RSS_SOFT = "*                soft    rss"
@@ -160,26 +156,4 @@ class HistorySizeLimit:
         limit_open_command = '{0}'.format(cmd)
         ssr.utils.subprocess_not_output(limit_open_command)
 
-        return (True, '')
-
-class ResourceMonitor:
-    def __init__(self):
-        self.conf = ssr.configuration.KV(RESOURCE_MONITOR_CONF_PATH, "=", "=")
-
-    def get(self):
-        retdata = dict()
-        if str(self.conf.get_value(RESOURCE_MONITOR_KEY)) == "0":
-            retdata["enabled"] = True
-        else:
-            retdata["enabled"] = False
-
-        return (True, json.dumps(retdata))
-
-    def set(self, args_json):
-        args = json.loads(args_json)
-
-        if args['enabled']:
-            self.conf.set_value(RESOURCE_MONITOR_KEY,"1")
-        else:
-            self.conf.set_value(RESOURCE_MONITOR_KEY,"0")
         return (True, '')

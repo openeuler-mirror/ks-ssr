@@ -85,9 +85,4 @@
         <_label>Vulnerability scanning</_label>
         <_description>Scanning system CVE vulnerability</_description>
     </reinforcement>
-    <reinforcement>
-        <name>config-resource-monitor</name>
-        <_label>Resource monitor</_label>
-        <_description>Monitoring system resources</_description>
-    </reinforcement>
 </ssr_plugin>
