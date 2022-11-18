@@ -7,7 +7,7 @@
             <arg type="u" name="standard_type" direction="in">
                 <summary>The security reinforcement standard type.</summary>
             </arg>
-            <description>Set the desktop background.</description>
+            <description>Set the standard type.</description>
         </method>
 
         <method name="ImportCustomRS">
@@ -19,9 +19,9 @@
 
         <method name="SetStrategyType">
             <arg type="u" name="strategy_type" direction="in">
-                <summary>The security reinforcement standard type.</summary>
+                <summary>The security reinforcement strategy type.</summary>
             </arg>
-            <description>Set the desktop background.</description>
+            <description>Set the strategy type.</description>
         </method>
 
         <method name="ImportCustomRA">
@@ -39,6 +39,13 @@
                 <summary>Check whether the check box is checked.</summary>
             </arg>
             <description>Set check box selection status.</description>
+        </method>
+
+        <method name="SetResourceMonitorSwitch">
+            <arg type="u" name="resource_monitor" direction="in">
+                <summary>The security reinforcement resource monitor switch.</summary>
+            </arg>
+            <description>Set the resource monitor switch.</description>
         </method>
 
         <method name="GetCategories">
@@ -154,6 +161,11 @@
         <property name="strategy_type" type="u" access="read">
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
             <description>The strategy type.</description>
+        </property>
+
+        <property name="resource_monitor" type="u" access="read">
+            <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+            <description>The resource monitor switch.</description>
         </property>
 
         <signal name="ScanProgress">
