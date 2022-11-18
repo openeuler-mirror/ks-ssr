@@ -85,6 +85,9 @@ protected:
     // 设置复选框状态
     virtual void SetCheckBox(const std::string &reinforcement_name, const bool &checkbox_status);
 
+    // 设置资源监控开关
+    virtual void SetResourceMonitorSwitch(const uint32_t &resource_monitor);
+
     // 获取分类
     virtual std::string GetCategories();
 
@@ -106,7 +109,6 @@ protected:
     // 重置指定的加固项
     virtual void ResetReinforcement(const std::string &name);
 
-//    std::string reinforcement_interface_fun();
     // 扫描指定加固项
     virtual int64_t Scan(const std::vector<std::string> &names);
 

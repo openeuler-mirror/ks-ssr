@@ -805,22 +805,6 @@
                 </layout>
             </arg> -->
         </reinforcement>
-        <reinforcement>
-            <name>config-resource-monitor</name>
-            <arg>
-                <name>enabled</name>
-                <value>true</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Open monitor(Takes effect after the backend service is restarted)</_label>
-                </layout>
-            </arg>
-        </reinforcement>
         <!-- 审计类 -->
         <reinforcement>
             <name>audit-auditd-switch</name>

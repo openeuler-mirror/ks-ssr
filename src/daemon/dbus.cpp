@@ -126,6 +126,33 @@ void DBus::SetCheckBox(const std::string &reinforcement_name, const bool &checkb
     configuration_->set_ra_checkbox(reinforcement_name, checkbox_status);
 }
 
+void DBus::SetResourceMonitorSwitch(const uint32_t &resource_monitor)
+{
+    KLOG_PROFILE("resource monitor: %d.", resource_monitor);
+
+    if (resource_monitor >= SSRResourceMonitor::SSR_RESOURCE_MONITOR_OR)
+    {
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID);
+    }
+
+    RETURN_IF_TRUE(resource_monitor == this->configuration_->get_resource_monitor_status())
+
+    if (this->configuration_->set_resource_monitor_status(SSRResourceMonitor(resource_monitor)))
+    {
+        if (this->timeout_handler_)
+            this->timeout_handler_.disconnect();
+        if (SSRResourceMonitor(resource_monitor) != SSRResourceMonitor::SSR_RESOURCE_MONITOR_CLOSE)
+        {
+            auto timeout = Glib::MainContext::get_default()->signal_timeout();
+            this->timeout_handler_ = timeout.connect(sigc::mem_fun(this, &DBus::on_resource_monitor), RESOURCEMONITORMS);
+        }
+    }
+    else
+    {
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SET_RESOURCE_MONITOR_FAILED);
+    }
+}
+
 std::string DBus::GetCategories()
 {
     KLOG_PROFILE("");
@@ -651,6 +678,11 @@ void DBus::on_get_property(::DBus::InterfaceAdaptor& interface, const std::strin
     {
         value.writer().append_uint32(this->configuration_->get_strategy_type());
     }
+    else if (property == "resource_monitor")
+    {
+        value.writer().append_uint32(this->configuration_->get_resource_monitor_status());
+        KLOG_DEBUG("get resource monitor status");
+    }
     else
     {
         KLOG_WARNING("Unknown property: %s.", property.c_str());
@@ -672,6 +704,11 @@ void DBus::on_set_property(::DBus::InterfaceAdaptor& interface, const std::strin
     {
         uint32_t strategy_type = value;
         this->configuration_->set_strategy_type(SSRStrategyType(strategy_type));
+    }
+    else if (property == "resource_monitor")
+    {
+        uint32_t resource_monitor = value;
+        this->configuration_->set_resource_monitor_status(SSRResourceMonitor(resource_monitor));
     }
     else
     {
@@ -712,8 +749,11 @@ void DBus::init()
     this->resource_monitor_->signal_cpu_average_load_ratio().connect(sigc::mem_fun(this, &DBus::cpuAverageLoadRatio));
     this->resource_monitor_->signal_vmstat_siso().connect(sigc::mem_fun(this, &DBus::vmstatSiSo));
 
-    auto timeout = Glib::MainContext::get_default()->signal_timeout();
-    this->timeout_handler_ = timeout.connect(sigc::mem_fun(this, &DBus::on_resource_monitor), RESOURCEMONITORMS);
+    if (configuration_->get_resource_monitor_status() == SSRResourceMonitor::SSR_RESOURCE_MONITOR_OPEN)
+    {
+        auto timeout = Glib::MainContext::get_default()->signal_timeout();
+        this->timeout_handler_ = timeout.connect(sigc::mem_fun(this, &DBus::on_resource_monitor), RESOURCEMONITORMS);
+    }
 }
 
 void DBus::update_license_info()
