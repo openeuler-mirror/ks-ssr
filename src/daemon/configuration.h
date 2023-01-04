@@ -36,6 +36,14 @@ public:
     SSRStrategyType get_strategy_type();
     // 设置加固策略类型
     bool set_strategy_type(SSRStrategyType strategy_type);
+    // 获取定时扫描时间
+    int get_time_scan();
+    // 设置定时扫描时间
+    bool set_time_scan(int time_scan);
+    // 获取通知状态
+    SSRNotificationStatus get_notification_status();
+    // 设置通知状态
+    bool set_notification_status(SSRNotificationStatus notification_status);
     // 检测导入ra文件是否正确
     bool check_ra_strategy();
     // 前台复选框勾选调用，checkbox后台默认为false

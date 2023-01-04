@@ -24,6 +24,20 @@
             <description>Set the strategy type.</description>
         </method>
 
+        <method name="SetTimeScan">
+            <arg type="u" name="time_scan" direction="in">
+                <summary>The timing scanning time.</summary>
+            </arg>
+            <description>Method of setting the timing scanning time.</description>
+        </method>
+
+        <method name="SetNotificationStatus">
+            <arg type="u" name="notification_status" direction="in">
+                <summary>The security reinforcement notification status.</summary>
+            </arg>
+            <description>Method of setting foreground notification prompt.</description>
+        </method>
+
         <method name="ImportCustomRA">
             <arg type="s" name="encoded_strategy" direction="in">
                 <summary>The encoded reinforcement strategy.</summary>
@@ -161,6 +175,16 @@
         <property name="strategy_type" type="u" access="read">
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
             <description>The strategy type.</description>
+        </property>
+
+        <property name="time_scan" type="u" access="read">
+            <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+            <description>The time scan.</description>
+        </property>
+
+        <property name="notification_status" type="u" access="read">
+            <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+            <description>The notification status.</description>
         </property>
 
         <property name="resource_monitor" type="u" access="read">

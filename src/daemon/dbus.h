@@ -79,6 +79,12 @@ protected:
     // 设置策略类型
     virtual void SetStrategyType(const uint32_t &strategy_type);
 
+    // 设置定时扫描时间
+    virtual void SetTimeScan(const uint32_t &time_scan);
+
+    // 设置通知状态
+    virtual void SetNotificationStatus(const uint32_t &notification_status);
+
     // 设置自定义加固策略
     virtual void ImportCustomRA(const std::string &encoded_strategy);
 
