@@ -33,6 +33,9 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     case SSRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID:
         error_desc = _("The strategy type is invalid.");
         break;
+    case SSRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID:
+        error_desc = _("The notification status is invalid.");
+        break;
     case SSRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID:
         error_desc = _("The resource monitor is invalid.");
         break;
@@ -65,6 +68,8 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     case SSRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED:
     case SSRErrorCode::ERROR_DAEMON_SET_STANDARD_TYPE_FAILED:
     case SSRErrorCode::ERROR_DAEMON_SET_STRATEGY_TYPE_FAILED:
+    case SSRErrorCode::ERROR_DAEMON_SET_TIME_SCAN_FAILED:
+    case SSRErrorCode::ERROR_DAEMON_SET_NOTIFICATION_STATUS_FAILED:
     case SSRErrorCode::ERROR_PLUGIN_CONFIG_JSON_EXCEPTION:
     case SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID:
     case SSRErrorCode::ERROR_PLUGIN_CONFIG_REINFORCEMENT_NOTFOUND:

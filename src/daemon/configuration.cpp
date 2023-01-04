@@ -17,6 +17,8 @@ namespace Daemon
 #define SSR_BASE_KEY_STANDARD_TYPE "standard_type"
 #define SSR_BASE_KEY_STRATEGY_TYPE "strategy_type"
 #define SSR_BASE_KEY_RESOURCE_MONITOR "resource_monitor"
+#define SSR_BASE_KEY_TIME_SCAN "time_scan"
+#define SSR_BASE_KEY_NOTIFICATION_STATUS "notification_status"
 
 #define MAX_THREAD_NUM_DEFAULT 1
 
@@ -102,6 +104,62 @@ bool Configuration::set_strategy_type(SSRStrategyType strategy_type)
     if (!this->set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_STRATEGY_TYPE, int32_t(strategy_type)))
     {
         KLOG_WARNING("Failed to set strategy type.");
+        return false;
+    }
+    // this->reload_strategy();
+    return true;
+}
+
+int Configuration::get_time_scan()
+{
+    auto retval = this->get_integer(SSR_GROUP_NAME, SSR_BASE_KEY_TIME_SCAN);
+
+    if (retval < 0)
+    {
+        KLOG_WARNING("The strategy type is invalid. time scan: %d.", retval);
+        return 0;
+    }
+
+    return int(retval);
+}
+
+bool Configuration::set_time_scan(int time_scan)
+{
+    // RETURN_VAL_IF_FALSE(time_scan < 99, false);
+    RETURN_VAL_IF_TRUE(time_scan == this->get_notification_status(), true);
+
+    if (!this->set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_TIME_SCAN, int32_t(time_scan)))
+    {
+        KLOG_WARNING("Failed to set time scan.");
+        return false;
+    }
+    // this->reload_strategy();
+    return true;
+}
+
+SSRNotificationStatus Configuration::get_notification_status()
+{
+    auto retval = this->get_integer(SSR_GROUP_NAME,
+                                    SSR_BASE_KEY_NOTIFICATION_STATUS,
+                                    SSRNotificationStatus::SSR_NOTIFICATION_OPEN);
+
+    if (retval >= SSR_NOTIFICATION_OTHER || retval < 0)
+    {
+        KLOG_WARNING("The strategy type is invalid. notification status: %d.", retval);
+        return SSRNotificationStatus::SSR_NOTIFICATION_OPEN;
+    }
+
+    return SSRNotificationStatus(retval);
+}
+
+bool Configuration::set_notification_status(SSRNotificationStatus notification_status)
+{
+    RETURN_VAL_IF_FALSE(notification_status < SSRNotificationStatus::SSR_NOTIFICATION_OTHER, false);
+    RETURN_VAL_IF_TRUE(notification_status == this->get_notification_status(), true);
+
+    if (!this->set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_NOTIFICATION_STATUS, int32_t(notification_status)))
+    {
+        KLOG_WARNING("Failed to set notification status.");
         return false;
     }
     // this->reload_strategy();
