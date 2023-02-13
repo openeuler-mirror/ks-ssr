@@ -1,5 +1,0 @@
-[D-BUS Service]
-Name=com.kylinsec.SSR
-User=root
-Exec=@SSR_INSTALL_BINDIR@/ks-ssr-daemon
-@SYSTEMD_SERVICE@
