@@ -1,7 +1,0 @@
-
-# -*- coding: utf-8 -*-
-import gettext
-
-translation = gettext.translation(
-    "@PROJECT_NAME@", "@CMAKE_INSTALL_FULL_DATADIR@/locale/", languages=["en_US", "zh_CN"])
-_ = translation.gettext
