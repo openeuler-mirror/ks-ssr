@@ -93,3 +93,7 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/ssr-sshd-port.pp
                 ${PROJECT_SOURCE_DIR}/data/ssr-ulimit.pp
         DESTINATION ${SSR_INSTALL_DATADIR}/)
 
+# iptables rules files
+install(FILES ${PROJECT_SOURCE_DIR}/data/ssr-iptables.rules
+        DESTINATION ${SSR_INSTALL_DATADIR}/)
+
