@@ -7,7 +7,7 @@
         <version>1.0.0</version>
     </head>
     <body>
-        <reinforcement>
+        <!-- <reinforcement>
             <name>network-firewalld-switch</name>
             <arg>
                 <name>enabled</name>
@@ -34,7 +34,7 @@
                     <label lang="zh_CN">开放端口 (分号分割)</label>
                 </layout>
             </arg>
-        </reinforcement>
+        </reinforcement> -->
         <reinforcement>
             <name>network-sysctl-icmp-redirect</name>
             <arg>
