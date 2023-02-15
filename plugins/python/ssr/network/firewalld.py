@@ -260,6 +260,12 @@ class IcmpTimestamp(Firewall):
 
     def set(self, args_json):
         args = json.loads(args_json)
+
+        if self.firewalld_systemd.is_active():
+            if self.firewalld_systemd.stop():
+                return (False, 'Unable to stop firewalld service! \t\t')
+            self.firewalld_systemd.disable()
+        
         if args['timestamp_request']:
             self.del_iptables(OPEN_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TIMESTAMP_REQUEST_DETAIL ,"")
             self.del_iptables(OPEN_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TIMESTAMP_REPLY_DETAIL ,"")
@@ -284,6 +290,12 @@ class Traceroute(Firewall):
 
     def set(self, args_json):
         args = json.loads(args_json)
+
+        if self.firewalld_systemd.is_active():
+            if self.firewalld_systemd.stop():
+                return (False, 'Unable to stop firewalld service! \t\t')
+            self.firewalld_systemd.disable()
+
         if args['enabled']:
             self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TRACEROUTE_DETAIL ,"")
             self.set_iptables(DISABLE_IPTABLES_OUTPUT_ICMP ,CHECK_IPTABLES_OUTPUT_ICMP ,TRACEROUTE_DETAIL ,"")
