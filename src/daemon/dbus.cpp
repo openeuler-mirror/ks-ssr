@@ -746,31 +746,32 @@ std::string DBus::ActivateByActivationCode(const std::string& activation_code)
 
 void DBus::on_get_property(::DBus::InterfaceAdaptor& interface, const std::string& property, ::DBus::Variant& value)
 {
+    value.clear();
     if (property == "version")
     {
         value.writer().append_string(PROJECT_VERSION);
     }
     else if (property == "standard_type")
     {
-        value.writer().append_uint32(this->configuration_->get_standard_type());
+        value.writer().append_uint32((uint32_t)this->configuration_->get_standard_type());
     }
     else if (property == "strategy_type")
     {
-        value.writer().append_uint32(this->configuration_->get_strategy_type());
+        value.writer().append_uint32((uint32_t)this->configuration_->get_strategy_type());
     }
     else if (property == "resource_monitor")
     {
-        value.writer().append_uint32(this->configuration_->get_resource_monitor_status());
+        value.writer().append_uint32((uint32_t)this->configuration_->get_resource_monitor_status());
         KLOG_DEBUG("get resource monitor status");
     }
     else if (property == "time_scan")
     {
-        value.writer().append_uint32(this->configuration_->get_time_scan());
+        value.writer().append_uint32((uint32_t)this->configuration_->get_time_scan());
         KLOG_DEBUG("get time scan");
     }
     else if (property == "notification_status")
     {
-        value.writer().append_uint32(this->configuration_->get_notification_status());
+        value.writer().append_uint32((uint32_t)this->configuration_->get_notification_status());
         KLOG_DEBUG("get notification status");
     }
     else
@@ -787,27 +788,27 @@ void DBus::on_set_property(::DBus::InterfaceAdaptor& interface, const std::strin
     }
     else if (property == "standard_type")
     {
-        uint32_t standard_type = value;
+        uint32_t standard_type = (uint32_t)value;
         this->configuration_->set_standard_type(SSRStandardType(standard_type));
     }
     else if (property == "strategy_type")
     {
-        uint32_t strategy_type = value;
+        uint32_t strategy_type = (uint32_t)value;
         this->configuration_->set_strategy_type(SSRStrategyType(strategy_type));
     }
     else if (property == "resource_monitor")
     {
-        uint32_t resource_monitor = value;
+        uint32_t resource_monitor = (uint32_t)value;
         this->configuration_->set_resource_monitor_status(SSRResourceMonitor(resource_monitor));
     }
     else if (property == "time_scan")
     {
-        uint32_t time_scan = value;
+        uint32_t time_scan = (uint32_t)value;
         this->configuration_->set_time_scan(int(time_scan));
     }
     else if (property == "notification_status")
     {
-        uint32_t notification_status = value;
+        uint32_t notification_status = (uint32_t)value;
         this->configuration_->set_notification_status(SSRNotificationStatus(notification_status));
     }
     else
