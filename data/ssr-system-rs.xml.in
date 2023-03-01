@@ -237,6 +237,19 @@
                     <_label>disable output ports (Split with semicolon)</_label>
                 </layout>
             </arg>
+            <arg>
+                <name>disable-ping</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>disable icmp ping</_label>
+                </layout>
+            </arg>
         </reinforcement>
         <reinforcement>
             <name>network-sysctl-high-risk-vulnerability</name>
