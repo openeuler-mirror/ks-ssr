@@ -56,6 +56,9 @@ TRACEROUTE_DETAIL = "time-exceeded -j DROP"
 TIMESTAMP_REQUEST_DETAIL = "timestamp-request -j DROP"
 TIMESTAMP_REPLY_DETAIL = "timestamp-reply -j DROP"
 
+# ICMP echo-request (ping)
+TIMESTAMP_ECHO_REQUEST = "echo-request -j REJECT"
+
 # 开放所有端口
 OPEN_IPTABLES_ALL_PORTS = "iptables -P INPUT ACCEPT; iptables -P OUTPUT ACCEPT; iptables -P FORWARD ACCEPT"
 
@@ -149,6 +152,7 @@ class FirewallManager(Firewall):
         # 是否清空规则与最大连接数由用户决定，默认为否,都为符合
         retdata['clear-configuration'] = False
         retdata['input-ports-connect-nums'] = 0
+        retdata['disable-ping'] = len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_ICMP + " " + TIMESTAMP_ECHO_REQUEST)) == 0
         
         return (True, json.dumps(retdata))
 
@@ -234,11 +238,17 @@ class FirewallManager(Firewall):
         else:
             self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format("dpt:" + IPTABLES_LIMITS_PORTS.replace(",","|dpt:")), "OUTPUT")
 
+
+        if args['disable-ping']:
+            self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TIMESTAMP_ECHO_REQUEST ,"")
+        else:
+            self.del_iptables(OPEN_IPTABLES_INPUT_ICMP, CHECK_IPTABLES_INPUT_ICMP, TIMESTAMP_ECHO_REQUEST, "")
+
         if args['clear-configuration']:
             ssr.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
             ssr.utils.subprocess_not_output(CLEAR_IPTABLES)
             ssr.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
-
+        
         # 保存iptables配置
         self.save_iptables_rule()
             
