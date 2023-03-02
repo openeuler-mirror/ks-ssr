@@ -260,7 +260,7 @@ class TTYS(UDev):
         output = ssr.utils.subprocess_has_output(setserial_status)
         if  len(output)  == 0:
             retdata[TTYS_ARG_ENABLED]  = True
-            return (False, json.dumps(retdata))
+            return (True, json.dumps(retdata))
 
         retdata[TTYS_ARG_ENABLED] = "enabled" in list_get
 
