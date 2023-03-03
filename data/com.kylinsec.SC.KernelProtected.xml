@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+    <interface name="com.kylinsec.SC.KernelProtected">
+
+        <method name="GetModuleFiles">
+            <arg type="s" name="files" direction="out">
+                <summary>The json string describes the kernel modules files which contain file path and authentication status, etc..</summary>
+            </arg>
+            <description>Get kernel module files information.</description>
+        </method>
+
+        <method name="AddFile">
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Add file to kernel module whitelist.</description>
+        </method>
+
+        <method name="ProhibitUnloading">
+            <arg type="b" name="prohibited" direction="in">
+                <summary>Whether prohibit module unloading.</summary>
+            </arg>
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Prohibit module unloading.</description>
+        </method>
+
+        <method name="RemoveFile">
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Remove file from kernel module whitelist.</description>
+        </method>
+
+    </interface>
+</node>
