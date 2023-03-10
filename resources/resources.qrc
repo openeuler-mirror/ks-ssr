@@ -1,0 +1,11 @@
+<RCC>
+    <!--主题-->
+    <qresource prefix="/">
+        <file>styles/ks-sc-gui.qss</file>
+    </qresource>
+
+    <qresource prefix="/">
+        <file alias="box-little">images/box-little.png</file>
+        <file alias="box-big">images/box-big.png</file>
+    </qresource>
+</RCC>
