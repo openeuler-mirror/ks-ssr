@@ -13,21 +13,91 @@
  */
 
 #include "src/ui/box/box.h"
+#include <QMenu>
+#include <QMouseEvent>
 #include "sc-i.h"
+#include "src/ui/box/modify-password.h"
 #include "src/ui/box_manager_proxy.h"
 
 namespace KS
 {
-Box::Box(const QString &boxUID)
+Box::Box(const QString &boxUID) : m_boxUID(boxUID),
+                                  m_modifyPassword(nullptr),
+                                  m_popupMenu(nullptr)
 {
     this->m_boxManagerProxy = new BoxManagerProxy(SC_DBUS_NAME,
                                                   SC_BOX_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
 
-    // auto box = this->m_boxManagerProxy->GetBoxByUID(boxUID);
+    this->setPixmap(QPixmap(":/box-big"));
+    // this->setIcon(QIcon(":/box-big"));
+    // this->setIconSize(QSize(64, 64));
+    // this->setFlat(true);
+    // this->setCheckable(false);
 
-    this->setIcon(QIcon(":/box-big"));
-    this->setIconSize(QSize(64, 64));
+    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_boxUID).value();
+
+    // this->m_modifyPassword = new ModifyPassword();
+
+    this->m_popupMenu = new QMenu(this);
+    this->m_mountedStatusAction = this->m_popupMenu->addAction(mounted ? tr("Lock") : tr("Unlock"),
+                                                               this,
+                                                               &Box::switchMountedStatus);
+    this->m_popupMenu->addAction(tr("Modify password"), this, &Box::modifyPassword);
+    this->m_popupMenu->addAction(tr("Delete"));
+}
+
+void Box::boxChanged()
+{
+    // 保密箱属性发生变化，需要进行更新
+    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_boxUID).value();
+    this->m_mountedStatusAction->setText(mounted ? tr("Lock") : tr("Unlock"));
+}
+
+void Box::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::RightButton)
+    {
+        this->m_popupMenu->popup(event->globalPos());
+    }
+
+    QLabel::mousePressEvent(event);
+}
+
+void Box::switchMountedStatus()
+{
+    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_boxUID).value();
+
+    if (mounted)
+    {
+        this->m_boxManagerProxy->UnMount(this->m_boxUID).waitForFinished();
+    }
+    else
+    {
+        this->m_boxManagerProxy->Mount(this->m_boxUID).waitForFinished();
+    }
+}
+
+void Box::modifyPassword()
+{
+    if (this->m_modifyPassword)
+    {
+        this->m_modifyPassword->show();
+        return;
+    }
+
+    this->m_modifyPassword = new ModifyPassword();
+    connect(this->m_modifyPassword, SIGNAL(accepted()), this, SLOT(modifyPasswordAccepted()));
+    this->m_modifyPassword->show();
+}
+
+void Box::modifyPasswordAccepted()
+{
+    auto reply = this->m_boxManagerProxy->ModifyBoxPassword(this->m_boxUID,
+                                                            this->m_modifyPassword->getCurrentPassword(),
+                                                            this->m_modifyPassword->getNewPassword());
+
+    reply.waitForFinished();
 }
 }  // namespace KS
