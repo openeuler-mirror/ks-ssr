@@ -38,14 +38,20 @@ BoxManager::BoxManager() : QWidget(nullptr),
 
     initBoxs();
 
+    connect(this->m_boxManagerProxy, SIGNAL(BoxAdded(const QString &)), this, SLOT(boxAdded(const QString &)));
+    connect(this->m_boxManagerProxy, SIGNAL(BoxDeleted(const QString &)), this, SLOT(boxDeleted(const QString &)));
+    connect(this->m_boxManagerProxy, SIGNAL(BoxChanged(const QString &)), this, SLOT(boxChanged(const QString &)));
     connect(this->m_ui->m_newBox, SIGNAL(clicked(bool)), this, SLOT(newBoxClicked(bool)));
 }
 
 void BoxManager::initBoxs()
 {
     // TODO: test
-    auto box = new Box("123");
-    this->m_ui->m_boxs->addBox(box);
+    for (int i = 0; i <= 20; ++i)
+    {
+        auto box = new Box(QString("ID%1").arg(i));
+        this->m_ui->m_boxs->addBox(box);
+    }
 
     QJsonParseError jsonError;
     auto reply = this->m_boxManagerProxy->GetBoxs();
@@ -63,8 +69,71 @@ void BoxManager::initBoxs()
     for (auto iter : jsonRoot)
     {
         auto jsonBox = iter.toObject();
-        auto boxUID = jsonBox.value(SCBM_JK_BOX_UID).toString();
-        auto box = new Box(boxUID);
+        auto box = this->buildBox(jsonBox);
+    }
+}
+
+Box *BoxManager::buildBox(const QJsonObject &jsonBox)
+{
+    auto boxUID = jsonBox.value(SCBM_JK_BOX_UID).toString();
+    auto box = new Box(boxUID);
+    return box;
+}
+
+void BoxManager::addBox(Box *box)
+{
+    this->m_ui->m_boxs->addBox(box);
+    this->m_boxs.insert(box->getBoxUID(), box);
+}
+
+void BoxManager::removeBox(const QString &boxUID)
+{
+    auto box = this->m_boxs.value(boxUID);
+    if (box)
+    {
+        this->m_ui->m_boxs->removeBox(box);
+        this->m_boxs.remove(box->getBoxUID());
+    }
+}
+
+void BoxManager::boxAdded(const QString &boxUID)
+{
+    QJsonParseError jsonError;
+
+    auto reply = this->m_boxManagerProxy->GetBoxByUID(boxUID);
+    reply.waitForFinished();
+
+    // 可能无权限获取
+    if (reply.isError())
+    {
+        KLOG_DEBUG() << "Cannot get box " << boxUID << " info: " << reply.error().message();
+        return;
+    }
+
+    auto jsonStr = reply.value();
+    auto jsonDoc = QJsonDocument::fromJson(jsonStr.toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser box information failed: " << jsonError.errorString();
+        return;
+    }
+
+    auto jsonBox = jsonDoc.object();
+    auto box = this->buildBox(jsonBox);
+    this->addBox(box);
+}
+
+void BoxManager::boxDeleted(const QString &boxUID)
+{
+    this->removeBox(boxUID);
+}
+
+void BoxManager::boxChanged(const QString &boxUID)
+{
+    auto box = this->m_boxs.value(boxUID);
+    if (box)
+    {
+        box->boxChanged();
     }
 }
 

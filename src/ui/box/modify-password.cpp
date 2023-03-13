@@ -12,27 +12,24 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
-#pragma once
-
-#include "src/ui/common/titlebar-window.h"
-
-namespace Ui
-{
-class Window;
-}
+#include "src/ui/box/modify-password.h"
+#include "src/ui/ui_modify-password.h"
 
 namespace KS
 {
-class Navigation;
-
-class Window : public QWidget
+ModifyPassword::ModifyPassword(QWidget *parent) : QWidget(parent),
+                                                  m_ui(new Ui::ModifyPassword())
 {
-    Q_OBJECT
-public:
-    Window();
-    virtual ~Window(){};
+    this->m_ui->setupUi(this);
+}
 
-private:
-    Ui::Window *m_ui;
-};
+QString ModifyPassword::getCurrentPassword()
+{
+    return this->m_ui->m_currentPassword->text();
+}
+
+QString ModifyPassword::getNewPassword()
+{
+    return this->m_ui->m_newPassword->text();
+}
 }  // namespace KS

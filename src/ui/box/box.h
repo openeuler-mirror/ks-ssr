@@ -14,23 +14,27 @@
 
 #pragma once
 
-#include <QPushButton>
+#include <QLabel>
 
+class QMouseEvent;
+class QMenu;
 class BoxManagerProxy;
 
 namespace KS
 {
-struct BoxInfo
-{
-    // uid
-    QString uid;
-    // 名称
-    QString name;
-    // 是否挂载
-    bool mounted;
-};
+// struct BoxInfo
+// {
+//     // uid
+//     QString uid;
+//     // 名称
+//     QString name;
+//     // 是否挂载
+//     bool mounted;
+// };
 
-class Box : public QPushButton
+class ModifyPassword;
+
+class Box : public QLabel
 {
     Q_OBJECT
 
@@ -38,8 +42,27 @@ public:
     Box(const QString &boxUID);
     virtual ~Box(){};
 
+    QString getBoxUID() { return this->m_boxUID; }
+
+public Q_SLOTS:
+    void boxChanged();
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+
 private:
+    void switchMountedStatus();
+    void modifyPassword();
+
+private Q_SLOTS:
+    void modifyPasswordAccepted();
+
+private:
+    QString m_boxUID;
     BoxManagerProxy *m_boxManagerProxy;
+    ModifyPassword *m_modifyPassword;
+    QMenu *m_popupMenu;
+    QAction *m_mountedStatusAction;
 };
 
 }  // namespace KS
