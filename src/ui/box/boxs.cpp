@@ -13,27 +13,27 @@
  */
 
 #include "src/ui/box/boxs.h"
-#include <QGridLayout>
+#include "src/ui/box/flow-layout.h"
 
 namespace KS
 {
-Boxs::Boxs(QWidget *parent) : QWidget(parent),
-                              m_lastBoxRow(0),
-                              m_lastBoxCol(-1)
+Boxs::Boxs(QWidget *parent) : QWidget(parent)
 {
+    this->setLayout(new FlowLayout());
 }
 
 void Boxs::addBox(Box *box)
 {
-    auto layout = qobject_cast<QGridLayout *>(this->layout());
+    auto layout = qobject_cast<FlowLayout *>(this->layout());
+    layout->addWidget(box);
 
-    ++this->m_lastBoxCol;
-    if (this->m_lastBoxCol >= layout->columnCount())
-    {
-        this->m_lastBoxCol = 0;
-        ++this->m_lastBoxRow;
-    }
-    layout->addWidget(box, this->m_lastBoxRow, this->m_lastBoxCol);
+    // ++this->m_lastBoxCol;
+    // if (this->m_lastBoxCol >= layout->columnCount())
+    // {
+    //     this->m_lastBoxCol = 0;
+    //     ++this->m_lastBoxRow;
+    // }
+    // layout->addWidget(box, this->m_lastBoxRow, this->m_lastBoxCol);
 }
 
 void Boxs::removeBox(Box *box)
