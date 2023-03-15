@@ -1,0 +1,50 @@
+KS--TitlebarWindow QFrame#TitlebarFrame{
+    background-color:#222222;
+    border-radius:8px;
+    border: 1px solid #393939;
+}
+
+KS--TitlebarWindow[maximized="true"] QFrame#TitlebarFrame{
+    background-color:#222222;
+    border-radius:0px;
+    border: 1px solid #393939;
+}
+
+KS--TitlebarWindow QWidget#TitlebarWidget{
+    background-color:#2d2d2d;
+    border-top-right-radius:8px;
+    border-top-left-radius:8px;
+    border:none;
+}
+
+KS--TitlebarWindow QWidget#TitleContentWidget{
+    border-radius: 6px;
+    border: none;
+}
+
+
+QLabel#TitlebarTitle{
+    color:white;
+}
+
+QPushButton#TitlebarCloseButton,
+QPushButton#TitlebarMaxButton,
+QPushButton#TitlebarMinButton{
+    background:transparent;
+    width:16px;
+    height:16px;
+    border:none;
+}
+
+QPushButton#TitlebarMinButton{
+    image:url(:/images/titlebar/window-minimum-symbolic);
+}
+
+QPushButton#TitlebarCloseButton{
+    image:url(:/images/titlebar/window-close-symbolic);
+}
+
+QPushButton#TitlebarMaxButton{
+    image:url(:/images/titlebar/window-maximum-symbolic);
+}
+
