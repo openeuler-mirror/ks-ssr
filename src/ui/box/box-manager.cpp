@@ -31,15 +31,10 @@ BoxManager::BoxManager() : QWidget(nullptr),
 {
     this->m_ui->setupUi(this);
 
-    // this->setStyleSheet("background-color: #FF0000");
-
     this->m_boxManagerProxy = new BoxManagerProxy(SC_DBUS_NAME,
                                                   SC_BOX_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
-
-    this->m_ui->m_boxsScroll->setFrameStyle(QFrame::NoFrame);
-    this->m_ui->m_boxsScroll->viewport()->setStyleSheet("background-color:transparent;");
 
     initBoxs();
 
@@ -52,7 +47,7 @@ BoxManager::BoxManager() : QWidget(nullptr),
 void BoxManager::initBoxs()
 {
     // TODO: test
-    for (int i = 0; i <= 50; ++i)
+    for (int i = 0; i <= 20; ++i)
     {
         auto box = new Box(QString("ID%1").arg(i));
         this->m_ui->m_boxs->addBox(box);
@@ -88,7 +83,7 @@ Box *BoxManager::buildBox(const QJsonObject &jsonBox)
 void BoxManager::addBox(Box *box)
 {
     this->m_ui->m_boxs->addBox(box);
-    this->m_boxs.insert(box->getUID(), box);
+    this->m_boxs.insert(box->getBoxUID(), box);
 }
 
 void BoxManager::removeBox(const QString &boxUID)
@@ -97,7 +92,7 @@ void BoxManager::removeBox(const QString &boxUID)
     if (box)
     {
         this->m_ui->m_boxs->removeBox(box);
-        this->m_boxs.remove(box->getUID());
+        this->m_boxs.remove(box->getBoxUID());
     }
 }
 

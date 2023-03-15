@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QApplication::setApplicationName(programName);
     QApplication::setApplicationVersion(PROJECT_VERSION);
-    app.setStyle("Fusion");
 
     QTranslator translator;
 

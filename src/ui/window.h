@@ -25,18 +25,12 @@ namespace KS
 {
 class Navigation;
 
-class Window : public TitlebarWindow
+class Window : public QWidget
 {
     Q_OBJECT
 public:
     Window();
     virtual ~Window(){};
-
-private:
-    // 窗口整体初始化
-    void initWindow();
-    // 分类模块（窗口内容）初始化
-    void initCategories();
 
 private:
     Ui::Window *m_ui;

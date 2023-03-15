@@ -19,7 +19,7 @@
 #include <QObject>
 #include <QPushButton>
 
-#include "global-define.h"
+#include "global_define.h"
 #include "title-bar-layout.h"
 #include "titlebar-window.h"
 
@@ -93,6 +93,7 @@ private:
     // NOTE: 使用DropShadowEffect会将设置的窗口绘制成图片，之后再背景透明的地方添加阴影,再进行渲染
     // 理论上窗口内容m_frame绘制的圆角窗口具有背景，所以不会在m_frame子控件里添加阴影
     QGraphicsDropShadowEffect *m_shadowEffect;
+    bool m_isCompositingManagerRunning;
 };
 
 }  // namespace KS

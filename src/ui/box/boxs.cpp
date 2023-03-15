@@ -19,7 +19,7 @@ namespace KS
 {
 Boxs::Boxs(QWidget *parent) : QWidget(parent)
 {
-    this->setLayout(new FlowLayout(this, 0, 16, 16));
+    this->setLayout(new FlowLayout());
 }
 
 void Boxs::addBox(Box *box)

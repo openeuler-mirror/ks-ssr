@@ -13,7 +13,7 @@
  */
 
 #include "titlebar-window.h"
-#include "global-define.h"
+#include "global_define.h"
 #include "src/ui/common/xlib-helper.h"
 #include "titlebar-window-private.h"
 
@@ -83,6 +83,62 @@ void TitlebarWindow::setButtonHints(TitlebarButtonHintFlags hints)
 void TitlebarWindow::setResizeable(bool resizeable)
 {
     d_func()->m_resizeable = resizeable;
+}
+
+int TitlebarWindow::contentWrapperMarginBottom() const
+{
+    QMargins contentMargins = d_func()->m_windowContentWidgetWrapper->contentsMargins();
+    return contentMargins.bottom();
+}
+
+int TitlebarWindow::contentWrapperMarginRight() const
+{
+    QMargins contentMargins = d_func()->m_windowContentWidgetWrapper->contentsMargins();
+    return contentMargins.right();
+}
+
+int TitlebarWindow::contentWrapperMarginLeft() const
+{
+    QMargins contentMargins = d_func()->m_windowContentWidgetWrapper->contentsMargins();
+    return contentMargins.left();
+}
+
+bool TitlebarWindow::compositingRunning() const
+{
+    return d_func()->m_isCompositingManagerRunning;
+}
+
+void TitlebarWindow::setContentWrapperMarginBottom(int margin)
+{
+    QMargins contentMargins = d_func()->m_windowContentWidgetWrapper->contentsMargins();
+    if (contentMargins.bottom() == margin)
+    {
+        return;
+    }
+    contentMargins.setBottom(margin);
+    d_func()->m_windowContentWidgetWrapper->setContentsMargins(contentMargins);
+}
+
+void TitlebarWindow::setContentWrapperMarginRight(int margin)
+{
+    QMargins contentMargins = d_func()->m_windowContentWidgetWrapper->contentsMargins();
+    if (contentMargins.right() == margin)
+    {
+        return;
+    }
+    contentMargins.setRight(margin);
+    d_func()->m_windowContentWidgetWrapper->setContentsMargins(contentMargins);
+}
+
+void TitlebarWindow::setContentWrapperMarginLeft(int margin)
+{
+    QMargins contentMargins = d_func()->m_windowContentWidgetWrapper->contentsMargins();
+    if (contentMargins.left() == margin)
+    {
+        return;
+    }
+    contentMargins.setLeft(margin);
+    d_func()->m_windowContentWidgetWrapper->setContentsMargins(contentMargins);
 }
 
 QWidget *TitlebarWindow::getWindowContentWidget()
