@@ -1,0 +1,84 @@
+/* common settings */
+
+QPushButton
+{
+    color: #FFFFFF;
+    background-color: #393939;
+    border: none;
+    border-radius: 4px;
+}
+
+QPushButton:checked
+{
+    background-color: #00a2ff;
+}
+
+QLabel
+{
+    color: #FFFFFF;
+}
+
+QScrollBar:vertical {
+    border: none;
+    background: transparent;
+    margin: 0px;
+    width: 4px;
+}
+
+QScrollBar::handle:vertical {
+    border: none;
+    border-radius: 2px;
+    background-color: #595959;
+    min-width: 4px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #696969;
+}
+
+QScrollBar::handle:vertical:pressed  {
+    background-color: #2eb3ff;
+}
+
+QScrollBar::add-line:vertical {
+    border: none;
+    background: none;
+}
+
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}
+
+/* window settings */
+QWidget#m_banner
+{
+    background-image: url(":/images/banner");
+    border-radius: 6px
+}
+
+KS--NavigationItem QPushButton#m_icon
+{
+    padding: 8px;
+    border-radius: 6px;
+}
+
+QWidget#m_contents
+{
+    background-color: #2d2d2d;
+    border-radius: 6px;
+}
+
+
+/* box settings */
+
+QScrollArea#m_boxsArea
+{
+    background: transparent;
+}
+
+QPushButton#m_newBox
+{
+    background-color: #2eb3ff;
+}
