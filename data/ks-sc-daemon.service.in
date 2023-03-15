@@ -1,0 +1,10 @@
+[Unit]
+Description=KylinSec SC Daemon Service
+
+[Service]
+Type=dbus
+BusName=com.kylinsec.SC
+ExecStart=@SC_INSTALL_BINDIR@/ks-sc-daemon
+
+[Install]
+WantedBy=multi-user.target

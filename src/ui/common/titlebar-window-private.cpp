@@ -13,7 +13,7 @@
  */
 
 #include "titlebar-window-private.h"
-#include "src/ui/common/global-define.h"
+#include "src/ui/common/global_define.h"
 #include "src/ui/common/xlib-helper.h"
 #include "title-bar-layout.h"
 
@@ -57,8 +57,11 @@ TitlebarWindowPrivate::TitlebarWindowPrivate(TitlebarWindow *ptr)
       m_windowContentWidget(nullptr),
       m_titlebarIsPressed(false),
       m_resizeable(true),
-      m_shadowEffect(nullptr)
+      m_shadowEffect(nullptr),
+      m_isCompositingManagerRunning(false)
 {
+    m_isCompositingManagerRunning = QX11Info::isCompositingManagerRunning();
+
     m_shadowEffect = new QGraphicsDropShadowEffect(q_ptr);
     m_shadowEffect->setOffset(0, 0);
     q_func()->setGraphicsEffect(m_shadowEffect);
@@ -73,7 +76,6 @@ void TitlebarWindowPrivate::init()
     initOtherWidget();
     /// 内容栏
     auto contentWidget = new QWidget;
-    contentWidget->setObjectName("TitleContentWidget");
     setWindowContentWidget(contentWidget);
     /// 加载样式表
     QFile file(DEFAULT_THEME_PATH);
@@ -196,6 +198,7 @@ void TitlebarWindowPrivate::handlerMouseButtonReleaseEvent(QMouseEvent *ev)
     }
 }
 
+#include <QApplication>
 void TitlebarWindowPrivate::handlerMouseMoveEvent(QMouseEvent *ev)
 {
     ///判断是否点击标题栏区域
@@ -237,7 +240,7 @@ void TitlebarWindowPrivate::initOtherWidget()
 {
     ///主布局
     m_layout = new QVBoxLayout(q_ptr);
-    m_layout->setObjectName("TitlebarMainLayout");
+    m_layout->setObjectName("KiranTitlebarMainLayout");
     m_layout->setMargin(0);
     m_layout->setSpacing(0);
 
@@ -245,7 +248,7 @@ void TitlebarWindowPrivate::initOtherWidget()
     m_frame = new QFrame(q_ptr);
     m_frame->setAttribute(Qt::WA_Hover);
     m_layout->addWidget(m_frame);
-    m_frame->setObjectName("TitlebarFrame");
+    m_frame->setObjectName("KiranTitlebarFrame");
     m_frameLayout = new QVBoxLayout(m_frame);
     m_frameLayout->setMargin(0);
     m_frameLayout->setSpacing(0);
@@ -253,9 +256,9 @@ void TitlebarWindowPrivate::initOtherWidget()
     ///标题栏
     m_titlebarWidget = new QWidget(m_frame);
     m_titlebarWidget->setFocusPolicy(Qt::NoFocus);
-    m_titlebarWidget->setObjectName("TitlebarWidget");
+    m_titlebarWidget->setObjectName("KiranTitlebarWidget");
     m_titlebarWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    m_titlebarWidget->setFixedHeight(40);
+    m_titlebarWidget->setFixedHeight(60);
     m_frameLayout->addWidget(m_titlebarWidget);
     m_titleBarLayout = new TitlebarLayout(m_titlebarWidget);
     m_titleBarLayout->setMargin(0);
@@ -265,7 +268,7 @@ void TitlebarWindowPrivate::initOtherWidget()
     ///标题栏居左部分
     //标题栏图标
     m_titleIcon = new QLabel(m_titlebarWidget);
-    m_titleIcon->setObjectName("TitlebarIcon");
+    m_titleIcon->setObjectName("KiranTitlebarIcon");
     m_titleIcon->setFixedSize(24, 24);
     m_titleBarLayout->setTitleBarIconLabel(m_titleIcon);
     m_titleBarLayout->setTitleBarIconMargin(QMargins(12, 0, 0, 0));
@@ -273,7 +276,7 @@ void TitlebarWindowPrivate::initOtherWidget()
     //标题
     m_title = new QLabel(m_titlebarWidget);
     m_title->setFont(QFontDatabase::systemFont(QFontDatabase::TitleFont));
-    m_title->setObjectName("TitlebarTitle");
+    m_title->setObjectName("KiranTitlebarTitle");
     m_title->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
     m_title->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
     m_title->installEventFilter(this);
@@ -282,17 +285,17 @@ void TitlebarWindowPrivate::initOtherWidget()
     ///标题栏居中部分
     //自定义控件区域
     m_titlebarCenterWidget = new QWidget(m_titlebarWidget);
-    m_titlebarCenterWidget->setObjectName("TitlebarCenterWidget");
+    m_titlebarCenterWidget->setObjectName("KiranTitlebarCenterWidget");
     m_titlebarCenterWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_titleBarLayout->setTitleBarCustomWidget(m_titlebarCenterWidget);
     m_customLayout = new QHBoxLayout(m_titlebarCenterWidget);
     m_customLayout->setMargin(0);
     m_customLayout->setSpacing(0);
-    m_customLayout->setObjectName("TitlebarCustomLayout");
+    m_customLayout->setObjectName("KiranTitlebarCustomLayout");
 
     ///标题栏居右部分
     m_titlebarRirghtWidget = new QWidget(m_titlebarWidget);
-    m_titlebarRirghtWidget->setObjectName("TitlebarRightWidget");
+    m_titlebarRirghtWidget->setObjectName("KiranTitlebarRightWidget");
     m_titlebarRirghtWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
     m_titleBarLayout->setTitleBarRightWidget(m_titlebarRirghtWidget);
     m_titleBarLayout->setTitleBarRightWidgetMargin(QMargins(0, 0, 0, 24));
@@ -305,7 +308,7 @@ void TitlebarWindowPrivate::initOtherWidget()
 
     //最小化
     m_btnMin = new QPushButton(m_titlebarWidget);
-    m_btnMin->setObjectName("TitlebarMinButton");
+    m_btnMin->setObjectName("KiranTitlebarMinButton");
     m_btnMin->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_btnMin->setVisible(false);
     m_btnMin->setFocusPolicy(Qt::NoFocus);
@@ -316,7 +319,7 @@ void TitlebarWindowPrivate::initOtherWidget()
 
     //最大化
     m_btnMax = new QPushButton(m_titlebarWidget);
-    m_btnMax->setObjectName("TitlebarMaxButton");
+    m_btnMax->setObjectName("KiranTitlebarMaxButton");
     m_btnMax->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_btnMax->setVisible(false);
     m_btnMax->setFocusPolicy(Qt::NoFocus);
@@ -334,7 +337,7 @@ void TitlebarWindowPrivate::initOtherWidget()
 
     //关闭
     m_btnClose = new QPushButton(m_titlebarWidget);
-    m_btnClose->setObjectName("TitlebarCloseButton");
+    m_btnClose->setObjectName("KiranTitlebarCloseButton");
     m_btnClose->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_btnClose->setVisible(false);
     m_btnClose->setFocusPolicy(Qt::NoFocus);
@@ -347,7 +350,7 @@ void TitlebarWindowPrivate::initOtherWidget()
 
     ///内容窗口包装
     m_windowContentWidgetWrapper = new QWidget(m_frame);
-    m_windowContentWidgetWrapper->setObjectName("TitlebarContentWrapper");
+    m_windowContentWidgetWrapper->setObjectName("KiranTitlebarContentWrapper");
     m_frameLayout->addWidget(m_windowContentWidgetWrapper);
     m_windowContentWidgetWrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QHBoxLayout *windowContentWidgetWrapperLayout = new QHBoxLayout(m_windowContentWidgetWrapper);
@@ -357,12 +360,16 @@ void TitlebarWindowPrivate::initOtherWidget()
 
 void TitlebarWindowPrivate::initShadow()
 {
-    m_shadowEffect->setEnabled(true);
+    bool showShadow = m_isCompositingManagerRunning;
+    if (Q_LIKELY(m_shadowEffect))
+    {
+        m_shadowEffect->setEnabled(showShadow);
+    }
     if (Q_LIKELY(m_layout))
     {
-        m_layout->setMargin(SHADOW_BORDER_WIDTH);
+        m_layout->setMargin(showShadow ? SHADOW_BORDER_WIDTH : 0);
     }
-    int gtkFrameExtent = SHADOW_BORDER_WIDTH;
+    int gtkFrameExtent = showShadow ? SHADOW_BORDER_WIDTH : 0;
     SetShadowWidth(QX11Info::display(),
                    q_ptr->winId(),
                    gtkFrameExtent,
@@ -373,7 +380,7 @@ void TitlebarWindowPrivate::initShadow()
 
 void TitlebarWindowPrivate::updateShadowStyle(bool active)
 {
-    bool showShadow = (!(q_func()->windowState() & Qt::WindowFullScreen));
+    bool showShadow = m_isCompositingManagerRunning && (!(q_func()->windowState() & Qt::WindowFullScreen));
     if (Q_LIKELY(m_shadowEffect && showShadow))
     {
         m_shadowEffect->setColor(active ? activatedColor : inactivatedColor);
