@@ -93,16 +93,15 @@ QString BoxManager::CreateBox(const QString &name, const QString &password)
         // 加密处理
         std::string encryptKey = CryptoHelper::rsa_encrypt(m_rSAPublicKey, key.toStdString());
         std::string encryptPassphrase = CryptoHelper::rsa_encrypt(m_rSAPublicKey, StrUtils::rtrim(passphrase.toStdString()));
-        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, password.toStdString());
+//        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, password.toStdString());
 
         KLOG_DEBUG() << "key = " << key << "passphrase = " << passphrase;
-        KLOG_DEBUG() << "encryptPassword = " << QString::fromStdString(encryptPassword);
 
         // 创建随机uid 暂定为六位字符, 作为唯一标识符
         QString uid = getRandBoxUid();
 
         // 插入数据库
-        BoxDao::getInstance()->addQuery(name, uid, false, QString::fromStdString(encryptPassword), QString::fromStdString(encryptKey),
+        BoxDao::getInstance()->addQuery(name, uid, false, password, QString::fromStdString(encryptKey),
                                         QString::fromStdString(encryptPassphrase), uint(conn.interface()->serviceUid(msg.service()).value()));
 
         // 创建对应文件夹 未挂载box
@@ -137,8 +136,9 @@ void BoxManager::DelBox(const QString &box_uid, const QString &password)
         // 密码认证
         QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
         std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(3).toString().toStdString());
+        std::string decryptInputPassword  = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, password.toStdString());
 
-        if (password.toStdString() != decryptPassword)
+        if (decryptInputPassword != decryptPassword)
         {
             KLOG_DEBUG() << "DelBox password error!";
             return;
@@ -251,15 +251,16 @@ void BoxManager::ModifyBoxPassword(const QString &box_uid, const QString &curren
     {
         QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
         std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(3).toString().toStdString());
+        std::string decryptInputPassword  = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, current_password.toStdString());
 
-        if (current_password.toStdString() != decryptPassword)
+        if (decryptInputPassword != decryptPassword)
         {
             KLOG_DEBUG() << "ModifyBoxPassword password error!";
             return;
         }
 
-        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, new_password.toStdString());
-        BoxDao::getInstance()->ModifyQueryPasswd(box_uid, QString::fromStdString(encryptPassword));
+//        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, new_password.toStdString());
+        BoxDao::getInstance()->ModifyQueryPasswd(box_uid, new_password);
     }
     catch (const std::exception &e)
     {
@@ -276,8 +277,9 @@ bool BoxManager::Mount(const QString &box_uid, const QString &password)
         // 密码认证
         QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
         std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(3).toString().toStdString());
+        std::string decryptInputPassword  = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, password.toStdString());
 
-        if (password.toStdString() != decryptPassword)
+        if (decryptInputPassword != decryptPassword)
         {
             KLOG_DEBUG() << "Mount password error!";
             return false;
@@ -310,7 +312,7 @@ bool BoxManager::Mount(const QString &box_uid, const QString &password)
                                QString::fromStdString(decryptKey), QString::fromStdString(decryptPspr)))
         {
             // 修改数据库中挂载状态
-            BoxDao::getInstance()->ModifyQueryMountStatus(box_uid, true);
+            BoxDao::getInstance()->modifyQueryMountStatus(box_uid, true);
             emit BoxChanged(box_uid);
             return true;
         }
@@ -340,7 +342,7 @@ void BoxManager::UnMount(const QString &box_uid)
 
         m_ecryptFS->encrypt(mountPath);
         // 修改数据库中挂载状态
-        BoxDao::getInstance()->ModifyQueryMountStatus(box_uid, false);
+        BoxDao::getInstance()->modifyQueryMountStatus(box_uid, false);
         emit BoxChanged(box_uid);
     }
     catch (const std::exception &e)
