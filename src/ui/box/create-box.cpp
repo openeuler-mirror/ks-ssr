@@ -1,4 +1,10 @@
 /**
+ * @file          /ks-sc/src/ui/box/create-box.cpp
+ * @brief         
+ * @author        chendingjian <chendingjian@kylinos.com>
+ * @copyright (c) 2023 KylinSec. All rights reserved.
+ */
+/**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
  * kiran-session-manager is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
@@ -22,14 +28,18 @@ CreateBox::CreateBox(QWidget *parent) : QWidget(parent),
 {
     this->m_ui->setupUi(this);
 
-    connect(this->m_ui->m_ok, &QPushButton::clicked, this, [this](bool) {
-        // TODO: 检查数据合法性
-        Q_EMIT this->accepted();
-    });
+    connect(this->m_ui->m_ok, &QPushButton::clicked, this, [this](bool)
+            {
+                // TODO: 检查数据合法性
+                Q_EMIT this->accepted();
+                this->close();
+            });
 
-    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this](bool) {
-        Q_EMIT this->rejected();
-    });
+    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this](bool)
+            {
+                Q_EMIT this->rejected();
+                this->close();
+            });
 }
 
 QString CreateBox::getName()
