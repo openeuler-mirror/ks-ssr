@@ -41,7 +41,6 @@ BoxManager::BoxManager() : QWidget(nullptr),
                                                   this);
 
     this->m_ui->m_boxsScroll->setFrameStyle(QFrame::NoFrame);
-    this->m_ui->m_boxsScroll->viewport()->setStyleSheet("background-color:transparent;");
 
     initBoxs();
 
