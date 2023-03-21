@@ -12,43 +12,16 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
-#pragma once
-
-#include <QPushButton>
-
-class QPushButton;
-class QLabel;
+#include <QWidget>
 
 namespace KS
 {
-class NavigationItem : public QWidget
+class TrustedProtected : public QWidget
 {
     Q_OBJECT
 public:
-    NavigationItem(const QString &iconName, const QString &description);
-    virtual ~NavigationItem(){};
-
-Q_SIGNALS:
-    void clicked(bool checked);
-
-private:
-    QPushButton *m_icon;
-    QLabel *m_description;
+    TrustedProtected();
+    virtual ~TrustedProtected(){};
 };
 
-class Navigation : public QWidget
-{
-    Q_OBJECT
-
-public:
-    Navigation(QWidget *parent = nullptr);
-    virtual ~Navigation(){};
-
-    // 导航栏添加分类项
-    void addItem(NavigationItem *item);
-
-Q_SIGNALS:
-    void currentCategoryChanged(int index);
-};
-
-}  // namespace KS
+}

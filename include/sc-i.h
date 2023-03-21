@@ -30,6 +30,7 @@ extern "C"
 // BM: Box Manager
 #define SCBM_JK_BOX_UID "uid"
 #define SCBM_JK_BOX_NAME "name"
+#define SCBM_JK_BOX_MOUNTED "isMount"
 
 #ifdef __cplusplus
 }
