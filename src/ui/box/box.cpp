@@ -53,6 +53,7 @@ void Box::initBox()
     auto layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     this->m_showingIcon = new QPushButton(this);
+    // 放在qss中会被scrollarea->viewport的样式表覆盖，所以在代码中设定背景
     this->m_showingIcon->setFlat(true);
     this->m_showingIcon->setFixedSize(QSize(102, 102));
     this->m_showingIcon->setIcon(QIcon(":/images/box-big"));
