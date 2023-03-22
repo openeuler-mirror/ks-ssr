@@ -1,8 +1,15 @@
 /**
- * @file          /ks-sc/src/daemon/box/box-manager.h
- * @brief         
- * @author        chendingjian <chendingjian@kylinos.com>
- * @copyright (c) 2023 KylinSec. All rights reserved.
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
+ * ks-sc is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2 
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
+ * See the Mulan PSL v2 for more details.  
+ * 
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 #pragma once
 
@@ -33,11 +40,11 @@ public:  // PROPERTIES
 
 public Q_SLOTS:  // METHODS
     QString CreateBox(const QString &name, const QString &password);
-    void DelBox(const QString &password, const QString &box_uid);
+    bool DelBox(const QString &password, const QString &box_uid);
     QString GetBoxByUID(const QString &box_uid);
     QString GetBoxs();
     bool IsMounted(const QString &box_uid);
-    void ModifyBoxPassword(const QString &box_uid, const QString &current_password, const QString &new_password);
+    bool ModifyBoxPassword(const QString &box_uid, const QString &current_password, const QString &new_password);
     bool Mount(const QString &box_uid, const QString &password);
     void UnMount(const QString &box_uid);
 Q_SIGNALS:  // SIGNALS
