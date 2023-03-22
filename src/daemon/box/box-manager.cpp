@@ -11,9 +11,14 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+
 #include "src/daemon/box/box-manager.h"
 #include <pwd.h>
+#include <qt5-log-i.h>
 #include <QDBusConnection>
+#include "config.h"
+#include "include/sc-i.h"
+#include "lib/base/crypto-helper.h"
 #include "lib/base/str-utils.h"
 #include "src/daemon/box/box-dao.h"
 #include "src/daemon/box_manager_adaptor.h"
@@ -31,6 +36,7 @@ namespace KS
 BoxManager::BoxManager(QObject *parent) : QObject(parent)
 {
     this->m_dbusAdaptor = new BoxManagerAdaptor(this);
+    m_boxDao = new BoxDao;
 
     m_ecryptFS = new EcryptFS(this);
     this->init();
@@ -57,13 +63,13 @@ QString getRandStr(uint length)
 }
 
 // 生成6位不重复uid,作为box标识
-QString getRandBoxUid()
+QString BoxManager::getRandBoxUid()
 {
     QString uid = getRandStr(6);
 
-    QSqlQuery query = BoxDao::getInstance()->findQuery(uid);
+    BoxInfo boxInfo = m_boxDao->getBox(uid);
     // 若存在则重新生成uid
-    if ("" != query.value(1).toString())
+    if ("" != boxInfo.boxId)
     {
         KLOG_DEBUG() << "There is same uid. uid = " << uid;
         getRandBoxUid();
@@ -108,8 +114,8 @@ QString BoxManager::CreateBox(const QString &name, const QString &password)
         QString uid = getRandBoxUid();
 
         // 插入数据库
-        BoxDao::getInstance()->addQuery(name, uid, false, password, QString::fromStdString(encryptKey),
-                                        QString::fromStdString(encryptPassphrase), uint(conn.interface()->serviceUid(msg.service()).value()));
+        m_boxDao->addBox(name, uid, false, password, QString::fromStdString(encryptKey),
+                         QString::fromStdString(encryptPassphrase), uint(conn.interface()->serviceUid(msg.service()).value()));
 
         // 创建对应文件夹 未挂载box
         QDir dir(UNMOUNTED_DIR_CREAT_PATH);
@@ -141,8 +147,8 @@ bool BoxManager::DelBox(const QString &box_uid, const QString &password)
     try
     {
         // 密码认证
-        QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
-        std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(3).toString().toStdString());
+        BoxInfo boxInfo = m_boxDao->getBox(box_uid);
+        std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, boxInfo.encryptpassword.toStdString());
         std::string decryptInputPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, password.toStdString());
 
         if (decryptInputPassword != decryptPassword)
@@ -151,26 +157,26 @@ bool BoxManager::DelBox(const QString &box_uid, const QString &password)
             return false;
         }
 
-        if (QVariant(query.value(2).toString()).toBool())
+        if (boxInfo.isMount)
         {
             KLOG_DEBUG() << "Is mounted. uid = " << box_uid;
             return false;
         }
 
         // 删除目录
-        QString dirPath = UNMOUNTED_DIR_CREAT_PATH "/" + query.value(0).toString() + query.value(1).toString();
+        QString dirPath = UNMOUNTED_DIR_CREAT_PATH "/" + boxInfo.boxName + boxInfo.boxId;
         m_ecryptFS->rmBoxDir(dirPath);
 
-        if (0 == query.value(6).toInt())
-            dirPath = "~/box/" + query.value(0).toString();
+        if (0 == boxInfo.senderUserUid)
+            dirPath = "~/box/" + boxInfo.boxName;
         else
         {
-            dirPath = QString("/home/%1/box/%2").arg(getSendUserName(query.value(6).toInt()), query.value(0).toString());
+            dirPath = QString("/home/%1/box/%2").arg(getSendUserName(boxInfo.senderUserUid), boxInfo.boxName);
         }
         m_ecryptFS->rmBoxDir(dirPath);
 
         // 删除数据库
-        BoxDao::getInstance()->delQuery(box_uid);
+        m_boxDao->delBox(box_uid);
 
         emit BoxDeleted(box_uid);
         return true;
@@ -186,12 +192,12 @@ QString BoxManager::GetBoxByUID(const QString &box_uid)
 {
     try
     {
-        QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
+        BoxInfo boxInfo = m_boxDao->getBox(box_uid);
         Json::Value values;
-        values[BOX_NAME_KEY] = query.value(0).toString().toStdString();
-        values[BOX_UID_KEY] = query.value(1).toString().toStdString();
-        values[BOX_ISMOUNT_KEY] = query.value(2).toString().toStdString();
-        values[BOX_PASSWD_KEY] = query.value(3).toString().toStdString();
+        values[BOX_NAME_KEY] = boxInfo.boxName.toStdString();
+        values[BOX_UID_KEY] = boxInfo.boxId.toStdString();
+        values[BOX_ISMOUNT_KEY] = QString::number(boxInfo.isMount).toStdString();
+        values[BOX_PASSWD_KEY] = boxInfo.encryptpassword.toStdString();
         std::string boxInfor = StrUtils::json2str(values);
 
         return QString::fromStdString(boxInfor);
@@ -207,25 +213,27 @@ QString BoxManager::GetBoxs()
 {
     try
     {
-        QSqlQuery query(BoxDao::getInstanceDb());
+        // 获取调用者用户uid
+        QDBusConnection conn = connection();
+        QDBusMessage msg = message();
+
+        QList<BoxInfo> boxInfoList = m_boxDao->getBoxs();
         Json::Value values;
         int i = 0;
-
-        QString cmd = "select * from notes;";
-        if (!query.exec(cmd))
-            KLOG_DEBUG() << "select error!";
-        else
+        for (BoxInfo boxInfo : boxInfoList)
         {
-            while (query.next())
+            // 调用者uid检测，不属于调用者创建的box不返回给前台
+            if (conn.interface()->serviceUid(msg.service()).value() != uint(boxInfo.senderUserUid))
             {
-                // 暂只返回以下四个数据给前台
-                values[i][BOX_NAME_KEY] = query.value(0).toString().toStdString();
-                values[i][BOX_UID_KEY] = query.value(1).toString().toStdString();
-                values[i][BOX_ISMOUNT_KEY] = query.value(2).toString().toStdString();
-                values[i][BOX_PASSWD_KEY] = query.value(3).toString().toStdString();
-
                 i++;
+                continue;
             }
+            // 暂只返回以下四个数据给前台
+            values[i][BOX_NAME_KEY] = boxInfo.boxName.toStdString();
+            values[i][BOX_UID_KEY] = boxInfo.boxId.toStdString();
+            values[i][BOX_ISMOUNT_KEY] = QString::number(boxInfo.isMount).toStdString();
+            values[i][BOX_PASSWD_KEY] = boxInfo.encryptpassword.toStdString();
+            i++;
         }
 
         std::string boxInfors = StrUtils::json2str(values);
@@ -243,9 +251,9 @@ bool BoxManager::IsMounted(const QString &box_uid)
 {
     try
     {
-        QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
+        BoxInfo boxInfo = m_boxDao->getBox(box_uid);
 
-        return QVariant(query.value(2).toString()).toBool();
+        return boxInfo.isMount;
     }
     catch (const std::exception &e)
     {
@@ -258,8 +266,8 @@ bool BoxManager::ModifyBoxPassword(const QString &box_uid, const QString &curren
 {
     try
     {
-        QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
-        std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(3).toString().toStdString());
+        BoxInfo boxInfo = m_boxDao->getBox(box_uid);
+        std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, boxInfo.encryptpassword.toStdString());
         std::string decryptInputPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, current_password.toStdString());
 
         KLOG_DEBUG() << "decryptPassword = " << QString::fromStdString(decryptPassword) << "decryptInputPassword = " << QString::fromStdString(decryptInputPassword);
@@ -270,7 +278,7 @@ bool BoxManager::ModifyBoxPassword(const QString &box_uid, const QString &curren
         }
 
         //        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, new_password.toStdString());
-        BoxDao::getInstance()->ModifyQueryPasswd(box_uid, new_password);
+        m_boxDao->modifyPasswd(box_uid, new_password);
         return true;
     }
     catch (const std::exception &e)
@@ -286,8 +294,8 @@ bool BoxManager::Mount(const QString &box_uid, const QString &password)
     try
     {
         // 密码认证
-        QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
-        std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(3).toString().toStdString());
+        BoxInfo boxInfo = m_boxDao->getBox(box_uid);
+        std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, boxInfo.encryptpassword.toStdString());
         std::string decryptInputPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, password.toStdString());
 
         if (decryptInputPassword != decryptPassword)
@@ -297,33 +305,33 @@ bool BoxManager::Mount(const QString &box_uid, const QString &password)
         }
 
         // 已挂载则返回
-        if (QVariant(query.value(2).toString()).toBool())
+        if (boxInfo.isMount)
         {
             KLOG_DEBUG() << "Is mounted. uid = " << box_uid;
             return true;
         }
 
         //挂载
-        std::string decryptKey = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(4).toString().toStdString());
-        KLOG_DEBUG() << "decryptKeyPspr = " << QString::fromStdString(decryptKey);
-        std::string decryptPspr = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(5).toString().toStdString());  //Pspr
-        KLOG_DEBUG() << "decryptKeyPspr = " << QString::fromStdString(decryptPspr);
+        std::string decryptKey = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, boxInfo.encryptKey.toStdString());
+        KLOG_DEBUG() << "decryptKey = " << QString::fromStdString(decryptKey);
+        std::string decryptPspr = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, boxInfo.encryptPspr.toStdString());  //Pspr
+        KLOG_DEBUG() << "decryptPspr = " << QString::fromStdString(decryptPspr);
 
         QString mountPath;
-        if (0 == query.value(6).toInt())
-            mountPath = "~/box/" + query.value(0).toString();
+        if (0 == boxInfo.senderUserUid)
+            mountPath = "~/box/" + boxInfo.boxName;
         else
         {
-            mountPath = QString("/home/%1/box/%2").arg(getSendUserName(query.value(6).toInt()), query.value(0).toString());
+            mountPath = QString("/home/%1/box/%2").arg(getSendUserName(boxInfo.senderUserUid), boxInfo.boxName);
         }
 
         m_ecryptFS->mkdirBoxDir(mountPath);
 
-        if (m_ecryptFS->dcrypt(UNMOUNTED_DIR_CREAT_PATH "/" + query.value(0).toString() + query.value(1).toString(), mountPath,
+        if (m_ecryptFS->dcrypt(UNMOUNTED_DIR_CREAT_PATH "/" + boxInfo.boxName + boxInfo.boxId, mountPath,
                                QString::fromStdString(decryptKey), QString::fromStdString(decryptPspr)))
         {
             // 修改数据库中挂载状态
-            BoxDao::getInstance()->modifyQueryMountStatus(box_uid, true);
+            m_boxDao->modifyMountStatus(box_uid, true);
             emit BoxChanged(box_uid);
             return true;
         }
@@ -342,18 +350,18 @@ void BoxManager::UnMount(const QString &box_uid)
 {
     try
     {
-        QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
+        BoxInfo boxInfo = m_boxDao->getBox(box_uid);
         QString mountPath;
-        if (0 == query.value(6).toInt())
-            mountPath = "~/box/" + query.value(0).toString();
+        if (0 == boxInfo.senderUserUid)
+            mountPath = "~/box/" + boxInfo.boxName;
         else
         {
-            mountPath = QString("/home/%1/box/%2").arg(getSendUserName(query.value(6).toInt()), query.value(0).toString());
+            mountPath = QString("/home/%1/box/%2").arg(getSendUserName(boxInfo.senderUserUid), boxInfo.boxName);
         }
 
         m_ecryptFS->encrypt(mountPath);
         // 修改数据库中挂载状态
-        BoxDao::getInstance()->modifyQueryMountStatus(box_uid, false);
+        m_boxDao->modifyMountStatus(box_uid, false);
         emit BoxChanged(box_uid);
     }
     catch (const std::exception &e)

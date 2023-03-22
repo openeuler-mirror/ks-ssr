@@ -11,56 +11,58 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+
 #include "box-dao.h"
+#include <qt5-log-i.h>
+#include "config.h"
 
 namespace KS
 {
-BoxDao *BoxDao::m_instance = nullptr;
-
 BoxDao::BoxDao()
 {
+    this->init();
 }
 
 BoxDao::~BoxDao()
 {
 }
 
-void BoxDao::addQuery(const QString boxName, const QString boxId, bool isMount, const QString encryptpassword, const QString encryptKey, const QString encryptPspr, int senderUserUid)
+void BoxDao::addBox(const QString boxName, const QString boxId, bool isMount, const QString encryptpassword, const QString encryptKey, const QString encryptPspr, int senderUserUid)
 {
     QSqlQuery query(m_boxDb);
 
-    QString cmd = QString("insert into notes (boxName,boxId,isMount,encryptpassword,encryptKey,encryptPspr,senderUserUid) values('%1','%2','%3','%4','%5','%6',%7);")
+    QString cmd = QString("insert into boxs (boxName,boxId,isMount,encryptpassword,encryptKey,encryptPspr,senderUserUid) values('%1','%2','%3','%4','%5','%6',%7);")
                       .arg(boxName, boxId, QString::number(isMount), encryptpassword, encryptKey, encryptPspr, QString::number(senderUserUid));
     KLOG_DEBUG() << "addQuery cmd = " << cmd;
     if (!query.exec(cmd))
         KLOG_DEBUG() << "BoxDao insert error!";
 }
 
-void BoxDao::modifyQueryMountStatus(const QString boxId, bool isMount)
+void BoxDao::modifyMountStatus(const QString boxId, bool isMount)
 {
     QSqlQuery query(m_boxDb);
 
-    QString cmd = QString("update notes set isMount ='%1' where boxId='%2';").arg(QString::number(isMount), boxId);
+    QString cmd = QString("update boxs set isMount ='%1' where boxId='%2';").arg(QString::number(isMount), boxId);
     KLOG_DEBUG() << "fixedQueryMountStatus cmd = " << cmd;
     if (!query.exec(cmd))
         KLOG_DEBUG() << "modifyQueryMountStatus error!";
 }
 
-void BoxDao::ModifyQueryPasswd(const QString boxId, const QString encryptpassword)
+void BoxDao::modifyPasswd(const QString boxId, const QString encryptpassword)
 {
     QSqlQuery query(m_boxDb);
 
-    QString cmd = QString("update notes set encryptpassword='%1' where boxId='%2';").arg(encryptpassword, boxId);
+    QString cmd = QString("update boxs set encryptpassword='%1' where boxId='%2';").arg(encryptpassword, boxId);
     KLOG_DEBUG() << "fixedQueryPasswd cmd = " << cmd;
     if (!query.exec(cmd))
         KLOG_DEBUG() << "ModifyQueryPasswd error!";
 }
 
-bool BoxDao::delQuery(const QString boxId)
+bool BoxDao::delBox(const QString boxId)
 {
     QSqlQuery query(m_boxDb);
 
-    QString cmd = QString("delete from notes where boxId='%1';").arg(boxId);
+    QString cmd = QString("delete from boxs where boxId='%1';").arg(boxId);
     KLOG_DEBUG() << "addQuery cmd = " << cmd;
     if (!query.exec(cmd))
     {
@@ -71,29 +73,63 @@ bool BoxDao::delQuery(const QString boxId)
         return true;
 }
 
-QSqlQuery BoxDao::findQuery(const QString boxId)
+BoxInfo BoxDao::getBox(const QString boxId)
 {
     QSqlQuery query(m_boxDb);
-    QString cmd = "select * from notes;";
+    BoxInfo boxInfo;
+    QString cmd = "select * from boxs;";
     if (!query.exec(cmd))
         KLOG_DEBUG() << "select error!";
     else
     {
         while (query.next())
         {
-            KLOG_DEBUG() << "boxName:" << query.value(0).toString();
-            KLOG_DEBUG() << "boxId:" << query.value(1).toString();
             if (query.value(1).toString() == boxId)
-                return query;
+            {
+                boxInfo.boxName = query.value(0).toString();
+                boxInfo.boxId = query.value(1).toString();
+                boxInfo.isMount = query.value(2).toBool();
+                boxInfo.encryptpassword = query.value(3).toString();
+                boxInfo.encryptKey = query.value(4).toString();
+                boxInfo.encryptPspr = query.value(5).toString();
+                boxInfo.senderUserUid = query.value(6).toInt();
+                return boxInfo;
+            }
         }
     }
-    return QSqlQuery();
+    return boxInfo;
 }
 
-int BoxDao::getQueryCount()
+QList<BoxInfo> BoxDao::getBoxs()
 {
     QSqlQuery query(m_boxDb);
-    QString cmd = "select count() from notes;";
+    QList<BoxInfo> boxInfoList;
+
+    QString cmd = "select * from boxs;";
+    if (!query.exec(cmd))
+        KLOG_DEBUG() << "select error!";
+    else
+    {
+        while (query.next())
+        {
+            BoxInfo boxInfo;
+            boxInfo.boxName = query.value(0).toString();
+            boxInfo.boxId = query.value(1).toString();
+            boxInfo.isMount = query.value(2).toBool();
+            boxInfo.encryptpassword = query.value(3).toString();
+            boxInfo.encryptKey = query.value(4).toString();
+            boxInfo.encryptPspr = query.value(5).toString();
+            boxInfo.senderUserUid = query.value(6).toInt();
+            boxInfoList << boxInfo;
+        }
+    }
+    return boxInfoList;
+}
+
+int BoxDao::getBoxCount()
+{
+    QSqlQuery query(m_boxDb);
+    QString cmd = "select count() from boxs;";
     if (!query.exec(cmd))
     {
         KLOG_DEBUG() << "getQuerySum error!";
@@ -111,7 +147,7 @@ int BoxDao::getQueryCount()
 bool sqlTableExist(QSqlQuery query)
 {
     //    QString cmd = QString("select count(*) from sqlite_master where type='table' and name='%1'").arg(tablename);
-    if (!query.exec("select count() from notes;"))
+    if (!query.exec("select count() from boxs;"))
     {
         //        KLOG_DEBUG()<<"sqlTableExist error!";
         KLOG_DEBUG() << "not Exist!";
@@ -131,7 +167,7 @@ bool sqlTableExist(QSqlQuery query)
 void BoxDao::init()
 {
     m_boxDb = QSqlDatabase::addDatabase("QSQLITE");
-    m_boxDb.setDatabaseName(SC_INSTALL_DATADIR "/box-dao.dat");  //设置数据库名称
+    m_boxDb.setDatabaseName(SC_INSTALL_DATADIR "/sc.dat");  //设置数据库名称
     if (!m_boxDb.open())
         KLOG_ERROR() << "BoxDao open error：" << m_boxDb.lastError();
 
@@ -141,9 +177,9 @@ void BoxDao::init()
     //    if (!m_boxDb.isValid())
     if (!sqlTableExist(query))
     {
-        query.exec("drop table notes");
+        query.exec("drop table boxs");
 
-        QString cmd = "create table notes(\
+        QString cmd = "create table boxs(\
                                         boxName varchar(100),\
                                         boxId varchar(50),\
                                         isMount varchar(50),\
