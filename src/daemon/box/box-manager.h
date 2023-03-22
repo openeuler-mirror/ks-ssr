@@ -11,15 +11,15 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+
 #pragma once
 
 #include <QDBusContext>
 #include <QDBusObjectPath>
 #include <QObject>
 #include <QStringList>
-
 #include "ecryptfs.h"
-#include "lib/base/base.h"
+#include "src/daemon/box/box-dao.h"
 
 class BoxManagerAdaptor;
 
@@ -56,9 +56,11 @@ public Q_SLOTS:
 
 private:
     void init();
+    QString getRandBoxUid();
 
 private:
     BoxManagerAdaptor *m_dbusAdaptor;
+    BoxDao *m_boxDao;
 
     EcryptFS *m_ecryptFS;
 
