@@ -40,6 +40,9 @@
             <arg type="s" name="password" direction="in">
                 <summary>The password needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
             </arg>
+            <arg type="b" name="deleted" direction="out">
+                <summary>Whether to deleted.</summary>
+            </arg>
             <description>DelBox a encrypted box.</description>
         </method>
 
@@ -52,6 +55,9 @@
             </arg>
             <arg type="s" name="new_password" direction="in">
                 <summary>The new password which needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
+            </arg>
+            <arg type="b" name="modify" direction="out">
+                <summary>Whether to modify.</summary>
             </arg>
             <description>Modify password for box.</description>
         </method>

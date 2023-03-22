@@ -154,6 +154,9 @@ void BoxManager::newBoxClicked(bool checked)
     this->m_createBox = new CreateBox();
     connect(this->m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
 
+    int x = this->x() + this->width() / 4 + m_createBox->width() / 4;
+    int y = this->y() + this->height() / 4 + m_createBox->height() / 4;
+    m_createBox->move(x, y);
     this->m_createBox->show();
 }
 

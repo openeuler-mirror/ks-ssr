@@ -61,9 +61,11 @@ private:
 
     void switchMountedStatus();
     void modifyPassword();
+    void delBox();
 
     // 解锁时需输入密码
-    QWidget *buildInputPasswdPage();
+    QWidget *buildMountInputPasswdPage();
+    QWidget *buildPasswdNotifyPage(const QString notify);
 
 private Q_SLOTS:
     void modifyPasswordAccepted();

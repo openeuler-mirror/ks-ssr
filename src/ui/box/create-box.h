@@ -35,6 +35,9 @@ public:
     QString getName();
     QString getPassword();
 
+private Q_SLOTS:
+    void onOkClicked();
+
 Q_SIGNALS:
     void accepted();
     void rejected();
