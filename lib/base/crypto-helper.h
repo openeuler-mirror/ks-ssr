@@ -20,6 +20,7 @@
 namespace KS
 {
 #define DEFAULT_DES_KEY "scdaemon"
+#define DEFAULT_AES_KEY "kiranscdaemonaes"
 
 class CryptoHelper
 {
@@ -55,5 +56,9 @@ public:
     // des加密和解密
     static std::string des_encrypt(const std::string &message, const std::string &key = DEFAULT_DES_KEY);
     static std::string des_decrypt(const std::string &message, const std::string &key = DEFAULT_DES_KEY);
+
+    // aes加密和解密
+    static std::string aes_encrypt(const std::string &message, const std::string &key = DEFAULT_AES_KEY);
+    static std::string aes_decrypt(const std::string &message, const std::string &key = DEFAULT_AES_KEY);
 };
 }  // namespace KS

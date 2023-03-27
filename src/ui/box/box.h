@@ -16,6 +16,7 @@
 
 #include <QLineEdit>
 #include <QWidget>
+#include <QProcess>
 
 class QMouseEvent;
 class QMenu;
@@ -48,8 +49,9 @@ public:
     // 获取保险箱UID
     QString getUID() { return this->m_uid; }
 
-public Q_SLOTS:
+public slots:
     void boxChanged();
+    void onIconBtnClick();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -65,7 +67,7 @@ private:
 
     // 解锁时需输入密码
     QWidget *buildMountInputPasswdPage();
-    QWidget *buildPasswdNotifyPage(const QString notify);
+    QWidget *buildNotifyPage(const QString notify);
 
 private slots:
     void modifyPasswordAccepted();
@@ -89,6 +91,7 @@ private:
     QAction *m_mountedStatusAction;
 
     QLineEdit *m_passwdEdit;
+    QProcess *m_process;
 };
 
 }  // namespace KS

@@ -22,7 +22,7 @@ EcryptFS::EcryptFS(QObject *parent) : QObject(parent)
     m_process = new QProcess(parent);
 }
 
-QString EcryptFS::generate_passphrase(const QString key)
+QString EcryptFS::generate_passphrase(const QString &key)
 {
     QString cmd = QString("echo '%1' |").arg(key) + GENERATE_PASSPHRASE_CMD;
     if (m_process->state() != QProcess::Running)
@@ -35,7 +35,7 @@ QString EcryptFS::generate_passphrase(const QString key)
     return m_processOutput;
 }
 
-void EcryptFS::encrypt(const QString umountPath)
+void EcryptFS::encrypt(const QString &umountPath)
 {
     QString cmd = QString("umount %1").arg(umountPath);
     if (m_process->state() != QProcess::Running)
@@ -47,7 +47,7 @@ void EcryptFS::encrypt(const QString umountPath)
     }
 }
 
-bool EcryptFS::dcrypt(const QString mountObjectPath, const QString mountPath, const QString key, const QString passphrase)
+bool EcryptFS::dcrypt(const QString &mountObjectPath, const QString &mountPath, const QString &key, const QString &passphrase)
 {
     //    mkdir(mountPath);
     QString cmd = MOUNT_ECRYPTFS_CMD + QString(" %1 %2  -o passphrase_passwd=%3,ecryptfs_sig=%4,ecryptfs_fnek_sig=%5,key=passphrase,ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough,ecryptfs_enable_filename_crypto=y,no_sig_cache")
@@ -65,7 +65,7 @@ bool EcryptFS::dcrypt(const QString mountObjectPath, const QString mountPath, co
         return false;
 }
 
-void EcryptFS::mkdirBoxDir(const QString path)
+void EcryptFS::mkdirBoxDir(const QString &path)
 {
     QString cmd = QString("mkdir -p %1").arg(path);
     if (m_process->state() != QProcess::Running)
@@ -77,7 +77,7 @@ void EcryptFS::mkdirBoxDir(const QString path)
     }
 }
 
-void EcryptFS::rmBoxDir(const QString path)
+void EcryptFS::rmBoxDir(const QString &path)
 {
     QString cmd = QString("rm -r %1").arg(path);
     if (m_process->state() != QProcess::Running)
