@@ -108,9 +108,6 @@ QString BoxManager::CreateBox(const QString &name, const QString &password)
     std::string decryptPasswd = CryptoHelper::rsa_decrypt(this->m_rSAPrivateKey.toStdString(), password.toStdString());
     std::string encryptPasswd = CryptoHelper::aes_encrypt(decryptPasswd);
 
-    // KLOG_DEBUG() << "key = " << key << "passphrase = " << passphrase;
-    // KLOG_DEBUG() << "encryptKey = " << QString::fromStdString(encryptKey) << "encryptPassphrase = " << QString::fromStdString(encryptPassphrase);
-
     // 创建随机uid 暂定为六位字符, 作为唯一标识符
     QString uid = getRandBoxUid();
 
