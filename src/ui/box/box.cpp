@@ -108,7 +108,6 @@ void Box::initBoxInfo()
     auto jsonBox = jsonDoc.object();
     this->m_name = jsonBox.value(SCBM_JK_BOX_NAME).toString();
     this->m_mounted = QVariant(jsonBox.value(SCBM_JK_BOX_MOUNTED).toString()).toBool();
-    KLOG_DEBUG() << "m_name = " << m_name << "m_mounted = " << m_mounted << "mount value = " << jsonBox.value(SCBM_JK_BOX_MOUNTED).toString();
 }
 
 void Box::initMenu()
@@ -152,9 +151,9 @@ void Box::onIconBtnClick()
         return;
     }
 
-    QString path = QString("~/box/%1/").arg(m_name);
+    QString path = QString("/box/%1/").arg(m_name);
     QString cmd = QString("caja %1").arg(path);
-    KLOG_DEBUG() << "open dir = " << path;
+    KLOG_DEBUG() << "Open dir. path = " << path;
     m_process->start("bash", QStringList() << "-c" << cmd);
 }
 
@@ -221,8 +220,8 @@ void Box::delBox()
     QPushButton *canel = new QPushButton(tr("canel"));
     connect(ok, &QPushButton::clicked, this, [this]
             {
-                std::string encryptPasswd = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey().toStdString(), m_passwdEdit->text().toStdString());
-                auto reply = this->m_boxManagerProxy->DelBox(this->m_uid, QString::fromStdString(encryptPasswd));
+                auto encryptPasswd = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey(), m_passwdEdit->text());
+                auto reply = this->m_boxManagerProxy->DelBox(this->m_uid, encryptPasswd);
                 bool ret = false;
                 reply.waitForFinished();
                 if (reply.isValid())
@@ -274,8 +273,8 @@ QWidget *Box::buildMountInputPasswdPage()
     QPushButton *canel = new QPushButton(tr("canel"));
     connect(ok, &QPushButton::clicked, this, [this]
             {
-                std::string encryptPasswd = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey().toStdString(), m_passwdEdit->text().toStdString());
-                auto reply = this->m_boxManagerProxy->Mount(this->m_uid, QString::fromStdString(encryptPasswd));
+                auto encryptPasswd = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey(), m_passwdEdit->text());
+                auto reply = this->m_boxManagerProxy->Mount(this->m_uid, encryptPasswd);
                 bool ret = false;
                 reply.waitForFinished();
                 if (reply.isValid())
@@ -309,7 +308,7 @@ QWidget *Box::buildMountInputPasswdPage()
     return widget;
 }
 
-QWidget *Box::buildNotifyPage(const QString notify)
+QWidget *Box::buildNotifyPage(const QString &notify)
 {
     QWidget *widget = new QWidget();
     widget->setWindowModality(Qt::ApplicationModal);
@@ -333,12 +332,12 @@ QWidget *Box::buildNotifyPage(const QString notify)
 
 void Box::modifyPasswordAccepted()
 {
-    std::string encryptCurrentPassword = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey().toStdString(), this->m_modifyPassword->getCurrentPassword().toStdString());
-    std::string encryptNewPassword = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey().toStdString(), this->m_modifyPassword->getNewPassword().toStdString());
+    auto encryptCurrentPassword = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey(), this->m_modifyPassword->getCurrentPassword());
+    auto encryptNewPassword = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey(), this->m_modifyPassword->getNewPassword());
 
     auto reply = this->m_boxManagerProxy->ModifyBoxPassword(this->m_uid,
-                                                            QString::fromStdString(encryptCurrentPassword),
-                                                            QString::fromStdString(encryptNewPassword));
+                                                            encryptCurrentPassword,
+                                                            encryptNewPassword);
 
     bool ret = false;
     reply.waitForFinished();

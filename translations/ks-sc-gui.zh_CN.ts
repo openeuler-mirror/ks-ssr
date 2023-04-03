@@ -4,85 +4,85 @@
 <context>
     <name>Box</name>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="101"/>
-        <location filename="../src/ui/box/box.cpp" line="114"/>
+        <location filename="../src/ui/box/box.cpp" line="121"/>
+        <location filename="../src/ui/box/box.cpp" line="133"/>
         <source>Lock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="101"/>
-        <location filename="../src/ui/box/box.cpp" line="114"/>
+        <location filename="../src/ui/box/box.cpp" line="121"/>
+        <location filename="../src/ui/box/box.cpp" line="133"/>
         <source>Unlock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="104"/>
+        <location filename="../src/ui/box/box.cpp" line="124"/>
         <source>Modify password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="105"/>
+        <location filename="../src/ui/box/box.cpp" line="125"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="121"/>
+        <location filename="../src/ui/box/box.cpp" line="150"/>
         <source>Box is locked, please unlocked!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="184"/>
-        <location filename="../src/ui/box/box.cpp" line="237"/>
+        <location filename="../src/ui/box/box.cpp" line="210"/>
+        <location filename="../src/ui/box/box.cpp" line="263"/>
         <source>input password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="190"/>
-        <location filename="../src/ui/box/box.cpp" line="243"/>
+        <location filename="../src/ui/box/box.cpp" line="216"/>
+        <location filename="../src/ui/box/box.cpp" line="269"/>
         <source>Please input password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="194"/>
-        <location filename="../src/ui/box/box.cpp" line="247"/>
-        <location filename="../src/ui/box/box.cpp" line="295"/>
+        <location filename="../src/ui/box/box.cpp" line="220"/>
+        <location filename="../src/ui/box/box.cpp" line="273"/>
+        <location filename="../src/ui/box/box.cpp" line="321"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="195"/>
-        <location filename="../src/ui/box/box.cpp" line="248"/>
+        <location filename="../src/ui/box/box.cpp" line="221"/>
+        <location filename="../src/ui/box/box.cpp" line="274"/>
         <source>canel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="207"/>
+        <location filename="../src/ui/box/box.cpp" line="233"/>
         <source>The Password is wrong or has been mounted!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="260"/>
-        <location filename="../src/ui/box/box.cpp" line="324"/>
+        <location filename="../src/ui/box/box.cpp" line="286"/>
+        <location filename="../src/ui/box/box.cpp" line="350"/>
         <source>Password error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="212"/>
+        <location filename="../src/ui/box/box.cpp" line="238"/>
         <source>Delete success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="265"/>
+        <location filename="../src/ui/box/box.cpp" line="291"/>
         <source>Unlock success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="290"/>
+        <location filename="../src/ui/box/box.cpp" line="316"/>
         <source>notice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="329"/>
+        <location filename="../src/ui/box/box.cpp" line="355"/>
         <source>Modify success!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -91,19 +91,16 @@
     <name>BoxManager</name>
     <message>
         <location filename="../src/ui/box/box-manager.ui" line="14"/>
-        <location filename="../build/src/ui/ui_box-manager.h" line="115"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-manager.ui" line="71"/>
-        <location filename="../build/src/ui/ui_box-manager.h" line="116"/>
         <source>Provides data isolation, hiding and encryption protection functions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-manager.ui" line="129"/>
-        <location filename="../build/src/ui/ui_box-manager.h" line="117"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
@@ -112,37 +109,31 @@
     <name>CreateBox</name>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="14"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="125"/>
         <source>Create security box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="26"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="126"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="40"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="127"/>
         <source>Password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="54"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="128"/>
         <source>Confirm password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="68"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="129"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="75"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="130"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -208,43 +199,36 @@
     <name>ModifyPassword</name>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="14"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="148"/>
         <source>Modify password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="29"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="149"/>
         <source>Security box name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="53"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="150"/>
         <source>Current password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="67"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="151"/>
         <source>New password:       </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="81"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="152"/>
         <source>Confirm password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="111"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="153"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="118"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="154"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -268,7 +252,6 @@
     <name>Window</name>
     <message>
         <location filename="../src/ui/window.ui" line="20"/>
-        <location filename="../build/src/ui/ui_window.h" line="112"/>
         <source>Security center</source>
         <translation type="unfinished"></translation>
     </message>

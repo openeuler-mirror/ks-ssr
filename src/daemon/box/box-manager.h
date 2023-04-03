@@ -19,7 +19,7 @@
 #include <QObject>
 #include <QStringList>
 #include "ecryptfs.h"
-#include "src/daemon/box/box-dao.h"
+#include "src/daemon/box/box.h"
 
 class BoxManagerAdaptor;
 
@@ -34,8 +34,8 @@ public:
     virtual ~BoxManager();
 
 public:  // PROPERTIES
-    Q_PROPERTY(QString RSAPublicKey READ rSAPublicKey)
-    QString rSAPublicKey() const { return m_rSAPublicKey; };
+    Q_PROPERTY(QString RSAPublicKey READ rsaPublicKey)
+    QString rsaPublicKey() const { return m_rsaPublicKey; };
 
 public Q_SLOTS:  // METHODS
     // 创建box
@@ -49,7 +49,9 @@ public Q_SLOTS:  // METHODS
     // 通过box uid获取mount状态
     bool IsMounted(const QString &box_uid);
     // 修改box的密码
-    bool ModifyBoxPassword(const QString &box_uid, const QString &current_password, const QString &new_password);
+    bool ModifyBoxPassword(const QString &box_uid,
+                           const QString &current_password,
+                           const QString &new_password);
     // 挂载box（解锁）
     bool Mount(const QString &box_uid, const QString &password);
     // 取消挂载（加锁）
@@ -66,17 +68,13 @@ public Q_SLOTS:
 
 private:
     void init();
-    QString getRandBoxUid();
-    QString getRandStr(uint length);
-    QString getSendUserName(const uint &userUid);
+    uint getSenderUid();
 
 private:
     BoxManagerAdaptor *m_dbusAdaptor;
-    BoxDao *m_boxDao;
+    QList<Box *> m_boxList;
 
-    EcryptFS *m_ecryptFS;
-
-    QString m_rSAPublicKey;  // property
-    QString m_rSAPrivateKey;
+    QString m_rsaPublicKey;  // property
+    QString m_rsaPrivateKey;
 };
 }  // namespace KS
