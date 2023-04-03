@@ -138,7 +138,6 @@ void BoxManager::boxDeleted(const QString &boxUID)
 
 void BoxManager::boxChanged(const QString &boxUID)
 {
-    KLOG_DEBUG() << "boxUID = " << boxUID;
     auto box = this->m_boxs.value(boxUID);
     box->boxChanged();
 }
@@ -163,9 +162,9 @@ void BoxManager::newBoxClicked(bool checked)
 void BoxManager::createBoxAccepted()
 {
     // rsa加密
-    std::string encryptPassword = CryptoHelper::rsa_encrypt(this->m_boxManagerProxy->rSAPublicKey().toStdString(), this->m_createBox->getPassword().toStdString());
+    auto encryptPassword = CryptoHelper::rsa_encrypt(this->m_boxManagerProxy->rSAPublicKey(), this->m_createBox->getPassword());
     auto reply = this->m_boxManagerProxy->CreateBox(this->m_createBox->getName(),
-                                                    QString::fromStdString(encryptPassword));
+                                                    encryptPassword);
 
     auto boxID = reply.value();
     auto box = new Box(boxID);
