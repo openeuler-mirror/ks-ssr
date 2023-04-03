@@ -33,7 +33,7 @@ public:
 
     QString getCurrentPassword();
     QString getNewPassword();
-    void setBoxName(const QString boxName);
+    void setBoxName(const QString &boxName);
 
 private:
     void init();
