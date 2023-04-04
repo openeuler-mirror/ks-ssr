@@ -30,16 +30,16 @@ public:
     virtual ~CryptoHelper();
 
     // 生成rsa公钥和私钥对
-    static void generate_rsa_key(uint32_t keyLength,
+    static void generateRsaKey(uint32_t keyLength,
                                  QString &privateKey,
                                  QString &publicKey);
 
     // rsa加密和解密
-    static QString rsa_encrypt(const QString &publicKey, const QString &message);
-    static QString rsa_decrypt(const QString &privateKey, const QString &ciphertext);
+    static QString rsaEncrypt(const QString &publicKey, const QString &message);
+    static QString rsaDecrypt(const QString &privateKey, const QString &ciphertext);
 
     // aes加密和解密
-    static QString aes_encrypt(const QString &message, const QString &key = DEFAULT_AES_KEY);
-    static QString aes_decrypt(const QString &message, const QString &key = DEFAULT_AES_KEY);
+    static QString aesEncrypt(const QString &message, const QString &key = DEFAULT_AES_KEY);
+    static QString aesDecrypt(const QString &message, const QString &key = DEFAULT_AES_KEY);
 };
 }  // namespace KS
