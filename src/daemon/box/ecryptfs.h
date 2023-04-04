@@ -31,7 +31,7 @@ public:
     virtual ~EcryptFS(){};
 
     // 添加口令 ，返回ecryptfs_sig
-    QString add_passphrase(const QString &passphrase);
+    QString addPassphrase(const QString &passphrase);
     // 解密 umount
     void encrypt(const QString &umountPath);
     /*
@@ -48,6 +48,9 @@ public:
 
 public Q_SLOTS:
     void onProcessExit(int exitCode, QProcess::ExitStatus exitStatus);
+
+private:
+    void execute(const QString &cmd);
 
 private:
     QProcess *m_process;
