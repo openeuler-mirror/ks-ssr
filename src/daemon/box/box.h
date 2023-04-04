@@ -28,7 +28,7 @@ class Box : public QObject
 public:
     explicit Box(const QString &name,
                  const QString &password,
-                 uint senderUid,
+                 uint userUID,
                  const QString &boxId = "",
                  QObject *parent = nullptr);
 
@@ -47,13 +47,13 @@ private:
 
     QString getRandBoxUid();
     QString getRandStr(uint length);
-    BoxDaoInfo getBoxDaoInfo();
+    BoxRecord getBoxInfo();
 
 private:
     QString m_name;
     QString m_boxId;
     QString m_password;
-    uint m_senderUid;
+    uint m_userUID;
 
     BoxDao *m_boxDao;
 

@@ -53,7 +53,7 @@ CryptoHelper::~CryptoHelper()
 {
 }
 
-void CryptoHelper::generate_rsa_key(uint32_t key_length,
+void CryptoHelper::generateRsaKey(uint32_t key_length,
                                     QString &privateKey,
                                     QString &publicKey)
 {
@@ -72,7 +72,7 @@ void CryptoHelper::generate_rsa_key(uint32_t key_length,
         publicKey = QString::fromStdString(publicKeyStd);
 }
 
-QString CryptoHelper::rsa_encrypt(const QString &publicKey,
+QString CryptoHelper::rsaEncrypt(const QString &publicKey,
                                       const QString &message)
 {
     RETURN_VAL_IF_TRUE(message.isEmpty(), QString());
@@ -102,7 +102,7 @@ QString CryptoHelper::rsa_encrypt(const QString &publicKey,
     }
 }
 
-QString CryptoHelper::rsa_decrypt(const QString &privateKey, const QString &ciphertext)
+QString CryptoHelper::rsaDecrypt(const QString &privateKey, const QString &ciphertext)
 {
     RETURN_VAL_IF_TRUE(ciphertext.isEmpty(), QString());
 
@@ -123,7 +123,7 @@ QString CryptoHelper::rsa_decrypt(const QString &privateKey, const QString &ciph
     }
 }
 
-QString CryptoHelper::aes_encrypt(const QString &message, const QString &key)
+QString CryptoHelper::aesEncrypt(const QString &message, const QString &key)
 {
     try
     {
@@ -142,7 +142,7 @@ QString CryptoHelper::aes_encrypt(const QString &message, const QString &key)
     }
 }
 
-QString CryptoHelper::aes_decrypt(const QString &message, const QString &key)
+QString CryptoHelper::aesDecrypt(const QString &message, const QString &key)
 {
     try
     {

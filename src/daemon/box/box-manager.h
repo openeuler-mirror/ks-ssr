@@ -41,28 +41,28 @@ public Q_SLOTS:  // METHODS
     // 创建box
     QString CreateBox(const QString &name, const QString &password);
     // 删除box
-    bool DelBox(const QString &password, const QString &box_uid);
+    bool DelBox(const QString &password, const QString &boxId);
     // 通过box uid获取box
-    QString GetBoxByUID(const QString &box_uid);
+    QString GetBoxByUID(const QString &boxId);
     // 获取所有box信息
     QString GetBoxs();
     // 通过box uid获取mount状态
-    bool IsMounted(const QString &box_uid);
+    bool IsMounted(const QString &boxId);
     // 修改box的密码
-    bool ModifyBoxPassword(const QString &box_uid,
-                           const QString &current_password,
-                           const QString &new_password);
+    bool ModifyBoxPassword(const QString &boxId,
+                           const QString &currentPassword,
+                           const QString &newPassword);
     // 挂载box（解锁）
-    bool Mount(const QString &box_uid, const QString &password);
+    bool Mount(const QString &boxId, const QString &password);
     // 取消挂载（加锁）
-    void UnMount(const QString &box_uid);
+    void UnMount(const QString &boxId);
 Q_SIGNALS:  // SIGNALS
     // box增加
-    void BoxAdded(const QString &box_uid);
+    void BoxAdded(const QString &boxId);
     // box信息改变
-    void BoxChanged(const QString &box_uid);
+    void BoxChanged(const QString &boxId);
     // 删除box
-    void BoxDeleted(const QString &box_uid);
+    void BoxDeleted(const QString &boxId);
 
 public Q_SLOTS:
 
@@ -72,7 +72,7 @@ private:
 
 private:
     BoxManagerAdaptor *m_dbusAdaptor;
-    QList<Box *> m_boxList;
+    QMap<QString, Box *> m_boxs;
 
     QString m_rsaPublicKey;  // property
     QString m_rsaPrivateKey;
