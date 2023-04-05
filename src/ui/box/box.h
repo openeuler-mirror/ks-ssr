@@ -39,6 +39,7 @@ struct BoxInfo
 };
 
 class ModifyPassword;
+class RetrievePassword;
 
 class Box : public QWidget
 {
@@ -50,6 +51,7 @@ public:
 
     // 获取保险箱UID
     QString getUID() { return this->m_uid; }
+    QWidget *buildNotifyPage(const QString &notify);
 
 public slots:
     void boxChanged();
@@ -66,13 +68,14 @@ private:
     void switchMountedStatus();
     void modifyPassword();
     void delBox();
+    void retrievePassword();
 
     // 解锁时需输入密码
     QWidget *buildMountInputPasswdPage();
-    QWidget *buildNotifyPage(const QString &notify);
 
 private slots:
     void modifyPasswordAccepted();
+    void retrievePasswordAccepted();
 
 private:
     // 保险箱唯一标识
@@ -92,6 +95,7 @@ private:
 
     BoxManagerProxy *m_boxManagerProxy;
     ModifyPassword *m_modifyPassword;
+    RetrievePassword *m_retrievePassword;
     QMenu *m_popupMenu;
     QAction *m_mountedStatusAction;
 
