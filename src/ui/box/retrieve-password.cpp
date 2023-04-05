@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
@@ -9,55 +9,54 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-
-#include "src/ui/box/modify-password.h"
-#include <QMessageBox>
-#include "src/ui/ui_modify-password.h"
+#include "retrieve-password.h"
+#include "ui_retrieve-password.h"
 
 namespace KS
 {
-ModifyPassword::ModifyPassword(QWidget *parent) : QWidget(parent),
-                                                  m_ui(new Ui::ModifyPassword())
+RetrievePassword::RetrievePassword(QWidget *parent) : QWidget(parent),
+                                                      m_ui(new Ui::RetrievePassword)
 {
-    this->m_ui->setupUi(this);
+    m_ui->setupUi(this);
     this->init();
 }
 
-QString ModifyPassword::getCurrentPassword()
+RetrievePassword::~RetrievePassword()
 {
-    return this->m_ui->m_currentPassword->text();
+    delete m_ui;
 }
 
-QString ModifyPassword::getNewPassword()
+QString RetrievePassword::getNewPassword()
 {
-    return this->m_ui->m_newPassword->text();
+    return this->m_ui->m_password->text();
 }
 
-void ModifyPassword::setBoxName(const QString &boxName)
+QString RetrievePassword::getPassphrase()
 {
-    this->m_ui->m_boxName->setText(boxName);
+    return this->m_ui->m_passphrase->text();
 }
 
-void ModifyPassword::init()
+void RetrievePassword::init()
 {
     this->setWindowModality(Qt::ApplicationModal);
-    this->m_ui->m_currentPassword->setEchoMode(QLineEdit::Password);
-    this->m_ui->m_newPassword->setEchoMode(QLineEdit::Password);
+    this->setWindowTitle(tr("Retrieve password"));
+    this->m_ui->m_password->setEchoMode(QLineEdit::Password);
     this->m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
-    connect(this->m_ui->pushButton_2, &QPushButton::clicked, this, [this]
+    this->m_ui->m_passphrase->setEchoMode(QLineEdit::Password);
+    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
                 this->hide();
                 emit rejected();
             });
 
-    connect(this->m_ui->pushButton, &QPushButton::clicked, this, &ModifyPassword::onOkClicked);
+    connect(this->m_ui->m_ok, &QPushButton::clicked, this, &RetrievePassword::onOkClicked);
 }
 
-void ModifyPassword::onOkClicked()
+void RetrievePassword::onOkClicked()
 {
-    if (this->m_ui->m_newPassword->text() != this->m_ui->m_confirmPassword->text())
+    if (this->m_ui->m_password->text() != this->m_ui->m_confirmPassword->text())
     {
         QWidget *widget = new QWidget();
         widget->setWindowModality(Qt::ApplicationModal);
@@ -81,8 +80,8 @@ void ModifyPassword::onOkClicked()
     {
         emit accepted();
         this->hide();
-        this->m_ui->m_currentPassword->setText("");
-        this->m_ui->m_newPassword->setText("");
+        this->m_ui->m_passphrase->setText("");
+        this->m_ui->m_password->setText("");
         this->m_ui->m_confirmPassword->setText("");
     }
 }
