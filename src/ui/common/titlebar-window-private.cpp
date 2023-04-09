@@ -49,7 +49,7 @@ TitlebarWindowPrivate::TitlebarWindowPrivate(TitlebarWindow *ptr)
       m_titleIcon(nullptr),
       m_title(nullptr),
       m_customLayout(nullptr),
-      m_buttonHints(TitlebarWindow::TitlebarMinMaxCloseHints),
+      m_buttonHints(TitlebarWindow::TitlebarMinimizeButtonHint | TitlebarWindow::TitlebarCloseButtonHint),
       m_btnMin(nullptr),
       m_btnMax(nullptr),
       m_btnClose(nullptr),
