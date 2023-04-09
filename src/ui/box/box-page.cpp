@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * kiran-session-manager is licensed under Mulan PSL v2.
+ * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -12,22 +12,24 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
-#include "src/ui/box/box-manager.h"
+#include "src/ui/box/box-page.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLineEdit>
+#include "lib/base/crypto-helper.h"
 #include "sc-i.h"
 #include "src/ui/box/box.h"
 #include "src/ui/box/create-box.h"
 #include "src/ui/box_manager_proxy.h"
-#include "src/ui/ui_box-manager.h"
+#include "src/ui/ui_box-page.h"
 
 namespace KS
 {
-BoxManager::BoxManager() : QWidget(nullptr),
-                           m_ui(new Ui::BoxManager()),
-                           m_createBox(nullptr)
+BoxPage::BoxPage() : QWidget(nullptr),
+                     m_ui(new Ui::BoxPage()),
+                     m_createBox(nullptr)
 {
     this->m_ui->setupUi(this);
 
@@ -46,14 +48,14 @@ BoxManager::BoxManager() : QWidget(nullptr),
     connect(this->m_ui->m_newBox, SIGNAL(clicked(bool)), this, SLOT(newBoxClicked(bool)));
 }
 
-void BoxManager::initBoxs()
+void BoxPage::initBoxs()
 {
     // TODO: test
-    for (int i = 0; i <= 50; ++i)
-    {
-        auto box = new Box(QString("ID%1").arg(i));
-        this->m_ui->m_boxs->addBox(box);
-    }
+    // for (int i = 0; i <= 50; ++i)
+    // {
+    //     auto box = new Box(QString("ID%1").arg(i));
+    //     this->m_ui->m_boxs->addBox(box);
+    // }
 
     QJsonParseError jsonError;
     auto reply = this->m_boxManagerProxy->GetBoxs();
@@ -72,23 +74,25 @@ void BoxManager::initBoxs()
     {
         auto jsonBox = iter.toObject();
         auto box = this->buildBox(jsonBox);
+        this->addBox(box);
     }
 }
 
-Box *BoxManager::buildBox(const QJsonObject &jsonBox)
+Box *BoxPage::buildBox(const QJsonObject &jsonBox)
 {
     auto boxUID = jsonBox.value(SCBM_JK_BOX_UID).toString();
     auto box = new Box(boxUID);
     return box;
 }
 
-void BoxManager::addBox(Box *box)
+void BoxPage::addBox(Box *box)
 {
     this->m_ui->m_boxs->addBox(box);
     this->m_boxs.insert(box->getUID(), box);
+    KLOG_DEBUG() << "insert box uid = " << box->getUID();
 }
 
-void BoxManager::removeBox(const QString &boxUID)
+void BoxPage::removeBox(const QString &boxUID)
 {
     auto box = this->m_boxs.value(boxUID);
     if (box)
@@ -98,7 +102,7 @@ void BoxManager::removeBox(const QString &boxUID)
     }
 }
 
-void BoxManager::boxAdded(const QString &boxUID)
+void BoxPage::boxAdded(const QString &boxUID)
 {
     QJsonParseError jsonError;
 
@@ -121,25 +125,22 @@ void BoxManager::boxAdded(const QString &boxUID)
     }
 
     auto jsonBox = jsonDoc.object();
-    auto box = this->buildBox(jsonBox);
-    this->addBox(box);
+    //    auto box = this->buildBox(jsonBox);
+    //    this->addBox(box);
 }
 
-void BoxManager::boxDeleted(const QString &boxUID)
+void BoxPage::boxDeleted(const QString &boxUID)
 {
     this->removeBox(boxUID);
 }
 
-void BoxManager::boxChanged(const QString &boxUID)
+void BoxPage::boxChanged(const QString &boxUID)
 {
     auto box = this->m_boxs.value(boxUID);
-    if (box)
-    {
-        box->boxChanged();
-    }
+    box->boxChanged();
 }
 
-void BoxManager::newBoxClicked(bool checked)
+void BoxPage::newBoxClicked(bool checked)
 {
     if (this->m_createBox)
     {
@@ -150,19 +151,22 @@ void BoxManager::newBoxClicked(bool checked)
     this->m_createBox = new CreateBox();
     connect(this->m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
 
+    int x = this->x() + this->width() / 4 + m_createBox->width() / 4;
+    int y = this->y() + this->height() / 4 + m_createBox->height() / 4;
+    m_createBox->move(x, y);
     this->m_createBox->show();
 }
 
-void BoxManager::createBoxAccepted()
+void BoxPage::createBoxAccepted()
 {
-    // TODO: 换成dbus
-    if (0)
-    {
-        auto reply = this->m_boxManagerProxy->CreateBox(this->m_createBox->getName(),
-                                                        this->m_createBox->getPassword());
-        auto boxID = reply.value();
-        auto box = new Box(boxID);
-        this->m_ui->m_boxs->addBox(box);
-    }
+    // rsa加密
+    auto encryptPassword = CryptoHelper::rsaEncrypt(this->m_boxManagerProxy->rSAPublicKey(), this->m_createBox->getPassword());
+    auto reply = this->m_boxManagerProxy->CreateBox(this->m_createBox->getName(),
+                                                    encryptPassword);
+
+    auto boxID = reply.value();
+    auto box = new Box(boxID);
+    //    this->m_ui->m_boxs->addBox(box);
+    this->addBox(box);
 }
 }  // namespace KS
