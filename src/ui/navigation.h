@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * kiran-session-manager is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -18,6 +18,7 @@
 
 class QPushButton;
 class QLabel;
+class QButtonGroup;
 
 namespace KS
 {
@@ -27,6 +28,8 @@ class NavigationItem : public QWidget
 public:
     NavigationItem(const QString &iconName, const QString &description);
     virtual ~NavigationItem(){};
+
+    QAbstractButton *getButton() { return this->m_icon; };
 
 Q_SIGNALS:
     void clicked(bool checked);
@@ -49,6 +52,9 @@ public:
 
 Q_SIGNALS:
     void currentCategoryChanged(int index);
+
+private:
+    QButtonGroup *m_buttons;
 };
 
 }  // namespace KS

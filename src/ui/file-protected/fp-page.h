@@ -16,31 +16,30 @@
 
 #include <QWidget>
 
+class FileProtectedProxy;
+
 namespace Ui
 {
-class CreateBox;
-};
+class FPPage;
+}  // namespace Ui
 
 namespace KS
 {
-// 创建保险箱页面
-class CreateBox : public QWidget
+class FPPage : public QWidget
 {
     Q_OBJECT
-
 public:
-    CreateBox(QWidget *parent = nullptr);
-    virtual ~CreateBox(){};
+    FPPage();
+    virtual ~FPPage(){};
 
-    QString getName();
-    QString getPassword();
-
-Q_SIGNALS:
-    void accepted();
-    void rejected();
+private Q_SLOTS:
+    void searchTextChanged(const QString &text);
+    void addClicked(bool checked);
+    void unprotectClicked(bool checked);
 
 private:
-    Ui::CreateBox *m_ui;
-};
+    Ui::FPPage *m_ui;
 
+    FileProtectedProxy *m_fileProtectedProxy;
+};
 }  // namespace KS
