@@ -24,5 +24,14 @@
             <description>Remove file from protected file list.</description>
         </method>
 
+        <method name="Search">
+            <arg type="s" name="path_key" direction="in">
+                <summary>A search key.</summary>
+            </arg>
+            <arg type="s" name="files" direction="out">
+                <summary>The json string describes the files which contain file path and authentication status, etc..</summary>
+            </arg>
+            <description>Search for files list.</description>
+        </method>
     </interface>
 </node>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>BoxManager</class>
- <widget class="QWidget" name="BoxManager">
+ <class>BoxPage</class>
+ <widget class="QWidget" name="BoxPage">
   <property name="geometry">
    <rect>
     <x>0</x>
