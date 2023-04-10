@@ -26,11 +26,12 @@ class Box : public QObject
 {
     Q_OBJECT
 public:
-    explicit Box(const QString &name,
+    Box(const QString &name,
                  const QString &password,
                  uint userUID,
                  const QString &boxId = "",
                  QObject *parent = nullptr);
+    virtual ~Box(){};
 
     QString getBoxID();
     QString getBoxName();

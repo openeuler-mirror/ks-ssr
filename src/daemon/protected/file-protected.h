@@ -12,46 +12,41 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#ifndef DAEMON_H
-#define DAEMON_H
+#pragma once
 
+#include <QDBusContext>
+#include <QDBusObjectPath>
 #include <QObject>
-#include "src/daemon/box/box-manager.h"
-#include "src/daemon/protected/file-protected.h"
-#include "src/daemon/trusted/trusted.h"
+#include <QStringList>
+#include "src/daemon/common/kss.h"
+
+class FileProtectedAdaptor;
 
 namespace KS
 {
-class Daemon : public QObject
+class FileProtected : public QObject,
+                      protected QDBusContext
 {
     Q_OBJECT
 public:
-    Daemon();
-    virtual ~Daemon();
+    FileProtected(QObject *parent);
+    virtual ~FileProtected();
 
-    static Daemon *getInstance()
-    {
-        return m_instance;
-    };
-
-    static void globalInit()
-    {
-        m_instance = new Daemon();
-        m_instance->init();
-    };
-
-    static void globalDeinit() { delete m_instance; };
+public Q_SLOTS:  // METHODS
+    // 添加文件
+    void AddFile(const QString &filePath);
+    // 获取文件列表
+    QString GetFiles();
+    // 移除文件
+    void RemoveFile(const QString &filePath);
+    // 搜索
+    QString Search(const QString &pathKey);
 
 private:
     void init();
 
 private:
-    static Daemon *m_instance;
-
-    BoxManager *m_boxManager;
-    Trusted *m_trusted;
-    FileProtected *m_fileProtected;
+    FileProtectedAdaptor *m_dbusAdaptor;
+    Kss *m_kss;
 };
 }  // namespace KS
-
-#endif  // DAEMON_H

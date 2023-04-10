@@ -88,7 +88,6 @@ void EcryptFS::onProcessExit(int exitCode, QProcess::ExitStatus exitStatus)
 
     KLOG_DEBUG() << "Execute the command to successfully output: " << standardOutput;
     m_processOutput = standardOutput;
-
     QByteArray errordOutput = this->m_process->readAllStandardError();
     if (!errordOutput.isEmpty())
     {

@@ -27,6 +27,14 @@ extern "C"
 #define SC_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/BoxManager"
 #define SC_BOX_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SC.BoxManager"
 
+// 可信保护相关定义
+#define SC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/SC/Trusted"
+#define SC_TRUSTED_PROTECTED_DBUS_INTERFACE_NAME "com.kylinsec.SC.Trusted"
+
+// 文件保护相关定义
+#define SC_FILE_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/SC/FileProtected"
+#define SC_FILE_PROTECTED_DBUS_INTERFACE_NAME "com.kylinsec.SC.FileProtected"
+
 // BM: Box Manager
 #define SCBM_JK_BOX_UID "uid"
 #define SCBM_JK_BOX_NAME "name"
