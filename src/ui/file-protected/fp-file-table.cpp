@@ -14,10 +14,15 @@
 
 #include "src/ui/file-protected/fp-file-table.h"
 #include <qt5-log-i.h>
+#include <stdio.h>
+#include <QApplication>
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QJsonDocument>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QPainterPath>
 #include <QSpinBox>
 #include <QStandardItemModel>
 #include <QTableView>
@@ -37,6 +42,9 @@ enum FileTableField
     FILE_TABLE_FIELD_LAST
 };
 
+// 表格每行线条绘制的的圆角半径
+#define TABLE_LINE_RADIUS 4
+
 FPFilesDelegate::FPFilesDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
 }
@@ -46,35 +54,133 @@ FPFilesDelegate::~FPFilesDelegate()
     KLOG_DEBUG() << "The FPFilesDelegate is deleted.";
 }
 
-QWidget *FPFilesDelegate::createEditor(QWidget *parent,
-                                       const QStyleOptionViewItem &option,
-                                       const QModelIndex &index) const
+// QWidget *FPFilesDelegate::createEditor(QWidget *parent,
+//                                        const QStyleOptionViewItem &option,
+//                                        const QModelIndex &index) const
+// {
+//     // switch (index.column())
+//     // {
+//     // case FileTableField::FILE_TABLE_FIELD_CHECKBOX:
+//     // {
+//     //     auto editor = new QCheckBox(parent);
+//     //     editor->setText(QString());
+//     //     return editor;
+//     // }
+//     // default:
+//     //     break;
+//     // }
+//     return nullptr;
+// }
+
+void FPFilesDelegate::paint(QPainter *painter,
+                            const QStyleOptionViewItem &option,
+                            const QModelIndex &index) const
 {
-    auto editor = new QCheckBox(parent);
-    editor->setText(QString());
-    return editor;
+    painter->save();
+
+    QPainterPath path;
+    painter->setRenderHint(QPainter::RenderHint::Antialiasing);
+    if (index.column() == 0)
+    {
+        auto rect = option.rect.adjusted(0, 2, TABLE_LINE_RADIUS, -2);
+        path.addRoundedRect(rect, TABLE_LINE_RADIUS, TABLE_LINE_RADIUS);
+    }
+    else if (index.column() == index.model()->columnCount(index.parent()) - 1)
+    {
+        auto rect = option.rect.adjusted(-TABLE_LINE_RADIUS, 2, 0, -2);
+        path.addRoundedRect(rect, TABLE_LINE_RADIUS, TABLE_LINE_RADIUS);
+    }
+    else
+    {
+        auto rect = option.rect.adjusted(0, 2, 0, -2);
+        path.addRect(rect);
+    }
+
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QBrush(QColor(57, 57, 57)));
+    painter->drawPath(path);
+
+    painter->restore();
+
+    // TODO: 两个问题：1）样式还存在问题; 2）当editorEvent设置状态改变时，当前函数不会立即调用，会等到鼠标移出窗口后才刷新
+    if (index.column() == FileTableField::FILE_TABLE_FIELD_CHECKBOX)
+    {
+        auto checkboxOption = option;
+        this->initStyleOption(&checkboxOption, index);
+
+        QStyleOptionButton checkboxStyle;
+        auto value = index.model()->data(index, Qt::EditRole).toBool();
+        KLOG_INFO() << "value: " << value;
+        checkboxStyle.state = value ? QStyle::State_On : QStyle::State_Off;
+        checkboxStyle.state |= QStyle::State_Enabled;
+        checkboxStyle.iconSize = QSize(20, 20);
+        checkboxStyle.rect = option.rect;
+
+        const QWidget *widget = option.widget;
+        QStyle *style = widget ? widget->style() : QApplication::style();
+        style->drawControl(QStyle::CE_CheckBox, &checkboxStyle, painter);
+        // style->drawPrimitive(QStyle::PE_IndicatorCheckBox, &checkboxStyle, painter);
+    }
+    else
+    {
+        this->QStyledItemDelegate::paint(painter, option, index);
+    }
 }
 
-void FPFilesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+bool FPFilesDelegate::editorEvent(QEvent *event,
+                                  QAbstractItemModel *model,
+                                  const QStyleOptionViewItem &option,
+                                  const QModelIndex &index)
 {
-    auto value = index.model()->data(index, Qt::EditRole).toBool();
+    auto docorationRect = option.rect;
+    auto mouseEvent = static_cast<QMouseEvent *>(event);
 
-    auto checkbox = static_cast<QCheckBox *>(editor);
-    checkbox->setChecked(value);
+    if (event->type() == QEvent::MouseButtonPress &&
+        docorationRect.contains(mouseEvent->pos()) &&
+        index.column() == FileTableField::FILE_TABLE_FIELD_CHECKBOX)
+    {
+        auto value = model->data(index, Qt::EditRole).toBool();
+        model->setData(index, !value, Qt::EditRole);
+    }
+
+    return this->QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
-void FPFilesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
-{
-    auto checkbox = static_cast<QCheckBox *>(editor);
-    model->setData(index, checkbox->isChecked(), Qt::EditRole);
-}
+// void FPFilesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+// {
+//     switch (index.column())
+//     {
+//     case FileTableField::FILE_TABLE_FIELD_CHECKBOX:
+//     {
+//         auto value = index.model()->data(index, Qt::EditRole).toBool();
+//         auto checkbox = static_cast<QCheckBox *>(editor);
+//         checkbox->setChecked(value);
+//     }
+//     default:
+//         break;
+//     }
+// }
 
-void FPFilesDelegate::updateEditorGeometry(QWidget *editor,
-                                           const QStyleOptionViewItem &option,
-                                           const QModelIndex &index) const
-{
-    editor->setGeometry(option.rect);
-}
+// void FPFilesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+// {
+//     switch (index.column())
+//     {
+//     case FileTableField::FILE_TABLE_FIELD_CHECKBOX:
+//     {
+//         auto checkbox = static_cast<QCheckBox *>(editor);
+//         model->setData(index, checkbox->isChecked(), Qt::EditRole);
+//     }
+//     default:
+//         break;
+//     }
+// }
+
+// void FPFilesDelegate::updateEditorGeometry(QWidget *editor,
+//                                            const QStyleOptionViewItem &option,
+//                                            const QModelIndex &index) const
+// {
+//     editor->setGeometry(option.rect);
+// }
 
 FPFilesFilterModel::FPFilesFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
@@ -180,7 +286,7 @@ QVariant FPFilesModel::data(const QModelIndex &index, int role) const
         switch (index.column())
         {
         case FileTableField::FILE_TABLE_FIELD_CHECKBOX:
-            return QVariant();
+            return fileInfo.selected;
         default:
             break;
         }
@@ -254,44 +360,45 @@ bool FPFilesModel::setHeaderData(int section, Qt::Orientation orientation, const
 
 Qt::ItemFlags FPFilesModel::flags(const QModelIndex &index) const
 {
-    if (index.column() == FileTableField::FILE_TABLE_FIELD_CHECKBOX)
-    {
-        return Qt::ItemFlag::ItemIsEditable | Qt::ItemFlag::ItemIsEnabled;
-    }
+    // if (index.column() == FileTableField::FILE_TABLE_FIELD_CHECKBOX)
+    // {
+    //     return Qt::ItemFlag::ItemIsEnabled;
+    // }
     return Qt::ItemFlag::NoItemFlags;
 }
 
-FPFileTable::FPFileTable(QWidget *parent) : QWidget(parent),
-                                            m_view(nullptr),
+FPFileTable::FPFileTable(QWidget *parent) : QTableView(parent),
                                             m_filterProxy(nullptr)
 {
-    auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
-
-    this->m_view = new QTableView(this);
-    this->m_view->setObjectName("m_fpFileTableView");
-    this->m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // 设置Model
-    auto fileModel = new FPFilesModel(this->m_view);
-    this->m_filterProxy = new FPFilesFilterModel(this->m_view);
+    auto fileModel = new FPFilesModel(this);
+    this->m_filterProxy = new FPFilesFilterModel(this);
     this->m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(fileModel));
-    this->m_view->setModel(this->m_filterProxy);
-    this->m_view->setShowGrid(false);
+    this->setModel(this->m_filterProxy);
+    this->setShowGrid(false);
 
     // 设置Delegate
-    this->m_view->setItemDelegateForColumn(FILE_TABLE_FIELD_CHECKBOX, new FPFilesDelegate(this->m_view));
+    // this->setItemDelegateForColumn(FILE_TABLE_FIELD_CHECKBOX, new FPFilesDelegate(this));
+    this->setItemDelegate(new FPFilesDelegate(this));
 
-    // 设置表头
-    auto tableHeader = this->m_view->horizontalHeader();
-    tableHeader->resizeSection(FileTableField::FILE_TABLE_FIELD_CHECKBOX, 50);
-    tableHeader->resizeSection(FileTableField::FILE_TABLE_FIELD_NUMBER, 100);
-    tableHeader->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_NAME, 150);
-    tableHeader->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_PATH, 500);
-    tableHeader->setStretchLastSection(true);
-    tableHeader->setSectionsMovable(false);
-    tableHeader->setDefaultAlignment(Qt::AlignLeft);
+    // 设置水平行表头
+    auto horizontalHeader = this->horizontalHeader();
+    horizontalHeader->resizeSection(FileTableField::FILE_TABLE_FIELD_CHECKBOX, 50);
+    horizontalHeader->resizeSection(FileTableField::FILE_TABLE_FIELD_NUMBER, 100);
+    horizontalHeader->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_NAME, 150);
+    horizontalHeader->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_PATH, 500);
+    horizontalHeader->setStretchLastSection(true);
+    horizontalHeader->setSectionsMovable(false);
+    horizontalHeader->setDefaultAlignment(Qt::AlignLeft);
+    horizontalHeader->setFixedHeight(24);
+    horizontalHeader->setDefaultAlignment(Qt::AlignVCenter);
 
-    layout->addWidget(this->m_view);
+    // 设置垂直列表头
+    auto verticalHeader = this->verticalHeader();
+    verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
+    verticalHeader->setDefaultSectionSize(38);
 }
+
 }  // namespace KS
