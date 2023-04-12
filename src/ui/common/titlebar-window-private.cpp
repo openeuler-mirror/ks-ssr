@@ -260,7 +260,7 @@ void TitlebarWindowPrivate::initOtherWidget()
     m_titleBarLayout = new TitlebarLayout(m_titlebarWidget);
     m_titleBarLayout->setMargin(0);
     m_titleBarLayout->setSpacing(0);
-    m_titleBarLayout->setObjectName("KiranTitlebarLayout");
+    m_titleBarLayout->setObjectName("TitlebarLayout");
 
     ///标题栏居左部分
     //标题栏图标
@@ -297,7 +297,8 @@ void TitlebarWindowPrivate::initOtherWidget()
     m_titleBarLayout->setTitleBarRightWidget(m_titlebarRirghtWidget);
     m_titleBarLayout->setTitleBarRightWidgetMargin(QMargins(0, 0, 0, 24));
     QHBoxLayout *titlebarRightlayout = new QHBoxLayout(m_titlebarRirghtWidget);
-    titlebarRightlayout->setSpacing(10);
+    titlebarRightlayout->setContentsMargins(0, 0, 6, 0);
+    titlebarRightlayout->setSpacing(0);
 
     //占位
     QSpacerItem *spacerItem = new QSpacerItem(0, 20, QSizePolicy::Expanding);
