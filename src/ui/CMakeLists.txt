@@ -28,7 +28,13 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/create-box.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/modify-password.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/file-protected/fp-page.ui)
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/retrieve-password.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/file-protected/fp-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/peripheral-management/pm-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/peripheral-management/sidebar-item.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/peripheral-management/pm-device-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/peripheral-management/pm-connect-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/peripheral-management/edit-permissions.ui)
 
 set(TARGET_NAME ks-sc-gui)
 
