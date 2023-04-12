@@ -21,13 +21,6 @@ namespace KS
 {
 class TitlebarWindowPrivate;
 
-/**
- * @brief 自定义标题栏窗口
- * <img src="../snapshot/kiran-switch-button.png" alt="kiran-switch-button" style="zoom:90%;" />
- * @bug 移动窗口过后，窗体收不到鼠标悬浮事件,考虑窗口管理器引起
- * @since 2.0.0
- */
-
 class Q_DECL_EXPORT TitlebarWindow : public QWidget
 {
     Q_OBJECT
@@ -50,25 +43,17 @@ public:
 
 public:
     /**
-     * @brief KiranTitlebarWindow构造方法
-     * @deprecated 3.0.0之后该接口将被废弃
-     */
-    __attribute__((deprecated)) explicit TitlebarWindow();
-
-    /**
-     * @brief KiranTitlebarWindow构造方法
-     * 考虑之前版本的兼容问题，暂时父控件不为默认构造
+     * @brief 构造方法
      * @param parent      父控件
      * @param windowFlags window标志
-     * @since 2.1.0
      * @see QWidget::QWidget(QWidget*, Qt::WindowFlags)
      */
-    explicit TitlebarWindow(QWidget *parent, Qt::WindowFlags windowFlags = Qt::Window);
+    explicit TitlebarWindow(QWidget *parent = nullptr, Qt::WindowFlags windowFlags = Qt::Window);
 
     /**
-     * @brief KiranTitlebarWindow析构方法
+     * @brief 析构方法
      */
-    ~TitlebarWindow();
+    virtual ~TitlebarWindow();
 
     /**
      * @brief 设置自定义标题栏的内容窗口
@@ -140,7 +125,7 @@ protected:
     bool event(QEvent *event) override;
 
 private:
-    /* KiranTitlebarWindow私有类指针 */
+    /* TitlebarWindow私有类指针 */
     TitlebarWindowPrivate *d_ptr;
 };
 

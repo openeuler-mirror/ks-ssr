@@ -24,23 +24,9 @@
 
 namespace KS
 {
-TitlebarWindow::TitlebarWindow()
-    : QWidget(nullptr),
-      d_ptr(new TitlebarWindowPrivate(this))
-{
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
-    setAttribute(Qt::WA_TranslucentBackground);
-    setAttribute(Qt::WA_Hover);
-
-    d_func()->init();
-    QWidget::ensurePolished();
-    setTitle(qApp->applicationName());
-    setIcon(QIcon::fromTheme("window"));
-}
-
-TitlebarWindow::TitlebarWindow(QWidget *parent, Qt::WindowFlags windowFlags)
-    : QWidget(parent),
-      d_ptr(new TitlebarWindowPrivate(this))
+TitlebarWindow::TitlebarWindow(QWidget *parent,
+                               Qt::WindowFlags windowFlags) : QWidget(parent),
+                                                              d_ptr(new TitlebarWindowPrivate(this))
 {
     setWindowFlags(Qt::FramelessWindowHint | windowFlags);
     setAttribute(Qt::WA_TranslucentBackground);
