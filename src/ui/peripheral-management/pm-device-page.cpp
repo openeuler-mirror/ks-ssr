@@ -71,8 +71,15 @@ void PMDevicePage::editClicked(bool checked)
        return;
     }
 
-    m_editPermission = new EditPermissions();
+    QList<PMPermissionsType> permissions;
+    permissions.append(PM_PERMISSIONS_TYPE_READ);
+    m_editPermission = new EditPermissions("test",PM_DEVICE_STATUS_DISABLE,permissions);
     connect(m_editPermission,&EditPermissions::permissionChanged,this,&PMDevicePage::update);
+    connect(m_editPermission,&EditPermissions::destroyed,
+            [this]{
+                m_editPermission->deleteLater();
+                m_editPermission = nullptr;
+    });
 
     int x = this->x() + this->width() / 4 + m_editPermission->width() / 4;
     int y = this->y() + this->height() / 4 + m_editPermission->height() / 4;
