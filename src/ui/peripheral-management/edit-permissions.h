@@ -37,21 +37,32 @@ enum PMPermissionsType
     PM_PERMISSIONS_TYPE_EXEC
 };
 
-class EditPermissions : public TitlebarWindow
+class EditPermissions : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit EditPermissions(QWidget *parent = nullptr);
+    EditPermissions(const QString name, const PMDeviceStatus status, const QList<PMPermissionsType> permission, QWidget *parent = nullptr);
     ~EditPermissions();
+
+protected:
+    void paintEvent(QPaintEvent *event);
+
+private:
+    void initComboBox();
+    void initBtns();
 
 private slots:
     void onConfirm();
+    void onStatusChanged(int index);
 
 signals:
     void permissionChanged(int status, QList<PMPermissionsType> permissions);
 
 private:
     Ui::EditPermissions *m_ui;
+    QString m_name;
+    PMDeviceStatus m_status;
+    QList<PMPermissionsType> m_permission;
 };
 }   //namespace KS
