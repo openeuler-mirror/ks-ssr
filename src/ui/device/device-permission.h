@@ -17,19 +17,30 @@
 #include <QWidget>
 #include "src/ui/common/titlebar-window.h"
 
-namespace Ui {
-class EditPermissions;
+namespace Ui
+{
+class DevicePermission;
 }
 
-namespace KS {
-
+namespace KS
+{
+/**
+ * @brief 设备状态
+ */
 enum PMDeviceStatus
 {
-    PM_DEVICE_STATUS_ENABLE,     //启用
-    PM_DEVICE_STATUS_DISABLE,    //禁用
-    PM_DEVICE_STATUS_UNACTIVE    //未授权
+    //启用
+    PM_DEVICE_STATUS_ENABLE,
+    //禁用
+    PM_DEVICE_STATUS_DISABLE,
+    //未授权
+    PM_DEVICE_STATUS_UNACTIVE,
+    PM_DEVICE_STATUS_LAST
 };
 
+/**
+ * @brief 设备权限
+ */
 enum PMPermissionsType
 {
     PM_PERMISSIONS_TYPE_READ,
@@ -37,32 +48,36 @@ enum PMPermissionsType
     PM_PERMISSIONS_TYPE_EXEC
 };
 
-class EditPermissions : public QWidget
+class DevicePermission : public QWidget
 {
     Q_OBJECT
 
 public:
-    EditPermissions(const QString name, const PMDeviceStatus status, const QList<PMPermissionsType> permission, QWidget *parent = nullptr);
-    ~EditPermissions();
+    DevicePermission(const QString &name, QWidget *parent = nullptr);
+    ~DevicePermission();
+    void setDeviceStatus(PMDeviceStatus status);
+    void setDevicePermission(QList<PMPermissionsType> permission);
+    PMDeviceStatus getDeviceStatus();
+    QList<PMPermissionsType> getDevicePermission();
 
 protected:
     void paintEvent(QPaintEvent *event);
 
 private:
-    void initComboBox();
-    void initBtns();
+    int enmu2int(PMDeviceStatus status);
+    PMDeviceStatus int2enum(int status);
 
 private slots:
     void onConfirm();
     void onStatusChanged(int index);
 
 signals:
-    void permissionChanged(int status, QList<PMPermissionsType> permissions);
+    void okCliecked();
 
 private:
-    Ui::EditPermissions *m_ui;
+    Ui::DevicePermission *m_ui;
     QString m_name;
     PMDeviceStatus m_status;
-    QList<PMPermissionsType> m_permission;
+    QList<PMPermissionsType> m_permissions;
 };
-}   //namespace KS
+}  //namespace KS

@@ -16,20 +16,21 @@
 
 #include <QWidget>
 
-namespace Ui {
-class PMDevicePage;
+namespace Ui
+{
+class DeviceListPage;
 }
 
-namespace  KS {
-
-class EditPermissions;
-class PMDevicePage : public QWidget
+namespace KS
+{
+class DevicePermission;
+class DeviceListPage : public QWidget
 {
     Q_OBJECT
 
 public:
-    PMDevicePage(QWidget *parent = nullptr);
-    ~PMDevicePage();
+    DeviceListPage(QWidget *parent = nullptr);
+    ~DeviceListPage();
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -37,11 +38,10 @@ protected:
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void editClicked(bool checked);
-    void update();
+    void updateDevice();
 
 private:
-    Ui::PMDevicePage *m_ui;
-    EditPermissions *m_editPermission;
+    Ui::DeviceListPage *m_ui;
+    DevicePermission *m_devicePermission;
 };
-} //namespace KS
-
+}  //namespace KS

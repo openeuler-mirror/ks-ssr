@@ -12,34 +12,32 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "src/ui/peripheral-management/pm-connect-page.h"
-#include "src/ui/ui_pm-connect-page.h"
-#include "src/ui/peripheral-management/edit-permissions.h"
-
+#include "src/ui/device/device-log-page.h"
+#include "src/ui/device/device-permission.h"
+#include "src/ui/ui_device-log-page.h"
 
 #include <kiran-log/qt5-log-i.h>
 #include <QPainter>
 #include <QStyleOption>
 
-namespace KS {
-
-PMConnectPage::PMConnectPage(QWidget *parent) :
-    QWidget(parent),
-    m_ui(new Ui::PMConnectPage)
+namespace KS
+{
+DeviceLogPage::DeviceLogPage(QWidget *parent) : QWidget(parent),
+                                                m_ui(new Ui::DeviceLogPage)
 {
     m_ui->setupUi(this);
     m_ui->m_title->setText(tr("Connect Record"));
 
     m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
-    connect(m_ui->m_search,&QLineEdit::textChanged,this,&PMConnectPage::searchTextChanged);
+    connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceLogPage::searchTextChanged);
 }
 
-PMConnectPage::~PMConnectPage()
+DeviceLogPage::~DeviceLogPage()
 {
     delete m_ui;
 }
 
-void PMConnectPage::paintEvent(QPaintEvent *event)
+void DeviceLogPage::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QStyleOption opt;
@@ -48,7 +46,7 @@ void PMConnectPage::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void PMConnectPage::searchTextChanged(const QString &text)
+void DeviceLogPage::searchTextChanged(const QString &text)
 {
     KLOG_DEBUG() << "The search text is change to " << text;
 
@@ -56,8 +54,7 @@ void PMConnectPage::searchTextChanged(const QString &text)
     filterProxy->setFilterFixedString(text);
 }
 
-void PMConnectPage::update()
+void DeviceLogPage::update()
 {
-
 }
-}   //namespace KS
+}  //namespace KS
