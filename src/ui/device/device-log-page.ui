@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PMConnectPage</class>
- <widget class="QWidget" name="PMConnectPage">
+ <class>DeviceLogPage</class>
+ <widget class="QWidget" name="DeviceLogPage">
   <property name="geometry">
    <rect>
     <x>0</x>

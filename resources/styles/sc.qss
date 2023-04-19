@@ -177,20 +177,20 @@ QTableView#m_fileTable > QWidget
     margin: 0px 22px 0px 0px;
 }
 
-/* peripheral-management */
-KS--EditPermissions
+/* Device */
+KS--DevicePermissions
 {
     background-color:#2d2d2d;
     color: #ffffff;
 }
 
-KS--EditPermissions > QComboBox
+KS--DevicePermissions > QComboBox
 {
     background: #222222;
 }
 
-KS--PMDevicePage,
-KS--PMConnectPage
+KS--DeviceListPage,
+KS--DeviceLogPage
 {
     background-color:#2d2d2d;
 }
