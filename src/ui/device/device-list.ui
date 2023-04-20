@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DeviceListPage</class>
- <widget class="QWidget" name="DeviceListPage">
+ <class>DeviceList</class>
+ <widget class="QWidget" name="DeviceList">
   <property name="geometry">
    <rect>
     <x>0</x>

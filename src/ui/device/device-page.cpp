@@ -13,8 +13,8 @@
  */
 
 #include "src/ui/device/device-page.h"
-#include "src/ui/device/device-list-page.h"
-#include "src/ui/device/device-log-page.h"
+#include "src/ui/device/device-list.h"
+#include "src/ui/device/device-log.h"
 #include "src/ui/device/sidebar-item.h"
 #include "src/ui/ui_device-page.h"
 
@@ -56,8 +56,8 @@ void DevicePage::initSidebar()
 
 void DevicePage::initSubPage()
 {
-    DeviceListPage *deviceList = new DeviceListPage(this);
-    DeviceLogPage *connectRecord = new DeviceLogPage(this);
+    auto *deviceList = new DeviceList(this);
+    auto *connectRecord = new DeviceLog(this);
 
     m_ui->m_stacked->addWidget(deviceList);
     m_ui->m_stacked->addWidget(connectRecord);
@@ -65,11 +65,8 @@ void DevicePage::initSubPage()
 
 void DevicePage::createSideBarItem(const QString &text, const QString &icon)
 {
-    QListWidgetItem *newItem = nullptr;
-    SidebarItem *customItem = nullptr;
-
-    newItem = new QListWidgetItem(m_ui->m_sidebar);
-    customItem = new SidebarItem(text, icon, m_ui->m_sidebar);
+    auto newItem = new QListWidgetItem(m_ui->m_sidebar);
+    auto customItem = new SidebarItem(text, icon, m_ui->m_sidebar);
 
     m_ui->m_sidebar->addItem(newItem);
     m_ui->m_sidebar->setItemWidget(newItem, customItem);
