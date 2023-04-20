@@ -3,17 +3,17 @@ cmake_minimum_required(VERSION 3.0)
 file(GLOB_RECURSE SRC_H_FILES ./*.h)
 file(GLOB_RECURSE SRC_CPP_FILES ./*.cpp)
 
-qt_add_dbus_adaptor(
+qt5_add_dbus_adaptor(
   SECURITY_BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/box/box-manager.h KS::BoxManager
   box_manager_adaptor BoxManagerAdaptor)
 
-qt_add_dbus_adaptor(
+qt5_add_dbus_adaptor(
   TRUSTED_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.Trusted.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/trusted/trusted.h KS::Trusted
   trusted_adaptor TrustedAdaptor)
 
-qt_add_dbus_adaptor(
+qt5_add_dbus_adaptor(
   FILES_PROTECTED_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/protected/file-protected.h KS::FileProtected
   file_protected_adaptor FileProtectedAdaptor)
@@ -21,7 +21,7 @@ qt_add_dbus_adaptor(
 set(TARGET_NAME ks-sc-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 add_executable(
   ${TARGET_NAME}

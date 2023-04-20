@@ -81,4 +81,9 @@ void Navigation::addItem(NavigationItem *item)
     //         });
 }
 
+void Navigation::setBtnChecked(int id)
+{
+    this->m_buttons->button(id)->setChecked(true);
+}
+
 }  // namespace KS

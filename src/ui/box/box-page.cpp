@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "src/ui/box/box-page.h"
@@ -22,14 +22,21 @@
 #include "sc-i.h"
 #include "src/ui/box/box.h"
 #include "src/ui/box/create-box.h"
+#include "src/ui/box/modify-password.h"
+#include "src/ui/box/retrieve-password.h"
 #include "src/ui/box_manager_proxy.h"
+#include "src/ui/common/custom-window.h"
 #include "src/ui/ui_box-page.h"
 
 namespace KS
 {
 BoxPage::BoxPage() : QWidget(nullptr),
                      m_ui(new Ui::BoxPage()),
-                     m_createBox(nullptr)
+                     m_createBoxPage(nullptr),
+                     m_createBox(nullptr),
+                     m_modifyPasswordPage(nullptr),
+                     m_retrievePasswordPage(nullptr),
+                     m_passwdEdit(nullptr)
 {
     this->m_ui->setupUi(this);
 
@@ -39,10 +46,13 @@ BoxPage::BoxPage() : QWidget(nullptr),
                                                   this);
 
     this->m_ui->m_boxsScroll->setFrameStyle(QFrame::NoFrame);
+    this->initBoxs();
+    m_passwdEdit = new QLineEdit(this);
+    m_passwdEdit->setFixedHeight(36);
+    m_passwdEdit->setEchoMode(QLineEdit::Password);
+    m_passwdEdit->hide();
 
-    initBoxs();
-
-    connect(this->m_boxManagerProxy, SIGNAL(BoxAdded(const QString &)), this, SLOT(boxAdded(const QString &)));
+    connect(this->m_boxManagerProxy, SIGNAL(BoxAdded(const QString &, const QString &)), this, SLOT(boxAdded(const QString &, const QString &)));
     connect(this->m_boxManagerProxy, SIGNAL(BoxDeleted(const QString &)), this, SLOT(boxDeleted(const QString &)));
     connect(this->m_boxManagerProxy, SIGNAL(BoxChanged(const QString &)), this, SLOT(boxChanged(const QString &)));
     connect(this->m_ui->m_newBox, SIGNAL(clicked(bool)), this, SLOT(newBoxClicked(bool)));
@@ -50,13 +60,6 @@ BoxPage::BoxPage() : QWidget(nullptr),
 
 void BoxPage::initBoxs()
 {
-    // TODO: test
-    // for (int i = 0; i <= 50; ++i)
-    // {
-    //     auto box = new Box(QString("ID%1").arg(i));
-    //     this->m_ui->m_boxs->addBox(box);
-    // }
-
     QJsonParseError jsonError;
     auto reply = this->m_boxManagerProxy->GetBoxs();
     auto boxs = reply.value();
@@ -90,6 +93,56 @@ void BoxPage::addBox(Box *box)
     this->m_ui->m_boxs->addBox(box);
     this->m_boxs.insert(box->getUID(), box);
     KLOG_DEBUG() << "insert box uid = " << box->getUID();
+    box->disconnect();
+    connect(box, &Box::unUnlockedIconClicked, this, [this]
+            {
+                auto notify = buildNotifyPage(tr("Box is locked, please unlocked!"));
+                notify->show();
+            });
+    // 解锁
+    connect(box, &Box::sigInputMountPasswd, this, [this](const QString &boxUID)
+            {
+                auto inputPasswdPage = buildInputPasswdPage(boxUID, INPUT_PASSWORD_TYPE::MOUNT_PASSWORD);
+                inputPasswdPage->show();
+            });
+
+    connect(this, &BoxPage::sigInputMountPasswdAccepted, box, &Box::checkMountPasswd);
+
+    connect(box, &Box::sigMountPasswdResult, this, [this](bool status)
+            { this->inputPasswdNotify(tr("Unlock success!"),
+                                      tr("Unlock failed, please check whether the password is correct."),
+                                      status); });
+    // 删除
+    connect(box, &Box::sigDelBox, this, [this](const QString &boxUID)
+            {
+                auto inputPasswdPage = buildInputPasswdPage(boxUID, INPUT_PASSWORD_TYPE::DELETE_BOX_PASSWORD);
+                inputPasswdPage->show();
+            });
+
+    connect(this, &BoxPage::sigInputDelPasswdAccepted, box, &Box::checkDelPasswd);
+
+    connect(box, &Box::sigDelPasswdResult, this, [this](bool status)
+            { this->inputPasswdNotify(tr("Delete success!"),
+                                      tr("The Password is wrong or has been mounted!"),
+                                      status); });
+    // 修改密码
+    connect(box, &Box::sigModifyPasswdResult, this, [this](bool status)
+            {
+                this->inputPasswdNotify(tr("Modify success!"),
+                                        tr("Password error!"),
+                                        status);
+                this->m_modifyPasswordPage->close();
+            });
+    connect(box, &Box::showModifyPassword, this, &BoxPage::showModifyPasswordPage);
+    // 找回口令
+    connect(box, &Box::sigRetrievePasswordResult, this, [this](bool status)
+            {
+                this->inputPasswdNotify(tr("Retrieve success!"),
+                                        tr("Passphrase error!"),
+                                        status);
+                this->m_retrievePasswordPage->close();
+            });
+    connect(box, &Box::showRetrievePassword, this, &BoxPage::showRetrievePasswordPage);
 }
 
 void BoxPage::removeBox(const QString &boxUID)
@@ -102,7 +155,107 @@ void BoxPage::removeBox(const QString &boxUID)
     }
 }
 
-void BoxPage::boxAdded(const QString &boxUID)
+TitlebarWindow *BoxPage::buildInputPasswdPage(const QString &boxUID, INPUT_PASSWORD_TYPE type)
+{
+    m_inputPasswdBoxUID = boxUID;
+    auto *widget = new CustomWindow(this);
+    widget->setTitle(tr("Input password"));
+    widget->setFixedSize(300, 220);
+
+    auto cusVLay = widget->getContentLayout();
+
+    auto *label = new QLabel(tr("Please input password:"));
+    label->setFixedHeight(36);
+
+    auto *hlay = new QHBoxLayout(widget);
+    auto *ok = new QPushButton(tr("ok"), widget);
+    ok->setFixedSize(80, 36);
+    ok->setStyleSheet("QPushButton{"
+                      "color:#FFFFFF;"
+                      "font:NotoSansCJKsc-Regular;"
+                      "font-size:12px;"
+                      "border-radius:8px;"
+                      "background:#43A3F2;}"
+                      "QPushButton:hover{"
+                      "background:#79C3FF;"
+                      "border:4px;}");
+
+    auto *cancel = new QPushButton(tr("cancel"), widget);
+    cancel->setFixedSize(80, 36);
+    cancel->setStyleSheet("QPushButton{"
+                          "color:#FFFFFF;"
+                          "font:NotoSansCJKsc-Regular;"
+                          "font-size:12px;"
+                          "border-radius:8px;"
+                          "background:#393939;}"
+                          "QPushButton:hover{"
+                          "background:#464646;"
+                          "border:4px;}");
+    if (type == INPUT_PASSWORD_TYPE::MOUNT_PASSWORD)
+    {
+        connect(ok, &QPushButton::clicked, this, [this]
+                {
+                    emit this->sigInputMountPasswdAccepted(m_passwdEdit->text(), m_inputPasswdBoxUID);
+                    this->m_passwdEdit->setText("");
+                });
+    }
+    else if (type == INPUT_PASSWORD_TYPE::DELETE_BOX_PASSWORD)
+    {
+        connect(ok, &QPushButton::clicked, this, [this]
+                {
+                    emit this->sigInputDelPasswdAccepted(m_passwdEdit->text(), m_inputPasswdBoxUID);
+                    this->m_passwdEdit->setText("");
+                });
+    }
+    connect(ok, &QPushButton::clicked, widget, &QWidget::close);
+    connect(cancel, &QPushButton::clicked, widget, &QWidget::close);
+
+    hlay->addWidget(ok);
+    hlay->addWidget(cancel);
+
+    cusVLay->addWidget(label);
+    cusVLay->addWidget(m_passwdEdit);
+    m_passwdEdit->show();
+    cusVLay->addStretch();
+    cusVLay->addLayout(hlay);
+
+    int x = this->x() + this->width() / 4 + widget->width() / 4;
+    int y = this->y() + this->height() / 4 + widget->height() / 4;
+    widget->move(x, y);
+
+    return widget;
+}
+
+TitlebarWindow *BoxPage::buildNotifyPage(const QString &notify)
+{
+    auto widget = new CustomWindow(this);
+    widget->setFixedSize(240, 180);
+    widget->buildNotify(notify);
+
+    int x = this->x() + this->width() / 4 + widget->width() / 4;
+    int y = this->y() + this->height() / 4 + widget->height() / 4;
+    widget->move(x, y);
+
+    return widget;
+}
+
+void BoxPage::inputPasswdNotify(const QString &normal,
+                                const QString &error,
+                                bool status)
+{
+    if (status)
+    {
+        auto notify = buildNotifyPage(normal);
+        notify->show();
+    }
+    else
+    {
+        auto notify = buildNotifyPage(error);
+        notify->show();
+    }
+}
+
+void BoxPage::boxAdded(const QString &boxUID, const QString &passphrase)
 {
     QJsonParseError jsonError;
 
@@ -125,7 +278,11 @@ void BoxPage::boxAdded(const QString &boxUID)
     }
 
     auto jsonBox = jsonDoc.object();
-    //    auto box = this->buildBox(jsonBox);
+
+    auto notify = this->buildNotifyPage(QString(tr("Please remember this box passphrase : %1")).arg(passphrase));
+    notify->show();
+
+    //    this->buildBox(jsonBox);
     //    this->addBox(box);
 }
 
@@ -142,19 +299,45 @@ void BoxPage::boxChanged(const QString &boxUID)
 
 void BoxPage::newBoxClicked(bool checked)
 {
-    if (this->m_createBox)
+    if (this->m_createBoxPage && this->m_createBox)
     {
+        this->m_createBoxPage->show();
         this->m_createBox->show();
         return;
     }
+    m_createBoxPage = new CustomWindow(this);
 
-    this->m_createBox = new CreateBox();
-    connect(this->m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
+    m_createBoxPage->setTitle(tr("Add box"));
+    m_createBoxPage->setFixedSize(400, 300);
 
-    int x = this->x() + this->width() / 4 + m_createBox->width() / 4;
-    int y = this->y() + this->height() / 4 + m_createBox->height() / 4;
-    m_createBox->move(x, y);
-    this->m_createBox->show();
+    auto cusVLay = m_createBoxPage->getContentLayout();
+
+    m_createBox = new CreateBox(m_createBoxPage);
+    connect(m_createBox, &CreateBox::inputEmpty, this, [this]
+            {
+                auto notity = buildNotifyPage(tr("The input cannot be empty, please improve the information."));
+                notity->show();
+            });
+    connect(m_createBox, &CreateBox::accepted, this, [this]
+            {
+                createBoxAccepted();
+                m_createBoxPage->close();
+            });
+    connect(m_createBox, &CreateBox::rejected, this, [this]
+            { m_createBoxPage->close(); });
+    connect(m_createBox, &CreateBox::passwdInconsistent, this, [this]
+            {
+                auto notity = buildNotifyPage(tr("Please confirm whether the password is consistent."));
+                notity->show();
+            });
+
+    cusVLay->addWidget(m_createBox);
+
+    int x = this->x() + this->width() / 4 + m_createBoxPage->width() / 4;
+    int y = this->y() + this->height() / 4 + m_createBoxPage->height() / 4;
+    m_createBoxPage->move(x, y);
+    m_createBoxPage->show();
+    m_createBox->show();
 }
 
 void BoxPage::createBoxAccepted()
@@ -166,7 +349,64 @@ void BoxPage::createBoxAccepted()
 
     auto boxID = reply.value();
     auto box = new Box(boxID);
-    //    this->m_ui->m_boxs->addBox(box);
     this->addBox(box);
+}
+
+void BoxPage::showModifyPasswordPage(ModifyPassword *modifyPassword)
+{
+    m_modifyPasswordPage = new CustomWindow(this);
+    m_modifyPasswordPage->setTitle(tr("Modify password"));
+    m_modifyPasswordPage->setFixedSize(400, 320);
+
+    auto cusVLay = m_modifyPasswordPage->getContentLayout();
+    cusVLay->addWidget(modifyPassword);
+
+    connect(modifyPassword, &ModifyPassword::inputEmpty, this, [this]
+            {
+                auto notity = buildNotifyPage(tr("The input cannot be empty, please improve the information."));
+                notity->show();
+            });
+    connect(modifyPassword, &ModifyPassword::passwdInconsistent, this, [this]
+            {
+                auto notity = buildNotifyPage(tr("Please confirm whether the password is consistent."));
+                notity->show();
+            });
+    connect(modifyPassword, &ModifyPassword::rejected, this, [this]
+            { this->m_modifyPasswordPage->close(); });
+
+    modifyPassword->show();
+    int x = this->x() + this->width() / 4 + m_modifyPasswordPage->width() / 4;
+    int y = this->y() + this->height() / 4 + m_modifyPasswordPage->height() / 4;
+    m_modifyPasswordPage->move(x, y);
+    m_modifyPasswordPage->show();
+}
+
+void BoxPage::showRetrievePasswordPage(RetrievePassword *retrievePassword)
+{
+    m_retrievePasswordPage = new CustomWindow(this);
+    m_retrievePasswordPage->setTitle(tr("Retrieve password"));
+    m_retrievePasswordPage->setFixedSize(400, 320);
+
+    auto cusVLay = m_retrievePasswordPage->getContentLayout();
+    cusVLay->addWidget(retrievePassword);
+
+    connect(retrievePassword, &RetrievePassword::inputEmpty, this, [this]
+            {
+                auto notity = buildNotifyPage(tr("The input cannot be empty, please improve the information."));
+                notity->show();
+            });
+    connect(retrievePassword, &RetrievePassword::passwdInconsistent, this, [this]
+            {
+                auto notity = buildNotifyPage(tr("Please confirm whether the password is consistent."));
+                notity->show();
+            });
+    connect(retrievePassword, &RetrievePassword::rejected, this, [this]
+            { this->m_retrievePasswordPage->close(); });
+
+    retrievePassword->show();
+    int x = this->x() + this->width() / 4 + m_retrievePasswordPage->width() / 4;
+    int y = this->y() + this->height() / 4 + m_retrievePasswordPage->height() / 4;
+    m_retrievePasswordPage->move(x, y);
+    m_retrievePasswordPage->show();
 }
 }  // namespace KS
