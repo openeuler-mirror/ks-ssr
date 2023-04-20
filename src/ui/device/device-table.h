@@ -3,11 +3,11 @@
 
 #include <QWidget>
 
-class DeviceTable
+class DeviceTable : public QWidget
 {
     Q_OBJECT
 public:
     DeviceTable();
 };
 
-#endif // DEVICETABLE_H
+#endif  // DEVICETABLE_H
