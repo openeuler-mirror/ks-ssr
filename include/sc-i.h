@@ -23,9 +23,18 @@ extern "C"
 #define SC_DBUS_OBJECT_PATH "/com/kylinsec/SC"
 #define SC_DBUS_INTERFACE_NAME "com.kylinsec.SC"
 
+// ini文件
+#define KSS_INI_PATH SC_INSTALL_DATADIR "/sc.ini"
+#define KSS_INI_KEY "kss/init"
+
 // 保密箱相关定义
 #define SC_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/BoxManager"
 #define SC_BOX_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SC.BoxManager"
+
+// BM: Box Manager
+#define SCBM_JK_BOX_UID "uid"
+#define SCBM_JK_BOX_NAME "name"
+#define SCBM_JK_BOX_MOUNTED "isMount"
 
 // 可信保护相关定义
 #define SC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/SC/Trusted"
@@ -35,17 +44,17 @@ extern "C"
 #define SC_FILE_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/SC/FileProtected"
 #define SC_FILE_PROTECTED_DBUS_INTERFACE_NAME "com.kylinsec.SC.FileProtected"
 
-// BM: Box Manager
-#define SCBM_JK_BOX_UID "uid"
-#define SCBM_JK_BOX_NAME "name"
-#define SCBM_JK_BOX_MOUNTED "isMount"
+// kss命令 key相关定义
+#define KSS_JSON_KEY_RES "res"
+#define KSS_JSON_KEY_DATA "data"
+#define KSS_JSON_KEY_COUNT "count"
 
-// 文件保护相关定义
-#define SC_FILE_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/SC/FileProtected"
-#define SC_FILE_PROTECTED_DBUS_INTERFACE_NAME "com.kylinsec.SC.FileProtected"
-
-#define SCFP_JK_FILE_PATH "file_path"
-#define SCFP_JK_ADD_TIME "add_time"
+#define KSS_JSON_KEY_DATA_FILE_NAME "name"
+#define KSS_JSON_KEY_DATA_PATH "path"
+#define KSS_JSON_KEY_DATA_TYPE "ftype"
+#define KSS_JSON_KEY_DATA_STATUS "status"
+#define KSS_JSON_KEY_DATA_HASH "hash"
+#define KSS_JSON_KEY_DATA_ADD_TIME "time"
 
 #ifdef __cplusplus
 }

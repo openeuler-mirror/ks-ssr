@@ -17,6 +17,10 @@
         <file alias="checkbox-unchecked-disabled">images/checkbox-unchecked-disabled.svg</file>
         <file alias="checkbox-unchecked-hover">images/checkbox-unchecked-hover.svg</file>
         <file alias="checkbox-unchecked-normal">images/checkbox-unchecked-normal.svg</file>
+        <file alias="checkbox-indeterminate-normal">images/checkbox-indeterminate-normal.svg</file>
+        <file alias="execution-control">images/execution-control.svg</file>
+        <file alias="kernel-module-protected">images/kernel-module-protected.svg</file>
+        <file alias="right-arrow">images/right-arrow.svg</file>
     </qresource>
 
     <qresource prefix="/images/titlebar">

@@ -9,13 +9,15 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #pragma once
 
+#include <QLineEdit>
 #include <QMap>
 #include <QWidget>
+#include "src/ui/common/titlebar-window.h"
 
 class BoxManagerProxy;
 class QJsonObject;
@@ -27,8 +29,20 @@ class BoxPage;
 
 namespace KS
 {
+enum INPUT_PASSWORD_TYPE
+{
+    // 输入mount密码
+    MOUNT_PASSWORD = 0,
+    // 输入删除box密码
+    DELETE_BOX_PASSWORD,
+    OTHER_PASSWORD
+};
+
 class CreateBox;
 class Box;
+class ModifyPassword;
+class RetrievePassword;
+class CustomWindow;
 
 class BoxPage : public QWidget
 {
@@ -45,19 +59,39 @@ private:
 private:
     void addBox(Box *box);
     void removeBox(const QString &boxUID);
+    // 解锁时需输入密码
+    TitlebarWindow *buildInputPasswdPage(const QString &boxUID, INPUT_PASSWORD_TYPE type);
+    // 提示框
+    TitlebarWindow *buildNotifyPage(const QString &notify);
+    // 输入密码正确或错误提示
+    void inputPasswdNotify(const QString &normal,
+                           const QString &error,
+                           bool status);
+
+signals:
+    void sigInputMountPasswdAccepted(const QString &passwd, const QString &boxUID);
+    void sigInputDelPasswdAccepted(const QString &passwd, const QString &boxUID);
 
 private slots:
-    void boxAdded(const QString &boxUID);
+    void boxAdded(const QString &boxUID, const QString &passphrase);
     void boxDeleted(const QString &boxUID);
     void boxChanged(const QString &boxUID);
     void newBoxClicked(bool checked);
     void createBoxAccepted();
+    void showModifyPasswordPage(ModifyPassword *modifyPassword);
+    void showRetrievePasswordPage(RetrievePassword *retrievePassword);
 
 private:
     Ui::BoxPage *m_ui;
     BoxManagerProxy *m_boxManagerProxy;
+    CustomWindow *m_createBoxPage;
     CreateBox *m_createBox;
+    CustomWindow *m_modifyPasswordPage;
+    CustomWindow *m_retrievePasswordPage;
     // 所有保密箱对象
     QMap<QString, Box *> m_boxs;
+    QLineEdit *m_passwdEdit;
+    // 需要输入密码的box ID
+    QString m_inputPasswdBoxUID;
 };
 }  // namespace KS

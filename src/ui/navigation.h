@@ -49,6 +49,7 @@ public:
 
     // 导航栏添加分类项
     void addItem(NavigationItem *item);
+    void setBtnChecked(int id);
 
 Q_SIGNALS:
     void currentCategoryChanged(int index);
