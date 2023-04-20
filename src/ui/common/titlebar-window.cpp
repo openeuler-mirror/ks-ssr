@@ -28,7 +28,8 @@ TitlebarWindow::TitlebarWindow(QWidget *parent,
                                Qt::WindowFlags windowFlags) : QWidget(parent),
                                                               d_ptr(new TitlebarWindowPrivate(this))
 {
-    setWindowFlags(Qt::FramelessWindowHint | windowFlags);
+    auto flags = Qt::WindowFlags(Qt::FramelessWindowHint | Qt::Window);
+    setWindowFlags(flags);
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_Hover);
 

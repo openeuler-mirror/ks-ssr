@@ -26,14 +26,6 @@ void Boxs::addBox(Box *box)
 {
     auto layout = qobject_cast<FlowLayout *>(this->layout());
     layout->addWidget(box);
-
-    // ++this->m_lastBoxCol;
-    // if (this->m_lastBoxCol >= layout->columnCount())
-    // {
-    //     this->m_lastBoxCol = 0;
-    //     ++this->m_lastBoxRow;
-    // }
-    // layout->addWidget(box, this->m_lastBoxRow, this->m_lastBoxCol);
 }
 
 void Boxs::removeBox(Box *box)

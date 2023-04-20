@@ -9,15 +9,25 @@ set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
   PROPERTIES CLASSNAME BoxManagerProxy NO_NAMESPACE true)
 
-qt_add_dbus_interface(
-  BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
+qt5_add_dbus_interface(
+  BOX_MANAGER_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
   box_manager_proxy)
+
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.Trusted.xml
+  PROPERTIES CLASSNAME TrustedProxy NO_NAMESPACE true)
+
+qt5_add_dbus_interface(
+  TRUSTED_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.Trusted.xml
+  trusted_proxy)
 
 set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
   PROPERTIES CLASSNAME FileProtectedProxy NO_NAMESPACE true)
 
-qt_add_dbus_interface(
+qt5_add_dbus_interface(
   FILE_PROTECTED_SRCS
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
   file_protected_proxy)
@@ -34,12 +44,13 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/device/sidebar-item.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-list.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-log.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/device/device-permission.ui)
+  ${CMAKE_CURRENT_SOURCE_DIR}/device/device-permission.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/trusted-protected/table-common.ui)
 
 set(TARGET_NAME ks-sc-gui)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
+qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
                       ${PROJECT_SOURCE_DIR})
 
 add_executable(
@@ -48,6 +59,7 @@ add_executable(
   ${UI_CPP_FILES}
   ${BOX_MANAGER_SRCS}
   ${FILE_PROTECTED_SRCS}
+  ${TRUSTED_SRCS}
   ${QM_FILES}
   ${UI_FILES}
   "${PROJECT_SOURCE_DIR}/resources/resources.qrc")

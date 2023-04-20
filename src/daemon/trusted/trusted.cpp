@@ -26,6 +26,7 @@ Trusted::Trusted(QObject *parent) : QObject(parent)
 {
     this->m_dbusAdaptor = new TrustedAdaptor(this);
     m_kss = new Kss(this);
+    connect(m_kss, &Kss::initFinished, this, &Trusted::InitFinished);
 
     this->init();
 }

@@ -31,21 +31,58 @@ FPPage::FPPage() : QWidget(nullptr),
                                                         SC_FILE_PROTECTED_DBUS_OBJECT_PATH,
                                                         QDBusConnection::systemBus(),
                                                         this);
+    this->initStyle();
+    // 更新表格右上角提示信息
+    auto text = QString(tr("A total of %1 records")).arg(this->m_ui->m_fileTable->getFPFileInfos().size());
+    this->m_ui->m_tips->setText(text);
 
     // TODO:需要绘制颜色
     this->m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
 
     connect(this->m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
     connect(this->m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
+    connect(this->m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
     connect(this->m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(unprotectClicked(bool)));
+}
+
+void FPPage::initStyle()
+{
+    m_ui->m_add->setStyleSheet("QPushButton{"
+                               "color:white;"
+                               "font:NotoSansCJKsc-Regular;"
+                               "font-size:12px;"
+                               "border-radius:4px;"
+                               "background:#00a2ff;}"
+                               "QPushButton:hover{"
+                               "background:#79C3FF;"
+                               "border:4px;}");
+    m_ui->m_update->setStyleSheet("QPushButton{"
+                                  "color:white;"
+                                  "font:NotoSansCJKsc-Regular;"
+                                  "font-size:12px;"
+                                  "border-radius:4px;"
+                                  "background:#393939;}"
+                                  "QPushButton:hover{"
+                                  "background:#464646;"
+                                  "border:4px;}");
+    m_ui->m_unprotect->setStyleSheet("QPushButton{"
+                                     "color:red;"
+                                     "font:NotoSansCJKsc-Regular;"
+                                     "font-size:12px;"
+                                     "border-radius:4px;"
+                                     "background:#393939;}"
+                                     "QPushButton:hover{"
+                                     "background:#464646;"
+                                     "border:4px;}");
+    m_ui->m_tips->setStyleSheet("QLabel{"
+                                "color:#919191;"
+                                "font:NotoSansCJKsc-Regular;"
+                                "font-size:12px;}");
 }
 
 void FPPage::searchTextChanged(const QString &text)
 {
-    KLOG_DEBUG() << "The search text is change to " << text;
-
-    auto filterProxy = this->m_ui->m_fileTable->getFilterProxy();
-    filterProxy->setFilterFixedString(text);
+    this->m_ui->m_fileTable->searchTextChanged(text);
 }
 
 void FPPage::addClicked(bool checked)
@@ -54,11 +91,29 @@ void FPPage::addClicked(bool checked)
     if (!fileName.isEmpty())
     {
         this->m_fileProtectedProxy->AddFile(fileName);
+//        this->m_ui->m_fileTable->updateInfo();
     }
+}
+
+void FPPage::updateClicked(bool checked)
+{
+    this->m_ui->m_fileTable->updateInfo();
+    // 更新表格右上角提示信息
+    auto text = QString(tr("A total of %1 records")).arg(this->m_ui->m_fileTable->getFPFileInfos().size());
+    this->m_ui->m_tips->setText(text);
 }
 
 void FPPage::unprotectClicked(bool checked)
 {
+    auto trustedInfos = this->m_ui->m_fileTable->getFPFileInfos();
+    for (auto trustedInfo : trustedInfos)
+    {
+        if (trustedInfo.selected)
+        {
+            this->m_fileProtectedProxy->RemoveFile(trustedInfo.filePath);
+        }
+    }
+    this->m_ui->m_fileTable->updateInfo();
 }
 
 }  // namespace KS

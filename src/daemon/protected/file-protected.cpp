@@ -37,7 +37,7 @@ FileProtected::~FileProtected()
 void FileProtected::AddFile(const QString &filePath)
 {
     auto fileName = filePath.section('/', -1);
-//    KLOG_DEBUG() << "Add file name is " << fileName;
+    //    KLOG_DEBUG() << "Add file name is " << fileName;
     m_kss->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 }
 
