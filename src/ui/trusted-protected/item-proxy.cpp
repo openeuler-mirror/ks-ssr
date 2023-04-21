@@ -27,7 +27,7 @@ ItemProxy::ItemProxy(const QString &text,
     this->initUI(icon);
 }
 
-void ItemProxy::setRightShow(bool isShow)
+void ItemProxy::showArrow(bool isShow)
 {
     if (isShow)
     {

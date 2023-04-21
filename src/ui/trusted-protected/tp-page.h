@@ -31,7 +31,7 @@ public:
 private:
     void initUI();
     void createItem(const QString &text,
-                    TRUSTED_PROTECT_TYPE type,
+                    TrustedProtectType type,
                     const QString &icon);
 
 private slots:
