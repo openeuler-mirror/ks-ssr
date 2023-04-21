@@ -31,7 +31,6 @@ FPPage::FPPage() : QWidget(nullptr),
                                                         SC_FILE_PROTECTED_DBUS_OBJECT_PATH,
                                                         QDBusConnection::systemBus(),
                                                         this);
-    this->initStyle();
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records")).arg(this->m_ui->m_fileTable->getFPFileInfos().size());
     this->m_ui->m_tips->setText(text);
@@ -45,41 +44,6 @@ FPPage::FPPage() : QWidget(nullptr),
     connect(this->m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(unprotectClicked(bool)));
 }
 
-void FPPage::initStyle()
-{
-    m_ui->m_add->setStyleSheet("QPushButton{"
-                               "color:white;"
-                               "font:NotoSansCJKsc-Regular;"
-                               "font-size:12px;"
-                               "border-radius:4px;"
-                               "background:#00a2ff;}"
-                               "QPushButton:hover{"
-                               "background:#79C3FF;"
-                               "border:4px;}");
-    m_ui->m_update->setStyleSheet("QPushButton{"
-                                  "color:white;"
-                                  "font:NotoSansCJKsc-Regular;"
-                                  "font-size:12px;"
-                                  "border-radius:4px;"
-                                  "background:#393939;}"
-                                  "QPushButton:hover{"
-                                  "background:#464646;"
-                                  "border:4px;}");
-    m_ui->m_unprotect->setStyleSheet("QPushButton{"
-                                     "color:red;"
-                                     "font:NotoSansCJKsc-Regular;"
-                                     "font-size:12px;"
-                                     "border-radius:4px;"
-                                     "background:#393939;}"
-                                     "QPushButton:hover{"
-                                     "background:#464646;"
-                                     "border:4px;}");
-    m_ui->m_tips->setStyleSheet("QLabel{"
-                                "color:#919191;"
-                                "font:NotoSansCJKsc-Regular;"
-                                "font-size:12px;}");
-}
-
 void FPPage::searchTextChanged(const QString &text)
 {
     this->m_ui->m_fileTable->searchTextChanged(text);
@@ -91,7 +55,7 @@ void FPPage::addClicked(bool checked)
     if (!fileName.isEmpty())
     {
         this->m_fileProtectedProxy->AddFile(fileName);
-//        this->m_ui->m_fileTable->updateInfo();
+        //        this->m_ui->m_fileTable->updateInfo();
     }
 }
 

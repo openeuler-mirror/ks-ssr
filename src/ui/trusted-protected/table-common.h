@@ -36,7 +36,7 @@ public:
     void addOperationButton(QList<QPushButton *> btns);
     void addTable(QTableView *table);
     void setPrompt(const QString &prompt);
-    void setSumTest(const QString &test);
+    void setSumText(const QString &test);
 
 signals:
     void sigSearchTextChanged(const QString &text);

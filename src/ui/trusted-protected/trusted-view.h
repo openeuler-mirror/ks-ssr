@@ -24,14 +24,14 @@ class TrustedView : public TableCommon
 {
     Q_OBJECT
 public:
-    TrustedView(QWidget *parent = nullptr, TRUSTED_PROTECT_TYPE type = KERNEL_PROTECT);
+    TrustedView(QWidget *parent = nullptr, TrustedProtectType type = TRUSTED_PROTECT_KERNEL);
     virtual ~TrustedView(){};
 
 private:
     void initUI();
     void initBtns();
-    // 是否需要初始化数据
-    void isNeedInitData();
+    // 检测初始化数据是否完成
+    void checkInitDataIsFinished();
 
 private slots:
     void addClicked(bool checked);
@@ -46,7 +46,7 @@ private:
 
     TrustedProxy *m_trustedProxy;
 
-    TRUSTED_PROTECT_TYPE m_type;
+    TrustedProtectType m_type;
 };
 }  // namespace KS
 

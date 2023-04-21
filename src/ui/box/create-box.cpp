@@ -23,7 +23,6 @@ CreateBox::CreateBox(QWidget *parent) : QWidget(parent),
 {
     this->m_ui->setupUi(this);
     this->setWindowModality(Qt::ApplicationModal);
-    this->initStyle();
     this->m_ui->m_password->setEchoMode(QLineEdit::Password);
     this->m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
     connect(this->m_ui->m_ok, &QPushButton::clicked, this, &CreateBox::onOkClicked);
@@ -43,34 +42,6 @@ QString CreateBox::getName()
 QString CreateBox::getPassword()
 {
     return this->m_ui->m_password->text();
-}
-
-void CreateBox::initStyle()
-{
-    this->m_ui->m_ok->setFixedSize(80, 36);
-    this->m_ui->m_ok->setStyleSheet("QPushButton{"
-                                    "color:#FFFFFF;"
-                                    "font:NotoSansCJKsc-Regular;"
-                                    "font-size:12px;"
-                                    "border-radius:8px;"
-                                    "background:#43A3F2;}"
-                                    "QPushButton:hover{"
-                                    "background:#79C3FF;"
-                                    "border:4px;}");
-    this->m_ui->m_cancel->setFixedSize(80, 36);
-    this->m_ui->m_cancel->setStyleSheet("QPushButton{"
-                                        "color:#FFFFFF;"
-                                        "font:NotoSansCJKsc-Regular;"
-                                        "font-size:12px;"
-                                        "border-radius:8px;"
-                                        "background:#393939;}"
-                                        "QPushButton:hover{"
-                                        "background:#464646;"
-                                        "border:4px;}");
-
-    this->m_ui->m_name->setFixedHeight(36);
-    this->m_ui->m_password->setFixedHeight(36);
-    this->m_ui->m_confirmPassword->setFixedHeight(36);
 }
 
 void CreateBox::onOkClicked()

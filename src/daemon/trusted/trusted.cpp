@@ -25,8 +25,8 @@ namespace KS
 Trusted::Trusted(QObject *parent) : QObject(parent)
 {
     this->m_dbusAdaptor = new TrustedAdaptor(this);
-    m_kss = new Kss(this);
-    connect(m_kss, &Kss::initFinished, this, &Trusted::InitFinished);
+    m_kss = new KSS(this);
+    connect(m_kss, &KSS::initFinished, this, &Trusted::InitFinished);
 
     this->init();
 }
@@ -60,9 +60,9 @@ void Trusted::RemoveFile(const QString &filePath)
 
 QString Trusted::Search(const QString &pathKey, uint searchType)
 {
-    RETURN_VAL_IF_TRUE(TRUSTED_PROTECT_TYPE(searchType) == TRUSTED_PROTECT_TYPE::OTHER_TRUSTED_PROTECT, QString())
+    RETURN_VAL_IF_TRUE(TrustedProtectType(searchType) == TrustedProtectType::TRUSTED_PROTECT_NONE, QString())
 
-    if (TRUSTED_PROTECT_TYPE(searchType) == TRUSTED_PROTECT_TYPE::KERNEL_PROTECT)
+    if (TrustedProtectType(searchType) == TrustedProtectType::TRUSTED_PROTECT_KERNEL)
     {
         return m_kss->search(pathKey, m_kss->getModuleFiles());
     }
