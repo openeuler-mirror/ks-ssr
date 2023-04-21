@@ -63,16 +63,12 @@ public:
 protected:
     void paintEvent(QPaintEvent *event);
 
-private:
-    int enmu2int(const DeviceStatus &status);
-    DeviceStatus int2enum(int status);
-
 private slots:
-    void onConfirm();
-    void onStatusChanged(int index);
+    void confirm();
+    void updateGroupBox(int index);
 
 signals:
-    void clickConfirm();
+    void permissionChanged();
 
 private:
     Ui::DevicePermission *m_ui;

@@ -14,6 +14,7 @@
 
 #include "src/ui/device/device-list.h"
 #include "src/ui/device/device-permission.h"
+#include "src/ui/device/table-filter-model.h"
 #include "src/ui/ui_device-list.h"
 
 #include <kiran-log/qt5-log-i.h>
@@ -29,8 +30,23 @@ DeviceList::DeviceList(QWidget *parent) : QWidget(parent),
     m_ui->m_title->setText(tr("Device List"));
 
     m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
+
     connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceList::searchTextChanged);
-    connect(m_ui->m_edit, &QPushButton::clicked, this, &DeviceList::editClicked);
+    connect(m_ui->m_table, &DeviceListTable::clicked, this, &DeviceList::popupEditDialog);
+
+    QList<DeviceInfo> infos;
+    for (int i = 0; i < 50; i++)
+    {
+        auto deviceInfo = DeviceInfo{.number = i,
+                                     .name = "1",
+                                     .type = i,
+                                     .id = "1",
+                                     .interface = i,
+                                     .status = i,
+                                     .permission = i};
+        infos << deviceInfo;
+    }
+    m_ui->m_table->setData(infos);
 }
 
 DeviceList::~DeviceList()
@@ -58,29 +74,32 @@ void DeviceList::searchTextChanged(const QString &text)
     filterProxy->setFilterFixedString(text);
 }
 
-void DeviceList::editClicked(bool checked)
+void DeviceList::popupEditDialog(const QModelIndex &index)
 {
-    if (!m_devicePermission)
+    if (index.column() == m_ui->m_table->getColCount() - 1)
     {
-        //TODO:由于现在还没有调用后台接口获取设备名，先设置test作为设备名，后续改为具体的设备名
-        m_devicePermission = new DevicePermission("test");
-        connect(m_devicePermission, &DevicePermission::clickConfirm, this, &DeviceList::updateDevice);
-        connect(m_devicePermission, &DevicePermission::destroyed,
-                [this]
-                {
-                    m_devicePermission->deleteLater();
-                    m_devicePermission = nullptr;
-                });
+        if (!m_devicePermission)
+        {
+            //TODO:由于现在还没有调用后台接口获取设备名，先设置test作为设备名，后续改为具体的设备名
+            m_devicePermission = new DevicePermission("test");
+            connect(m_devicePermission, &DevicePermission::permissionChanged, this, &DeviceList::updateDevice);
+            connect(m_devicePermission, &DevicePermission::destroyed,
+                    [this]
+                    {
+                        m_devicePermission->deleteLater();
+                        m_devicePermission = nullptr;
+                    });
+        }
+
+        int permissions = DEVICE_PERMISSION_TYPE_READ | DEVICE_PERMISSION_TYPE_EXEC;
+        m_devicePermission->setDeviceStatus(DEVICE_STATUS_UNACTIVE);
+        m_devicePermission->setDevicePermission(permissions);
+
+        int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
+        int y = this->y() + this->height() / 4 + m_devicePermission->height() / 4;
+        this->m_devicePermission->move(x, y);
+        this->m_devicePermission->show();
     }
-
-    int permissions = DEVICE_PERMISSION_TYPE_READ | DEVICE_PERMISSION_TYPE_EXEC;
-    m_devicePermission->setDeviceStatus(DEVICE_STATUS_UNACTIVE);
-    m_devicePermission->setDevicePermission(permissions);
-
-    int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
-    int y = this->y() + this->height() / 4 + m_devicePermission->height() / 4;
-    this->m_devicePermission->move(x, y);
-    this->m_devicePermission->show();
 }
 
 void DeviceList::updateDevice()
