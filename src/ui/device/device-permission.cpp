@@ -34,9 +34,9 @@ DevicePermission::DevicePermission(const QString &name, QWidget *parent) : QWidg
     m_ui->m_status->addItem(tr("enable"), DEVICE_STATUS_ENABLE);
     m_ui->m_status->addItem(tr("disable"), DEVICE_STATUS_DISABLE);
 
-    connect(m_ui->m_confirm, &QPushButton::clicked, this, &DevicePermission::onConfirm);
+    connect(m_ui->m_confirm, &QPushButton::clicked, this, &DevicePermission::confirm);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &DevicePermission::close);
-    connect(m_ui->m_status, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DevicePermission::onStatusChanged);
+    connect(m_ui->m_status, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DevicePermission::updateGroupBox);
 }
 
 DevicePermission::~DevicePermission()
@@ -96,7 +96,7 @@ int DevicePermission::getDevicePermission()
     return m_permissions;
 }
 
-void DevicePermission::onConfirm()
+void DevicePermission::confirm()
 {
     int permissions = 0;
     if (m_ui->m_read->isChecked())
@@ -136,15 +136,15 @@ void DevicePermission::onConfirm()
     else
     {
         auto status = m_ui->m_status->currentData().toInt();
-        m_status = int2enum(status);
+        m_status = DeviceStatus(status);
         m_permissions = permissions;
 
-        emit clickConfirm();
+        emit permissionChanged();
         hide();
     }
 }
 
-void DevicePermission::onStatusChanged(int index)
+void DevicePermission::updateGroupBox(int index)
 {
     if (m_ui->m_status->currentData().toInt() != DEVICE_STATUS_ENABLE)
     {
@@ -163,21 +163,6 @@ void DevicePermission::paintEvent(QPaintEvent *event)
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
-
-DeviceStatus DevicePermission::int2enum(int status)
-{
-    switch (status)
-    {
-    case DEVICE_STATUS_UNACTIVE:
-        return DEVICE_STATUS_UNACTIVE;
-    case DEVICE_STATUS_DISABLE:
-        return DEVICE_STATUS_DISABLE;
-    case DEVICE_STATUS_ENABLE:
-        return DEVICE_STATUS_ENABLE;
-    default:
-        return DEVICE_STATUS_LAST;
-    }
 }
 
 }  // namespace KS
