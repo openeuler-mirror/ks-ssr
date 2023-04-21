@@ -38,7 +38,6 @@ public:
 
 private:
     void init();
-    void initStyle();
 
 private slots:
     void onOkClicked();

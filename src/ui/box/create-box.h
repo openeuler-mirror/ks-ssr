@@ -35,9 +35,6 @@ public:
     QString getName();
     QString getPassword();
 
-private:
-    void initStyle();
-
 private slots:
     void onOkClicked();
 

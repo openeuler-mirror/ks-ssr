@@ -24,11 +24,11 @@ class TrustedAdaptor;
 
 namespace KS
 {
-enum TRUSTED_PROTECT_TYPE
+enum TrustedProtectType
 {
-    KERNEL_PROTECT = 0,
-    EXECUTE_PROTECT,
-    OTHER_TRUSTED_PROTECT
+    TRUSTED_PROTECT_EXECUTE = 0,
+    TRUSTED_PROTECT_KERNEL,
+    TRUSTED_PROTECT_NONE
 };
 
 class Trusted : public QObject,
@@ -62,6 +62,6 @@ private:
 
 private:
     TrustedAdaptor *m_dbusAdaptor;
-    Kss *m_kss;
+    KSS *m_kss;
 };
 }  // namespace KS
