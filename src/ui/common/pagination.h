@@ -14,36 +14,48 @@
 
 #pragma once
 
+#include <QPushButton>
 #include <QWidget>
 
 namespace Ui
 {
-class DevicePage;
+class Pagination;
 }
 
 namespace KS
 {
-class SidebarItem;
-class DeviceRecord;
-class DeviceList;
-
-class DevicePage : public QWidget
+class PageButtonGroup;
+class Pagination : public QWidget
 {
     Q_OBJECT
 
 public:
-    DevicePage(QWidget *parent = nullptr);
-    virtual ~DevicePage();
-
-protected:
-    void paintEvent(QPaintEvent *event);
+    Pagination(QWidget *parent = nullptr);
+    virtual ~Pagination();
+    void setTotalPages(int number);
 
 private:
-    void initSidebar();
-    void initSubPage();
-    void createSideBarItem(const QString &text, const QString &icon);
+    void initPageButton();
+    void setCurrentPage(int currentPage);
+
+private slots:
+    void jump();
+    void prevClick();
+    void nextClick();
+    void pageBtnClick();
+    void updatetPageBtns();
+    void setSelectedBtn();
+
+signals:
+    void jumperClicked(int number);
+    void currentPageChanged(int number);
+    void totalPageChanged();
 
 private:
-    Ui::DevicePage *m_ui;
+    Ui::Pagination *m_ui;
+    int m_totalPage;
+    int m_prevPage;
+    int m_currentPage;
+    QList<QPushButton *> *m_pageButtons;
 };
 }  // namespace KS

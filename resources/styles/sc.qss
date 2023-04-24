@@ -30,13 +30,6 @@ QLineEdit
     border-radius: 6px;
 }
 
-QToolTip
-{
-    background-color: #FFFFFF;
-    border-radius: 4px;
-    color: #000000;
-}
-
 
 /* common scrollarea/scrollbar */
 
@@ -60,8 +53,7 @@ QScrollBar::handle:vertical {
     border: none;
     border-radius: 2px;
     background-color: #595959;
-    min-width: 4px;    
-    min-height:30px;
+    min-width: 4px;
     margin: 0px;
 }
 
@@ -86,25 +78,9 @@ QScrollBar::sub-line:vertical {
 /* common table */
 
 QHeaderView,
-QTableView,
-QListWidget
+QTableView
 {
     background-color: transparent;
-}
-
-QListWidget::item
-{
-    border: 0px;
-    /*background-color: #393939;*/
-    background-color: #393939;
-    margin: 2px 0px 2px 0px;
-    border-radius: 6px;
-    border: 6px
-}
-
-QListWidget::item::selected
-{
-    background: #00a2ff;
 }
 
 QHeaderView::section
@@ -116,9 +92,8 @@ QHeaderView::section
 
 QHeaderView::section:first
 {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    margin-left: -2px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
 
 QHeaderView::section:last
@@ -132,7 +107,7 @@ QTableView::item
     border: 0px;
     /*background-color: #393939;*/
     background-color: transparent;
-    margin: 0px 0px 2px 0px;
+    margin: 2px 0px 2px 0px;
 }
 
 /* main window */
@@ -188,110 +163,18 @@ QCheckBox::indicator:indeterminate:pressed {
     image: url(:/images/checkbox-indeterminate-active);
 }
 
-/* custom widget */
-QWidget#cusWidget
-{
-    background-color: #2d2d2d;
-    border-radius: 6px;
-}
-
-QPushButton#okBtn,
-QPushButton#passwdOkBtn,
-QPushButton#m_ok,
-QPushButton#m_add
-{
-    color:#FFFFFF;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-    border-radius:4px;
-    background:#43A3F2;
-}
-
-QPushButton#okBtn:hover,
-QPushButton#passwdOkBtn:hover,
-QPushButton#m_ok:hover,
-QPushButton#m_add:hover
-{
-    background:#79C3FF;
-    border:4px;
-}
-
-QPushButton#passwdCancelBtn,
-QPushButton#m_cancel,
-QPushButton#m_update
-{
-    color:#FFFFFF;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-    border-radius:4px;
-    background:#393939;
-}
-
-QPushButton#passwdCancelBtn:hover,
-QPushButton#m_cancel:hover,
-QPushButton#m_update:hover
-{
-    background:#464646;
-    border:4px;
-}
-
-QPushButton#m_unprotect
-{
-    color:red;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-    border-radius:4px;
-    background:#393939;
-}
-
-QPushButton#m_unprotect:hover
-{
-    background:#464646;
-    border:4px;
-}
-
 /* security box */
+
 QPushButton#m_newBox
 {
-    color:#FFFFFF;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-    border-radius:4px;
-    background:#43A3F2;
-}
-QPushButton#m_newBox:hover
-{
-    background:#79C3FF;
-    border:4px;
-}
-
-QMenu#m_popupMenu
-{
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-    color:black;
+    background-color: #2eb3ff;
 }
 
 /* file protected */
-QTableView#m_fileTable > QWidget
+
+QTableView#m_fileTable > QWidget 
 {
     margin: 0px 22px 0px 0px;
-}
-QLabel#m_tips
-{
-    color:#919191;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-}
-
-/* trusted protected */
-KS--TPTable > QWidget
-{
-    margin: 0px 12px 0px 0px;
-}
-QWidget#space
-{
-    background-color: #222222;
 }
 
 /* Device */
@@ -307,7 +190,7 @@ KS--DevicePermissions > QComboBox
 }
 
 KS--DeviceList,
-KS--DeviceLog
+KS--DeviceRecord
 {
     background-color:#2d2d2d;
 }
@@ -341,6 +224,7 @@ QListWidget#m_sidebar::item:hover
 {
 
 }
+
 
 
 
