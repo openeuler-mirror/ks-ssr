@@ -14,7 +14,7 @@
 
 #include "src/ui/device/device-page.h"
 #include "src/ui/device/device-list.h"
-#include "src/ui/device/device-log.h"
+#include "src/ui/device/device-record.h"
 #include "src/ui/device/sidebar-item.h"
 #include "src/ui/ui_device-page.h"
 
@@ -57,7 +57,7 @@ void DevicePage::initSidebar()
 void DevicePage::initSubPage()
 {
     auto *deviceList = new DeviceList(this);
-    auto *connectRecord = new DeviceLog(this);
+    auto *connectRecord = new DeviceRecord(this);
 
     m_ui->m_stacked->addWidget(deviceList);
     m_ui->m_stacked->addWidget(connectRecord);
