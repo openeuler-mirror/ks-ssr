@@ -13,12 +13,12 @@
  */
 
 #include "src/ui/device/device-list.h"
+#include <kiran-log/qt5-log-i.h>
+#include <QPainter>
+#include "src/ui/device/device-list-delegate.h"
 #include "src/ui/device/device-permission.h"
 #include "src/ui/device/table-filter-model.h"
 #include "src/ui/ui_device-list.h"
-
-#include <kiran-log/qt5-log-i.h>
-#include <QPainter>
 
 namespace KS
 {
@@ -32,8 +32,18 @@ DeviceList::DeviceList(QWidget *parent) : QWidget(parent),
     m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
 
     connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceList::searchTextChanged);
-    connect(m_ui->m_table, &DeviceListTable::clicked, this, &DeviceList::popupEditDialog);
+    connect(m_ui->m_table, &DeviceTable::clicked, this, &DeviceList::popupEditDialog);
 
+    m_ui->m_table->setHeaderSections(QStringList() << tr("Number")
+                                                   << tr("Device Name")
+                                                   << tr("Device Type")
+                                                   << tr("Device Id")
+                                                   << tr("Device Interface")
+                                                   << tr("Device Status")
+                                                   << tr("Device Permission"));
+    m_ui->m_table->setItemDelegate(new DeviceListDelegate(this));
+
+    //just test add table data.
     QList<DeviceInfo> infos;
     for (int i = 0; i < 50; i++)
     {
