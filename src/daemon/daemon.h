@@ -19,6 +19,7 @@
 #include "src/daemon/box/box-manager.h"
 #include "src/daemon/protected/file-protected.h"
 #include "src/daemon/trusted/trusted.h"
+#include "src/daemon/device/device-manager.h"
 
 namespace KS
 {
@@ -51,6 +52,7 @@ private:
     BoxManager *m_boxManager;
     Trusted *m_trusted;
     FileProtected *m_fileProtected;
+    DeviceManager *m_deviceManger;
 };
 }  // namespace KS
 

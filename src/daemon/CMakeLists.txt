@@ -18,6 +18,11 @@ qt5_add_dbus_adaptor(
   ${CMAKE_SOURCE_DIR}/src/daemon/protected/file-protected.h KS::FileProtected
   file_protected_adaptor FileProtectedAdaptor)
 
+qt5_add_dbus_adaptor(
+  SECURITY_DEVICE_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/device/device-manager.h KS::DeviceManager
+  device_manager_adaptor DeviceManagerAdaptor)
+
 set(TARGET_NAME ks-sc-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
@@ -30,6 +35,7 @@ add_executable(
   ${SECURITY_BOX_MANAGER_SRCS}
   ${TRUSTED_MANAGER_SRCS}
   ${FILES_PROTECTED_MANAGER_SRCS}
+  ${SECURITY_DEVICE_MANAGER_SRCS}
   ${QM_FILES})
 
 target_include_directories(
@@ -44,7 +50,8 @@ target_link_libraries(
   PRIVATE Qt5::Core
           Qt5::DBus
           Qt5::Sql
-          lib-base)
+          lib-base
+          ${LIBSYSTEMD_LIBRARIES})
 
 install(FILES ${QM_FILES} DESTINATION ${SC_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
