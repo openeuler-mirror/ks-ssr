@@ -26,6 +26,7 @@ Daemon::Daemon() : QObject(nullptr)
     m_boxManager = new BoxManager(this);
     m_trusted = new Trusted(this);
     m_fileProtected = new FileProtected(this);
+    m_deviceManger = new DeviceManager(this);
 }
 
 Daemon::~Daemon()
