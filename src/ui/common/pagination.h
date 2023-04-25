@@ -43,13 +43,12 @@ private slots:
     void prevClick();
     void nextClick();
     void pageBtnClick();
-    void updatetPageBtns();
-    void setSelectedBtn();
+    void updatetPageBtns(int number);
 
 signals:
     void jumperClicked(int number);
     void currentPageChanged(int number);
-    void totalPageChanged();
+    void totalPageChanged(int number);
 
 private:
     Ui::Pagination *m_ui;
