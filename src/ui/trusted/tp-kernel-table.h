@@ -93,6 +93,8 @@ public:
     void searchTextChanged(const QString &text);
     void updateRecord();
     QList<TrustedRecord> getKernelRecords();
+    // 获取被篡改数
+    int getKerneltamperedNums();
 
 private:
     void mouseEnter(const QModelIndex &index);

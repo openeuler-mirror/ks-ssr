@@ -353,6 +353,19 @@ QList<TrustedRecord> TPKernelTable::getKernelRecords()
     return m_model->getKernelRecords();
 }
 
+int TPKernelTable::getKerneltamperedNums()
+{
+    int kerneltamperedNums = 0;
+    for (auto kernelRecord : m_model->getKernelRecords())
+    {
+        if (kernelRecord.status != tr("Certified"))
+        {
+            kerneltamperedNums++;
+        }
+    }
+    return kerneltamperedNums;
+}
+
 void TPKernelTable::mouseEnter(const QModelIndex &index)
 {
     RETURN_IF_TRUE(index.column() != KernelField::KERNEL_FIELD_FILE_PATH)
