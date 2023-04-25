@@ -47,7 +47,7 @@ Window::Window() : TitlebarWindow(nullptr), m_ui(new Ui::Window)
     m_ui->setupUi(getWindowContentWidget());
 
     initWindow();
-    initCategories();
+    initNavigation();
 }
 
 Window::~Window()
@@ -75,31 +75,29 @@ void Window::initWindow()
     }
 }
 
-void Window::initCategories()
+void Window::initNavigation()
 {
     // 初始化分类选项
     m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected", tr("Trusted protected")));
-    // m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected"));
-    // m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected"));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected", tr("File protected")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Private box")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Peripheral management")));
     m_ui->m_navigation->setBtnChecked(0);
 
     // 移除qt designer默认创建的widget
-    while (m_ui->m_categoryPages->currentWidget() != nullptr)
+    while (m_ui->m_pages->currentWidget() != nullptr)
     {
-        auto currentWidget = m_ui->m_categoryPages->currentWidget();
-        m_ui->m_categoryPages->removeWidget(currentWidget);
+        auto currentWidget = m_ui->m_pages->currentWidget();
+        m_ui->m_pages->removeWidget(currentWidget);
         delete currentWidget;
     }
 
-    m_ui->m_categoryPages->addWidget(new TPPage(this));
-    m_ui->m_categoryPages->addWidget(new FPPage());
-    m_ui->m_categoryPages->addWidget(new BoxPage());
-    m_ui->m_categoryPages->addWidget(new DevicePage());
-    m_ui->m_categoryPages->setCurrentIndex(0);
+    m_ui->m_pages->addWidget(new TPPage(this));
+    m_ui->m_pages->addWidget(new FPPage());
+    m_ui->m_pages->addWidget(new BoxPage());
+    m_ui->m_pages->addWidget(new DevicePage());
+    m_ui->m_pages->setCurrentIndex(0);
 
-    connect(m_ui->m_navigation, SIGNAL(currentCategoryChanged(int)), m_ui->m_categoryPages, SLOT(setCurrentIndex(int)));
+    connect(m_ui->m_navigation, SIGNAL(currentCategoryChanged(int)), m_ui->m_pages, SLOT(setCurrentIndex(int)));
 }
 }  // namespace KS
