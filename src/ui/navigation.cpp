@@ -58,20 +58,20 @@ NavigationItem::NavigationItem(const QString &iconName,
 
 Navigation::Navigation(QWidget *parent) : QWidget(parent)
 {
-    m_buttons = new QButtonGroup(this);
+    m_items = new QButtonGroup(this);
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-    connect(m_buttons, &QButtonGroup::idClicked, [this](int id)
+    connect(m_items, &QButtonGroup::idClicked, [this](int id)
             { Q_EMIT currentCategoryChanged(id); });
 #else
-    connect(m_buttons, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id)
+    connect(m_items, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id)
             { Q_EMIT currentCategoryChanged(id); });
 #endif
 }
 
 void Navigation::addItem(NavigationItem *item)
 {
-    m_buttons->addButton(item->getButton(), layout()->count());
+    m_items->addButton(item->getButton(), layout()->count());
     layout()->addWidget(item);
 
     // connect(item, &NavigationItem::clicked, this, [this, item](bool checked)
@@ -83,7 +83,7 @@ void Navigation::addItem(NavigationItem *item)
 
 void Navigation::setBtnChecked(int id)
 {
-    m_buttons->button(id)->setChecked(true);
+    m_items->button(id)->setChecked(true);
 }
 
 }  // namespace KS

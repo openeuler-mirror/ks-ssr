@@ -130,7 +130,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QStackedWidget" name="m_categoryPages">
+       <widget class="QStackedWidget" name="m_pages">
         <property name="currentIndex">
          <number>1</number>
         </property>
