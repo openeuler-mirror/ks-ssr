@@ -15,10 +15,12 @@
 #include "src/daemon/protected/file-protected.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
-#include <QDateTime>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include "config.h"
-#include "include/sc-i.h"
-#include "include/sc-marcos.h"
+#include "include/ksc-i.h"
+#include "include/ksc-marcos.h"
 #include "src/daemon/file_protected_adaptor.h"
 
 namespace KS
@@ -53,14 +55,37 @@ void FileProtected::RemoveFile(const QString &filePath)
 
 QString FileProtected::Search(const QString &pathKey)
 {
-    return m_kss->search(pathKey, m_kss->getFiles());
+    QJsonDocument resultJsonDoc;
+    QJsonArray jsonArr;
+
+    QJsonParseError jsonError;
+    auto jsonDoc = QJsonDocument::fromJson(m_kss->getFiles().toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser kernel protected information failed: " << jsonError.errorString();
+        return QString();
+    }
+
+    auto jsonModules = jsonDoc.object().value(KSC_JK_DATA).toArray();
+    for (const auto &module : jsonModules)
+    {
+        auto jsonMod = module.toObject();
+
+        // 通过输入的pathKey，判断list中path字段是否包含pathKey
+        if (jsonMod.value(KSC_JK_DATA_PATH).toString().contains(pathKey))
+        {
+            jsonArr.push_back(jsonMod);
+        }
+    }
+    resultJsonDoc.setArray(jsonArr);
+    return QString(resultJsonDoc.toJson());
 }
 
 void FileProtected::init()
 {
     QDBusConnection connection = QDBusConnection::systemBus();
 
-    if (!connection.registerObject(SC_FILE_PROTECTED_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(KSC_FILE_PROTECTED_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }

@@ -49,17 +49,15 @@ public:
     // 获取文件保护列表
     QString getFiles();
 
-    // 搜索 传入要搜索的列表，此处fileList为一个json字符串，可通过get*Files()获取
-    QString search(const QString &pathKey, const QString &fileList);
 public Q_SLOTS:
-    void onProcessExit(int exitCode, QProcess::ExitStatus exitStatus);
+    void processExited(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     void execute(const QString &cmd);
-    void initData();
+    void initTrusted();
 
 private slots:
-    void initDataResults();
+    void initTrustedResults();
 
 signals:
     void initFinished();
@@ -69,6 +67,7 @@ private:
     QString m_processOutput;
     QString m_errorOutput;
     QSettings *m_ini;
+    QThread *m_kssInitThread;
 };
 }  // namespace KS
 #endif  // KSS_H

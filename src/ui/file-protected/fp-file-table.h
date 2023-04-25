@@ -20,7 +20,7 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 #include <QWidget>
-#include "src/ui/trusted-protected/new-headerview.h"
+#include "src/ui/trusted/tp-table-header-proxy.h"
 
 class FileProtectedProxy;
 
@@ -122,7 +122,7 @@ private:
 private:
     FPFilesFilterModel *m_filterProxy;
     FPFilesModel *m_model;
-    NewHeaderView *m_newHeaderView;
+    TPTableHeaderProxy *m_headerViewProxy;
 };
 
 }  // namespace KS
