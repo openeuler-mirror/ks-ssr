@@ -52,10 +52,10 @@
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="m_input"/>
+    <widget class="QLineEdit" name="m_pageNoInput"/>
    </item>
    <item>
-    <widget class="QPushButton" name="m_jumper">
+    <widget class="QPushButton" name="m_pageJumper">
      <property name="text">
       <string>Go to</string>
      </property>
