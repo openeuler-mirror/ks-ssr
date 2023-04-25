@@ -19,13 +19,13 @@ extern "C"
 {
 #endif
 
-#define KSC_DBUS_NAME "com.kylinsec.KSC"
-#define KSC_DBUS_OBJECT_PATH "/com/kylinsec/KSC"
-#define KSC_DBUS_INTERFACE_NAME "com.kylinsec.KSC"
+#define KSC_DBUS_NAME "com.kylinsec.SC"
+#define KSC_DBUS_OBJECT_PATH "/com/kylinsec/SC"
+#define KSC_DBUS_INTERFACE_NAME "com.kylinsec.SC"
 
 // 保密箱相关定义
-#define KSC_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/KSC/BoxManager"
-#define KSC_BOX_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.KSC.BoxManager"
+#define KSC_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/BoxManager"
+#define KSC_BOX_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SC.BoxManager"
 
 // BM: Box Manager
 #define KSC_BM_JK_BOX_UID "uid"
@@ -33,12 +33,12 @@ extern "C"
 #define KSC_BM_JK_BOX_MOUNTED "isMount"
 
 // 可信保护相关定义
-#define KSC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/KSC/Trusted"
-#define KSC_TRUSTED_PROTECTED_DBUS_INTERFACE_NAME "com.kylinsec.KSC.Trusted"
+#define KSC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/SC/Trusted"
+#define KSC_TRUSTED_PROTECTED_DBUS_INTERFACE_NAME "com.kylinsec.SC.Trusted"
 
 // 文件保护相关定义
-#define KSC_FILE_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/KSC/FileProtected"
-#define KSC_FILE_PROTECTED_DBUS_INTERFACE_NAME "com.kylinsec.KSC.FileProtected"
+#define KSC_FILE_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/SC/FileProtected"
+#define KSC_FILE_PROTECTED_DBUS_INTERFACE_NAME "com.kylinsec.SC.FileProtected"
 
 // kss命令 key相关定义 JK: JSON_KEY
 #define KSC_JK_RES "res"

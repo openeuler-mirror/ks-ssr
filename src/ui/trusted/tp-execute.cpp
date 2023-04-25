@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
+ * ks-sc is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2 
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
+ * See the Mulan PSL v2 for more details.  
+ * 
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ */
 #include "src/ui/trusted/tp-execute.h"
 #include <qt5-log-i.h>
 #include <QDir>
@@ -9,16 +22,17 @@
 namespace KS
 {
 TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
-                   m_ui(new Ui::TPExecute)
+                                        m_ui(new Ui::TPExecute)
 {
     this->m_ui->setupUi(this);
 
     this->m_trustedProtectedProxy = new TrustedProxy(KSC_DBUS_NAME,
-                                                        KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
-                                                        QDBusConnection::systemBus(),
-                                                        this);
+                                                     KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
+                                                     QDBusConnection::systemBus(),
+                                                     this);
     // 更新表格右上角提示信息
-    auto text = QString(tr("A total of %1 records")).arg(this->m_ui->m_executeTable->getExecuteRecords().size());
+    auto text = QString(tr("A total of %1 records, Being tampered with %2")).arg(QString::number(this->m_ui->m_executeTable->getExecuteRecords().size()),
+                                                                                 QString::number(this->m_ui->m_executeTable->getExecutetamperedNums()));
     this->m_ui->m_tips->setText(text);
 
     // TODO:需要绘制颜色
@@ -39,7 +53,8 @@ void TPExecute::updateInfo()
 {
     this->m_ui->m_executeTable->updateRecord();
     // 更新表格右上角提示信息
-    auto text = QString(tr("A total of %1 records")).arg(this->m_ui->m_executeTable->getExecuteRecords().size());
+    auto text = QString(tr("A total of %1 records, Being tampered with %2")).arg(QString::number(this->m_ui->m_executeTable->getExecuteRecords().size()),
+                                                                                 QString::number(this->m_ui->m_executeTable->getExecutetamperedNums()));
     this->m_ui->m_tips->setText(text);
 }
 

@@ -358,6 +358,19 @@ QList<TrustedRecord> TPExecuteTable::getExecuteRecords()
     return m_model->getExecuteRecords();
 }
 
+int TPExecuteTable::getExecutetamperedNums()
+{
+    int executetamperedNums = 0;
+    for (auto kernelRecord : m_model->getExecuteRecords())
+    {
+        if (kernelRecord.status != tr("Certified"))
+        {
+            executetamperedNums++;
+        }
+    }
+    return executetamperedNums;
+}
+
 void TPExecuteTable::mouseEnter(const QModelIndex &index)
 {
     if (index.column() != ExecuteField::EXECUTE_FIELD_FILE_PATH)

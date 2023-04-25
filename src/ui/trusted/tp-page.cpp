@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-sc is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
- * See the Mulan PSL v2 for more details.
- *
- * Author:     yuanxing <yuanxing@kylinos.com.cn>
+ *          http://license.coscl.org.cn/MulanPSL2 
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
+ * See the Mulan PSL v2 for more details.  
+ * 
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
 #include "src/ui/trusted/tp-page.h"
@@ -81,15 +81,15 @@ void TPPage::checkTrustedLoadFinied()
     auto settings = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
     RETURN_IF_TRUE(settings->value(KSC_INI_KEY).toInt() != 0)
 
-    auto widget = new SubWindow(this);
-    widget->setFixedSize(240, 180);
-    widget->buildNotify(tr("Trusted data needs to be initialised,"
-                           "please wait a few minutes to refresh."));
+    auto message = new SubWindow(this);
+    message->setFixedSize(240, 180);
+    message->buildNotify(tr("Trusted data needs to be initialised,"
+                            "please wait a few minutes to refresh."));
 
-    int x = this->x() + this->width() / 4 + widget->width() / 4;
-    int y = this->y() + this->height() / 4 + widget->height() / 4;
-    widget->move(x, y);
-    widget->show();
+    int x = this->x() + this->width() / 4 + message->width() / 4;
+    int y = this->y() + this->height() / 4 + message->height() / 4;
+    message->move(x, y);
+    message->show();
 }
 
 void TPPage::createSideBarItem(const QString &text, const QString &icon)
