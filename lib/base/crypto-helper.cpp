@@ -25,7 +25,7 @@
 #include <cryptopp/rsa.h>
 #include <qt5-log-i.h>
 
-#include "include/sc-marcos.h"
+#include "include/ksc-marcos.h"
 #include "lib/base/crypto-helper.h"
 
 using namespace CryptoPP;
@@ -54,26 +54,26 @@ CryptoHelper::~CryptoHelper()
 }
 
 void CryptoHelper::generateRsaKey(uint32_t key_length,
-                                    QString &privateKey,
-                                    QString &publicKey)
+                                  QString &privateKey,
+                                  QString &publicKey)
 {
     auto privateKeyStd = privateKey.toStdString();
     auto publicKeyStd = publicKey.toStdString();
-        RSAES_OAEP_SHA_Decryptor rsa_decryptor(global_rng(), key_length);
-        HexEncoder private_sink(new Base64Encoder(new StringSink(privateKeyStd)));
-        rsa_decryptor.AccessMaterial().Save(private_sink);
-        private_sink.MessageEnd();
+    RSAES_OAEP_SHA_Decryptor rsa_decryptor(global_rng(), key_length);
+    HexEncoder private_sink(new Base64Encoder(new StringSink(privateKeyStd)));
+    rsa_decryptor.AccessMaterial().Save(private_sink);
+    private_sink.MessageEnd();
 
-        RSAES_OAEP_SHA_Encryptor rsa_encryptor(rsa_decryptor);
-        HexEncoder public_sink(new Base64Encoder(new StringSink(publicKeyStd)));
-        rsa_encryptor.AccessMaterial().Save(public_sink);
-        public_sink.MessageEnd();
-        privateKey = QString::fromStdString(privateKeyStd);
-        publicKey = QString::fromStdString(publicKeyStd);
+    RSAES_OAEP_SHA_Encryptor rsa_encryptor(rsa_decryptor);
+    HexEncoder public_sink(new Base64Encoder(new StringSink(publicKeyStd)));
+    rsa_encryptor.AccessMaterial().Save(public_sink);
+    public_sink.MessageEnd();
+    privateKey = QString::fromStdString(privateKeyStd);
+    publicKey = QString::fromStdString(publicKeyStd);
 }
 
 QString CryptoHelper::rsaEncrypt(const QString &publicKey,
-                                      const QString &message)
+                                 const QString &message)
 {
     RETURN_VAL_IF_TRUE(message.isEmpty(), QString());
 

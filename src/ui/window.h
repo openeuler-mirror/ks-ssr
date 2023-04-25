@@ -30,7 +30,9 @@ class Window : public TitlebarWindow
     Q_OBJECT
 public:
     Window();
-    virtual ~Window(){};
+    virtual ~Window();
+
+    static Ui::Window *instance();
 
 private:
     // 窗口整体初始化

@@ -13,7 +13,7 @@
  */
 
 #include "table-filter-model.h"
-#include "sc-marcos.h"
+#include "ksc-marcos.h"
 
 namespace KS
 {

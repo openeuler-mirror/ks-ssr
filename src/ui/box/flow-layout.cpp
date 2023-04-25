@@ -14,7 +14,7 @@
 
 #include "src/ui/box/flow-layout.h"
 #include <QWidget>
-#include "sc-marcos.h"
+#include "ksc-marcos.h"
 
 namespace KS
 {

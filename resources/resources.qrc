@@ -31,7 +31,7 @@
     </qresource>
 
     <qresource prefix="/styles">
-        <file alias="sc">styles/sc.qss</file>
+        <file alias="ksc">styles/ksc.qss</file>
         <file alias="titlebar-window">styles/titlebar-window.qss</file>
     </qresource>
 </RCC>

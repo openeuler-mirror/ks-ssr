@@ -29,7 +29,7 @@ public:
     Box(const QString &name,
         const QString &password,
         uint userUID,
-        const QString &boxId = "",
+        const QString &boxID = "",
         QObject *parent = nullptr);
     virtual ~Box(){};
 
@@ -54,7 +54,7 @@ private:
 
 private:
     QString m_name;
-    QString m_boxId;
+    QString m_boxID;
     QString m_password;
     uint m_userUID;
 
