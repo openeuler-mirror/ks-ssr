@@ -20,7 +20,7 @@
 #include <QRandomGenerator>
 #include <QTime>
 #include "config.h"
-#include "include/sc-marcos.h"
+#include "include/ksc-marcos.h"
 #include "lib/base/crypto-helper.h"
 
 namespace KS
@@ -31,10 +31,10 @@ namespace KS
 Box::Box(const QString &name,
          const QString &password,
          uint userUID,
-         const QString &boxId,
+         const QString &boxID,
          QObject *parent) : QObject(parent),
                             m_name(name),
-                            m_boxId(boxId),
+                            m_boxID(boxID),
                             m_password(password),
                             m_userUID(userUID)
 {
@@ -46,7 +46,7 @@ Box::Box(const QString &name,
 
 QString Box::getBoxID()
 {
-    return m_boxId;
+    return m_boxID;
 }
 
 QString Box::getBoxName()
@@ -68,7 +68,7 @@ uint Box::getUserUid()
 
 QString Box::getPassphrase()
 {
-    auto decryptPspr = CryptoHelper::aesDecrypt(m_boxDao->getBox(m_boxId).encryptPspr);
+    auto decryptPspr = CryptoHelper::aesDecrypt(m_boxDao->getBox(m_boxID).encryptPspr);
     return decryptPspr;
 }
 
@@ -78,13 +78,13 @@ bool Box::retrievePassword(const QString &passphrase, const QString &newPassword
 
     auto encryptPassword = CryptoHelper::aesEncrypt(newPassword);
 
-    m_boxDao->modifyPasswd(m_boxId, encryptPassword);
+    m_boxDao->modifyPasswd(m_boxID, encryptPassword);
     return true;
 }
 
 BoxRecord Box::getBoxInfo()
 {
-    return m_boxDao->getBox(m_boxId);
+    return m_boxDao->getBox(m_boxID);
 }
 
 bool Box::delBox(const QString &inputPassword)
@@ -101,19 +101,19 @@ bool Box::delBox(const QString &inputPassword)
 
     if (boxInfo.isMount)
     {
-        KLOG_WARNING() << "The box has been mounted and cannot be deleted. uid = " << m_boxId;
+        KLOG_WARNING() << "The box has been mounted and cannot be deleted. uid = " << m_boxID;
         return false;
     }
 
     // 删除目录
-    QString dirPath = QString("%1/%2%3").arg(SC_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxId);
+    QString dirPath = QString("%1/%2%3").arg(KSC_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
     m_ecryptFS->rmBoxDir(dirPath);
 
-    QString mountPath = QString("%1/%2").arg(SC_BOX_MOUNT_DIR, boxInfo.boxName);
+    QString mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
     m_ecryptFS->rmBoxDir(mountPath);
 
     // 删除数据库
-    m_boxDao->delBox(m_boxId);
+    m_boxDao->delBox(m_boxID);
 
     return true;
 }
@@ -140,7 +140,7 @@ bool Box::mount(const QString &inputPassword)
     // 已挂载则返回
     if (boxInfo.isMount)
     {
-        KLOG_WARNING() << "The box has been mounted and there is no need to repeat the operation. uid = " << m_boxId;
+        KLOG_WARNING() << "The box has been mounted and there is no need to repeat the operation. uid = " << m_boxID;
         return true;
     }
 
@@ -148,26 +148,26 @@ bool Box::mount(const QString &inputPassword)
     auto decryptPspr = CryptoHelper::aesDecrypt(boxInfo.encryptPspr);  //Pspr
     auto decryptSig = CryptoHelper::aesDecrypt(boxInfo.encryptSig);
 
-    auto mountPath = QString("%1/%2").arg(SC_BOX_MOUNT_DIR, boxInfo.boxName);
+    auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
     m_ecryptFS->mkdirBoxDir(mountPath, getUser());
 
-    auto mountObjectPath = QString("%1/%2%3").arg(SC_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxId);
+    auto mountObjectPath = QString("%1/%2%3").arg(KSC_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
 
     RETURN_VAL_IF_TRUE(!m_ecryptFS->decrypt(mountObjectPath, mountPath, decryptPspr, decryptSig), false)
 
     // 修改数据库中挂载状态
-    m_boxDao->modifyMountStatus(m_boxId, true);
+    m_boxDao->modifyMountStatus(m_boxID, true);
     return true;
 }
 
 void Box::umount()
 {
     auto boxInfo = getBoxInfo();
-    QString mountPath = QString("%1/%2").arg(SC_BOX_MOUNT_DIR, boxInfo.boxName);
+    QString mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
 
     m_ecryptFS->encrypt(mountPath);
     // 修改数据库中挂载状态
-    m_boxDao->modifyMountStatus(m_boxId, false);
+    m_boxDao->modifyMountStatus(m_boxID, false);
 }
 
 bool Box::modifyBoxPassword(const QString &inputPassword, const QString &newPassword)
@@ -183,13 +183,13 @@ bool Box::modifyBoxPassword(const QString &inputPassword, const QString &newPass
 
     auto encryptPassword = CryptoHelper::aesEncrypt(newPassword);
 
-    m_boxDao->modifyPasswd(m_boxId, encryptPassword);
+    m_boxDao->modifyPasswd(m_boxID, encryptPassword);
     return true;
 }
 
 void Box::init()
 {
-    if (m_boxId.isEmpty())
+    if (m_boxID.isEmpty())
     {
         QString passphrase = getRandStr(GET_BOX_PASSPHRASE_BIT);
         QString sig = m_ecryptFS->addPassphrase(passphrase);
@@ -204,22 +204,22 @@ void Box::init()
         auto encryptPasswd = CryptoHelper::aesEncrypt(m_password);
 
         // 创建随机uid 暂定为六位字符, 作为唯一标识符
-        m_boxId = getRandBoxUid();
+        m_boxID = getRandBoxUid();
 
         // 插入数据库
-        m_boxDao->addBox(m_name, m_boxId, false, encryptPasswd, encryptPassphrase,
+        m_boxDao->addBox(m_name, m_boxID, false, encryptPasswd, encryptPassphrase,
                          encryptSig, m_userUID);
     }
 
     // 创建对应文件夹 未挂载box
-    QDir dir(SC_BOX_MOUNT_DATADIR);
-    if (!dir.mkdir(m_name + m_boxId))  // name+uid 命名 可区分不同用户下创建的相同文件夹名称
+    QDir dir(KSC_BOX_MOUNT_DATADIR);
+    if (!dir.mkdir(m_name + m_boxID))  // name+uid 命名 可区分不同用户下创建的相同文件夹名称
     {
-        KLOG_WARNING() << "Failed to create folder. name = " << m_name << " uid = " << m_boxId;
+        KLOG_WARNING() << "Failed to create folder. name = " << m_name << " uid = " << m_boxID;
     }
 
     // 在对应调用的用户根目录创建文件夹
-    QString mountPath = QString("%1/%2").arg(SC_BOX_MOUNT_DIR, m_name);
+    QString mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, m_name);
     m_ecryptFS->mkdirBoxDir(mountPath, getUser());
 }
 
@@ -233,7 +233,7 @@ QString Box::getRandBoxUid()
 
         auto boxInfo = m_boxDao->getBox(uid);
         // 若存在则重新生成uid
-        if (!boxInfo.boxId.isEmpty())
+        if (!boxInfo.boxID.isEmpty())
         {
             KLOG_WARNING() << "There is same uid. uid = " << uid;
             uid = "";

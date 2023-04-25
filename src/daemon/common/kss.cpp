@@ -19,46 +19,55 @@
 #include <QJsonObject>
 #include <QThread>
 #include "config.h"
-#include "include/sc-i.h"
-#include "include/sc-marcos.h"
+#include "include/ksc-i.h"
+#include "include/ksc-marcos.h"
 
 namespace KS
 {
-#define KSS_INIT_CMD "kss card deploy"
+// ini文件
+#define KSC_INI_PATH KSC_INSTALL_DATADIR "/ksc.ini"
+#define KSC_INI_KEY "ksc/initialized"
+// 线程初始化 等待时长（30分钟）
+#define KSS_INIT_THREAD_TIMEOUT 30 * 60 * 1000
+
+#define KSS_JSON_KEY_DATA_PATH KSC_JK_DATA_PATH
+
+// 暂时使用 -p 传入user pin，后续做需要做可信卡时再做修改
+#define KSS_INIT_CMD "kss card deploy -p 123123"
 #define KSS_INIT_DATA_CMD "kss secure setup"
 
-#define DIGEST_SCAN_ADD_FILE_CMD "kss digest scan -u"
-#define DIGEST_SCAN_REMOVE_FILE_CMD "kss digest scan -r"
-#define DIGEST_SCAN_GET_EXECUTE_CMD "kss digest info -e"
-#define DIGEST_SCAN_GET_KERNEL_CMD "kss digest info -m"
+#define KSS_DIGEST_SCAN_ADD_FILE_CMD "kss digest scan -u"
+#define KSS_DIGEST_SCAN_REMOVE_FILE_CMD "kss digest scan -r"
+#define KSS_DIGEST_INFO_GET_EXECUTE_CMD "kss digest info -e"
+#define KSS_DIGEST_INFO_GET_KERNEL_CMD "kss digest info -m"
 
-#define ADD_FILE_CMD "kss file add"
-#define REMOVE_FILE_CMD "kss file del"
-#define GET_FILES_CMD "kss file info"
+#define KSS_ADD_FILE_CMD "kss file add"
+#define KSS_REMOVE_FILE_CMD "kss file del"
+#define KSS_GET_FILES_CMD "kss file info"
 
-KSS::KSS(QObject *parent) : QObject(parent)
+KSS::KSS(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
 {
     m_process = new QProcess(parent);
-    m_ini = new QSettings(KSS_INI_PATH, QSettings::IniFormat, this);
+    m_ini = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
 
-    this->initData();
+    this->initTrusted();
 }
 
 void KSS::addTrustedFile(const QString &filePath)
 {
-    auto cmd = QString("%1 %2").arg(DIGEST_SCAN_ADD_FILE_CMD, filePath);
+    auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_ADD_FILE_CMD, filePath);
     this->execute(cmd);
 }
 
 void KSS::removeTrustedFile(const QString &filePath)
 {
-    auto cmd = QString("%1 %2").arg(DIGEST_SCAN_REMOVE_FILE_CMD, filePath);
+    auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_REMOVE_FILE_CMD, filePath);
     this->execute(cmd);
 }
 
 QString KSS::getModuleFiles()
 {
-    this->execute(DIGEST_SCAN_GET_KERNEL_CMD);
+    this->execute(KSS_DIGEST_INFO_GET_KERNEL_CMD);
     return m_processOutput;
 }
 
@@ -68,58 +77,29 @@ void KSS::prohibitUnloading(bool prohibited, const QString &filePath)
 
 QString KSS::getExecuteFiles()
 {
-    this->execute(DIGEST_SCAN_GET_EXECUTE_CMD);
+    this->execute(KSS_DIGEST_INFO_GET_EXECUTE_CMD);
     return m_processOutput;
 }
 
 void KSS::addFile(const QString &fileName, const QString &filePath, const QString &insertTime)
 {
-    auto cmd = QString("%1 -n %2 -p %3 -t '%4'").arg(ADD_FILE_CMD, fileName, filePath, insertTime);
+    auto cmd = QString("%1 -n %2 -p %3 -t '%4'").arg(KSS_ADD_FILE_CMD, fileName, filePath, insertTime);
     this->execute(cmd);
 }
 
 void KSS::removeFile(const QString &filePath)
 {
-    auto cmd = QString("%1 -p %2").arg(REMOVE_FILE_CMD, filePath);
+    auto cmd = QString("%1 -p %2").arg(KSS_REMOVE_FILE_CMD, filePath);
     this->execute(cmd);
 }
 
 QString KSS::getFiles()
 {
-    this->execute(GET_FILES_CMD);
+    this->execute(KSS_GET_FILES_CMD);
     return m_processOutput;
 }
 
-QString KSS::search(const QString &pathKey, const QString &fileList)
-{
-    QJsonDocument resultJsonDoc;
-    QJsonArray jsonArr;
-
-    QJsonParseError jsonError;
-    auto jsonDoc = QJsonDocument::fromJson(fileList.toUtf8(), &jsonError);
-    if (jsonDoc.isNull())
-    {
-        KLOG_WARNING() << "Parser kernel protected information failed: " << jsonError.errorString();
-        return QString();
-    }
-
-    auto jsonModules = jsonDoc.object().value(KSS_JSON_KEY_DATA).toArray();
-
-    for (auto module : jsonModules)
-    {
-        auto jsonMod = module.toObject();
-
-        // 通过输入的pathKey，判断list中path字段是否包含pathKey
-        if (jsonMod.value(KSS_JSON_KEY_DATA_PATH).toString().contains(pathKey))
-        {
-            jsonArr.push_back(jsonMod);
-        }
-    }
-    resultJsonDoc.setArray(jsonArr);
-    return QString(resultJsonDoc.toJson());
-}
-
-void KSS::onProcessExit(int exitCode, QProcess::ExitStatus exitStatus)
+void KSS::processExited(int exitCode, QProcess::ExitStatus exitStatus)
 {
     KLOG_DEBUG() << "Command execution completed. exitcode = " << exitCode << "exitStatus = " << exitStatus;
     this->m_process->disconnect();
@@ -141,37 +121,37 @@ void KSS::execute(const QString &cmd)
 {
     KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
     m_process->start("bash", QStringList() << "-c" << cmd);
-    connect(this->m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onProcessExit(int, QProcess::ExitStatus)));
+    connect(this->m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processExited(int, QProcess::ExitStatus)));
     m_process->waitForFinished();
 }
 
-void KSS::initDataResults()
+void KSS::initTrustedResults()
 {
-    KLOG_INFO() << "Initialisation ok kss data is completed.";
+    KLOG_INFO() << "Kss data initialisation completed.";
 
-    m_ini->setValue(KSS_INI_KEY, 1);
+    m_ini->setValue(KSC_INI_KEY, 1);
     emit this->initFinished();
 }
 
-void KSS::initData()
+void KSS::initTrusted()
 {
-    RETURN_IF_TRUE(m_ini->value(KSS_INI_KEY).toInt() != 0)
+    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() != 0)
 
     KLOG_INFO() << "Start kss initialisation.";
     this->execute(KSS_INIT_CMD);
 
-    auto kssInitThread = QThread::create([this]
-                                         {
-                                             auto process = new QProcess(this);
-                                             auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r`");
-                                             KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
-                                             process->start("bash", QStringList() << "-c" << cmd);
-                                             process->waitForFinished(-1);
-                                         });
+    m_kssInitThread = QThread::create([this]
+                                      {
+                                          auto process = new QProcess(this);
+                                          auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r` -b");
+                                          KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
+                                          process->start("bash", QStringList() << "-c" << cmd);
+                                          process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
+                                      });
 
-    connect(kssInitThread, &QThread::finished, this, &KSS::initDataResults);
-    connect(kssInitThread, &QThread::finished, kssInitThread, &QThread::deleteLater);
+    connect(m_kssInitThread, &QThread::finished, this, &KSS::initTrustedResults);
+    connect(m_kssInitThread, &QThread::finished, m_kssInitThread, &QThread::deleteLater);
 
-    kssInitThread->start();
+    m_kssInitThread->start();
 }
 }  // namespace KS

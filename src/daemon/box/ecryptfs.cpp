@@ -15,7 +15,7 @@
 #include "ecryptfs.h"
 #include <qt5-log-i.h>
 #include <QDir>
-#include "include/sc-marcos.h"
+#include "include/ksc-marcos.h"
 
 namespace KS
 {
@@ -79,7 +79,7 @@ void EcryptFS::rmBoxDir(const QString &path)
     }
 }
 
-void EcryptFS::onProcessExit(int exitCode, QProcess::ExitStatus exitStatus)
+void EcryptFS::processExited(int exitCode, QProcess::ExitStatus exitStatus)
 {
     KLOG_DEBUG() << "Command execution completed. exitcode = " << exitCode << "exitStatus = " << exitStatus;
     this->m_process->disconnect();
@@ -100,7 +100,7 @@ void EcryptFS::execute(const QString &cmd)
 {
     KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
     m_process->start("bash", QStringList() << "-c" << cmd);
-    connect(this->m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onProcessExit(int, QProcess::ExitStatus)));
+    connect(this->m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processExited(int, QProcess::ExitStatus)));
     m_process->waitForFinished();
 }
 }  // namespace KS

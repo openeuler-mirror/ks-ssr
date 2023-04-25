@@ -15,7 +15,7 @@
 #include "src/ui/common/pagination.h"
 #include <QIntValidator>
 #include <QPushButton>
-#include "sc-marcos.h"
+#include "ksc-marcos.h"
 #include "src/ui/ui_pagination.h"
 
 //页码按钮个数

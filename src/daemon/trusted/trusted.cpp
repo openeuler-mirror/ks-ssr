@@ -15,9 +15,12 @@
 #include "src/daemon/trusted/trusted.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include "config.h"
-#include "include/sc-i.h"
-#include "include/sc-marcos.h"
+#include "include/ksc-i.h"
+#include "include/ksc-marcos.h"
 #include "src/daemon/trusted_adaptor.h"
 
 namespace KS
@@ -60,23 +63,48 @@ void Trusted::RemoveFile(const QString &filePath)
 
 QString Trusted::Search(const QString &pathKey, uint searchType)
 {
-    RETURN_VAL_IF_TRUE(TrustedProtectType(searchType) == TrustedProtectType::TRUSTED_PROTECT_NONE, QString())
+    RETURN_VAL_IF_TRUE(TrustedProtectType(searchType) == TrustedProtectType::TRUSTED_PROTECT_TYPE_NONE, QString())
+    QString fileList;
+    QJsonDocument resultJsonDoc;
+    QJsonArray jsonArr;
+    QJsonParseError jsonError;
 
-    if (TrustedProtectType(searchType) == TrustedProtectType::TRUSTED_PROTECT_KERNEL)
+    if (TrustedProtectType(searchType) == TrustedProtectType::TRUSTED_PROTECT_TYPE_KERNEL)
     {
-        return m_kss->search(pathKey, m_kss->getModuleFiles());
+        fileList = m_kss->getModuleFiles();
     }
     else
     {
-        return m_kss->search(pathKey, m_kss->getExecuteFiles());
+        fileList = m_kss->getExecuteFiles();
     }
+
+    auto jsonDoc = QJsonDocument::fromJson(fileList.toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        return QString();
+    }
+
+    auto jsonModules = jsonDoc.object().value(KSC_JK_DATA).toArray();
+    for (const auto &module : jsonModules)
+    {
+        auto jsonMod = module.toObject();
+
+        // 通过输入的pathKey，判断list中path字段是否包含pathKey
+        if (jsonMod.value(KSC_JK_DATA_PATH).toString().contains(pathKey))
+        {
+            jsonArr.push_back(jsonMod);
+        }
+    }
+    resultJsonDoc.setArray(jsonArr);
+    return QString(resultJsonDoc.toJson());
 }
 
 void Trusted::init()
 {
     QDBusConnection connection = QDBusConnection::systemBus();
 
-    if (!connection.registerObject(SC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(KSC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }

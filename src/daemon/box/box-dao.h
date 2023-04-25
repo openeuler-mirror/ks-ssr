@@ -24,7 +24,7 @@ namespace KS
 struct BoxRecord
 {
     QString boxName;
-    QString boxId;
+    QString boxID;
     bool isMount;
     QString encryptpassword;
     QString encryptPspr;
@@ -40,20 +40,20 @@ public:
 
     // 添加box到数据库
     void addBox(const QString &boxName,
-                const QString &boxId,
+                const QString &boxID,
                 bool isMount,
                 const QString &encryptpassword,
                 const QString &encryptPspr,
                 const QString &encryptSig,
                 int userUid);
     // 为box修改数据库中储存的挂载状态
-    void modifyMountStatus(const QString &boxId, bool isMount);
+    void modifyMountStatus(const QString &boxID, bool isMount);
     // 为box修改数据库中储存的密码
-    void modifyPasswd(const QString &boxId, const QString &encryptpassword);
+    void modifyPasswd(const QString &boxID, const QString &encryptpassword);
     // 删除数据库中的box
-    bool delBox(const QString &boxId);
-    // 通过boxId获取box
-    BoxRecord getBox(const QString &boxId);
+    bool delBox(const QString &boxID);
+    // 通过boxID获取box
+    BoxRecord getBox(const QString &boxID);
     // 获取boxs表中所有box
     QList<BoxRecord> getBoxs();
     // 获取boxs表中的条数

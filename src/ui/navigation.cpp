@@ -25,65 +25,65 @@ NavigationItem::NavigationItem(const QString &iconName,
                                const QString &description) : m_icon(nullptr),
                                                              m_description(nullptr)
 {
-    this->setFixedWidth(88);
+    setFixedWidth(88);
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(10);
 
-    this->m_icon = new QPushButton(this);
-    this->m_icon->setCheckable(true);
-    this->m_icon->setFlat(true);
-    this->m_icon->setObjectName("m_icon");
-    this->m_icon->setIcon(QIcon(iconName));
-    this->m_icon->setIconSize(QSize(48, 48));
-    this->m_icon->setFixedSize(QSize(64, 64));
+    m_icon = new QPushButton(this);
+    m_icon->setCheckable(true);
+    m_icon->setFlat(true);
+    m_icon->setObjectName("m_icon");
+    m_icon->setIcon(QIcon(iconName));
+    m_icon->setIconSize(QSize(48, 48));
+    m_icon->setFixedSize(QSize(64, 64));
 
-    layout->addWidget(this->m_icon);
-    layout->setAlignment(this->m_icon, Qt::AlignCenter);
+    layout->addWidget(m_icon);
+    layout->setAlignment(m_icon, Qt::AlignCenter);
 
-    this->m_description = new QLabel(this);
+    m_description = new QLabel(this);
     // 主要为了适配英文环境下文字显示，如果不换行可能会导致文字显示不全
-    this->m_description->setWordWrap(true);
-    this->m_description->setText(description);
-    this->m_description->setAlignment(Qt::AlignCenter);
-    layout->addWidget(this->m_description);
-    layout->setAlignment(this->m_description, Qt::AlignCenter);
+    m_description->setWordWrap(true);
+    m_description->setText(description);
+    m_description->setAlignment(Qt::AlignCenter);
+    layout->addWidget(m_description);
+    layout->setAlignment(m_description, Qt::AlignCenter);
     layout->addStretch(0);
 
-    this->setLayout(layout);
+    setLayout(layout);
 
-    connect(this->m_icon, &QPushButton::clicked, [this](bool checked)
-            { this->clicked(checked); });
+    connect(m_icon, &QPushButton::clicked, [this](bool checked)
+            { clicked(checked); });
 }
 
 Navigation::Navigation(QWidget *parent) : QWidget(parent)
 {
-    this->m_buttons = new QButtonGroup(this);
+    m_buttons = new QButtonGroup(this);
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-    connect(this->m_buttons, &QButtonGroup::idClicked, [this](int id)
-            { Q_EMIT this->currentCategoryChanged(id); });
+    connect(m_buttons, &QButtonGroup::idClicked, [this](int id)
+            { Q_EMIT currentCategoryChanged(id); });
 #else
-    connect(this->m_buttons, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id)
-            { Q_EMIT this->currentCategoryChanged(id); });
+    connect(m_buttons, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id)
+            { Q_EMIT currentCategoryChanged(id); });
 #endif
 }
 
 void Navigation::addItem(NavigationItem *item)
 {
-    this->m_buttons->addButton(item->getButton(), this->layout()->count());
-    this->layout()->addWidget(item);
+    m_buttons->addButton(item->getButton(), layout()->count());
+    layout()->addWidget(item);
 
     // connect(item, &NavigationItem::clicked, this, [this, item](bool checked)
     //         {
-    //             auto index = this->layout()->indexOf(item);
-    //             Q_EMIT this->currentCategoryChanged(index);
+    //             auto index = layout()->indexOf(item);
+    //             Q_EMIT currentCategoryChanged(index);
     //         });
 }
 
 void Navigation::setBtnChecked(int id)
 {
-    this->m_buttons->button(id)->setChecked(true);
+    m_buttons->button(id)->setChecked(true);
 }
 
 }  // namespace KS

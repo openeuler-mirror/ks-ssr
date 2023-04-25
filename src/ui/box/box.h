@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #pragma once
@@ -40,6 +40,7 @@ struct BoxInfo
 
 class ModifyPassword;
 class RetrievePassword;
+class InputPassword;
 
 class Box : public QWidget
 {
@@ -47,7 +48,7 @@ class Box : public QWidget
 
 public:
     Box(const QString &uid);
-    virtual ~Box();
+    virtual ~Box(){};
 
     // 获取保险箱UID
     QString getUID() { return this->m_uid; }
@@ -55,8 +56,6 @@ public:
 public slots:
     void boxChanged();
     void onIconBtnClick();
-    void checkMountPasswd(const QString &passwd, const QString &boxUID);
-    void checkDelPasswd(const QString &passwd, const QString &boxUID);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -66,6 +65,7 @@ private:
     void initBoxInfo();
     void initMenu();
 
+    QWidget *buildNotifyPage(const QString &notify);
     void switchMountedStatus();
     void modifyPassword();
     void delBox();
@@ -74,24 +74,8 @@ private:
 private slots:
     void modifyPasswordAccepted();
     void retrievePasswordAccepted();
-
-signals:
-    void unlockedClicked(const QString &boxUID);
-    // mount密码检测结果
-    void checkMountPasswdResult(bool status);
-    void delBoxClicked(const QString &boxUID);
-    // 左键点击未解锁图标
-    void unUnlockedIconClicked();
-    // 删除box密码检测结果
-    void checkDelPasswdResult(bool status);
-    // 修改密码 输入密码检测结果
-    void checkModifyPasswdResult(bool status);
-    // 找回密码 口令检测结果
-    void checkRetrievePasswordResult(bool status);
-    // 显示修改密码页面
-    void modifyPasswordClicked(ModifyPassword *modifyPassword);
-    // 显示找回密码页面
-    void retrievePasswordClicked(RetrievePassword *retrievePassword);
+    void inputMountPasswordAccepted();
+    void inputDelBoxPasswordAccepted();
 
 private:
     // 保险箱唯一标识
@@ -112,6 +96,8 @@ private:
     BoxManagerProxy *m_boxManagerProxy;
     ModifyPassword *m_modifyPassword;
     RetrievePassword *m_retrievePassword;
+    InputPassword *m_inputMountPassword;
+    InputPassword *m_inputDelBoxPassword;
     QMenu *m_popupMenu;
     QAction *m_mountedStatusAction;
 

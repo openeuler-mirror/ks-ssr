@@ -6,17 +6,17 @@
     <message>
         <location filename="../src/ui/box/box-page.ui" line="14"/>
         <source>Box manager</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-page.ui" line="71"/>
         <source>Provides data isolation, hiding and encryption protection functions</source>
-        <translation>提供数据隔离、隐藏和加密保护功能</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-page.ui" line="129"/>
         <source>New</source>
-        <translation>新建</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -24,32 +24,114 @@
     <message>
         <location filename="../src/ui/box/create-box.ui" line="14"/>
         <source>Create security box</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="29"/>
         <source>Name:</source>
-        <translation>名字：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="43"/>
+        <location filename="../src/ui/box/create-box.ui" line="50"/>
         <source>Password:</source>
-        <translation>密码：</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/create-box.ui" line="57"/>
-        <source>Confirm password:</source>
-        <translation>确认密码：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="71"/>
-        <source>OK</source>
-        <translation>确认</translation>
+        <source>Confirm password:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="78"/>
+        <location filename="../src/ui/box/create-box.ui" line="104"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/create-box.ui" line="123"/>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DeviceList</name>
+    <message>
+        <location filename="../src/ui/device/device-list.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.ui" line="105"/>
+        <source>Please enter keyword search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.ui" line="137"/>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DevicePage</name>
+    <message>
+        <location filename="../src/ui/device/device-page.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DevicePermission</name>
+    <message>
+        <location filename="../src/ui/device/device-permission.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.ui" line="22"/>
+        <source>Device status:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.ui" line="43"/>
+        <source>Permission control:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.ui" line="50"/>
+        <source>read</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.ui" line="57"/>
+        <source>write</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.ui" line="64"/>
+        <source>exec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.ui" line="102"/>
+        <source>Confirm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.ui" line="109"/>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DeviceRecord</name>
+    <message>
+        <location filename="../src/ui/device/device-record.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.ui" line="105"/>
+        <source>Please enter keyword search</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -57,37 +139,37 @@
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="14"/>
         <source>Form</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="40"/>
         <source>Protect critical file paths from malicious tampering and deletion</source>
-        <translation>保护关键文件路径，防止恶意篡改、删除</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="60"/>
         <source>0 records in total</source>
-        <translation>共0条记录</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="105"/>
         <source>Please enter keyword search</source>
-        <translation>请输入关键字搜索</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="137"/>
         <source>Add</source>
-        <translation>添加</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="156"/>
         <source>Update</source>
-        <translation>更新</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="175"/>
         <source>Unprotect</source>
-        <translation>删除</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -96,361 +178,505 @@
         <location filename="../src/ui/execution-control.ui" line="14"/>
         <location filename="../src/ui/trusted.ui" line="14"/>
         <source>Form</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/execution-control.ui" line="41"/>
         <source>TextLabel</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/execution-control.ui" line="75"/>
         <source>Add</source>
-        <translation>添加</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/execution-control.ui" line="82"/>
         <source>Update</source>
-        <translation>更新</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/execution-control.ui" line="89"/>
         <source>Remove</source>
-        <translation>删除</translation>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>InputPassword</name>
+    <message>
+        <location filename="../src/ui/box/input-password.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/input-password.ui" line="38"/>
+        <source>please input password:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/input-password.ui" line="82"/>
+        <source>ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/input-password.ui" line="101"/>
+        <source>cancel</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::Box</name>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="140"/>
-        <location filename="../src/ui/box/box.cpp" line="153"/>
+        <location filename="../src/ui/box/box.cpp" line="124"/>
+        <location filename="../src/ui/box/box.cpp" line="137"/>
         <source>Lock</source>
-        <translation>上锁</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="140"/>
-        <location filename="../src/ui/box/box.cpp" line="153"/>
+        <location filename="../src/ui/box/box.cpp" line="124"/>
+        <location filename="../src/ui/box/box.cpp" line="137"/>
+        <location filename="../src/ui/box/box.cpp" line="187"/>
         <source>Unlock</source>
-        <translation>解锁</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="143"/>
+        <location filename="../src/ui/box/box.cpp" line="127"/>
+        <location filename="../src/ui/box/box.cpp" line="208"/>
+        <location filename="../src/ui/box/box.cpp" line="259"/>
         <source>Modify password</source>
-        <translation>修改密码</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="144"/>
+        <location filename="../src/ui/box/box.cpp" line="128"/>
         <source>Delete</source>
-        <translation>删除</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="145"/>
+        <location filename="../src/ui/box/box.cpp" line="129"/>
         <source>Retrieve the password</source>
-        <translation>找回密码</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="214"/>
+        <location filename="../src/ui/box/box.cpp" line="265"/>
+        <source>Please confirm whether the password is consistent.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="219"/>
+        <location filename="../src/ui/box/box.cpp" line="270"/>
+        <source>The input cannot be empty, please improve the information.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="239"/>
+        <source>Del box</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="315"/>
+        <location filename="../src/ui/box/box.cpp" line="372"/>
+        <source>Password error!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="320"/>
+        <source>Modify success!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="346"/>
+        <source>Passphrase error!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="351"/>
+        <source>Retrieve success!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="377"/>
+        <source>Unlock success!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="394"/>
+        <source>The Password is wrong or has been mounted!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="399"/>
+        <source>Delete success!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::BoxPage</name>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="99"/>
-        <source>Box is locked, please unlocked!</source>
-        <translation>保险箱已锁定，请先解锁！</translation>
+        <location filename="../src/ui/box/box-page.cpp" line="124"/>
+        <source>Please remember this box passphrase : %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="112"/>
-        <source>Unlock success!</source>
-        <translation>解锁成功！</translation>
+        <location filename="../src/ui/box/box-page.cpp" line="150"/>
+        <source>Create box</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="113"/>
-        <source>Unlock failed, please check whether the password is correct.</source>
-        <translation>解锁失败，请检查密码是否正确。</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="125"/>
-        <source>Delete success!</source>
-        <translation>删除成功！</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="126"/>
-        <source>The Password is wrong or has been mounted!</source>
-        <translation>密码错误或已经挂载！</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="131"/>
-        <source>Modify success!</source>
-        <translation>修改成功！</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="132"/>
-        <source>Password error!</source>
-        <translation>密码错误！</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="140"/>
-        <source>Retrieve success!</source>
-        <translation>找回成功！</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="141"/>
-        <source>Passphrase error!</source>
-        <translation>口令错误！</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="162"/>
-        <source>Input password</source>
-        <translation>输入密码</translation>
+        <location filename="../src/ui/box/box-page.cpp" line="157"/>
+        <source>Please confirm whether the password is consistent.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-page.cpp" line="167"/>
-        <source>Please input password:</source>
-        <translation>请输入密码：</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="171"/>
-        <source>ok</source>
-        <translation>确认</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="183"/>
-        <source>cancel</source>
-        <translation>取消</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="282"/>
-        <source>Please remember this box passphrase : %1</source>
-        <translation>请记住您的保险箱口令： %1</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="310"/>
-        <source>Add box</source>
-        <translation>添加保险箱</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="318"/>
-        <location filename="../src/ui/box/box-page.cpp" line="366"/>
-        <location filename="../src/ui/box/box-page.cpp" line="395"/>
         <source>The input cannot be empty, please improve the information.</source>
-        <translation>禁止输入空字符，请完善信息。</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="330"/>
-        <location filename="../src/ui/box/box-page.cpp" line="371"/>
-        <location filename="../src/ui/box/box-page.cpp" line="400"/>
-        <source>Please confirm whether the password is consistent.</source>
-        <translation>请确认两次密码是否一致。</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="358"/>
-        <source>Modify password</source>
-        <translation>修改密码</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="387"/>
-        <source>Retrieve password</source>
-        <translation>找回密码</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>KS::CustomWindow</name>
+    <name>KS::DeviceList</name>
     <message>
-        <location filename="../src/ui/common/custom-window.cpp" line="38"/>
-        <source>Notify</source>
-        <translation>通知</translation>
+        <location filename="../src/ui/device/device-list.cpp" line="30"/>
+        <source>Device List</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/common/custom-window.cpp" line="48"/>
+        <location filename="../src/ui/device/device-list.cpp" line="37"/>
+        <source>Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="38"/>
+        <source>Device Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="39"/>
+        <source>Device Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="40"/>
+        <source>Device Id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="41"/>
+        <source>Device Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="42"/>
+        <source>Device Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="43"/>
+        <source>Device Permission</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::DeviceListDelegate</name>
+    <message>
+        <location filename="../src/ui/device/device-list-delegate.cpp" line="76"/>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::DevicePage</name>
+    <message>
+        <location filename="../src/ui/device/device-page.cpp" line="52"/>
+        <source>Device List</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-page.cpp" line="53"/>
+        <source>Connect Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::DevicePermission</name>
+    <message>
+        <location filename="../src/ui/device/device-permission.cpp" line="34"/>
+        <source>enable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.cpp" line="35"/>
+        <source>disable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.cpp" line="56"/>
+        <source>Please select device status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.cpp" line="120"/>
+        <source>notice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.cpp" line="124"/>
+        <source>Please select at least one permission.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-permission.cpp" line="125"/>
         <source>ok</source>
-        <translation>确认</translation>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::DeviceRecord</name>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="31"/>
+        <source>Connect Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="36"/>
+        <source>Device Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="37"/>
+        <source>Device Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="38"/>
+        <source>Device Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="39"/>
+        <source>Device Status</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::FPFilesModel</name>
     <message>
-        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="231"/>
+        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="236"/>
         <source>Number</source>
-        <translation>序号</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="233"/>
+        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="238"/>
         <source>File name</source>
-        <translation>文件名</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="235"/>
+        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="240"/>
         <source>File path</source>
-        <translation>文件路径</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="237"/>
+        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="242"/>
         <source>Add time</source>
-        <translation>添加时间</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::FPPage</name>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="36"/>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="102"/>
+        <location filename="../src/ui/file-protected/fp-page.cpp" line="35"/>
+        <location filename="../src/ui/file-protected/fp-page.cpp" line="71"/>
         <source>A total of %1 records</source>
-        <translation>共 %1 条记录</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="90"/>
+        <location filename="../src/ui/file-protected/fp-page.cpp" line="59"/>
         <source>Open file</source>
-        <translation>打开文件</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::RetrievePassword</name>
     <message>
-        <location filename="../src/ui/box/retrieve-password.cpp" line="45"/>
+        <location filename="../src/ui/box/retrieve-password.cpp" line="44"/>
         <source>Retrieve password</source>
-        <translation>找回密码</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>KS::TPModel</name>
+    <name>KS::SubWindow</name>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="260"/>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="284"/>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="433"/>
+        <location filename="../src/ui/common/sub-window.cpp" line="40"/>
+        <source>Notify</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/common/sub-window.cpp" line="50"/>
+        <source>ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::TPExecute</name>
+    <message>
+        <location filename="../src/ui/trusted/tp-execute.cpp" line="21"/>
+        <location filename="../src/ui/trusted/tp-execute.cpp" line="42"/>
+        <source>A total of %1 records</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-execute.cpp" line="53"/>
+        <source>Open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::TPExecuteModel</name>
+    <message>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="143"/>
         <source>Certified</source>
-        <translation>已认证</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="325"/>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="339"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="181"/>
         <source>Number</source>
-        <translation>序号</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="327"/>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="341"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="183"/>
         <source>File path</source>
-        <translation>文件路径</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="329"/>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="345"/>
-        <source>Status</source>
-        <translation>当前状态</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="343"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="185"/>
         <source>Type</source>
-        <translation>文件类型</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="413"/>
-        <source>Unknown file</source>
-        <translation>未知文件</translation>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="187"/>
+        <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::TPKernel</name>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="21"/>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="42"/>
+        <source>A total of %1 records</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="416"/>
-        <source>Executable file</source>
-        <translation>可执行程序</translation>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="53"/>
+        <source>Open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::TPKernelModel</name>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="141"/>
+        <source>Certified</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="419"/>
-        <source>Dynamic library</source>
-        <translation>动态库</translation>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="179"/>
+        <source>Number</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="422"/>
-        <source>Kernel file</source>
-        <translation>内核文件</translation>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="181"/>
+        <source>File path</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="425"/>
-        <source>Executable script</source>
-        <translation>可执行脚本</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/trusted-protected/trusted-table.cpp" line="437"/>
-        <source>Being tampered with</source>
-        <translation>被篡改</translation>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="183"/>
+        <source>Status</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::TPPage</name>
     <message>
-        <location filename="../src/ui/trusted-protected/tp-page.cpp" line="37"/>
+        <location filename="../src/ui/trusted/tp-page.cpp" line="63"/>
         <source>Execute protecked</source>
-        <translation>执行保护</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/tp-page.cpp" line="38"/>
+        <location filename="../src/ui/trusted/tp-page.cpp" line="64"/>
         <source>Kernel protecked</source>
-        <translation>内核保护</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-page.cpp" line="86"/>
+        <source>Trusted data needs to be initialised,please wait a few minutes to refresh.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>KS::TrustedView</name>
+    <name>KS::TPUtils</name>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="45"/>
-        <source>Manage kernel driver modules to prevent illegal loading and uninstallation</source>
-        <translation>管理内核驱动模块，阻止非法加载、卸载</translation>
+        <location filename="../src/ui/trusted/tp-utils.cpp" line="20"/>
+        <source>Unknown file</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="45"/>
-        <source>System core component integrity protection,protection and implementation environment safety</source>
-        <translation>系统核心组件的完整性保护，保护执行环境安全</translation>
+        <location filename="../src/ui/trusted/tp-utils.cpp" line="23"/>
+        <source>Executable file</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="48"/>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="138"/>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="164"/>
-        <source>A total of %1 records</source>
-        <translation>共 %1 条记录</translation>
+        <location filename="../src/ui/trusted/tp-utils.cpp" line="26"/>
+        <source>Dynamic library</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="60"/>
-        <source>Add file</source>
-        <translation>添加</translation>
+        <location filename="../src/ui/trusted/tp-utils.cpp" line="29"/>
+        <source>Kernel file</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="73"/>
-        <source>Update file</source>
-        <translation>更新</translation>
+        <location filename="../src/ui/trusted/tp-utils.cpp" line="32"/>
+        <source>Executable script</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="86"/>
-        <source>Del file</source>
-        <translation>删除</translation>
+        <location filename="../src/ui/trusted/tp-utils.cpp" line="45"/>
+        <source>Certified</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="115"/>
-        <source>Trusted data needs to be initialised,please wait a few minutes to refresh.</source>
-        <translation>可信数据需要初始化，请在几分钟后刷新页面。</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/trusted-protected/trusted-view.cpp" line="126"/>
-        <source>Open file</source>
-        <translation>打开文件</translation>
+        <location filename="../src/ui/trusted/tp-utils.cpp" line="49"/>
+        <source>Being tampered with</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::Window</name>
     <message>
-        <location filename="../src/ui/window.cpp" line="41"/>
+        <location filename="../src/ui/window.cpp" line="60"/>
         <source>Security control</source>
-        <translation>安全管控</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="62"/>
+        <location filename="../src/ui/window.cpp" line="81"/>
         <source>Trusted protected</source>
-        <translation>可信保护</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="65"/>
+        <location filename="../src/ui/window.cpp" line="84"/>
         <source>File protected</source>
-        <translation>文件保护</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="66"/>
+        <location filename="../src/ui/window.cpp" line="85"/>
         <source>Private box</source>
-        <translation>私密保险箱</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/window.cpp" line="86"/>
+        <source>Peripheral management</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -458,37 +684,60 @@
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="14"/>
         <source>Modify password</source>
-        <translation>修改密码</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="45"/>
+        <location filename="../src/ui/box/modify-password.ui" line="51"/>
         <source>Security box name</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="69"/>
+        <location filename="../src/ui/box/modify-password.ui" line="75"/>
         <source>Current password:</source>
-        <translation>当前密码：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="83"/>
+        <location filename="../src/ui/box/modify-password.ui" line="96"/>
         <source>New password:       </source>
-        <translation>新密码：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="97"/>
+        <location filename="../src/ui/box/modify-password.ui" line="117"/>
         <source>Confirm password:</source>
-        <translation>确认密码：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="124"/>
+        <location filename="../src/ui/box/modify-password.ui" line="163"/>
         <source>OK</source>
-        <translation>确认</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="131"/>
+        <location filename="../src/ui/box/modify-password.ui" line="182"/>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Pagination</name>
+    <message>
+        <location filename="../src/ui/common/pagination.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/common/pagination.ui" line="33"/>
+        <source>Prev</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/common/pagination.ui" line="50"/>
+        <source>Next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/common/pagination.ui" line="60"/>
+        <source>Go to</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -496,55 +745,129 @@
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="14"/>
         <source>Create security box</source>
-        <translation>找回密码</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="26"/>
         <source>passphrase:</source>
-        <translation>口令：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/retrieve-password.ui" line="40"/>
+        <location filename="../src/ui/box/retrieve-password.ui" line="47"/>
         <source>new password:</source>
-        <translation>新密码：</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/retrieve-password.ui" line="54"/>
-        <source>Confirm password:</source>
-        <translation>确认密码：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="68"/>
-        <source>OK</source>
-        <translation>确认</translation>
+        <source>Confirm password:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/retrieve-password.ui" line="75"/>
+        <location filename="../src/ui/box/retrieve-password.ui" line="101"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/retrieve-password.ui" line="120"/>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>TableCommon</name>
+    <name>SidebarItem</name>
     <message>
-        <location filename="../src/ui/trusted-protected/table-common.ui" line="14"/>
+        <location filename="../src/ui/device/sidebar-item.ui" line="26"/>
         <source>Form</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/table-common.ui" line="40"/>
+        <location filename="../src/ui/device/sidebar-item.ui" line="66"/>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TPExecute</name>
+    <message>
+        <location filename="../src/ui/trusted/tp-execute.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-execute.ui" line="40"/>
         <source>Protect critical file paths from malicious tampering and deletion</source>
-        <translation>保护关键文件路径，防止恶意篡改、删除</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/table-common.ui" line="64"/>
+        <location filename="../src/ui/trusted/tp-execute.ui" line="60"/>
         <source>0 records in total</source>
-        <translation>共0条记录</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted-protected/table-common.ui" line="109"/>
+        <location filename="../src/ui/trusted/tp-execute.ui" line="105"/>
         <source>Please enter keyword search</source>
-        <translation>请输入关键字搜索</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-execute.ui" line="137"/>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-execute.ui" line="156"/>
+        <source>Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-execute.ui" line="175"/>
+        <source>Unprotect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TPKernel</name>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel.ui" line="43"/>
+        <source>Protect critical file paths from malicious tampering and deletion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel.ui" line="63"/>
+        <source>0 records in total</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel.ui" line="108"/>
+        <source>Please enter keyword search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel.ui" line="140"/>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel.ui" line="159"/>
+        <source>Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel.ui" line="178"/>
+        <source>Unprotect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TPPage</name>
+    <message>
+        <location filename="../src/ui/trusted/tp-page.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -552,7 +875,7 @@
     <message>
         <location filename="../src/ui/window.ui" line="20"/>
         <source>Security control</source>
-        <translation>安全管控</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
