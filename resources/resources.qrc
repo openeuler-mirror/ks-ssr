@@ -1,5 +1,4 @@
 <RCC>
-
     <qresource prefix="/images">
         <file alias="logo">images/logo.png</file>
         <file alias="banner">images/banner.png</file>
@@ -17,21 +16,20 @@
         <file alias="checkbox-unchecked-disabled">images/checkbox-unchecked-disabled.svg</file>
         <file alias="checkbox-unchecked-hover">images/checkbox-unchecked-hover.svg</file>
         <file alias="checkbox-unchecked-normal">images/checkbox-unchecked-normal.svg</file>
-        <file alias="checkbox-indeterminate-normal">images/checkbox-indeterminate-normal.svg</file>
-        <file alias="execution-control">images/execution-control.svg</file>
-        <file alias="kernel-module-protected">images/kernel-module-protected.svg</file>
-        <file alias="right-arrow">images/right-arrow.svg</file>
+        <file alias="arrow-down">images/arrow-down.svg</file>
+        <file alias="arrow-right">images/arrow-right.svg</file>
+        <file alias="device-list">images/device-list.svg</file>
+        <file alias="device-record">images/device-record.svg</file>
+        <file alias="device">images/device.png</file>
     </qresource>
-
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>
         <file alias="window-maximum-symbolic">images/titlebar/window-maximum-symbolic.svg</file>
         <file alias="window-unmaximum-symbolic">images/titlebar/window-unmaximum-symbolic.svg</file>
         <file alias="window-close-symbolic">images/titlebar/window-close-symbolic.svg</file>
     </qresource>
-
     <qresource prefix="/styles">
-        <file alias="ksc">styles/ksc.qss</file>
+        <file alias="sc">styles/sc.qss</file>
         <file alias="titlebar-window">styles/titlebar-window.qss</file>
     </qresource>
 </RCC>

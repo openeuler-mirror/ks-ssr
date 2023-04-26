@@ -34,11 +34,16 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event);
+
+private:
+    void initTableStyle();
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void popupEditDialog(const QModelIndex &index);
     void updateDevice();
+    void updateCursor(const QModelIndex &index);
 
 private:
     Ui::DeviceList *m_ui;
