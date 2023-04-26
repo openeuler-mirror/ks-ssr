@@ -43,6 +43,9 @@ private:
     void initSubPage();
     void createSideBarItem(const QString &text, const QString &icon);
 
+private slots:
+    void updatePage(int currentRow);
+
 private:
     Ui::DevicePage *m_ui;
 };

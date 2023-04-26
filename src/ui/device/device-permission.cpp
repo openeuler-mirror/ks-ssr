@@ -13,23 +13,27 @@
  */
 
 #include "device-permission.h"
-#include <QLineEdit>
-#include <QPainter>
-#include "ui_device-permission.h"
-
 #include <kiran-log/qt5-log-i.h>
+#include <QLineEdit>
+#include <QListView>
+#include <QPainter>
+#include <QStyledItemDelegate>
+#include "ui_device-permission.h"
 
 namespace KS
 {
-DevicePermission::DevicePermission(const QString &name, QWidget *parent) : QWidget(parent),
+DevicePermission::DevicePermission(const QString &name, QWidget *parent) : TitlebarWindow(parent),
                                                                            m_ui(new Ui::DevicePermission),
                                                                            m_name(name)
 {
-    m_ui->setupUi(this);
-    setWindowTitle(name);
-    setWindowFlags(Qt::Window);
+    m_ui->setupUi(getWindowContentWidget());
+    setTitle(name);
     setWindowModality(Qt::ApplicationModal);
     setAttribute(Qt::WA_DeleteOnClose);
+
+    //给QCombobox设置代理才能设置下拉列表项的高度
+    QStyledItemDelegate *delegate = new QStyledItemDelegate(this);
+    m_ui->m_status->setItemDelegate(delegate);
 
     m_ui->m_status->addItem(tr("enable"), DEVICE_STATUS_ENABLE);
     m_ui->m_status->addItem(tr("disable"), DEVICE_STATUS_DISABLE);
@@ -51,10 +55,11 @@ void DevicePermission::setDeviceStatus(const DeviceStatus &status)
     {
     case DEVICE_STATUS_UNACTIVE:
     {
-        //由于qt5.15.2及以上的版本设置QCombobox占位符，无法正常显示，见QTBUG-90595，因此使用自定义QLineEdit来显示占位符
+        //由于qt5 .15.2及以上的版本设置QCombobox占位符，无法正常显示，见QTBUG - 90595，因此使用自定义QLineEdit来显示占位符
         auto *line = new QLineEdit(m_ui->m_status);
         line->setPlaceholderText(tr("Please select device status"));
         line->setReadOnly(true);
+        line->installEventFilter(this);
         m_ui->m_status->setLineEdit(line);
         m_ui->m_status->lineEdit()->clear();
         m_ui->m_status->setCurrentIndex(-1);
@@ -163,6 +168,16 @@ void DevicePermission::paintEvent(QPaintEvent *event)
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+bool DevicePermission::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_ui->m_status->lineEdit() && event->type() == QEvent::MouseButtonRelease)
+    {
+        m_ui->m_status->showPopup();
+        return true;
+    }
+    return false;
 }
 
 }  // namespace KS
