@@ -18,6 +18,7 @@
 #include <QListView>
 #include <QPainter>
 #include <QStyledItemDelegate>
+#include "include/ksc-marcos.h"
 #include "ui_device-permission.h"
 
 namespace KS
@@ -32,7 +33,7 @@ DevicePermission::DevicePermission(const QString &name, QWidget *parent) : Title
     setAttribute(Qt::WA_DeleteOnClose);
 
     //给QCombobox设置代理才能设置下拉列表项的高度
-    QStyledItemDelegate *delegate = new QStyledItemDelegate(this);
+    auto delegate = new QStyledItemDelegate(this);
     m_ui->m_status->setItemDelegate(delegate);
 
     m_ui->m_status->addItem(tr("enable"), DEVICE_STATUS_ENABLE);
@@ -56,7 +57,7 @@ void DevicePermission::setDeviceStatus(const DeviceStatus &status)
     case DEVICE_STATUS_UNACTIVE:
     {
         //由于qt5 .15.2及以上的版本设置QCombobox占位符，无法正常显示，见QTBUG - 90595，因此使用自定义QLineEdit来显示占位符
-        auto *line = new QLineEdit(m_ui->m_status);
+        auto line = new QLineEdit(m_ui->m_status);
         line->setPlaceholderText(tr("Please select device status"));
         line->setReadOnly(true);
         line->installEventFilter(this);
@@ -172,12 +173,10 @@ void DevicePermission::paintEvent(QPaintEvent *event)
 
 bool DevicePermission::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == m_ui->m_status->lineEdit() && event->type() == QEvent::MouseButtonRelease)
-    {
-        m_ui->m_status->showPopup();
-        return true;
-    }
-    return false;
+    RETURN_VAL_IF_FALSE(watched == m_ui->m_status->lineEdit() && event->type() == QEvent::MouseButtonRelease, false);
+
+    m_ui->m_status->showPopup();
+    return true;
 }
 
 }  // namespace KS

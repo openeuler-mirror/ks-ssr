@@ -44,7 +44,7 @@ private:
     void createSideBarItem(const QString &text, const QString &icon);
 
 private slots:
-    void updatePage(int currentRow);
+    void setSideBarItemStatus(int currentRow);
 
 private:
     Ui::DevicePage *m_ui;
