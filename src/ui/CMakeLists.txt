@@ -52,7 +52,8 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-permission.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/trusted/tp-kernel.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/trusted/tp-execute.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/trusted/tp-page.ui)
+  ${CMAKE_CURRENT_SOURCE_DIR}/trusted/tp-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/trusted/table-delete-notify.ui)
 
 set(TARGET_NAME ks-sc-gui)
 

@@ -21,52 +21,52 @@ namespace KS
 CreateBox::CreateBox(QWidget *parent) : QWidget(parent),
                                         m_ui(new Ui::CreateBox())
 {
-    this->m_ui->setupUi(this);
-    this->setWindowModality(Qt::ApplicationModal);
-    this->m_ui->m_password->setEchoMode(QLineEdit::Password);
-    this->m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
-    connect(this->m_ui->m_ok, &QPushButton::clicked, this, &CreateBox::onOkClicked);
+    m_ui->setupUi(this);
+    setWindowModality(Qt::ApplicationModal);
+    m_ui->m_password->setEchoMode(QLineEdit::Password);
+    m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
+    connect(m_ui->m_ok, &QPushButton::clicked, this, &CreateBox::onOkClicked);
 
-    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this](bool)
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this](bool)
             {
-                Q_EMIT this->rejected();
-                this->close();
+                Q_EMIT rejected();
+                close();
             });
 }
 
 QString CreateBox::getName()
 {
-    return this->m_ui->m_name->text();
+    return m_ui->m_name->text();
 }
 
 QString CreateBox::getPassword()
 {
-    return this->m_ui->m_password->text();
+    return m_ui->m_password->text();
 }
 
 void CreateBox::onOkClicked()
 {
     // 禁止出现空密码、空保险箱名
-    if (this->m_ui->m_password->text().isEmpty() || this->m_ui->m_confirmPassword->text().isEmpty() || this->m_ui->m_name->text().isEmpty())
+    if (m_ui->m_password->text().isEmpty() || m_ui->m_confirmPassword->text().isEmpty() || m_ui->m_name->text().isEmpty())
     {
-        emit this->inputEmpty();
+        emit inputEmpty();
         KLOG_WARNING() << "The input cannot be empty, please improve the information.";
         return;
     }
 
     // 两次输入的密码不一致
-    if (this->m_ui->m_password->text() != this->m_ui->m_confirmPassword->text())
+    if (m_ui->m_password->text() != m_ui->m_confirmPassword->text())
     {
-        emit this->passwdInconsistent();
+        emit passwdInconsistent();
         return;
     }
 
-    emit this->accepted();
+    emit accepted();
     // 创建成功后清空输入框
-    this->hide();
-    this->m_ui->m_name->setText("");
-    this->m_ui->m_password->setText("");
-    this->m_ui->m_confirmPassword->setText("");
+    hide();
+    m_ui->m_name->setText("");
+    m_ui->m_password->setText("");
+    m_ui->m_confirmPassword->setText("");
 };
 
 }  // namespace KS

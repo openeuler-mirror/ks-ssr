@@ -26,8 +26,8 @@ TPTableHeaderProxy::TPTableHeaderProxy(QWidget *parent) : QHeaderView(Qt::Horizo
 {
     m_rect = new QRect(15, 2, 20, 20);
     // 做下拉筛选功能时可能会用到这个属性，暂设置为false
-    this->setSectionsClickable(false);
-    this->setMouseTracking(true);
+    setSectionsClickable(false);
+    setMouseTracking(true);
     // TODO: 使用setIndexWidget需要调整位置
     // setIndexWidget(indexAt(QPoint(0, 0)), new QCheckBox(this));
 }

@@ -21,61 +21,61 @@ namespace KS
 ModifyPassword::ModifyPassword(QWidget *parent) : QWidget(parent),
                                                   m_ui(new Ui::ModifyPassword())
 {
-    this->m_ui->setupUi(this);
-    this->init();
+    m_ui->setupUi(this);
+    init();
 }
 
 QString ModifyPassword::getCurrentPassword()
 {
-    return this->m_ui->m_currentPassword->text();
+    return m_ui->m_currentPassword->text();
 }
 
 QString ModifyPassword::getNewPassword()
 {
-    return this->m_ui->m_newPassword->text();
+    return m_ui->m_newPassword->text();
 }
 
 void ModifyPassword::setBoxName(const QString &boxName)
 {
-    this->m_ui->m_boxName->setText(boxName);
+    m_ui->m_boxName->setText(boxName);
 }
 
 void ModifyPassword::init()
 {
-    this->setWindowModality(Qt::ApplicationModal);
-    this->m_ui->m_currentPassword->setEchoMode(QLineEdit::Password);
-    this->m_ui->m_newPassword->setEchoMode(QLineEdit::Password);
-    this->m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
-    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this]
+    setWindowModality(Qt::ApplicationModal);
+    m_ui->m_currentPassword->setEchoMode(QLineEdit::Password);
+    m_ui->m_newPassword->setEchoMode(QLineEdit::Password);
+    m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
-                this->close();
-                emit this->rejected();
+                close();
+                emit rejected();
             });
 
-    connect(this->m_ui->m_ok, &QPushButton::clicked, this, &ModifyPassword::onOkClicked);
+    connect(m_ui->m_ok, &QPushButton::clicked, this, &ModifyPassword::onOkClicked);
 }
 
 void ModifyPassword::onOkClicked()
 {
     // 禁止输入空字符
-    if (this->m_ui->m_newPassword->text().isEmpty() ||
-        this->m_ui->m_confirmPassword->text().isEmpty() ||
-        this->m_ui->m_currentPassword->text().isEmpty())
+    if (m_ui->m_newPassword->text().isEmpty() ||
+        m_ui->m_confirmPassword->text().isEmpty() ||
+        m_ui->m_currentPassword->text().isEmpty())
     {
-        emit this->inputEmpty();
+        emit inputEmpty();
         return;
     }
     // 两次密码不一致
-    if (this->m_ui->m_newPassword->text() != this->m_ui->m_confirmPassword->text())
+    if (m_ui->m_newPassword->text() != m_ui->m_confirmPassword->text())
     {
-        emit this->passwdInconsistent();
+        emit passwdInconsistent();
         return;
     }
 
     emit accepted();
-    this->close();
-    this->m_ui->m_currentPassword->setText("");
-    this->m_ui->m_newPassword->setText("");
-    this->m_ui->m_confirmPassword->setText("");
+    close();
+    m_ui->m_currentPassword->setText("");
+    m_ui->m_newPassword->setText("");
+    m_ui->m_confirmPassword->setText("");
 }
 }  // namespace KS

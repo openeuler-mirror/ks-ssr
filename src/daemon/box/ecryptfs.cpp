@@ -26,15 +26,16 @@ EcryptFS::EcryptFS(QObject *parent) : QObject(parent)
 
 QString EcryptFS::addPassphrase(const QString &passphrase)
 {
+    RETURN_VAL_IF_TRUE(!isExistEcryptFSMod(), QString())
     QString cmd = QString("echo '%1' | %2").arg(passphrase, GENERATE_PASSPHRASE_CMD);
-    this->execute(cmd);
+    execute(cmd);
     return m_processOutput;
 }
 
 void EcryptFS::encrypt(const QString &umountPath)
 {
     QString cmd = QString("umount %1").arg(umountPath);
-    this->execute(cmd);
+    execute(cmd);
 }
 
 bool EcryptFS::decrypt(const QString &mountObjectPath,
@@ -52,7 +53,7 @@ bool EcryptFS::decrypt(const QString &mountObjectPath,
                           "ecryptfs_enable_filename_crypto=y,"
                           "no_sig_cache")
                       .arg(MOUNT_ECRYPTFS_CMD, mountObjectPath, mountPath, passphrase, sig, sig);
-    this->execute(cmd);
+    execute(cmd);
     RETURN_VAL_IF_TRUE(m_errorOutput.isEmpty(), true)
 
     return false;
@@ -61,13 +62,14 @@ bool EcryptFS::decrypt(const QString &mountObjectPath,
 void EcryptFS::mkdirBoxDir(const QString &path, const QString &userName)
 {
     QDir dir(path);
-    if (!dir.mkpath(path))  // name+uid 命名 可区分不同用户下创建的相同文件夹名称
+    // name+uid 命名 可区分不同用户下创建的相同文件夹名称
+    if (!dir.mkpath(path))
     {
         KLOG_WARNING() << "Failed to mkdir folder. path = " << path;
     }
 
     QString cmd = QString("chown %2:%2 %1").arg(path, userName);
-    this->execute(cmd);
+    execute(cmd);
 }
 
 void EcryptFS::rmBoxDir(const QString &path)
@@ -82,13 +84,13 @@ void EcryptFS::rmBoxDir(const QString &path)
 void EcryptFS::processExited(int exitCode, QProcess::ExitStatus exitStatus)
 {
     KLOG_DEBUG() << "Command execution completed. exitcode = " << exitCode << "exitStatus = " << exitStatus;
-    this->m_process->disconnect();
+    m_process->disconnect();
 
-    QByteArray standardOutput = this->m_process->readAllStandardOutput();
+    QByteArray standardOutput = m_process->readAllStandardOutput();
 
     KLOG_DEBUG() << "Execute the command to successfully output: " << standardOutput;
     m_processOutput = standardOutput;
-    QByteArray errordOutput = this->m_process->readAllStandardError();
+    QByteArray errordOutput = m_process->readAllStandardError();
     if (!errordOutput.isEmpty())
     {
         KLOG_ERROR() << "Execution command error output: " << errordOutput;
@@ -100,7 +102,14 @@ void EcryptFS::execute(const QString &cmd)
 {
     KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
     m_process->start("bash", QStringList() << "-c" << cmd);
-    connect(this->m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processExited(int, QProcess::ExitStatus)));
+    connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processExited(int, QProcess::ExitStatus)));
     m_process->waitForFinished();
+}
+
+bool EcryptFS::isExistEcryptFSMod()
+{
+    QString cmd = QString("lsmod |grep ecryptfs");
+    execute(cmd);
+    return !m_processOutput.isEmpty();
 }
 }  // namespace KS

@@ -16,14 +16,14 @@
 
 BoxImage::BoxImage(QWidget *parent, const QString &imagePath) : QWidget(parent)
 {
-    this->setWindowFlag(Qt::FramelessWindowHint);
-    this->setAttribute(Qt::WA_TranslucentBackground, true);
-    this->setFixedSize(70, 70);
+    setWindowFlag(Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    setFixedSize(70, 70);
 
     m_image = new QImage(imagePath);
     m_drawArea = QRect(0, 0, width(), width());
 
-    this->move(m_image->width() * 5, m_image->height() * 5);
+    move(m_image->width() * 5, m_image->height() * 5);
 }
 
 void BoxImage::paintEvent(QPaintEvent *event)
@@ -32,8 +32,8 @@ void BoxImage::paintEvent(QPaintEvent *event)
     painter.drawPixmap(0, 0, width(), height(), QPixmap(":/images/box-big"));
     // 抗锯齿
     painter.setRenderHint(QPainter::Antialiasing);
-    qreal x = m_drawArea.center().x() + this->width() / 2 - m_image->width() + 4;
-    qreal y = m_drawArea.center().y() + this->height() / 2 - m_image->height() + 4;
+    qreal x = m_drawArea.center().x() + width() / 2 - m_image->width() + 4;
+    qreal y = m_drawArea.center().y() + height() / 2 - m_image->height() + 4;
     painter.drawImage(x, y, *m_image);
 
     QWidget::paintEvent(event);

@@ -21,7 +21,7 @@ namespace KS
 {
 BoxDao::BoxDao()
 {
-    this->init();
+    init();
 }
 
 BoxDao::~BoxDao()
@@ -30,38 +30,38 @@ BoxDao::~BoxDao()
 
 void BoxDao::addBox(const QString &boxName,
                     const QString &boxID,
-                    bool isMount,
+                    bool mounted,
                     const QString &encryptpassword,
-                    const QString &encryptPspr,
+                    const QString &encryptPassphrase,
                     const QString &encryptSig,
-                    int userUid)
+                    int userUID)
 {
-    QString cmd = QString("insert into boxs (boxName,boxID,isMount,encryptpassword,encryptPspr,encryptSig,userUid) \
+    QString cmd = QString("insert into boxs (boxName,boxID,mounted,encryptpassword,encryptPassphrase,encryptSig,userUID) \
                       values('%1','%2','%3','%4','%5','%6',%7);")
-                      .arg(boxName, boxID, QString::number(isMount), encryptpassword, encryptPspr, encryptSig, QString::number(userUid));
+                      .arg(boxName, boxID, QString::number(mounted), encryptpassword, encryptPassphrase, encryptSig, QString::number(userUID));
 
-    this->execute(cmd);
+    execute(cmd);
 }
 
-void BoxDao::modifyMountStatus(const QString &boxID, bool isMount)
+void BoxDao::modifyMountStatus(const QString &boxID, bool mounted)
 {
-    QString cmd = QString("update boxs set isMount ='%1' where boxID='%2';").arg(QString::number(isMount), boxID);
+    QString cmd = QString("update boxs set mounted ='%1' where boxID='%2';").arg(QString::number(mounted), boxID);
 
-    this->execute(cmd);
+    execute(cmd);
 }
 
 void BoxDao::modifyPasswd(const QString &boxID, const QString &encryptpassword)
 {
     QString cmd = QString("update boxs set encryptpassword='%1' where boxID='%2';").arg(encryptpassword, boxID);
 
-    this->execute(cmd);
+    execute(cmd);
 }
 
 bool BoxDao::delBox(const QString &boxID)
 {
     QString cmd = QString("delete from boxs where boxID='%1';").arg(boxID);
 
-    RETURN_VAL_IF_TRUE(!this->execute(cmd), false)
+    RETURN_VAL_IF_TRUE(!execute(cmd), false)
 
     return true;
 }
@@ -95,11 +95,11 @@ QList<BoxRecord> BoxDao::getBoxs()
             BoxRecord boxRecord;
             boxRecord.boxName = query.value(0).toString();
             boxRecord.boxID = query.value(1).toString();
-            boxRecord.isMount = QVariant(query.value(2).toString()).toBool();
+            boxRecord.mounted = QVariant(query.value(2).toString()).toBool();
             boxRecord.encryptpassword = query.value(3).toString();
-            boxRecord.encryptPspr = query.value(4).toString();
+            boxRecord.encryptPassphrase = query.value(4).toString();
             boxRecord.encryptSig = query.value(5).toString();
-            boxRecord.userUid = query.value(6).toInt();
+            boxRecord.userUID = query.value(6).toInt();
             boxRecordList << boxRecord;
         }
     }
@@ -126,7 +126,7 @@ int BoxDao::getBoxCount()
 void BoxDao::init()
 {
     m_boxDb = QSqlDatabase::addDatabase("QSQLITE");
-    m_boxDb.setDatabaseName(KSC_INSTALL_DATADIR "ksc.dat");  //设置数据库名称
+    m_boxDb.setDatabaseName(KSC_INSTALL_DATADIR "/ksc.dat");  //设置数据库名称
     if (!m_boxDb.open())
     {
         KLOG_ERROR() << "BoxDao open error ：" << m_boxDb.lastError();
@@ -143,11 +143,11 @@ void BoxDao::init()
         QString cmd = "create table boxs(\
                                         boxName varchar(100),\
                                         boxID varchar(50),\
-                                        isMount varchar(50),\
+                                        mounted varchar(50),\
                                         encryptpassword varchar(1000),\
-                                        encryptPspr varchar(1000),\
+                                        encryptPassphrase varchar(1000),\
                                         encryptSig varchar(1000),\
-                                        userUid integer)";
+                                        userUID integer)";
 
         if (!query.exec(cmd))
         {
