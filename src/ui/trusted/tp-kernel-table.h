@@ -96,8 +96,8 @@ public:
     // 获取被篡改数
     int getKerneltamperedNums();
 
-private:
-    void mouseEnter(const QModelIndex &index);
+private slots:
+    void showDetails(const QModelIndex &index);
 
 private:
     TPKernelFilterModel *m_filterProxy;

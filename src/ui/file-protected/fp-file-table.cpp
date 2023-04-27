@@ -94,7 +94,7 @@ void FPFilesDelegate::paint(QPainter *painter,
     if (index.column() == FileTableField::FILE_TABLE_FIELD_CHECKBOX)
     {
         auto checkboxOption = option;
-        this->initStyleOption(&checkboxOption, index);
+        initStyleOption(&checkboxOption, index);
 
         QStyleOptionButton checkboxStyle;
         QPixmap pixmap;
@@ -113,7 +113,7 @@ void FPFilesDelegate::paint(QPainter *painter,
     }
     else
     {
-        this->QStyledItemDelegate::paint(painter, option, index);
+        QStyledItemDelegate::paint(painter, option, index);
     }
 }
 
@@ -133,7 +133,7 @@ bool FPFilesDelegate::editorEvent(QEvent *event,
         model->setData(index, !value, Qt::EditRole);
     }
 
-    return this->QStyledItemDelegate::editorEvent(event, model, option, index);
+    return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
 FPFilesFilterModel::FPFilesFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
@@ -145,9 +145,9 @@ bool FPFilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
     QString textComb;
     for (auto i = 0; i < FILE_TABLE_FIELD_LAST; ++i)
     {
-        auto index = this->sourceModel()->index(sourceRow, i, sourceParent);
-        auto text = this->sourceModel()->data(index).toString();
-        RETURN_VAL_IF_TRUE(text.contains(this->filterRegExp()), true);
+        auto index = sourceModel()->index(sourceRow, i, sourceParent);
+        auto text = sourceModel()->data(index).toString();
+        RETURN_VAL_IF_TRUE(text.contains(filterRegExp()), true);
     }
 
     return false;
@@ -155,17 +155,17 @@ bool FPFilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
 
 FPFilesModel::FPFilesModel(QObject *parent) : QAbstractTableModel(parent)
 {
-    this->m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
-                                                        KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
-                                                        QDBusConnection::systemBus(),
-                                                        this);
+    m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
+                                                  KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
+                                                  QDBusConnection::systemBus(),
+                                                  this);
 
-    this->updateInfo();
+    updateInfo();
 }
 
 int FPFilesModel::rowCount(const QModelIndex &parent) const
 {
-    return this->m_filesInfo.size();
+    return m_filesInfo.size();
 }
 
 int FPFilesModel::columnCount(const QModelIndex &parent) const
@@ -177,13 +177,13 @@ QVariant FPFilesModel::data(const QModelIndex &index, int role) const
 {
     RETURN_VAL_IF_TRUE(!index.isValid(), QVariant());
 
-    if (index.row() >= this->m_filesInfo.size() || index.column() >= FileTableField::FILE_TABLE_FIELD_LAST)
+    if (index.row() >= m_filesInfo.size() || index.column() >= FileTableField::FILE_TABLE_FIELD_LAST)
     {
         KLOG_WARNING() << "The index exceeds range limit.";
         return QVariant();
     }
 
-    auto fileInfo = this->m_filesInfo[index.row()];
+    auto fileInfo = m_filesInfo[index.row()];
 
     switch (role)
     {
@@ -265,12 +265,12 @@ bool FPFilesModel::setData(const QModelIndex &index, const QVariant &value, int 
         return false;
     }
 
-    this->m_filesInfo[index.row()].selected = value.toBool();
+    m_filesInfo[index.row()].selected = value.toBool();
     emit dataChanged(index, index);
 
     if (role == Qt::UserRole || role == Qt::EditRole)
     {
-        this->onSingleStateChanged();
+        onSingleStateChanged();
     }
     return true;
 }
@@ -288,7 +288,8 @@ void FPFilesModel::updateInfo()
 {
     beginResetModel();
     m_filesInfo.clear();
-    auto reply = this->m_fileProtectedProxy->GetFiles();
+    auto reply = m_fileProtectedProxy->GetFiles();
+    reply.waitForFinished();
     auto files = reply.value();
 
     QJsonParseError jsonError;
@@ -309,7 +310,7 @@ void FPFilesModel::updateInfo()
                                        .fileName = data.value(KSS_JSON_KEY_DATA_FILE_NAME).toString(),
                                        .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
                                        .addTime = data.value(KSS_JSON_KEY_DATA_ADD_TIME).toString()};
-            this->m_filesInfo.push_back(fileInfo);
+            m_filesInfo.push_back(fileInfo);
         }
     }
     endResetModel();
@@ -326,7 +327,7 @@ void FPFilesModel::onStateChanged(Qt::CheckState checkState)
     for (int i = 0; i < rowCount(); ++i)
     {
         index = this->index(i, 0);
-        this->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
+        setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
     }
 }
 
@@ -351,30 +352,30 @@ void FPFilesModel::onSingleStateChanged()
         state = Qt::PartiallyChecked;
     }
 
-    emit this->stateChanged(state);
+    emit stateChanged(state);
 }
 
 FPFileTable::FPFileTable(QWidget *parent) : QTableView(parent),
                                             m_filterProxy(nullptr)
 {
-    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // 设置Model
     m_model = new FPFilesModel(this);
     m_headerViewProxy = new TPTableHeaderProxy(this);
-    this->setHorizontalHeader(m_headerViewProxy);
-    this->setMouseTracking(true);
+    setHorizontalHeader(m_headerViewProxy);
+    setMouseTracking(true);
     connect(m_headerViewProxy, &TPTableHeaderProxy::toggled, m_model, &FPFilesModel::onStateChanged);
     connect(m_model, &FPFilesModel::stateChanged, m_headerViewProxy, &TPTableHeaderProxy::setCheckState);
 
-    this->m_filterProxy = new FPFilesFilterModel(this);
-    this->m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
-    this->setModel(this->m_filterProxy);
-    this->setShowGrid(false);
+    m_filterProxy = new FPFilesFilterModel(this);
+    m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
+    setModel(m_filterProxy);
+    setShowGrid(false);
 
     // 设置Delegate
-    // this->setItemDelegateForColumn(FILE_TABLE_FIELD_CHECKBOX, new FPFilesDelegate(this));
-    this->setItemDelegate(new FPFilesDelegate(this));
+    // setItemDelegateForColumn(FILE_TABLE_FIELD_CHECKBOX, new FPFilesDelegate(this));
+    setItemDelegate(new FPFilesDelegate(this));
 
     // 设置水平行表头
     m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_CHECKBOX, 50);
@@ -418,8 +419,8 @@ void FPFileTable::mouseEnter(const QModelIndex &index)
     {
         return;
     }
-    auto mod = this->selectionModel()->model()->data(index);
-    QToolTip::showText(QCursor::pos(), mod.toString(), this, this->rect(), 2000);
+    auto mod = selectionModel()->model()->data(index);
+    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
 }
 
 }  // namespace KS

@@ -50,6 +50,7 @@ public Q_SLOTS:
 
 private:
     void execute(const QString &cmd);
+    bool isExistEcryptFSMod();
 
 private:
     QProcess *m_process;

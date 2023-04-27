@@ -20,7 +20,7 @@ RetrievePassword::RetrievePassword(QWidget *parent) : QWidget(parent),
                                                       m_ui(new Ui::RetrievePassword)
 {
     m_ui->setupUi(this);
-    this->init();
+    init();
 }
 
 RetrievePassword::~RetrievePassword()
@@ -30,51 +30,50 @@ RetrievePassword::~RetrievePassword()
 
 QString RetrievePassword::getNewPassword()
 {
-    return this->m_ui->m_password->text();
+    return m_ui->m_password->text();
 }
 
 QString RetrievePassword::getPassphrase()
 {
-    return this->m_ui->m_passphrase->text();
+    return m_ui->m_passphrase->text();
 }
 
 void RetrievePassword::init()
 {
-    this->setWindowModality(Qt::ApplicationModal);
-    this->setWindowTitle(tr("Retrieve password"));
-    this->m_ui->m_password->setEchoMode(QLineEdit::Password);
-    this->m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
-    this->m_ui->m_passphrase->setEchoMode(QLineEdit::Password);
-    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this]
+    setWindowModality(Qt::ApplicationModal);
+    m_ui->m_password->setEchoMode(QLineEdit::Password);
+    m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
+    m_ui->m_passphrase->setEchoMode(QLineEdit::Password);
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
-                this->close();
-                emit this->rejected();
+                close();
+                emit rejected();
             });
 
-    connect(this->m_ui->m_ok, &QPushButton::clicked, this, &RetrievePassword::onOkClicked);
+    connect(m_ui->m_ok, &QPushButton::clicked, this, &RetrievePassword::onOkClicked);
 }
 
 void RetrievePassword::onOkClicked()
 {
     // 禁止输入空字符
-    if (this->m_ui->m_password->text().isEmpty() ||
-        this->m_ui->m_passphrase->text().isEmpty() ||
-        this->m_ui->m_confirmPassword->text().isEmpty())
+    if (m_ui->m_password->text().isEmpty() ||
+        m_ui->m_passphrase->text().isEmpty() ||
+        m_ui->m_confirmPassword->text().isEmpty())
     {
-        emit this->inputEmpty();
+        emit inputEmpty();
         return;
     }
     // 两次密码不一致
-    if (this->m_ui->m_password->text() != this->m_ui->m_confirmPassword->text())
+    if (m_ui->m_password->text() != m_ui->m_confirmPassword->text())
     {
-        emit this->passwdInconsistent();
+        emit passwdInconsistent();
         return;
     }
 
     emit accepted();
-    this->close();
-    this->m_ui->m_passphrase->setText("");
-    this->m_ui->m_password->setText("");
-    this->m_ui->m_confirmPassword->setText("");
+    close();
+    m_ui->m_passphrase->setText("");
+    m_ui->m_password->setText("");
+    m_ui->m_confirmPassword->setText("");
 }
 }  // namespace KS

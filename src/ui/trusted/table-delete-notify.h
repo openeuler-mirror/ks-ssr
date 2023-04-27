@@ -11,38 +11,36 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#pragma once
+#ifndef TABLEDELETENOTIFY_H
+#define TABLEDELETENOTIFY_H
 
 #include <QWidget>
-#include "src/ui/trusted/tp-execute-table.h"
+#include "src/ui/common/titlebar-window.h"
 
 namespace Ui
 {
-class TPExecute;
+class TableDeleteNotify;
 }
 
 namespace KS
 {
-class TPExecute : public QWidget
+class TableDeleteNotify : public TitlebarWindow
 {
     Q_OBJECT
+
 public:
-    TPExecute(QWidget *parent = nullptr);
-    ~TPExecute();
+    explicit TableDeleteNotify(QWidget *parent = nullptr);
+    ~TableDeleteNotify();
 
 private:
-    void updateInfo();
+    void init();
 
-private Q_SLOTS:
-    void searchTextChanged(const QString &text);
-    void addClicked(bool checked);
-    void updateClicked(bool checked);
-    void unprotectClicked(bool checked);
-    void unprotectAccepted();
+signals:
+    void accepted();
 
 private:
-    Ui::TPExecute *m_ui;
-
-    TrustedProxy *m_trustedProtectedProxy;
+    Ui::TableDeleteNotify *m_ui;
 };
 }  // namespace KS
+
+#endif  // TABLEDELETENOTIFY_H

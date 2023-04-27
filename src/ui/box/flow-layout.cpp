@@ -23,13 +23,13 @@ FlowLayout::FlowLayout(QWidget *parent, int margin, int hSpacing, int vSpacing) 
                                                                                   m_vSpace(vSpacing)
 
 {
-    this->setContentsMargins(margin, margin, margin, margin);
+    setContentsMargins(margin, margin, margin, margin);
 }
 
 FlowLayout::~FlowLayout()
 {
     QLayoutItem *item;
-    while ((item = this->takeAt(0)))
+    while ((item = takeAt(0)))
     {
         delete item;
     }
@@ -37,38 +37,38 @@ FlowLayout::~FlowLayout()
 
 void FlowLayout::addItem(QLayoutItem *item)
 {
-    this->m_itemList.append(item);
+    m_itemList.append(item);
 }
 
 int FlowLayout::horizontalSpacing() const
 {
-    RETURN_VAL_IF_TRUE(this->m_hSpace >= 0, this->m_hSpace);
+    RETURN_VAL_IF_TRUE(m_hSpace >= 0, m_hSpace);
 
-    return this->smartSpacing(QStyle::PM_LayoutHorizontalSpacing);
+    return smartSpacing(QStyle::PM_LayoutHorizontalSpacing);
 }
 
 int FlowLayout::verticalSpacing() const
 {
-    RETURN_VAL_IF_TRUE(this->m_vSpace >= 0, this->m_vSpace);
+    RETURN_VAL_IF_TRUE(m_vSpace >= 0, m_vSpace);
 
-    return this->smartSpacing(QStyle::PM_LayoutVerticalSpacing);
+    return smartSpacing(QStyle::PM_LayoutVerticalSpacing);
 }
 
 int FlowLayout::count() const
 {
-    return this->m_itemList.size();
+    return m_itemList.size();
 }
 
 QLayoutItem *FlowLayout::itemAt(int index) const
 {
-    return this->m_itemList.value(index);
+    return m_itemList.value(index);
 }
 
 QLayoutItem *FlowLayout::takeAt(int index)
 {
-    if (index >= 0 && index < this->m_itemList.size())
+    if (index >= 0 && index < m_itemList.size())
     {
-        return this->m_itemList.takeAt(index);
+        return m_itemList.takeAt(index);
     }
     return nullptr;
 }
@@ -85,7 +85,7 @@ bool FlowLayout::hasHeightForWidth() const
 
 int FlowLayout::heightForWidth(int width) const
 {
-    return this->doLayout(QRect(0, 0, width, 0));
+    return doLayout(QRect(0, 0, width, 0));
 }
 
 void FlowLayout::setGeometry(const QRect &rect)
@@ -96,13 +96,13 @@ void FlowLayout::setGeometry(const QRect &rect)
 
 QSize FlowLayout::sizeHint() const
 {
-    return this->minimumSize();
+    return minimumSize();
 }
 
 QSize FlowLayout::minimumSize() const
 {
     QSize size;
-    for (const QLayoutItem *item : qAsConst(this->m_itemList))
+    for (const QLayoutItem *item : qAsConst(m_itemList))
     {
         size = size.expandedTo(item->minimumSize());
     }
@@ -129,7 +129,7 @@ int FlowLayout::doLayout(const QRect &rect) const
     int y = effectiveRect.y();
     int lineHeight = 0;
 
-    for (QLayoutItem *item : qAsConst(this->m_itemList))
+    for (QLayoutItem *item : qAsConst(m_itemList))
     {
         const auto itemWidget = item->widget();
         int spaceX = horizontalSpacing();

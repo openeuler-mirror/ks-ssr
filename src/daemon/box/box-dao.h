@@ -21,15 +21,23 @@
 
 namespace KS
 {
+// 记录box信息
 struct BoxRecord
 {
+    // box名字
     QString boxName;
+    // box ID 作为box唯一标识
     QString boxID;
-    bool isMount;
+    // box 是否挂载
+    bool mounted;
+    // 加密的密码
     QString encryptpassword;
-    QString encryptPspr;
+    // 加密后的口令
+    QString encryptPassphrase;
+    // 加密后的挂载身份验证令牌的签名，在执行装载之前，身份验证令牌必须位于内核密钥环中。
     QString encryptSig;
-    int userUid;
+    // 调用者UID
+    int userUID;
 };
 
 class BoxDao
@@ -41,13 +49,13 @@ public:
     // 添加box到数据库
     void addBox(const QString &boxName,
                 const QString &boxID,
-                bool isMount,
+                bool mounted,
                 const QString &encryptpassword,
-                const QString &encryptPspr,
+                const QString &encryptPassphrase,
                 const QString &encryptSig,
-                int userUid);
+                int userUID);
     // 为box修改数据库中储存的挂载状态
-    void modifyMountStatus(const QString &boxID, bool isMount);
+    void modifyMountStatus(const QString &boxID, bool mounted);
     // 为box修改数据库中储存的密码
     void modifyPasswd(const QString &boxID, const QString &encryptpassword);
     // 删除数据库中的box

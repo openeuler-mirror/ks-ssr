@@ -34,7 +34,7 @@ namespace KS
 TPPage::TPPage(QWidget *parent) : QWidget(parent),
                                   m_ui(new Ui::TPPage)
 {
-    this->m_ui->setupUi(this);
+    m_ui->setupUi(this);
     initSidebar();
     initSubPage();
     checkTrustedLoadFinied();
@@ -45,7 +45,7 @@ TPPage::TPPage(QWidget *parent) : QWidget(parent),
 
 TPPage::~TPPage()
 {
-    delete this->m_ui;
+    delete m_ui;
 }
 
 void TPPage::paintEvent(QPaintEvent *event)
@@ -86,8 +86,8 @@ void TPPage::checkTrustedLoadFinied()
     message->buildNotify(tr("Trusted data needs to be initialised,"
                             "please wait a few minutes to refresh."));
 
-    int x = this->x() + this->width() / 4 + message->width() / 4;
-    int y = this->y() + this->height() / 4 + message->height() / 4;
+    int x = this->x() + width() / 4 + message->width() / 4;
+    int y = this->y() + height() / 4 + message->height() / 4;
     message->move(x, y);
     message->show();
 }

@@ -19,7 +19,7 @@ InputPassword::InputPassword(QWidget *parent) : QWidget(parent),
                                                 m_ui(new Ui::InputPassword)
 {
     m_ui->setupUi(this);
-    this->init();
+    init();
 }
 
 InputPassword::~InputPassword()
@@ -29,24 +29,24 @@ InputPassword::~InputPassword()
 
 QString InputPassword::getInputPassword()
 {
-    return this->m_ui->m_inputPasswd->text();
+    return m_ui->m_inputPasswd->text();
 }
 
 void InputPassword::init()
 {
-    this->setWindowModality(Qt::ApplicationModal);
+    setWindowModality(Qt::ApplicationModal);
     m_ui->m_inputPasswd->setEchoMode(QLineEdit::Password);
-    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this]
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
-                this->close();
-                emit this->rejected();
+                close();
+                emit rejected();
             });
 
-    connect(this->m_ui->m_ok, &QPushButton::clicked, this, [this]
+    connect(m_ui->m_ok, &QPushButton::clicked, this, [this]
             {
+                close();
+                emit accepted();
                 m_ui->m_inputPasswd->setText("");
-                this->close();
-                emit this->accepted();
             });
 }
 

@@ -23,6 +23,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include "ksc-i.h"
+#include "ksc-marcos.h"
 #include "lib/base/crypto-helper.h"
 #include "src/ui/box/input-password.h"
 #include "src/ui/box/modify-password.h"
@@ -39,32 +40,32 @@ Box::Box(const QString &uid) : m_uid(uid),
                                m_retrievePassword(nullptr),
                                m_popupMenu(nullptr)
 {
-    this->m_boxManagerProxy = new BoxManagerProxy(KSC_DBUS_NAME,
-                                                  KSC_BOX_MANAGER_DBUS_OBJECT_PATH,
-                                                  QDBusConnection::systemBus(),
-                                                  this);
+    m_boxManagerProxy = new BoxManagerProxy(KSC_DBUS_NAME,
+                                            KSC_BOX_MANAGER_DBUS_OBJECT_PATH,
+                                            QDBusConnection::systemBus(),
+                                            this);
     m_process = new QProcess;
     m_imageLock = new BoxImage(this, ":/images/box-locked");
     m_imageUnlock = new BoxImage(this);
 
-    this->initBox();
-    this->initMenu();
+    initBox();
+    initMenu();
 }
 
 void Box::initBox()
 {
-    this->initBoxInfo();
+    initBoxInfo();
 
-    /* this->setFixedWidth(102); */
+    /* setFixedWidth(102); */
 
     auto layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
-    this->m_showingIcon = new QPushButton(this);
+    m_showingIcon = new QPushButton(this);
     // 放在qss中会被scrollarea->viewport的样式表覆盖，所以在代码中设定背景
-    this->m_showingIcon->setFlat(true);
-    this->m_showingIcon->setFixedSize(QSize(102, 102));
-    //    this->m_showingIcon->setIcon(QIcon(":/images/box-big"));
-    //    this->m_showingIcon->setIconSize(QSize(70, 70));
+    m_showingIcon->setFlat(true);
+    m_showingIcon->setFixedSize(QSize(102, 102));
+    //    m_showingIcon->setIcon(QIcon(":/images/box-big"));
+    //    m_showingIcon->setIconSize(QSize(70, 70));
     QVBoxLayout *vlay = new QVBoxLayout(m_showingIcon);
     vlay->setContentsMargins(0, 0, 0, 0);
     vlay->addWidget(m_imageLock, 0, Qt::AlignCenter);
@@ -81,21 +82,21 @@ void Box::initBox()
 
     vlay->addWidget(m_imageLock, 0, Qt::AlignCenter);
 
-    layout->addWidget(this->m_showingIcon);
+    layout->addWidget(m_showingIcon);
 
     connect(m_showingIcon, &QPushButton::clicked, this, &Box::onIconBtnClick);
 
-    this->m_showingName = new QLabel(this);
-    this->m_showingName->setText(this->m_name);
-    this->m_showingName->setAlignment(Qt::AlignCenter);
-    layout->addWidget(this->m_showingName);
+    m_showingName = new QLabel(this);
+    m_showingName->setText(m_name);
+    m_showingName->setAlignment(Qt::AlignCenter);
+    layout->addWidget(m_showingName);
 
-    this->setLayout(layout);
+    setLayout(layout);
 }
 
 void Box::initBoxInfo()
 {
-    auto reply = this->m_boxManagerProxy->GetBoxByUID(this->m_uid);
+    auto reply = m_boxManagerProxy->GetBoxByUID(m_uid);
     auto jsonStr = reply.value();
 
     QJsonParseError jsonError;
@@ -109,32 +110,32 @@ void Box::initBoxInfo()
 
     auto jsonBox = jsonDoc.object();
     m_name = jsonBox.value(KSC_BM_JK_BOX_NAME).toString();
-    m_mounted = QVariant(jsonBox.value(KSC_BM_JK_BOX_MOUNTED).toString()).toBool();
+    m_mounted = jsonBox.value(KSC_BM_JK_BOX_MOUNTED).toBool();
 }
 
 void Box::initMenu()
 {
-    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_uid).value();
+    auto mounted = m_boxManagerProxy->IsMounted(m_uid).value();
 
-    // this->m_modifyPassword = new ModifyPassword();
+    // m_modifyPassword = new ModifyPassword();
 
-    this->m_popupMenu = new QMenu(this);
+    m_popupMenu = new QMenu(this);
     m_popupMenu->setObjectName("m_popupMenu");
 
-    this->m_mountedStatusAction = this->m_popupMenu->addAction(mounted ? tr("Lock") : tr("Unlock"),
-                                                               this,
-                                                               &Box::switchMountedStatus);
-    this->m_popupMenu->addAction(tr("Modify password"), this, &Box::modifyPassword);
-    this->m_popupMenu->addAction(tr("Delete"), this, &Box::delBox);
-    this->m_popupMenu->addAction(tr("Retrieve the password"), this, &Box::retrievePassword);
+    m_mountedStatusAction = m_popupMenu->addAction(mounted ? tr("Lock") : tr("Unlock"),
+                                                   this,
+                                                   &Box::switchMountedStatus);
+    m_popupMenu->addAction(tr("Modify password"), this, &Box::modifyPassword);
+    m_popupMenu->addAction(tr("Delete"), this, &Box::delBox);
+    m_popupMenu->addAction(tr("Retrieve the password"), this, &Box::retrievePassword);
 }
 
 void Box::boxChanged()
 {
     // 保密箱属性发生变化，需要进行更新
-    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_uid).value();
+    auto mounted = m_boxManagerProxy->IsMounted(m_uid).value();
     m_mounted = mounted;
-    this->m_mountedStatusAction->setText(mounted ? tr("Lock") : tr("Unlock"));
+    m_mountedStatusAction->setText(mounted ? tr("Lock") : tr("Unlock"));
     if (m_mounted)
     {
         m_imageUnlock->show();
@@ -167,7 +168,7 @@ void Box::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::RightButton)
     {
-        this->m_popupMenu->popup(event->globalPos());
+        m_popupMenu->popup(event->globalPos());
     }
 
     QWidget::mousePressEvent(event);
@@ -175,15 +176,15 @@ void Box::mousePressEvent(QMouseEvent *event)
 
 void Box::switchMountedStatus()
 {
-    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_uid).value();
+    auto mounted = m_boxManagerProxy->IsMounted(m_uid).value();
 
     if (mounted)
     {
-        this->m_boxManagerProxy->UnMount(this->m_uid).waitForFinished();
+        m_boxManagerProxy->UnMount(m_uid).waitForFinished();
     }
     else
     {
-        auto inputMountPasswd = new SubWindow(this->window());
+        auto inputMountPasswd = new SubWindow(window());
         inputMountPasswd->setTitle(tr("Unlock"));
         inputMountPasswd->setFixedSize(300, 220);
 
@@ -194,8 +195,8 @@ void Box::switchMountedStatus()
 
         inputMountPasswd->getContentLayout()->addWidget(m_inputMountPassword);
 
-        int x = this->window()->x() / 2 + inputMountPasswd->width();
-        int y = this->window()->y() / 2 + inputMountPasswd->height();
+        int x = window()->x() / 2 + inputMountPasswd->width();
+        int y = window()->y() / 2 + inputMountPasswd->height();
         inputMountPasswd->move(x, y);
         inputMountPasswd->show();
     }
@@ -203,39 +204,39 @@ void Box::switchMountedStatus()
 
 void Box::modifyPassword()
 {
-    auto modifyPassword = new SubWindow(this->window());
-    modifyPassword->setFixedSize(400, 320);
+    auto modifyPassword = new SubWindow(window());
+    modifyPassword->setFixedSize(400, 400);
     modifyPassword->setTitle(tr("Modify password"));
 
-    this->m_modifyPassword = new ModifyPassword(modifyPassword);
-    connect(this->m_modifyPassword, SIGNAL(accepted()), this, SLOT(modifyPasswordAccepted()));
-    connect(this->m_modifyPassword, &ModifyPassword::passwdInconsistent, this, [this]
+    m_modifyPassword = new ModifyPassword(modifyPassword);
+    connect(m_modifyPassword, SIGNAL(accepted()), this, SLOT(modifyPasswordAccepted()));
+    connect(m_modifyPassword, &ModifyPassword::passwdInconsistent, this, [this]
             {
                 auto messge = buildNotifyPage(QString(tr("Please confirm whether the password is consistent.")));
                 messge->show();
             });
-    connect(this->m_modifyPassword, &ModifyPassword::inputEmpty, this, [this]
+    connect(m_modifyPassword, &ModifyPassword::inputEmpty, this, [this]
             {
                 auto messge = buildNotifyPage(tr("The input cannot be empty, please improve the information."));
                 messge->show();
             });
-    connect(this->m_modifyPassword, &ModifyPassword::accepted, modifyPassword, &SubWindow::close);
-    connect(this->m_modifyPassword, &ModifyPassword::rejected, modifyPassword, &SubWindow::close);
+    connect(m_modifyPassword, &ModifyPassword::accepted, modifyPassword, &SubWindow::close);
+    connect(m_modifyPassword, &ModifyPassword::rejected, modifyPassword, &SubWindow::close);
 
-    this->m_modifyPassword->setBoxName(this->m_name);
-    //    this->m_modifyPassword->show();
+    m_modifyPassword->setBoxName(m_name);
+    //    m_modifyPassword->show();
 
     modifyPassword->getContentLayout()->addWidget(m_modifyPassword);
 
-    int x = this->window()->x() + this->window()->width() / 4 + modifyPassword->width() / 4;
-    int y = this->window()->y() + this->window()->height() / 4 + modifyPassword->height() / 4;
+    int x = window()->x() + window()->width() / 4 + modifyPassword->width() / 4;
+    int y = window()->y() + window()->height() / 4 + modifyPassword->height() / 8;
     modifyPassword->move(x, y);
     modifyPassword->show();
 }
 
 void Box::delBox()
 {
-    auto inputDelBoxPasswd = new SubWindow(this->window());
+    auto inputDelBoxPasswd = new SubWindow(window());
     inputDelBoxPasswd->setTitle(tr("Del box"));
     inputDelBoxPasswd->setFixedSize(300, 220);
 
@@ -246,51 +247,51 @@ void Box::delBox()
 
     inputDelBoxPasswd->getContentLayout()->addWidget(m_inputDelBoxPassword);
 
-    int x = this->window()->x() / 2 + inputDelBoxPasswd->width();
-    int y = this->window()->y() / 2 + inputDelBoxPasswd->height();
+    int x = window()->x() / 2 + inputDelBoxPasswd->width();
+    int y = window()->y() / 2 + inputDelBoxPasswd->height();
     inputDelBoxPasswd->move(x, y);
     inputDelBoxPasswd->show();
 }
 
 void Box::retrievePassword()
 {
-    auto retrievePasswd = new SubWindow(this->window());
-    retrievePasswd->setFixedSize(400, 320);
-    retrievePasswd->setTitle(tr("Modify password"));
+    auto retrievePasswd = new SubWindow(window());
+    retrievePasswd->setFixedSize(400, 350);
+    retrievePasswd->setTitle(tr("Retrieve password"));
 
-    this->m_retrievePassword = new RetrievePassword(retrievePasswd);
-    connect(this->m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
-    connect(this->m_retrievePassword, &RetrievePassword::passwdInconsistent, this, [this]
+    m_retrievePassword = new RetrievePassword(retrievePasswd);
+    connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
+    connect(m_retrievePassword, &RetrievePassword::passwdInconsistent, this, [this]
             {
                 auto messge = buildNotifyPage(QString(tr("Please confirm whether the password is consistent.")));
                 messge->show();
             });
-    connect(this->m_retrievePassword, &RetrievePassword::inputEmpty, this, [this]
+    connect(m_retrievePassword, &RetrievePassword::inputEmpty, this, [this]
             {
                 auto messge = buildNotifyPage(tr("The input cannot be empty, please improve the information."));
                 messge->show();
             });
-    connect(this->m_retrievePassword, &RetrievePassword::accepted, retrievePasswd, &SubWindow::close);
-    connect(this->m_retrievePassword, &RetrievePassword::rejected, retrievePasswd, &SubWindow::close);
+    connect(m_retrievePassword, &RetrievePassword::accepted, retrievePasswd, &SubWindow::close);
+    connect(m_retrievePassword, &RetrievePassword::rejected, retrievePasswd, &SubWindow::close);
 
-    //    this->m_modifyPassword->show();
+    //    m_modifyPassword->show();
 
     retrievePasswd->getContentLayout()->addWidget(m_retrievePassword);
 
-    int x = this->window()->x() + this->window()->width() / 4 + retrievePasswd->width() / 4;
-    int y = this->window()->y() + this->window()->height() / 4 + retrievePasswd->height() / 4;
+    int x = window()->x() + window()->width() / 4 + retrievePasswd->width() / 4;
+    int y = window()->y() + window()->height() / 4 + retrievePasswd->height() / 8;
     retrievePasswd->move(x, y);
     retrievePasswd->show();
 }
 
 QWidget *Box::buildNotifyPage(const QString &notify)
 {
-    auto message = new SubWindow(this->window());
+    auto message = new SubWindow(window());
     message->setFixedSize(240, 180);
     message->buildNotify(notify);
 
-    int x = this->window()->x() + this->window()->width() / 4 + message->width() / 4;
-    int y = this->window()->y() + this->window()->height() / 4 + message->height() / 4;
+    int x = window()->x() + window()->width() / 4 + message->width() / 4;
+    int y = window()->y() + window()->height() / 4 + message->height() / 4;
     message->move(x, y);
 
     return message;
@@ -298,107 +299,91 @@ QWidget *Box::buildNotifyPage(const QString &notify)
 
 void Box::modifyPasswordAccepted()
 {
-    auto encryptCurrentPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), this->m_modifyPassword->getCurrentPassword());
-    auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), this->m_modifyPassword->getNewPassword());
+    auto encryptCurrentPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getCurrentPassword());
+    auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getNewPassword());
 
-    auto reply = this->m_boxManagerProxy->ModifyBoxPassword(this->m_uid,
-                                                            encryptCurrentPassword,
-                                                            encryptNewPassword);
+    auto reply = m_boxManagerProxy->ModifyBoxPassword(m_uid,
+                                                      encryptCurrentPassword,
+                                                      encryptNewPassword);
 
-    bool ret = false;
     reply.waitForFinished();
-    if (reply.isValid())
+    RETURN_IF_TRUE(!reply.isValid())
+
+    auto ret = reply.value();
+    if (!ret)
     {
-        ret = reply.value();
-        if (!ret)
-        {
-            auto message = buildNotifyPage(QString(tr("Password error!")));
-            message->show();
-        }
-        else
-        {
-            auto message = buildNotifyPage(QString(tr("Modify success!")));
-            message->show();
-        }
+        auto message = buildNotifyPage(QString(tr("Password error!")));
+        message->show();
     }
     else
     {
-        KLOG_WARNING() << "modify password failed. ret = " << ret;
+        auto message = buildNotifyPage(QString(tr("Modify success!")));
+        message->show();
     }
 }
 
 void Box::retrievePasswordAccepted()
 {
-    auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), this->m_retrievePassword->getNewPassword());
-    auto encryptPassphrase = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), this->m_retrievePassword->getPassphrase());
+    auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getNewPassword());
+    auto encryptPassphrase = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
 
-    auto reply = this->m_boxManagerProxy->RetrievePassword(this->m_uid,
-                                                           encryptPassphrase,
-                                                           encryptNewPassword);
-
-    bool ret = false;
+    auto reply = m_boxManagerProxy->RetrievePassword(m_uid,
+                                                     encryptPassphrase,
+                                                     encryptNewPassword);
     reply.waitForFinished();
-    if (reply.isValid())
+    RETURN_IF_TRUE(!reply.isValid())
+
+    auto ret = reply.value();
+    if (!ret)
     {
-        ret = reply.value();
-        if (!ret)
-        {
-            auto message = buildNotifyPage(QString(tr("Passphrase error!")));
-            message->show();
-        }
-        else
-        {
-            auto message = buildNotifyPage(QString(tr("Retrieve success!")));
-            message->show();
-        }
+        auto message = buildNotifyPage(QString(tr("Passphrase error!")));
+        message->show();
     }
     else
     {
-        KLOG_WARNING() << "Retrieve password failed. ret = " << ret;
+        auto message = buildNotifyPage(QString(tr("Retrieve success!")));
+        message->show();
     }
 }
 
 void Box::inputMountPasswordAccepted()
 {
+    auto test = m_inputMountPassword->getInputPassword();
     auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputMountPassword->getInputPassword());
-    auto reply = this->m_boxManagerProxy->Mount(this->m_uid, encryptPasswd);
-    bool ret = false;
+    auto reply = m_boxManagerProxy->Mount(m_uid, encryptPasswd);
     reply.waitForFinished();
-    if (reply.isValid())
+    RETURN_IF_TRUE(!reply.isValid())
+
+    auto ret = reply.value();
+    if (!ret)
     {
-        ret = reply.value();
-        if (!ret)
-        {
-            auto message = buildNotifyPage(QString(tr("Password error!")));
-            message->show();
-        }
-        else
-        {
-            auto message = buildNotifyPage(QString(tr("Unlock success!")));
-            message->show();
-        }
+        auto message = buildNotifyPage(QString(tr("Password error!")));
+        message->show();
+    }
+    else
+    {
+        auto message = buildNotifyPage(QString(tr("Unlock success!")));
+        message->show();
     }
 }
 
 void Box::inputDelBoxPasswordAccepted()
 {
     auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputDelBoxPassword->getInputPassword());
-    auto reply = this->m_boxManagerProxy->DelBox(this->m_uid, encryptPasswd);
-    bool ret = false;
+    auto reply = m_boxManagerProxy->DelBox(m_uid, encryptPasswd);
     reply.waitForFinished();
-    if (reply.isValid())
+    RETURN_IF_TRUE(!reply.isValid())
+
+    auto ret = reply.value();
+    if (!ret)
     {
-        ret = reply.value();
-        if (!ret)
-        {
-            auto message = buildNotifyPage(QString(tr("The Password is wrong or has been mounted!")));
-            message->show();
-        }
-        else
-        {
-            auto message = buildNotifyPage(QString(tr("Delete success!")));
-            message->show();
-        }
+        auto message = buildNotifyPage(QString(tr("The Password is wrong or has been mounted!")));
+        message->show();
+    }
+    else
+    {
+        auto message = buildNotifyPage(QString(tr("Delete success!")));
+        message->show();
     }
 }
 }  // namespace KS
