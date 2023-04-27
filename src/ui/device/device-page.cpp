@@ -50,7 +50,8 @@ void DevicePage::initSidebar()
     createSideBarItem(tr("Device List"), ":/images/device-list");
     createSideBarItem(tr("Connect Record"), ":/images/device-record");
 
-    connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, this, &DevicePage::updatePage);
+    connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, m_ui->m_stacked, &QStackedWidget::setCurrentIndex);
+    connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, this, &DevicePage::setSideBarItemStatus);
     m_ui->m_sidebar->setCurrentRow(0);
 }
 
@@ -78,7 +79,7 @@ void DevicePage::createSideBarItem(const QString &text, const QString &icon)
     newItem->setData(Qt::UserRole, text);
 }
 
-void DevicePage::updatePage(int currentRow)
+void DevicePage::setSideBarItemStatus(int currentRow)
 {
     //更新侧边栏item状态
     for (auto i = 0; i < m_ui->m_sidebar->count(); i++)
@@ -89,8 +90,6 @@ void DevicePage::updatePage(int currentRow)
         else
             customItem->setSelected(false);
     }
-    //更新右侧页面
-    m_ui->m_stacked->setCurrentIndex(currentRow);
 }
 
 }  // namespace KS
