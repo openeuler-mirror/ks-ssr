@@ -139,25 +139,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="m_update">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>72</width>
-          <height>36</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Update</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="m_unprotect">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">

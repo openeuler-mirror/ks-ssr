@@ -65,7 +65,7 @@ void TPDelegate::paint(QPainter *painter,
     if (index.column() == 0)
     {
         auto checkboxOption = option;
-        this->initStyleOption(&checkboxOption, index);
+        initStyleOption(&checkboxOption, index);
 
         QStyleOptionButton checkboxStyle;
         QPixmap pixmap;
@@ -84,7 +84,7 @@ void TPDelegate::paint(QPainter *painter,
     }
     else
     {
-        this->QStyledItemDelegate::paint(painter, option, index);
+        QStyledItemDelegate::paint(painter, option, index);
     }
 }
 
@@ -104,6 +104,6 @@ bool TPDelegate::editorEvent(QEvent *event,
         model->setData(index, !value, Qt::EditRole);
     }
 
-    return this->QStyledItemDelegate::editorEvent(event, model, option, index);
+    return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 }  // namespace KS

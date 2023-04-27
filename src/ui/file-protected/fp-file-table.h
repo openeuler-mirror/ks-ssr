@@ -111,7 +111,7 @@ public:
     FPFileTable(QWidget *parent = nullptr);
     virtual ~FPFileTable(){};
 
-    FPFilesFilterModel *getFilterProxy() { return this->m_filterProxy; };
+    FPFilesFilterModel *getFilterProxy() { return m_filterProxy; };
     void searchTextChanged(const QString &text);
     void updateInfo();
     QList<FPFileInfo> getFPFileInfos();

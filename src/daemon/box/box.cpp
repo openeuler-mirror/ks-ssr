@@ -41,7 +41,7 @@ Box::Box(const QString &name,
     m_boxDao = new BoxDao;
     m_ecryptFS = new EcryptFS(this);
 
-    this->init();
+    init();
 }
 
 QString Box::getBoxID()
@@ -68,7 +68,7 @@ uint Box::getUserUid()
 
 QString Box::getPassphrase()
 {
-    auto decryptPspr = CryptoHelper::aesDecrypt(m_boxDao->getBox(m_boxID).encryptPspr);
+    auto decryptPspr = CryptoHelper::aesDecrypt(m_boxDao->getBox(m_boxID).encryptPassphrase);
     return decryptPspr;
 }
 
@@ -99,7 +99,7 @@ bool Box::delBox(const QString &inputPassword)
         return false;
     }
 
-    if (boxInfo.isMount)
+    if (boxInfo.mounted)
     {
         KLOG_WARNING() << "The box has been mounted and cannot be deleted. uid = " << m_boxID;
         return false;
@@ -118,11 +118,11 @@ bool Box::delBox(const QString &inputPassword)
     return true;
 }
 
-bool Box::isMount()
+bool Box::mounted()
 {
     auto boxInfo = getBoxInfo();
 
-    return boxInfo.isMount;
+    return boxInfo.mounted;
 }
 
 bool Box::mount(const QString &inputPassword)
@@ -138,14 +138,14 @@ bool Box::mount(const QString &inputPassword)
     }
 
     // 已挂载则返回
-    if (boxInfo.isMount)
+    if (boxInfo.mounted)
     {
         KLOG_WARNING() << "The box has been mounted and there is no need to repeat the operation. uid = " << m_boxID;
         return true;
     }
 
     //挂载
-    auto decryptPspr = CryptoHelper::aesDecrypt(boxInfo.encryptPspr);  //Pspr
+    auto decryptPspr = CryptoHelper::aesDecrypt(boxInfo.encryptPassphrase);  //Pspr
     auto decryptSig = CryptoHelper::aesDecrypt(boxInfo.encryptSig);
 
     auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
@@ -191,11 +191,12 @@ void Box::init()
 {
     if (m_boxID.isEmpty())
     {
-        QString passphrase = getRandStr(GET_BOX_PASSPHRASE_BIT);
-        QString sig = m_ecryptFS->addPassphrase(passphrase);
-        if (passphrase.isEmpty())
+        auto passphrase = getRandStr(GET_BOX_PASSPHRASE_BIT);
+        auto sig = m_ecryptFS->addPassphrase(passphrase);
+        if (sig.isEmpty())
         {
             KLOG_ERROR() << "generate passphrase fail. check ecryptfs.ko is load!";
+            return;
         }
 
         // aes加密处理 存入数据库

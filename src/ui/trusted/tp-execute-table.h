@@ -95,7 +95,7 @@ public:
     int getExecutetamperedNums();
 
 private:
-    void mouseEnter(const QModelIndex &index);
+    void showDetails(const QModelIndex &index);
 
 private:
     TPExecuteFilterModel *m_filterProxy;
