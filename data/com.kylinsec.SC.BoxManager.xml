@@ -30,6 +30,9 @@
             <arg type="s" name="box_uid" direction="out">
                 <summary>The box UID.</summary>
             </arg>
+            <arg type="s" name="passphrase" direction="out">
+                <summary>The box passphrase.</summary>
+            </arg>
             <description>Create a encrypted box.</description>
         </method>
 
@@ -115,9 +118,6 @@
         <signal name="BoxAdded">
             <arg name="box_uid" type="s">
                 <summary>The box UID.</summary>
-            </arg>
-            <arg name="passphrase" type="s">
-                <summary>The box passphrase.</summary>
             </arg>
             <description>Emit the signal when box is added.</description>
         </signal>
