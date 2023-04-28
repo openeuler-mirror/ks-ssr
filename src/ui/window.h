@@ -35,10 +35,14 @@ public:
     static Ui::Window *instance();
 
 private:
+    bool isActive();
     // 窗口整体初始化
     void initWindow();
     // 导航和导航项初始化
     void initNavigation();
+
+private slots:
+    void popupActiveDialog();
 
 private:
     Ui::Window *m_ui;

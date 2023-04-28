@@ -26,16 +26,20 @@
  */
 
 #include "src/ui/window.h"
+#include <ks-license-gui/ksl-va.h>
 #include <qt5-log-i.h>
 #include <QFile>
+#include <QMenu>
 #include <QMutex>
 #include <QPushButton>
 #include <QStackedWidget>
 #include "src/ui/box/box-page.h"
 #include "src/ui/device/device-page.h"
-#include "src/ui/fp/fp-page.h"
+#include "src/ui/file-protected/fp-page.h"
+#include "src/ui/license/activation.h"
+#include "src/ui/license/license-utils.h"
 #include "src/ui/navigation.h"
-#include "src/ui/tp/tp-page.h"
+#include "src/ui/trusted/tp-page.h"
 #include "src/ui/ui_window.h"
 
 namespace KS
@@ -46,6 +50,24 @@ Window::Window() : TitlebarWindow(nullptr), m_ui(new Ui::Window)
 {
     m_ui->setupUi(getWindowContentWidget());
 
+    auto activation = new Activation(this);
+    if (!activation->isActivate())
+    {
+        activation->show();
+    }
+    connect(activation, &Activation::activated,
+            [this](bool isActived)
+            {
+                if (isActived)
+                {
+                    activation->hide();
+                }
+            });
+    connect(activation, &Activation::closed,
+            [this] {
+
+            });
+
     initWindow();
     initNavigation();
 }
@@ -55,11 +77,17 @@ Window::~Window()
     delete m_ui;
 }
 
+bool Window::isActive()
+{
+    auto dbusUtils = new LicenseUtils(this);
+}
+
 void Window::initWindow()
 {
     setTitle(tr("Security control"));
     setIcon(QIcon(":/images/logo"));
-    setFixedSize(984, 648);
+    setFixedWidth(984);
+    setFixedHeight(648);
 
     // 初始化样式表
     QFile file(KSC_STYLE_PATH);
@@ -72,6 +100,19 @@ void Window::initWindow()
     {
         KLOG_WARNING() << "Failed to open file " << KSC_STYLE_PATH;
     }
+
+    //创建标题栏右侧菜单按钮
+    setTitlebarCustomLayoutAlignHCenter(false);
+    auto layout = getTitlebarCustomLayout();
+    auto btnForMenu = new QPushButton(this);
+    btnForMenu->setFixedSize(QSize(16, 16));
+    layout->addWidget(btnForMenu);
+    layout->setAlignment(Qt::AlignRight);
+
+    auto settingMenu = new QMenu(this);
+    auto action = settingMenu->addAction(tr("Activate"));
+    connect(action, &QAction::triggered, this, &Window::popupActiveDialog);
+    btnForMenu->setMenu(settingMenu);
 }
 
 void Window::initNavigation()
@@ -98,5 +139,11 @@ void Window::initNavigation()
     m_ui->m_pages->setCurrentIndex(0);
 
     connect(m_ui->m_navigation, SIGNAL(currentCategoryChanged(int)), m_ui->m_pages, SLOT(setCurrentIndex(int)));
+}
+
+void Window::popupActiveDialog()
+{
+    auto kslVa = new KslVA(tr("Active"), QIcon());
+    kslVa->show();
 }
 }  // namespace KS
