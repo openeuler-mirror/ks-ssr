@@ -12,7 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#include "src/daemon/trusted/trusted.h"
+#include "src/daemon/tp/tp.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include <QJsonArray>
@@ -21,47 +21,47 @@
 #include "config.h"
 #include "include/ksc-i.h"
 #include "include/ksc-marcos.h"
-#include "src/daemon/trusted_adaptor.h"
+#include "src/daemon/tp_adaptor.h"
 
 namespace KS
 {
-Trusted::Trusted(QObject *parent) : QObject(parent)
+TP::TP(QObject *parent) : QObject(parent)
 {
-    m_dbusAdaptor = new TrustedAdaptor(this);
+    m_dbusAdaptor = new TPAdaptor(this);
     m_kss = new KSS(this);
-    connect(m_kss, &KSS::initFinished, this, &Trusted::InitFinished);
+    connect(m_kss, &KSS::initFinished, this, &TP::InitFinished);
 
     init();
 }
-Trusted::~Trusted()
+TP::~TP()
 {
 }
 
-void Trusted::AddFile(const QString &filePath)
+void TP::AddFile(const QString &filePath)
 {
     m_kss->addTrustedFile(filePath);
 }
 
-QString Trusted::GetExecuteFiles()
+QString TP::GetExecuteFiles()
 {
     return m_kss->getExecuteFiles();
 }
 
-QString Trusted::GetModuleFiles()
+QString TP::GetModuleFiles()
 {
     return m_kss->getModuleFiles();
 }
 
-void Trusted::ProhibitUnloading(bool prohibited, const QString &filePath)
+void TP::ProhibitUnloading(bool prohibited, const QString &filePath)
 {
 }
 
-void Trusted::RemoveFile(const QString &filePath)
+void TP::RemoveFile(const QString &filePath)
 {
     m_kss->removeTrustedFile(filePath);
 }
 
-QString Trusted::Search(const QString &pathKey, uint searchType)
+QString TP::Search(const QString &pathKey, uint searchType)
 {
     RETURN_VAL_IF_TRUE(TrustedProtectType(searchType) == TrustedProtectType::TRUSTED_PROTECT_TYPE_NONE, QString())
     QString fileList;
@@ -100,11 +100,11 @@ QString Trusted::Search(const QString &pathKey, uint searchType)
     return QString(resultJsonDoc.toJson());
 }
 
-void Trusted::init()
+void TP::init()
 {
     QDBusConnection connection = QDBusConnection::systemBus();
 
-    if (!connection.registerObject(KSC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(KSC_TP_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }

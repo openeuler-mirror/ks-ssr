@@ -20,7 +20,7 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 #include <QWidget>
-#include "src/ui/trusted/tp-table-header-proxy.h"
+#include "src/ui/tp/tp-table-header-proxy.h"
 
 class FileProtectedProxy;
 

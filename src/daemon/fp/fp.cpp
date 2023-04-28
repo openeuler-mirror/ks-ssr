@@ -12,7 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#include "src/daemon/protected/file-protected.h"
+#include "src/daemon/fp/fp.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include <QJsonArray>
@@ -21,39 +21,39 @@
 #include "config.h"
 #include "include/ksc-i.h"
 #include "include/ksc-marcos.h"
-#include "src/daemon/file_protected_adaptor.h"
+#include "src/daemon/fp_adaptor.h"
 
 namespace KS
 {
-FileProtected::FileProtected(QObject *parent) : QObject(parent)
+FP::FP(QObject *parent) : QObject(parent)
 {
-    m_dbusAdaptor = new FileProtectedAdaptor(this);
+    m_dbusAdaptor = new FPAdaptor(this);
     m_kss = new KSS(this);
 
     init();
 }
-FileProtected::~FileProtected()
+FP::~FP()
 {
 }
 
-void FileProtected::AddFile(const QString &filePath)
+void FP::AddFile(const QString &filePath)
 {
     auto fileName = filePath.section('/', -1);
     //    KLOG_DEBUG() << "Add file name is " << fileName;
     m_kss->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 }
 
-QString FileProtected::GetFiles()
+QString FP::GetFiles()
 {
     return m_kss->getFiles();
 }
 
-void FileProtected::RemoveFile(const QString &filePath)
+void FP::RemoveFile(const QString &filePath)
 {
     m_kss->removeFile(filePath);
 }
 
-QString FileProtected::Search(const QString &pathKey)
+QString FP::Search(const QString &pathKey)
 {
     QJsonDocument resultJsonDoc;
     QJsonArray jsonArr;
@@ -81,11 +81,11 @@ QString FileProtected::Search(const QString &pathKey)
     return QString(resultJsonDoc.toJson());
 }
 
-void FileProtected::init()
+void FP::init()
 {
     QDBusConnection connection = QDBusConnection::systemBus();
 
-    if (!connection.registerObject(KSC_FILE_PROTECTED_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(KSC_FP_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }

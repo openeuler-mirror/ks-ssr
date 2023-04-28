@@ -15,7 +15,7 @@
 #define TPKERNEL_H
 
 #include <QWidget>
-#include "src/ui/trusted/tp-kernel-table.h"
+#include "src/ui/tp/tp-kernel-table.h"
 
 namespace Ui
 {
@@ -44,7 +44,7 @@ private Q_SLOTS:
 private:
     Ui::TPKernel *m_ui;
 
-    TrustedProxy *m_trustedProtectedProxy;
+    TPProxy *m_tpDBusProxy;
 };
 }  // namespace KS
 

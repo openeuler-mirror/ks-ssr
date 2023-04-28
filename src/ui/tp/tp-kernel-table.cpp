@@ -30,8 +30,8 @@
 #include <QToolTip>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
-#include "src/ui/trusted/tp-delegate.h"
-#include "src/ui/trusted_proxy.h"
+#include "src/ui/tp/tp-delegate.h"
+#include "src/ui/tp_proxy.h"
 
 namespace KS
 {
@@ -73,12 +73,12 @@ bool TPKernelFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sou
 }
 
 TPKernelModel::TPKernelModel(QObject *parent) : QAbstractTableModel(parent),
-                                                m_trustedProtectedProxy(nullptr)
+                                                m_tpDBusProxy(nullptr)
 {
-    m_trustedProtectedProxy = new TrustedProxy(KSC_DBUS_NAME,
-                                               KSC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH,
-                                               QDBusConnection::systemBus(),
-                                               this);
+    m_tpDBusProxy = new TPProxy(KSC_DBUS_NAME,
+                                KSC_TP_DBUS_OBJECT_PATH,
+                                QDBusConnection::systemBus(),
+                                this);
     updateRecord();
 }
 
@@ -219,7 +219,7 @@ void TPKernelModel::updateRecord()
 {
     beginResetModel();
     m_kernelRecords.clear();
-    auto reply = m_trustedProtectedProxy->GetModuleFiles();
+    auto reply = m_tpDBusProxy->GetModuleFiles();
     auto files = reply.value();
 
     QJsonParseError jsonError;

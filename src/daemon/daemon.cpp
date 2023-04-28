@@ -16,6 +16,10 @@
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include "include/ksc-i.h"
+#include "src/daemon/box/box-manager.h"
+#include "src/daemon/device/device-manager.h"
+#include "src/daemon/fp/fp.h"
+#include "src/daemon/tp/tp.h"
 
 namespace KS
 {
@@ -24,8 +28,8 @@ Daemon *Daemon::m_instance = nullptr;
 Daemon::Daemon() : QObject(nullptr)
 {
     m_boxManager = new BoxManager(this);
-    m_trusted = new Trusted(this);
-    m_fileProtected = new FileProtected(this);
+    m_trusted = new TP(this);
+    m_fileProtected = new FP(this);
     m_deviceManger = new DeviceManager(this);
 }
 

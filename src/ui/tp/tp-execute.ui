@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TPKernel</class>
- <widget class="QWidget" name="TPKernel">
+ <class>TPExecute</class>
+ <widget class="QWidget" name="TPExecute">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,9 +12,6 @@
   </property>
   <property name="windowTitle">
    <string>Form</string>
-  </property>
-  <property name="styleSheet">
-   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -183,15 +180,15 @@
     </widget>
    </item>
    <item>
-    <widget class="KS::TPKernelTable" name="m_kernelTable" native="true"/>
+    <widget class="KS::TPExecuteTable" name="m_executeTable" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KS::TPKernelTable</class>
+   <class>KS::TPExecuteTable</class>
    <extends>QWidget</extends>
-   <header>src/ui/trusted/tp-kernel-table.h</header>
+   <header>src/ui/tp/tp-execute-table.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

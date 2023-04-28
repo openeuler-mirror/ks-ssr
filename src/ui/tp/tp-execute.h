@@ -11,50 +11,40 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+#pragma once
 
-#ifndef DAEMON_H
-#define DAEMON_H
+#include <QWidget>
+#include "src/ui/tp/tp-execute-table.h"
 
-#include <QObject>
+namespace Ui
+{
+class TPExecute;
+}
+
+class TPProxy;
 
 namespace KS
 {
-class BoxManager;
-class TP;
-class FP;
-class DeviceManager;
-
-class Daemon : public QObject
+class TPExecute : public QWidget
 {
     Q_OBJECT
 public:
-    Daemon();
-    virtual ~Daemon();
-
-    static Daemon *getInstance()
-    {
-        return m_instance;
-    };
-
-    static void globalInit()
-    {
-        m_instance = new Daemon();
-        m_instance->init();
-    };
-
-    static void globalDeinit() { delete m_instance; };
+    TPExecute(QWidget *parent = nullptr);
+    ~TPExecute();
 
 private:
-    void init();
+    void updateInfo();
+
+private Q_SLOTS:
+    void searchTextChanged(const QString &text);
+    void addClicked(bool checked);
+    void updateClicked(bool checked);
+    void unprotectClicked(bool checked);
+    void unprotectAccepted();
 
 private:
-    static Daemon *m_instance;
+    Ui::TPExecute *m_ui;
 
-    BoxManager *m_boxManager;
-    TP *m_trusted;
-    FP *m_fileProtected;
-    DeviceManager *m_deviceManger;
+    TPProxy *m_dbusProxy;
 };
 }  // namespace KS
-
-#endif  // DAEMON_H
