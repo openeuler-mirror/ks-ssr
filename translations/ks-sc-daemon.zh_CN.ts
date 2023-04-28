@@ -191,48 +191,52 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.ui" line="137"/>
         <location filename="../build/src/ui/ui_device-list.h" line="115"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="30"/>
+        <location filename="../src/ui/device/device-list.cpp" line="33"/>
         <source>Device List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="37"/>
+        <location filename="../src/ui/device/device-list.cpp" line="36"/>
+        <source>0 records in total</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="80"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="38"/>
+        <location filename="../src/ui/device/device-list.cpp" line="81"/>
         <source>Device Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="39"/>
+        <location filename="../src/ui/device/device-list.cpp" line="82"/>
         <source>Device Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="40"/>
+        <location filename="../src/ui/device/device-list.cpp" line="83"/>
         <source>Device Id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="41"/>
+        <location filename="../src/ui/device/device-list.cpp" line="84"/>
         <source>Device Interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="42"/>
+        <location filename="../src/ui/device/device-list.cpp" line="85"/>
         <source>Device Status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="43"/>
+        <location filename="../src/ui/device/device-list.cpp" line="86"/>
         <source>Device Permission</source>
         <translation type="unfinished"></translation>
     </message>
@@ -254,12 +258,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-page.cpp" line="52"/>
+        <location filename="../src/ui/device/device-page.cpp" line="50"/>
         <source>Device List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-page.cpp" line="53"/>
+        <location filename="../src/ui/device/device-page.cpp" line="51"/>
         <source>Connect Record</source>
         <translation type="unfinished"></translation>
     </message>
@@ -267,49 +271,49 @@
 <context>
     <name>DevicePermission</name>
     <message>
-        <location filename="../src/ui/device/device-permission.ui" line="14"/>
+        <location filename="../src/ui/device/device-permission.ui" line="32"/>
         <location filename="../build/src/ui/ui_device-permission.h" line="127"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.ui" line="22"/>
+        <location filename="../src/ui/device/device-permission.ui" line="76"/>
         <location filename="../build/src/ui/ui_device-permission.h" line="128"/>
         <source>Device status:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.ui" line="43"/>
+        <location filename="../src/ui/device/device-permission.ui" line="122"/>
         <location filename="../build/src/ui/ui_device-permission.h" line="129"/>
         <source>Permission control:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.ui" line="50"/>
+        <location filename="../src/ui/device/device-permission.ui" line="141"/>
         <location filename="../build/src/ui/ui_device-permission.h" line="130"/>
         <source>read</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.ui" line="57"/>
+        <location filename="../src/ui/device/device-permission.ui" line="160"/>
         <location filename="../build/src/ui/ui_device-permission.h" line="131"/>
         <source>write</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.ui" line="64"/>
+        <location filename="../src/ui/device/device-permission.ui" line="179"/>
         <location filename="../build/src/ui/ui_device-permission.h" line="132"/>
         <source>exec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.ui" line="102"/>
+        <location filename="../src/ui/device/device-permission.ui" line="222"/>
         <location filename="../build/src/ui/ui_device-permission.h" line="133"/>
         <source>Confirm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.ui" line="109"/>
+        <location filename="../src/ui/device/device-permission.ui" line="241"/>
         <location filename="../build/src/ui/ui_device-permission.h" line="134"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
@@ -330,27 +334,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-record.cpp" line="31"/>
+        <location filename="../src/ui/device/device-record.cpp" line="32"/>
         <source>Connect Record</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-record.cpp" line="36"/>
+        <location filename="../src/ui/device/device-record.cpp" line="33"/>
+        <source>0 records in total</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="57"/>
         <source>Device Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-record.cpp" line="37"/>
+        <location filename="../src/ui/device/device-record.cpp" line="58"/>
         <source>Device Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-record.cpp" line="38"/>
+        <location filename="../src/ui/device/device-record.cpp" line="59"/>
         <source>Device Time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-record.cpp" line="39"/>
+        <location filename="../src/ui/device/device-record.cpp" line="60"/>
         <source>Device Status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -417,13 +426,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="35"/>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="72"/>
+        <location filename="../src/ui/file-protected/fp-page.cpp" line="36"/>
+        <location filename="../src/ui/file-protected/fp-page.cpp" line="73"/>
         <source>A total of %1 records</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="59"/>
+        <location filename="../src/ui/file-protected/fp-page.cpp" line="60"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -487,32 +496,32 @@
 <context>
     <name>KS::DevicePermission</name>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="34"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="39"/>
         <source>enable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="35"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="40"/>
         <source>disable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="56"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="61"/>
         <source>Please select device status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="120"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="126"/>
         <source>notice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="124"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="130"/>
         <source>Please select at least one permission.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="125"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="131"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
@@ -533,27 +542,27 @@
 <context>
     <name>KS::TPExecuteModel</name>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="144"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="145"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="182"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="181"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="184"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="183"/>
         <source>File path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="186"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="185"/>
         <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="188"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="187"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -561,36 +570,35 @@
 <context>
     <name>KS::TPExecuteTable</name>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="369"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="363"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="388"/>
-        <source>Path:%1
-Md5:%2</source>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="376"/>
+        <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::TPKernelModel</name>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="142"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="143"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="178"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="179"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="180"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="181"/>
         <source>File path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="182"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="183"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -598,14 +606,13 @@ Md5:%2</source>
 <context>
     <name>KS::TPKernelTable</name>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="359"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="358"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="378"/>
-        <source>Path:%1
-Md5:%2</source>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="371"/>
+        <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -648,6 +655,19 @@ Md5:%2</source>
     </message>
 </context>
 <context>
+    <name>KS::TableDeleteNotify</name>
+    <message>
+        <location filename="../src/ui/trusted/table-delete-notify.cpp" line="37"/>
+        <source>Remove protection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/table-delete-notify.cpp" line="38"/>
+        <source>The removal operation is irreversible.Do you confirm the removal of the selected record from the whitelist?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>KS::Window</name>
     <message>
         <location filename="../src/ui/window.cpp" line="60"/>
@@ -655,23 +675,23 @@ Md5:%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="81"/>
+        <location filename="../src/ui/window.cpp" line="80"/>
         <source>Trusted protected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="82"/>
+        <location filename="../src/ui/window.cpp" line="81"/>
         <source>File protected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="83"/>
+        <location filename="../src/ui/window.cpp" line="82"/>
         <source>Private box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="84"/>
-        <source>Peripheral management</source>
+        <location filename="../src/ui/window.cpp" line="83"/>
+        <source>Device management</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -846,13 +866,13 @@ Md5:%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.cpp" line="35"/>
-        <location filename="../src/ui/trusted/tp-execute.cpp" line="56"/>
+        <location filename="../src/ui/trusted/tp-execute.cpp" line="38"/>
+        <location filename="../src/ui/trusted/tp-execute.cpp" line="59"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.cpp" line="67"/>
+        <location filename="../src/ui/trusted/tp-execute.cpp" line="70"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -902,19 +922,14 @@ Md5:%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="36"/>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="59"/>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="38"/>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="61"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="72"/>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="74"/>
         <source>Open file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="88"/>
-        <source>Please confirm whether to remove the protection.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -939,6 +954,33 @@ Md5:%2</source>
     <message>
         <location filename="../src/ui/trusted/tp-page.cpp" line="86"/>
         <source>Trusted data needs to be initialised,please wait a few minutes to refresh.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TableDeleteNotify</name>
+    <message>
+        <location filename="../src/ui/trusted/table-delete-notify.ui" line="14"/>
+        <location filename="../build/src/ui/ui_table-delete-notify.h" line="109"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/table-delete-notify.ui" line="65"/>
+        <location filename="../build/src/ui/ui_table-delete-notify.h" line="110"/>
+        <source>text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/table-delete-notify.ui" line="114"/>
+        <location filename="../build/src/ui/ui_table-delete-notify.h" line="111"/>
+        <source>ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/table-delete-notify.ui" line="133"/>
+        <location filename="../build/src/ui/ui_table-delete-notify.h" line="112"/>
+        <source>cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

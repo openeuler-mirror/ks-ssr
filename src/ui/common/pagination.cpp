@@ -42,9 +42,9 @@ Pagination::Pagination(QWidget *parent) : QWidget(parent),
     connect(m_ui->m_prev, &QPushButton::clicked, this, &Pagination::prevClick);
     connect(m_ui->m_next, &QPushButton::clicked, this, &Pagination::nextClick);
     //更新页码按钮
-    connect(this, &Pagination::totalPageChanged, this, &Pagination::updatetPageBtns);
+    connect(this, &Pagination::totalPageChanged, this, &Pagination::updatePageBtns);
     //更新页码按钮
-    connect(this, &Pagination::currentPageChanged, this, &Pagination::updatetPageBtns);
+    connect(this, &Pagination::currentPageChanged, this, &Pagination::updatePageBtns);
 }
 
 Pagination::~Pagination()
@@ -115,14 +115,6 @@ void Pagination::updatePageBtns(int number)
     //只有一页（8条）时隐藏分页控件
     if (m_totalPage <= 1)
         hide();
-    else
-    {
-    }
-}
-
-void Pagination::setSelectedBtn()
-{
-    //如果被点击的btn显示在界面中（已有选中状态），则不处理
 }
 
 }  // namespace KS
