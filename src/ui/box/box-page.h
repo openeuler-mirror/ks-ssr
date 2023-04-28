@@ -47,7 +47,7 @@ private:
     void removeBox(const QString &boxUID);
 
 private slots:
-    void boxAdded(const QString &boxUID, const QString &passphrase);
+    void boxAdded(const QString &boxUID);
     void boxDeleted(const QString &boxUID);
     void boxChanged(const QString &boxUID);
     void newBoxClicked(bool checked);

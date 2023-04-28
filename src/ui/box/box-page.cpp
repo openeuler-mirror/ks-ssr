@@ -43,7 +43,7 @@ BoxPage::BoxPage() : QWidget(nullptr),
 
     initBoxs();
 
-    connect(m_boxManagerProxy, SIGNAL(BoxAdded(const QString &, const QString &)), this, SLOT(boxAdded(const QString &, const QString &)));
+    connect(m_boxManagerProxy, SIGNAL(BoxAdded(const QString &)), this, SLOT(boxAdded(const QString &)));
     connect(m_boxManagerProxy, SIGNAL(BoxDeleted(const QString &)), this, SLOT(boxDeleted(const QString &)));
     connect(m_boxManagerProxy, SIGNAL(BoxChanged(const QString &)), this, SLOT(boxChanged(const QString &)));
     connect(m_ui->m_newBox, SIGNAL(clicked(bool)), this, SLOT(newBoxClicked(bool)));
@@ -96,7 +96,7 @@ void BoxPage::removeBox(const QString &boxUID)
     }
 }
 
-void BoxPage::boxAdded(const QString &boxUID, const QString &passphrase)
+void BoxPage::boxAdded(const QString &boxUID)
 {
     QJsonParseError jsonError;
 
@@ -119,14 +119,6 @@ void BoxPage::boxAdded(const QString &boxUID, const QString &passphrase)
     }
 
     auto jsonBox = jsonDoc.object();
-
-    auto messge = new SubWindow(this);
-    messge->buildNotify(QString(tr("Please remember this box passphrase : %1")).arg(passphrase));
-    messge->setFixedSize(240, 180);
-    int x = window()->x() + window()->width() / 4 + messge->width() / 4;
-    int y = window()->y() + window()->height() / 4 + messge->height() / 4;
-    messge->move(x, y);
-    messge->show();
 
     //    auto box = buildBox(jsonBox);
     //    addBox(box);
@@ -187,10 +179,13 @@ void BoxPage::newBoxClicked(bool checked)
 
 void BoxPage::createBoxAccepted()
 {
+    // 口令
+    QString passphrase;
     // rsa加密
     auto encryptPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_createBox->getPassword());
     auto reply = m_boxManagerProxy->CreateBox(m_createBox->getName(),
-                                              encryptPassword);
+                                              encryptPassword,
+                                              passphrase);
 
     auto boxID = reply.value();
     if (boxID.isEmpty())
@@ -208,5 +203,13 @@ void BoxPage::createBoxAccepted()
     auto box = new Box(boxID);
     //    m_ui->m_boxs->addBox(box);
     addBox(box);
+    // 显示消息
+    auto messge = new SubWindow(this);
+    messge->buildNotify(QString(tr("Please remember this box passphrase : %1")).arg(passphrase));
+    messge->setFixedSize(240, 180);
+    int x = window()->x() + window()->width() / 4 + messge->width() / 4;
+    int y = window()->y() + window()->height() / 4 + messge->height() / 4;
+    messge->move(x, y);
+    messge->show();
 }
 }  // namespace KS
