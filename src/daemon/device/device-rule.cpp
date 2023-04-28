@@ -18,7 +18,7 @@
 #include <QMutex>
 #include <QTextStream>
 #include "config.h"
-#include "sc-marcos.h"
+#include "ksc-marcos.h"
 
 namespace KS
 {
