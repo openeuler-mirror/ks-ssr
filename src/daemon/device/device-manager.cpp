@@ -15,8 +15,8 @@
 #include "src/daemon/device/device-manager.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
-#include "sc-i.h"
-#include "sc-marcos.h"
+#include "ksc-i.h"
+#include "ksc-marcos.h"
 #include "src/daemon/device/sd-device-enumerator.h"
 #include "src/daemon/device_manager_adaptor.h"
 

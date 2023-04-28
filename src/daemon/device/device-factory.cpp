@@ -15,7 +15,7 @@
 #include "src/daemon/device/device-factory.h"
 #include <qt5-log-i.h>
 #include <QMutex>
-#include "sc-marcos.h"
+#include "ksc-marcos.h"
 #include "src/daemon/device/usb-device.h"
 
 namespace KS

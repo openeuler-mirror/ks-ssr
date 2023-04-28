@@ -15,8 +15,8 @@
 #include "src/daemon/device/usb-device.h"
 #include <qt5-log-i.h>
 #include <QFile>
-#include "sc-i.h"
-#include "sc-marcos.h"
+#include "ksc-i.h"
+#include "ksc-marcos.h"
 
 namespace KS
 {

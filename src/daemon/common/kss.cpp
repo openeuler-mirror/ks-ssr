@@ -55,18 +55,21 @@ KSS::KSS(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
 
 void KSS::addTrustedFile(const QString &filePath)
 {
+    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0)
     auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_ADD_FILE_CMD, filePath);
     execute(cmd);
 }
 
 void KSS::removeTrustedFile(const QString &filePath)
 {
+    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0)
     auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_REMOVE_FILE_CMD, filePath);
     execute(cmd);
 }
 
 QString KSS::getModuleFiles()
 {
+    RETURN_VAL_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0, QString())
     execute(KSS_DIGEST_INFO_GET_KERNEL_CMD);
     return m_processOutput;
 }
@@ -77,24 +80,28 @@ void KSS::prohibitUnloading(bool prohibited, const QString &filePath)
 
 QString KSS::getExecuteFiles()
 {
+    RETURN_VAL_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0, QString())
     execute(KSS_DIGEST_INFO_GET_EXECUTE_CMD);
     return m_processOutput;
 }
 
 void KSS::addFile(const QString &fileName, const QString &filePath, const QString &insertTime)
 {
+    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0)
     auto cmd = QString("%1 -n %2 -p %3 -t '%4'").arg(KSS_ADD_FILE_CMD, fileName, filePath, insertTime);
     execute(cmd);
 }
 
 void KSS::removeFile(const QString &filePath)
 {
+    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0)
     auto cmd = QString("%1 -p %2").arg(KSS_REMOVE_FILE_CMD, filePath);
     execute(cmd);
 }
 
 QString KSS::getFiles()
 {
+    RETURN_VAL_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0, QString())
     execute(KSS_GET_FILES_CMD);
     return m_processOutput;
 }

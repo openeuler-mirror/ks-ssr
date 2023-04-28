@@ -14,7 +14,7 @@
 
 #include "src/daemon/device/sd-device.h"
 #include <qt5-log-i.h>
-#include "sc-marcos.h"
+#include "ksc-marcos.h"
 
 namespace KS
 {
