@@ -12,7 +12,7 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
-#include "src/ui/file-protected/fp-file-table.h"
+#include "src/ui/fp/fp-file-table.h"
 #include <qt5-log-i.h>
 #include <stdio.h>
 #include <QApplication>
@@ -156,7 +156,7 @@ bool FPFilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
 FPFilesModel::FPFilesModel(QObject *parent) : QAbstractTableModel(parent)
 {
     m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
-                                                  KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
+                                                  KSC_FP_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
 

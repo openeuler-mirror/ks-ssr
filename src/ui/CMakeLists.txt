@@ -10,18 +10,16 @@ set_source_files_properties(
   PROPERTIES CLASSNAME BoxManagerProxy NO_NAMESPACE true)
 
 qt5_add_dbus_interface(
-  BOX_MANAGER_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
+  BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
   box_manager_proxy)
 
 set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.Trusted.xml
-  PROPERTIES CLASSNAME TrustedProxy NO_NAMESPACE true)
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.TrustedProtected.xml
+  PROPERTIES CLASSNAME TPProxy NO_NAMESPACE true)
 
 qt5_add_dbus_interface(
-  TRUSTED_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.Trusted.xml
-  trusted_proxy)
+  TP_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.TrustedProtected.xml
+  tp_proxy)
 
 set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
@@ -59,7 +57,7 @@ set(TARGET_NAME ks-sc-gui)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
-                      ${PROJECT_SOURCE_DIR})
+                       ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}
@@ -67,7 +65,7 @@ add_executable(
   ${UI_CPP_FILES}
   ${BOX_MANAGER_SRCS}
   ${FILE_PROTECTED_SRCS}
-  ${TRUSTED_SRCS}
+  ${TP_SRCS}
   ${QM_FILES}
   ${UI_FILES}
   "${PROJECT_SOURCE_DIR}/resources/resources.qrc")

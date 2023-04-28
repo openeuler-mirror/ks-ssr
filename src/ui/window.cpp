@@ -33,9 +33,9 @@
 #include <QStackedWidget>
 #include "src/ui/box/box-page.h"
 #include "src/ui/device/device-page.h"
-#include "src/ui/file-protected/fp-page.h"
+#include "src/ui/fp/fp-page.h"
 #include "src/ui/navigation.h"
-#include "src/ui/trusted/tp-page.h"
+#include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
 
 namespace KS
