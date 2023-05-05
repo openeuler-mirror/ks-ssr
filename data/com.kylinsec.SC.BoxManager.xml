@@ -102,11 +102,8 @@
             <arg type="s" name="passphrase" direction="in">
                 <summary>The box passphrase which needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
             </arg>
-            <arg type="s" name="new_password" direction="in">
-                <summary>The new password which needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
-            </arg>
-            <arg type="b" name="retrieve" direction="out">
-                <summary>Whether to retrieve.</summary>
+            <arg type="s" name="password" direction="out">
+                <summary>The box password.</summary>
             </arg>
             <description>Retrieve box password.</description>
         </method>

@@ -35,9 +35,9 @@
       <number>24</number>
      </property>
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="m_note">
        <property name="text">
-        <string>Protect critical file paths from malicious tampering and deletion</string>
+        <string>System core component integrity protection,protection and implementation environment safety</string>
        </property>
       </widget>
      </item>

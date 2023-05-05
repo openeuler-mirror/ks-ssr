@@ -40,7 +40,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Protect critical file paths from malicious tampering and deletion</string>
+        <string>Manage kernel driver modules to prevent illegal loading and uninstallation</string>
        </property>
       </widget>
      </item>
