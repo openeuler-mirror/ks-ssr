@@ -38,7 +38,7 @@ public:
     QString getUser();
     uint getUserUid();
     QString getPassphrase();
-    bool retrievePassword(const QString &passphrase, const QString &newPassword);
+    QString retrievePassword(const QString &passphrase);
     bool delBox(const QString &inputPassword);
     bool mounted();
     bool mount(const QString &inputPassword);
