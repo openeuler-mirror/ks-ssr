@@ -30,7 +30,6 @@ class RetrievePassword : public QWidget
 public:
     explicit RetrievePassword(QWidget *parent = nullptr);
     ~RetrievePassword();
-    QString getNewPassword();
     QString getPassphrase();
 
 private:
@@ -42,8 +41,6 @@ private slots:
 signals:
     void accepted();
     void rejected();
-    // 两次密码不一致
-    void passwdInconsistent();
     // 输入空字符
     void inputEmpty();
 

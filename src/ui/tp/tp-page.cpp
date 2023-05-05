@@ -82,7 +82,7 @@ void TPPage::checkTrustedLoadFinied()
     RETURN_IF_TRUE(settings->value(KSC_INI_KEY).toInt() != 0)
 
     auto message = new SubWindow(this);
-    message->setFixedSize(240, 180);
+    message->setFixedSize(240, 200);
     message->buildNotify(tr("Trusted data needs to be initialised,"
                             "please wait a few minutes to refresh."));
 

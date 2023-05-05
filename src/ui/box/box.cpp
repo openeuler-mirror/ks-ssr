@@ -63,7 +63,7 @@ void Box::initBox()
     m_showingIcon = new QPushButton(this);
     // 放在qss中会被scrollarea->viewport的样式表覆盖，所以在代码中设定背景
     m_showingIcon->setFlat(true);
-    m_showingIcon->setFixedSize(QSize(102, 102));
+    m_showingIcon->setFixedSize(102, 102);
     //    m_showingIcon->setIcon(QIcon(":/images/box-big"));
     //    m_showingIcon->setIconSize(QSize(70, 70));
     QVBoxLayout *vlay = new QVBoxLayout(m_showingIcon);
@@ -256,16 +256,11 @@ void Box::delBox()
 void Box::retrievePassword()
 {
     auto retrievePasswd = new SubWindow(window());
-    retrievePasswd->setFixedSize(400, 350);
+    retrievePasswd->setFixedSize(300, 220);
     retrievePasswd->setTitle(tr("Retrieve password"));
 
     m_retrievePassword = new RetrievePassword(retrievePasswd);
     connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
-    connect(m_retrievePassword, &RetrievePassword::passwdInconsistent, this, [this]
-            {
-                auto messge = buildNotifyPage(QString(tr("Please confirm whether the password is consistent.")));
-                messge->show();
-            });
     connect(m_retrievePassword, &RetrievePassword::inputEmpty, this, [this]
             {
                 auto messge = buildNotifyPage(tr("The input cannot be empty, please improve the information."));
@@ -273,8 +268,6 @@ void Box::retrievePassword()
             });
     connect(m_retrievePassword, &RetrievePassword::accepted, retrievePasswd, &SubWindow::close);
     connect(m_retrievePassword, &RetrievePassword::rejected, retrievePasswd, &SubWindow::close);
-
-    //    m_modifyPassword->show();
 
     retrievePasswd->getContentLayout()->addWidget(m_retrievePassword);
 
@@ -287,7 +280,7 @@ void Box::retrievePassword()
 QWidget *Box::buildNotifyPage(const QString &notify)
 {
     auto message = new SubWindow(window());
-    message->setFixedSize(240, 180);
+    message->setFixedSize(240, 200);
     message->buildNotify(notify);
 
     int x = window()->x() + window()->width() / 4 + message->width() / 4;
@@ -309,8 +302,7 @@ void Box::modifyPasswordAccepted()
     reply.waitForFinished();
     RETURN_IF_TRUE(!reply.isValid())
 
-    auto ret = reply.value();
-    if (!ret)
+    if (!reply.value())
     {
         auto message = buildNotifyPage(QString(tr("Password error!")));
         message->show();
@@ -324,24 +316,21 @@ void Box::modifyPasswordAccepted()
 
 void Box::retrievePasswordAccepted()
 {
-    auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getNewPassword());
     auto encryptPassphrase = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
 
-    auto reply = m_boxManagerProxy->RetrievePassword(m_uid,
-                                                     encryptPassphrase,
-                                                     encryptNewPassword);
+    auto reply = m_boxManagerProxy->RetrievePassword(m_uid, encryptPassphrase);
     reply.waitForFinished();
     RETURN_IF_TRUE(!reply.isValid())
 
     auto ret = reply.value();
-    if (!ret)
+    if (ret.isEmpty())
     {
         auto message = buildNotifyPage(QString(tr("Passphrase error!")));
         message->show();
     }
     else
     {
-        auto message = buildNotifyPage(QString(tr("Retrieve success!")));
+        auto message = buildNotifyPage(QString(tr("Your box password is %1")).arg(ret));
         message->show();
     }
 }
@@ -354,8 +343,7 @@ void Box::inputMountPasswordAccepted()
     reply.waitForFinished();
     RETURN_IF_TRUE(!reply.isValid())
 
-    auto ret = reply.value();
-    if (!ret)
+    if (!reply.value())
     {
         auto message = buildNotifyPage(QString(tr("Password error!")));
         message->show();
@@ -374,8 +362,7 @@ void Box::inputDelBoxPasswordAccepted()
     reply.waitForFinished();
     RETURN_IF_TRUE(!reply.isValid())
 
-    auto ret = reply.value();
-    if (!ret)
+    if (!reply.value())
     {
         auto message = buildNotifyPage(QString(tr("The Password is wrong or has been mounted!")));
         message->show();
