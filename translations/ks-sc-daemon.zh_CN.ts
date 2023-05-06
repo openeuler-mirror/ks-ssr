@@ -55,7 +55,7 @@
     </message>
     <message>
         <location filename="../src/ui/box/box.cpp" line="307"/>
-        <location filename="../src/ui/box/box.cpp" line="349"/>
+        <location filename="../src/ui/box/box.cpp" line="348"/>
         <source>Password error!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -75,17 +75,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="354"/>
+        <location filename="../src/ui/box/box.cpp" line="353"/>
         <source>Unlock success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="369"/>
+        <location filename="../src/ui/box/box.cpp" line="367"/>
         <source>The Password is wrong or has been mounted!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="374"/>
+        <location filename="../src/ui/box/box.cpp" line="372"/>
         <source>Delete success!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -132,7 +132,7 @@
     </message>
     <message>
         <location filename="../src/ui/box/box-page.cpp" line="208"/>
-        <source>Please remember this box passphrase  : %1, Can be used to retrieve passwords.</source>
+        <source>Please remember this box passphrase : %1, Can be used to retrieve passwords.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -548,35 +548,40 @@
 <context>
     <name>KS::TPKernelModel</name>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="143"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="144"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="179"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="180"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="181"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="182"/>
         <source>File path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="183"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="184"/>
         <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="186"/>
+        <source>Prohibt unload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::TPKernelTable</name>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="359"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="364"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="372"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="377"/>
         <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -819,13 +824,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="37"/>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="58"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="38"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="59"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="69"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="70"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>

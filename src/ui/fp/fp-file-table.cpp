@@ -381,7 +381,7 @@ FPFileTable::FPFileTable(QWidget *parent) : QTableView(parent),
     m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_CHECKBOX, 50);
     m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_NUMBER, 100);
     m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_NAME, 150);
-    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_PATH, 500);
+    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_PATH, 450);
     m_headerViewProxy->setStretchLastSection(true);
     m_headerViewProxy->setSectionsMovable(false);
     m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft);
