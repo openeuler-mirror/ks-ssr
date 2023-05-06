@@ -21,6 +21,8 @@
 #include "config-ui.h"
 #include "src/ui/window.h"
 
+//#include "src/ui/common/kiran-switch-button.h"
+
 using namespace KS;
 
 int main(int argc, char *argv[])
@@ -50,6 +52,9 @@ int main(int argc, char *argv[])
 
     KS::Window window;
     window.show();
+
+//    KiranSwitchButton s;
+//    s.show();
 
     return app.exec();
 }
