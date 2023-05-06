@@ -30,7 +30,7 @@
 #include <QToolTip>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
-#include "src/ui/tp/tp-delegate.h"
+#include "src/ui/tp/tp-kernel-delegate.h"
 #include "src/ui/tp_proxy.h"
 
 namespace KS
@@ -41,19 +41,18 @@ enum KernelField
     KERNEL_FIELD_NUMBER,
     KERNEL_FIELD_FILE_PATH,
     KERNEL_FIELD_STATUS,
-    //    TRUSTED_FIELD_PROHIBIT_UNLOAD,
+    KERNEL_FIELD_PROHIBIT_UNLOAD,
     KERNEL_FIELD_LAST
 };
 
 // 内核保护列数
-#define KERNEL_TABLE_COL 4
-// 执行保护列数
-#define EXECUTE_TABLE_COL 5
+#define KERNEL_TABLE_COL 5
 #define KSS_JSON_KEY_DATA KSC_JK_DATA
 #define KSS_JSON_KEY_DATA_PATH KSC_JK_DATA_PATH
 #define KSS_JSON_KEY_DATA_TYPE KSC_JK_DATA_TYPE
 #define KSS_JSON_KEY_DATA_STATUS KSC_JK_DATA_STATUS
 #define KSS_JSON_KEY_DATA_HASH KSC_JK_DATA_HASH
+#define KSS_JSON_KEY_DATA_GUARD KSC_JK_DATA_GUARD
 
 TPKernelFilterModel::TPKernelFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
@@ -130,6 +129,9 @@ QVariant TPKernelModel::data(const QModelIndex &index, int role) const
         case 0:
             return trustedRecord.selected;
             break;
+        case PROHIBIT_UNLOADING_COL:
+            return trustedRecord.guard;
+            break;
         default:
             break;
         }
@@ -181,6 +183,8 @@ QVariant TPKernelModel::headerData(int section, Qt::Orientation orientation, int
             return tr("File path");
         case KernelField::KERNEL_FIELD_STATUS:
             return tr("Status");
+        case KernelField::KERNEL_FIELD_PROHIBIT_UNLOAD:
+            return tr("Prohibt unload");
         default:
             break;
         }
@@ -195,14 +199,23 @@ bool TPKernelModel::setData(const QModelIndex &index,
                             const QVariant &value,
                             int role)
 {
-    RETURN_VAL_IF_TRUE(index.column() != 0, false)
-
-    m_kernelRecords[index.row()].selected = value.toBool();
-    emit dataChanged(index, index);
-
-    if (role == Qt::UserRole || role == Qt::EditRole)
+//    RETURN_VAL_IF_TRUE(index.column() != 0, false)
+    switch (index.column())
     {
-        onSingleStateChanged();
+    case 0:
+        m_kernelRecords[index.row()].selected = value.toBool();
+        emit dataChanged(index, index);
+        if (role == Qt::UserRole || role == Qt::EditRole)
+        {
+            onSingleStateChanged();
+        }
+        break;
+    case PROHIBIT_UNLOADING_COL:
+        m_kernelRecords[index.row()].guard = value.toBool();
+        emit dataChanged(index, index);
+        break;
+    default:
+        return false;
     }
 
     return true;
@@ -210,7 +223,7 @@ bool TPKernelModel::setData(const QModelIndex &index,
 
 Qt::ItemFlags TPKernelModel::flags(const QModelIndex &index) const
 {
-    RETURN_VAL_IF_TRUE(index.column() == 0, Qt::ItemFlag::ItemIsEnabled)
+    RETURN_VAL_IF_TRUE(index.column() == 0 || index.column() == PROHIBIT_UNLOADING_COL, Qt::ItemFlag::ItemIsEnabled)
 
     return Qt::ItemFlag::NoItemFlags;
 }
@@ -245,7 +258,8 @@ void TPKernelModel::updateRecord()
                                             .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
                                             .type = type,
                                             .status = status,
-                                            .md5 = data.value(KSS_JSON_KEY_DATA_HASH).toString()};
+                                            .md5 = data.value(KSS_JSON_KEY_DATA_HASH).toString(),
+                                            .guard = data.value(KSS_JSON_KEY_DATA_GUARD).toInt() == 0 ? false : true};
             m_kernelRecords.push_back(fileRecord);
         }
     }
@@ -295,7 +309,6 @@ TPKernelTable::TPKernelTable(QWidget *parent) : QTableView(parent),
                                                 m_filterProxy(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
     // 设置Model
     m_model = new TPKernelModel(this);
     m_headerViewProxy = new TPTableHeaderProxy(this);
@@ -310,13 +323,14 @@ TPKernelTable::TPKernelTable(QWidget *parent) : QTableView(parent),
 
     setShowGrid(false);
     // 设置Delegate
-    setItemDelegate(new TPDelegate(this));
+    setItemDelegate(new TPKernelDelegate(this));
 
     // 设置水平行表头
     m_headerViewProxy->resizeSection(KernelField::KERNEL_FIELD_CHECKBOX, 50);
-    m_headerViewProxy->resizeSection(KernelField::KERNEL_FIELD_NUMBER, 100);
-    m_headerViewProxy->resizeSection(KernelField::KERNEL_FIELD_FILE_PATH, 450);
+    m_headerViewProxy->resizeSection(KernelField::KERNEL_FIELD_NUMBER, 80);
+    m_headerViewProxy->resizeSection(KernelField::KERNEL_FIELD_FILE_PATH, 390);
     m_headerViewProxy->resizeSection(KernelField::KERNEL_FIELD_STATUS, 100);
+    m_headerViewProxy->resizeSection(KernelField::KERNEL_FIELD_PROHIBIT_UNLOAD, 80);
 
     m_headerViewProxy->setStretchLastSection(true);
     //    m_headerViewProxy->set(false);
@@ -330,8 +344,8 @@ TPKernelTable::TPKernelTable(QWidget *parent) : QTableView(parent),
     verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
     verticalHeader->setDefaultSectionSize(38);
 
-    connect(this, &TPKernelTable::entered, this, &TPKernelTable::showDetails);
-    connect(this, &TPKernelTable::clicked, this, &TPKernelTable::showDetails);
+    connect(this, &TPKernelTable::entered, this, &TPKernelTable::itemEntered);
+    connect(this, &TPKernelTable::clicked, this, &TPKernelTable::itemClicked);
 }
 
 void TPKernelTable::searchTextChanged(const QString &text)
@@ -364,12 +378,44 @@ int TPKernelTable::getKerneltamperedNums()
     return kerneltamperedNums;
 }
 
-void TPKernelTable::showDetails(const QModelIndex &index)
+void TPKernelTable::itemEntered(const QModelIndex &index)
 {
-    RETURN_IF_TRUE(index.column() != KernelField::KERNEL_FIELD_FILE_PATH)
+//    RETURN_IF_TRUE(index.column() != KernelField::KERNEL_FIELD_FILE_PATH)
+    if (index.column() == KernelField::KERNEL_FIELD_FILE_PATH)
+    {
+        auto module = selectionModel()->model()->data(index);
+        QToolTip::showText(QCursor::pos(), QString(tr("%1")).arg(module.toString()), this);
+    }
+    if (index.column() == KernelField::KERNEL_FIELD_PROHIBIT_UNLOAD)
+    {
+        this->setCursor(Qt::PointingHandCursor);
+    }
+    else
+    {
+        this->setCursor(Qt::ArrowCursor);
+    }
+}
 
+void TPKernelTable::itemClicked(const QModelIndex &index)
+{
+    if (index.column() == KernelField::KERNEL_FIELD_FILE_PATH)
+    {
+        auto module = selectionModel()->model()->data(index);
+        QToolTip::showText(QCursor::pos(), QString(tr("%1")).arg(module.toString()), this);
+    }
+    RETURN_IF_TRUE(index.column() != KernelField::KERNEL_FIELD_PROHIBIT_UNLOAD)
     auto module = selectionModel()->model()->data(index);
-    QToolTip::showText(QCursor::pos(), QString(tr("%1")).arg(module.toString()), this);
+
+    auto kernelRecords = getKernelRecords();
+    int i = 0;
+    for (auto kernelRecord : kernelRecords)
+    {
+        if (index.row() == i++)
+        {
+            emit prohibitUnloadingStatusChange(module.toBool(), kernelRecord.filePath);
+            break;
+        }
+    }
 }
 
 }  // namespace KS
