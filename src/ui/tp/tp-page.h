@@ -27,6 +27,7 @@ namespace KS
 class SidebarItem;
 class TPKernel;
 class TPExecute;
+class MaskWidget;
 
 class TPPage : public QWidget
 {
@@ -37,7 +38,8 @@ public:
     virtual ~TPPage();
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     void initSidebar();
@@ -51,5 +53,6 @@ private slots:
 private:
     Ui::TPPage *m_ui;
     QMap<QString, SidebarItem *> m_sidebarItems;
+    MaskWidget *m_maskWidget;
 };
 }  // namespace KS
