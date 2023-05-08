@@ -75,7 +75,7 @@ void EcryptFS::mkdirBoxDir(const QString &path, const QString &userName)
 void EcryptFS::rmBoxDir(const QString &path)
 {
     QDir dir(path);
-    if (!dir.rmpath(path))
+    if (!dir.removeRecursively())
     {
         KLOG_WARNING() << "Failed to remove folder. path = " << path;
     }
