@@ -34,7 +34,8 @@ public:
 
 private:
     void updateInfo();
-
+signals:
+    void initFinished();
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void addClicked(bool checked);

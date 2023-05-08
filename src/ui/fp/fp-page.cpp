@@ -16,13 +16,21 @@
 #include <qt5-log-i.h>
 #include <QDir>
 #include <QFileDialog>
+#include <QSettings>
+#include "config.h"
 #include "ksc-i.h"
+#include "ksc-marcos.h"
+#include "src/ui/common/sub-window.h"
 #include "src/ui/file_protected_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_fp-page.h"
 
 namespace KS
 {
+// ini文件
+#define KSC_INI_PATH KSC_INSTALL_DATADIR "/ksc.ini"
+#define KSC_INI_KEY "ksc/initialized"
+
 FPPage::FPPage(QWidget *parent) : QWidget(parent),
                                   m_ui(new Ui::FPPage())
 {
@@ -57,6 +65,7 @@ void FPPage::searchTextChanged(const QString &text)
 
 void FPPage::addClicked(bool checked)
 {
+    RETURN_IF_TRUE(!checkTrustedLoadFinied())
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     if (!fileName.isEmpty())
     {
@@ -74,8 +83,29 @@ void FPPage::updateInfo()
     m_ui->m_tips->setText(text);
 }
 
+bool FPPage::checkTrustedLoadFinied()
+{
+    // 可信未初始化完成，不允许操作
+    auto settings = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
+    if (settings->value(KSC_INI_KEY).toInt() == 0)
+    {
+        auto message = new SubWindow(this);
+        message->setFixedSize(240, 200);
+        message->buildNotify(tr("Trusted data needs to be initialised,"
+                                "please wait a few minutes before trying."));
+
+        int x = this->x() + width() / 4 + message->width() / 4;
+        int y = this->y() + height() / 4 + message->height() / 4;
+        message->move(x, y);
+        message->show();
+        return false;
+    }
+    return true;
+}
+
 void FPPage::unprotectClicked(bool checked)
 {
+    RETURN_IF_TRUE(!checkTrustedLoadFinied())
     auto unprotectNotify = new TableDeleteNotify(this);
     unprotectNotify->show();
 

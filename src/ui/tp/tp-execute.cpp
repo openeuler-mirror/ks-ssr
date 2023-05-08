@@ -33,7 +33,10 @@ TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
                               QDBusConnection::systemBus(),
                               this);
     // 初始化完成自动刷新
-    connect(m_dbusProxy, SIGNAL(InitFinished()), this, SLOT(updateInfo()));
+    connect(m_dbusProxy, &TPProxy::InitFinished, this, [this] {
+        updateInfo();
+        emit initFinished();
+    });
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2")).arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()), QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
     m_ui->m_tips->setText(text);
