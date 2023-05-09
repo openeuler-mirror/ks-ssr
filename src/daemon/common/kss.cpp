@@ -56,11 +56,13 @@ KSS::KSS(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
     m_ini = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
 }
 
-void KSS::addTrustedFile(const QString &filePath)
+QString KSS::addTrustedFile(const QString &filePath)
 {
-    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0)
+    RETURN_VAL_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0, QString())
     auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_ADD_FILE_CMD, filePath);
     execute(cmd);
+
+    return m_processOutput;
 }
 
 void KSS::removeTrustedFile(const QString &filePath)
@@ -134,7 +136,8 @@ void KSS::execute(const QString &cmd)
     KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
     m_process->start("bash", QStringList() << "-c" << cmd);
     connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processExited(int, QProcess::ExitStatus)));
-    m_process->waitForFinished();
+    // 一分钟超时
+    m_process->waitForFinished(60 * 1000);
 }
 
 void KSS::initTrustedResults()
