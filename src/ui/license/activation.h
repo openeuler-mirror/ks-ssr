@@ -39,6 +39,7 @@ struct LicenseInfo
 };
 
 class LicenseUtils;
+class QRCodeDialog;
 class Activation : public TitlebarWindow
 {
     Q_OBJECT
@@ -47,13 +48,20 @@ public:
     Activation(QWidget* parent = nullptr);
     virtual ~Activation();
     bool isActivate();
+    void updateLicenseInfo();
+
+protected:
+    void closeEvent(QCloseEvent* event);
 
 private:
-    void getLicense();
     void initUI();
+    void getLicenseInfo();
+    void setLicenseInfo();
 
 private slots:
     void activate();
+    void popupQrencode();
+    void getLicense(bool isChanged);
 
 signals:
     void activated(bool);
@@ -63,5 +71,6 @@ private:
     Ui::Activation* m_ui;
     LicenseUtils* m_licenseUtils;
     LicenseInfo m_licenseInfo;
+    QRCodeDialog* m_qrcodeDialog;
 };
 }  // namespace KS

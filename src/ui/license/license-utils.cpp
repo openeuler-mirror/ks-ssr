@@ -22,7 +22,7 @@ namespace KS
 LicenseUtils::LicenseUtils(QObject* parent) : QObject(parent)
 {
     creatObjectName(LICENSE_OBJECT_NAME);
-    QDBusConnection::systemBus().connect(LICENSE_OBJECT_DBUS_NAME,
+    QDBusConnection::systemBus().connect(LICENSE_HELPER_DBUS_NAME,
                                          LICENSE_OBJECT_OBJECT_PATH "/" LICENSE_OBJECT_NAME,
                                          LICENSE_OBJECT_DBUS_NAME,
                                          QLatin1String(SIGNAL_LICENSE_CHANGED),
@@ -65,14 +65,14 @@ failed:
 
 QString LicenseUtils::getLicense()
 {
-    QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_OBJECT_DBUS_NAME,
+    QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_HELPER_DBUS_NAME,
                                                                 LICENSE_OBJECT_OBJECT_PATH "/" LICENSE_OBJECT_NAME,
                                                                 LICENSE_OBJECT_DBUS_NAME,
                                                                 METHOD_GET_LICENSE);
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
-    KLOG_DEBUG() << "msgReply " << msgReply;
+    KLOG_DEBUG() << "getLicense msgReply " << msgReply;
 
     QString errMsg;
     if (msgReply.type() == QDBusMessage::ReplyMessage)
@@ -94,9 +94,9 @@ failed:
     return "";
 }
 
-bool LicenseUtils::activateByActivationCode(const QString& activation_Code)
+bool LicenseUtils::activateByActivationCode(const QString& activation_Code, QString& errorMsg)
 {
-    QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_OBJECT_DBUS_NAME,
+    QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_HELPER_DBUS_NAME,
                                                                 LICENSE_OBJECT_OBJECT_PATH "/" LICENSE_OBJECT_NAME,
                                                                 LICENSE_OBJECT_DBUS_NAME,
                                                                 METHOD_ACTIVATE_BY_ACTIVATION_CODE);
@@ -106,7 +106,7 @@ bool LicenseUtils::activateByActivationCode(const QString& activation_Code)
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
 
-    KLOG_DEBUG() << "msgReply " << msgReply;
+    KLOG_DEBUG() << "activateByActivationCode msgReply " << msgReply;
 
     if (msgReply.type() == QDBusMessage::ErrorMessage)
     {
@@ -115,6 +115,7 @@ bool LicenseUtils::activateByActivationCode(const QString& activation_Code)
     return true;
 
 failed:
+    errorMsg = msgReply.errorName() + msgReply.errorMessage();
     KLOG_WARNING() << LICENSE_OBJECT_DBUS_NAME << METHOD_ACTIVATE_BY_ACTIVATION_CODE
                    << msgReply.errorName() << msgReply.errorMessage();
     return false;
@@ -124,47 +125,5 @@ void LicenseUtils::licenseChange(bool isChanged)
 {
     emit licenseChanged(isChanged);
 }
-//QString LicenseUtils::callInterface(DbusInterface num)
-//{
-//    QString ret;
-//    switch (num)
-//    {
-//    case GET_LICENSE:
-//        ret = getLicense();
-//        KLOG_DEBUG() << ret;
-//        break;
-//    default:
-//        KLOG_WARNING() << "error interface!";
-//        break;
-//    }
-
-//    if (ret == QString("failed"))
-//    {
-//        callFailed();
-//    }
-//    return ret;
-//}
-
-//bool LicenseUtils::callInterface(DbusInterface num, QString args)
-//{
-//    bool ret = false;
-//    QString errorMsg;
-//    switch (num)
-//    {
-//    case ACTIVATE_BYACTIVATIONCODE:
-//        ret = activateByActivationCode(args, errorMsg);
-//        emit licenseChanged(ret);
-//        break;
-//    default:
-//        KLOG_WARNING() << "error interface!";
-//        break;
-//    }
-//    return ret;
-//}
-
-//void LicenseUtils::callFailed()
-//{
-//    emit callDbusFailed();
-//}
 
 }  // namespace KS
