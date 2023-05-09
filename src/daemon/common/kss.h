@@ -31,7 +31,7 @@ public:
 public:
     // 可信保护
     // 添加文件
-    void addTrustedFile(const QString &filePath);
+    QString addTrustedFile(const QString &filePath);
     // 移除文件
     void removeTrustedFile(const QString &filePath);
     // 获取内核白名单
