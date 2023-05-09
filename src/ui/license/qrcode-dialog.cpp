@@ -18,37 +18,31 @@
 
 namespace KS
 {
-QRCodeDialog::QRCodeDialog(QWidget *parent) : QWidget(parent),
+QRCodeDialog::QRCodeDialog(QWidget *parent) : TitlebarWindow(parent),
                                               ui(new Ui::QRCodeDialog)
 {
-    ui->setupUi(this);
+    ui->setupUi(getWindowContentWidget());
     iniUI();
 }
 
 void QRCodeDialog::iniUI()
 {
-    setWindowFlags(Qt::X11BypassWindowManagerHint);
-    setWindowTitle(QRCodeDialog::tr("QRcode of Machine and Activation Code"));
-    setWindowIcon(QIcon(":/images/icons/ksl-os-24.png"));
-    setAttribute(Qt::WA_TransparentForMouseEvents);
-    this->setMaximumSize(230, 230);
-    this->setMinimumSize(230, 230);
-    ui->qrcode_layout->setMargin(10);
+    setWindowModality(Qt::WindowModal);
+    setTitle(tr("QR code"));
+    setIcon(QIcon(":/images/logo"));
+    setButtonHints(TitlebarCloseButtonHint);
+    setFixedSize(350, 300);
+    ui->m_layout->setMargin(10);
 }
 
-void QRCodeDialog::setQRCode(const QString &text, bool isMachineCode)
+void QRCodeDialog::setQRCode(const QString &text)
 {
-    qrcode = new QRCode(this, text, 160, 160);
+    auto qrcode = new QRCode(this, text, 160, 160);
     qrcode->setMinimumSize(160, 160);
     qrcode->setMaximumSize(160, 160);
-    ui->qrcode_layout->addWidget(qrcode, Qt::AlignHCenter);
-    ui->qrcode_layout->setAlignment(qrcode, Qt::AlignHCenter);
-    ui->qrcode_layout->setAlignment(qrcode, Qt::AlignVCenter);
-
-    if (!isMachineCode)
-    {
-        ui->label_qrcode_text->setText(tr("Scan QR code to get activation code"));
-    }
+    ui->m_layout->addWidget(qrcode, Qt::AlignHCenter);
+    ui->m_layout->setAlignment(qrcode, Qt::AlignHCenter);
+    ui->m_layout->setAlignment(qrcode, Qt::AlignVCenter);
 }
 
 QRCodeDialog::~QRCodeDialog()

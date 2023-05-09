@@ -26,7 +26,6 @@
  */
 
 #include "src/ui/window.h"
-#include <ks-license-gui/ksl-va.h>
 #include <qt5-log-i.h>
 #include <QFile>
 #include <QMenu>
@@ -37,7 +36,6 @@
 #include "src/ui/device/device-page.h"
 #include "src/ui/file-protected/fp-page.h"
 #include "src/ui/license/activation.h"
-#include "src/ui/license/license-utils.h"
 #include "src/ui/navigation.h"
 #include "src/ui/trusted/tp-page.h"
 #include "src/ui/ui_window.h"
@@ -46,30 +44,16 @@ namespace KS
 {
 #define KSC_STYLE_PATH ":/styles/ksc"
 
-Window::Window() : TitlebarWindow(nullptr), m_ui(new Ui::Window)
+Window::Window() : TitlebarWindow(nullptr),
+                   m_ui(new Ui::Window),
+                   m_activation(nullptr),
+                   m_activateStatus(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
 
-    auto activation = new Activation(this);
-    if (!activation->isActivate())
-    {
-        activation->show();
-    }
-    connect(activation, &Activation::activated,
-            [this](bool isActived)
-            {
-                if (isActived)
-                {
-                    activation->hide();
-                }
-            });
-    connect(activation, &Activation::closed,
-            [this] {
-
-            });
-
     initWindow();
     initNavigation();
+    initActivation();
 }
 
 Window::~Window()
@@ -77,9 +61,34 @@ Window::~Window()
     delete m_ui;
 }
 
-bool Window::isActive()
+void Window::initActivation()
 {
-    auto dbusUtils = new LicenseUtils(this);
+    m_activation = new Activation(this);
+    if (!m_activation->isActivate())
+    {
+        m_activateStatus->show();
+        auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
+        auto y = this->y() + this->height() / 4 + m_activation->height() / 4;
+        m_activation->move(x, y);
+        m_activation->raise();
+        m_activation->show();
+    }
+    connect(m_activation, &Activation::activated,
+            [this](bool isActived)
+            {
+                //设置激活对话框和激活状态标签是否可见
+                m_activation->setVisible(!isActived);
+                m_activateStatus->setVisible(!isActived);
+            });
+    connect(m_activation, &Activation::closed,
+            [this]
+            {
+                //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
+                if (!m_activation->isActivate())
+                    qApp->quit();
+                else
+                    m_activation->hide();
+            });
 }
 
 void Window::initWindow()
@@ -101,18 +110,32 @@ void Window::initWindow()
         KLOG_WARNING() << "Failed to open file " << KSC_STYLE_PATH;
     }
 
-    //创建标题栏右侧菜单按钮
     setTitlebarCustomLayoutAlignHCenter(false);
     auto layout = getTitlebarCustomLayout();
+    layout->setContentsMargins(0, 0, 10, 0);
+    layout->setSpacing(10);
+
+    //未激活文本
+    m_activateStatus = new QLabel(this);
+    m_activateStatus->setObjectName("activateStatus");
+    m_activateStatus->setFixedHeight(18);
+    m_activateStatus->setAlignment(Qt::AlignHCenter);
+    m_activateStatus->setText("Unactivated");
+    m_activateStatus->hide();
+
+    //创建标题栏右侧菜单按钮
     auto btnForMenu = new QPushButton(this);
+    btnForMenu->setObjectName("btnForMenu");
     btnForMenu->setFixedSize(QSize(16, 16));
-    layout->addWidget(btnForMenu);
-    layout->setAlignment(Qt::AlignRight);
 
     auto settingMenu = new QMenu(this);
-    auto action = settingMenu->addAction(tr("Activate"));
+    auto action = settingMenu->addAction(tr("Activate Info"));
     connect(action, &QAction::triggered, this, &Window::popupActiveDialog);
     btnForMenu->setMenu(settingMenu);
+
+    layout->addWidget(m_activateStatus);
+    layout->addWidget(btnForMenu);
+    layout->setAlignment(Qt::AlignRight);
 }
 
 void Window::initNavigation()
@@ -143,7 +166,10 @@ void Window::initNavigation()
 
 void Window::popupActiveDialog()
 {
-    auto kslVa = new KslVA(tr("Active"), QIcon());
-    kslVa->show();
+    m_activation->updateLicenseInfo();
+    auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
+    auto y = this->y() + this->height() / 4 + m_activation->height() / 4;
+    m_activation->move(x, y);
+    m_activation->show();
 }
 }  // namespace KS
