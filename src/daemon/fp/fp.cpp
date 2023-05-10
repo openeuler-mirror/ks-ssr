@@ -42,7 +42,7 @@ void FP::AddFile(const QString &filePath)
 {
     if (filePath.isEmpty())
     {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_FP_FILE_PATH_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
         return ;
     }
 
@@ -61,7 +61,7 @@ void FP::RemoveFile(const QString &filePath)
 {
     if (filePath.isEmpty())
     {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_FP_FILE_PATH_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
         return ;
     }
 
@@ -72,7 +72,7 @@ QString FP::Search(const QString &pathKey)
 {
     if (pathKey.isEmpty())
     {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_FP_FILE_KEY_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
         return QString();
     }
 
