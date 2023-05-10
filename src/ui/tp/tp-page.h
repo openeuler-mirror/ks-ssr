@@ -27,7 +27,7 @@ namespace KS
 class SidebarItem;
 class TPKernel;
 class TPExecute;
-class MaskWidget;
+class Loading;
 
 class TPPage : public QWidget
 {
@@ -53,6 +53,6 @@ private slots:
 private:
     Ui::TPPage *m_ui;
     QMap<QString, SidebarItem *> m_sidebarItems;
-    MaskWidget *m_maskWidget;
+    Loading *m_maskWidget;
 };
 }  // namespace KS

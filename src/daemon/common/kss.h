@@ -27,6 +27,7 @@ class KSS : public QObject
 public:
     KSS(QObject *parent = nullptr);
     virtual ~KSS(){};
+    static QSharedPointer<KSS> getDefault();
 
 public:
     // 可信保护
@@ -48,12 +49,12 @@ public:
     void removeFile(const QString &filePath);
     // 获取文件保护列表
     QString getFiles();
-    void initTrusted();
 
 public Q_SLOTS:
     void processExited(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
+    void init();
     void execute(const QString &cmd);
 
 private slots:
@@ -63,6 +64,8 @@ signals:
     void initFinished();
 
 private:
+    static QSharedPointer<KSS> m_instance;
+
     QProcess *m_process;
     QString m_processOutput;
     QString m_errorOutput;

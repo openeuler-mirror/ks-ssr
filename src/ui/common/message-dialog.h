@@ -11,40 +11,32 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-
 #pragma once
 
-#include <QDBusContext>
-#include <QDBusObjectPath>
-#include <QObject>
-#include <QStringList>
-
-class FPAdaptor;
+#include <QVBoxLayout>
+#include "src/ui/common/titlebar-window.h"
 
 namespace KS
 {
-class FP : public QObject,
-           protected QDBusContext
+// 自定义消息对话框，统一提示信息对话框，输入信息对话框样式
+class MessageDialog : public TitlebarWindow
 {
     Q_OBJECT
 public:
-    FP(QObject *parent);
-    virtual ~FP();
+    MessageDialog(QWidget *parent = nullptr);
+    virtual ~MessageDialog();
 
-public Q_SLOTS:  // METHODS
-    // 添加文件
-    void AddFile(const QString &filePath);
-    // 获取文件列表
-    QString GetFiles();
-    // 移除文件
-    void RemoveFile(const QString &filePath);
-    // 搜索
-    QString Search(const QString &pathKey);
+    QVBoxLayout *getContentLayout();
+
+    void buildNotify(const QString &notify);
 
 private:
-    void init();
+    void initUI();
+
+protected:
+    void paintEvent(QPaintEvent *event);
 
 private:
-    FPAdaptor *m_dbusAdaptor;
+    QVBoxLayout *m_contentLayout;
 };
 }  // namespace KS
