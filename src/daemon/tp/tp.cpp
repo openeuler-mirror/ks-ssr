@@ -43,7 +43,7 @@ void TP::AddFile(const QString &filePath)
 {
     if (filePath.isEmpty())
     {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_TP_FILE_PATH_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
         return ;
     }
 
@@ -79,7 +79,7 @@ void TP::ProhibitUnloading(bool prohibited, const QString &filePath)
 {
     if (filePath.isEmpty())
     {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_TP_FILE_PATH_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
         return ;
     }
 
@@ -90,7 +90,7 @@ void TP::RemoveFile(const QString &filePath)
 {
     if (filePath.isEmpty())
     {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_TP_FILE_PATH_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
         return ;
     }
 
@@ -101,7 +101,7 @@ QString TP::Search(const QString &pathKey, uint searchType)
 {
     if (pathKey.isEmpty())
     {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_TP_FILE_KEY_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
         return QString();
     }
 
