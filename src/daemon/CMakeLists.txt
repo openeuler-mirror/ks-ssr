@@ -46,7 +46,8 @@ qt5_add_dbus_adaptor(
 set(TARGET_NAME ks-sc-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
+                                ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}
