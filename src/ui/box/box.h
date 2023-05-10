@@ -41,6 +41,7 @@ struct BoxInfo
 class ModifyPassword;
 class RetrievePassword;
 class InputPassword;
+class MessageDialog;
 
 class Box : public QWidget
 {
@@ -65,7 +66,7 @@ private:
     void initBoxInfo();
     void initMenu();
 
-    QWidget *buildNotifyPage(const QString &notify);
+    QWidget *buildNotify(const QString &notify);
     void switchMountedStatus();
     void modifyPassword();
     void delBox();

@@ -30,7 +30,7 @@ namespace KS
 // 线程初始化 等待时长（30分钟）
 #define KSS_INIT_THREAD_TIMEOUT 30 * 60 * 1000
 
-#define KSS_JSON_KEY_DATA_PATH KSC_JK_DATA_PATH
+#define KSS_JSON_KEY_DATA_PATH KSC_KSS_JK_DATA_PATH
 
 // 暂时使用 -p 传入user pin，后续做需要做可信卡时再做修改
 #define KSS_INIT_CMD "kss card deploy -p 123123"
@@ -54,6 +54,17 @@ KSS::KSS(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
 {
     m_process = new QProcess(parent);
     m_ini = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
+}
+
+QSharedPointer<KSS> KSS::m_instance = nullptr;
+QSharedPointer<KSS> KSS::getDefault()
+{
+    if(!m_instance)
+    {
+        m_instance = QSharedPointer<KSS>::create();
+        m_instance->init();
+    }
+    return m_instance;
 }
 
 QString KSS::addTrustedFile(const QString &filePath)
@@ -148,20 +159,21 @@ void KSS::initTrustedResults()
     emit initFinished();
 }
 
-void KSS::initTrusted()
+void KSS::init()
 {
     RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() != 0)
 
     KLOG_INFO() << "Start kss initialisation.";
     execute(KSS_INIT_CMD);
 
-    m_kssInitThread = QThread::create([this] {
-        auto process = new QProcess(this);
-        auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r` -b");
-        KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
-        process->start("bash", QStringList() << "-c" << cmd);
-        process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
-    });
+    m_kssInitThread = QThread::create([this]
+                                      {
+                                          auto process = new QProcess(this);
+                                          auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r` -b");
+                                          KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
+                                          process->start("bash", QStringList() << "-c" << cmd);
+                                          process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
+                                      });
 
     connect(m_kssInitThread, &QThread::finished, this, &KSS::initTrustedResults);
     connect(m_kssInitThread, &QThread::finished, m_kssInitThread, &QThread::deleteLater);
