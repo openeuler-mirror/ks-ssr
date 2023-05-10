@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 
+if(POLICY CMP0071)
+  cmake_policy(SET CMP0071 NEW)
+endif()
+
 file(GLOB_RECURSE UI_H_FILES ./*.h)
 file(GLOB_RECURSE UI_CPP_FILES ./*.cpp)
 
