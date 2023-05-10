@@ -37,11 +37,11 @@ DeviceManager::~DeviceManager()
 void DeviceManager::init()
 {
     this->initDevices();
-    
+
     connect(&m_devMonitor, &SdDeviceMonitor::udevSignal, this, &DeviceManager::handleUdevEvent);
 
     auto connection = QDBusConnection::systemBus();
-    if (!connection.registerObject(SC_DEVICE_MANAGER_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH, this))
     {
         KLOG_ERROR() << "Failed to register object:" << connection.lastError();
     }
@@ -115,14 +115,14 @@ QJsonObject DeviceManager::makeDevcieJsonInfo(QSharedPointer<Device> device)
 {
     auto permission = device->getPermission();
     QJsonObject jsonObj{
-        {SC_DEVICE_KEY_ID, device->getId()},
-        {SC_DEVICE_KEY_NAME, device->getName()},
-        {SC_DEVICE_KEY_TYPE, device->getType()},
-        {SC_DEVICE_KEY_INTERFACE_TYPE, device->getInterfaceType()},
-        {SC_DEVICE_KEY_READ, permission->read},
-        {SC_DEVICE_KEY_WRITE, permission->write},
-        {SC_DEVICE_KEY_EXECUTE, permission->execute},
-        {SC_DEVICE_KEY_STATE, device->getState()}};
+        {KSC_DEVICE_KEY_ID, device->getId()},
+        {KSC_DEVICE_KEY_NAME, device->getName()},
+        {KSC_DEVICE_KEY_TYPE, device->getType()},
+        {KSC_DEVICE_KEY_INTERFACE_TYPE, device->getInterfaceType()},
+        {KSC_DEVICE_KEY_READ, permission->read},
+        {KSC_DEVICE_KEY_WRITE, permission->write},
+        {KSC_DEVICE_KEY_EXECUTE, permission->execute},
+        {KSC_DEVICE_KEY_STATE, device->getState()}};
 
     return jsonObj;
 }
@@ -148,13 +148,13 @@ bool DeviceManager::ChangePermission(const QString &permissions)
 #define GET_JSON_BOOL_VALUE(obj, key) ((obj).value(key).isBool() ? (obj).value(key).toBool() : false)
 
     auto jsonObj = jsonDoc.object();
-    auto id = GET_JSON_STRING_VALUE(jsonObj, SC_DEVICE_KEY_ID);
-    auto enable = GET_JSON_BOOL_VALUE(jsonObj, SC_DEVICE_KEY_ENABLE);
+    auto id = GET_JSON_STRING_VALUE(jsonObj, KSC_DEVICE_KEY_ID);
+    auto enable = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_KEY_ENABLE);
 
     auto permission = QSharedPointer<Permission>(new Permission{
-        .read = GET_JSON_BOOL_VALUE(jsonObj, SC_DEVICE_KEY_READ),
-        .write = GET_JSON_BOOL_VALUE(jsonObj, SC_DEVICE_KEY_WRITE),
-        .execute = GET_JSON_BOOL_VALUE(jsonObj, SC_DEVICE_KEY_EXECUTE),
+        .read = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_KEY_READ),
+        .write = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_KEY_WRITE),
+        .execute = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_KEY_EXECUTE),
     });
 
 #undef GET_JSON_STRING_VALUE
@@ -240,7 +240,7 @@ void DeviceManager::handleUdevChangeEvent(SdDevice *device)
     if (dev)
     {
         KLOG_INFO() << "Device changed with syspath " << syspath;
-        
+
         dev->update();
 
         Q_EMIT m_dbusAdaptor->DeviceChanged(dev->getId(), DEVICE_ACTION_CHANGE);

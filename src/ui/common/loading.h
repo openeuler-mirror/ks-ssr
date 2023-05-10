@@ -11,21 +11,19 @@
  *
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
-#ifndef MASKWIDGET_H
-#define MASKWIDGET_H
+#ifndef LOADING_H
+#define LOADING_H
 
 #include <QLabel>
 #include <QObject>
 namespace KS
 {
-class MaskWidget : public QWidget
+class Loading : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MaskWidget(QWidget *parent = nullptr);
-    void setMaskVisible(bool visible);
-    bool maskIsVisible();
-    ~MaskWidget();
+    explicit Loading(QWidget *parent = nullptr);
+    ~Loading();
 
 private:
     void initUI();
@@ -39,4 +37,4 @@ private:
 };
 }  // namespace KS
 
-#endif  // MASKWIDGET_H
+#endif  // LOADING_H
