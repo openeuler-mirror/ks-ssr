@@ -14,8 +14,8 @@
 
 #pragma once
 
+#include <qrencode.h>
 #include <QWidget>
-#include "qrcode.h"
 #include "src/ui/common/titlebar-window.h"
 
 namespace Ui
@@ -35,11 +35,13 @@ public:
 
 private:
     void iniUI();
+    QPixmap createQRcodePixmap(const QString &text);
 
 public:
-    void setQRCode(const QString &text);
+    void setText(const QString &text);
 
 private:
     Ui::QRCodeDialog *ui;
+    QRcode *m_qrcode;
 };
 }  // namespace KS

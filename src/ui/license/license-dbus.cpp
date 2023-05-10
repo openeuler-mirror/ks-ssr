@@ -12,14 +12,15 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "src/ui/license/license-utils.h"
+#include "src/ui/license/license-dbus.h"
 
 #include <kiran-log/qt5-log-i.h>
 #include <exception>
+#include "include/ksc-marcos.h"
 
 namespace KS
 {
-LicenseUtils::LicenseUtils(QObject* parent) : QObject(parent)
+LicenseDBus::LicenseDBus(QObject* parent) : QObject(parent)
 {
     creatObjectName(LICENSE_OBJECT_NAME);
     QDBusConnection::systemBus().connect(LICENSE_HELPER_DBUS_NAME,
@@ -30,11 +31,11 @@ LicenseUtils::LicenseUtils(QObject* parent) : QObject(parent)
                                          SLOT(licenseChange(bool)));
 }
 
-LicenseUtils::~LicenseUtils()
+LicenseDBus::~LicenseDBus()
 {
 }
 
-bool LicenseUtils::creatObjectName(const QString& objectName)
+bool LicenseDBus::creatObjectName(const QString& objectName)
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_MANAGER_DBUS_NAME,
                                                                 LICENSE_MANAGER_OBJECT_PATH,
@@ -46,24 +47,27 @@ bool LicenseUtils::creatObjectName(const QString& objectName)
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
     QString errorMsg;
-    if (msgReply.type() == QDBusMessage::ReplyMessage)
+    do
     {
-        QList<QVariant> args = msgReply.arguments();
-        if (args.size() < 1)
+        if (msgReply.type() == QDBusMessage::ReplyMessage)
         {
-            errorMsg = "arguments size < 1";
-            goto failed;
+            QList<QVariant> args = msgReply.arguments();
+            RETURN_VAL_IF_TRUE(args.size() >= 1, true);
+
+            errorMsg = tr("arguments size < 1");
+            break;
         }
 
-        return true;
-    }
-failed:
-    KLOG_WARNING() << LICENSE_MANAGER_DBUS_NAME << METHOD_GET_LICENSE_OBJECT
-                   << msgReply.errorName() << msgReply.errorMessage() << errorMsg;
+    } while (0);
+
+    KLOG_WARNING() << "create object name failed!"
+                   << "dbus name: " << LICENSE_MANAGER_DBUS_NAME
+                   << "method: " << METHOD_GET_LICENSE_OBJECT
+                   << "error: " << msgReply.errorMessage() << errorMsg;
     return false;
 }
 
-QString LicenseUtils::getLicense()
+QString LicenseDBus::getLicense()
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_HELPER_DBUS_NAME,
                                                                 LICENSE_OBJECT_OBJECT_PATH "/" LICENSE_OBJECT_NAME,
@@ -72,29 +76,33 @@ QString LicenseUtils::getLicense()
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
-    KLOG_DEBUG() << "getLicense msgReply " << msgReply;
+    KLOG_DEBUG() << "getLicense msgReply: " << msgReply;
 
-    QString errMsg;
-    if (msgReply.type() == QDBusMessage::ReplyMessage)
+    QString errorMsg;
+    do
     {
-        QList<QVariant> args = msgReply.arguments();
-        if (args.size() < 1)
+        if (msgReply.type() == QDBusMessage::ReplyMessage)
         {
-            errMsg = "arguments size < 1";
-            goto failed;
+            QList<QVariant> args = msgReply.arguments();
+            if (args.size() < 1)
+            {
+                errorMsg = tr("arguments size < 1");
+                break;
+            }
+            QVariant firstArg = args.takeFirst();
+            return firstArg.toString();
         }
-        QVariant firstArg = args.takeFirst();
-        return firstArg.toString();
-    }
+    } while (0);
 
-failed:
-    KLOG_WARNING() << LICENSE_OBJECT_DBUS_NAME << METHOD_GET_LICENSE
-                   << msgReply.errorName() << msgReply.errorMessage() << errMsg;
+    KLOG_WARNING() << "get license information failed!"
+                   << "dbus name: " << LICENSE_OBJECT_DBUS_NAME
+                   << "method: " << METHOD_GET_LICENSE
+                   << "error: " << msgReply.errorMessage() << errorMsg;
 
     return "";
 }
 
-bool LicenseUtils::activateByActivationCode(const QString& activation_Code, QString& errorMsg)
+bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QString& errorMsg)
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_HELPER_DBUS_NAME,
                                                                 LICENSE_OBJECT_OBJECT_PATH "/" LICENSE_OBJECT_NAME,
@@ -106,22 +114,18 @@ bool LicenseUtils::activateByActivationCode(const QString& activation_Code, QStr
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
 
-    KLOG_DEBUG() << "activateByActivationCode msgReply " << msgReply;
+    KLOG_DEBUG() << "activateByActivationCode msgReply: " << msgReply;
 
-    if (msgReply.type() == QDBusMessage::ErrorMessage)
-    {
-        goto failed;
-    }
-    return true;
+    RETURN_VAL_IF_TRUE(msgReply.type() != QDBusMessage::ErrorMessage, true);
 
-failed:
-    errorMsg = msgReply.errorName() + msgReply.errorMessage();
-    KLOG_WARNING() << LICENSE_OBJECT_DBUS_NAME << METHOD_ACTIVATE_BY_ACTIVATION_CODE
-                   << msgReply.errorName() << msgReply.errorMessage();
+    errorMsg = tr("activate by activation code failed:\n dbus name: %1\n error: %2:")
+                   .arg(LICENSE_OBJECT_DBUS_NAME)
+                   .arg(msgReply.errorMessage());
+    KLOG_WARNING() << errorMsg;
     return false;
 }
 
-void LicenseUtils::licenseChange(bool isChanged)
+void LicenseDBus::licenseChange(bool isChanged)
 {
     emit licenseChanged(isChanged);
 }
