@@ -39,7 +39,7 @@ qt5_add_dbus_interface(
 qt5_wrap_ui(
   UI_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/license/activation.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/license/license-activation.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/license/qrcode-dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/common/pagination.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-page.ui
