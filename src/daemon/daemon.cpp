@@ -17,7 +17,7 @@
 #include <QDBusConnection>
 #include "include/ksc-i.h"
 #include "src/daemon/box/box-manager.h"
-#include "src/daemon/device/device-manager.h"
+// #include "src/daemon/device/device-manager.h"
 #include "src/daemon/fp/fp.h"
 #include "src/daemon/tp/tp.h"
 
@@ -30,7 +30,7 @@ Daemon::Daemon() : QObject(nullptr)
     m_boxManager = new BoxManager(this);
     m_trusted = new TP(this);
     m_fileProtected = new FP(this);
-    m_deviceManger = new DeviceManager(this);
+    // m_deviceManger = new DeviceManager(this);
 }
 
 Daemon::~Daemon()
