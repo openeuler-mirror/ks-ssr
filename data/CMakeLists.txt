@@ -26,6 +26,10 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.conf
 install(FILES ${PROJECT_SOURCE_DIR}/data/ksc.dat
         DESTINATION ${KSC_INSTALL_DATADIR})
 
+# box dir
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/data/box
+        DESTINATION ${KSC_INSTALL_DATADIR})
+
 # ini files
 install(FILES ${PROJECT_SOURCE_DIR}/data/ksc.ini
         DESTINATION ${KSC_INSTALL_DATADIR})
