@@ -18,13 +18,38 @@
                 <description>Get device information.</description>
             </method>
             <method name="ChangePermission">
+                 <arg type="s" name="id" direction="in">
+                    <summary>The id of device.</summary>
+                </arg>
                 <arg type="s" name="permissions" direction="in">
                     <summary>The permissions json string of device.</summary>
                 </arg>
                 <arg type="b" name="result" direction="out">
-                    <summary>The permissions result.</summary>
+                    <summary>The permissions change result.</summary>
                 </arg>
-            </method>            
+            </method>
+            <method name="Enable">
+                 <arg type="s" name="id" direction="in">
+                    <summary>The id of device.</summary>
+                </arg>
+                <arg type="b" name="result" direction="out">
+                    <summary>The enable result.</summary>
+                </arg>
+            </method>
+            <method name="Disable">
+                 <arg type="s" name="id" direction="in">
+                    <summary>The id of device.</summary>
+                </arg>
+                <arg type="b" name="result" direction="out">
+                    <summary>The disable result.</summary>
+                </arg>
+            </method>
+            <method name="GetRecords">
+                <arg type="s" name="records" direction="out">
+                    <summary>The json string of device connect record list.</summary>
+                </arg>
+                <description>Get all devices connect record information.</description>
+            </method>          
             <signal name="DeviceChanged">
                 <arg name="id" type="s">
                     <summary>The device id.</summary>

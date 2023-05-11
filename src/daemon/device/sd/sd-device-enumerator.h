@@ -13,27 +13,30 @@
  */
 #pragma once
 
-#include <systemd/sd-device.h>
 #include <QObject>
-#include "src/daemon/device/sd-device.h"
+#include "src/daemon/device/sd/sd-device.h"
+
+typedef struct sd_device_enumerator sd_device_enumerator;
 
 namespace KS
 {
-class SdDeviceEnumerator : public QObject
+
+class SDDeviceEnumerator : public QObject
 {
     Q_OBJECT
 
 public:
-    SdDeviceEnumerator(QObject *parent = nullptr);
-    virtual ~SdDeviceEnumerator();
+    SDDeviceEnumerator(QObject *parent = nullptr);
+    virtual ~SDDeviceEnumerator();
 
-    QList<QSharedPointer<SdDevice>> getDevices();
+    QList<SDDevice *> getDevices() const;
 
 private:
     void init();
 
 private:
     sd_device_enumerator *m_enumerator;
+    QList<SDDevice *> m_devices;
 };
 
 }  // namespace KS
