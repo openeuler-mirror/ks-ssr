@@ -84,14 +84,13 @@ void TPKernel::addClicked(bool checked)
     if (reply.isError())
     {
         KLOG_WARNING() << "Failed to add files: " << reply.error().message();
-        auto message = new MessageDialog(this);
-        message->setFixedSize(240, 200);
-        message->buildNotify(reply.error().message());
+        auto messgeDialog = new MessageDialog(this);
+        messgeDialog->setMessage(reply.error().message());
 
-        int x = this->x() + this->width() / 4 + message->width() / 4;
-        int y = this->y() + this->height() / 4 + message->height() / 4;
-        message->move(x, y);
-        message->show();
+        int x = this->x() + this->width() / 4 + messgeDialog->width() / 4;
+        int y = this->y() + this->height() / 4 + messgeDialog->height() / 4;
+        messgeDialog->move(x, y);
+        messgeDialog->show();
     }
     updateInfo();
 }

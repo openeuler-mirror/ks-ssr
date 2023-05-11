@@ -171,7 +171,7 @@ bool Box::modifyBoxPassword(const QString &inputPassword, const QString &newPass
 {
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
-    //    auto decryptInputPassword = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, m_password);
+    //    auto decryptBoxPasswordChecked = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, m_password);
     if (inputPassword != decryptPassword)
     {
         KLOG_ERROR() << "Password error!";
