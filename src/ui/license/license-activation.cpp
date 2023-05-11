@@ -26,18 +26,19 @@ namespace KS
 {
 LicenseActivation::LicenseActivation(QWidget *parent) : TitlebarWindow(parent),
                                                         m_ui(new Ui::LicenseActivation),
-                                                        m_licenseUtils(nullptr),
+                                                        m_licenseDbus(nullptr),
                                                         m_qrcodeDialog(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
     initUI();
 
-    m_licenseUtils = new LicenseDBus(this);
-    updateLicenseInfo();
+    m_licenseDbus = new LicenseDBus(this);
+    update();
 
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &LicenseActivation::closed);
     connect(m_ui->m_activate, &QPushButton::clicked, this, &LicenseActivation::activate);
-    connect(m_licenseUtils, &LicenseDBus::licenseChanged, this, &LicenseActivation::getLicense);
+
+    connect(m_licenseDbus, &LicenseDBus::licenseChanged, this, &LicenseActivation::setLicense);
 }
 
 LicenseActivation::~LicenseActivation()
@@ -67,7 +68,7 @@ void LicenseActivation::closeEvent(QCloseEvent *event)
 
 void LicenseActivation::getLicenseInfo()
 {
-    auto licenseInfoJson = m_licenseUtils->getLicense();
+    auto licenseInfoJson = m_licenseDbus->getLicense();
     RETURN_IF_TRUE(licenseInfoJson.isEmpty());
 
     QJsonParseError jsonError;
@@ -116,7 +117,7 @@ void LicenseActivation::initUI()
 void LicenseActivation::activate()
 {
     QString errorMsg;
-    auto isActivated = m_licenseUtils->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
+    auto isActivated = m_licenseDbus->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
 
     //TODO:弹出自定义错误提示框
     if (!isActivated)
@@ -128,10 +129,10 @@ void LicenseActivation::activate()
     }
     else
     {
-        QMessageBox::warning(this,
-                             tr("Activate app"),
-                             tr("Activate app successful!"),
-                             QMessageBox::Ok);
+        QMessageBox::information(this,
+                                 tr("Activate app"),
+                                 tr("Activate app successful!"),
+                                 QMessageBox::Ok);
     }
 }
 
@@ -152,23 +153,15 @@ void LicenseActivation::popupQrencode()
     m_qrcodeDialog->show();
 }
 
-void LicenseActivation::getLicense(bool isChanged)
+void LicenseActivation::setLicense()
 {
-    if (isChanged)
-    {
-        updateLicenseInfo();
-        emit activated(isActivate());
-    }
+    update();
+    emit activated(isActivate());
 }
 
-void LicenseActivation::updateLicenseInfo()
+void LicenseActivation::update()
 {
     getLicenseInfo();
-    setLicenseInfo();
-}
-
-void LicenseActivation::setLicenseInfo()
-{
     m_ui->m_machine_code->setText(m_licenseInfo.machineCode);
     m_ui->m_activation_code->setText(m_licenseInfo.activationCode);
     m_ui->m_expired_time->setText(QDateTime::fromSecsSinceEpoch(m_licenseInfo.expiredTime).toString("yyyy-MM-dd"));
