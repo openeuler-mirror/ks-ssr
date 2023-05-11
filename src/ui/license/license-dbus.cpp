@@ -125,9 +125,9 @@ bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QStri
     return false;
 }
 
-void LicenseDBus::licenseChange(bool isChanged)
+void LicenseDBus::licenseChange(bool)
 {
-    emit licenseChanged(isChanged);
+    emit licenseChanged();
 }
 
 }  // namespace KS
