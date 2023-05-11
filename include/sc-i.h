@@ -56,6 +56,11 @@ extern "C"
 #define SC_DEVICE_KEY_STATE "state"
 #define SC_DEVICE_KEY_ENABLE "enable"
 
+#define SC_DEVICE_CONNECT_RECORD_KEY_NAME "name"
+#define SC_DEVICE_CONNECT_RECORD_KEY_TYPE "type"
+#define SC_DEVICE_CONNECT_RECORD_KEY_TIME "time"
+#define SC_DEVICE_CONNECT_RECORD_KEY_STATE "state"
+
     enum DeviceType
     {
         DEVICE_TYPE_DISK = 0,
@@ -93,6 +98,12 @@ extern "C"
         DEVICE_ACTION_ADD = 0,
         DEVICE_ACTION_REMOVE,
         DEVICE_ACTION_CHANGE
+    };
+
+    enum DeviceConnectState
+    {
+        DEVICE_CONNECT_SUCCESSED = 0,
+        DEVICE_CONNECT_FAILED
     };
 
 #ifdef __cplusplus

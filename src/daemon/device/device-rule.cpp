@@ -18,10 +18,26 @@
 #include <QMutex>
 #include <QTextStream>
 #include "config.h"
-#include "ksc-marcos.h"
+#include "sc-i.h"
+#include "sc-marcos.h"
 
 namespace KS
 {
+
+#define DEVICE_SETTINGS_KYE_ID "id"
+#define DEVICE_SETTINGS_KYE_NAME "name"
+#define DEVICE_SETTINGS_KYE_ID_PRODUCT "idProduct"
+#define DEVICE_SETTINGS_KYE_ID_VENDOR "idVendor"
+#define DEVICE_SETTINGS_KYE_TYPE "type"
+#define DEVICE_SETTINGS_KYE_INTERFACE_TYPE "interfaceType"
+#define DEVICE_SETTINGS_KYE_READ "read"
+#define DEVICE_SETTINGS_KYE_WRITE "write"
+#define DEVICE_SETTINGS_KYE_EXECUTE "execute"
+#define DEVICE_SETTINGS_KYE_ENABLE "enable"
+
+#define PERMISSION_BIN_VALUE_READ 4     // 2的2次方
+#define PERMISSION_BIN_VALUE_WRITE 2    // 2的1次方
+#define PERMISSION_BIN_VALUE_EXECUTE 1  // 2的0次方
 
 DeviceRule *DeviceRule::instance()
 {
@@ -45,75 +61,137 @@ DeviceRule::DeviceRule(QObject *parent) : QObject(parent)
 
 void DeviceRule::init()
 {
-    QFile file(SC_DEVICE_UDEV_RULES_FILE);
+    m_settings = new QSettings(SC_DEVICE_RULE_FILE, QSettings::NativeFormat, this);
 
-    RETURN_IF_FALSE(file.open(QIODevice::ReadOnly | QIODevice::Text))
+    this->updateUdevFile();
+}
 
-    QTextStream in(&file);
+void DeviceRule::addRule(const Rule &rule)
+{
+    m_settings->beginGroup(rule.uid);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_ID, rule.id);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_NAME, rule.name);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_ID_PRODUCT, rule.idProduct);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_ID_VENDOR, rule.idVendor);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_TYPE, rule.type);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_INTERFACE_TYPE, rule.interfaceType);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_READ, rule.read);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_WRITE, rule.write);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_EXECUTE, rule.execute);
+    m_settings->setValue(DEVICE_SETTINGS_KYE_ENABLE, rule.enable);
+    m_settings->endGroup();
 
-    while (!in.atEnd())
+    this->updateUdevFile();
+}
+
+QStringList DeviceRule::toUdevRules()
+{
+    auto groups = m_settings->childGroups();
+    QStringList rules;
+
+    Q_FOREACH (auto group, groups)
     {
-        QString line = in.readLine();
+        auto udevRule = this->rule2UdevRule(this->getRule(group));
 
-        m_ruleList << line;
+        if(!udevRule.isNull())
+        {
+            rules.append(udevRule);
+        }
     }
 
-    m_ruleList.removeDuplicates();
-
-    file.close();
+    return rules;
 }
 
-bool DeviceRule::addRule(const QString &rule)
+QString DeviceRule::rule2UdevRule(QSharedPointer<Rule> rule)
 {
-    if (m_ruleList.contains(rule))
+    if (rule->interfaceType == INTERFACE_TYPE_USB)
     {
-        KLOG_WARNING() << "Faile to add rule because have exist: " << rule;
-        return false;
+        return QString::asprintf("ACTION==\"*\", SUBSYSTEMS==\"usb\", \
+ATTRS{idVendor}==\"%s\", ATTRS{idProduct}==\"%s\", \
+MODE=\"%s\", RUN=\"/bin/sh -c 'echo %d >/sys/$devpath/authorized'\"",
+                                 rule->idVendor.toStdString().c_str(),
+                                 rule->idVendor.toStdString().c_str(),
+                                 this->getUdevModeValue(rule).toStdString().c_str(),
+                                 rule->enable ? 1 : 0);
     }
 
-    m_ruleList << rule;
-
-    return this->updateRulesToFile();
+    return QString();
 }
 
-bool DeviceRule::updateRule(const QString &rule, const QString &newRule)
+QString DeviceRule::getUdevModeValue(QSharedPointer<Rule> rule)
 {
-    m_ruleList.replaceInStrings(rule, newRule);
+    auto permission = rule->read * PERMISSION_BIN_VALUE_READ +
+                      rule->write * PERMISSION_BIN_VALUE_WRITE +
+                      rule->execute * PERMISSION_BIN_VALUE_EXECUTE;
 
-    return this->updateRulesToFile();
+    // 所有用户的读，写，执行权限一样
+    return QString::asprintf("0%d%d%d", permission, permission, permission);
 }
 
-bool DeviceRule::updateRulesToFile()
+void DeviceRule::updateUdevFile()
 {
-    QFile file(SC_DEVICE_UDEV_RULES_FILE);
-
     // 触发系统事件，让systemd-udevd服务重新加载规则文件
     QFile::remove(SC_DEVICE_UDEV_RULES_FILE);
+
+    auto rules = this->toUdevRules();
+
+    RETURN_IF_TRUE(rules.isEmpty())
+
+    QFile file(SC_DEVICE_UDEV_RULES_FILE);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         KLOG_ERROR() << "Can not open file: ." << SC_DEVICE_UDEV_RULES_FILE;
-        return false;
+        return;
     }
 
     QTextStream out(&file);
 
-    auto context = m_ruleList.join("\n");
+    auto context = rules.join("\n");
 
     out << context << "\n";
 
     file.close();
-
-    return true;
 }
 
-QString DeviceRule::findRule(const QString &str)
+QSharedPointer<Rule> DeviceRule::getRule(const QString &uid)
 {
-    auto list = m_ruleList.filter(str);
+    RETURN_VAL_IF_FALSE(this->groupExisted(uid), nullptr)
 
-    RETURN_VAL_IF_TRUE(list.isEmpty(), nullptr)
+    auto rule = QSharedPointer<Rule>(new Rule());
 
-    return list.first();
+    m_settings->beginGroup(uid);
+
+    rule->uid = uid;
+    rule->id = m_settings->value(DEVICE_SETTINGS_KYE_ID).toString();
+    rule->name = m_settings->value(DEVICE_SETTINGS_KYE_NAME).toString();
+    rule->idProduct = m_settings->value(DEVICE_SETTINGS_KYE_ID_PRODUCT).toString();
+    rule->idVendor = m_settings->value(DEVICE_SETTINGS_KYE_ID_VENDOR).toString();
+    rule->interfaceType = m_settings->value(DEVICE_SETTINGS_KYE_INTERFACE_TYPE).toInt();
+    rule->type = m_settings->value(DEVICE_SETTINGS_KYE_TYPE).toInt();
+    rule->enable = m_settings->value(DEVICE_SETTINGS_KYE_ENABLE).toBool();
+    rule->read = m_settings->value(DEVICE_SETTINGS_KYE_READ).toBool();
+    rule->write = m_settings->value(DEVICE_SETTINGS_KYE_WRITE).toBool();
+    rule->execute = m_settings->value(DEVICE_SETTINGS_KYE_EXECUTE).toBool();
+
+    m_settings->endGroup();
+
+    return rule;
+}
+
+bool DeviceRule::groupExisted(const QString group)
+{
+    auto childGroups = m_settings->childGroups();
+
+    Q_FOREACH (auto childGroup, childGroups)
+    {
+        if (childGroup == group)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }  // namespace KS
