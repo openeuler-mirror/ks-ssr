@@ -18,7 +18,6 @@
 #include <QJsonParseError>
 #include <QMessageBox>
 #include "include/ksc-marcos.h"
-#include "src/ui/license/license-dbus.h"
 #include "src/ui/license/qrcode-dialog.h"
 #include "ui_license-activation.h"
 
@@ -26,19 +25,20 @@ namespace KS
 {
 LicenseActivation::LicenseActivation(QWidget *parent) : TitlebarWindow(parent),
                                                         m_ui(new Ui::LicenseActivation),
-                                                        m_licenseDbus(nullptr),
-                                                        m_qrcodeDialog(nullptr)
+                                                        m_licenseDBus(nullptr),
+                                                        m_qrcodeDialog(nullptr),
+                                                        m_licenseInfo(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
     initUI();
 
-    m_licenseDbus = new LicenseDBus(this);
+    m_licenseDBus = LicenseDBus::getDefault();
     update();
 
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &LicenseActivation::closed);
     connect(m_ui->m_activate, &QPushButton::clicked, this, &LicenseActivation::activate);
 
-    connect(m_licenseDbus, &LicenseDBus::licenseChanged, this, &LicenseActivation::setLicense);
+    connect(m_licenseDBus.data(), &LicenseDBus::licenseChanged, this, &LicenseActivation::setLicense, Qt::UniqueConnection);
 }
 
 LicenseActivation::~LicenseActivation()
@@ -51,41 +51,10 @@ LicenseActivation::~LicenseActivation()
     }
 }
 
-bool LicenseActivation::isActivate()
-{
-    RETURN_VAL_IF_TRUE(m_licenseInfo.activationStatus != LAS_ACTIVATED, false);
-
-    //判断激活是否过期
-    auto currTime = QDateTime::currentDateTime().toSecsSinceEpoch();
-    return currTime <= m_licenseInfo.expiredTime;
-}
-
 void LicenseActivation::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     emit closed();
-}
-
-void LicenseActivation::getLicenseInfo()
-{
-    auto licenseInfoJson = m_licenseDbus->getLicense();
-    RETURN_IF_TRUE(licenseInfoJson.isEmpty());
-
-    QJsonParseError jsonError;
-    auto jsonDoc = QJsonDocument::fromJson(licenseInfoJson.toUtf8(), &jsonError);
-    if (jsonDoc.isNull())
-    {
-        KLOG_WARNING() << "Parser files information failed: " << jsonError.errorString();
-        return;
-    }
-    else
-    {
-        auto data = jsonDoc.object();
-        m_licenseInfo.activationCode = data.value(LICENSE_JK_ACTIVATION_CODE).toString();
-        m_licenseInfo.machineCode = data.value(LICENSE_JK_MACHINE_CODE).toString();
-        m_licenseInfo.activationStatus = data.value(LICENSE_JK_ACTIVATION_STATUS).toInt();
-        m_licenseInfo.expiredTime = time_t(data.value(LICENSE_JK_EXPIRED_TIME).toVariant().toUInt());
-    }
 }
 
 void LicenseActivation::initUI()
@@ -117,7 +86,7 @@ void LicenseActivation::initUI()
 void LicenseActivation::activate()
 {
     QString errorMsg;
-    auto isActivated = m_licenseDbus->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
+    auto isActivated = m_licenseDBus->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
 
     //TODO:弹出自定义错误提示框
     if (!isActivated)
@@ -138,14 +107,14 @@ void LicenseActivation::activate()
 
 void LicenseActivation::popupQrencode()
 {
-    RETURN_IF_TRUE(m_licenseInfo.machineCode.isEmpty());
+    RETURN_IF_TRUE(m_licenseInfo.data()->machineCode.isEmpty());
 
     if (!m_qrcodeDialog)
     {
         m_qrcodeDialog = new QRCodeDialog(this);
-        m_qrcodeDialog->setText(m_licenseInfo.machineCode);
     }
 
+    m_qrcodeDialog->setText(m_licenseInfo.data()->machineCode);
     auto x = this->x() + this->width() / 4 + m_qrcodeDialog->width() / 4;
     auto y = this->y() + this->height() / 4 + m_qrcodeDialog->height() / 4;
     m_qrcodeDialog->move(x, y);
@@ -153,19 +122,19 @@ void LicenseActivation::popupQrencode()
     m_qrcodeDialog->show();
 }
 
-void LicenseActivation::setLicense()
+void LicenseActivation::setLicense(QSharedPointer<LicenseInfo> licenseInfo)
 {
-    update();
-    emit activated(isActivate());
+    m_licenseInfo = licenseInfo;
+    m_ui->m_machine_code->setText(m_licenseInfo.data()->machineCode);
+    m_ui->m_activation_code->setText(m_licenseInfo.data()->activationCode);
+    m_ui->m_expired_time->setText(QDateTime::fromSecsSinceEpoch(m_licenseInfo.data()->expiredTime).toString("yyyy-MM-dd"));
+    m_ui->m_timeWidget->setVisible(m_licenseDBus->isActivated());
 }
 
 void LicenseActivation::update()
 {
-    getLicenseInfo();
-    m_ui->m_machine_code->setText(m_licenseInfo.machineCode);
-    m_ui->m_activation_code->setText(m_licenseInfo.activationCode);
-    m_ui->m_expired_time->setText(QDateTime::fromSecsSinceEpoch(m_licenseInfo.expiredTime).toString("yyyy-MM-dd"));
-    m_ui->m_timeWidget->setVisible(isActivate());
+    auto licenseInfo = m_licenseDBus->getLicense();
+    setLicense(licenseInfo);
 }
 
 }  // namespace KS
