@@ -60,7 +60,7 @@ void TP::AddFile(const QString &filePath)
 
     if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
     {
-        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD));
+        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_TP_ADD_INVALID_FILE));
         return;
     }
 }
