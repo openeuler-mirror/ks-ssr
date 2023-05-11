@@ -28,7 +28,7 @@ public:
 
     QVBoxLayout *getContentLayout();
 
-    void buildNotify(const QString &notify);
+    void setMessage(const QString &message);
 
 private:
     void initUI();

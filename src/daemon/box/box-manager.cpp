@@ -73,11 +73,11 @@ void BoxManager::DelBox(const QString &boxID, const QString &password)
     if (!box)
     {
         sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
-        return ;
+        return;
     }
-    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto decryptBoxPasswordChecked = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
 
-    if (!box->delBox(decryptInputPassword))
+    if (!box->delBox(decryptBoxPasswordChecked))
     {
         sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_DELETE_FAILED));
         KLOG_WARNING() << "Failed to delete box.";
@@ -151,48 +151,48 @@ void BoxManager::ModifyBoxPassword(const QString &boxID,
     if (boxID.isEmpty() || currentPassword.isEmpty() || newPassword.isEmpty())
     {
         sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
-        return ;
+        return;
     }
 
-    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, currentPassword);
+    auto decryptBoxPasswordChecked = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, currentPassword);
     auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
 
     auto box = m_boxs.value(boxID);
     if (!box)
     {
         sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
-        return ;
+        return;
     }
-    if (!box->modifyBoxPassword(decryptInputPassword, decryptNewPassword))
+    if (!box->modifyBoxPassword(decryptBoxPasswordChecked, decryptNewPassword))
     {
         sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_MODIFY_PASSWORD_FAILED));
-        return ;
+        return;
     }
 }
 
 // 解锁
 void BoxManager::Mount(const QString &boxID, const QString &password)
 {
-    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto decryptBoxPasswordChecked = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
     auto box = m_boxs.value(boxID);
     if (!box)
     {
         sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
-        return ;
+        return;
     }
 
     RETURN_IF_TRUE(box->getBoxID() != boxID)
 
-    if (!box->mount(decryptInputPassword))
+    if (!box->mount(decryptBoxPasswordChecked))
     {
         sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR));
-        return ;
+        return;
     }
 
     emit BoxChanged(boxID);
 }
 
-QString BoxManager::RetrievePassword(const QString &boxID, const QString &passphrase)
+QString BoxManager::BoxPasswordRetrieve(const QString &boxID, const QString &passphrase)
 {
     if (passphrase.isEmpty())
     {
@@ -225,7 +225,7 @@ void BoxManager::UnMount(const QString &boxID)
     if (!box)
     {
         sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
-        return ;
+        return;
     }
 
     RETURN_IF_TRUE(box->getBoxID() != boxID)

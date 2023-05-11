@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <QWidget>
+#include "src/ui/common/titlebar-window.h"
 
 namespace Ui
 {
@@ -24,7 +24,7 @@ class CreateBox;
 namespace KS
 {
 // 创建保险箱页面
-class CreateBox : public QWidget
+class CreateBox : public TitlebarWindow
 {
     Q_OBJECT
 

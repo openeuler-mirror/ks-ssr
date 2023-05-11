@@ -38,9 +38,9 @@ struct BoxInfo
     bool mounted;
 };
 
-class ModifyPassword;
-class RetrievePassword;
-class InputPassword;
+class BoxPasswordModification;
+class BoxPasswordRetrieve;
+class BoxPasswordChecked;
 class MessageDialog;
 
 class Box : public QWidget
@@ -66,7 +66,7 @@ private:
     void initBoxInfo();
     void initMenu();
 
-    QWidget *buildNotify(const QString &notify);
+    QWidget *buildMessageDialog(const QString &message);
     void switchMountedStatus();
     void modifyPassword();
     void delBox();
@@ -95,10 +95,10 @@ private:
     BoxImage *m_imageUnlock;
 
     BoxManagerProxy *m_boxManagerProxy;
-    ModifyPassword *m_modifyPassword;
-    RetrievePassword *m_retrievePassword;
-    InputPassword *m_inputMountPassword;
-    InputPassword *m_inputDelBoxPassword;
+    BoxPasswordModification *m_modifyPassword;
+    BoxPasswordRetrieve *m_retrievePassword;
+    BoxPasswordChecked *m_inputMountPassword;
+    BoxPasswordChecked *m_inputDelBoxPassword;
     QMenu *m_popupMenu;
     QAction *m_mountedStatusAction;
 

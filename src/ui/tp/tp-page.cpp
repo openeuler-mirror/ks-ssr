@@ -102,15 +102,14 @@ void TPPage::checkTrustedLoadFinied()
     auto settings = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
     RETURN_IF_TRUE(settings->value(KSC_INI_KEY).toInt() != 0)
 
-    auto message = new MessageDialog(this);
-    message->setFixedSize(240, 200);
-    message->buildNotify(tr("Trusted data needs to be initialised,"
+    auto messgeDialog = new MessageDialog(this);
+    messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
                             "please wait a few minutes to refresh."));
 
-    int x = this->x() + width() / 4 + message->width() / 4;
-    int y = this->y() + height() / 4 + message->height() / 4;
-    message->move(x, y);
-    message->show();
+    int x = this->x() + width() / 4 + messgeDialog->width() / 4;
+    int y = this->y() + height() / 4 + messgeDialog->height() / 4;
+    messgeDialog->move(x, y);
+    messgeDialog->show();
 
     if (!m_maskWidget->isVisible())
     {

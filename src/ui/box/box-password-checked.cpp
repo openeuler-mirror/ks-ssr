@@ -11,30 +11,37 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#include "input-password.h"
-#include "ui_input-password.h"
+#include "box-password-checked.h"
+#include "ui_box-password-checked.h"
 namespace KS
 {
-InputPassword::InputPassword(QWidget *parent) : QWidget(parent),
-                                                m_ui(new Ui::InputPassword)
+BoxPasswordChecked::BoxPasswordChecked(QWidget *parent) : TitlebarWindow(parent),
+                                                          m_ui(new Ui::BoxPasswordChecked)
 {
-    m_ui->setupUi(this);
+    m_ui->setupUi(getWindowContentWidget());
     init();
 }
 
-InputPassword::~InputPassword()
+BoxPasswordChecked::~BoxPasswordChecked()
 {
     delete m_ui;
 }
 
-QString InputPassword::getInputPassword()
+QString BoxPasswordChecked::getBoxPasswordChecked()
 {
     return m_ui->m_inputPasswd->text();
 }
 
-void InputPassword::init()
+void BoxPasswordChecked::init()
 {
+    // 页面关闭时销毁
+    setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::ApplicationModal);
+    setIcon(QIcon(":/images/logo"));
+    setResizeable(false);
+    setTitleBarHeight(36);
+    setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
+
     m_ui->m_inputPasswd->setEchoMode(QLineEdit::Password);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
