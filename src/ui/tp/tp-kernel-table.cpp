@@ -250,13 +250,11 @@ void TPKernelModel::updateRecord()
     {
         // 后台返回数据需先转为obj后，将obj中的data字段转为arr
         auto jsonDataArray = jsonDoc.object().value(KSS_JSON_KEY_DATA).toArray();
-
         for (auto jsonData : jsonDataArray)
         {
             auto data = jsonData.toObject();
             auto type = TPUtils::fileTypeEnum2Str(data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
             auto status = TPUtils::fileStatusEnum2Str(data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
-
             auto fileRecord = TrustedRecord{.selected = false,
                                             .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
                                             .type = type,
@@ -409,17 +407,11 @@ void TPKernelTable::itemClicked(const QModelIndex &index)
     }
     RETURN_IF_TRUE(index.column() != KernelField::KERNEL_FIELD_PROHIBIT_UNLOAD)
     auto module = selectionModel()->model()->data(index);
+    // 取到该行的序号列
+    auto number = selectionModel()->model()->data(model()->index(index.row(), 1)).toInt();
+    auto kernelRecord = getKernelRecords()[number - 1];
 
-    auto kernelRecords = getKernelRecords();
-    int i = 0;
-    for (auto kernelRecord : kernelRecords)
-    {
-        if (index.row() == i++)
-        {
-            emit prohibitUnloadingStatusChange(module.toBool(), kernelRecord.filePath);
-            break;
-        }
-    }
+    emit prohibitUnloadingStatusChange(module.toBool(), kernelRecord.filePath);
 }
 
 }  // namespace KS
