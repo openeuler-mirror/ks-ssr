@@ -16,7 +16,8 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include "src/daemon/device/sd-device.h"
+#include "src/daemon/device/sd/sd-device.h"
+#include <QJsonObject>
 
 namespace KS
 {
@@ -45,28 +46,30 @@ class Device : public QObject
 public:
     Device(const QString &syspath, QObject *parent = nullptr);
     virtual ~Device();
-    virtual int setEnable(bool enable);
-    virtual void update();
-    QString getId() const;
-    void setId(QString &id);
-    QString getName() const;
-    void setName(QString &name);
-    QString getSyspath() const;
-    int getType() const;
-    void setType(int type);
-    int getInterfaceType() const;
-    void setInterfaceType(int type);
-    int getState() const;
-    void setState(int state);
-    QSharedPointer<Permission> getPermission() const;
-    void setPermission(const QString &rule);
-    void setPermission(QSharedPointer<Permission> permission);
-    QString getPermissionMode();
-    void trigger();
-    QSharedPointer<SdDevice> getSdDevcie();
 
-private:
-    void setPermission(int permission);
+public:
+    virtual int setEnable(bool enable);
+
+public:
+    QString getId() const;
+    QString getName() const;
+    int getType() const;
+    int getInterfaceType() const;
+    int getState() const;
+    QString getSyspath() const;
+    QSharedPointer<Permission> getPermission() const;
+    QSharedPointer<SDDevice> getSDDevcie();
+
+    void setId(QString &id);
+    void setName(QString &name);
+    void setType(int type);
+    void setInterfaceType(int type);
+    void setState(int state);
+    void setPermission(QSharedPointer<Permission> permission);
+
+public:
+    QJsonObject toJsonObject();
+    void trigger();
 
 private:
     QString m_id;
@@ -76,6 +79,6 @@ private:
     int m_interfaceType;
     int m_state;
     QSharedPointer<Permission> m_permission;
-    QSharedPointer<SdDevice> m_device;
+    QSharedPointer<SDDevice> m_device;
 };
 }  // namespace KS

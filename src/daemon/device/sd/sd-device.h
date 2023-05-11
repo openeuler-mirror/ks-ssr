@@ -11,23 +11,33 @@
  *
  * Author:     wangxiaoqing <wangxiaoqing@kylinos.com.cn>
  */
-
 #pragma once
 
 #include <QObject>
-#include "src/daemon/device/sd/sd-device.h"
+
+typedef struct sd_device sd_device;
 
 namespace KS
 {
-
-class Device;
-
-class DeviceFactory : public QObject
+class SDDevice : public QObject
 {
     Q_OBJECT
 
 public:
-    DeviceFactory(QObject* parent = nullptr);
-    QSharedPointer<Device> createDevice(SDDevice* device);
+    SDDevice(sd_device *device, QObject *parent = nullptr);
+    SDDevice(const QString &syspath, QObject *parent = nullptr);
+    virtual ~SDDevice();
+
+public:
+    QString getSyspath() const;
+    QString getSubsystem() const;
+    QString getDevtype() const;
+    QString getSysname() const;
+    QString getSysattrValue(const QString &attr) const;
+    void trigger();
+
+private:
+    sd_device *m_device;
 };
+
 }  // namespace KS

@@ -14,19 +14,11 @@
 
 #include "src/daemon/device/device.h"
 #include <qt5-log-i.h>
-#include "ksc-marcos.h"
+#include "sc-i.h"
+#include "sc-marcos.h"
 
 namespace KS
 {
-#define MAX_PERMISSION_VALUE 7
-
-#define PERMISSION_VALUE_READ 3     // 二进制100
-#define PERMISSION_VALUE_WRITE 2    // 二进制010
-#define PERMISSION_VALUE_EXECUTE 1  // 二进制001
-
-#define PERMISSION_BIN_VALUE_READ 4     // 2的2次方
-#define PERMISSION_BIN_VALUE_WRITE 2    // 2的1次方
-#define PERMISSION_BIN_VALUE_EXECUTE 1  // 2的0次方
 
 Device::Device(const QString& syspath, QObject* parent)
     : QObject(parent)
@@ -37,7 +29,7 @@ Device::Device(const QString& syspath, QObject* parent)
         .execute = false,
     });
 
-    m_device = QSharedPointer<SdDevice>(new SdDevice(syspath));
+    m_device = QSharedPointer<SDDevice>(new SDDevice(syspath));
     m_syspath = syspath;
 }
 
@@ -46,11 +38,6 @@ Device::~Device() {}
 int Device::setEnable(bool enable)
 {
     return false;
-}
-
-void Device::update()
-{
-    m_device = QSharedPointer<SdDevice>(new SdDevice(m_syspath));
 }
 
 QString Device::getId() const
@@ -113,39 +100,10 @@ QSharedPointer<Permission> Device::getPermission() const
     return m_permission;
 }
 
-void Device::setPermission(const QString& rule)
-{
-    auto mode = rule.section("MODE=", 1, 1);
-
-    RETURN_IF_TRUE(mode.isNull());
-
-    auto permission = mode.mid(2, 1);
-    RETURN_IF_TRUE(permission.isNull());
-
-    this->setPermission(permission.toInt());
-}
 
 void Device::setPermission(QSharedPointer<Permission> permission)
 {
     m_permission = permission;
-}
-
-void Device::setPermission(int permission)
-{
-    RETURN_IF_TRUE(permission > MAX_PERMISSION_VALUE)
-
-    m_permission->read = permission & PERMISSION_VALUE_READ;
-    m_permission->write = permission & PERMISSION_VALUE_WRITE;
-    m_permission->execute = permission & PERMISSION_VALUE_EXECUTE;
-}
-
-QString Device::getPermissionMode()
-{
-    auto permission = m_permission->read * PERMISSION_BIN_VALUE_READ +
-                 m_permission->write * PERMISSION_BIN_VALUE_WRITE +
-                 m_permission->execute * PERMISSION_BIN_VALUE_EXECUTE;
-
-    return QString::asprintf("0%d%d%d", permission, permission, permission);
 }
 
 void Device::trigger()
@@ -153,8 +111,26 @@ void Device::trigger()
     m_device->trigger();
 }
 
-QSharedPointer<SdDevice> Device::getSdDevcie()
+QSharedPointer<SDDevice> Device::getSDDevcie()
 {
     return m_device;
 }
+
+QJsonObject Device::toJsonObject()
+{
+    auto permission = this->getPermission();
+    
+    QJsonObject jsonObj{
+        {SC_DEVICE_KEY_ID, this->getId()},
+        {SC_DEVICE_KEY_NAME, this->getName()},
+        {SC_DEVICE_KEY_TYPE, this->getType()},
+        {SC_DEVICE_KEY_INTERFACE_TYPE, this->getInterfaceType()},
+        {SC_DEVICE_KEY_READ, permission->read},
+        {SC_DEVICE_KEY_WRITE, permission->write},
+        {SC_DEVICE_KEY_EXECUTE, permission->execute},
+        {SC_DEVICE_KEY_STATE, this->getState()}};
+
+    return jsonObj;
+}
+
 }  // namespace KS
