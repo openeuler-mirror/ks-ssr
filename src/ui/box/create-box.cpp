@@ -18,11 +18,18 @@
 
 namespace KS
 {
-CreateBox::CreateBox(QWidget *parent) : QWidget(parent),
+CreateBox::CreateBox(QWidget *parent) : TitlebarWindow(parent),
                                         m_ui(new Ui::CreateBox())
 {
-    m_ui->setupUi(this);
+    m_ui->setupUi(getWindowContentWidget());
+    // 页面关闭时销毁
+    setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::ApplicationModal);
+    setIcon(QIcon(":/images/logo"));
+    setResizeable(false);
+    setTitleBarHeight(36);
+    setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
+
     m_ui->m_password->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
     connect(m_ui->m_ok, &QPushButton::clicked, this, &CreateBox::onOkClicked);

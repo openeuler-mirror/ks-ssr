@@ -22,7 +22,7 @@ namespace KS
 class BoxManager;
 class TP;
 class FP;
-class DeviceManager;
+// class DeviceManager;
 
 class Daemon : public QObject
 {
@@ -53,7 +53,7 @@ private:
     BoxManager *m_boxManager;
     TP *m_trusted;
     FP *m_fileProtected;
-    DeviceManager *m_deviceManger;
+    // DeviceManager *m_deviceManger;
 };
 }  // namespace KS
 

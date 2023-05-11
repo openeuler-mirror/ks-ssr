@@ -40,9 +40,9 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/common/pagination.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/create-box.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/modify-password.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/retrieve-password.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/input-password.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-modification.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-retrieve.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-checked.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/fp/fp-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/sidebar-item.ui
