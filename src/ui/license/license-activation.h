@@ -15,9 +15,7 @@
 #pragma once
 
 #include <kylin-license/license-i.h>
-#include <QDialog>
 #include "src/ui/common/titlebar-window.h"
-#include "src/ui/license/license-dbus.h"
 
 namespace Ui
 {
@@ -36,7 +34,7 @@ public:
     LicenseActivation(QWidget* parent = nullptr);
     virtual ~LicenseActivation();
     /**
-     * @brief update:通过dbus获取授权信息，并将数据更新在ui界面中
+     * @brief update:将授权信息设置在ui界面中
      */
     void update();
 
@@ -50,11 +48,6 @@ private slots:
     void activate();
     void popupQrencode();
 
-    /**
-     * @brief setLicense:授权信息变化的槽函数，用于重新获取授权信息并设置在ui界面中，发送应用是否授权信号
-     */
-    void setLicense(QSharedPointer<LicenseInfo> licenseInfo);
-
 signals:
     void closed();
 
@@ -62,6 +55,5 @@ private:
     Ui::LicenseActivation* m_ui;
     QSharedPointer<LicenseDBus> m_licenseDBus;
     QRCodeDialog* m_qrcodeDialog;
-    QSharedPointer<LicenseInfo> m_licenseInfo;
 };
 }  // namespace KS
