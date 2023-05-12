@@ -16,7 +16,6 @@
 
 #include <QLabel>
 #include "src/ui/common/titlebar-window.h"
-#include "src/ui/license/license-dbus.h"
 
 namespace Ui
 {
@@ -47,7 +46,7 @@ private:
 
 private slots:
     void popupActiveDialog();
-    void updateActivation(QSharedPointer<LicenseInfo> licenseInfo);
+    void updateActivation();
 
 private:
     Ui::Window *m_ui;

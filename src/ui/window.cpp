@@ -36,6 +36,7 @@
 #include "src/ui/device/device-page.h"
 #include "src/ui/fp/fp-page.h"
 #include "src/ui/license/license-activation.h"
+#include "src/ui/license/license-dbus.h"
 #include "src/ui/navigation.h"
 #include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
@@ -65,12 +66,9 @@ Window::~Window()
 void Window::initActivation()
 {
     m_activation = new LicenseActivation(this);
-
     m_licenseDBus = LicenseDBus::getDefault();
-    auto licenseInfo = m_licenseDBus->getLicense();
-    bool isActivate = (licenseInfo.data()->activationStatus == LicenseActivationStatus::LAS_ACTIVATED) &&
-                      (licenseInfo.data()->expiredTime >= QDateTime::currentDateTime().toSecsSinceEpoch());
-    if (!isActivate)
+
+    if (!m_licenseDBus->isActivated())
     {
         m_activateStatus->show();
         auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
@@ -172,11 +170,9 @@ void Window::popupActiveDialog()
     m_activation->show();
 }
 
-void Window::updateActivation(QSharedPointer<LicenseInfo> licenseInfo)
+void Window::updateActivation()
 {
-    bool isActivate = (licenseInfo.data()->activationStatus == LicenseActivationStatus::LAS_ACTIVATED) &&
-                      (licenseInfo.data()->expiredTime >= QDateTime::currentDateTime().toSecsSinceEpoch());
-
+    bool isActivate = m_licenseDBus->isActivated();
     //设置激活对话框和激活状态标签是否可见
     m_activation->setVisible(!isActivate);
     m_activateStatus->setVisible(!isActivate);
