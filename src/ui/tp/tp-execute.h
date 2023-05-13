@@ -32,6 +32,8 @@ public:
     TPExecute(QWidget *parent = nullptr);
     ~TPExecute();
 
+    int getInitialized();
+
 private:
     void updateInfo();
 signals:
