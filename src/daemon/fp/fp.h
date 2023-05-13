@@ -31,6 +31,10 @@ public:
     FP(QObject *parent);
     virtual ~FP();
 
+public:  // PROPERTIES
+    Q_PROPERTY(int Initialized READ getInitialized)
+    int getInitialized() const;
+
 public Q_SLOTS:  // METHODS
     // 添加文件
     void AddFile(const QString &filePath);
@@ -43,6 +47,10 @@ public Q_SLOTS:  // METHODS
 
 private:
     void init();
+
+private:
+    void onAddFile(const QDBusMessage &message, const QString &filePath);
+    void onRemoveFile(const QDBusMessage &message, const QString &filePath);
 
 private:
     FPAdaptor *m_dbusAdaptor;

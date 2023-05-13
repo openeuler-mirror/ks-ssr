@@ -59,7 +59,7 @@ KSS::KSS(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
 QSharedPointer<KSS> KSS::m_instance = nullptr;
 QSharedPointer<KSS> KSS::getDefault()
 {
-    if(!m_instance)
+    if (!m_instance)
     {
         m_instance = QSharedPointer<KSS>::create();
         m_instance->init();
@@ -122,6 +122,11 @@ QString KSS::getFiles()
     RETURN_VAL_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0, QString())
     execute(KSS_GET_FILES_CMD);
     return m_processOutput;
+}
+
+int KSS::getInitialized()
+{
+    return m_ini->value(KSC_INI_KEY).toInt();
 }
 
 void KSS::processExited(int exitCode, QProcess::ExitStatus exitStatus)

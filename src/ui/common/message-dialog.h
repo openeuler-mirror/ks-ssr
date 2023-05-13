@@ -18,15 +18,13 @@
 
 namespace KS
 {
-// 自定义消息对话框，统一提示信息对话框，输入信息对话框样式
+// 自定义消息对话框，统一提示信息对话框
 class MessageDialog : public TitlebarWindow
 {
     Q_OBJECT
 public:
     MessageDialog(QWidget *parent = nullptr);
     virtual ~MessageDialog();
-
-    QVBoxLayout *getContentLayout();
 
     void setMessage(const QString &message);
 
