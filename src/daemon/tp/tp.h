@@ -38,7 +38,10 @@ public:
     TP(QObject *parent);
     virtual ~TP();
 
-public:          // PROPERTIES
+public:  // PROPERTIES
+    Q_PROPERTY(int Initialized READ getInitialized)
+    int getInitialized() const;
+
 public Q_SLOTS:  // METHODS
     // 添加文件
     void AddFile(const QString &filePath);
@@ -58,6 +61,11 @@ Q_SIGNALS:  // SIGNALS
 
 private:
     void init();
+
+private:
+    void onAddFile(const QDBusMessage &message, const QString &filePath);
+    void onRemoveFile(const QDBusMessage &message, const QString &filePath);
+    void onProhibitUnloading(const QDBusMessage &message, bool prohibited, const QString &filePath);
 
 private:
     TPAdaptor *m_dbusAdaptor;
