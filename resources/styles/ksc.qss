@@ -212,8 +212,8 @@ QCheckBox::indicator::disabled:unchecked{
     image: url(:/images/checkbox-unchecked-disabled);
 }
 
-/* custom widget */
-QWidget#cusWidget
+/* message dialog */
+QWidget#messageDialog
 {
     background-color: #2d2d2d;
     border-radius: 6px;
@@ -325,6 +325,26 @@ KS--TPTableHeaderProxy
     color:#919191;
     font:NotoSansCJKsc-Regular;
     font-size:12px;
+}
+
+KS--TPPage QListWidget#m_sidebar
+{
+    background-color:#2d2d2d;
+    border-radius: 6px;
+    padding-left: 10px;
+    padding-top: 16px;
+    padding-right: 24px;
+}
+
+KS--TPPage QListWidget#m_sidebar::item
+{
+    border-radius: 6px;
+    background:#393939;
+}
+
+KS--TPPage QListWidget#m_sidebar::item:selected
+{
+    background:#00A2FF;
 }
 
 QStackedWidget#m_stacked
