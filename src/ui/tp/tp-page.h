@@ -53,6 +53,6 @@ private slots:
 private:
     Ui::TPPage *m_ui;
     QMap<QString, SidebarItem *> m_sidebarItems;
-    Loading *m_maskWidget;
+    Loading *m_loading;
 };
 }  // namespace KS

@@ -73,7 +73,7 @@ void MessageDialog::initUI()
 
     auto cusWidget = new QWidget(getWindowContentWidget());
     m_contentLayout = new QVBoxLayout(cusWidget);
-    cusWidget->setObjectName("cusWidget");
+    cusWidget->setObjectName("messageDialog");
     m_contentLayout->setContentsMargins(24, 24, 24, 12);
 
     vlay->addWidget(cusWidget);
