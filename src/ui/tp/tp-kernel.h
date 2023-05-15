@@ -45,7 +45,7 @@ private Q_SLOTS:
 private:
     Ui::TPKernel *m_ui;
 
-    TPProxy *m_tpDBusProxy;
+    KSSDbusProxy *m_tpDBusProxy;
 };
 }  // namespace KS
 

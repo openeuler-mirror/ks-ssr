@@ -32,13 +32,9 @@ extern "C"
 #define KSC_BM_JK_BOX_NAME "name"
 #define KSC_BM_JK_BOX_MOUNTED "mounted"
 
-// 可信保护相关定义
-#define KSC_TP_DBUS_OBJECT_PATH "/com/kylinsec/SC/TrustedProtected"
-#define KSC_TP_DBUS_INTERFACE_NAME "com.kylinsec.SC.TrustedProtected"
-
-// 文件保护相关定义
-#define KSC_FP_DBUS_OBJECT_PATH "/com/kylinsec/SC/FileProtected"
-#define KSC_FP_DBUS_INTERFACE_NAME "com.kylinsec.SC.FileProtected"
+// KSS相关定义, 包括TP FP的接口
+#define KSC_KSS_INIT_DBUS_OBJECT_PATH "/com/kylinsec/SC/KSS"
+#define KSC_KSS_INIT_DBUS_INTERFACE_NAME "com.kylinsec.SC.KSS"
 
 // kss命令 key相关定义 JK: JSON_KEY
 #define KSC_KSS_JK_RES "res"

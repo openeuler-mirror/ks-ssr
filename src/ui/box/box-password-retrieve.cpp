@@ -16,24 +16,24 @@
 
 namespace KS
 {
-BoxPasswordRetrieve::BoxPasswordRetrieve(QWidget *parent) : TitlebarWindow(parent),
-                                                            m_ui(new Ui::BoxPasswordRetrieve)
+RetrieveBoxPassword::RetrieveBoxPassword(QWidget *parent) : TitlebarWindow(parent),
+                                                            m_ui(new Ui::RetrieveBoxPassword)
 {
     m_ui->setupUi(getWindowContentWidget());
     init();
 }
 
-BoxPasswordRetrieve::~BoxPasswordRetrieve()
+RetrieveBoxPassword::~RetrieveBoxPassword()
 {
     delete m_ui;
 }
 
-QString BoxPasswordRetrieve::getPassphrase()
+QString RetrieveBoxPassword::getPassphrase()
 {
     return m_ui->m_passphrase->text();
 }
 
-void BoxPasswordRetrieve::init()
+void RetrieveBoxPassword::init()
 {
     // 页面关闭时销毁
     setAttribute(Qt::WA_DeleteOnClose);
@@ -50,10 +50,10 @@ void BoxPasswordRetrieve::init()
                 emit rejected();
             });
 
-    connect(m_ui->m_ok, &QPushButton::clicked, this, &BoxPasswordRetrieve::onOkClicked);
+    connect(m_ui->m_ok, &QPushButton::clicked, this, &RetrieveBoxPassword::onOkClicked);
 }
 
-void BoxPasswordRetrieve::onOkClicked()
+void RetrieveBoxPassword::onOkClicked()
 {
     // 禁止输入空字符
     if (m_ui->m_passphrase->text().isEmpty())

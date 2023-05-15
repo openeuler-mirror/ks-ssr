@@ -18,8 +18,9 @@
 #include "ksc-i.h"
 #include "ksc-marcos.h"
 #include "src/ui/common/message-dialog.h"
+#include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
-#include "src/ui/tp_proxy.h"
+//#include "src/ui/"
 #include "src/ui/ui_tp-execute.h"
 
 namespace KS
@@ -29,12 +30,13 @@ TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
 {
     m_ui->setupUi(this);
     //    m_ui->m_note->setWordWrap(true);
-    m_dbusProxy = new TPProxy(KSC_DBUS_NAME,
-                              KSC_TP_DBUS_OBJECT_PATH,
-                              QDBusConnection::systemBus(),
-                              this);
+    m_dbusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
+                                   KSC_KSS_INIT_DBUS_OBJECT_PATH,
+                                   QDBusConnection::systemBus(),
+                                   this);
+
     // 初始化完成自动刷新
-    connect(m_dbusProxy, &TPProxy::InitFinished, this, [this]
+    connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this]
             {
                 updateInfo();
                 emit initFinished();
@@ -80,7 +82,7 @@ void TPExecute::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     RETURN_IF_TRUE(fileName.isEmpty())
 
-    auto reply = m_dbusProxy->AddFile(fileName);
+    auto reply = m_dbusProxy->AddTPFile(fileName);
     reply.waitForFinished();
 
     if (reply.isError())
@@ -117,7 +119,7 @@ void TPExecute::unprotectAccepted()
     {
         if (trustedInfo.selected)
         {
-            m_dbusProxy->RemoveFile(trustedInfo.filePath).waitForFinished();
+            m_dbusProxy->RemoveTPFile(trustedInfo.filePath).waitForFinished();
         }
     }
     updateInfo();

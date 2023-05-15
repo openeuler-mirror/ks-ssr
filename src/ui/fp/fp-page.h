@@ -16,7 +16,7 @@
 
 #include <QWidget>
 
-class FileProtectedProxy;
+class KSSDbusProxy;
 
 namespace Ui
 {
@@ -45,6 +45,6 @@ private Q_SLOTS:
 private:
     Ui::FPPage *m_ui;
 
-    FileProtectedProxy *m_fileProtectedProxy;
+    KSSDbusProxy *m_fileProtectedProxy;
 };
 }  // namespace KS

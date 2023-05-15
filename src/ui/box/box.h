@@ -39,7 +39,7 @@ struct BoxInfo
 };
 
 class BoxPasswordModification;
-class BoxPasswordRetrieve;
+class RetrieveBoxPassword;
 class BoxPasswordChecked;
 class MessageDialog;
 
@@ -96,7 +96,7 @@ private:
 
     BoxManagerProxy *m_boxManagerProxy;
     BoxPasswordModification *m_modifyPassword;
-    BoxPasswordRetrieve *m_retrievePassword;
+    RetrieveBoxPassword *m_retrievePassword;
     BoxPasswordChecked *m_inputMountPassword;
     BoxPasswordChecked *m_inputDelBoxPassword;
     QMenu *m_popupMenu;

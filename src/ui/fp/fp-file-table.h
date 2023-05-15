@@ -22,7 +22,7 @@
 #include <QWidget>
 #include "src/ui/tp/tp-table-header-proxy.h"
 
-class FileProtectedProxy;
+class KSSDbusProxy;
 
 namespace KS
 {
@@ -99,7 +99,7 @@ private:
     void onSingleStateChanged();
 
 private:
-    FileProtectedProxy *m_fileProtectedProxy;
+    KSSDbusProxy *m_fileProtectedProxy;
     QList<FPFileInfo> m_filesInfo;
 };
 

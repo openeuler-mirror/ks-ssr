@@ -86,7 +86,7 @@
             <description>Return true if the box is mounted else return false.</description>
         </method>
 
-        <method name="BoxPasswordRetrieve">
+        <method name="RetrieveBoxPassword">
             <arg type="s" name="box_uid" direction="in">
                 <summary>The box UID.</summary>
             </arg>
