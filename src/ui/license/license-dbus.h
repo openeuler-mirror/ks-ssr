@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <kylin-license/license-i.h>
+#include <ks-license/license-i.h>
 #include <QObject>
 #include <QString>
 
