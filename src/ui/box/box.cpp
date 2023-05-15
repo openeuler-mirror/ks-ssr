@@ -234,11 +234,11 @@ void Box::delBox()
 
 void Box::retrievePassword()
 {
-    m_retrievePassword = new BoxPasswordRetrieve(window());
+    m_retrievePassword = new RetrieveBoxPassword(window());
     m_retrievePassword->setFixedSize(300, 220);
     m_retrievePassword->setTitle(tr("Retrieve password"));
     connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
-    connect(m_retrievePassword, &BoxPasswordRetrieve::inputEmpty, this, [this]
+    connect(m_retrievePassword, &RetrieveBoxPassword::inputEmpty, this, [this]
             {
                 auto message = buildMessageDialog(tr("The input cannot be empty, please improve the information."));
                 message->show();
@@ -282,7 +282,7 @@ void Box::retrievePasswordAccepted()
 {
     auto encryptPassphrase = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
 
-    auto reply = m_boxManagerProxy->BoxPasswordRetrieve(m_uid, encryptPassphrase);
+    auto reply = m_boxManagerProxy->RetrieveBoxPassword(m_uid, encryptPassphrase);
     reply.waitForFinished();
 
     auto message = buildMessageDialog(reply.isError() ? reply.error().message() : QString(tr("Your box password is %1")).arg(reply.value()));

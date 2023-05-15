@@ -12,8 +12,8 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#ifndef KSS_H
-#define KSS_H
+#ifndef KSSWRAPPER_H
+#define KSSWRAPPER_H
 
 #include <QObject>
 #include <QProcess>
@@ -21,13 +21,13 @@
 
 namespace KS
 {
-class KSS : public QObject
+class KSSWrapper : public QObject
 {
     Q_OBJECT
 public:
-    KSS(QObject *parent = nullptr);
-    virtual ~KSS(){};
-    static QSharedPointer<KSS> getDefault();
+    KSSWrapper(QObject *parent = nullptr);
+    virtual ~KSSWrapper(){};
+    static QSharedPointer<KSSWrapper> getDefault();
 
 public:
     // 可信保护
@@ -67,7 +67,7 @@ signals:
     void initFinished();
 
 private:
-    static QSharedPointer<KSS> m_instance;
+    static QSharedPointer<KSSWrapper> m_instance;
 
     QProcess *m_process;
     QString m_processOutput;
@@ -76,4 +76,4 @@ private:
     QThread *m_kssInitThread;
 };
 }  // namespace KS
-#endif  // KSS_H
+#endif  // KSSWrapper_H
