@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <QObject>
 #include <QStyledItemDelegate>
 
 namespace KS

@@ -15,7 +15,6 @@
 #pragma once
 
 #include <qrencode.h>
-#include <QWidget>
 #include "src/ui/common/titlebar-window.h"
 
 namespace Ui

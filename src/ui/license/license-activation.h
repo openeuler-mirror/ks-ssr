@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <kylin-license/license-i.h>
 #include "src/ui/common/titlebar-window.h"
 
 namespace Ui

@@ -16,7 +16,6 @@
 
 #include <ks-license/license-i.h>
 #include <QObject>
-#include <QString>
 
 #define LICENSE_OBJECT_NAME "KSSC"
 #define TIMEOUT_MS 5000
