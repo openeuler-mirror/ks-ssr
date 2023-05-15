@@ -30,8 +30,8 @@
 #include <QToolTip>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
+#include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/tp-kernel-delegate.h"
-#include "src/ui/tp_proxy.h"
 
 namespace KS
 {
@@ -74,10 +74,10 @@ bool TPKernelFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sou
 TPKernelModel::TPKernelModel(QObject *parent) : QAbstractTableModel(parent),
                                                 m_tpDBusProxy(nullptr)
 {
-    m_tpDBusProxy = new TPProxy(KSC_DBUS_NAME,
-                                KSC_TP_DBUS_OBJECT_PATH,
-                                QDBusConnection::systemBus(),
-                                this);
+    m_tpDBusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
+                                     KSC_KSS_INIT_DBUS_OBJECT_PATH,
+                                     QDBusConnection::systemBus(),
+                                     this);
     updateRecord();
 }
 

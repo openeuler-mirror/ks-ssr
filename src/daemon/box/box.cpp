@@ -84,15 +84,15 @@ BoxRecord Box::getBoxInfo()
     return m_boxDao->getBox(m_boxID);
 }
 
-bool Box::delBox(const QString &inputPassword)
+bool Box::delBox(const QString &currentPassword)
 {
     // 密码认证
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
 
-    if (inputPassword != decryptPassword)
+    if (currentPassword != decryptPassword)
     {
-        KLOG_ERROR() << "Password error!";
+        KLOG_WARNING() << "Password error!";
         return false;
     }
 
@@ -122,15 +122,15 @@ bool Box::mounted()
     return boxInfo.mounted;
 }
 
-bool Box::mount(const QString &inputPassword)
+bool Box::mount(const QString &currentPassword)
 {
     // 密码认证
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
 
-    if (inputPassword != decryptPassword)
+    if (currentPassword != decryptPassword)
     {
-        KLOG_ERROR() << "Mount password error!";
+        KLOG_WARNING() << "Mount password error!";
         return false;
     }
 
@@ -167,14 +167,14 @@ void Box::umount()
     m_boxDao->modifyMountStatus(m_boxID, false);
 }
 
-bool Box::modifyBoxPassword(const QString &inputPassword, const QString &newPassword)
+bool Box::modifyBoxPassword(const QString &currentPassword, const QString &newPassword)
 {
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
     //    auto decryptBoxPasswordChecked = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, m_password);
-    if (inputPassword != decryptPassword)
+    if (currentPassword != decryptPassword)
     {
-        KLOG_ERROR() << "Password error!";
+        KLOG_WARNING() << "Password error!";
         return false;
     }
 
@@ -192,7 +192,7 @@ void Box::init()
         auto sig = m_ecryptFS->addPassphrase(passphrase);
         if (sig.isEmpty())
         {
-            KLOG_ERROR() << "generate passphrase fail. check ecryptfs.ko is load!";
+            KLOG_WARNING() << "generate passphrase fail. check ecryptfs.ko is load!";
             return;
         }
 

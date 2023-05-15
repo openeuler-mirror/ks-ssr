@@ -18,8 +18,8 @@
 #include "ksc-i.h"
 #include "ksc-marcos.h"
 #include "src/ui/common/message-dialog.h"
+#include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
-#include "src/ui/tp_proxy.h"
 #include "src/ui/ui_tp-kernel.h"
 
 namespace KS
@@ -29,14 +29,13 @@ TPKernel::TPKernel(QWidget *parent) : QWidget(parent),
 {
     m_ui->setupUi(this);
 
-    m_tpDBusProxy = new TPProxy(KSC_DBUS_NAME,
-                                KSC_TP_DBUS_OBJECT_PATH,
-                                QDBusConnection::systemBus(),
-                                this);
+    m_tpDBusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
+                                     KSC_KSS_INIT_DBUS_OBJECT_PATH,
+                                     QDBusConnection::systemBus(),
+                                     this);
     // 初始化完成自动刷新
-    connect(m_tpDBusProxy, &TPProxy::InitFinished, this, [this]{
-        updateInfo();
-    });
+    connect(m_tpDBusProxy, &KSSDbusProxy::InitFinished, this, [this]
+            { updateInfo(); });
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2"))
                     .arg(QString::number(m_ui->m_kernelTable->getKernelRecords().size()),
@@ -78,7 +77,7 @@ void TPKernel::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath(), "", 0, QFileDialog::DontUseCustomDirectoryIcons);
     RETURN_IF_TRUE(fileName.isEmpty())
 
-    auto reply = m_tpDBusProxy->AddFile(fileName);
+    auto reply = m_tpDBusProxy->AddTPFile(fileName);
     reply.waitForFinished();
 
     if (reply.isError())
@@ -115,7 +114,7 @@ void TPKernel::unprotectAccepted()
     {
         if (trustedInfo.selected)
         {
-            m_tpDBusProxy->RemoveFile(trustedInfo.filePath).waitForFinished();
+            m_tpDBusProxy->RemoveTPFile(trustedInfo.filePath).waitForFinished();
         }
     }
     updateInfo();

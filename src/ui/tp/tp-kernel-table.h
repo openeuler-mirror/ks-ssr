@@ -23,7 +23,7 @@
 #include "src/ui/tp/tp-table-header-proxy.h"
 #include "src/ui/tp/tp-utils.h"
 
-class TPProxy;
+class KSSDbusProxy;
 
 namespace KS
 {
@@ -78,7 +78,7 @@ private:
     void onSingleStateChanged();
 
 private:
-    TPProxy *m_tpDBusProxy;
+    KSSDbusProxy *m_tpDBusProxy;
     QList<TrustedRecord> m_kernelRecords;
 };
 
