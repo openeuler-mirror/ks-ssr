@@ -17,7 +17,7 @@
 #include <QDBusConnection>
 #include "include/ksc-i.h"
 #include "src/daemon/box/box-manager.h"
- #include "src/daemon/device/device-manager.h"
+#include "src/daemon/device/device-manager.h"
 #include "src/daemon/fp/fp.h"
 #include "src/daemon/tp/tp.h"
 

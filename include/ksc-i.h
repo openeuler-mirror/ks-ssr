@@ -40,7 +40,7 @@ extern "C"
 #define KSC_FP_DBUS_OBJECT_PATH "/com/kylinsec/SC/FileProtected"
 #define KSC_FP_DBUS_INTERFACE_NAME "com.kylinsec.SC.FileProtected"
 
-// kss命令 key相关定义 JK: JSON_JK
+// kss命令 key相关定义 JK: JSON_KEY
 #define KSC_KSS_JK_RES "res"
 #define KSC_KSS_JK_DATA "data"
 #define KSC_KSS_JK_COUNT "count"
@@ -55,24 +55,17 @@ extern "C"
 
 // 外设管理相关定义
 #define KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/DeviceManager"
+#define KSC_DEVICE_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SC.DeviceManager"
 
-#define KSC_DEVICE_JK_ID "id"
-#define KSC_DEVICE_JK_NAME "name"
-#define KSC_DEVICE_JK_TYPE "type"
-#define KSC_DEVICE_JK_INTERFACE_TYPE "interface_type"
-#define KSC_DEVICE_JK_READ "read"
-#define KSC_DEVICE_JK_WRITE "write"
-#define KSC_DEVICE_JK_EXECUTE "execute"
-#define KSC_DEVICE_JK_STATE "state"
-#define KSC_DEVICE_JK_ENABLE "enable"
-
-#define KSC_DCR_JK_NAME "name"
-#define KSC_DCR_JK_TYPE "type"
-#define KSC_DCR_JK_TIME "time"
-#define KSC_DCR_JK_STATE "state"
-
-#define KSC_DI_JK_TYPE "type"
-#define KSC_DI_JK_ENABLE "enable"
+#define KSC_DEVICE_KEY_ID "id"
+#define KSC_DEVICE_KEY_NAME "name"
+#define KSC_DEVICE_KEY_TYPE "type"
+#define KSC_DEVICE_KEY_INTERFACE_TYPE "interface_type"
+#define KSC_DEVICE_KEY_READ "read"
+#define KSC_DEVICE_KEY_WRITE "write"
+#define KSC_DEVICE_KEY_EXECUTE "execute"
+#define KSC_DEVICE_KEY_STATE "state"
+#define KSC_DEVICE_KEY_ENABLE "enable"
 
     enum DeviceType
     {
@@ -113,10 +106,14 @@ extern "C"
         DEVICE_ACTION_CHANGE
     };
 
-    enum DeviceConnectState
+    /**
+     * @brief 设备权限
+     */
+    enum PermissionType
     {
-        DEVICE_CONNECT_SUCCESSED = 0,
-        DEVICE_CONNECT_FAILED
+        PERMISSION_TYPE_READ = (1 << 0),
+        PERMISSION_TYPE_WRITE = (1 << 1),
+        PERMISSION_TYPE_EXEC = (1 << 2)
     };
 
 #ifdef __cplusplus
