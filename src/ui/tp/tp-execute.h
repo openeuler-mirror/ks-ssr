@@ -32,7 +32,7 @@ public:
     TPExecute(QWidget *parent = nullptr);
     ~TPExecute();
 
-    int getInitialized();
+    bool getInitialized();
 
 private:
     void updateInfo();

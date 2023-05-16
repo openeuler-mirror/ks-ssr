@@ -18,6 +18,7 @@
 #include <QObject>
 #include <QProcess>
 #include <QSettings>
+#include "include/ksc-i.h"
 
 namespace KS
 {
@@ -35,8 +36,8 @@ public:
     QString addTrustedFile(const QString &filePath);
     // 移除文件
     void removeTrustedFile(const QString &filePath);
-    // 获取内核白名单
-    QString getModuleFiles();
+    // 获取可信文件
+    QString getTrustedFiles(KSCKSSTrustedFileType type);
     // 防卸载功能开关
     void prohibitUnloading(bool prohibited, const QString &filePath);
     // 获取程序白名单

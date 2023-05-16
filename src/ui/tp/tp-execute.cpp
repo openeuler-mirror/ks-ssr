@@ -59,7 +59,7 @@ TPExecute::~TPExecute()
     delete m_ui;
 }
 
-int TPExecute::getInitialized()
+bool TPExecute::getInitialized()
 {
     return m_dbusProxy->initialized();
 }
@@ -82,7 +82,7 @@ void TPExecute::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     RETURN_IF_TRUE(fileName.isEmpty())
 
-    auto reply = m_dbusProxy->AddTPFile(fileName);
+    auto reply = m_dbusProxy->AddTrustedFile(fileName);
     reply.waitForFinished();
 
     if (reply.isError())
@@ -119,7 +119,7 @@ void TPExecute::unprotectAccepted()
     {
         if (trustedInfo.selected)
         {
-            m_dbusProxy->RemoveTPFile(trustedInfo.filePath).waitForFinished();
+            m_dbusProxy->RemoveTrustedFile(trustedInfo.filePath).waitForFinished();
         }
     }
     updateInfo();

@@ -37,7 +37,7 @@ namespace KS
 #define KSS_INIT_DATA_CMD "kss secure setup"
 
 #define KSS_DIGEST_SCAN_ADD_FILE_CMD "kss digest scan -u"
-#define KSS_DIGEST_SCAN_REMOVE_FILE_CMD "kss digest scan -r"
+#define KSS_DIGEST_SCAN_REMOVE_FILE_CMD "kss digest scan -f -r"
 #define KSS_DIGEST_INFO_GET_EXECUTE_CMD "kss digest info -e"
 #define KSS_DIGEST_INFO_GET_KERNEL_CMD "kss digest info -m"
 
@@ -83,10 +83,23 @@ void KSSWrapper::removeTrustedFile(const QString &filePath)
     execute(cmd);
 }
 
-QString KSSWrapper::getModuleFiles()
+QString KSSWrapper::getTrustedFiles(KSCKSSTrustedFileType type)
 {
     RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
-    execute(KSS_DIGEST_INFO_GET_KERNEL_CMD);
+
+    if (type == KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE)
+    {
+        execute(KSS_DIGEST_INFO_GET_EXECUTE_CMD);
+    }
+    else if (type == KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_KERNEL)
+    {
+        execute(KSS_DIGEST_INFO_GET_KERNEL_CMD);
+    }
+    else
+    {
+        return QString();
+    }
+
     return m_processOutput;
 }
 
@@ -94,13 +107,6 @@ void KSSWrapper::prohibitUnloading(bool prohibited, const QString &filePath)
 {
     auto cmd = QString("%1 %2").arg(prohibited ? KSS_OPEN_PROHIBIT_UNLOADING_CMD : KSS_CLOSE_PROHIBIT_UNLOADING_CMD, filePath);
     execute(cmd);
-}
-
-QString KSSWrapper::getExecuteFiles()
-{
-    RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
-    execute(KSS_DIGEST_INFO_GET_EXECUTE_CMD);
-    return m_processOutput;
 }
 
 void KSSWrapper::addFile(const QString &fileName, const QString &filePath, const QString &insertTime)
@@ -171,14 +177,13 @@ void KSSWrapper::init()
     KLOG_INFO() << "Start kss initialisation.";
     execute(KSS_INIT_CMD);
 
-    m_kssInitThread = QThread::create([this]
-                                      {
-                                          auto process = new QProcess(this);
-                                          auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r` -b");
-                                          KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
-                                          process->start("bash", QStringList() << "-c" << cmd);
-                                          process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
-                                      });
+    m_kssInitThread = QThread::create([this] {
+        auto process = new QProcess(this);
+        auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r`");
+        KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
+        process->start("bash", QStringList() << "-c" << cmd);
+        process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
+    });
 
     connect(m_kssInitThread, &QThread::finished, this, &KSSWrapper::initTrustedResults);
     connect(m_kssInitThread, &QThread::finished, m_kssInitThread, &QThread::deleteLater);
