@@ -14,8 +14,8 @@
 
 #include "src/daemon/device/device.h"
 #include <qt5-log-i.h>
-#include "sc-i.h"
-#include "sc-marcos.h"
+#include "ksc-i.h"
+#include "ksc-marcos.h"
 
 namespace KS
 {
@@ -35,17 +35,17 @@ Device::Device(const QString& syspath, QObject* parent)
 
 Device::~Device() {}
 
-int Device::setEnable(bool enable)
+bool Device::setEnable(bool enable)
 {
     return false;
 }
 
-QString Device::getId() const
+QString Device::getID() const
 {
     return m_id;
 }
 
-void Device::setId(QString& id)
+void Device::setID(QString& id)
 {
     m_id = id;
 }
@@ -121,14 +121,14 @@ QJsonObject Device::toJsonObject()
     auto permission = this->getPermission();
     
     QJsonObject jsonObj{
-        {SC_DEVICE_KEY_ID, this->getId()},
-        {SC_DEVICE_KEY_NAME, this->getName()},
-        {SC_DEVICE_KEY_TYPE, this->getType()},
-        {SC_DEVICE_KEY_INTERFACE_TYPE, this->getInterfaceType()},
-        {SC_DEVICE_KEY_READ, permission->read},
-        {SC_DEVICE_KEY_WRITE, permission->write},
-        {SC_DEVICE_KEY_EXECUTE, permission->execute},
-        {SC_DEVICE_KEY_STATE, this->getState()}};
+        {KSC_DEVICE_JK_ID, this->getID()},
+        {KSC_DEVICE_JK_NAME, this->getName()},
+        {KSC_DEVICE_JK_TYPE, this->getType()},
+        {KSC_DEVICE_JK_INTERFACE_TYPE, this->getInterfaceType()},
+        {KSC_DEVICE_JK_READ, permission->read},
+        {KSC_DEVICE_JK_WRITE, permission->write},
+        {KSC_DEVICE_JK_EXECUTE, permission->execute},
+        {KSC_DEVICE_JK_STATE, this->getState()}};
 
     return jsonObj;
 }

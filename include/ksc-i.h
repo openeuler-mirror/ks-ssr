@@ -32,11 +32,15 @@ extern "C"
 #define KSC_BM_JK_BOX_NAME "name"
 #define KSC_BM_JK_BOX_MOUNTED "mounted"
 
-// KSS相关定义, 包括TP FP的接口
-#define KSC_KSS_INIT_DBUS_OBJECT_PATH "/com/kylinsec/SC/KSS"
-#define KSC_KSS_INIT_DBUS_INTERFACE_NAME "com.kylinsec.SC.KSS"
+// 可信保护相关定义
+#define KSC_TP_DBUS_OBJECT_PATH "/com/kylinsec/SC/TrustedProtected"
+#define KSC_TP_DBUS_INTERFACE_NAME "com.kylinsec.SC.TrustedProtected"
 
-// kss命令 key相关定义 JK: JSON_KEY
+// 文件保护相关定义
+#define KSC_FP_DBUS_OBJECT_PATH "/com/kylinsec/SC/FileProtected"
+#define KSC_FP_DBUS_INTERFACE_NAME "com.kylinsec.SC.FileProtected"
+
+// kss命令 key相关定义 JK: JSON_JK
 #define KSC_KSS_JK_RES "res"
 #define KSC_KSS_JK_DATA "data"
 #define KSC_KSS_JK_COUNT "count"
@@ -49,25 +53,26 @@ extern "C"
 #define KSC_KSS_JK_DATA_ADD_TIME "time"
 #define KSC_KSS_JK_DATA_GUARD "guard"
 
-    enum KSCKSSTrustedFileType
-    {
-        KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE = 0,
-        KSC_KSS_TRUSTED_FILE_TYPE_KERNEL,
-        KSC_KSS_TRUSTED_FILE_TYPE_NONE
-    };
-
 // 外设管理相关定义
 #define KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/DeviceManager"
 
-#define KSC_DEVICE_KEY_ID "id"
-#define KSC_DEVICE_KEY_NAME "name"
-#define KSC_DEVICE_KEY_TYPE "type"
-#define KSC_DEVICE_KEY_INTERFACE_TYPE "interface_type"
-#define KSC_DEVICE_KEY_READ "read"
-#define KSC_DEVICE_KEY_WRITE "write"
-#define KSC_DEVICE_KEY_EXECUTE "execute"
-#define KSC_DEVICE_KEY_STATE "state"
-#define KSC_DEVICE_KEY_ENABLE "enable"
+#define KSC_DEVICE_JK_ID "id"
+#define KSC_DEVICE_JK_NAME "name"
+#define KSC_DEVICE_JK_TYPE "type"
+#define KSC_DEVICE_JK_INTERFACE_TYPE "interface_type"
+#define KSC_DEVICE_JK_READ "read"
+#define KSC_DEVICE_JK_WRITE "write"
+#define KSC_DEVICE_JK_EXECUTE "execute"
+#define KSC_DEVICE_JK_STATE "state"
+#define KSC_DEVICE_JK_ENABLE "enable"
+
+#define KSC_DCR_JK_NAME "name"
+#define KSC_DCR_JK_TYPE "type"
+#define KSC_DCR_JK_TIME "time"
+#define KSC_DCR_JK_STATE "state"
+
+#define KSC_DI_JK_TYPE "type"
+#define KSC_DI_JK_ENABLE "enable"
 
     enum DeviceType
     {
@@ -106,6 +111,12 @@ extern "C"
         DEVICE_ACTION_ADD = 0,
         DEVICE_ACTION_REMOVE,
         DEVICE_ACTION_CHANGE
+    };
+
+    enum DeviceConnectState
+    {
+        DEVICE_CONNECT_SUCCESSED = 0,
+        DEVICE_CONNECT_FAILED
     };
 
 #ifdef __cplusplus

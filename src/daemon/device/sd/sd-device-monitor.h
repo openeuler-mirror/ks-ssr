@@ -41,6 +41,7 @@ public:
     virtual ~SDDeviceMonitor();
     void handleDeviceChange(sd_device *device);
 
+public slots:
     static int deviceMonitorHandler(sd_device_monitor *monitor, sd_device *device, void *userdata);
 
 signals:
@@ -49,8 +50,10 @@ signals:
 private:
     void init();
     void initDevices();
-    void recivUdevMessage(int fd);
     bool isDeviceExisted(const QString &syspath);
+
+private slots:
+    void recivUdevMessage(int fd);
 
 private:
     sd_device_monitor *m_monitor;

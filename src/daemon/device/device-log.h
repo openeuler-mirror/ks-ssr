@@ -20,32 +20,32 @@
 
 namespace KS
 {
-struct DeviceConnectRecord
+struct DeviceRecord
 {
 public:
-    DeviceConnectRecord() = default;
+    DeviceRecord() = default;
     QString name;
     int type;
     qint64 time;
     int state;
 };
 
-class Record : public QObject
+class DeviceLog : public QObject
 {
     Q_OBJECT
 
 public:
-    Record(QObject *parent = nullptr);
-    ~Record();
+    DeviceLog(QObject *parent = nullptr);
+    ~DeviceLog();
 
 public:
-    void addDeviceConnectRecord(const DeviceConnectRecord &record);
-    QJsonObject toJsonObject(QSharedPointer<DeviceConnectRecord> record);
-    QList<QSharedPointer<DeviceConnectRecord>> getDeviceConnectRecords();
+    void addDeviceRecord(const DeviceRecord &record);
+    QJsonObject toJsonObject(QSharedPointer<DeviceRecord> record);
+    QList<QSharedPointer<DeviceRecord>> getDeviceRecords();
 
 private:
-    QSharedPointer<DeviceConnectRecord> getDeviceConnectRecord(const QString &group);
-    void removeLastRecord();
+    QSharedPointer<DeviceRecord> getDeviceRecord(const QString &group);
+    void removeLastDeviceLog();
 
 private:
     QSettings *m_settings;

@@ -18,9 +18,9 @@ pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
 pkg_search_module(CRYPTOPP REQUIRED cryptopp)
 pkg_search_module(X11 REQUIRED x11)
 pkg_search_module(LIBSYSTEMD REQUIRED libsystemd)
-pkg_search_module(KS_LICENSE REQUIRED ks-license)
 
-set(SC_DEVICE_UDEV_RULES_FILE "/etc/udev/rules.d/99-ks-sc-device.rules")
+set(KSC_DEVICE_UDEV_RULES_FILE "/etc/udev/rules.d/99-ks-sc-device.rules")
+set(KSC_DI_UDEV_RULES_FILE "/etc/udev/rules.d/99-ks-sc-device-interface.rules")
 configure_file(config.h.in ${PROJECT_BINARY_DIR}/config.h)
 
 add_subdirectory(data)
