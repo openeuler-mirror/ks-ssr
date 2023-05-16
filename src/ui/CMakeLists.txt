@@ -18,30 +18,46 @@ qt5_add_dbus_interface(
   box_manager_proxy)
 
 set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
-  PROPERTIES CLASSNAME KSSDbusProxy NO_NAMESPACE true)
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.TrustedProtected.xml
+  PROPERTIES CLASSNAME TPProxy NO_NAMESPACE true)
 
-qt5_add_dbus_interface( 
-  KSS_DBUS_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
-  kss_dbus_proxy)
+qt5_add_dbus_interface(
+  TP_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.TrustedProtected.xml
+  tp_proxy)
+
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
+  PROPERTIES CLASSNAME FileProtectedProxy NO_NAMESPACE true)
+
+qt5_add_dbus_interface(
+  FILE_PROTECTED_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
+  file_protected_proxy)
+
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
+  PROPERTIES CLASSNAME DeviceManagerProxy NO_NAMESPACE true)
+
+qt5_add_dbus_interface(
+  DEVICE_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
+  device_manager_proxy)
 
 qt5_wrap_ui(
   UI_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/license/license-activation.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/license/qrcode-dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/common/pagination.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/create-box.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-modification.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-retrieve.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-checked.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/modify-password.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/retrieve-password.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/input-password.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/fp/fp-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/sidebar-item.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-list.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-log.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/device/device-permission.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/device/device-record.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-permission.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/tp-kernel.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/tp-execute.ui
@@ -59,7 +75,9 @@ add_executable(
   ${UI_H_FILES}
   ${UI_CPP_FILES}
   ${BOX_MANAGER_SRCS}
-  ${KSS_DBUS_SRCS}
+  ${FILE_PROTECTED_SRCS}
+  ${TP_SRCS}
+  ${DEVICE_MANAGER_SRCS}
   ${QM_FILES}
   ${UI_FILES}
   "${PROJECT_SOURCE_DIR}/resources/resources.qrc")
@@ -73,7 +91,7 @@ target_include_directories(
 
 target_link_libraries(
   ${TARGET_NAME} PRIVATE ${KLOG_QT5_LIBRARIES} ${X11_LIBRARIES} Qt5::DBus
-                         Qt5::Widgets Qt5::X11Extras lib-base)
+                         Qt5::Widgets Qt5::X11Extras lib-base qrencode)
 
 install(FILES ${QM_FILES} DESTINATION ${KSC_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

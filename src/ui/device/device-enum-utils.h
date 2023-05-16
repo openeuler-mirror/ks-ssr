@@ -14,26 +14,19 @@
 
 #pragma once
 
-#include <QStyledItemDelegate>
+#include <QObject>
+#include "include/ksc-i.h"
 
 namespace KS
 {
-enum RecordTableField
-{
-    RECORD_TABLE_FIELD_NAME,
-    RECORD_TABLE_FIELD_TYPE,
-    RECORD_TABLE_FIELD_TIME,
-    RECORD_TABLE_FIELD_STATUS,
-    RECORD_TABLE_FIELD_LAST
-};
-
-class DeviceRecordDelegate : public QStyledItemDelegate
+class DeviceEnumUtils : public QObject
 {
     Q_OBJECT
-
 public:
-    DeviceRecordDelegate(QObject *parent = 0);
-    virtual ~DeviceRecordDelegate();
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    static QString enum2Str(DeviceType enumVal);
+    static QString enum2Str(InterfaceType enumVal);
+    static QString enum2Str(DeviceState enumVal);
+
+    static DeviceState str2StateEnum(QString str);
 };
 }  // namespace KS
