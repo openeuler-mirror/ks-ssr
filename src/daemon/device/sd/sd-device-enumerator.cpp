@@ -29,7 +29,7 @@ SDDeviceEnumerator::~SDDeviceEnumerator()
 {
     Q_FOREACH (auto device, m_devices)
     {
-        device->deleteLater();
+        delete device;
     }
 
     if (m_enumerator)

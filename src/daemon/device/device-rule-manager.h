@@ -20,10 +20,10 @@
 
 namespace KS
 {
-struct Rule
+struct DeviceRule
 {
 public:
-    Rule() = default;
+    DeviceRule() = default;
     QString uid;
     QString id;
     QString name;
@@ -37,27 +37,39 @@ public:
     int interfaceType;
 };
 
-class DeviceRule : public QObject
+class DeviceRuleManager : public QObject
 {
     Q_OBJECT
 
 private:
-    explicit DeviceRule(QObject *parent = nullptr);
+    explicit DeviceRuleManager(QObject *parent = nullptr);
 
 public:
-    static DeviceRule *instance();
-    void addRule(const Rule &rule);
-    QSharedPointer<Rule> getRule(const QString &uid);
+    static DeviceRuleManager *instance();
+    void addRule(const DeviceRule &rule);
+    QSharedPointer<DeviceRule> getRule(const QString &uid);
+
+    bool isIFCEnable(int type);
+    bool setIFCEnable(int type,
+                      bool enable);
 
 private:
     void init();
-    QStringList toUdevRules();
-    QString rule2UdevRule(QSharedPointer<Rule> rule);
-    QString getUdevModeValue(QSharedPointer<Rule> rule);
+    QStringList getUdevRules();
+    QString rule2UdevRule(QSharedPointer<DeviceRule> rule);
     void updateUdevFile();
+    void updateIFCUdevFile();
+    void saveToFile(const QStringList &rules, 
+                    const QString &filename);
+
+    QStringList getIFCUdevRules();
+    QString getIFCUdevRule(int type);
+    QString getUdevModeValue(QSharedPointer<DeviceRule> rule);
+
     bool groupExisted(const QString group);
 
 private:
     QSettings *m_settings;
+    QSettings *m_ifcSettings;
 };
 }  // namespace KS
