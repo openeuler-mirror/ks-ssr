@@ -77,7 +77,7 @@ void TPKernel::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath(), "", 0, QFileDialog::DontUseCustomDirectoryIcons);
     RETURN_IF_TRUE(fileName.isEmpty())
 
-    auto reply = m_tpDBusProxy->AddTPFile(fileName);
+    auto reply = m_tpDBusProxy->AddTrustedFile(fileName);
     reply.waitForFinished();
 
     if (reply.isError())
@@ -114,7 +114,7 @@ void TPKernel::unprotectAccepted()
     {
         if (trustedInfo.selected)
         {
-            m_tpDBusProxy->RemoveTPFile(trustedInfo.filePath).waitForFinished();
+            m_tpDBusProxy->RemoveTrustedFile(trustedInfo.filePath).waitForFinished();
         }
     }
     updateInfo();

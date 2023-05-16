@@ -2,35 +2,31 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
     <interface name="com.kylinsec.SC.KSS">
-        <method name="GetModuleFiles">
+        <method name="GetTrustedFiles">
             <arg type="s" name="files" direction="out">
-                <summary>The json string describes the kernel modules files which contain file path and authentication status, etc..</summary>
+                <summary>The json string describes the trusted files which contain file path and authentication status, etc..</summary>
             </arg>
-            <description>Get kernel module files information.</description>
+            <arg type="u" name="type" direction="in">
+                <summary>The trusted file types.</summary>
+            </arg>
+            <description>Get trusted files information.</description>
         </method>
 
-        <method name="GetExecuteFiles">
-            <arg type="s" name="files" direction="out">
-                <summary>The json string describes the Execute files which contain file path and authentication status, etc..</summary>
-            </arg>
-            <description>Get Execute files information.</description>
-        </method>
-
-        <method name="GetFPFiles">
+        <method name="GetProtectedFiles">
             <arg type="s" name="files" direction="out">
                 <summary>The json string describes the protected files.</summary>
             </arg>
             <description>Get protected files list.</description>
         </method>
 
-        <method name="AddFPFile">
+        <method name="AddProtectedFile">
             <arg type="s" name="file_path" direction="in">
                 <summary>A file path.</summary>
             </arg>
             <description>Add file to protected file list.</description>
         </method>
 
-        <method name="AddTPFile">
+        <method name="AddTrustedFile">
             <arg type="s" name="file_path" direction="in">
                 <summary>A file path.</summary>
             </arg>
@@ -47,14 +43,14 @@
             <description>Prohibit module unloading.</description>
         </method>
 
-        <method name="RemoveTPFile">
+        <method name="RemoveTrustedFile">
             <arg type="s" name="file_path" direction="in">
                 <summary>A file path.</summary>
             </arg>
             <description>Remove file from trusted whitelist.</description>
         </method>
         
-        <method name="RemoveFPFile">
+        <method name="RemoveProtectedFile">
             <arg type="s" name="file_path" direction="in">
                 <summary>A file path.</summary>
             </arg>
@@ -74,12 +70,12 @@
             <description>Search for trusted protection list.</description>
         </method>
 
-        <property name="Initialized" type="i" access="read">
-            <description>The ksc initialized.</description>
+        <property name="Initialized" type="b" access="read">
+            <description>The KSS initialized.</description>
         </property>
 
         <signal name="InitFinished">
-            <description>Initialisation ok kss data is completed.</description>
+            <description>KSS data initialisation completed.</description>
         </signal>
 
     </interface>

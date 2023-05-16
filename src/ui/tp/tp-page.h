@@ -44,7 +44,7 @@ protected:
 private:
     void initSidebar();
     void initSubPage();
-    void checkTrustedLoadFinied(int initialized);
+    void checkTrustedLoadFinied(bool initialized);
     void createSideBarItem(const QString &text, const QString &icon);
 
 private slots:
