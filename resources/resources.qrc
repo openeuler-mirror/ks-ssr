@@ -18,7 +18,7 @@
         <file alias="checkbox-unchecked-normal">images/checkbox-unchecked-normal.svg</file>
         <file alias="arrow-down">images/arrow-down.svg</file>
         <file alias="device-list">images/device-list.svg</file>
-        <file alias="device-record">images/device-record.svg</file>
+        <file alias="device-log">images/device-log.svg</file>
         <file alias="device">images/device.png</file>
         <file alias="checkbox-indeterminate-normal">images/checkbox-indeterminate-normal.svg</file>
         <file alias="execution-control">images/execution-control.svg</file>

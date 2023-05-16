@@ -5,16 +5,16 @@ if(POLICY CMP0071)
 endif()
 
 file(GLOB_RECURSE SRC_H_FILES ./box/*.h
-	                ./device/*.h
                         ./common/*.h
                         ./fp/*.h
                         ./tp/*.h
+                        ./device/*.h
                         ./daemon.h)
 file(GLOB_RECURSE SRC_CPP_FILES ./box/*.cpp
-	                ./device/*.cpp
                         ./common/*.cpp
                         ./fp/*.cpp
                         ./tp/*.cpp
+                        ./device/*.cpp
                         ./daemon.cpp
                         ./main.cpp)
 

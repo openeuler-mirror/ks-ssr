@@ -23,12 +23,14 @@
 
 namespace KS
 {
-DevicePermission::DevicePermission(const QString &name, QWidget *parent) : TitlebarWindow(parent),
-                                                                           m_ui(new Ui::DevicePermission),
-                                                                           m_name(name)
+DevicePermission::DevicePermission(const QString &name, const QString &id, QWidget *parent) : TitlebarWindow(parent),
+                                                                                              m_ui(new Ui::DevicePermission),
+                                                                                              m_name(name),
+                                                                                              m_id(id)
 {
     m_ui->setupUi(getWindowContentWidget());
     setTitle(name);
+    setIcon(QIcon(":/images/logo"));
     setWindowModality(Qt::ApplicationModal);
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -36,8 +38,8 @@ DevicePermission::DevicePermission(const QString &name, QWidget *parent) : Title
     auto delegate = new QStyledItemDelegate(this);
     m_ui->m_status->setItemDelegate(delegate);
 
-    m_ui->m_status->addItem(tr("enable"), DEVICE_STATUS_ENABLE);
-    m_ui->m_status->addItem(tr("disable"), DEVICE_STATUS_DISABLE);
+    m_ui->m_status->addItem(tr("enable"), DeviceState::DEVICE_STATE_ENABLE);
+    m_ui->m_status->addItem(tr("disable"), DeviceState::DEVICE_STATE_DISABLE);
 
     connect(m_ui->m_confirm, &QPushButton::clicked, this, &DevicePermission::confirm);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &DevicePermission::close);
@@ -49,12 +51,17 @@ DevicePermission::~DevicePermission()
     delete m_ui;
 }
 
-void DevicePermission::setDeviceStatus(const DeviceStatus &status)
+QString DevicePermission::getDeviceID()
+{
+    return m_id;
+}
+
+void DevicePermission::setDeviceStatus(const DeviceState &status)
 {
     m_status = status;
     switch (m_status)
     {
-    case DEVICE_STATUS_UNACTIVE:
+    case DeviceState::DEVICE_STATE_UNAUTHORIED:
     {
         //由于qt5 .15.2及以上的版本设置QCombobox占位符，无法正常显示，见QTBUG - 90595，因此使用自定义QLineEdit来显示占位符
         auto line = new QLineEdit(m_ui->m_status);
@@ -66,8 +73,8 @@ void DevicePermission::setDeviceStatus(const DeviceStatus &status)
         m_ui->m_status->setCurrentIndex(-1);
         break;
     }
-    case DEVICE_STATUS_ENABLE:
-    case DEVICE_STATUS_DISABLE:
+    case DeviceState::DEVICE_STATE_ENABLE:
+    case DeviceState::DEVICE_STATE_DISABLE:
     {
         int currIndex = m_ui->m_status->findData(m_status);
         m_ui->m_status->setCurrentIndex(currIndex);
@@ -77,7 +84,7 @@ void DevicePermission::setDeviceStatus(const DeviceStatus &status)
         break;
     }
 
-    if (m_status != DEVICE_STATUS_ENABLE)
+    if (m_status != DeviceState::DEVICE_STATE_ENABLE)
     {
         m_ui->m_groupBox->setDisabled(true);
     }
@@ -87,12 +94,12 @@ void DevicePermission::setDevicePermission(int permission)
 {
     m_permissions = permission;
 
-    m_ui->m_read->setChecked(m_permissions & DEVICE_PERMISSION_TYPE_READ);
-    m_ui->m_write->setChecked(m_permissions & DEVICE_PERMISSION_TYPE_WRITE);
-    m_ui->m_exec->setChecked(m_permissions & DEVICE_PERMISSION_TYPE_EXEC);
+    m_ui->m_read->setChecked(m_permissions & PERMISSION_TYPE_READ);
+    m_ui->m_write->setChecked(m_permissions & PERMISSION_TYPE_WRITE);
+    m_ui->m_exec->setChecked(m_permissions & PERMISSION_TYPE_EXEC);
 }
 
-DeviceStatus DevicePermission::getDeviceStatus()
+DeviceState DevicePermission::getDeviceStatus()
 {
     return m_status;
 }
@@ -107,18 +114,19 @@ void DevicePermission::confirm()
     int permissions = 0;
     if (m_ui->m_read->isChecked())
     {
-        permissions |= DEVICE_PERMISSION_TYPE_READ;
+        permissions |= PERMISSION_TYPE_READ;
     }
     if (m_ui->m_write->isChecked())
     {
-        permissions |= DEVICE_PERMISSION_TYPE_WRITE;
+        permissions |= PERMISSION_TYPE_WRITE;
     }
     if (m_ui->m_exec->isChecked())
     {
-        permissions |= DEVICE_PERMISSION_TYPE_EXEC;
+        permissions |= PERMISSION_TYPE_EXEC;
     }
 
-    if (0 == permissions)
+    auto state = (DeviceState)m_ui->m_status->currentData().toInt();
+    if (0 == permissions && state == DeviceState::DEVICE_STATE_ENABLE)
     {
         auto *msgDialog = new QWidget();
         msgDialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -141,10 +149,8 @@ void DevicePermission::confirm()
     }
     else
     {
-        auto status = m_ui->m_status->currentData().toInt();
-        m_status = DeviceStatus(status);
+        m_status = state;
         m_permissions = permissions;
-
         emit permissionChanged();
         hide();
     }
@@ -152,14 +158,10 @@ void DevicePermission::confirm()
 
 void DevicePermission::updateGroupBox(int index)
 {
-    if (m_ui->m_status->currentData().toInt() != DEVICE_STATUS_ENABLE)
-    {
-        m_ui->m_groupBox->setDisabled(true);
-    }
-    else
-    {
-        m_ui->m_groupBox->setDisabled(false);
-    }
+    //设备未授权状态下不能修改权限
+    m_ui->m_confirm->setDisabled(0 > index);
+
+    m_ui->m_groupBox->setDisabled(m_ui->m_status->currentData().toInt() != DeviceState::DEVICE_STATE_ENABLE);
 }
 
 void DevicePermission::paintEvent(QPaintEvent *event)

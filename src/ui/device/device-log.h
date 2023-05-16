@@ -14,29 +14,36 @@
 
 #pragma once
 
-#include <QStyledItemDelegate>
+#include <QWidget>
+#include "src/ui/device_manager_proxy.h"
+
+namespace Ui
+{
+class DeviceLog;
+}
 
 namespace KS
 {
-enum DeviceTableField
-{
-    DEVICE_TABLE_FIELD_NUMBER,
-    DEVICE_TABLE_FIELD_NAME,
-    DEVICE_TABLE_FIELD_TYPE,
-    DEVICE_TABLE_FIELD_ID,
-    DEVICE_TABLE_FIELD_INTERFACE,
-    DEVICE_TABLE_FIELD_STATUS,
-    DEVICE_TABLE_FIELD_PERMISSION,
-    DEVICE_TABLE_FIELD_LAST
-};
-
-class DeviceListDelegate : public QStyledItemDelegate
+class DeviceLog : public QWidget
 {
     Q_OBJECT
 
 public:
-    DeviceListDelegate(QObject *parent = 0);
-    virtual ~DeviceListDelegate();
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    DeviceLog(QWidget *parent = nullptr);
+    virtual ~DeviceLog();
+
+protected:
+    void paintEvent(QPaintEvent *event);
+
+private:
+    void initTableStyle();
+    void update();
+
+private Q_SLOTS:
+    void searchTextChanged(const QString &text);
+
+private:
+    Ui::DeviceLog *m_ui;
+    DeviceManagerProxy *m_deviceManagerProxy;
 };
-}  // namespace KS
+}  //namespace KS
