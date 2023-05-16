@@ -53,7 +53,7 @@ namespace KS
 USBDevice::USBDevice(const QString &syspath, QObject *parent)
     : Device(syspath, parent)
 {
-    m_DevRule = DeviceRule::instance();
+    m_ruleManager = DeviceRuleManager::instance();
 
     this->init();
     this->initPermission();
@@ -77,7 +77,7 @@ void USBDevice::init()
         id = device->getSysattrValue("dev");
     }
 
-    this->setId(id);
+    this->setID(id);
     this->setName(m_product);
     this->setType(this->parseDeviceType());
     this->setInterfaceType(INTERFACE_TYPE_USB);
@@ -186,7 +186,7 @@ int USBDevice::hidProtocol2DevcieType(const InterfaceClass &interface)
 
 void USBDevice::initPermission()
 {
-    auto rule = m_DevRule->getRule(m_uid);
+    auto rule = m_ruleManager->getRule(m_uid);
 
     if (rule == nullptr)
     {
@@ -203,12 +203,12 @@ void USBDevice::initPermission()
     this->setState((rule->enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
 }
 
-int USBDevice::setEnable(bool enable)
+bool USBDevice::setEnable(bool enable)
 {
-    Rule rule;
+    DeviceRule rule;
 
     rule.uid = m_uid;
-    rule.id = this->getId();
+    rule.id = this->getID();
     rule.name = this->getName();
     rule.idVendor = m_idVendor;
     rule.idProduct = m_idProduct;
@@ -219,11 +219,11 @@ int USBDevice::setEnable(bool enable)
     rule.write = this->getPermission()->write;
     rule.execute = this->getPermission()->execute;
 
-    m_DevRule->addRule(rule);
+    m_ruleManager->addRule(rule);
 
     this->setState((rule.enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
     
-    return 0;
+    return true;
 }
 
 }  // namespace KS

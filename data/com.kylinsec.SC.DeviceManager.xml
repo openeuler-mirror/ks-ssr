@@ -49,7 +49,38 @@
                     <summary>The json string of device connect record list.</summary>
                 </arg>
                 <description>Get all devices connect record information.</description>
-            </method>          
+            </method> 
+            <method name="GetInterfaces">
+                <arg type="s" name="interfaces" direction="out">
+                    <summary>The json string of interface info list.</summary>
+                </arg>
+                <description>Get all device interfaces information.</description>
+            </method>
+            <method name="GetInterface">
+                <arg type="s" name="interface" direction="out">
+                    <summary>The json string of interface info.</summary>
+                </arg>
+                <arg type="i" name="type" direction="in">
+                    <summary>The type of device inteface.</summary>
+                </arg>
+                <description>Get device interface information.</description>
+            </method> 
+            <method name="EnableInterface">
+                 <arg type="i" name="type" direction="in">
+                    <summary>The type of device interface.</summary>
+                </arg>
+                <arg type="b" name="result" direction="out">
+                    <summary>The enable result.</summary>
+                </arg>
+            </method>
+            <method name="DisableInterface">
+                 <arg type="i" name="type" direction="in">
+                    <summary>The type of device interface.</summary>
+                </arg>
+                <arg type="b" name="result" direction="out">
+                    <summary>The disable result.</summary>
+                </arg>
+            </method> 
             <signal name="DeviceChanged">
                 <arg name="id" type="s">
                     <summary>The device id.</summary>
