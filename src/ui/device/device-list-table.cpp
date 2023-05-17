@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * kiran-session-manager is licensed under Mulan PSL v2.
+ * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -22,7 +22,7 @@
 #include <QStyle>
 #include <QToolTip>
 #include "include/ksc-marcos.h"
-#include "src/ui/device/device-enum-utils.h"
+#include "src/ui/device/device-utils.h"
 #include "src/ui/device/table-filter-model.h"
 
 namespace KS
@@ -30,9 +30,9 @@ namespace KS
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-static QMap<QString, QColor> colorMap = {{DeviceEnumUtils::enum2Str(DeviceState::DEVICE_STATE_ENABLE), QColor("#00a2ff")},
-                                         {DeviceEnumUtils::enum2Str(DeviceState::DEVICE_STATE_DISABLE), QColor("#d30000")},
-                                         {DeviceEnumUtils::enum2Str(DeviceState::DEVICE_STATE_UNAUTHORIED), QColor("#919191")}};
+static QMap<QString, QColor> colorMap = {{DeviceUtils::deviceStateEnum2Str(DeviceState::DEVICE_STATE_ENABLE), QColor("#00a2ff")},
+                                         {DeviceUtils::deviceStateEnum2Str(DeviceState::DEVICE_STATE_DISABLE), QColor("#d30000")},
+                                         {DeviceUtils::deviceStateEnum2Str(DeviceState::DEVICE_STATE_UNAUTHORIED), QColor("#919191")}};
 
 DeviceListDelegate::DeviceListDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
@@ -122,6 +122,7 @@ DeviceListTable::DeviceListTable(QWidget *parent) : QTableView(parent),
                                                   KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
+    connect(m_deviceManagerProxy, &DeviceManagerProxy::DeviceChanged, this, &DeviceListTable::update);
     initTable();
 }
 
@@ -138,9 +139,9 @@ void DeviceListTable::setData(const QList<DeviceInfo> &infos)
     {
         auto deviceInfo = infos.at(i);
 
-        auto type = DeviceEnumUtils::enum2Str((DeviceType)deviceInfo.type);
-        auto interface = DeviceEnumUtils::enum2Str((InterfaceType)deviceInfo.interface);
-        auto state = DeviceEnumUtils::enum2Str((DeviceState)deviceInfo.state);
+        auto type = DeviceUtils::deviceTypeEnum2Str(deviceInfo.type);
+        auto interface = DeviceUtils::interfaceTypeEnum2Str(deviceInfo.interface);
+        auto state = DeviceUtils::deviceStateEnum2Str(deviceInfo.state);
 
         m_model->setData(m_model->index(row, ListTableField::LIST_TABLE_FIELD_NUMBER), deviceInfo.number);
         m_model->setData(m_model->index(row, ListTableField::LIST_TABLE_FIELD_NAME), deviceInfo.name);
@@ -162,7 +163,7 @@ DeviceState DeviceListTable::getState(int row)
     }
 
     auto item = m_model->item(row, ListTableField::LIST_TABLE_FIELD_STATUS);
-    return DeviceEnumUtils::str2StateEnum(item->text());
+    return DeviceUtils::deviceStateStr2Enum(item->text());
 }
 
 QString DeviceListTable::getID(int row)
@@ -198,8 +199,6 @@ int DeviceListTable::getPermission(int row)
     }
 
     auto item = m_model->item(row, ListTableField::LIST_TABLE_FIELD_PERMISSION);
-
-    KLOG_INFO() << "permission item text:" << item->text();
     return item->text().toInt();
 }
 
@@ -215,7 +214,7 @@ int DeviceListTable::getRowCount()
 
 TableFilterModel *DeviceListTable::getFilterProxy()
 {
-    return this->m_filterProxy;
+    return m_filterProxy;
 }
 
 void DeviceListTable::leaveEvent(QEvent *event)
@@ -224,56 +223,54 @@ void DeviceListTable::leaveEvent(QEvent *event)
     //处理鼠标移出表格事件，将鼠标变为箭头
     if (mouseEvent->type() == QEvent::Leave)
     {
-        this->setCursor(Qt::ArrowCursor);
+        setCursor(Qt::ArrowCursor);
     }
 }
 
 void DeviceListTable::initTable()
 {
-    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    this->setSelectionMode(QAbstractItemView::NoSelection);
-    this->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    this->setFocusPolicy(Qt::NoFocus);
-    this->setMouseTracking(true);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setSelectionMode(QAbstractItemView::NoSelection);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setFocusPolicy(Qt::NoFocus);
+    setMouseTracking(true);
 
     // 设置Model
     m_model = new QStandardItemModel(this);
-    this->m_filterProxy = new TableFilterModel(this);
-    this->m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
-    this->setModel(this->m_filterProxy);
-    this->setShowGrid(false);
+    m_filterProxy = new TableFilterModel(this);
+    m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
+    setModel(m_filterProxy);
+    setShowGrid(false);
 
     // 设置代理
-    this->setItemDelegate(new DeviceListDelegate(this));
+    setItemDelegate(new DeviceListDelegate(this));
 
     // 设置水平行表头
-    auto horizontalHeader = this->horizontalHeader();
-    horizontalHeader->setSectionResizeMode(QHeaderView::Fixed);
-    horizontalHeader->setStretchLastSection(true);
-    horizontalHeader->setSectionsMovable(false);
-    horizontalHeader->setDefaultAlignment(Qt::AlignLeft);
-    horizontalHeader->setFixedHeight(24);
-    horizontalHeader->setDefaultAlignment(Qt::AlignVCenter);
-    horizontalHeader->resizeSection(ListTableField::LIST_TABLE_FIELD_NUMBER, 50);
-    horizontalHeader->resizeSection(ListTableField::LIST_TABLE_FIELD_NAME, 200);
-    horizontalHeader->resizeSection(ListTableField::LIST_TABLE_FIELD_STATUS, 80);
-    horizontalHeader->resizeSection(ListTableField::LIST_TABLE_FIELD_INTERFACE, 150);
-    horizontalHeader->resizeSection(ListTableField::LIST_TABLE_FIELD_TYPE, 100);
-    horizontalHeader->resizeSection(ListTableField::LIST_TABLE_FIELD_ID, 120);
+    horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    horizontalHeader()->setStretchLastSection(true);
+    horizontalHeader()->setSectionsMovable(false);
+    horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    horizontalHeader()->setFixedHeight(24);
+    horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter);
 
     setHeaderSections(QStringList() << tr("Number")
                                     << tr("Device Name")
                                     << tr("Device Type")
                                     << tr("Device Id")
-                                    << tr("Device Interface")
-                                    << tr("Device Status")
+                                    << tr("Interface")
+                                    << tr("Status")
                                     << tr("Permission"));
+    horizontalHeader()->resizeSection(ListTableField::LIST_TABLE_FIELD_NUMBER, 60);
+    horizontalHeader()->resizeSection(ListTableField::LIST_TABLE_FIELD_NAME, 150);
+    horizontalHeader()->resizeSection(ListTableField::LIST_TABLE_FIELD_STATUS, 100);
+    horizontalHeader()->resizeSection(ListTableField::LIST_TABLE_FIELD_INTERFACE, 80);
+    horizontalHeader()->resizeSection(ListTableField::LIST_TABLE_FIELD_TYPE, 120);
+    horizontalHeader()->resizeSection(ListTableField::LIST_TABLE_FIELD_ID, 100);
 
     // 设置垂直列表头
-    auto verticalHeader = this->verticalHeader();
-    verticalHeader->setVisible(false);
-    verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
-    verticalHeader->setDefaultSectionSize(38);
+    verticalHeader()->setVisible(false);
+    verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    verticalHeader()->setDefaultSectionSize(38);
 
     connect(this, &DeviceListTable::entered, this, &DeviceListTable::updateCusor);
     connect(this, &DeviceListTable::entered, this, &DeviceListTable::showDetails);
@@ -298,11 +295,11 @@ void DeviceListTable::updateCusor(const QModelIndex &index)
     但是当鼠标直接从编辑列移出表格时，鼠标还是手形，需要处理鼠标移出表格事件，将鼠标变为箭头*/
     if (index.column() == ListTableField::LIST_TABLE_FIELD_PERMISSION)
     {
-        this->setCursor(Qt::PointingHandCursor);
+        setCursor(Qt::PointingHandCursor);
     }
     else
     {
-        this->setCursor(Qt::ArrowCursor);
+        setCursor(Qt::ArrowCursor);
     }
 }
 
@@ -310,8 +307,7 @@ void DeviceListTable::showDetails(const QModelIndex &index)
 {
     RETURN_IF_TRUE(!index.isValid());
     RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
-    RETURN_IF_TRUE(index.column() == ListTableField::LIST_TABLE_FIELD_NUMBER ||
-                   index.column() == ListTableField::LIST_TABLE_FIELD_STATUS ||
+    RETURN_IF_TRUE(index.column() == ListTableField::LIST_TABLE_FIELD_STATUS ||
                    index.column() == ListTableField::LIST_TABLE_FIELD_PERMISSION);
 
     auto item = m_model->item(index.row(), index.column());
@@ -319,7 +315,7 @@ void DeviceListTable::showDetails(const QModelIndex &index)
     {
         QFontMetrics fm(fontMetrics());
         auto textWidthInPxs = fm.horizontalAdvance(item->text(), item->text().length());
-        if (textWidthInPxs > this->columnWidth(index.column()))
+        if (textWidthInPxs > columnWidth(index.column()))
         {
             QPoint point = QCursor::pos();
             QRect rect = QRect(point.x(), point.y(), 30, 10);
@@ -344,42 +340,38 @@ void DeviceListTable::update()
     auto reply = m_deviceManagerProxy->GetDevices();
     reply.waitForFinished();
     auto devicesJson = reply.value();
-    KLOG_DEBUG() << devicesJson;
+    KLOG_DEBUG() << "The reply of dbus method GetDevices:" << devicesJson;
 
     QJsonParseError jsonError;
-
     auto jsonDoc = QJsonDocument::fromJson(devicesJson.toUtf8(), &jsonError);
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser files information failed: " << jsonError.errorString();
+        return;
     }
-    else
+
+    int count = 1;
+    auto jsonDataArray = jsonDoc.array();
+    for (auto jsonData : jsonDataArray)
     {
-        int count = 1;
-        // 后台返回数据需先转为obj后，将obj中的data字段转为arr
-        auto jsonDataArray = jsonDoc.array();
-        for (auto jsonData : jsonDataArray)
-        {
-            auto data = jsonData.toObject();
+        auto data = jsonData.toObject();
 
-            auto deviceInfo = DeviceInfo{.number = count,
-                                         .name = data.value(KSC_DEVICE_KEY_NAME).toString(),
-                                         .type = (DeviceType)data.value(KSC_DEVICE_KEY_TYPE).toInt(),
-                                         .id = data.value(KSC_DEVICE_KEY_ID).toString(),
-                                         .interface = (InterfaceType)data.value(KSC_DEVICE_KEY_INTERFACE_TYPE).toInt(),
-                                         .state = (DeviceState)data.value(KSC_DEVICE_KEY_STATE).toInt(),
-                                         .permission = 0};
+        auto deviceInfo = DeviceInfo{.number = count,
+                                     .name = data.value(KSC_DEVICE_JK_NAME).toString(),
+                                     .type = (DeviceType)data.value(KSC_DEVICE_JK_TYPE).toInt(),
+                                     .id = data.value(KSC_DEVICE_JK_ID).toString(),
+                                     .interface = (InterfaceType)data.value(KSC_DEVICE_JK_INTERFACE_TYPE).toInt(),
+                                     .state = (DeviceState)data.value(KSC_DEVICE_JK_STATE).toInt(),
+                                     .permission = 0};
 
-            SET_DEVICE_PERMISSION(data, KSC_DEVICE_KEY_READ, deviceInfo, PermissionType::PERMISSION_TYPE_READ);
-            SET_DEVICE_PERMISSION(data, KSC_DEVICE_KEY_WRITE, deviceInfo, PermissionType::PERMISSION_TYPE_WRITE);
-            SET_DEVICE_PERMISSION(data, KSC_DEVICE_KEY_EXECUTE, deviceInfo, PermissionType::PERMISSION_TYPE_EXEC);
+        SET_DEVICE_PERMISSION(data, KSC_DEVICE_JK_READ, deviceInfo, PermissionType::PERMISSION_TYPE_READ);
+        SET_DEVICE_PERMISSION(data, KSC_DEVICE_JK_WRITE, deviceInfo, PermissionType::PERMISSION_TYPE_WRITE);
+        SET_DEVICE_PERMISSION(data, KSC_DEVICE_JK_EXECUTE, deviceInfo, PermissionType::PERMISSION_TYPE_EXEC);
 
-            m_devicesInfo.push_back(deviceInfo);
-            count++;
-        }
-
-        setData(m_devicesInfo);
+        m_devicesInfo.push_back(deviceInfo);
+        count++;
     }
+    setData(m_devicesInfo);
 }
 
 }  // namespace KS

@@ -80,7 +80,7 @@ void DeviceLog::searchTextChanged(const QString &text)
 {
     KLOG_DEBUG() << "The search text is change to " << text;
 
-    auto filterProxy = this->m_ui->m_table->getFilterProxy();
+    auto filterProxy = m_ui->m_table->getFilterProxy();
     filterProxy->setFilterFixedString(text);
 }
 

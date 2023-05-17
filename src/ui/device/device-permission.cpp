@@ -19,17 +19,15 @@
 #include <QPainter>
 #include <QStyledItemDelegate>
 #include "include/ksc-marcos.h"
+#include "src/ui/common/message-dialog.h"
 #include "ui_device-permission.h"
 
 namespace KS
 {
-DevicePermission::DevicePermission(const QString &name, const QString &id, QWidget *parent) : TitlebarWindow(parent),
-                                                                                              m_ui(new Ui::DevicePermission),
-                                                                                              m_name(name),
-                                                                                              m_id(id)
+DevicePermission::DevicePermission(QWidget *parent) : TitlebarWindow(parent),
+                                                      m_ui(new Ui::DevicePermission)
 {
     m_ui->setupUi(getWindowContentWidget());
-    setTitle(name);
     setIcon(QIcon(":/images/logo"));
     setWindowModality(Qt::ApplicationModal);
     setAttribute(Qt::WA_DeleteOnClose);
@@ -43,7 +41,7 @@ DevicePermission::DevicePermission(const QString &name, const QString &id, QWidg
 
     connect(m_ui->m_confirm, &QPushButton::clicked, this, &DevicePermission::confirm);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &DevicePermission::close);
-    connect(m_ui->m_status, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DevicePermission::updateGroupBox);
+    connect(m_ui->m_status, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DevicePermission::update);
 }
 
 DevicePermission::~DevicePermission()
@@ -54,6 +52,11 @@ DevicePermission::~DevicePermission()
 QString DevicePermission::getDeviceID()
 {
     return m_id;
+}
+
+void DevicePermission::setDeviceID(const QString &id)
+{
+    m_id = id;
 }
 
 void DevicePermission::setDeviceStatus(const DeviceState &status)
@@ -124,44 +127,53 @@ void DevicePermission::confirm()
     {
         permissions |= PERMISSION_TYPE_EXEC;
     }
-
     auto state = (DeviceState)m_ui->m_status->currentData().toInt();
+
     if (0 == permissions && state == DeviceState::DEVICE_STATE_ENABLE)
     {
-        auto *msgDialog = new QWidget();
-        msgDialog->setAttribute(Qt::WA_DeleteOnClose);
-        msgDialog->setWindowModality(Qt::ApplicationModal);
-        msgDialog->setWindowTitle(tr("notice"));
-        msgDialog->setWindowIcon(QIcon(":/images/logo"));
-        auto *vlay = new QVBoxLayout(msgDialog);
-
-        auto *label = new QLabel(QString(tr("Please select at least one permission.")));
-        auto *ok = new QPushButton(tr("ok"), msgDialog);
-        connect(ok, &QPushButton::clicked, msgDialog, &QWidget::close);
-
-        vlay->addWidget(label);
-        vlay->addWidget(ok);
-
-        int x = this->x() + this->width() / 4 + msgDialog->width() / 4;
-        int y = this->y() + this->height() / 4 + msgDialog->height() / 4;
+        auto msgDialog = new MessageDialog(this);
+        msgDialog->setMessage(tr("Please select at least one permission."));
+        int x = window()->x() + window()->width() / 4 + msgDialog->width() / 4;
+        int y = window()->y() + window()->height() / 4 + msgDialog->height() / 4;
         msgDialog->move(x, y);
         msgDialog->show();
+        return;
     }
-    else
+
+    if (state != m_status)
     {
         m_status = state;
-        m_permissions = permissions;
-        emit permissionChanged();
-        hide();
+        emit stateChanged();
     }
+
+    if (permissions != m_permissions)
+    {
+        //禁用状态下无法修改权限，只有在启用状态下才能修改权限
+        if (state == DeviceState::DEVICE_STATE_ENABLE)
+        {
+            m_permissions = permissions;
+            emit permissionChanged();
+        }
+    }
+
+    hide();
 }
 
-void DevicePermission::updateGroupBox(int index)
+void DevicePermission::update(int index)
 {
-    //设备未授权状态下不能修改权限
+    //设备未授权状态下不能修改权限和状态
     m_ui->m_confirm->setDisabled(0 > index);
 
-    m_ui->m_groupBox->setDisabled(m_ui->m_status->currentData().toInt() != DeviceState::DEVICE_STATE_ENABLE);
+    auto state = (DeviceState)m_ui->m_status->currentData().toInt();
+    m_ui->m_groupBox->setDisabled(state != DeviceState::DEVICE_STATE_ENABLE);
+
+    //若选择禁用，还原权限
+    if (state != DeviceState::DEVICE_STATE_ENABLE)
+    {
+        m_ui->m_read->setChecked(m_permissions & PERMISSION_TYPE_READ);
+        m_ui->m_write->setChecked(m_permissions & PERMISSION_TYPE_WRITE);
+        m_ui->m_exec->setChecked(m_permissions & PERMISSION_TYPE_EXEC);
+    }
 }
 
 void DevicePermission::paintEvent(QPaintEvent *event)
