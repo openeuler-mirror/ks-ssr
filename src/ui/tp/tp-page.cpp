@@ -73,7 +73,7 @@ void TPPage::initSidebar()
 
 void TPPage::initSubPage()
 {
-    auto *execute = new TPExecute(m_ui->m_stacked);
+    auto execute = new TPExecute(m_ui->m_stacked);
     connect(execute, &TPExecute::initFinished, this, [this]
             {
                 if (m_loading->isVisible())
@@ -83,7 +83,7 @@ void TPPage::initSubPage()
 
                 m_ui->m_sidebar->setEnabled(true);
             });
-    auto *kernel = new TPKernel(m_ui->m_stacked);
+    auto kernel = new TPKernel(m_ui->m_stacked);
 
     m_ui->m_stacked->addWidget(execute);
     m_ui->m_stacked->addWidget(kernel);

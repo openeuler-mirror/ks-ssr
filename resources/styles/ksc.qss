@@ -150,6 +150,34 @@ QTableView::item
     margin: 2px 0px 2px 0px;
 }
 
+QListWidget#m_sidebar
+{
+    background-color:#2d2d2d;
+    border-radius: 6px;
+    padding-left: 10px;
+    padding-top: 16px;
+    padding-right: 24px;
+}
+
+QListWidget#m_sidebar::item
+{
+    border-radius: 6px;
+    background:#393939;
+}
+
+QListWidget#m_sidebar::item:selected
+{
+    background:#00A2FF;
+}
+
+QRadioButton#m_soft,
+QRadioButton#m_hard
+{
+    font-family: Noto Sans CJK SC regular;
+    font-size:12px;
+    color:#FFFFFF;
+}
+
 /* main window */
 QWidget#m_banner
 {
@@ -165,6 +193,7 @@ KS--NavigationItem QPushButton#m_icon
 
 KS--Window QWidget#m_contents,
 QWidget#m_deleteNotify,
+QFrame#m_frame,
 KS--Loading#maskWidget
 {
     background-color: #2d2d2d;
@@ -255,8 +284,8 @@ QCheckBox::indicator::disabled:unchecked{
     image: url(:/images/checkbox-unchecked-disabled);
 }
 
-/* custom widget */
-QWidget#cusWidget
+/* message dialog */
+QWidget#messageDialog
 {
     background-color: #2d2d2d;
     border-radius: 6px;
@@ -370,6 +399,11 @@ KS--TPTableHeaderProxy
     font-size:12px;
 }
 
+QPushButton#m_switch
+{
+    background-color: transparent;
+}
+
 QStackedWidget#m_stacked
 {
     background-color:#2d2d2d;
@@ -386,7 +420,7 @@ KS--DevicePage
 }
 
 KS--DeviceList,
-KS--DeviceLog
+KS--DeviceRecord
 {
     background-color:#2d2d2d;
 }
@@ -456,12 +490,6 @@ KS--DevicePermission #m_confirm:checked
     background-color:#00a2ff;
 }
 
-KS--DevicePermission #m_confirm:disabled
-{
-    color:#919191;
-    background-color:#393939;
-}
-
 KS--DevicePage QListWidget#m_sidebar
 {
     background-color:#2d2d2d;
@@ -482,25 +510,6 @@ KS--DevicePage QListWidget#m_sidebar::item:selected
     background:#00A2FF;
 }
 
-KS--DeviceListTable::item,
-KS--DeviceLogTable:item
-{
-    padding-left:10px;
-}
-
-KS--DeviceListTable QHeaderView,
-KS--DeviceLogTable QHeaderView
-{
-    color:#919191;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-}
-
-KS--DeviceListTable QHeaderView::section,
-KS--DeviceLogTable QHeaderView::section
-{
-    padding-left:10px;
-}
 
 /*********License*****************/
 KS--LicenseActivation QWidget#m_content
