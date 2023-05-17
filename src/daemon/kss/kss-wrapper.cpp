@@ -36,6 +36,14 @@ namespace KS
 #define KSS_INIT_CMD "kss card deploy -p 123123"
 #define KSS_INIT_DATA_CMD "kss secure setup"
 
+// 软硬件模式切换
+#define KSS_SECURE_TCM_SOFT_CMD "kss secure tcm -s"
+#define KSS_SECURE_TCM_HARD_CMD "kss secure tcm -p"
+
+// 可信开关 -s开启，-l关闭
+#define KSS_SECURE_SET_STATUS_CMD "kss secure set-status"
+
+// 可信数据操作
 #define KSS_DIGEST_SCAN_ADD_FILE_CMD "kss digest scan -u"
 #define KSS_DIGEST_SCAN_REMOVE_FILE_CMD "kss digest scan -f -r"
 #define KSS_DIGEST_INFO_GET_EXECUTE_CMD "kss digest info -e"
@@ -109,6 +117,23 @@ void KSSWrapper::prohibitUnloading(bool prohibited, const QString &filePath)
     execute(cmd);
 }
 
+void KSSWrapper::softModeChecked()
+{
+    execute(KSS_SECURE_TCM_SOFT_CMD);
+}
+
+void KSSWrapper::hardModeChecked(const QString &userPin)
+{
+    auto cmd = QString("%1 %2").arg(KSS_SECURE_TCM_HARD_CMD, userPin);
+    execute(cmd);
+}
+
+void KSSWrapper::setTrustedStatus(bool status)
+{
+    auto cmd = QString("%1 %2").arg(KSS_SECURE_SET_STATUS_CMD, status ? "-s" : "-l");
+    execute(cmd);
+}
+
 void KSSWrapper::addFile(const QString &fileName, const QString &filePath, const QString &insertTime)
 {
     RETURN_IF_TRUE(getInitialized() == 0)
@@ -177,13 +202,14 @@ void KSSWrapper::init()
     KLOG_INFO() << "Start kss initialisation.";
     execute(KSS_INIT_CMD);
 
-    m_kssInitThread = QThread::create([this] {
-        auto process = new QProcess(this);
-        auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r`");
-        KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
-        process->start("bash", QStringList() << "-c" << cmd);
-        process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
-    });
+    m_kssInitThread = QThread::create([this]
+                                      {
+                                          auto process = new QProcess(this);
+                                          auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r`");
+                                          KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
+                                          process->start("bash", QStringList() << "-c" << cmd);
+                                          process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
+                                      });
 
     connect(m_kssInitThread, &QThread::finished, this, &KSSWrapper::initTrustedResults);
     connect(m_kssInitThread, &QThread::finished, m_kssInitThread, &QThread::deleteLater);
