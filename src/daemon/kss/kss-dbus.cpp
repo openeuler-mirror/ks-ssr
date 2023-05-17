@@ -64,7 +64,10 @@ CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFile, addTPFileAfterAuthorization, KSS_
 CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFile, removeTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
 CHECK_AUTH_WITH_2ARGS(KSSDbus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool, const QString &)
 CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFile, addFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFile, removeFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &);
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFile, removeFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, HardModeChecked, hardModeCheckedAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH(KSSDbus, SoftModeChecked, softModeCheckedAfterAuthorization, KSS_PERMISSION_AUTHENTICATION)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, SetTrustedStatus, setTrustedStatusAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool)
 
 QString KSSDbus::GetTrustedFiles(uint type)
 {
@@ -194,6 +197,32 @@ void KSSDbus::removeFPFileAfterAuthorization(const QDBusMessage &message, const 
     RETURN_DBUS_ERROR_BOX_NOFOUND_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
 
     KSSWrapper::getDefault()->removeFile(filePath);
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
+}
+
+void KSSDbus::hardModeCheckedAfterAuthorization(const QDBusMessage &message, const QString &userPin)
+{
+    RETURN_DBUS_ERROR_BOX_NOFOUND_IF_TRUE(userPin.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+
+    KSSWrapper::getDefault()->hardModeChecked(userPin);
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
+}
+
+void KSSDbus::softModeCheckedAfterAuthorization(const QDBusMessage &message)
+{
+    KSSWrapper::getDefault()->softModeChecked();
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
+}
+
+void KSSDbus::setTrustedStatusAfterAuthorization(const QDBusMessage &message, bool status)
+{
+    KSSWrapper::getDefault()->setTrustedStatus(status);
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
