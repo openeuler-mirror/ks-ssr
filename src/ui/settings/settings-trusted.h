@@ -11,15 +11,15 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef TRUSTEDSETTINGS_H
-#define TRUSTEDSETTINGS_H
+#ifndef SETTINGSTRUSTED_H
+#define SETTINGSTRUSTED_H
 
-#include <QWidget>
 #include <QButtonGroup>
+#include <QWidget>
 
 namespace Ui
 {
-class TrustedSettings;
+class SettingsTrusted;
 }
 
 class KSSDbusProxy;
@@ -28,13 +28,13 @@ namespace KS
 {
 class TrustedUserPin;
 
-class TrustedSettings : public QWidget
+class SettingsTrusted : public QWidget
 {
     Q_OBJECT
 
 public:
-    TrustedSettings(QWidget *parent = nullptr);
-    ~TrustedSettings();
+    SettingsTrusted(QWidget *parent = nullptr);
+    ~SettingsTrusted();
 
 private:
     void init();
@@ -49,10 +49,10 @@ private slots:
     void inputHardUserPinAccepted();
 
 private:
-    Ui::TrustedSettings *m_ui;
+    Ui::SettingsTrusted *m_ui;
 
     TrustedUserPin *m_userPin;
     KSSDbusProxy *m_kssDbusProxy;
 };
 }  // namespace KS
-#endif  // TRUSTEDSETTINGS_H
+#endif  // SETTINGSTRUSTED_H

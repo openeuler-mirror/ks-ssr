@@ -26,7 +26,7 @@
 #include "src/ui/license/license-activation.h"
 #include "src/ui/license/license-dbus.h"
 #include "src/ui/navigation.h"
-#include "src/ui/setup/settings-page.h"
+#include "src/ui/settings/settings-page.h"
 #include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
 

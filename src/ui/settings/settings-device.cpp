@@ -12,7 +12,7 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "device-settings.h"
+#include "settings-device.h"
 #include <QCheckBox>
 #include <QLabel>
 #include <QObject>
@@ -24,7 +24,7 @@
 
 namespace KS
 {
-DeviceSettings::DeviceSettings(QWidget *parent) : QWidget(parent),
+SettingsDevice::SettingsDevice(QWidget *parent) : QWidget(parent),
                                                   m_deviceManagerProxy(nullptr)
 {
     initUI();
@@ -37,11 +37,11 @@ DeviceSettings::DeviceSettings(QWidget *parent) : QWidget(parent),
     updateUI();
 }
 
-DeviceSettings::~DeviceSettings()
+SettingsDevice::~SettingsDevice()
 {
 }
 
-void DeviceSettings::initUI()
+void SettingsDevice::initUI()
 {
     auto vLayout = new QVBoxLayout(this);
     vLayout->setSpacing(0);
@@ -55,7 +55,7 @@ void DeviceSettings::initUI()
     vLayout->addStretch(1);
 }
 
-void DeviceSettings::updateUI()
+void SettingsDevice::updateUI()
 {
     RETURN_IF_TRUE(m_interfaces.size() < 1);
 
@@ -72,12 +72,12 @@ void DeviceSettings::updateUI()
         m_gridLayout->addItem(sparcerItem, count, 1);
         m_gridLayout->addWidget(stateCheckBox, count, 2);
 
-        connect(stateCheckBox, &QCheckBox::toggled, this, &DeviceSettings::handleInterfaceState);
+        connect(stateCheckBox, &QCheckBox::toggled, this, &SettingsDevice::handleInterfaceState);
         count++;
     }
 }
 
-QList<Interface> DeviceSettings::getInterfaces()
+QList<Interface> SettingsDevice::getInterfaces()
 {
     QList<Interface> interfaces;
     auto reply = m_deviceManagerProxy->GetInterfaces();
@@ -106,7 +106,7 @@ QList<Interface> DeviceSettings::getInterfaces()
     return interfaces;
 }
 
-void DeviceSettings::setInterfaceState(bool isEnable, InterfaceType type)
+void SettingsDevice::setInterfaceState(bool isEnable, InterfaceType type)
 {
     RETURN_IF_TRUE(type == InterfaceType::INTERFACE_TYPE_UNKNOWN);
 
@@ -138,7 +138,7 @@ void DeviceSettings::setInterfaceState(bool isEnable, InterfaceType type)
     }
 }
 
-void DeviceSettings::handleInterfaceState(bool checked)
+void SettingsDevice::handleInterfaceState(bool checked)
 {
     auto stateCheckBox = qobject_cast<QCheckBox *>(sender());
     auto type = (InterfaceType)stateCheckBox->property(INTERFACE_TYPE_PROPERTY).toInt();
