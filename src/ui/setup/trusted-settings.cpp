@@ -13,18 +13,24 @@
  */
 #include "trusted-settings.h"
 #include "ui_trusted-settings.h"
+#include "src/ui/setup/trusted-user-pin.h"
+#include "src/ui/kss_dbus_proxy.h"
+#include "include/ksc-i.h"
+#include "include/ksc-marcos.h"
+#include "src/ui/common/message-dialog.h"
 namespace KS
 {
 TrustedSettings::TrustedSettings(QWidget *parent) : QWidget(parent),
                                                     m_ui(new Ui::TrustedSettings)
 {
     m_ui->setupUi(this);
-    QIcon icon(":/images/switch-open");
-    m_ui->m_switch->setCheckable(true);
-    m_ui->m_switch->setIcon(QIcon(m_ui->m_switch->isChecked() ? ":/images/switch-open" : ":/images/switch-close"));
-    m_ui->m_switch->setFixedSize(52, 24);
-    m_ui->m_switch->setIconSize(QSize(52, 24));
-    connect(m_ui->m_switch, &QPushButton::clicked, this, &TrustedSettings::switchChanged);
+
+    m_kssDbusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
+                                      KSC_KSS_INIT_DBUS_OBJECT_PATH,
+                                      QDBusConnection::systemBus(),
+                                      this);
+
+    init();
 }
 
 TrustedSettings::~TrustedSettings()
@@ -32,11 +38,172 @@ TrustedSettings::~TrustedSettings()
     delete m_ui;
 }
 
+void TrustedSettings::init()
+{
+    // switch
+    m_ui->m_switch->setCheckable(true);
+    m_ui->m_switch->setChecked(m_kssDbusProxy->trustedStatus());
+    m_ui->m_switch->setIcon(QIcon(m_ui->m_switch->isChecked() ? ":/images/switch-open" : ":/images/switch-close"));
+    m_ui->m_switch->setFixedSize(52, 24);
+    m_ui->m_switch->setIconSize(QSize(52, 24));
+    connect(m_ui->m_switch, &QPushButton::clicked, this, &TrustedSettings::switchChanged);
+
+    // radio
+    auto mode = m_kssDbusProxy->storageMode();
+    m_ui->m_soft->setCheckable(true);
+    m_ui->m_soft->setIcon(QIcon(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ?
+                                    ":/images/radio-checked" :
+                                    ":/images/radio-unchecked"));
+    m_ui->m_soft->setChecked(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ? true : false);
+    m_ui->m_soft->setIconSize(QSize(14, 14));
+
+    m_ui->m_hard->setCheckable(true);
+    m_ui->m_hard->setIcon(QIcon(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ?
+                                    ":/images/radio-unchecked" :
+                                    ":/images/radio-checked"));
+    m_ui->m_soft->setChecked(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ? false : true);
+    m_ui->m_hard->setIconSize(QSize(14, 14));
+    m_ui->m_hardLabel->setWordWrap(true);
+
+    connect(m_ui->m_soft, &QPushButton::clicked, this, &TrustedSettings::softRadioChanged);
+    connect(m_ui->m_hard, &QPushButton::clicked, this, &TrustedSettings::hardRadioChanged);
+}
+
+void TrustedSettings::updateSoftMode()
+{
+    auto mode = m_kssDbusProxy->storageMode();
+    m_ui->m_soft->setIcon(QIcon(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ?
+                                    ":/images/radio-checked" :
+                                    ":/images/radio-unchecked"));
+    m_ui->m_soft->setChecked(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ? true : false);
+
+    m_ui->m_hard->setIcon(QIcon(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ?
+                                    ":/images/radio-unchecked" :
+                                    ":/images/radio-checked"));
+    m_ui->m_soft->setChecked(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ? false : true);
+}
+
+bool TrustedSettings::checkTrustedLoadFinied()
+{
+    // 可信未初始化完成，不允许操作
+    if (!m_kssDbusProxy->initialized())
+    {
+        auto messgeDialog = new MessageDialog(this);
+        messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
+                                    "please wait a few minutes before trying."));
+
+        int x = this->x() + width() / 4 + messgeDialog->width() / 4;
+        int y = this->y() + height() / 4 + messgeDialog->height() / 4;
+        messgeDialog->move(x, y);
+        messgeDialog->show();
+        return false;
+    }
+    return true;
+}
+
 void TrustedSettings::switchChanged(bool checked)
 {
+    RETURN_IF_TRUE(!checkTrustedLoadFinied())
+    auto reply = m_kssDbusProxy->SetTrustedStatus(checked);
+    reply.waitForFinished();
+
+    if (reply.isError())
+    {
+        auto messageDialog = new MessageDialog(this);
+        messageDialog->setMessage(reply.error().message());
+
+        auto x = this->x() + this->width() / 4 + messageDialog->width() / 2;
+        auto y = this->y() + this->height() / 4 + messageDialog->height() / 2;
+        messageDialog->move(x, y);
+        messageDialog->show();
+        return;
+    }
+
     m_ui->m_switch->setIcon(QIcon(checked ? ":/images/switch-open" : ":/images/switch-close"));
     m_ui->m_switch->setChecked(checked);
+}
 
-    emit trustedStatusChange(checked);
+void TrustedSettings::softRadioChanged(bool checked)
+{
+    RETURN_IF_TRUE(!checkTrustedLoadFinied())
+    m_userPin = new TrustedUserPin(this);
+    connect(m_userPin, &TrustedUserPin::accepted, this, &TrustedSettings::inputSoftUserPinAccepted);
+    connect(m_userPin, &TrustedUserPin::rejected, this, [this]{
+        // 取消需将选中状态改回去
+        updateSoftMode();
+    });
+
+    auto x = this->x() + this->width() / 4 + m_userPin->width() / 2;
+    auto y = this->y() + this->height() / 4 + m_userPin->height() / 2;
+    m_userPin->move(x, y);
+    m_userPin->show();
+
+    m_ui->m_soft->setIcon(QIcon(checked ? ":/images/radio-checked" : ":/images/radio-unchecked"));
+    m_ui->m_soft->setChecked(checked);
+
+    m_ui->m_hard->setIcon(QIcon(!checked ? ":/images/radio-checked" : ":/images/radio-unchecked"));
+    m_ui->m_hard->setChecked(!checked);
+}
+
+void TrustedSettings::hardRadioChanged(bool checked)
+{
+    RETURN_IF_TRUE(!checkTrustedLoadFinied())
+    m_userPin = new TrustedUserPin(this);
+    connect(m_userPin, &TrustedUserPin::accepted, this, &TrustedSettings::inputHardUserPinAccepted);
+    connect(m_userPin, &TrustedUserPin::rejected, this, [this]{
+        // 取消需将选中状态改回去
+        updateSoftMode();
+    });
+
+    auto x = this->x() + this->width() / 4 + m_userPin->width() / 2;
+    auto y = this->y() + this->height() / 4 + m_userPin->height() / 2;
+    m_userPin->move(x, y);
+    m_userPin->show();
+
+    m_ui->m_hard->setIcon(QIcon(checked ? ":/images/radio-checked" : ":/images/radio-unchecked"));
+    m_ui->m_hard->setChecked(checked);
+
+    m_ui->m_soft->setIcon(QIcon(!checked ? ":/images/radio-checked" : ":/images/radio-unchecked"));
+    m_ui->m_soft->setChecked(!checked);
+}
+
+void TrustedSettings::inputSoftUserPinAccepted()
+{
+    auto reply = m_kssDbusProxy->SetStorageMode(KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT, m_userPin->getUserPin());
+    reply.waitForFinished();
+
+    if (reply.isError())
+    {
+        auto messageDialog = new MessageDialog(this);
+        messageDialog->setMessage(reply.error().message());
+
+        auto x = this->x() + this->width() / 4 + messageDialog->width() / 2;
+        auto y = this->y() + this->height() / 4 + messageDialog->height() / 2;
+        messageDialog->move(x, y);
+        messageDialog->show();
+        // 错误则将选中状态改回去
+        updateSoftMode();
+        return;
+    }
+}
+
+void TrustedSettings::inputHardUserPinAccepted()
+{
+    auto reply = m_kssDbusProxy->SetStorageMode(KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_HARD, m_userPin->getUserPin());
+    reply.waitForFinished();
+
+    if (reply.isError())
+    {
+        auto messageDialog = new MessageDialog(this);
+        messageDialog->setMessage(reply.error().message());
+
+        auto x = this->x() + this->width() / 4 + messageDialog->width() / 2;
+        auto y = this->y() + this->height() / 4 + messageDialog->height() / 2;
+        messageDialog->move(x, y);
+        messageDialog->show();
+        // 错误则将选中状态改回去
+        updateSoftMode();
+        return;
+    }
 }
 }  // namespace KS
