@@ -170,14 +170,6 @@ QListWidget#m_sidebar::item:selected
     background:#00A2FF;
 }
 
-QRadioButton#m_soft,
-QRadioButton#m_hard
-{
-    font-family: Noto Sans CJK SC regular;
-    font-size:12px;
-    color:#FFFFFF;
-}
-
 /* main window */
 QWidget#m_banner
 {
@@ -287,6 +279,8 @@ QCheckBox::indicator::disabled:unchecked{
 /* message dialog */
 QWidget#messageDialog
 {
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
     background-color: #2d2d2d;
     border-radius: 6px;
 }
@@ -314,7 +308,7 @@ QPushButton#m_add:hover
 
 QPushButton#passwdCancelBtn,
 QPushButton#m_cancel,
-QPushButton#m_update
+QPushButton#m_recertification
 {
     color:#FFFFFF;
     font:NotoSansCJKsc-Regular;
@@ -325,7 +319,7 @@ QPushButton#m_update
 
 QPushButton#passwdCancelBtn:hover,
 QPushButton#m_cancel:hover,
-QPushButton#m_update:hover
+QPushButton#m_recertification:hover
 {
     background:#464646;
     border:4px;
@@ -399,8 +393,17 @@ KS--TPTableHeaderProxy
     font-size:12px;
 }
 
-QPushButton#m_switch
+QPushButton#m_switch,
+QPushButton#searchButton,
+QPushButton#m_soft,
+QPushButton#m_hard
 {
+    background-color: transparent;
+}
+
+QToolButton#m_refresh
+{
+    border:none;
     background-color: transparent;
 }
 

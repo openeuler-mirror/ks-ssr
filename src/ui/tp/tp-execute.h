@@ -14,6 +14,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QTimer>
 #include "src/ui/tp/tp-execute-table.h"
 
 namespace Ui
@@ -41,13 +42,16 @@ signals:
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void addClicked(bool checked);
-    void updateClicked(bool checked);
+    void refreshClicked(bool checked);
+    void recertificationClicked(bool checked);
     void unprotectClicked(bool checked);
     void unprotectAccepted();
+    void refreshTimerTimeout();
 
 private:
     Ui::TPExecute *m_ui;
 
     KSSDbusProxy *m_dbusProxy;
+    QTimer *m_refreshTimer;
 };
 }  // namespace KS

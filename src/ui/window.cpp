@@ -20,11 +20,9 @@
 #include <QMutex>
 #include <QPushButton>
 #include <QStackedWidget>
-#include "include/ksc-i.h"
 #include "src/ui/box/box-page.h"
 #include "src/ui/device/device-page.h"
 #include "src/ui/fp/fp-page.h"
-#include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/license/license-activation.h"
 #include "src/ui/license/license-dbus.h"
 #include "src/ui/navigation.h"
@@ -40,15 +38,10 @@ Window::Window() : TitlebarWindow(nullptr),
                    m_ui(new Ui::Window),
                    m_activation(nullptr),
                    m_activateStatus(nullptr),
-                   m_licenseDBus(nullptr),
-                   m_kssDbusProxy(nullptr)
+                   m_licenseDBus(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
 
-    m_kssDbusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
-                                      KSC_KSS_INIT_DBUS_OBJECT_PATH,
-                                      QDBusConnection::systemBus(),
-                                      this);
     initWindow();
     initNavigation();
     initActivation();
@@ -178,14 +171,9 @@ void Window::updateActivation()
 void Window::popupSettingsDialog()
 {
     auto settingsDialog = new SettingsPage(this);
-    // TODO 需要获取可信状态，settingsDialog应根据此状态设置当前swith值
 
-    // 设置可信开关
-    connect(settingsDialog, &SettingsPage::trustedStatusChange, this, [this](bool status)
-            { m_kssDbusProxy->SetTrustedStatus(status); });
-
-    auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
-    auto y = this->y() + this->height() / 4 + m_activation->height() / 4;
+    auto x = this->x() + this->width() / 4 + m_activation->width() / 16;
+    auto y = this->y() + this->height() / 4 + m_activation->height() / 16;
     settingsDialog->move(x, y);
     settingsDialog->show();
 }

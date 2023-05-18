@@ -37,11 +37,15 @@ namespace KS
 #define KSS_INIT_DATA_CMD "kss secure setup"
 
 // 软硬件模式切换
-#define KSS_SECURE_TCM_SOFT_CMD "kss secure tcm -s"
+#define KSS_SECURE_TCM_SOFT_CMD "kss secure tcm -s -p"
 #define KSS_SECURE_TCM_HARD_CMD "kss secure tcm -p"
+// 获取当前软硬模式信息
+#define KSS_CARD_INFO_CMD "kss card info"
 
 // 可信开关 -s开启，-l关闭
 #define KSS_SECURE_SET_STATUS_CMD "kss secure set-status"
+// 获取可信状态
+#define KSS_SECURE_GET_STATUS_CMD "kss secure get-status"
 
 // 可信数据操作
 #define KSS_DIGEST_SCAN_ADD_FILE_CMD "kss digest scan -u"
@@ -94,20 +98,9 @@ void KSSWrapper::removeTrustedFile(const QString &filePath)
 QString KSSWrapper::getTrustedFiles(KSCKSSTrustedFileType type)
 {
     RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
+    RETURN_VAL_IF_TRUE(type == KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_NONE, QString())
 
-    if (type == KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE)
-    {
-        execute(KSS_DIGEST_INFO_GET_EXECUTE_CMD);
-    }
-    else if (type == KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_KERNEL)
-    {
-        execute(KSS_DIGEST_INFO_GET_KERNEL_CMD);
-    }
-    else
-    {
-        return QString();
-    }
-
+    execute(type == KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE ? KSS_DIGEST_INFO_GET_EXECUTE_CMD : KSS_DIGEST_INFO_GET_KERNEL_CMD);
     return m_processOutput;
 }
 
@@ -117,21 +110,42 @@ void KSSWrapper::prohibitUnloading(bool prohibited, const QString &filePath)
     execute(cmd);
 }
 
-void KSSWrapper::softModeChecked()
+QString KSSWrapper::setStorageMode(KSCKSSTrustedStorageType type, const QString &userPin)
 {
-    execute(KSS_SECURE_TCM_SOFT_CMD);
+    RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
+    RETURN_VAL_IF_TRUE(type == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_NONE, QString())
+
+    auto cmd = QString("%1 %2").arg(type == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ? KSS_SECURE_TCM_SOFT_CMD : KSS_SECURE_TCM_HARD_CMD, userPin);
+    execute(cmd);
+
+    return m_errorOutput;
 }
 
-void KSSWrapper::hardModeChecked(const QString &userPin)
+KSCKSSTrustedStorageType KSSWrapper::getCurrentStorageMode()
 {
-    auto cmd = QString("%1 %2").arg(KSS_SECURE_TCM_HARD_CMD, userPin);
-    execute(cmd);
+    execute(KSS_CARD_INFO_CMD);
+
+    if (m_processOutput.trimmed() == "Software Backend")
+    {
+        return KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT;
+    }
+    else
+    {
+        return KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_HARD;
+    }
 }
 
 void KSSWrapper::setTrustedStatus(bool status)
 {
+    RETURN_IF_TRUE(getInitialized() == 0)
     auto cmd = QString("%1 %2").arg(KSS_SECURE_SET_STATUS_CMD, status ? "-s" : "-l");
     execute(cmd);
+}
+
+QString KSSWrapper::getTrustedStatus()
+{
+    execute(KSS_SECURE_GET_STATUS_CMD);
+    return m_processOutput;
 }
 
 void KSSWrapper::addFile(const QString &fileName, const QString &filePath, const QString &insertTime)
