@@ -15,14 +15,13 @@
 #include <qt5-log-i.h>
 #include <QDir>
 #include <QFileDialog>
-#include <QWidgetAction>
 #include <QPainter>
+#include <QWidgetAction>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
 #include "src/ui/common/message-dialog.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
-//#include "src/ui/"
 #include "src/ui/ui_tp-execute.h"
 
 namespace KS
@@ -47,8 +46,8 @@ TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
             });
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2"))
-            .arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()),
-                 QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
+                    .arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()),
+                         QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
     m_ui->m_tips->setText(text);
 
     // TODO:需要绘制颜色
@@ -90,8 +89,8 @@ void TPExecute::updateInfo()
     m_ui->m_executeTable->updateRecord();
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2"))
-            .arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()),
-                 QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
+                    .arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()),
+                         QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
     m_ui->m_tips->setText(text);
 }
 

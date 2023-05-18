@@ -36,7 +36,6 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private:
-    void initTableStyle();
     void update();
 
 private Q_SLOTS:

@@ -34,7 +34,7 @@ namespace KS
 #define KSS_PERMISSION_AUTHENTICATION "com.kylinsec.SC.PermissionAuthentication"
 
 // Box fount
-#define RETURN_KSS_DBUS_ERROR_IF_TRUE(cond, errorCode)                                               \
+#define RETURN_KSS_DBUS_ERROR_IF_TRUE(cond, errorCode)                                                       \
     {                                                                                                        \
         if (cond)                                                                                            \
         {                                                                                                    \

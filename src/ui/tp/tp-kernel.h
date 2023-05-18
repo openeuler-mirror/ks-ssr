@@ -14,8 +14,8 @@
 #ifndef TPKERNEL_H
 #define TPKERNEL_H
 
-#include <QWidget>
 #include <QTimer>
+#include <QWidget>
 #include "src/ui/tp/tp-kernel-table.h"
 
 namespace Ui

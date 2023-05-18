@@ -18,7 +18,6 @@
 #include "src/ui/ui_device-log.h"
 
 #include <kiran-log/qt5-log-i.h>
-#include <QHeaderView>
 #include <QPainter>
 #include <QStyleOption>
 
@@ -50,21 +49,6 @@ void DeviceLog::paintEvent(QPaintEvent *event)
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
-
-void DeviceLog::initTableStyle()
-{
-    //just test add table data.
-    QList<RecordInfo> infos;
-    for (int i = 0; i < 50; i++)
-    {
-        auto deviceInfo = RecordInfo{.name = "1",
-                                     .type = i,
-                                     .time = "1",
-                                     .status = i};
-        infos << deviceInfo;
-    }
-    m_ui->m_table->setData(infos);
 }
 
 void DeviceLog::update()

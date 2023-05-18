@@ -17,6 +17,7 @@
 #include <QStandardItemModel>
 #include <QStyledItemDelegate>
 #include <QTableView>
+#include "include/ksc-i.h"
 #include "src/ui/device_manager_proxy.h"
 
 namespace KS
@@ -25,9 +26,9 @@ struct RecordInfo
 {
     RecordInfo() = default;
     QString name;
-    int type;
-    QString time;
-    int status;
+    DeviceType type;
+    time_t time;
+    DeviceConnectState state;
 };
 
 enum LogTableField
