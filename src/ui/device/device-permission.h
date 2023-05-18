@@ -17,6 +17,7 @@
 #include <QWidget>
 #include "include/ksc-i.h"
 #include "src/ui/common/titlebar-window.h"
+
 namespace Ui
 {
 class DevicePermission;
@@ -29,12 +30,16 @@ class DevicePermission : public TitlebarWindow
     Q_OBJECT
 
 public:
-    DevicePermission(const QString &name, const QString &id, QWidget *parent = nullptr);
+    DevicePermission(QWidget *parent = nullptr);
     virtual ~DevicePermission();
+
+    void setDeviceID(const QString &id);
     QString getDeviceID();
+
     void setDeviceStatus(const DeviceState &status);
-    void setDevicePermission(int permission);
     DeviceState getDeviceStatus();
+
+    void setDevicePermission(int permission);
     int getDevicePermission();
 
 protected:
@@ -43,14 +48,14 @@ protected:
 
 private slots:
     void confirm();
-    void updateGroupBox(int index);
+    void update(int index);
 
 signals:
     void permissionChanged();
+    void stateChanged();
 
 private:
     Ui::DevicePermission *m_ui;
-    QString m_name;
     QString m_id;
     DeviceState m_status;
     int m_permissions;

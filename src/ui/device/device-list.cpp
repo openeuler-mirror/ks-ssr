@@ -14,16 +14,14 @@
 
 #include "src/ui/device/device-list.h"
 #include <kiran-log/qt5-log-i.h>
-#include <QEvent>
-#include <QHeaderView>
-#include <QMouseEvent>
 #include <QPainter>
 #include "include/ksc-i.h"
 #include "include/ksc-marcos.h"
-#include "src/ui/device/device-enum-utils.h"
+#include "src/ui/common/message-dialog.h"
 #include "src/ui/device/device-permission.h"
 #include "src/ui/device/table-filter-model.h"
 #include "src/ui/ui_device-list.h"
+
 namespace KS
 {
 DeviceList::DeviceList(QWidget *parent) : QWidget(parent),
@@ -85,15 +83,11 @@ void DeviceList::popupEditDialog(const QModelIndex &index)
 {
     if (index.column() == m_ui->m_table->getColCount() - 1)
     {
-        auto deviceName = m_ui->m_table->getName(index.row());
-        auto deviceID = m_ui->m_table->getID(index.row());
-        auto state = m_ui->m_table->getState(index.row());
-        auto permissions = m_ui->m_table->getPermission(index.row());
-
         if (!m_devicePermission)
         {
-            m_devicePermission = new DevicePermission(deviceName, deviceID, this);
+            m_devicePermission = new DevicePermission(this);
             connect(m_devicePermission, &DevicePermission::permissionChanged, this, &DeviceList::updatePermission);
+            connect(m_devicePermission, &DevicePermission::stateChanged, this, &DeviceList::updateState);
             connect(m_devicePermission, &DevicePermission::destroyed,
                     [this]
                     {
@@ -101,6 +95,14 @@ void DeviceList::popupEditDialog(const QModelIndex &index)
                         m_devicePermission = nullptr;
                     });
         }
+
+        auto deviceName = m_ui->m_table->getName(index.row());
+        auto deviceID = m_ui->m_table->getID(index.row());
+        auto state = m_ui->m_table->getState(index.row());
+        auto permissions = m_ui->m_table->getPermission(index.row());
+
+        m_devicePermission->setTitle(deviceName);
+        m_devicePermission->setDeviceID(deviceID);
         m_devicePermission->setDeviceStatus(state);
         m_devicePermission->setDevicePermission(permissions);
 
@@ -113,25 +115,63 @@ void DeviceList::popupEditDialog(const QModelIndex &index)
 
 void DeviceList::updatePermission()
 {
-    //获取用户选择的设备权限和状态
-    auto status = m_devicePermission->getDeviceStatus();
-    auto permissions = m_devicePermission->getDevicePermission();
     auto id = m_devicePermission->getDeviceID();
+    //获取用户选择的设备权限
+    auto permissions = m_devicePermission->getDevicePermission();
 
-    //TODO:将数据传入后台
+    //数据传入后台
     QJsonDocument jsonDoc;
     QJsonObject jsonObj{
-        {KSC_DEVICE_KEY_ID, id},
-        {KSC_DEVICE_KEY_READ, permissions & PermissionType::PERMISSION_TYPE_READ},
-        {KSC_DEVICE_KEY_WRITE, permissions & PermissionType::PERMISSION_TYPE_WRITE},
-        {KSC_DEVICE_KEY_EXECUTE, permissions & PermissionType::PERMISSION_TYPE_EXEC},
-        {KSC_DEVICE_KEY_STATE, status}};
+        {KSC_DEVICE_JK_READ, (permissions & PermissionType::PERMISSION_TYPE_READ) > 0},
+        {KSC_DEVICE_JK_WRITE, (permissions & PermissionType::PERMISSION_TYPE_WRITE) > 0},
+        {KSC_DEVICE_JK_EXECUTE, (permissions & PermissionType::PERMISSION_TYPE_EXEC) > 0}};
     jsonDoc.setObject(jsonObj);
 
-    KLOG_DEBUG() << "change permission json:" << QString(jsonDoc.toJson(QJsonDocument::Compact));
-    m_deviceManagerProxy->ChangePermission(QString(jsonDoc.toJson(QJsonDocument::Compact)));
+    if (!m_deviceManagerProxy->ChangePermission(id, QString(jsonDoc.toJson(QJsonDocument::Compact))))
+    {
+        auto msgDialog = new MessageDialog(this);
+        msgDialog->setMessage(tr("Failed to change permission of device!"));
+        int x = window()->x() + window()->width() / 4 + msgDialog->width() / 4;
+        int y = window()->y() + window()->height() / 4 + msgDialog->height() / 4;
+        msgDialog->move(x, y);
+        msgDialog->show();
+        return;
+    }
+}
 
-    //更新表格
-    update();
+void DeviceList::updateState()
+{
+    auto id = m_devicePermission->getDeviceID();
+    //获取用户选择的状态
+    auto state = m_devicePermission->getDeviceStatus();
+    RETURN_IF_TRUE(state != DEVICE_STATE_ENABLE && state != DEVICE_STATE_DISABLE);
+
+    QString errMsg;
+    //数据传入后台
+    if (state == DeviceState::DEVICE_STATE_ENABLE)
+    {
+        if (!m_deviceManagerProxy->Enable(id))
+        {
+            errMsg = tr("Failed to enable device!");
+        }
+    }
+    else
+    {
+        if (!m_deviceManagerProxy->Disable(id))
+        {
+            errMsg = tr("Failed to disable device!");
+        }
+    }
+
+    if (!errMsg.isEmpty())
+    {
+        auto msgDialog = new MessageDialog(this);
+        msgDialog->setMessage(errMsg);
+        int x = window()->x() + window()->width() / 4 + msgDialog->width() / 4;
+        int y = window()->y() + window()->height() / 4 + msgDialog->height() / 4;
+        msgDialog->move(x, y);
+        msgDialog->show();
+        return;
+    }
 }
 }  //namespace KS

@@ -18,21 +18,13 @@ qt5_add_dbus_interface(
   box_manager_proxy)
 
 set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.TrustedProtected.xml
-  PROPERTIES CLASSNAME TPProxy NO_NAMESPACE true)
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
+  PROPERTIES CLASSNAME KSSDbusProxy NO_NAMESPACE true)
 
-qt5_add_dbus_interface(
-  TP_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.TrustedProtected.xml
-  tp_proxy)
-
-set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
-  PROPERTIES CLASSNAME FileProtectedProxy NO_NAMESPACE true)
-
-qt5_add_dbus_interface(
-  FILE_PROTECTED_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
-  file_protected_proxy)
+qt5_add_dbus_interface( 
+  KSS_DBUS_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
+  kss_dbus_proxy)
 
 set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
@@ -50,9 +42,9 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/common/pagination.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/create-box.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/modify-password.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/retrieve-password.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/input-password.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-modification.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-retrieve.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-checked.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/fp/fp-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/sidebar-item.ui
@@ -63,9 +55,9 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/tp-execute.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/tp-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/table-delete-notify.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/setup/settings-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/setup/trusted-settings.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/setup/trusted-user-pin.ui)
+  ${CMAKE_CURRENT_SOURCE_DIR}/settings/settings-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/settings/settings-trusted.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-user-pin.ui)
 
 set(TARGET_NAME ks-sc-gui)
 
@@ -78,9 +70,8 @@ add_executable(
   ${UI_H_FILES}
   ${UI_CPP_FILES}
   ${BOX_MANAGER_SRCS}
-  ${FILE_PROTECTED_SRCS}
-  ${TP_SRCS}
   ${DEVICE_MANAGER_SRCS}
+  ${KSS_DBUS_SRCS}
   ${QM_FILES}
   ${UI_FILES}
   "${PROJECT_SOURCE_DIR}/resources/resources.qrc")
