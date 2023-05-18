@@ -15,13 +15,19 @@
 #define TRUSTEDSETTINGS_H
 
 #include <QWidget>
+#include <QButtonGroup>
 
 namespace Ui
 {
 class TrustedSettings;
 }
+
+class KSSDbusProxy;
+
 namespace KS
 {
+class TrustedUserPin;
+
 class TrustedSettings : public QWidget
 {
     Q_OBJECT
@@ -30,14 +36,23 @@ public:
     TrustedSettings(QWidget *parent = nullptr);
     ~TrustedSettings();
 
+private:
+    void init();
+    void updateSoftMode();
+    bool checkTrustedLoadFinied();
+
 private slots:
     void switchChanged(bool checked);
-
-signals:
-    void trustedStatusChange(bool status);
+    void softRadioChanged(bool checked);
+    void hardRadioChanged(bool checked);
+    void inputSoftUserPinAccepted();
+    void inputHardUserPinAccepted();
 
 private:
     Ui::TrustedSettings *m_ui;
+
+    TrustedUserPin *m_userPin;
+    KSSDbusProxy *m_kssDbusProxy;
 };
 }  // namespace KS
 #endif  // TRUSTEDSETTINGS_H
