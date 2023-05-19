@@ -11,48 +11,33 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef SETTINGSTRUSTED_H
-#define SETTINGSTRUSTED_H
+#ifndef TRUSTEDSETTINGS_H
+#define TRUSTEDSETTINGS_H
 
-#include <QButtonGroup>
 #include <QWidget>
 
 namespace Ui
 {
-class SettingsTrusted;
+class TrustedSettings;
 }
-
-class KSSDbusProxy;
-
 namespace KS
 {
-class TrustedUserPin;
-
-class SettingsTrusted : public QWidget
+class TrustedSettings : public QWidget
 {
     Q_OBJECT
 
 public:
-    SettingsTrusted(QWidget *parent = nullptr);
-    ~SettingsTrusted();
-
-private:
-    void init();
-    void updateSoftMode();
-    bool checkTrustedLoadFinied();
+    TrustedSettings(QWidget *parent = nullptr);
+    ~TrustedSettings();
 
 private slots:
     void switchChanged(bool checked);
-    void softRadioChanged(bool checked);
-    void hardRadioChanged(bool checked);
-    void inputSoftUserPinAccepted();
-    void inputHardUserPinAccepted();
+
+signals:
+    void trustedStatusChange(bool status);
 
 private:
-    Ui::SettingsTrusted *m_ui;
-
-    TrustedUserPin *m_userPin;
-    KSSDbusProxy *m_kssDbusProxy;
+    Ui::TrustedSettings *m_ui;
 };
 }  // namespace KS
-#endif  // SETTINGSTRUSTED_H
+#endif  // TRUSTEDSETTINGS_H
