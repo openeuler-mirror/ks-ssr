@@ -51,14 +51,18 @@ namespace KS
         }                                                                                                   \
     }
 
-BoxManager::BoxManager(QObject *parent) : QObject(parent)
+BoxManager *BoxManager::m_instance = nullptr;
+void BoxManager::globalInit(QObject *parent)
 {
-    m_dbusAdaptor = new BoxManagerAdaptor(this);
-
-    init();
+    m_instance = new BoxManager(parent);
 }
-BoxManager::~BoxManager()
+
+void BoxManager::globalDeinit()
 {
+    if (m_instance)
+    {
+        delete m_instance;
+    }
 }
 
 QString BoxManager::CreateBox(const QString &name, const QString &password, QString &passphrase)
@@ -223,6 +227,16 @@ void BoxManager::UnMount(const QString &boxID)
 
     box->umount();
     emit BoxChanged(boxID);
+}
+
+BoxManager::BoxManager(QObject *parent) : QObject(parent)
+{
+    m_dbusAdaptor = new BoxManagerAdaptor(this);
+
+    init();
+}
+BoxManager::~BoxManager()
+{
 }
 
 void BoxManager::init()
