@@ -15,8 +15,6 @@
 #include "src/daemon/device/sd/sd-device.h"
 #include <qt5-log-i.h>
 #include <systemd/sd-device.h>
-#include <QThread>
-#include <QProcess>
 #include "ksc-marcos.h"
 
 namespace KS
@@ -99,22 +97,9 @@ QString SDDevice::getSysattrValue(const QString& attr) const
 
 void SDDevice::trigger()
 {
-    auto process = new QProcess(this);
-    auto cmd = QString("udevadm trigger %1").arg(getSyspath());
-    KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
-    process->start("bash", QStringList() << "-c" << cmd);
-
-    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [=]()
+    if (sd_device_trigger(m_device, SD_DEVICE_CHANGE) < 0)
     {
-        if (!process->readAllStandardError().isEmpty())
-        {
-            KLOG_ERROR() << "Failed to trigger sd device with change event.";
-        }
-        process->deleteLater();
-    });
-//    if (sd_device_trigger(m_device, SD_DEVICE_CHANGE) < 0)
-//    {
-//        KLOG_ERROR() << "Failed to trigger sd device with change event.";
-//    }
+        KLOG_ERROR() << "Failed to trigger sd device with change event.";
+    }
 }
 }  // namespace KS

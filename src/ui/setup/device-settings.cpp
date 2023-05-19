@@ -12,7 +12,7 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "settings-device.h"
+#include "device-settings.h"
 #include <QCheckBox>
 #include <QLabel>
 #include <QObject>
@@ -24,7 +24,7 @@
 
 namespace KS
 {
-SettingsDevice::SettingsDevice(QWidget *parent) : QWidget(parent),
+DeviceSettings::DeviceSettings(QWidget *parent) : QWidget(parent),
                                                   m_deviceManagerProxy(nullptr)
 {
     initUI();
@@ -37,11 +37,11 @@ SettingsDevice::SettingsDevice(QWidget *parent) : QWidget(parent),
     updateUI();
 }
 
-SettingsDevice::~SettingsDevice()
+DeviceSettings::~DeviceSettings()
 {
 }
 
-void SettingsDevice::initUI()
+void DeviceSettings::initUI()
 {
     auto vLayout = new QVBoxLayout(this);
     vLayout->setSpacing(0);
@@ -55,7 +55,7 @@ void SettingsDevice::initUI()
     vLayout->addStretch(1);
 }
 
-void SettingsDevice::updateUI()
+void DeviceSettings::updateUI()
 {
     RETURN_IF_TRUE(m_interfaces.size() < 1);
 
@@ -72,12 +72,12 @@ void SettingsDevice::updateUI()
         m_gridLayout->addItem(sparcerItem, count, 1);
         m_gridLayout->addWidget(stateCheckBox, count, 2);
 
-        connect(stateCheckBox, &QCheckBox::toggled, this, &SettingsDevice::handleInterfaceState);
+        connect(stateCheckBox, &QCheckBox::toggled, this, &DeviceSettings::handleInterfaceState);
         count++;
     }
 }
 
-QList<Interface> SettingsDevice::getInterfaces()
+QList<Interface> DeviceSettings::getInterfaces()
 {
     QList<Interface> interfaces;
     auto reply = m_deviceManagerProxy->GetInterfaces();
@@ -106,26 +106,15 @@ QList<Interface> SettingsDevice::getInterfaces()
     return interfaces;
 }
 
-void SettingsDevice::setInterfaceState(bool isEnable, InterfaceType type)
+void DeviceSettings::setInterfaceState(bool isEnable, InterfaceType type)
 {
     RETURN_IF_TRUE(type == InterfaceType::INTERFACE_TYPE_UNKNOWN);
 
     QString errMsg;
-    if (isEnable)
-    {
-        if (!m_deviceManagerProxy->EnableInterface(type))
-        {
-            errMsg = tr("Failed to enable interface!");
-        }
-    }
-    else
-    {
-        if (!m_deviceManagerProxy->DisableInterface(type))
-        {
-            errMsg = tr("Failed to disable interface!");
-        }
-    }
 
+    m_deviceManagerProxy->EnableInterface(type, isEnable);
+
+    // TODO: 这里改成监控dbus错误消息，这种弹框用到的地方比较多，可以做一下封装，没必要每个地方都写一遍
     if (!errMsg.isEmpty())
     {
         auto msgDialog = new MessageDialog(this);
@@ -138,7 +127,7 @@ void SettingsDevice::setInterfaceState(bool isEnable, InterfaceType type)
     }
 }
 
-void SettingsDevice::handleInterfaceState(bool checked)
+void DeviceSettings::handleInterfaceState(bool checked)
 {
     auto stateCheckBox = qobject_cast<QCheckBox *>(sender());
     auto type = (InterfaceType)stateCheckBox->property(INTERFACE_TYPE_PROPERTY).toInt();

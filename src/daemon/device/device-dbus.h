@@ -62,10 +62,7 @@ public Q_SLOTS:  // METHODS
     bool Disable(const QString &id);
 
     // 启用设备接口
-    bool EnableInterface(int type);
-
-    // 禁用设备接口
-    bool DisableInterface(int type);
+    void EnableInterface(int type, bool enabled);
 
     // 获取连接记录
     QString GetRecords();
