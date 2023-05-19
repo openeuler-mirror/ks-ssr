@@ -20,6 +20,7 @@
 
 namespace KS
 {
+// TODO: 这里应该也不是DeviceRule，只有UDEV才叫Rule，这里只能说是控制参数
 struct DeviceRule
 {
 public:
@@ -37,12 +38,10 @@ public:
     int interfaceType;
 };
 
+// TODO: 类名还要想一下，应该叫DeviceConfiguration好一些，如果换名字的话，类里面其他名字也要换
 class DeviceRuleManager : public QObject
 {
     Q_OBJECT
-
-private:
-    explicit DeviceRuleManager(QObject *parent = nullptr);
 
 public:
     static DeviceRuleManager *instance();
@@ -50,26 +49,43 @@ public:
     QSharedPointer<DeviceRule> getRule(const QString &uid);
 
     bool isIFCEnable(int type);
-    bool setIFCEnable(int type,
-                      bool enable);
+    bool setIFCEnable(int type, bool enable);
+
+private:
+    explicit DeviceRuleManager(QObject *parent = nullptr);
 
 private:
     void init();
-    QStringList getUdevRules();
-    QString rule2UdevRule(QSharedPointer<DeviceRule> rule);
-    void updateUdevFile();
-    void updateIFCUdevFile();
-    void saveToFile(const QStringList &rules, 
-                    const QString &filename);
 
-    QStringList getIFCUdevRules();
-    QString getIFCUdevRule(int type);
+    // 将设备控制文件同步到对应的系统配置中
+    void syncDeviceFile();
+    // 将设备控制配置同步到udev规则文件
+    void syncToDeviceUdevFile();
+    // 设备规则对象转udev字符串
+    QString ruleObj2Str(QSharedPointer<DeviceRule> rule);
     QString getUdevModeValue(QSharedPointer<DeviceRule> rule);
 
-    bool groupExisted(const QString group);
+    // 将接口控制文件同步到对应的系统配置中
+    void syncInterfaceFile();
+    // 同步更新蓝牙服务
+    void syncToBluetoothService();
+    // 将接口控制配置同步到udev规则文件
+    void syncToInterfaceUdevFile();
+    // 根据接口类型获取udev规则
+    QString getInterfaceUdevRule(int type);
+    // 将接口控制配置同步到grub文件
+    void syncInterfaceToGrubFile();
+    // 获取系统中所有HDMI接口名称
+    QStringList getHDMINames();
+
+    void saveToFile(const QStringList &lines, const QString &filename);
+    // 更新legacy和efi两种模式下的grub配置
+    void updateGrub(const QString &filePath);
 
 private:
-    QSettings *m_settings;
-    QSettings *m_ifcSettings;
+    // 设备控制相关配置
+    QSettings *m_deviceSettings;
+    // 接口控制相关配置
+    QSettings *m_interfaceSettings;
 };
 }  // namespace KS
