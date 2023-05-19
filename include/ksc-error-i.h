@@ -26,10 +26,9 @@ extern "C"
         ERROR_FAILED,
         ERROR_COMMON_INVALID_ARGS,
 
-        // FP File protect
-
-        // TP Trusted protect
+        // KSS, FP and TP Trusted protect
         ERROR_TP_ADD_INVALID_FILE,
+        ERROR_CHANGE_STORAGE_MODE_FAILED,
 
         // BM Box manager
         ERROR_BM_DELETE_FAILED,
