@@ -14,9 +14,9 @@
 
 #pragma once
 
+#include <QString>
 #include <cstdint>
 #include <string>
-#include <QString>
 
 namespace KS
 {
@@ -31,8 +31,8 @@ public:
 
     // 生成rsa公钥和私钥对
     static void generateRsaKey(uint32_t keyLength,
-                                 QString &privateKey,
-                                 QString &publicKey);
+                               QString &privateKey,
+                               QString &publicKey);
 
     // rsa加密和解密
     static QString rsaEncrypt(const QString &publicKey, const QString &message);
