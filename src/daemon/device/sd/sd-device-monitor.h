@@ -23,7 +23,6 @@ typedef struct sd_event sd_event;
 
 namespace KS
 {
-
 enum SDDeviceAction
 {
     SD_DEVICE_ACTION_INVALID = 0,

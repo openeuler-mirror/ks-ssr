@@ -18,6 +18,8 @@
 #include <QSettings>
 #include <QSharedPointer>
 
+class QThread;
+
 namespace KS
 {
 // TODO: 这里应该也不是DeviceRule，只有UDEV才叫Rule，这里只能说是控制参数
@@ -49,7 +51,7 @@ public:
     QSharedPointer<DeviceRule> getRule(const QString &uid);
 
     bool isIFCEnable(int type);
-    bool setIFCEnable(int type, bool enable);
+    void setIFCEnable(int type, bool enable);
 
 private:
     explicit DeviceRuleManager(QObject *parent = nullptr);
@@ -67,8 +69,6 @@ private:
 
     // 将接口控制文件同步到对应的系统配置中
     void syncInterfaceFile();
-    // 同步更新蓝牙服务
-    void syncToBluetoothService();
     // 将接口控制配置同步到udev规则文件
     void syncToInterfaceUdevFile();
     // 根据接口类型获取udev规则
@@ -77,9 +77,17 @@ private:
     void syncInterfaceToGrubFile();
     // 获取系统中所有HDMI接口名称
     QStringList getHDMINames();
+    // 同步更新蓝牙服务
+    void syncToBluetoothService();
 
     void saveToFile(const QStringList &lines, const QString &filename);
-    // 更新legacy和efi两种模式下的grub配置
+    // 在线程中更新相关的grub配置
+    void updateGrubsInThread();
+    // 检查是否有等待grub配置更新的命令
+    void checkWaitingUpdateGrubs();
+    // grub配置更新完毕
+    void finishGrubsUpdate();
+    // 更新单个grub配置
     void updateGrub(const QString &filePath);
 
 private:
@@ -87,5 +95,9 @@ private:
     QSettings *m_deviceSettings;
     // 接口控制相关配置
     QSettings *m_interfaceSettings;
+    // grub更新线程
+    QThread *m_grubUpdateThread;
+    // 是否需要更新grub配置
+    bool m_waitingUpdateGrub;
 };
 }  // namespace KS

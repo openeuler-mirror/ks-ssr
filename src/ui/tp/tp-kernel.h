@@ -14,7 +14,6 @@
 #ifndef TPKERNEL_H
 #define TPKERNEL_H
 
-#include <QTimer>
 #include <QWidget>
 #include "src/ui/tp/tp-kernel-table.h"
 
@@ -38,19 +37,15 @@ private:
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void addClicked(bool checked);
-    void refreshClicked(bool checked);
-    void recertificationClicked(bool checked);
+    void updateClicked(bool checked);
     void unprotectClicked(bool checked);
     void unprotectAccepted();
     void prohibitUnloadingStatusChanged(bool status, const QString &path);
-    void refreshTimerTimeout();
 
 private:
     Ui::TPKernel *m_ui;
 
-    KSSDbusProxy *m_dbusProxy;
-
-    QTimer *m_refreshTimer;
+    KSSDbusProxy *m_tpDBusProxy;
 };
 }  // namespace KS
 

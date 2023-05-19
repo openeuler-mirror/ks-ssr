@@ -87,17 +87,8 @@
             <arg type="i" name="type" direction="in">
                 <summary>The type of device interface.</summary>
             </arg>
-            <arg type="b" name="result" direction="out">
-                <summary>The enable result.</summary>
-            </arg>
-        </method>
-
-        <method name="DisableInterface">
-            <arg type="i" name="type" direction="in">
-                <summary>The type of device interface.</summary>
-            </arg>
-            <arg type="b" name="result" direction="out">
-                <summary>The disable result.</summary>
+            <arg type="b" name="enabled" direction="in">
+                <summary>Whether to enable the interface.</summary>
             </arg>
         </method>
 

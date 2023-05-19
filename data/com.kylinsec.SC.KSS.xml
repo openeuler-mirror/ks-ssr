@@ -57,14 +57,15 @@
             <description>Remove file from protected file list.</description>
         </method>
 
-        <method name="SetStorageMode">
-            <arg type="u" name="type" direction="in">
-                <summary>A storage mode type.</summary>
-            </arg>
+        <method name="SoftModeChecked">
+            <description>Select soft mode for root key storage method.</description>
+        </method>
+
+        <method name="HardModeChecked">
             <arg type="s" name="user_pin" direction="in">
                 <summary>A user pin.</summary>
             </arg>
-            <description>Set the storage mode.</description>
+            <description>Select hard mode for root key storage method.</description>
         </method>
 
         <method name="SetTrustedStatus">
@@ -86,14 +87,6 @@
             </arg>
             <description>Search for trusted protection list.</description>
         </method>
-
-        <property name="StorageMode" type="u" access="read">
-            <description>The KSS storage mode.</description>
-        </property>
-
-        <property name="TrustedStatus" type="b" access="read">
-            <description>The KSS trusted status.</description>
-        </property>
 
         <property name="Initialized" type="b" access="read">
             <description>The KSS initialized.</description>

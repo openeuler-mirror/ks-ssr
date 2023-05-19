@@ -19,6 +19,7 @@
 #include <QMutex>
 #include <QProcess>
 #include <QTextStream>
+#include <QThread>
 #include "config.h"
 #include "ksc-i.h"
 #include "ksc-marcos.h"
@@ -125,7 +126,7 @@ bool DeviceRuleManager::isIFCEnable(int type)
     return ret;
 }
 
-bool DeviceRuleManager::setIFCEnable(int type, bool enable)
+void DeviceRuleManager::setIFCEnable(int type, bool enable)
 {
     // RETURN_VAL_IF_FALSE(this->verifyInterface(type), false)
 
@@ -137,11 +138,13 @@ bool DeviceRuleManager::setIFCEnable(int type, bool enable)
     m_interfaceSettings->endGroup();
 
     this->syncInterfaceFile();
-
-    return true;
 }
 
-DeviceRuleManager::DeviceRuleManager(QObject *parent) : QObject(parent)
+DeviceRuleManager::DeviceRuleManager(QObject *parent) : QObject(parent),
+                                                        m_deviceSettings(nullptr),
+                                                        m_interfaceSettings(nullptr),
+                                                        m_grubUpdateThread(nullptr),
+                                                        m_waitingUpdateGrub(false)
 {
     this->init();
 }
@@ -151,9 +154,8 @@ void DeviceRuleManager::init()
     m_deviceSettings = new QSettings(KSC_DEVICE_RULE_FILE, QSettings::NativeFormat, this);
     m_interfaceSettings = new QSettings(KSC_DI_RULE_FILE, QSettings::NativeFormat, this);
 
-    // grub2-mkconfig耗时比较长，初始化时展示不做同步
-    // this->syncDeviceFile();
-    // this->syncInterfaceFile();
+    this->syncDeviceFile();
+    this->syncInterfaceFile();
 }
 
 void DeviceRuleManager::syncDeviceFile()
@@ -206,22 +208,9 @@ QString DeviceRuleManager::getUdevModeValue(QSharedPointer<DeviceRule> rule)
 
 void DeviceRuleManager::syncInterfaceFile()
 {
-    this->syncToBluetoothService();
     this->syncToInterfaceUdevFile();
     this->syncInterfaceToGrubFile();
-}
-
-void DeviceRuleManager::syncToBluetoothService()
-{
-    auto enabled = isIFCEnable(InterfaceType::INTERFACE_TYPE_BLUETOOTH);
-    if (enabled)
-    {
-        SystemdProxy::getDefault()->startAndEnableUnit("bluetooth.service");
-    }
-    else
-    {
-        SystemdProxy::getDefault()->stopAndDisableUnit("bluetooth.service");
-    }
+    this->syncToBluetoothService();
 }
 
 void DeviceRuleManager::syncToInterfaceUdevFile()
@@ -274,30 +263,75 @@ RUN=\"/bin/sh -c 'nmcli n %s'\"",
 
 void DeviceRuleManager::syncInterfaceToGrubFile()
 {
+    QString grubValue;
+    QString grubOption;
+
+    // 生成grub选项
     auto hdmiNames = getHDMINames();
     auto enabled = isIFCEnable(InterfaceType::INTERFACE_TYPE_HDMI);
-
-    if (enabled || hdmiNames.size() == 0)
+    if (!enabled && hdmiNames.size() != 0)
     {
-        saveToFile(QStringList(), KSC_DI_GRUB_FILE);
-    }
-    else
-    {
-        QString grubOption("GRUB_CMDLINE_LINUX_DEFAULT=\"");
-
         for (const auto &hdmiName : hdmiNames)
         {
-            if (!grubOption.isEmpty())
+            if (!grubValue.isEmpty())
             {
-                grubOption.append(' ');
+                grubValue.append(' ');
             }
-            grubOption.append(QString("video=%1:d").arg(hdmiName));
+            grubValue.append(QString("video=%1:d").arg(hdmiName));
         }
-        grubOption.append('"');
-        saveToFile(QStringList(grubOption), KSC_DI_GRUB_FILE);
     }
-    updateGrub(GRUB_LEGACY_FILE_PATH);
-    updateGrub(GRUB_EFI_FILE_PATH);
+    grubOption = QString("GRUB_CMDLINE_LINUX_DEFAULT=\"%1\"").arg(grubValue);
+
+    // 读取grub配置并替换掉对应的grub选项
+    QFile grubFile(KSC_DI_GRUB_FILE);
+    if (!grubFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        KLOG_WARNING() << "Open file " << KSC_DI_GRUB_FILE << " failed.";
+        return;
+    }
+
+    QStringList lines;
+    QTextStream grubIn(&grubFile);
+    while (!grubIn.atEnd())
+    {
+        QString line = grubIn.readLine();
+        if (!line.contains("GRUB_CMDLINE_LINUX_DEFAULT"))
+        {
+            lines.append(line);
+        }
+    }
+    lines.append(grubOption);
+    grubFile.close();
+    this->saveToFile(lines, KSC_DI_GRUB_FILE);
+
+    m_waitingUpdateGrub = true;
+    this->checkWaitingUpdateGrubs();
+}
+
+void DeviceRuleManager::updateGrubsInThread()
+{
+    this->updateGrub(GRUB_LEGACY_FILE_PATH);
+    this->updateGrub(GRUB_EFI_FILE_PATH);
+}
+
+void DeviceRuleManager::checkWaitingUpdateGrubs()
+{
+    RETURN_IF_TRUE(m_grubUpdateThread);
+
+    if (m_waitingUpdateGrub)
+    {
+        m_waitingUpdateGrub = false;
+        m_grubUpdateThread = QThread::create(std::bind(&DeviceRuleManager::updateGrubsInThread, this));
+        connect(m_grubUpdateThread, &QThread::finished, std::bind(&DeviceRuleManager::finishGrubsUpdate, this));
+        m_grubUpdateThread->start();
+    }
+}
+
+void DeviceRuleManager::finishGrubsUpdate()
+{
+    this->m_grubUpdateThread->deleteLater();
+    this->m_grubUpdateThread = nullptr;
+    this->checkWaitingUpdateGrubs();
 }
 
 QStringList DeviceRuleManager::getHDMINames()
@@ -315,6 +349,19 @@ QStringList DeviceRuleManager::getHDMINames()
         }
     }
     return hdmiNames;
+}
+
+void DeviceRuleManager::syncToBluetoothService()
+{
+    auto enabled = isIFCEnable(InterfaceType::INTERFACE_TYPE_BLUETOOTH);
+    if (enabled)
+    {
+        SystemdProxy::getDefault()->startAndEnableUnit("bluetooth.service");
+    }
+    else
+    {
+        SystemdProxy::getDefault()->stopAndDisableUnit("bluetooth.service");
+    }
 }
 
 void DeviceRuleManager::saveToFile(const QStringList &lines, const QString &filename)
