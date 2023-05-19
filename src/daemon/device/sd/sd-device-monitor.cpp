@@ -44,7 +44,7 @@ SDDeviceMonitor::~SDDeviceMonitor()
         m_event = nullptr;
     }
 
-    delete m_socketNotify;
+        delete m_socketNotify;
     m_socketNotify = nullptr;
 }
 

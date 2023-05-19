@@ -98,8 +98,11 @@ bool Box::delBox(const QString &currentPassword)
 
     if (boxInfo.mounted)
     {
-        KLOG_WARNING() << "The box has been mounted and cannot be deleted. uid = " << m_boxID;
-        return false;
+        // 如果已挂载则先unmount #5047
+        KLOG_DEBUG() << "The box has been mounted and cannot be deleted. uid = " << m_boxID;
+
+        umount();
+        // return false;
     }
 
     // 删除目录

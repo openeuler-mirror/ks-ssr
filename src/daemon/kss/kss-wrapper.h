@@ -44,10 +44,11 @@ public:
     QString getExecuteFiles();
 
     // 可信切换软模式
-    void softModeChecked();
-    void hardModeChecked(const QString &userPin);
+    QString setStorageMode(KSCKSSTrustedStorageType type, const QString &userPin);
+    KSCKSSTrustedStorageType getCurrentStorageMode();
     // 可信开关
     void setTrustedStatus(bool status);
+    QString getTrustedStatus();
 
     // 文件保护
     // 添加文件

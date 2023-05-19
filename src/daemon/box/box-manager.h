@@ -29,12 +29,9 @@ class BoxManager : public QObject,
                    protected QDBusContext
 {
     Q_OBJECT
-
 public:
-    static void globalInit(QObject *parent);
-    static void globalDeinit();
-
-    static BoxManager *instance() { return m_instance; };
+    BoxManager(QObject *parent);
+    virtual ~BoxManager();
 
 public:  // PROPERTIES
     Q_PROPERTY(QString RSAPublicKey READ rsaPublicKey)
@@ -69,17 +66,13 @@ Q_SIGNALS:  // SIGNALS
     // 删除box
     void BoxDeleted(const QString &boxID);
 
-private:
-    BoxManager(QObject *parent);
-    virtual ~BoxManager();
+public Q_SLOTS:
 
 private:
     void init();
     uint getSenderUid();
 
 private:
-    static BoxManager *m_instance;
-
     BoxManagerAdaptor *m_dbusAdaptor;
     QMap<QString, Box *> m_boxs;
 

@@ -29,6 +29,10 @@
         <file alias="switch-open">images/switch-open.svg</file>
         <file alias="switch-close">images/switch-close.svg</file>
         <file alias="loading">images/loading.gif</file>
+        <file alias="radio-checked">images/radio-checked.svg</file>
+        <file alias="radio-unchecked">images/radio-unchecked.svg</file>
+        <file alias="refresh">images/refresh.svg</file>
+        <file alias="refresh-hover">images/refresh-hover.svg</file>
     </qresource>
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>
