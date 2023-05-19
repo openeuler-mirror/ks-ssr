@@ -15,8 +15,8 @@
 #include "src/daemon/device/sd/sd-device.h"
 #include <qt5-log-i.h>
 #include <systemd/sd-device.h>
-#include <QThread>
 #include <QProcess>
+#include <QThread>
 #include "ksc-marcos.h"
 
 namespace KS
@@ -105,16 +105,16 @@ void SDDevice::trigger()
     process->start("bash", QStringList() << "-c" << cmd);
 
     connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [=]()
-    {
-        if (!process->readAllStandardError().isEmpty())
-        {
-            KLOG_ERROR() << "Failed to trigger sd device with change event.";
-        }
-        process->deleteLater();
-    });
-//    if (sd_device_trigger(m_device, SD_DEVICE_CHANGE) < 0)
-//    {
-//        KLOG_ERROR() << "Failed to trigger sd device with change event.";
-//    }
+            {
+                if (!process->readAllStandardError().isEmpty())
+                {
+                    KLOG_ERROR() << "Failed to trigger sd device with change event.";
+                }
+                process->deleteLater();
+            });
+    //    if (sd_device_trigger(m_device, SD_DEVICE_CHANGE) < 0)
+    //    {
+    //        KLOG_ERROR() << "Failed to trigger sd device with change event.";
+    //    }
 }
 }  // namespace KS
