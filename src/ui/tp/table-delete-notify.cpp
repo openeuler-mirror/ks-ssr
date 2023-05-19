@@ -31,6 +31,11 @@ TableDeleteNotify::~TableDeleteNotify()
 
 void TableDeleteNotify::init()
 {
+    // 页面关闭时销毁
+    setAttribute(Qt::WA_DeleteOnClose);
+    setWindowModality(Qt::ApplicationModal);
+    setTitleBarHeight(36);
+    setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
     setFixedSize(280, 200);
     setIcon(QIcon(":/images/logo"));
     setResizeable(false);
