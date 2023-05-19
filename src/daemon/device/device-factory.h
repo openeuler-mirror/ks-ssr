@@ -19,6 +19,7 @@
 
 namespace KS
 {
+
 class Device;
 
 class DeviceFactory : public QObject
