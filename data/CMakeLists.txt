@@ -19,9 +19,10 @@ install(
     ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/dbus-1/system-services)
 
 # policy file
-install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.policy.in
-        RENAME com.kylinsec.SC.policy
-        DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/polkit-1/actions/)
+install(
+  FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.policy.in
+  RENAME com.kylinsec.SC.policy
+  DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/polkit-1/actions/)
 
 # conf files
 install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.conf
@@ -40,10 +41,8 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/ksc.ini
         DESTINATION ${KSC_INSTALL_DATADIR})
 
 # desktop
-configure_file (
-        ${PROJECT_SOURCE_DIR}/data/ks-sc-gui.desktop.in
-        ${PROJECT_BINARY_DIR}/data/ks-sc-gui.desktop
-)
+configure_file(${PROJECT_SOURCE_DIR}/data/ks-sc-gui.desktop.in
+               ${PROJECT_BINARY_DIR}/data/ks-sc-gui.desktop)
 
 install(FILES ${PROJECT_BINARY_DIR}/data/ks-sc-gui.desktop
-	DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/applications/)
+        DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/applications/)
