@@ -17,19 +17,21 @@ qt5_add_dbus_interface(
   BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
   box_manager_proxy)
 
-set_source_files_properties(${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
-                            PROPERTIES CLASSNAME KSSDbusProxy NO_NAMESPACE true)
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
+  PROPERTIES CLASSNAME KSSDbusProxy NO_NAMESPACE true)
 
-qt5_add_dbus_interface(
-  KSS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml kss_dbus_proxy)
+qt5_add_dbus_interface( 
+  KSS_DBUS_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
+  kss_dbus_proxy)
 
 set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
   PROPERTIES CLASSNAME DeviceManagerProxy NO_NAMESPACE true)
 
 qt5_add_dbus_interface(
-  DEVICE_MANAGER_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
+  DEVICE_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
   device_manager_proxy)
 
 qt5_wrap_ui(
@@ -78,17 +80,12 @@ target_include_directories(
   ${TARGET_NAME}
   PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
           ${PROJECT_SOURCE_DIR}/include ${KLOG_QT5_INCLUDE_DIRS}
-          ${X11_INCLUDE_DIRS} ${KS_LICENSE_INCLUDE_DIRS})
+          ${X11_INCLUDE_DIRS}
+          ${KS_LICENSE_INCLUDE_DIRS})
 
 target_link_libraries(
-  ${TARGET_NAME}
-  PRIVATE ${KLOG_QT5_LIBRARIES}
-          ${X11_LIBRARIES}
-          Qt5::DBus
-          Qt5::Widgets
-          Qt5::X11Extras
-          lib-base
-          qrencode)
+  ${TARGET_NAME} PRIVATE ${KLOG_QT5_LIBRARIES} ${X11_LIBRARIES} Qt5::DBus
+                         Qt5::Widgets Qt5::X11Extras Qt5::Network lib-base qrencode)
 
 install(FILES ${QM_FILES} DESTINATION ${KSC_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

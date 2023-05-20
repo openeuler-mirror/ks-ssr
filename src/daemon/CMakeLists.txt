@@ -52,7 +52,7 @@ target_include_directories(
   ${TARGET_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
                          ${PROJECT_SOURCE_DIR}/include)
 
-target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Core Qt5::DBus Qt5::Sql
+target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Core Qt5::DBus Qt5::Sql Qt5::X11Extras
                                              lib-base ${LIBSYSTEMD_LIBRARIES})
 
 install(FILES ${QM_FILES} DESTINATION ${KSC_INSTALL_TRANSLATIONDIR})

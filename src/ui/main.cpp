@@ -18,6 +18,7 @@
 #include <QFileInfo>
 #include <QTranslator>
 #include <QtGlobal>
+#include "src/ui/common/single-application/single-application.h"
 #include "config-ui.h"
 #include "src/ui/window.h"
 
@@ -33,9 +34,14 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Failed to init kiran-log.");
     }
 
-    QApplication app(argc, argv);
-    QApplication::setApplicationName(programName);
-    QApplication::setApplicationVersion(PROJECT_VERSION);
+    SingleApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    SingleApplication app(argc,
+                          argv,
+                          true,
+                          SingleApplication::Mode::User | SingleApplication::Mode::SecondaryNotification);
+
+    SingleApplication::setApplicationName(programName);
+    SingleApplication::setApplicationVersion(PROJECT_VERSION);
     app.setStyle("Fusion");
     QTranslator translator;
 
@@ -46,6 +52,11 @@ int main(int argc, char *argv[])
     else
     {
         app.installTranslator(&translator);
+    }
+
+    if (!app.isPrimary())
+    {
+        exit(EXIT_SUCCESS);
     }
 
     KS::Window window;
