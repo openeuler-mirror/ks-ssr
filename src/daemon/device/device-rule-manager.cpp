@@ -47,6 +47,7 @@ namespace KS
 #define PER_BIN_VALUE_EXECUTE 1  // 2的0次方
 
 #define GRUB_MKCONFIG_PROGRAM "/usr/sbin/grub2-mkconfig"
+#define NMCLI_PROGRAM "/usr/bin/nmcli"
 // legacy模式下的grub配置路径
 #define GRUB_LEGACY_FILE_PATH "/etc/grub2.cfg"
 // efi模式下的grub配置路径
@@ -182,15 +183,15 @@ void DeviceRuleManager::syncToDeviceUdevFile()
 
 QString DeviceRuleManager::ruleObj2Str(QSharedPointer<DeviceRule> rule)
 {
-    if (rule->interfaceType == INTERFACE_TYPE_USB)
+    // 只有禁用的时候需要设置udev规则，启用时删除规则即可
+    if (rule->interfaceType == INTERFACE_TYPE_USB && !rule->enable)
     {
         return QString::asprintf("ACTION==\"*\", SUBSYSTEMS==\"usb\", \
 ATTRS{idVendor}==\"%s\", ATTRS{idProduct}==\"%s\", \
-MODE=\"%s\", RUN=\"/bin/sh -c 'echo %d >/sys/$devpath/authorized'\"",
+MODE=\"%s\", RUN=\"/bin/sh -c 'echo 0 >/sys/$devpath/authorized'\"",
                                  rule->idVendor.toStdString().c_str(),
-                                 rule->idVendor.toStdString().c_str(),
-                                 this->getUdevModeValue(rule).toStdString().c_str(),
-                                 rule->enable ? 1 : 0);
+                                 rule->idProduct.toStdString().c_str(),
+                                 this->getUdevModeValue(rule).toStdString().c_str());
     }
 
     return QString();
@@ -211,24 +212,18 @@ void DeviceRuleManager::syncInterfaceFile()
     this->syncToInterfaceUdevFile();
     this->syncInterfaceToGrubFile();
     this->syncToBluetoothService();
+    this->syncToNMService();
 }
 
 void DeviceRuleManager::syncToInterfaceUdevFile()
 {
     QStringList rules;
-    int type;
 
-    // TODO: 需要修改代码，不是每个类型都有UDEV规则
-    for (type = INTERFACE_TYPE_USB; type < INTERFACE_TYPE_LAST; type++)
+    auto udevRule = this->getInterfaceUdevRule(InterfaceType::INTERFACE_TYPE_USB);
+    if (!udevRule.isNull())
     {
-        auto udevRule = this->getInterfaceUdevRule(type);
-
-        if (!udevRule.isNull())
-        {
-            rules.append(udevRule);
-        }
+        rules.append(udevRule);
     }
-
     this->saveToFile(rules, KSC_DI_UDEV_RULE_FILE);
 }
 
@@ -239,10 +234,14 @@ QString DeviceRuleManager::getInterfaceUdevRule(int type)
     switch (type)
     {
     case INTERFACE_TYPE_USB:
-        return QString::asprintf("ACTION==\"*\", SUBSYSTEMS==\"usb\", \
-RUN=\"/bin/sh -c 'echo %d >/sys/$devpath/authorized'\"",
-                                 enable ? 1 : 0);
-
+    {
+        // 只有禁用的时候需要设置udev规则，启用时删除规则即可
+        if (!enable)
+        {
+            return QString::asprintf("ACTION==\"*\", SUBSYSTEMS==\"usb\", \
+RUN=\"/bin/sh -c 'echo 0 >/sys/$devpath/authorized'\"");
+        }
+    }
     case INTERFACE_TYPE_BLUETOOTH:
         break;
 
@@ -353,7 +352,7 @@ QStringList DeviceRuleManager::getHDMINames()
 
 void DeviceRuleManager::syncToBluetoothService()
 {
-    auto enabled = isIFCEnable(InterfaceType::INTERFACE_TYPE_BLUETOOTH);
+    auto enabled = this->isIFCEnable(InterfaceType::INTERFACE_TYPE_BLUETOOTH);
     if (enabled)
     {
         SystemdProxy::getDefault()->startAndEnableUnit("bluetooth.service");
@@ -361,6 +360,21 @@ void DeviceRuleManager::syncToBluetoothService()
     else
     {
         SystemdProxy::getDefault()->stopAndDisableUnit("bluetooth.service");
+    }
+}
+
+void DeviceRuleManager::syncToNMService()
+{
+    auto enabled = this->isIFCEnable(InterfaceType::INTERFACE_TYPE_NET);
+    auto arguments = QStringList{QString("n"), (enabled ? "on" : "off")};
+    auto command = QString("%1 %2").arg(NMCLI_PROGRAM).arg(arguments.join(' '));
+
+    KLOG_DEBUG() << "Sync switch to networkmanager service.";
+
+    auto exitcode = QProcess::execute(NMCLI_PROGRAM, arguments);
+    if (exitcode != 0)
+    {
+        KLOG_WARNING() << "Failed to execute command " << command << ", exitcode is " << exitcode;
     }
 }
 
