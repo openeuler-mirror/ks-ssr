@@ -14,6 +14,7 @@
 
 #include "device-log-table.h"
 #include <QApplication>
+#include <QDateTime>
 #include <QFont>
 #include <QHeaderView>
 #include <QPainter>
