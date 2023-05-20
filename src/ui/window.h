@@ -48,6 +48,8 @@ private slots:
     void popupActiveDialog();
     void updateActivation();
     void popupSettingsDialog();
+    // 单例模式激活窗口
+    void activateMetaObject();
 
 private:
     Ui::Window *m_ui;
