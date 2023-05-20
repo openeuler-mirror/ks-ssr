@@ -209,6 +209,12 @@ KS--Window QMenu
     border-radius: 6px;
     top:10px;
 }
+
+KS--Window QMenu QAbstractItemView
+{
+    border-radius: 6px;
+}
+
 KS--Window QMenu::item
 {
     color:#ffffff;
@@ -443,16 +449,63 @@ KS--DevicePage
    background-color:#222222;
 }
 
+
+KS--DevicePage QListWidget#m_sidebar
+{
+    background-color:#2d2d2d;
+    border-radius: 6px;
+    padding-left: 10px;
+    padding-top: 16px;
+    padding-right: 24px;
+}
+
+KS--DevicePage QListWidget#m_sidebar::item
+{
+    border-radius: 6px;
+    background:#393939;
+}
+
+KS--DevicePage QListWidget#m_sidebar::item:selected
+{
+    background:#00A2FF;
+}
+
 KS--DeviceList,
 KS--DeviceLog
 {
     background-color:#2d2d2d;
 }
 
+KS--DeviceList QLineEdit QPushButton,
+KS--DeviceLog QLineEdit QPushButton
+{
+    background-color:transparent;
+}
+
 KS--DeviceList QLabel#m_records,
 KS--DeviceLog QLabel#m_records
 {
     color:#919191;
+}
+
+KS--DeviceListTable::item,
+KS--DeviceLogTable:item
+{
+    padding-left:10px;
+}
+
+KS--DeviceListTable QHeaderView,
+KS--DeviceLogTable QHeaderView
+{
+    color:#919191;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+}
+
+KS--DeviceListTable QHeaderView::section,
+KS--DeviceLogTable QHeaderView::section
+{
+    padding-left:10px;
 }
 
 KS--DevicePermission  QComboBox
@@ -463,6 +516,7 @@ KS--DevicePermission  QComboBox
     padding-left:12px;
     padding-right:12px;
     combobox-popup:0;
+    color:#ffffff;
 }
 
 KS--DevicePermission QComboBox QAbstractItemView {
@@ -477,6 +531,7 @@ KS--DevicePermission QComboBox QAbstractItemView {
 
 KS--DevicePermission QComboBox QAbstractItemView::item
 {
+    color:#ffffff;
     min-height: 36px;
     border-top: 1px solid #454545;
     padding-left:12px;
@@ -504,6 +559,7 @@ KS--DevicePermission #m_groupBox
 
 KS--DevicePermission #m_groupBox QCheckBox
 {
+   color:#ffffff;
    background-color:#393939;
    border: none;
    border-radius: 6px;

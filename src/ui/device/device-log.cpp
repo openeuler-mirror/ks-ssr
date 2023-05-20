@@ -13,13 +13,14 @@
  */
 
 #include "src/ui/device/device-log.h"
+#include <kiran-log/qt5-log-i.h>
+#include <QPainter>
+#include <QPushButton>
+#include <QStyleOption>
+#include <QWidgetAction>
 #include "src/ui/device/device-permission.h"
 #include "src/ui/device/table-filter-model.h"
 #include "src/ui/ui_device-log.h"
-
-#include <kiran-log/qt5-log-i.h>
-#include <QPainter>
-#include <QStyleOption>
 
 namespace KS
 {
@@ -29,7 +30,14 @@ DeviceLog::DeviceLog(QWidget *parent) : QWidget(parent),
 {
     m_ui->setupUi(this);
     m_ui->m_title->setText(tr("Device Log"));
-    m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
+
+    //设置搜索框搜索图标
+    auto searchButton = new QPushButton(m_ui->m_search);
+    searchButton->setIcon(QIcon(":/images/search"));
+    searchButton->setIconSize(QSize(16, 16));
+    auto action = new QWidgetAction(m_ui->m_search);
+    action->setDefaultWidget(searchButton);
+    m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
     //获取设备记录数据插入表格
     update();

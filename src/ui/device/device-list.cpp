@@ -15,6 +15,8 @@
 #include "src/ui/device/device-list.h"
 #include <kiran-log/qt5-log-i.h>
 #include <QPainter>
+#include <QPushButton>
+#include <QWidgetAction>
 #include "include/ksc-i.h"
 #include "include/ksc-marcos.h"
 #include "src/ui/common/message-dialog.h"
@@ -31,7 +33,14 @@ DeviceList::DeviceList(QWidget *parent) : QWidget(parent),
 {
     m_ui->setupUi(this);
     m_ui->m_title->setText(tr("Device List"));
-    m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
+
+    //设置搜索框搜索图标
+    auto searchButton = new QPushButton(m_ui->m_search);
+    searchButton->setIcon(QIcon(":/images/search"));
+    searchButton->setIconSize(QSize(16, 16));
+    auto action = new QWidgetAction(m_ui->m_search);
+    action->setDefaultWidget(searchButton);
+    m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
     //获取设备列表数据插入表格
     update();
