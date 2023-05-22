@@ -30,10 +30,6 @@ namespace KS
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-static QMap<QString, QColor> colorMap = {{DeviceUtils::deviceStateEnum2Str(DeviceState::DEVICE_STATE_ENABLE), QColor("#00a2ff")},
-                                         {DeviceUtils::deviceStateEnum2Str(DeviceState::DEVICE_STATE_DISABLE), QColor("#d30000")},
-                                         {DeviceUtils::deviceStateEnum2Str(DeviceState::DEVICE_STATE_UNAUTHORIED), QColor("#919191")}};
-
 DeviceListDelegate::DeviceListDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
 }
@@ -94,7 +90,22 @@ void DeviceListDelegate ::paint(QPainter *painter, const QStyleOptionViewItem &o
     //绘制状态列:根据状态显示字体颜色
     else if (index.column() == LIST_TABLE_FIELD_STATUS)
     {
-        viewOption.palette.setColor(QPalette::Text, colorMap.value(index.data().toString()));
+        //TODO: 由于翻译成中文后使用map方式获取不到颜色值，后面要优化逻辑
+        auto state = index.data(Qt::EditRole).toString();
+        QColor color;
+        if (state == ENABLE)
+        {
+            color.setNamedColor("#00a2ff");
+        }
+        else if (state == DISABLE)
+        {
+            color.setNamedColor("#d30000");
+        }
+        else
+        {
+            color.setNamedColor("#919191");
+        }
+        viewOption.palette.setColor(QPalette::Text, color);
 
         QFont font;
         font.setUnderline(false);

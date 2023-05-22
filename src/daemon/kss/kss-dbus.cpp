@@ -16,6 +16,7 @@
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include <QDBusError>
+#include <QDateTime>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
