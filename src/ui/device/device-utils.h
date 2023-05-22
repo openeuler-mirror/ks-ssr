@@ -17,6 +17,12 @@
 #include <QObject>
 #include "include/ksc-i.h"
 
+#define ENABLE QObject::tr("Enable")
+#define DISABLE QObject::tr("Disable")
+#define UNAUTHORIED QObject::tr("Unauthoried")
+#define SUCCESSFUL QObject::tr("Successful")
+#define FAILED QObject::tr("Failed")
+
 namespace KS
 {
 class DeviceUtils : public QObject
