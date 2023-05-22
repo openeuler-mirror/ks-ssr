@@ -133,7 +133,7 @@ void DeviceLogTable::initTable()
     horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter);
     setHeaderSections(QStringList() << tr("Device Name")
                                     << tr("Device Type")
-                                    << tr("Device Time")
+                                    << tr("Connection Time")
                                     << tr("Device Status"));
     horizontalHeader()->resizeSection(LogTableField::LOG_TABLE_FIELD_NAME, 200);
     horizontalHeader()->resizeSection(LogTableField::LOG_TABLE_FIELD_TIME, 200);
