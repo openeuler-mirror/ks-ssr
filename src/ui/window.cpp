@@ -123,7 +123,7 @@ void Window::initWindow()
     settingMenu->setObjectName("settingMenu");
 
     settingMenu->addAction(tr("Setup"), this, &Window::popupSettingsDialog);
-    settingMenu->addAction(tr("Activate Info"), this, &Window::popupActiveDialog);
+    settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
 
     layout->addWidget(m_activateStatus);
     layout->addWidget(btnForMenu);

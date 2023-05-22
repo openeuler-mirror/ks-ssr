@@ -66,7 +66,7 @@ void SettingsDevice::updateUI()
         //在HDMI接口后面添加（重启后生效）
         if (interfaceName == DeviceUtils::interfaceTypeEnum2Str(InterfaceType::INTERFACE_TYPE_HDMI))
         {
-            interfaceName.append(tr("(Effective after restart)"));
+            interfaceName.append(tr(" (Effective after restart)"));
         }
 
         auto typeLabel = new QLabel(interfaceName, this);
