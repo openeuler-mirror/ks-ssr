@@ -71,8 +71,20 @@ void FPPage::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     if (!fileName.isEmpty())
     {
-        m_fileProtectedProxy->AddProtectedFile(fileName).waitForFinished();
-        //        m_ui->m_fileTable->updateInfo();
+        auto reply = m_fileProtectedProxy->AddProtectedFile(fileName);
+        reply.waitForFinished();
+
+        if (reply.isError())
+        {
+            auto messgeDialog = new MessageDialog(this);
+            messgeDialog->setMessage(reply.error().message());
+
+            int x = window()->x() + width() / 4 + messgeDialog->width() / 4;
+            int y = window()->y() + height() / 4 + messgeDialog->height() / 4;
+            messgeDialog->move(x, y);
+            messgeDialog->show();
+            return;
+        }
         updateInfo();
     }
 }
@@ -94,8 +106,8 @@ bool FPPage::checkTrustedLoadFinied(bool initialized)
         messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
                                     "please wait a few minutes before trying."));
 
-        int x = this->x() + width() / 4 + messgeDialog->width() / 4;
-        int y = this->y() + height() / 4 + messgeDialog->height() / 4;
+        int x = window()->x() + width() / 4 + messgeDialog->width() / 4;
+        int y = window()->y() + height() / 4 + messgeDialog->height() / 4;
         messgeDialog->move(x, y);
         messgeDialog->show();
         return false;
@@ -103,10 +115,39 @@ bool FPPage::checkTrustedLoadFinied(bool initialized)
     return true;
 }
 
+bool FPPage::isExistSelectedItem()
+{
+    auto trustedInfos = m_ui->m_fileTable->getFPFileInfos();
+    for (auto trustedInfo : trustedInfos)
+    {
+        RETURN_VAL_IF_TRUE(trustedInfo.selected, true)
+    }
+
+    return false;
+}
+
 void FPPage::unprotectClicked(bool checked)
 {
     RETURN_IF_TRUE(!checkTrustedLoadFinied(m_fileProtectedProxy->initialized()))
+
+    if (!isExistSelectedItem())
+    {
+        auto messgeDialog = new MessageDialog(this);
+        messgeDialog->setMessage(tr("Please select the content that needs to be removed."));
+
+        int x = window()->x() + width() / 4 + messgeDialog->width() / 4;
+        int y = window()->y() + height() / 4 + messgeDialog->height() / 4;
+        messgeDialog->move(x, y);
+        messgeDialog->show();
+        return;
+    }
+
     auto unprotectNotify = new TableDeleteNotify(this);
+
+    int x = window()->x() + width() / 4 + unprotectNotify->width() / 4;
+    int y = window()->y() + height() / 4 + unprotectNotify->height() / 4;
+
+    unprotectNotify->move(x, y);
     unprotectNotify->show();
 
     connect(unprotectNotify, &TableDeleteNotify::accepted, this, &FPPage::unprotectAccepted);

@@ -109,7 +109,7 @@ void KSSWrapper::removeTrustedFile(const QString &filePath)
         {
             continue;
         }
-        if (jsonMod.value(KSC_KSS_JK_DATA_GUARD).toInt() != 0)
+        if (jsonMod.value(KSC_KSS_JK_DATA_GUARD).toInt() == 0)
         {
             continue;
         }

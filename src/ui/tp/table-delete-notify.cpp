@@ -36,7 +36,7 @@ void TableDeleteNotify::init()
     setWindowModality(Qt::ApplicationModal);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    setFixedSize(280, 200);
+    setFixedSize(299, 219);
     setIcon(QIcon(":/images/logo"));
     setResizeable(false);
     setTitle(tr("Remove protection"));
@@ -50,10 +50,5 @@ void TableDeleteNotify::init()
                 close();
                 emit accepted();
             });
-
-    int x = window()->x() + window()->width() / 2 + width() / 2;
-    int y = window()->y() + window()->height() / 2 + height() / 2;
-
-    move(x, y);
 }
 }  // namespace KS

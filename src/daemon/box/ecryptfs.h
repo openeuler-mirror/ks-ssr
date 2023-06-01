@@ -31,8 +31,8 @@ public:
 
     // 添加口令 ，返回ecryptfs_sig
     QString addPassphrase(const QString &passphrase);
-    // 解密 umount
-    void encrypt(const QString &umountPath);
+    // 解密 umount 返回错误信息
+    QString encrypt(const QString &umountPath);
     /*
      * 解密：mount
      * @passphrase:口令

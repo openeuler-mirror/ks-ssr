@@ -46,6 +46,12 @@ void TrustedUserPin::setType(uint type)
     m_type = KSCKSSTrustedStorageType(type);
 }
 
+void TrustedUserPin::closeEvent(QCloseEvent *event)
+{
+    emit closed();
+    QWidget::closeEvent(event);
+}
+
 void TrustedUserPin::initUI()
 {
     // 页面关闭时销毁
@@ -55,14 +61,10 @@ void TrustedUserPin::initUI()
     setTitle(tr("Input pin code"));
     setResizeable(false);
     setTitleBarHeight(36);
-    setFixedSize(300, 240);
+    setFixedSize(319, 259);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
 
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
-            {
-                close();
-                emit rejected();
-            });
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, &TrustedUserPin::close);
 
     connect(m_ui->m_ok, &QPushButton::clicked, this, [this]
             {

@@ -48,6 +48,7 @@ private slots:
     void popupActiveDialog();
     void updateActivation();
     void popupSettingsDialog();
+    void popupAboutDialog();
     // 单例模式激活窗口
     void activateMetaObject();
 

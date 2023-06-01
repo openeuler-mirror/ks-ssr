@@ -210,6 +210,21 @@ void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QSt
 {
     RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
 
+    // 检测列表中是否存在相同文件
+    QJsonParseError jsonError;
+    auto jsonDoc = QJsonDocument::fromJson(KSSWrapper::getDefault()->getFiles().toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+    }
+
+    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
+    for (const auto &module : jsonModules)
+    {
+        auto jsonMod = module.toObject();
+        RETURN_KSS_DBUS_ERROR_IF_TRUE(jsonMod.value(KSC_KSS_JK_DATA_PATH).toString() == filePath, KSCErrorCode::ERROR_TP_ADD_RECUR_FILE)
+    }
+    // 添加文件
     QFileInfo fileInfo(filePath);
     auto fileName = fileInfo.fileName();
     KSSWrapper::getDefault()->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));

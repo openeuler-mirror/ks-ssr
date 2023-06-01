@@ -138,7 +138,7 @@ void BoxPage::boxChanged(const QString &boxUID)
 void BoxPage::newBoxClicked(bool checked)
 {
     m_createBox = new CreateBox(this);
-    m_createBox->setFixedSize(400, 350);
+    m_createBox->setFixedSize(419, 369);
     m_createBox->setTitle(tr("Create box"));
 
     connect(m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
@@ -194,7 +194,7 @@ void BoxPage::createBoxAccepted()
     // 显示消息
     auto messgeDialog = new MessageDialog(this);
     messgeDialog->setMessage(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase));
-    messgeDialog->setFixedSize(240, 200);
+    messgeDialog->setFixedSize(259, 219);
     int x = window()->x() + window()->width() / 4 + messgeDialog->width() / 4;
     int y = window()->y() + window()->height() / 4 + messgeDialog->height() / 4;
     messgeDialog->move(x, y);

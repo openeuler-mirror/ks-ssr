@@ -206,7 +206,7 @@ bool TPExecuteModel::setData(const QModelIndex &index,
 
     if (role == Qt::UserRole || role == Qt::EditRole)
     {
-        onSingleStateChanged();
+        checkSelectStatus();
     }
 
     return true;
@@ -240,10 +240,12 @@ void TPExecuteModel::updateRecord()
     {
         // 后台返回数据需先转为obj后，将obj中的data字段转为arr
         auto jsonDataArray = jsonDoc.object().value(KSS_JSON_KEY_DATA).toArray();
-
-        for (auto jsonData : jsonDataArray)
+        // 倒序排序
+        auto jsonData = jsonDataArray.end();
+        while (jsonData != jsonDataArray.begin())
         {
-            auto data = jsonData.toObject();
+            jsonData--;
+            auto data = jsonData->toObject();
             auto type = TPUtils::fileTypeEnum2Str(data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
             auto status = TPUtils::fileStatusEnum2Str(data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
 
@@ -263,17 +265,7 @@ QList<TrustedRecord> TPExecuteModel::getExecuteRecords()
     return m_executeRecords;
 }
 
-void TPExecuteModel::onStateChanged(Qt::CheckState checkState)
-{
-    QModelIndex index;
-    for (int i = 0; i < rowCount(); ++i)
-    {
-        index = this->index(i, 0);
-        setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
-    }
-}
-
-void TPExecuteModel::onSingleStateChanged()
+void TPExecuteModel::checkSelectStatus()
 {
     auto state = Qt::Unchecked;
     int selectCount = 0;
@@ -308,7 +300,7 @@ TPExecuteTable::TPExecuteTable(QWidget *parent) : QTableView(parent),
     setHorizontalHeader(m_headerViewProxy);
     setMouseTracking(true);
 
-    connect(m_headerViewProxy, &TPTableHeaderProxy::toggled, m_model, &TPExecuteModel::onStateChanged);
+    connect(m_headerViewProxy, &TPTableHeaderProxy::toggled, this, &TPExecuteTable::checkedAllItem);
     connect(m_model, &TPExecuteModel::stateChanged, m_headerViewProxy, &TPTableHeaderProxy::setCheckState);
     m_filterProxy = new TPExecuteFilterModel(this);
     m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
@@ -346,6 +338,12 @@ void TPExecuteTable::searchTextChanged(const QString &text)
     KLOG_DEBUG() << "The search text is change to " << text;
 
     m_filterProxy->setFilterFixedString(text);
+    emit m_model->stateChanged(Qt::Unchecked);
+    for (int i = 0; i < m_model->rowCount(); ++i)
+    {
+        auto index = m_model->index(i, 0);
+        m_model->setData(index, Qt::Unchecked);
+    }
 }
 
 void TPExecuteTable::updateRecord()
@@ -377,6 +375,18 @@ void TPExecuteTable::showDetails(const QModelIndex &index)
 
     auto module = selectionModel()->model()->data(index);
     QToolTip::showText(QCursor::pos(), QString(tr("%1")).arg(module.toString()), this);
+}
+
+void TPExecuteTable::checkedAllItem(Qt::CheckState checkState)
+{
+    QModelIndex index;
+    for (int i = 0; i < selectionModel()->model()->rowCount(); ++i)
+    {
+        // 取到该行的序号列
+        auto number = selectionModel()->model()->data(model()->index(index.row(), 1)).toInt();
+        index = m_model->index(number, 0);
+        m_model->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
+    }
 }
 
 }  // namespace KS
