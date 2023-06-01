@@ -17,6 +17,7 @@
 #include <QFile>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
+#include "usb-device-description.h"
 
 namespace KS
 {
@@ -64,19 +65,26 @@ USBDevice::~USBDevice() {}
 void USBDevice::init()
 {
     auto device = this->getSDDevcie();
+    auto desc = USBDeviceDescription::instance();
 
     m_idVendor = device->getSysattrValue("idVendor");
     m_idProduct = device->getSysattrValue("idProduct");
-    m_product = device->getSysattrValue("product");
-    m_manufacturer = device->getSysattrValue("manufacturer");
-    m_uid = "USB" + m_idVendor + m_idProduct;
 
-    auto id = device->getSysattrValue("serial");
-    if (id.isNull())
+    m_product = device->getSysattrValue("product");
+    if (m_product.isNull())
     {
-        id = device->getSysattrValue("dev");
+        m_product = desc->getProductDesc(m_idVendor, m_idProduct);
     }
 
+    m_manufacturer = device->getSysattrValue("manufacturer");
+    if (m_manufacturer.isNull())
+    {
+        m_manufacturer = desc->getManufacturerDesc(m_idVendor);
+    }
+
+    m_uid = "USB" + m_idVendor + m_idProduct;
+
+    auto id = m_idVendor + ":" + m_idProduct;
     this->setID(id);
     this->setName(m_product);
     this->setType(this->parseDeviceType());
@@ -224,6 +232,11 @@ bool USBDevice::setEnable(bool enable)
     this->setState((rule.enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
     
     return true;
+}
+
+void USBDevice::update()
+{
+    this->setType(this->parseDeviceType());
 }
 
 }  // namespace KS
