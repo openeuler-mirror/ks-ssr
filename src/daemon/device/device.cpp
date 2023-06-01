@@ -40,6 +40,10 @@ bool Device::setEnable(bool enable)
     return false;
 }
 
+void Device::update()
+{
+}
+
 QString Device::getID() const
 {
     return m_id;
