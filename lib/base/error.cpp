@@ -34,6 +34,9 @@ QString Error::getErrorDesc(KSCErrorCode errorCode)
     case KSCErrorCode::ERROR_TP_ADD_INVALID_FILE:
         errorDesc = QObject::tr("Added file types are not supported.");
         break;
+    case KSCErrorCode::ERROR_TP_ADD_RECUR_FILE:
+        errorDesc = QObject::tr("The file is already in the list, and there is no need to add it repeatedly.");
+        break;
     case KSCErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED:
         errorDesc = QObject::tr("Failed to switch storage mode.");
         break;
@@ -45,6 +48,15 @@ QString Error::getErrorDesc(KSCErrorCode errorCode)
         break;
     case KSCErrorCode::ERROR_BM_NOT_FOUND:
         errorDesc = QObject::tr("Box not found!");
+        break;
+    case KSCErrorCode::ERROR_BM_REPEATED_NAME:
+        errorDesc = QObject::tr("The box is exist!");
+        break;
+    case KSCErrorCode::ERROR_BM_SETTINGS_SAME_PASSWORD:
+        errorDesc = QObject::tr("The password set to the same as the current password is not supported.");
+        break;
+    case KSCErrorCode::ERROR_BM_UMOUNT_FAIL:
+        errorDesc = QObject::tr("Busy resources!");
         break;
     case KSCErrorCode::ERROR_BM_MODIFY_PASSWORD_FAILED:
         errorDesc = QObject::tr("Failed to change the password, please check whether the password is correct.");

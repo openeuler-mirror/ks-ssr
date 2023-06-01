@@ -65,7 +65,7 @@ void LicenseActivation::initUI()
     setIcon(QIcon(":/images/logo"));
     setTitle(tr("Activation"));
     setButtonHints(TitlebarCloseButtonHint);
-    setFixedSize(450, 390);
+    setFixedSize(469, 409);
 
     //创建二维码按钮
     auto hLayout = new QHBoxLayout(m_ui->m_machine_code);

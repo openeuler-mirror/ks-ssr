@@ -21,7 +21,9 @@
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QX11Info>
+#include "src/ui/about.h"
 #include "src/ui/box/box-page.h"
+#include "src/ui/common/single-application/single-application.h"
 #include "src/ui/device/device-page.h"
 #include "src/ui/fp/fp-page.h"
 #include "src/ui/license/license-activation.h"
@@ -30,7 +32,6 @@
 #include "src/ui/settings/settings-page.h"
 #include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
-#include "src/ui/common/single-application/single-application.h"
 
 namespace KS
 {
@@ -86,7 +87,8 @@ void Window::initWindow()
 {
     setTitle(tr("Security control"));
     setIcon(QIcon(":/images/logo"));
-    setFixedSize(984, 648);
+    setFixedSize(1003, 667);
+    setResizeable(false);
 
     // 初始化样式表
     QFile file(KSC_STYLE_PATH);
@@ -124,6 +126,7 @@ void Window::initWindow()
 
     settingMenu->addAction(tr("Settings"), this, &Window::popupSettingsDialog);
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
+    settingMenu->addAction(tr("About"), this, &Window::popupAboutDialog);
 
     layout->addWidget(m_activateStatus);
     layout->addWidget(btnForMenu);
@@ -159,8 +162,8 @@ void Window::initNavigation()
 void Window::popupActiveDialog()
 {
     m_activation->update();
-    auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
-    auto y = this->y() + this->height() / 4 + m_activation->height() / 4;
+    auto x = this->x() + this->width() / 4 + m_activation->width() / 16;
+    auto y = this->y() + this->height() / 4 + m_activation->height() / 16;
     m_activation->move(x, y);
     m_activation->show();
 }
@@ -177,10 +180,20 @@ void Window::popupSettingsDialog()
 {
     auto settingsDialog = new SettingsPage(this);
 
-    auto x = this->x() + this->width() / 4 + m_activation->width() / 16;
-    auto y = this->y() + this->height() / 4 + m_activation->height() / 16;
+    auto x = this->x() + this->width() / 4 + settingsDialog->width() / 16;
+    auto y = this->y() + this->height() / 4 + settingsDialog->height() / 16;
     settingsDialog->move(x, y);
     settingsDialog->show();
+}
+
+void Window::popupAboutDialog()
+{
+    auto aboutDialog = new About(this);
+
+    auto x = this->x() + this->width() / 4 + aboutDialog->width() / 16;
+    auto y = this->y() + this->height() / 4 + aboutDialog->height() / 16;
+    aboutDialog->move(x, y);
+    aboutDialog->show();
 }
 
 void Window::activateMetaObject()

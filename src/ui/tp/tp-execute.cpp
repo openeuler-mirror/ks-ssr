@@ -113,8 +113,8 @@ void TPExecute::addExecuteFile(bool checked)
         auto messgeDialog = new MessageDialog(this);
         messgeDialog->setMessage(reply.error().message());
 
-        int x = this->x() + this->width() / 4 + messgeDialog->width() / 4;
-        int y = this->y() + this->height() / 4 + messgeDialog->height() / 4;
+        int x = window()->x() + this->width() / 4 + messgeDialog->width() / 4;
+        int y = window()->y() + this->height() / 4 + messgeDialog->height() / 4;
         messgeDialog->move(x, y);
         messgeDialog->show();
     }

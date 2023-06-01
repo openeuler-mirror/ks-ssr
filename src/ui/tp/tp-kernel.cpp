@@ -105,8 +105,8 @@ void TPKernel::addKernelFile(bool checked)
         auto messgeDialog = new MessageDialog(this);
         messgeDialog->setMessage(reply.error().message());
 
-        int x = this->x() + this->width() / 4 + messgeDialog->width() / 4;
-        int y = this->y() + this->height() / 4 + messgeDialog->height() / 4;
+        int x = window()->x() + this->width() / 4 + messgeDialog->width() / 4;
+        int y = window()->y() + this->height() / 4 + messgeDialog->height() / 4;
         messgeDialog->move(x, y);
         messgeDialog->show();
     }
@@ -157,6 +157,7 @@ void TPKernel::prohibitUnloading(bool status, const QString &path)
 {
     RETURN_IF_TRUE(path.isEmpty())
     m_dbusProxy->ProhibitUnloading(status, path).waitForFinished();
+    updateInfo();
 }
 
 void TPKernel::updateRefreshIcon()

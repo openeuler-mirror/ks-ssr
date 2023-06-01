@@ -192,6 +192,13 @@ KS--Loading#maskWidget
     border-radius: 6px;
 }
 
+KS--Loading QLabel#loadingLabel
+{
+    color:#919191;
+    font-size: 12px;
+    font:NotoSansCJKsc-Regular;
+}
+
 KS--Window QPushButton#btnForMenu
 {
     background:#2d2d2d;
@@ -278,6 +285,22 @@ QCheckBox::indicator::disabled:unchecked{
     image: url(:/images/checkbox-unchecked-disabled);
 }
 
+/* about */
+QLabel#m_info,
+QLabel#m_version
+{
+    color:#ffffff;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+}
+
+QLabel#m_license
+{
+    color:#919191;
+    font:NotoSansCJKsc-Regular;
+    font-size:10px;
+}
+
 /* message dialog */
 QWidget#messageDialog
 {
@@ -329,7 +352,7 @@ QPushButton#m_recertification:hover
 
 QPushButton#m_unprotect
 {
-    color:red;
+    color:#FA4949;
     font:NotoSansCJKsc-Regular;
     font-size:12px;
     border-radius:4px;

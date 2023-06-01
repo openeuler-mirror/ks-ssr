@@ -49,10 +49,6 @@ public:
     // QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
-
-    // void setEditorData(QWidget *editor, const QModelIndex &index) const override;
-    // void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
-    // void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
 
 class FPFilesFilterModel : public QSortFilterProxyModel
@@ -92,11 +88,8 @@ public:
 signals:
     void stateChanged(Qt::CheckState checkState);
 
-public slots:
-    void onStateChanged(Qt::CheckState checkState);
-
 private:
-    void onSingleStateChanged();
+    void checkSelectStatus();
 
 private:
     KSSDbusProxy *m_fileProtectedProxy;
@@ -118,6 +111,9 @@ public:
 
 private:
     void mouseEnter(const QModelIndex &index);
+
+private slots:
+    void checkedAllItem(Qt::CheckState checkState);
 
 private:
     FPFilesFilterModel *m_filterProxy;
