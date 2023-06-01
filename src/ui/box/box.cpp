@@ -177,13 +177,25 @@ void Box::switchMountedStatus()
     auto mounted = m_boxManagerProxy->IsMounted(m_uid).value();
     if (mounted)
     {
-        m_boxManagerProxy->UnMount(m_uid).waitForFinished();
+        auto reply = m_boxManagerProxy->UnMount(m_uid);
+        reply.waitForFinished();
+
+        if (reply.isError())
+        {
+            auto messgeDialog = new MessageDialog(this);
+            messgeDialog->setMessage(reply.error().message());
+
+            int x = window()->x() + messgeDialog->width();
+            int y = window()->y() + messgeDialog->height();
+            messgeDialog->move(x, y);
+            messgeDialog->show();
+            return;
+        }
     }
     else
     {
         m_inputMountPassword = new BoxPasswordChecked(window());
         m_inputMountPassword->setTitle(tr("Unlock"));
-        m_inputMountPassword->setFixedSize(300, 240);
         connect(m_inputMountPassword, &BoxPasswordChecked::accepted, this, &Box::inputMountPasswordAccepted);
 
         int x = window()->x() / 2 + m_inputMountPassword->width();
@@ -196,7 +208,7 @@ void Box::switchMountedStatus()
 void Box::modifyPassword()
 {
     m_modifyPassword = new BoxPasswordModification(window());
-    m_modifyPassword->setFixedSize(400, 400);
+    m_modifyPassword->setFixedSize(419, 419);
     m_modifyPassword->setTitle(tr("Modify password"));
 
     connect(m_modifyPassword, SIGNAL(accepted()), this, SLOT(modifyPasswordAccepted()));
@@ -223,7 +235,6 @@ void Box::delBox()
 {
     m_inputDelBoxPassword = new BoxPasswordChecked(window());
     m_inputDelBoxPassword->setTitle(tr("Del box"));
-    m_inputDelBoxPassword->setFixedSize(300, 240);
     connect(m_inputDelBoxPassword, &BoxPasswordChecked::accepted, this, &Box::inputDelBoxPasswordAccepted);
 
     int x = window()->x() / 2 + m_inputDelBoxPassword->width();
@@ -235,7 +246,7 @@ void Box::delBox()
 void Box::retrievePassword()
 {
     m_retrievePassword = new RetrieveBoxPassword(window());
-    m_retrievePassword->setFixedSize(300, 220);
+    m_retrievePassword->setFixedSize(319, 239);
     m_retrievePassword->setTitle(tr("Retrieve password"));
     connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
     connect(m_retrievePassword, &RetrieveBoxPassword::inputEmpty, this, [this]

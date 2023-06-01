@@ -66,7 +66,7 @@ void MessageDialog::initUI()
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    setFixedSize(240, 200);
+    setFixedSize(259, 219);
 
     auto vlay = new QVBoxLayout(getWindowContentWidget());
     vlay->setContentsMargins(4, 4, 4, 4);

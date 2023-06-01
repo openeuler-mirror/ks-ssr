@@ -37,7 +37,7 @@ static const QColor inactivatedColor("#222222");
 static const int inactivatedBlurRadius = 10;
 
 static const QColor activatedColor("#000000");
-static const int activatedBlurRadius = 18;
+static const int activatedBlurRadius = 26;
 
 #define XCB_GENERIC_EVENT_TYPE "xcb_generic_event_t"
 
