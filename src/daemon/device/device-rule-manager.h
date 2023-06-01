@@ -69,10 +69,6 @@ private:
 
     // 将接口控制文件同步到对应的系统配置中
     void syncInterfaceFile();
-    // 将接口控制配置同步到udev规则文件
-    void syncToInterfaceUdevFile();
-    // 根据接口类型获取udev规则
-    QString getInterfaceUdevRule(int type);
     // 将接口控制配置同步到grub文件
     void syncInterfaceToGrubFile();
     // 获取系统中所有HDMI接口名称
@@ -91,6 +87,9 @@ private:
     void finishGrubsUpdate();
     // 更新单个grub配置
     void updateGrub(const QString &filePath);
+
+    //USB接口Udev规则
+    QStringList getUSBIFCUdevRule();
 
 private:
     // 设备控制相关配置
