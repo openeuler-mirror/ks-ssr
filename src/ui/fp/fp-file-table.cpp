@@ -287,6 +287,10 @@ Qt::ItemFlags FPFilesModel::flags(const QModelIndex &index) const
 void FPFilesModel::updateInfo()
 {
     beginResetModel();
+    SCOPE_EXIT({
+        endResetModel();
+    });
+
     m_filesInfo.clear();
     // 刷新时checkbox状态清空
     emit stateChanged(Qt::Unchecked);
@@ -301,25 +305,23 @@ void FPFilesModel::updateInfo()
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser files information failed: " << jsonError.errorString();
+        return;
     }
-    else
+
+    // 后台返回数据需先转为obj后，将obj中的data字段转为arr
+    auto jsonDataArray = jsonDoc.object().value(KSS_JSON_KEY_DATA).toArray();
+    // 倒序排序
+    auto jsonData = jsonDataArray.end();
+    while (jsonData != jsonDataArray.begin())
     {
-        // 后台返回数据需先转为obj后，将obj中的data字段转为arr
-        auto jsonDataArray = jsonDoc.object().value(KSS_JSON_KEY_DATA).toArray();
-        // 倒序排序
-        auto jsonData = jsonDataArray.end();
-        while (jsonData != jsonDataArray.begin())
-        {
-            jsonData--;
-            auto data = jsonData->toObject();
-            auto fileInfo = FPFileInfo{.selected = false,
-                                       .fileName = data.value(KSS_JSON_KEY_DATA_FILE_NAME).toString(),
-                                       .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
-                                       .addTime = data.value(KSS_JSON_KEY_DATA_ADD_TIME).toString()};
-            m_filesInfo.push_back(fileInfo);
-        }
+        jsonData--;
+        auto data = jsonData->toObject();
+        auto fileInfo = FPFileInfo{.selected = false,
+                                   .fileName = data.value(KSS_JSON_KEY_DATA_FILE_NAME).toString(),
+                                   .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
+                                   .addTime = data.value(KSS_JSON_KEY_DATA_ADD_TIME).toString()};
+        m_filesInfo.push_back(fileInfo);
     }
-    endResetModel();
 }
 
 QList<FPFileInfo> FPFilesModel::getFPFileInfos()
