@@ -16,8 +16,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QObject>
-#include "include/ksc-marcos.h"
-#include "src/ui/common/message-dialog.h"
+#include "src/ui/common/ksc-marcos-ui.h"
 #include "src/ui/device/device-utils.h"
 
 #define INTERFACE_TYPE_PROPERTY "interface type"
@@ -118,30 +117,13 @@ void SettingsDevice::setInterfaceState(bool isEnable, InterfaceType type)
     RETURN_IF_TRUE(type == InterfaceType::INTERFACE_TYPE_UNKNOWN);
 
     QString errMsg;
-    if (isEnable)
-    {
-        if (!m_deviceManagerProxy->EnableInterface(type))
-        {
-            errMsg = tr("Failed to enable interface!");
-        }
-    }
-    else
-    {
-        if (!m_deviceManagerProxy->DisableInterface(type))
-        {
-            errMsg = tr("Failed to disable interface!");
-        }
-    }
 
+    m_deviceManagerProxy->EnableInterface(type, isEnable);
+
+    // TODO: 这里改成监控dbus错误消息，这种弹框用到的地方比较多，可以做一下封装，没必要每个地方都写一遍
     if (!errMsg.isEmpty())
     {
-        auto msgDialog = new MessageDialog(this);
-        msgDialog->setMessage(errMsg);
-        int x = window()->x() + window()->width() / 4 + msgDialog->width() / 4;
-        int y = window()->y() + window()->height() / 4 + msgDialog->height() / 4;
-        msgDialog->move(x, y);
-        msgDialog->show();
-        return;
+        POPUP_MESSAGE_DIALOG_RETURN(errMsg, this);
     }
 }
 

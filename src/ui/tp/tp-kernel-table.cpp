@@ -231,6 +231,10 @@ Qt::ItemFlags TPKernelModel::flags(const QModelIndex &index) const
 void TPKernelModel::updateRecord()
 {
     beginResetModel();
+    SCOPE_EXIT({
+        endResetModel();
+    });
+
     m_kernelRecords.clear();
     // 刷新时checkbox状态清空
     emit stateChanged(Qt::Unchecked);
@@ -245,30 +249,27 @@ void TPKernelModel::updateRecord()
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser files Recordrmation failed: " << jsonError.errorString();
-    }
-    else
-    {
-        // 后台返回数据需先转为obj后，将obj中的data字段转为arr
-        auto jsonDataArray = jsonDoc.object().value(KSS_JSON_KEY_DATA).toArray();
-        // 倒序排序
-        auto jsonData = jsonDataArray.end();
-        while (jsonData != jsonDataArray.begin())
-        {
-            jsonData--;
-            auto data = jsonData->toObject();
-            auto type = TPUtils::fileTypeEnum2Str(data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
-            auto status = TPUtils::fileStatusEnum2Str(data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
-            auto fileRecord = TrustedRecord{.selected = false,
-                                            .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
-                                            .type = type,
-                                            .status = status,
-                                            .md5 = data.value(KSS_JSON_KEY_DATA_HASH).toString(),
-                                            .guard = data.value(KSS_JSON_KEY_DATA_GUARD).toInt() == 0 ? false : true};
-            m_kernelRecords.push_back(fileRecord);
-        }
+        return;
     }
 
-    endResetModel();
+    // 后台返回数据需先转为obj后，将obj中的data字段转为arr
+    auto jsonDataArray = jsonDoc.object().value(KSS_JSON_KEY_DATA).toArray();
+    // 倒序排序
+    auto jsonData = jsonDataArray.end();
+    while (jsonData != jsonDataArray.begin())
+    {
+        jsonData--;
+        auto data = jsonData->toObject();
+        auto type = TPUtils::fileTypeEnum2Str(data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
+        auto status = TPUtils::fileStatusEnum2Str(data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
+        auto fileRecord = TrustedRecord{.selected = false,
+                                        .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
+                                        .type = type,
+                                        .status = status,
+                                        .md5 = data.value(KSS_JSON_KEY_DATA_HASH).toString(),
+                                        .guard = data.value(KSS_JSON_KEY_DATA_GUARD).toInt() == 0 ? false : true};
+        m_kernelRecords.push_back(fileRecord);
+    }
 }
 
 QList<TrustedRecord> TPKernelModel::getKernelRecords()
