@@ -37,6 +37,8 @@ public:
 
 private:
     void updateInfo();
+    bool isExistSelectedItem();
+
 signals:
     void initFinished();
 private Q_SLOTS:

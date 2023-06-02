@@ -18,8 +18,7 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QMessageBox>
-#include "include/ksc-marcos.h"
-#include "src/ui/common/message-dialog.h"
+#include "src/ui/common/ksc-marcos-ui.h"
 #include "src/ui/license/license-dbus.h"
 #include "src/ui/license/qrcode-dialog.h"
 #include "ui_license-activation.h"
@@ -90,13 +89,14 @@ void LicenseActivation::activate()
     QString errorMsg;
     auto isActivated = m_licenseDBus->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
 
-    auto msgDialog = new MessageDialog(this);
-    msgDialog->setMessage(isActivated ? tr("Activate app successful!") : errorMsg);
-
-    int x = window()->x() + window()->width() / 4 + msgDialog->width() / 4;
-    int y = window()->y() + window()->height() / 4 + msgDialog->height() / 4;
-    msgDialog->move(x, y);
-    msgDialog->show();
+    if (isActivated)
+    {
+        POPUP_MESSAGE_DIALOG_RETURN(tr("Activate app successful!"), this)
+    }
+    else
+    {
+        POPUP_MESSAGE_DIALOG_RETURN(errorMsg, this)
+    }
 }
 
 void LicenseActivation::popupQrencode()

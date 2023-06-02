@@ -38,17 +38,6 @@ namespace KS
 #define TRUSTED_STATUS_OPEN 1
 #define TRUSTED_STATUS_CLOSE 2
 
-// Box fount
-#define RETURN_KSS_DBUS_ERROR_IF_TRUE(cond, errorCode)                                                       \
-    {                                                                                                        \
-        if (cond)                                                                                            \
-        {                                                                                                    \
-            auto replyMessage = message.createErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(errorCode)); \
-            QDBusConnection::systemBus().send(replyMessage);                                                 \
-            return;                                                                                          \
-        }                                                                                                    \
-    }
-
 KSSDbus::KSSDbus(QObject *parent) : QObject(parent)
 {
     m_dbusAdaptor = new KSSDbusAdaptor(this);
@@ -107,7 +96,10 @@ QString KSSDbus::GetProtectedFiles()
 
 QString KSSDbus::Search(const QString &pathKey, uint searchType)
 {
-    RETURN_VAL_DBUS_ERROR_IF_TRUE(pathKey.isEmpty(), QString())
+    RETURN_VAL_DBUS_ERROR_IF_TRUE(pathKey.isEmpty(),
+                                  QString(),
+                                  KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                                  message())
 
     RETURN_VAL_IF_TRUE(KSSType(searchType) == KSSType::KSS_TYPE_NONE, QString())
     QString fileList;
@@ -162,7 +154,9 @@ void KSSDbus::init()
 
 void KSSDbus::addTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_DBUS_ERROR_IF_TRUE(filePath.isEmpty(),
+                              KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                              message)
 
     auto output = KSSWrapper::getDefault()->addTrustedFile(filePath);
     QJsonParseError jsonError;
@@ -188,7 +182,9 @@ void KSSDbus::addTPFileAfterAuthorization(const QDBusMessage &message, const QSt
 
 void KSSDbus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_DBUS_ERROR_IF_TRUE(filePath.isEmpty(),
+                              KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                              message)
 
     KSSWrapper::getDefault()->removeTrustedFile(filePath);
 
@@ -198,7 +194,9 @@ void KSSDbus::removeTPFileAfterAuthorization(const QDBusMessage &message, const 
 
 void KSSDbus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool prohibited, const QString &filePath)
 {
-    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_DBUS_ERROR_IF_TRUE(filePath.isEmpty(),
+                              KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                              message)
 
     KSSWrapper::getDefault()->prohibitUnloading(prohibited, filePath);
 
@@ -208,7 +206,9 @@ void KSSDbus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, b
 
 void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_DBUS_ERROR_IF_TRUE(filePath.isEmpty(),
+                              KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                              message)
 
     // 检测列表中是否存在相同文件
     QJsonParseError jsonError;
@@ -222,7 +222,9 @@ void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QSt
     for (const auto &module : jsonModules)
     {
         auto jsonMod = module.toObject();
-        RETURN_KSS_DBUS_ERROR_IF_TRUE(jsonMod.value(KSC_KSS_JK_DATA_PATH).toString() == filePath, KSCErrorCode::ERROR_TP_ADD_RECUR_FILE)
+        RETURN_DBUS_ERROR_IF_TRUE(jsonMod.value(KSC_KSS_JK_DATA_PATH).toString() == filePath,
+                                  KSCErrorCode::ERROR_TP_ADD_RECUR_FILE,
+                                  message)
     }
     // 添加文件
     QFileInfo fileInfo(filePath);
@@ -235,7 +237,9 @@ void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QSt
 
 void KSSDbus::removeFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_DBUS_ERROR_IF_TRUE(filePath.isEmpty(),
+                              KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                              message)
 
     KSSWrapper::getDefault()->removeFile(filePath);
 
@@ -245,10 +249,14 @@ void KSSDbus::removeFPFileAfterAuthorization(const QDBusMessage &message, const 
 
 void KSSDbus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint type, const QString &userPin)
 {
-    RETURN_KSS_DBUS_ERROR_IF_TRUE(userPin.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_DBUS_ERROR_IF_TRUE(userPin.isEmpty(),
+                              KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                              message)
     auto error = KSSWrapper::getDefault()->setStorageMode(KSCKSSTrustedStorageType(type), userPin);
 
-    RETURN_KSS_DBUS_ERROR_IF_TRUE(!error.isEmpty(), KSCErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED)
+    RETURN_DBUS_ERROR_IF_TRUE(!error.isEmpty(),
+                              KSCErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED,
+                              message)
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);

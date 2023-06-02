@@ -18,8 +18,7 @@
 #include <QPushButton>
 #include <QWidgetAction>
 #include "include/ksc-i.h"
-#include "include/ksc-marcos.h"
-#include "src/ui/common/message-dialog.h"
+#include "src/ui/common/ksc-marcos-ui.h"
 #include "src/ui/device/device-permission.h"
 #include "src/ui/device/table-filter-model.h"
 #include "src/ui/ui_device-list.h"
@@ -138,13 +137,7 @@ void DeviceList::updatePermission()
 
     if (!m_deviceManagerProxy->ChangePermission(id, QString(jsonDoc.toJson(QJsonDocument::Compact))))
     {
-        auto msgDialog = new MessageDialog(this);
-        msgDialog->setMessage(tr("Failed to change permission of device!"));
-        int x = window()->x() + window()->width() / 4 + msgDialog->width() / 4;
-        int y = window()->y() + window()->height() / 4 + msgDialog->height() / 4;
-        msgDialog->move(x, y);
-        msgDialog->show();
-        return;
+        POPUP_MESSAGE_DIALOG_RETURN(tr("Failed to change permission of device!"), this);
     }
 }
 
@@ -174,13 +167,7 @@ void DeviceList::updateState()
 
     if (!errMsg.isEmpty())
     {
-        auto msgDialog = new MessageDialog(this);
-        msgDialog->setMessage(errMsg);
-        int x = window()->x() + window()->width() / 4 + msgDialog->width() / 4;
-        int y = window()->y() + window()->height() / 4 + msgDialog->height() / 4;
-        msgDialog->move(x, y);
-        msgDialog->show();
-        return;
+        POPUP_MESSAGE_DIALOG_RETURN(errMsg, this);
     }
 }
 }  //namespace KS
