@@ -143,9 +143,9 @@ void BoxPage::newBoxClicked(bool checked)
 
     connect(m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
     connect(m_createBox, &CreateBox::passwdInconsistent, this, [this]
-            { POPUP_MESSAGE_DIALOG(tr("Please confirm whether the password is consistent."), this); });
+            { POPUP_MESSAGE_DIALOG(tr("Please confirm whether the password is consistent.")); });
     connect(m_createBox, &CreateBox::inputEmpty, this, [this]
-            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."), this); });
+            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
 
     int x = window()->x() + window()->width() / 4 + m_createBox->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_createBox->height() / 8;
@@ -165,13 +165,14 @@ void BoxPage::createBoxAccepted()
     auto boxID = reply.value();
     if (!reply.error().message().isEmpty())
     {
-        POPUP_MESSAGE_DIALOG_RETURN(reply.error().message(), this);
+        POPUP_MESSAGE_DIALOG(reply.error().message());
+        return;
     }
 
     auto box = new Box(boxID);
     //    m_ui->m_boxs->addBox(box);
     addBox(box);
     // 显示消息
-    POPUP_MESSAGE_DIALOG_RETURN(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase), this);
+    POPUP_MESSAGE_DIALOG(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase));
 }
 }  // namespace KS

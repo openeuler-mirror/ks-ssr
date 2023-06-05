@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef TRUSTEDUSERPIN_H
-#define TRUSTEDUSERPIN_H
+
+#pragma once
 
 #include <QCloseEvent>
 #include <QWidget>
@@ -54,5 +54,3 @@ private:
     KSCKSSTrustedStorageType m_type;
 };
 }  // namespace KS
-
-#endif  // TRUSTEDUSERPIN_H

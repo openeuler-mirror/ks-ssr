@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef RETRIEVEPASSWORD_H
-#define RETRIEVEPASSWORD_H
+
+#pragma once
 
 #include "src/ui/common/titlebar-window.h"
 
@@ -48,5 +48,3 @@ private:
     Ui::RetrieveBoxPassword *m_ui;
 };
 }  // namespace KS
-
-#endif  // RETRIEVEPASSWORD_H

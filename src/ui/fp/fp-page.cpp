@@ -52,6 +52,7 @@ FPPage::FPPage(QWidget *parent) : QWidget(parent),
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addProtectedFile(bool)));
     //    connect(m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
     connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(popDeleteNotify(bool)));
+    connect(m_ui->m_fileTable, &FPFileTable::filesUpdate, this, &FPPage::updateTips);
 }
 
 FPPage::~FPPage()
@@ -71,19 +72,9 @@ void FPPage::addProtectedFile(bool checked)
     if (!fileName.isEmpty())
     {
         auto reply = m_fileProtectedProxy->AddProtectedFile(fileName);
-        CHECK_ERROR_FOR_DBUS_REPLY(reply, QString(""), this);
-
-        updateInfo();
+        CHECK_ERROR_FOR_DBUS_REPLY(reply);
         return;
     }
-}
-
-void FPPage::updateInfo()
-{
-    m_ui->m_fileTable->updateInfo();
-    // 更新表格右上角提示信息
-    auto text = QString(tr("A total of %1 records")).arg(m_ui->m_fileTable->getFPFileInfos().size());
-    m_ui->m_tips->setText(text);
 }
 
 bool FPPage::checkTrustedLoadFinied(bool initialized)
@@ -91,10 +82,10 @@ bool FPPage::checkTrustedLoadFinied(bool initialized)
     // 可信未初始化完成，不允许操作
     if (!initialized)
     {
-        POPUP_MESSAGE_DIALOG_RETURN_VAL(tr("Trusted data needs to be initialised,"
-                                           "please wait a few minutes before trying."),
-                                        false,
-                                        this);
+        POPUP_MESSAGE_DIALOG(tr("Trusted data needs to be initialised,"
+                                "please wait a few minutes before trying."));
+
+        return false;
     }
     return true;
 }
@@ -116,7 +107,8 @@ void FPPage::popDeleteNotify(bool checked)
 
     if (!isExistSelectedItem())
     {
-        POPUP_MESSAGE_DIALOG_RETURN(tr("Please select the content that needs to be removed."), this)
+        POPUP_MESSAGE_DIALOG(tr("Please select the content that needs to be removed."));
+        return;
     }
 
     auto unprotectNotify = new TableDeleteNotify(this);
@@ -140,7 +132,13 @@ void FPPage::removeProtectedFile()
             m_fileProtectedProxy->RemoveProtectedFile(trustedInfo.filePath).waitForFinished();
         }
     }
-    updateInfo();
+}
+
+void FPPage::updateTips(int total)
+{
+    // 更新表格右上角提示信息
+    auto text = QString(tr("A total of %1 records")).arg(QString::number(total));
+    m_ui->m_tips->setText(text);
 }
 
 }  // namespace KS
