@@ -11,8 +11,7 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef KSSDBUS_H
-#define KSSDBUS_H
+#pragma once
 
 #include <QDBusContext>
 #include <QDBusObjectPath>
@@ -72,6 +71,8 @@ public Q_SLOTS:  // METHODS
     QString Search(const QString &path_key, uint searchType);
 Q_SIGNALS:  // SIGNALS
     void InitFinished();
+    void TrustedFilesUpdate();
+    void ProtectedFilesUpdate();
 
 private:
     void init();
@@ -90,4 +91,3 @@ private:
 };
 
 }  // namespace KS
-#endif  // KSSDBUS_H

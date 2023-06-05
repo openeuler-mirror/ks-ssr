@@ -78,6 +78,8 @@ TPKernelModel::TPKernelModel(QObject *parent) : QAbstractTableModel(parent),
                                      KSC_KSS_INIT_DBUS_OBJECT_PATH,
                                      QDBusConnection::systemBus(),
                                      this);
+    connect(m_tpDBusProxy, &KSSDbusProxy::TrustedFilesUpdate, this, &TPKernelModel::updateRecord);
+
     updateRecord();
 }
 
@@ -270,6 +272,8 @@ void TPKernelModel::updateRecord()
                                         .guard = data.value(KSS_JSON_KEY_DATA_GUARD).toInt() == 0 ? false : true};
         m_kernelRecords.push_back(fileRecord);
     }
+
+    emit filesUpdate(m_kernelRecords.size());
 }
 
 QList<TrustedRecord> TPKernelModel::getKernelRecords()
@@ -313,6 +317,8 @@ TPKernelTable::TPKernelTable(QWidget *parent) : QTableView(parent),
 
     connect(m_headerViewProxy, &TPTableHeaderProxy::toggled, this, &TPKernelTable::checkedAllItem);
     connect(m_model, &TPKernelModel::stateChanged, m_headerViewProxy, &TPTableHeaderProxy::setCheckState);
+    connect(m_model, &TPKernelModel::filesUpdate, this, &TPKernelTable::filesUpdate);
+
     m_filterProxy = new TPKernelFilterModel(this);
     m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
     setModel(m_filterProxy);
@@ -357,7 +363,7 @@ void TPKernelTable::searchTextChanged(const QString &text)
     }
 }
 
-void TPKernelTable::updateRecord()
+void TPKernelTable::updateInfo()
 {
     m_model->updateRecord();
 }

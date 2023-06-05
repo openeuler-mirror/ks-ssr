@@ -38,6 +38,7 @@ private:
 
 public:
     void setText(const QString &text);
+    void setSummary(const QString &text);
 
 private:
     Ui::QRCodeDialog *ui;

@@ -11,19 +11,20 @@
  * 
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
- 
-#ifndef QAPPLICATIONDEMO_KIRAN_APPLICATION_PRIVATE_H
-#define QAPPLICATIONDEMO_KIRAN_APPLICATION_PRIVATE_H
+
+#pragma once
 
 #include "application.h"
 
-#include <QObject>
 #include <QFont>
+#include <QObject>
 namespace KS
 {
-class ApplicationPrivate : public QObject{
+class ApplicationPrivate : public QObject
+{
     Q_OBJECT
     Q_DECLARE_PUBLIC(Application);
+
 public:
     ApplicationPrivate(Application* ptr);
     ~ApplicationPrivate();
@@ -35,8 +36,7 @@ private:
     void setupTranslations();
 
 private:
-    Application *q_ptr;
+    Application* q_ptr;
     bool m_adaptiveAppFontEnable = false;
 };
 }  // namespace KS
-#endif //KIRAN_APPLICATION_PRIVATE_H

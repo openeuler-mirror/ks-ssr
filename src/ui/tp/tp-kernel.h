@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef TPKERNEL_H
-#define TPKERNEL_H
+
+#pragma once
 
 #include <QTimer>
 #include <QWidget>
@@ -33,7 +33,7 @@ public:
     ~TPKernel();
 
 private:
-    void updateInfo();
+    void updateTips(int total);
     bool isExistSelectedItem();
 
 private Q_SLOTS:
@@ -54,5 +54,3 @@ private:
     QTimer *m_refreshTimer;
 };
 }  // namespace KS
-
-#endif  // TPKERNEL_H

@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef TPKERNELDELEGATE_H
-#define TPKERNELDELEGATE_H
+
+#pragma once
 
 #include <QObject>
 #include "src/ui/tp/tp-delegate.h"
@@ -38,4 +38,3 @@ public:
                      const QModelIndex &index) override;
 };
 }  // namespace KS
-#endif  // TPKERNELDELEGATE_H

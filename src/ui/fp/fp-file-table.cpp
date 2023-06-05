@@ -159,8 +159,9 @@ FPFilesModel::FPFilesModel(QObject *parent) : QAbstractTableModel(parent)
                                             KSC_KSS_INIT_DBUS_OBJECT_PATH,
                                             QDBusConnection::systemBus(),
                                             this);
+    connect(m_fileProtectedProxy, &KSSDbusProxy::ProtectedFilesUpdate, this, &FPFilesModel::updateRecord);
 
-    updateInfo();
+    updateRecord();
 }
 
 int FPFilesModel::rowCount(const QModelIndex &parent) const
@@ -284,7 +285,7 @@ Qt::ItemFlags FPFilesModel::flags(const QModelIndex &index) const
     return Qt::ItemFlag::NoItemFlags;
 }
 
-void FPFilesModel::updateInfo()
+void FPFilesModel::updateRecord()
 {
     beginResetModel();
     SCOPE_EXIT({
@@ -322,6 +323,8 @@ void FPFilesModel::updateInfo()
                                    .addTime = data.value(KSS_JSON_KEY_DATA_ADD_TIME).toString()};
         m_filesInfo.push_back(fileInfo);
     }
+
+    emit filesUpdate(m_filesInfo.size());
 }
 
 QList<FPFileInfo> FPFilesModel::getFPFileInfos()
@@ -365,6 +368,7 @@ FPFileTable::FPFileTable(QWidget *parent) : QTableView(parent),
     setMouseTracking(true);
     connect(m_headerViewProxy, &TPTableHeaderProxy::toggled, this, &FPFileTable::checkedAllItem);
     connect(m_model, &FPFilesModel::stateChanged, m_headerViewProxy, &TPTableHeaderProxy::setCheckState);
+    connect(m_model, &FPFilesModel::filesUpdate, this, &FPFileTable::filesUpdate);
 
     m_filterProxy = new FPFilesFilterModel(this);
     m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
@@ -406,11 +410,6 @@ void FPFileTable::searchTextChanged(const QString &text)
         auto index = m_model->index(i, 0);
         m_model->setData(index, Qt::Unchecked);
     }
-}
-
-void FPFileTable::updateInfo()
-{
-    m_model->updateInfo();
 }
 
 QList<FPFileInfo> FPFileTable::getFPFileInfos()

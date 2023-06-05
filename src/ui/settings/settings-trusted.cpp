@@ -73,10 +73,9 @@ bool SettingsTrusted::checkTrustedLoadFinied()
     // 可信未初始化完成，不允许操作
     if (!m_kssDbusProxy->initialized())
     {
-        POPUP_MESSAGE_DIALOG_RETURN_VAL(tr("Trusted data needs to be initialised,"
-                                           "please wait a few minutes before trying."),
-                                        false,
-                                        this);
+        POPUP_MESSAGE_DIALOG(tr("Trusted data needs to be initialised,"
+                                "please wait a few minutes before trying."));
+        return false;
     }
     return true;
 }
@@ -93,7 +92,7 @@ void SettingsTrusted::setTrustedStatus(bool checked)
 
     if (reply.isError())
     {
-        POPUP_MESSAGE_DIALOG(reply.error().message(), this);
+        POPUP_MESSAGE_DIALOG(reply.error().message());
         m_ui->m_switch->setChecked(!checked);
         return;
     }
@@ -146,7 +145,7 @@ void SettingsTrusted::updateHardRadio(bool checked)
 void SettingsTrusted::setStorageMode()
 {
     auto reply = m_kssDbusProxy->SetStorageMode(m_userPin->getType(), m_userPin->getUserPin());
-    CHECK_ERROR_FOR_DBUS_REPLY(reply, QString(""), this);
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
     updateStorageMode();
 }
 }  // namespace KS

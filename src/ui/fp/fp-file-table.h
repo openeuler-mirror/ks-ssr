@@ -81,15 +81,15 @@ public:
     //    bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    void updateInfo();
-
     QList<FPFileInfo> getFPFileInfos();
 
 signals:
     void stateChanged(Qt::CheckState checkState);
+    void filesUpdate(int total);
 
 private:
     void checkSelectStatus();
+    void updateRecord();
 
 private:
     KSSDbusProxy *m_fileProtectedProxy;
@@ -106,11 +106,13 @@ public:
 
     FPFilesFilterModel *getFilterProxy() { return m_filterProxy; };
     void searchTextChanged(const QString &text);
-    void updateInfo();
     QList<FPFileInfo> getFPFileInfos();
 
 private:
     void mouseEnter(const QModelIndex &index);
+
+signals:
+    void filesUpdate(int total);
 
 private slots:
     void checkedAllItem(Qt::CheckState checkState);

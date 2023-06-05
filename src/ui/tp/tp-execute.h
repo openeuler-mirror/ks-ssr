@@ -36,7 +36,7 @@ public:
     bool getInitialized();
 
 private:
-    void updateInfo();
+    void updateTips(int total);
     bool isExistSelectedItem();
 
 signals:

@@ -177,9 +177,8 @@ void Box::switchMountedStatus()
     if (mounted)
     {
         auto reply = m_boxManagerProxy->UnMount(m_uid);
-        CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
-                                          QString(""),
-                                          window());
+        CHECK_ERROR_FOR_DBUS_REPLY(reply);
+        return;
     }
     else
     {
@@ -202,9 +201,9 @@ void Box::modifyPassword()
 
     connect(m_modifyPassword, SIGNAL(accepted()), this, SLOT(modifyPasswordAccepted()));
     connect(m_modifyPassword, &BoxPasswordModification::passwdInconsistent, this, [this]
-            { POPUP_MESSAGE_DIALOG(QString(tr("Please confirm whether the password is consistent.")), window()); });
+            { POPUP_MESSAGE_DIALOG(QString(tr("Please confirm whether the password is consistent."))); });
     connect(m_modifyPassword, &BoxPasswordModification::inputEmpty, this, [this]
-            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."), window()); });
+            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
 
     m_modifyPassword->setBoxName(m_name);
 
@@ -233,7 +232,7 @@ void Box::retrievePassword()
     m_retrievePassword->setTitle(tr("Retrieve password"));
     connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
     connect(m_retrievePassword, &RetrieveBoxPassword::inputEmpty, this, [this]
-            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."), window()); });
+            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
 
     int x = window()->x() + window()->width() / 4 + m_retrievePassword->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_retrievePassword->height() / 8;
@@ -248,35 +247,43 @@ void Box::modifyPasswordAccepted()
     auto reply = m_boxManagerProxy->ModifyBoxPassword(m_uid,
                                                       encryptCurrentPassword,
                                                       encryptNewPassword);
-    CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
-                                      tr("Modify success!"),
-                                      window());
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    if (!reply.isError())
+    {
+        POPUP_MESSAGE_DIALOG(tr("Modify success!"));
+    }
 }
 
 void Box::retrievePasswordAccepted()
 {
     auto encryptPassphrase = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
     auto reply = m_boxManagerProxy->RetrieveBoxPassword(m_uid, encryptPassphrase);
-    CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
-                                      QString(tr("Your box password is %1")).arg(reply.value()),
-                                      window());
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    if (!reply.isError())
+    {
+        POPUP_MESSAGE_DIALOG(QString(tr("Your box password is %1")).arg(reply.value()));
+    }
 }
 
 void Box::inputMountPasswordAccepted()
 {
     auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputMountPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->Mount(m_uid, encryptPasswd);
-    CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
-                                      QString(tr("Unlock success!")),
-                                      window());
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    if (!reply.isError())
+    {
+        POPUP_MESSAGE_DIALOG(QString(tr("Unlock success!")));
+    }
 }
 
 void Box::inputDelBoxPasswordAccepted()
 {
     auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputDelBoxPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->DelBox(m_uid, encryptPasswd);
-    CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
-                                      QString(tr("Delete success!")),
-                                      window());
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    if (!reply.isError())
+    {
+        POPUP_MESSAGE_DIALOG(QString(tr("Delete success!")));
+    }
 }
 }  // namespace KS

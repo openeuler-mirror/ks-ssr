@@ -12,16 +12,13 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#ifndef DAEMON_H
-#define DAEMON_H
+#pragma once
 
 #include <QObject>
 
 namespace KS
 {
-class BoxManager;
 class KSSDbus;
-class DeviceManager;
 
 class Daemon : public QObject
 {
@@ -49,10 +46,6 @@ private:
 private:
     static Daemon *m_instance;
 
-    BoxManager *m_boxManager;
     KSSDbus *m_kssDBus;
-    DeviceManager *m_deviceManger;
 };
 }  // namespace KS
-
-#endif  // DAEMON_H

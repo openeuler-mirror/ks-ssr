@@ -69,6 +69,7 @@ public:
 
 signals:
     void stateChanged(Qt::CheckState checkState);
+    void filesUpdate(int total);
 
 private:
     void checkSelectStatus();
@@ -87,12 +88,15 @@ public:
     virtual ~TPExecuteTable(){};
 
     void searchTextChanged(const QString &text);
-    void updateRecord();
+    void updateInfo();
     QList<TrustedRecord> getExecuteRecords();
     int getExecutetamperedNums();
 
 private:
     void showDetails(const QModelIndex &index);
+
+signals:
+    void filesUpdate(int total);
 
 private slots:
     void checkedAllItem(Qt::CheckState checkState);

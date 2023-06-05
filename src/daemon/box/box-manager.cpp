@@ -49,18 +49,22 @@ void BoxManager::globalDeinit()
 
 QString BoxManager::CreateBox(const QString &name, const QString &password, QString &passphrase)
 {
-    RETURN_VAL_DBUS_ERROR_IF_TRUE(name.isEmpty() || password.isEmpty(),
-                                  QString(),
-                                  KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
-                                  message())
+    if (name.isEmpty() || password.isEmpty())
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
+                                        KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                                        message())
+    }
 
     for (auto iterator = m_boxs.begin(); iterator != m_boxs.end(); iterator++)
     {
         auto box = iterator.value();
-        RETURN_VAL_DBUS_ERROR_IF_TRUE(box->getUserUid() == getSenderUid() && box->getBoxName() == name,
-                                      QString(),
-                                      KSCErrorCode::ERROR_BM_REPEATED_NAME,
-                                      message())
+        if (box->getUserUid() == getSenderUid() && box->getBoxName() == name)
+        {
+            DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
+                                            KSCErrorCode::ERROR_BM_REPEATED_NAME,
+                                            message())
+        }
     }
 
     auto decryptPasswd = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
@@ -82,14 +86,16 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
 void BoxManager::DelBox(const QString &boxID, const QString &password)
 {
     auto box = m_boxs.value(boxID);
-    RETURN_DBUS_ERROR_IF_TRUE(!box,
-                              KSCErrorCode::ERROR_BM_NOT_FOUND,
-                              message())
+    if (!box)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_NOT_FOUND, message())
+    }
 
     auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
-    RETURN_DBUS_ERROR_IF_TRUE(!box->delBox(decryptedPassword),
-                              KSCErrorCode::ERROR_BM_DELETE_FAILED,
-                              message())
+    if (!box->delBox(decryptedPassword))
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_DELETE_FAILED, message())
+    }
 
     m_boxs.remove(boxID);
     emit BoxDeleted(boxID);
@@ -100,10 +106,12 @@ QString BoxManager::GetBoxByUID(const QString &boxID)
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
     auto box = m_boxs.value(boxID);
-    RETURN_VAL_DBUS_ERROR_IF_TRUE(!box,
-                                  QString(),
-                                  KSCErrorCode::ERROR_BM_NOT_FOUND,
-                                  message())
+    if (!box)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
+                                        KSCErrorCode::ERROR_BM_NOT_FOUND,
+                                        message())
+    }
 
     jsonObj = QJsonObject{
         {BOX_NAME_KEY, box->getBoxName()},
@@ -143,10 +151,12 @@ QString BoxManager::GetBoxs()
 bool BoxManager::IsMounted(const QString &boxID)
 {
     auto box = m_boxs.value(boxID);
-    RETURN_VAL_DBUS_ERROR_IF_TRUE(!box,
-                                  false,
-                                  KSCErrorCode::ERROR_BM_NOT_FOUND,
-                                  message())
+    if (!box)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false,
+                                        KSCErrorCode::ERROR_BM_NOT_FOUND,
+                                        message())
+    }
 
     return box->mounted();
 }
@@ -155,23 +165,27 @@ void BoxManager::ModifyBoxPassword(const QString &boxID,
                                    const QString &currentPassword,
                                    const QString &newPassword)
 {
-    RETURN_DBUS_ERROR_IF_TRUE(boxID.isEmpty() || currentPassword.isEmpty() || newPassword.isEmpty(),
-                              KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
-                              message())
+    if (boxID.isEmpty() || currentPassword.isEmpty() || newPassword.isEmpty())
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message())
+    }
 
     auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, currentPassword);
     auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
-    RETURN_DBUS_ERROR_IF_TRUE(decryptedPassword == decryptNewPassword,
-                              KSCErrorCode::ERROR_BM_SETTINGS_SAME_PASSWORD,
-                              message())
+    if (decryptedPassword == decryptNewPassword)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_SETTINGS_SAME_PASSWORD, message())
+    }
 
     auto box = m_boxs.value(boxID);
-    RETURN_DBUS_ERROR_IF_TRUE(!box,
-                              KSCErrorCode::ERROR_BM_NOT_FOUND,
-                              message())
-    RETURN_DBUS_ERROR_IF_TRUE(!box->modifyBoxPassword(decryptedPassword, decryptNewPassword),
-                              KSCErrorCode::ERROR_BM_MODIFY_PASSWORD_FAILED,
-                              message())
+    if (!box)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_NOT_FOUND, message())
+    }
+    if (!box->modifyBoxPassword(decryptedPassword, decryptNewPassword))
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_MODIFY_PASSWORD_FAILED, message())
+    }
 }
 
 // 解锁
@@ -179,38 +193,47 @@ void BoxManager::Mount(const QString &boxID, const QString &password)
 {
     auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
     auto box = m_boxs.value(boxID);
-    RETURN_DBUS_ERROR_IF_TRUE(!box,
-                              KSCErrorCode::ERROR_BM_NOT_FOUND,
-                              message())
+    if (!box)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_NOT_FOUND, message())
+    }
 
     RETURN_IF_TRUE(box->getBoxID() != boxID)
-    RETURN_DBUS_ERROR_IF_TRUE(!box->mount(decryptedPassword),
-                              KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR,
-                              message())
+
+    if (!box->mount(decryptedPassword))
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR, message())
+    }
 
     emit BoxChanged(boxID);
 }
 
 QString BoxManager::RetrieveBoxPassword(const QString &boxID, const QString &passphrase)
 {
-    RETURN_VAL_DBUS_ERROR_IF_TRUE(passphrase.isEmpty(),
-                                  QString(),
-                                  KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
-                                  message())
+    if (passphrase.isEmpty())
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
+                                        KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                                        message())
+    }
 
     auto decryptPassphrase = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, passphrase);
     auto box = m_boxs.value(boxID);
-    RETURN_VAL_DBUS_ERROR_IF_TRUE(!box,
-                                  QString(),
-                                  KSCErrorCode::ERROR_BM_NOT_FOUND,
-                                  message())
+    if (!box)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
+                                        KSCErrorCode::ERROR_BM_NOT_FOUND,
+                                        message())
+    }
 
     auto password = box->retrievePassword(decryptPassphrase);
     // 口令错误
-    RETURN_VAL_DBUS_ERROR_IF_TRUE(password.isEmpty(),
-                                  QString(),
-                                  KSCErrorCode::ERROR_BM_INPUT_PASSPHRASE_ERROR,
-                                  message())
+    if (password.isEmpty())
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
+                                        KSCErrorCode::ERROR_BM_INPUT_PASSPHRASE_ERROR,
+                                        message())
+    }
 
     return password;
 }
@@ -219,9 +242,10 @@ QString BoxManager::RetrieveBoxPassword(const QString &boxID, const QString &pas
 void BoxManager::UnMount(const QString &boxID)
 {
     auto box = m_boxs.value(boxID);
-    RETURN_DBUS_ERROR_IF_TRUE(!box,
-                              KSCErrorCode::ERROR_BM_NOT_FOUND,
-                              message())
+    if (!box)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_NOT_FOUND, message())
+    }
 
     RETURN_IF_TRUE(box->getBoxID() != boxID)
 

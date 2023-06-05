@@ -12,8 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#ifndef BOX_H
-#define BOX_H
+#pragma once
 
 #include <QObject>
 #include <QStringList>
@@ -63,4 +62,3 @@ private:
     EcryptFS *m_ecryptFS;
 };
 }  // namespace KS
-#endif  // BOX_H
