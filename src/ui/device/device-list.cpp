@@ -137,7 +137,8 @@ void DeviceList::updatePermission()
 
     if (!m_deviceManagerProxy->ChangePermission(id, QString(jsonDoc.toJson(QJsonDocument::Compact))))
     {
-        POPUP_MESSAGE_DIALOG_RETURN(tr("Failed to change permission of device!"), this);
+        POPUP_MESSAGE_DIALOG(tr("Failed to change permission of device!"));
+        return;
     }
 }
 
@@ -167,7 +168,8 @@ void DeviceList::updateState()
 
     if (!errMsg.isEmpty())
     {
-        POPUP_MESSAGE_DIALOG_RETURN(errMsg, this);
+        POPUP_MESSAGE_DIALOG(errMsg);
+        return;
     }
 }
 }  //namespace KS

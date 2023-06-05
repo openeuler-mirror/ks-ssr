@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef SETTINGSPAGE_H
-#define SETTINGSPAGE_H
+
+#pragma once
 
 #include <QWidget>
 #include "src/ui/common/titlebar-window.h"
@@ -44,4 +44,3 @@ private:
 };
 
 }  // namespace KS
-#endif  // SETTINGSPAGE_H

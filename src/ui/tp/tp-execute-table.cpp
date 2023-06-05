@@ -78,6 +78,7 @@ TPExecuteModel::TPExecuteModel(QObject *parent) : QAbstractTableModel(parent),
                                      KSC_KSS_INIT_DBUS_OBJECT_PATH,
                                      QDBusConnection::systemBus(),
                                      this);
+    connect(m_tpDBusProxy, &KSSDbusProxy::TrustedFilesUpdate, this, &TPExecuteModel::updateRecord);
     updateRecord();
 }
 
@@ -259,6 +260,7 @@ void TPExecuteModel::updateRecord()
                                         .md5 = data.value(KSS_JSON_KEY_DATA_HASH).toString()};
         m_executeRecords.push_back(fileRecord);
     }
+    emit filesUpdate(m_executeRecords.size());
 }
 
 QList<TrustedRecord> TPExecuteModel::getExecuteRecords()
@@ -303,6 +305,8 @@ TPExecuteTable::TPExecuteTable(QWidget *parent) : QTableView(parent),
 
     connect(m_headerViewProxy, &TPTableHeaderProxy::toggled, this, &TPExecuteTable::checkedAllItem);
     connect(m_model, &TPExecuteModel::stateChanged, m_headerViewProxy, &TPTableHeaderProxy::setCheckState);
+    connect(m_model, &TPExecuteModel::filesUpdate, this, &TPExecuteTable::filesUpdate);
+
     m_filterProxy = new TPExecuteFilterModel(this);
     m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
     setModel(m_filterProxy);
@@ -347,7 +351,7 @@ void TPExecuteTable::searchTextChanged(const QString &text)
     }
 }
 
-void TPExecuteTable::updateRecord()
+void TPExecuteTable::updateInfo()
 {
     m_model->updateRecord();
 }

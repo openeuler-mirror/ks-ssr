@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef SETTINGSTRUSTED_H
-#define SETTINGSTRUSTED_H
+
+#pragma once
 
 #include <QButtonGroup>
 #include <QWidget>
@@ -54,4 +54,3 @@ private:
     KSSDbusProxy *m_kssDbusProxy;
 };
 }  // namespace KS
-#endif  // SETTINGSTRUSTED_H

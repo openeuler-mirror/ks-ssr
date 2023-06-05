@@ -12,8 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#ifndef LOADING_H
-#define LOADING_H
+#pragma once
 
 #include <QLabel>
 #include <QObject>
@@ -38,5 +37,3 @@ private:
     QTimer *m_timer;
 };
 }  // namespace KS
-
-#endif  // LOADING_H
