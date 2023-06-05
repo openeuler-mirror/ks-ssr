@@ -16,6 +16,7 @@
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include <QDateTime>
+#include <QProcess>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
 #include "src/daemon/device/device-dbus.h"
@@ -58,6 +59,7 @@ void DeviceManager::init()
     this->initDevices();
 
     connect(&m_sdDeviceMonitor, &SDDeviceMonitor::deviceChanged, this, &DeviceManager::handleUdevEvent);
+    connect(&m_mountMonitor, &DeviceMountMonitor::mountChanged, this, &DeviceManager::handleMountEvent);
 }
 
 void DeviceManager::initDevices()
@@ -130,6 +132,101 @@ void DeviceManager::handleUdevEvent(SDDevice *device,
 
     default:
         break;
+    }
+}
+
+QSharedPointer<Device> DeviceManager::getParentDevice(const QString syspath) const
+{
+    Q_FOREACH (auto device, m_devices)
+    {
+        if ((device->getType() != DEVICE_TYPE_HUB) &&
+            syspath.startsWith(device->getSyspath()))
+        {
+            return device;
+        }
+    }
+
+    return nullptr;
+}
+
+bool DeviceManager::isDeviceMountPerChanged(const QSharedPointer<Device> device,
+                                            const DeviceMount *mount)
+{
+    auto permission = device->getPermission();
+
+    return ((mount->write != permission->write) ||
+            (mount->execute != permission->execute));
+}
+
+QString DeviceManager::getMountSyspath(const DeviceMount *mount)
+{
+    SDDeviceEnumerator enumerator;
+    auto devices = enumerator.getDevices();
+
+    Q_FOREACH (auto device, devices)
+    {
+        auto devname = device->getDevname();
+
+        if (devname == mount->device)
+        {
+            return QString(device->getSyspath());
+        }
+    }
+
+    return nullptr;
+}
+
+void DeviceManager::handleMountEvent(const DeviceMount *mount)
+{
+    auto mountSyspath = this->getMountSyspath(mount);
+    RETURN_IF_TRUE(mountSyspath == nullptr)
+
+    auto parentDevice = getParentDevice(mountSyspath);
+    RETURN_IF_TRUE(parentDevice == nullptr)
+
+    if (this->isDeviceMountPerChanged(parentDevice, mount))
+    {
+        this->remountDevice(parentDevice, mount);
+    }
+}
+
+void DeviceManager::remountDevice(const QSharedPointer<Device> device,
+                                  const DeviceMount *mount)
+{
+    auto permission = device->getPermission();
+    QString args = QString("-o remount,");
+    args.append(permission->write ? "rw" : "ro");
+    if (!permission->execute)
+    {
+        args.append(",noexec");
+    }
+    auto command = QString("mount %1 %2 %3").arg(args, mount->device, mount->path);
+    auto exitcode = QProcess::execute(command);
+    if (exitcode != 0)
+    {
+        KLOG_WARNING() << "Failed to execute command " << command << ", exitcode is " << exitcode;
+    }
+}
+
+void DeviceManager::checkDeviceMount(const QSharedPointer<Device> device)
+{
+    RETURN_IF_TRUE(device->getType() != DEVICE_TYPE_DISK)
+    auto syspath = device->getSyspath();
+    auto mounts = m_mountMonitor.getMounts();
+
+    Q_FOREACH (auto mount, mounts)
+    {
+        auto mountSyspath = this->getMountSyspath(mount.get());
+        if (mountSyspath == nullptr)
+        {
+            continue;
+        }
+
+        if (mountSyspath.startsWith(syspath) &&
+            this->isDeviceMountPerChanged(device, mount.get()))
+        {
+            this->remountDevice(device, mount.get());
+        }
     }
 }
 

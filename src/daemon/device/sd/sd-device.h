@@ -32,6 +32,7 @@ public:
     QString getSyspath() const;
     QString getSubsystem() const;
     QString getDevtype() const;
+    QString getDevname() const;
     QString getSysname() const;
     QString getSysattrValue(const QString &attr) const;
     void trigger();

@@ -71,6 +71,15 @@ QString SDDevice::getDevtype() const
     return QString(devtype);
 }
 
+QString SDDevice::getDevname() const
+{
+    const char* devname = NULL;
+
+    RETURN_VAL_IF_TRUE(sd_device_get_devname(m_device, &devname) < 0, QString())
+
+    return QString(devname);
+}
+
 QString SDDevice::getSysname() const
 {
     const char* sysname = NULL;
