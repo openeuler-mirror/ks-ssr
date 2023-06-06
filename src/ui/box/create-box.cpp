@@ -44,15 +44,6 @@ CreateBox::CreateBox(QWidget *parent) : TitlebarWindow(parent),
     m_ui->m_password->setMaxLength(INPUT_MAX_LENGTH);
     m_ui->m_confirmPassword->setMaxLength(INPUT_MAX_LENGTH);
 
-    // 输入16字节
-    connect(m_ui->m_name, &QLineEdit::textChanged, this, [this]()
-            {
-                if (m_ui->m_name->text().length() > INPUT_MAX_LENGTH)
-                {
-                    m_ui->m_name->setText(m_ui->m_name->text().left(INPUT_MAX_LENGTH));
-                }
-            });
-
     m_ui->m_password->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
     connect(m_ui->m_ok, &QPushButton::clicked, this, &CreateBox::onOkClicked);

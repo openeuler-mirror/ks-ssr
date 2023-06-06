@@ -225,10 +225,6 @@ void Box::init()
     // name+uid 命名 可区分不同用户下创建的相同文件夹名称
     auto dataPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DATADIR, m_name + m_boxID);
     m_ecryptFS->mkdirBoxDir(dataPath, getUser());
-
-    // 在对应调用的用户根目录创建文件夹
-    //    auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, m_name);
-    //    m_ecryptFS->mkdirBoxDir(mountPath, getUser());
 }
 
 // 生成6位不重复uid,作为box标识
