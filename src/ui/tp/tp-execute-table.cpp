@@ -78,7 +78,7 @@ TPExecuteModel::TPExecuteModel(QObject *parent) : QAbstractTableModel(parent),
                                      KSC_KSS_INIT_DBUS_OBJECT_PATH,
                                      QDBusConnection::systemBus(),
                                      this);
-    connect(m_tpDBusProxy, &KSSDbusProxy::TrustedFilesUpdate, this, &TPExecuteModel::updateRecord);
+    connect(m_tpDBusProxy, &KSSDbusProxy::TrustedFilesChange, this, &TPExecuteModel::updateRecord);
     updateRecord();
 }
 

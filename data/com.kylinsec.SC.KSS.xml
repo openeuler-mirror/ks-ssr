@@ -103,11 +103,11 @@
             <description>KSS data initialisation completed.</description>
         </signal>
 
-        <signal name="TrustedFilesUpdate">
+        <signal name="TrustedFilesChange">
             <description>Update of trusted files.</description>
         </signal>
 
-        <signal name="ProtectedFilesUpdate">
+        <signal name="ProtectedFilesChange">
             <description>Update of protected files.</description>
         </signal>
 

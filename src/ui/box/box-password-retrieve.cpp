@@ -12,6 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "box-password-retrieve.h"
+#include <QRegularExpressionValidator>
 #include "ui_box-password-retrieve.h"
 
 namespace KS
@@ -43,7 +44,11 @@ void RetrieveBoxPassword::init()
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
 
+    auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
+    m_ui->m_passphrase->setValidator(validator);
     m_ui->m_passphrase->setEchoMode(QLineEdit::Password);
+    m_ui->m_passphrase->setMaxLength(16);
+
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
                 close();

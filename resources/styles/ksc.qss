@@ -129,11 +129,6 @@ QListWidget::item::selected
     background: #00a2ff;
 }
 
-QHeaderView
-{
-    color:#919191;
-}
-
 QHeaderView::section
 {
     background-color: #393939;
@@ -142,11 +137,18 @@ QHeaderView::section
     padding-left:10px;
 }
 
-QHeaderView::section:first
+KS--DevicePage QHeaderView::section:first
 {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    margin-left: -2px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+KS--TPPage QHeaderView::section:first,
+KS--FPPage QHeaderView::section:first
+{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    padding-left:-2px;
 }
 
 QHeaderView::section:last
