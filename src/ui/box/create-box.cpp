@@ -15,12 +15,11 @@
 #include "src/ui/box/create-box.h"
 #include <qt5-log-i.h>
 #include <QRegularExpressionValidator>
+#include "include/ksc-i.h"
 #include "src/ui/ui_create-box.h"
 
 namespace KS
 {
-#define INPUT_MAX_LENGTH 16
-
 CreateBox::CreateBox(QWidget *parent) : TitlebarWindow(parent),
                                         m_ui(new Ui::CreateBox())
 {
@@ -40,9 +39,9 @@ CreateBox::CreateBox(QWidget *parent) : TitlebarWindow(parent),
     m_ui->m_confirmPassword->setValidator(validator);
 
     // 限制输入长度
-    m_ui->m_name->setMaxLength(INPUT_MAX_LENGTH);
-    m_ui->m_password->setMaxLength(INPUT_MAX_LENGTH);
-    m_ui->m_confirmPassword->setMaxLength(INPUT_MAX_LENGTH);
+    m_ui->m_name->setMaxLength(KSC_BOX_NAME_MAX_LENGTH);
+    m_ui->m_password->setMaxLength(KSC_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_confirmPassword->setMaxLength(KSC_BOX_PASSWORD_MAX_LENGTH);
 
     m_ui->m_password->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
