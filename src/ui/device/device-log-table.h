@@ -66,6 +66,9 @@ private:
     void initTable();
     void setHeaderSections(QStringList sections);
 
+signals:
+    void logNumChanged(int number);
+
 private:
     TableFilterModel *m_filterProxy;
     QStandardItemModel *m_model;

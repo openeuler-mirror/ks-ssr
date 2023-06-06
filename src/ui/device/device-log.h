@@ -35,11 +35,9 @@ public:
 protected:
     void paintEvent(QPaintEvent *event);
 
-private:
-    void update();
-
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
+    void updateRecords(int number);
 
 private:
     Ui::DeviceLog *m_ui;
