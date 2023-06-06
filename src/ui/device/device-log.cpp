@@ -40,9 +40,11 @@ DeviceLog::DeviceLog(QWidget *parent) : QWidget(parent),
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
     //获取设备记录数据插入表格
-    update();
+    m_ui->m_table->update();
+    updateRecords(m_ui->m_table->getRowCount());
 
     connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceLog::searchTextChanged);
+    connect(m_ui->m_table, &DeviceLogTable::logNumChanged, this, &DeviceLog::updateRecords);
 }
 
 DeviceLog::~DeviceLog()
@@ -59,12 +61,10 @@ void DeviceLog::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void DeviceLog::update()
+void DeviceLog::updateRecords(int number)
 {
-    m_ui->m_table->update();
-
     // 更新表格右上角提示信息
-    auto text = QString(tr("A total of %1 records")).arg(m_ui->m_table->getRowCount());
+    auto text = QString(tr("A total of %1 records")).arg(number);
     m_ui->m_records->setText(text);
 }
 
