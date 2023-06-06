@@ -13,6 +13,7 @@
  */
 #include "box-password-retrieve.h"
 #include <QRegularExpressionValidator>
+#include "include/ksc-i.h"
 #include "ui_box-password-retrieve.h"
 
 namespace KS
@@ -47,7 +48,7 @@ void RetrieveBoxPassword::init()
     auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
     m_ui->m_passphrase->setValidator(validator);
     m_ui->m_passphrase->setEchoMode(QLineEdit::Password);
-    m_ui->m_passphrase->setMaxLength(16);
+    m_ui->m_passphrase->setMaxLength(KSC_BOX_PASSWORD_MAX_LENGTH);
 
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {

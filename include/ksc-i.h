@@ -32,6 +32,10 @@ extern "C"
 #define KSC_BM_JK_BOX_NAME "name"
 #define KSC_BM_JK_BOX_MOUNTED "mounted"
 
+// 保险箱名称长度以及保险箱密码长度
+#define KSC_BOX_NAME_MAX_LENGTH 16
+#define KSC_BOX_PASSWORD_MAX_LENGTH 16
+
 // KSS相关定义, 包括TP FP的接口
 #define KSC_KSS_INIT_DBUS_OBJECT_PATH "/com/kylinsec/SC/KSS"
 #define KSC_KSS_INIT_DBUS_INTERFACE_NAME "com.kylinsec.SC.KSS"
