@@ -49,6 +49,7 @@ DeviceList::DeviceList(QWidget *parent) : QWidget(parent),
                                                   QDBusConnection::systemBus(),
                                                   this);
 
+    connect(m_deviceManagerProxy, &DeviceManagerProxy::DeviceChanged, this, &DeviceList::update);
     connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceList::searchTextChanged);
     connect(m_ui->m_table, &DeviceListTable::clicked, this, &DeviceList::popupEditDialog);
 }
