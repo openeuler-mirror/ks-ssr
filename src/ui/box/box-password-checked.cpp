@@ -12,6 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 #include "box-password-checked.h"
+#include <QRegularExpressionValidator>
 #include "ui_box-password-checked.h"
 namespace KS
 {
@@ -43,7 +44,10 @@ void BoxPasswordChecked::init()
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
     setFixedSize(319, 259);
 
+    auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
+    m_ui->m_inputPasswd->setValidator(validator);
     m_ui->m_inputPasswd->setEchoMode(QLineEdit::Password);
+    m_ui->m_inputPasswd->setMaxLength(16);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
                 close();

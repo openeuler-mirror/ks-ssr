@@ -148,6 +148,7 @@ bool Box::mount(const QString &currentPassword)
     auto decryptPspr = CryptoHelper::aesDecrypt(boxInfo.encryptPassphrase);  //Pspr
     auto decryptSig = CryptoHelper::aesDecrypt(boxInfo.encryptSig);
 
+    // 在对应调用的用户根目录创建文件夹
     auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
     m_ecryptFS->mkdirBoxDir(mountPath, getUser());
 
@@ -168,6 +169,8 @@ bool Box::umount()
     RETURN_VAL_IF_TRUE(!m_ecryptFS->encrypt(mountPath).isEmpty(), false)
     // 修改数据库中挂载状态
     m_boxDao->modifyMountStatus(m_boxID, false);
+
+    m_ecryptFS->rmBoxDir(mountPath);
     return true;
 }
 
@@ -209,18 +212,19 @@ void Box::init()
         m_boxID = getRandBoxUid();
 
         // 插入数据库
-        m_boxDao->addBox(m_name, m_boxID, false, encryptPasswd, encryptPassphrase,
-                         encryptSig, m_userUID);
+        m_boxDao->addBox(m_name,
+                         m_boxID,
+                         false,
+                         encryptPasswd,
+                         encryptPassphrase,
+                         encryptSig,
+                         m_userUID);
     }
 
     // 创建对应文件夹 未挂载box
     // name+uid 命名 可区分不同用户下创建的相同文件夹名称
     auto dataPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DATADIR, m_name + m_boxID);
     m_ecryptFS->mkdirBoxDir(dataPath, getUser());
-
-    // 在对应调用的用户根目录创建文件夹
-    auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, m_name);
-    m_ecryptFS->mkdirBoxDir(mountPath, getUser());
 }
 
 // 生成6位不重复uid,作为box标识
