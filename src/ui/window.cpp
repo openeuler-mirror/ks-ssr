@@ -112,7 +112,7 @@ void Window::initWindow()
     m_activateStatus->setObjectName("activateStatus");
     m_activateStatus->setFixedHeight(18);
     m_activateStatus->setAlignment(Qt::AlignHCenter);
-    m_activateStatus->setText("Unactivated");
+    m_activateStatus->setText(tr("Unactivated"));
     m_activateStatus->hide();
 
     //创建标题栏右侧菜单按钮
