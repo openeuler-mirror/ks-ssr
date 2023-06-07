@@ -48,6 +48,10 @@ QString DeviceUtils::interfaceTypeEnum2Str(InterfaceType type)
         return tr("Network");
     case INTERFACE_TYPE_HDMI:
         return tr("HDMI");
+    case INTERFACE_TYPE_USB_MOUSE:
+        return tr("Mouse");
+    case INTERFACE_TYPE_USB_KBD:
+        return tr("Keyboard");
     case INTERFACE_TYPE_UNKNOWN:
         return tr("Unknown");
     default:

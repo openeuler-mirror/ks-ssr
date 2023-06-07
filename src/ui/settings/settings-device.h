@@ -40,7 +40,7 @@ private:
     void initUI();
     void updateUI();
     QList<Interface> getInterfaces();
-    void setInterfaceState(bool isEnable, InterfaceType type);
+    bool setInterfaceState(bool isEnable, InterfaceType type);
 
 private slots:
     void handleInterfaceState(bool checked);
@@ -49,5 +49,8 @@ private:
     DeviceManagerProxy *m_deviceManagerProxy;
     QList<Interface> m_interfaces;
     QGridLayout *m_gridLayout;
+    QGridLayout *m_usbLayout;
+    QGridLayout *m_kbdMouseLayout;
+    QWidget *m_kbdMouseContent;
 };
 }  // namespace KS
