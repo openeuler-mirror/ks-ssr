@@ -13,14 +13,19 @@
  */
 
 #include "src/daemon/device/device-mount-monitor.h"
+#include <fcntl.h>
 #include <qt5-log-i.h>
+#include <unistd.h>
 #include <QFile>
 #include "config.h"
 #include "ksc-marcos.h"
 
 namespace KS
 {
-DeviceMountMonitor::DeviceMountMonitor(QObject *parent) : QObject(parent)
+DeviceMountMonitor::DeviceMountMonitor(QObject *parent)
+    : QObject(parent),
+      m_socketNotify(nullptr),
+      m_file(0)
 {
     this->initMounts();
     this->initWatcher();
@@ -28,7 +33,13 @@ DeviceMountMonitor::DeviceMountMonitor(QObject *parent) : QObject(parent)
 
 DeviceMountMonitor::~DeviceMountMonitor()
 {
-    timer.stop();
+    if (m_file > 0)
+    {
+        close(m_file);
+    }
+
+    delete m_socketNotify;
+    m_socketNotify = nullptr;
 }
 
 void DeviceMountMonitor::initMounts()
@@ -36,7 +47,7 @@ void DeviceMountMonitor::initMounts()
     m_mounts = this->processMountFile();
 }
 
-void DeviceMountMonitor::check()
+void DeviceMountMonitor::handleMountFileChanged(int fd)
 {
     auto mounts = this->processMountFile();
     Q_FOREACH (auto mount, mounts)
@@ -49,9 +60,16 @@ void DeviceMountMonitor::check()
 
 void DeviceMountMonitor::initWatcher()
 {
-    timer.setTimerType(Qt::PreciseTimer);
-    QObject::connect(&timer, &QTimer::timeout, this, &DeviceMountMonitor::check);
-    timer.start(1000);
+    m_file = open(KSC_DEVICE_SYS_MOUNT_FILE, O_RDONLY);
+    if (m_file == -1)
+    {
+        KLOG_WARNING() << "Cannot open file " << KSC_DEVICE_SYS_MOUNT_FILE;
+        return;
+    }
+
+    m_socketNotify = new QSocketNotifier(m_file, QSocketNotifier::Write, this);
+    m_socketNotify->setEnabled(true);
+    QObject::connect(m_socketNotify, &QSocketNotifier::activated, this, &DeviceMountMonitor::handleMountFileChanged);
 }
 
 QMap<QString, QSharedPointer<DeviceMount>> DeviceMountMonitor::processMountFile()
@@ -80,12 +98,18 @@ QMap<QString, QSharedPointer<DeviceMount>> DeviceMountMonitor::processMountFile(
         }
     }
 
+    file.close();
+
     return mounts;
 }
 
 QSharedPointer<DeviceMount> DeviceMountMonitor::processMountLine(const QString mountLine)
 {
-    RETURN_VAL_IF_FALSE(mountLine.startsWith("/dev"), nullptr)
+    if (!mountLine.startsWith("/dev"))
+    {
+        return nullptr;
+    }
+
     auto strs = mountLine.split(" ");
     auto device = strs.at(0);
     auto path = strs.at(1);
