@@ -16,6 +16,7 @@
 
 #include <QMap>
 #include <QObject>
+#include <QSocketNotifier>
 #include <QTimer>
 
 namespace KS
@@ -49,7 +50,7 @@ signals:
     void mountChanged(const DeviceMount *mount);
 
 private slots:
-    void check();
+    void handleMountFileChanged(int fd);
 
 private:
     void initMounts();
@@ -58,6 +59,7 @@ private:
     QMap<QString, QSharedPointer<DeviceMount>> processMountFile();
     void checkMount(const QSharedPointer<DeviceMount> mount);
     QMap<QString, QSharedPointer<DeviceMount>> m_mounts;
-    QTimer timer;
+    QSocketNotifier *m_socketNotify;
+    int m_file;
 };
 }  // namespace KS
