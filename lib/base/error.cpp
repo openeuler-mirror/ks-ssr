@@ -38,7 +38,10 @@ QString Error::getErrorDesc(KSCErrorCode errorCode)
         errorDesc = QObject::tr("The file is already in the list, and there is no need to add it repeatedly.");
         break;
     case KSCErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED:
-        errorDesc = QObject::tr("Failed to switch storage mode.");
+        errorDesc = QObject::tr("There is no trusted card or the trusted card is not supported.");
+        break;
+    case KSCErrorCode::ERROR_USER_PIN_ERROR:
+        errorDesc = QObject::tr("The pin code is wrong!");
         break;
     case KSCErrorCode::ERROR_BM_DELETE_FAILED:
         errorDesc = QObject::tr("Failed to delete box.");

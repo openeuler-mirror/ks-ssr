@@ -21,6 +21,8 @@
 
 namespace KS
 {
+#define KSS_DEFAULT_USER_PIN 123123
+
 class KSSWrapper : public QObject
 {
     Q_OBJECT
