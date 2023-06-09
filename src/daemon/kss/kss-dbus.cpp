@@ -368,10 +368,11 @@ void KSSDbus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const
 
 void KSSDbus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint type, const QString &userPin)
 {
-    if (userPin.isEmpty())
+    if (KSS_DEFAULT_USER_PIN != userPin)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_USER_PIN_ERROR, message)
     }
+
     auto error = KSSWrapper::getDefault()->setStorageMode(KSCKSSTrustedStorageType(type), userPin);
 
     if (!error.isEmpty())

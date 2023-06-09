@@ -33,7 +33,7 @@ namespace KS
 #define KSS_JSON_KEY_DATA_PATH KSC_KSS_JK_DATA_PATH
 
 // 暂时使用 -p 传入user pin，后续做需要做可信卡时再做修改
-#define KSS_INIT_CMD "kss card deploy -p 123123"
+#define KSS_INIT_CMD "kss card deploy -p"
 #define KSS_INIT_DATA_CMD "kss secure setup"
 
 // 软硬件模式切换
@@ -241,7 +241,7 @@ void KSSWrapper::init()
     RETURN_IF_TRUE(m_ini->value(KSS_INI_KEY).toInt() != 0)
 
     KLOG_INFO() << "Start kss initialisation.";
-    execute(KSS_INIT_CMD);
+    execute(QString("%1 %2").arg(KSS_INIT_CMD, KSS_DEFAULT_USER_PIN));
 
     m_kssInitThread = QThread::create([this]
                                       {
