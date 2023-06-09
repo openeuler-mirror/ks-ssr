@@ -42,7 +42,7 @@ private Q_SLOTS:
     void updateKernelList(bool checked);
     void recertification(bool checked);
     void popDeleteNotify(bool checked);
-    void removeKernelFile();
+    void removeKernelFiles();
     void prohibitUnloading(bool status, const QString &path);
     void updateRefreshIcon();
 

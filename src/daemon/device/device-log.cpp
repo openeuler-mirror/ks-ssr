@@ -37,8 +37,8 @@ DeviceLog::~DeviceLog()
 
 void DeviceLog::addDeviceRecord(const DeviceRecord &record)
 {
-    this->removeLastDeviceLog();
-    
+    removeLastDeviceLog();
+
     m_settings->beginGroup(QString::asprintf("%ld", record.time));
     m_settings->setValue(DCR_KYE_NAME, record.name);
     m_settings->setValue(DCR_KYE_TYPE, record.type);
@@ -53,7 +53,7 @@ QList<QSharedPointer<DeviceRecord>> DeviceLog::getDeviceRecords()
 
     Q_FOREACH (auto group, groups)
     {
-        records.append(this->getDeviceRecord(group));
+        records.append(getDeviceRecord(group));
     }
 
     return records;

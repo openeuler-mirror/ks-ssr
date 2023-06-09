@@ -26,13 +26,21 @@ Daemon *Daemon::m_instance = nullptr;
 
 Daemon::Daemon() : QObject(nullptr)
 {
-    m_boxManager = new BoxManager(this);
-    m_deviceManger = new DeviceManager(this);
+    BoxManager::globalInit(this);
+    DeviceManager::globalInit(this);
+    // FIXME: 最好需要提供一个模块入口类，可以时KSSContext或者KSSManager，来管理dbus和wrapper
     m_kssDBus = new KSSDbus(this);
 }
 
 Daemon::~Daemon()
 {
+    if (m_kssDBus)
+    {
+        delete m_kssDBus;
+    }
+
+    DeviceManager::globalDeinit();
+    BoxManager::globalDeinit();
 }
 
 void Daemon::init()
