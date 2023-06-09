@@ -40,7 +40,7 @@ private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void addProtectedFile(bool checked);
     void popDeleteNotify(bool checked);
-    void removeProtectedFile();
+    void removeProtectedFiles();
     void updateTips(int total);
 
 private:

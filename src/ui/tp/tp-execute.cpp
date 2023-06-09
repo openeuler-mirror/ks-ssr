@@ -126,14 +126,16 @@ void TPExecute::updateExecuteList(bool checked)
 
 void TPExecute::recertification(bool checked)
 {
+    QStringList fileList;
     auto trustedInfos = m_ui->m_executeTable->getExecuteRecords();
     for (auto trustedInfo : trustedInfos)
     {
         if (trustedInfo.selected)
         {
-            m_dbusProxy->AddTrustedFile(trustedInfo.filePath).waitForFinished();
+            fileList << trustedInfo.filePath;
         }
     }
+    m_dbusProxy->AddTrustedFiles(fileList).waitForFinished();
 }
 
 void TPExecute::popDeleteNotify(bool checked)
@@ -152,19 +154,21 @@ void TPExecute::popDeleteNotify(bool checked)
     deleteNotify->move(x, y);
     deleteNotify->show();
 
-    connect(deleteNotify, &TableDeleteNotify::accepted, this, &TPExecute::removeExecuteFile);
+    connect(deleteNotify, &TableDeleteNotify::accepted, this, &TPExecute::removeExecuteFiles);
 }
 
-void TPExecute::removeExecuteFile()
+void TPExecute::removeExecuteFiles()
 {
+    QStringList fileList;
     auto trustedInfos = m_ui->m_executeTable->getExecuteRecords();
     for (auto trustedInfo : trustedInfos)
     {
         if (trustedInfo.selected)
         {
-            m_dbusProxy->RemoveTrustedFile(trustedInfo.filePath).waitForFinished();
+            fileList << trustedInfo.filePath;
         }
     }
+    m_dbusProxy->RemoveTrustedFiles(fileList).waitForFinished();
 }
 
 void TPExecute::updateRefreshIcon()

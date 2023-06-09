@@ -118,14 +118,16 @@ void TPKernel::updateKernelList(bool checked)
 
 void TPKernel::recertification(bool checked)
 {
+    QStringList fileList;
     auto trustedInfos = m_ui->m_kernelTable->getKernelRecords();
     for (auto trustedInfo : trustedInfos)
     {
         if (trustedInfo.selected)
         {
-            m_dbusProxy->AddTrustedFile(trustedInfo.filePath).waitForFinished();
+            fileList << trustedInfo.filePath;
         }
     }
+    m_dbusProxy->AddTrustedFiles(fileList).waitForFinished();
 }
 
 void TPKernel::popDeleteNotify(bool checked)
@@ -143,19 +145,21 @@ void TPKernel::popDeleteNotify(bool checked)
     deleteNotify->move(x, y);
     deleteNotify->show();
 
-    connect(deleteNotify, &TableDeleteNotify::accepted, this, &TPKernel::removeKernelFile);
+    connect(deleteNotify, &TableDeleteNotify::accepted, this, &TPKernel::removeKernelFiles);
 }
 
-void TPKernel::removeKernelFile()
+void TPKernel::removeKernelFiles()
 {
+    QStringList fileList;
     auto trustedInfos = m_ui->m_kernelTable->getKernelRecords();
     for (auto trustedInfo : trustedInfos)
     {
         if (trustedInfo.selected)
         {
-            m_dbusProxy->RemoveTrustedFile(trustedInfo.filePath).waitForFinished();
+            fileList << trustedInfo.filePath;
         }
     }
+    m_dbusProxy->RemoveTrustedFiles(fileList).waitForFinished();
 }
 
 void TPKernel::prohibitUnloading(bool status, const QString &path)
