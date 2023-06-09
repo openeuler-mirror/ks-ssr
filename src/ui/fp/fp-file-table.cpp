@@ -403,13 +403,6 @@ void FPFileTable::searchTextChanged(const QString &text)
     KLOG_DEBUG() << "The search text is change to " << text;
 
     m_filterProxy->setFilterFixedString(text);
-
-    emit m_model->stateChanged(Qt::Unchecked);
-    for (int i = 0; i < m_model->rowCount(); ++i)
-    {
-        auto index = m_model->index(i, 0);
-        m_model->setData(index, Qt::Unchecked);
-    }
 }
 
 QList<FPFileInfo> FPFileTable::getFPFileInfos()
@@ -429,12 +422,11 @@ void FPFileTable::mouseEnter(const QModelIndex &index)
 
 void FPFileTable::checkedAllItem(Qt::CheckState checkState)
 {
-    QModelIndex index;
-    for (int i = 0; i < selectionModel()->model()->rowCount(); ++i)
+    for (int i = 0; i < selectionModel()->model()->rowCount(); i++)
     {
         // 取到该行的序号列
-        auto number = selectionModel()->model()->data(model()->index(index.row(), 1)).toInt();
-        index = m_model->index(number, 0);
+        auto number = selectionModel()->model()->data(model()->index(i, 1)).toInt();
+        auto index = m_model->index(number - 1, 0);
         m_model->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
     }
 }
