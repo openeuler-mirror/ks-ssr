@@ -14,19 +14,20 @@
 
 #pragma once
 
-#include <QObject>
-#include "src/daemon/device/sd/sd-device.h"
+#include "src/daemon/device/device.h"
 
 namespace KS
 {
-class Device;
-
-class DeviceFactory : public QObject
+class DRMDevice : public Device
 {
     Q_OBJECT
 
 public:
-    DeviceFactory(QObject* parent = nullptr);
-    QSharedPointer<Device> createDevice(SDDevice* device);
+    DRMDevice(const QString &syspath, QObject *parent = nullptr);
+    virtual ~DRMDevice(){};
+
+private:
+    void init();
 };
+
 }  // namespace KS

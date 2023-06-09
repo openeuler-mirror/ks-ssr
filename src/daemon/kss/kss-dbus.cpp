@@ -77,10 +77,14 @@ bool KSSDbus::trustedStatus() const
 }
 
 CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFile, addTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFiles, addTPFilesAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QStringList &)
 CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFile, removeTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFiles, removeTPFilesAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QStringList &)
 CHECK_AUTH_WITH_2ARGS(KSSDbus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool, const QString &)
 CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFile, addFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFiles, addFPFilesAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QStringList &)
 CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFile, removeFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFiles, removeFPFilesAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QStringList &)
 CHECK_AUTH_WITH_2ARGS(KSSDbus, SetStorageMode, setStorageModeAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, uint, const QString &)
 CHECK_AUTH_WITH_1ARGS(KSSDbus, SetTrustedStatus, setTrustedStatusAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool);
 
@@ -182,6 +186,38 @@ void KSSDbus::addTPFileAfterAuthorization(const QDBusMessage &message, const QSt
     QDBusConnection::systemBus().send(replyMessage);
 }
 
+void KSSDbus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
+{
+    if (fileList.isEmpty())
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+    }
+    // TODO：暂时使用循环调用kss添加，kss有添加文件列表接口后修改为该接口
+    for (auto filePath : fileList)
+    {
+        auto output = KSSWrapper::getDefault()->addTrustedFile(filePath);
+        QJsonParseError jsonError;
+
+        auto jsonDoc = QJsonDocument::fromJson(output.toUtf8(), &jsonError);
+
+        if (jsonDoc.isNull())
+        {
+            KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+            return;
+        }
+
+        if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
+        {
+            DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
+        }
+    }
+
+    emit TrustedFilesChange();
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
+}
+
 void KSSDbus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
     if (filePath.isEmpty())
@@ -190,6 +226,24 @@ void KSSDbus::removeTPFileAfterAuthorization(const QDBusMessage &message, const 
     }
 
     KSSWrapper::getDefault()->removeTrustedFile(filePath);
+    emit TrustedFilesChange();
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
+}
+
+void KSSDbus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
+{
+    if (fileList.isEmpty())
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+    }
+    // TODO：暂时使用循环调用kss移除，kss有添加文件列表接口后修改为该接口
+    for (auto filePath : fileList)
+    {
+        KSSWrapper::getDefault()->removeTrustedFile(filePath);
+    }
+
     emit TrustedFilesChange();
 
     auto replyMessage = message.createReply();
@@ -244,6 +298,43 @@ void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QSt
     QDBusConnection::systemBus().send(replyMessage);
 }
 
+void KSSDbus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
+{
+    if (fileList.isEmpty())
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+    }
+    // TODO：暂时使用循环调用kss添加，kss有添加文件列表接口后修改为该接口
+    for (auto filePath : fileList)
+    {
+        // 检测列表中是否存在相同文件
+        QJsonParseError jsonError;
+        auto jsonDoc = QJsonDocument::fromJson(KSSWrapper::getDefault()->getFiles().toUtf8(), &jsonError);
+        if (jsonDoc.isNull())
+        {
+            KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        }
+
+        auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
+        for (const auto &module : jsonModules)
+        {
+            auto jsonMod = module.toObject();
+            if (jsonMod.value(KSC_KSS_JK_DATA_PATH).toString() == filePath)
+            {
+                DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_TP_ADD_RECUR_FILE, message)
+            }
+        }
+        // 添加文件
+        QFileInfo fileInfo(filePath);
+        auto fileName = fileInfo.fileName();
+        KSSWrapper::getDefault()->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+    }
+
+    emit ProtectedFilesChange();
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
+}
+
 void KSSDbus::removeFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
     if (filePath.isEmpty())
@@ -254,6 +345,23 @@ void KSSDbus::removeFPFileAfterAuthorization(const QDBusMessage &message, const 
     KSSWrapper::getDefault()->removeFile(filePath);
     emit ProtectedFilesChange();
 
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
+}
+
+void KSSDbus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
+{
+    if (fileList.isEmpty())
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+    }
+    // TODO：暂时使用循环调用kss移除，kss有添加文件列表接口后修改为该接口
+    for (auto filePath : fileList)
+    {
+        KSSWrapper::getDefault()->removeFile(filePath);
+    }
+
+    emit ProtectedFilesChange();
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }

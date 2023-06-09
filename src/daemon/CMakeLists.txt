@@ -16,18 +16,15 @@ qt5_add_dbus_adaptor(
   BoxManagerAdaptor)
 
 qt5_add_dbus_adaptor(
-  KSS_DBUS_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/kss/kss-dbus.h
-  KS::KSSDbus
-  kss_dbus_adaptor
+  KSS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/kss/kss-dbus.h KS::KSSDbus kss_dbus_adaptor
   KSSDbusAdaptor)
 
 qt5_add_dbus_adaptor(
   SECURITY_DEVICE_MANAGER_SRCS
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/device/device-manager.h
-  KS::DeviceManager
+  ${CMAKE_SOURCE_DIR}/src/daemon/device/device-dbus.h
+  KS::DeviceDBus
   device_manager_adaptor
   DeviceManagerAdaptor)
 
@@ -35,7 +32,7 @@ set(TARGET_NAME ks-sc-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
-                                ${PROJECT_SOURCE_DIR})
+                       ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}
