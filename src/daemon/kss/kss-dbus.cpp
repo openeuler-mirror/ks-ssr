@@ -258,7 +258,7 @@ void KSSDbus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, b
     }
 
     KSSWrapper::getDefault()->prohibitUnloading(prohibited, filePath);
-    emit TrustedFilesChange();
+    // emit TrustedFilesChange();
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);

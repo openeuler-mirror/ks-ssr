@@ -71,6 +71,7 @@ TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
     connect(m_ui->m_recertification, SIGNAL(clicked(bool)), this, SLOT(recertification(bool)));
     connect(m_ui->m_refresh, SIGNAL(clicked(bool)), this, SLOT(updateExecuteList(bool)));
     connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(popDeleteNotify(bool)));
+    // 防止有重名信号干扰，不使用SIGNAL-SLOT宏
     connect(m_ui->m_executeTable, &TPExecuteTable::filesUpdate, this, &TPExecute::updateTips);
 }
 
