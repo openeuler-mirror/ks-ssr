@@ -203,7 +203,7 @@ void KSSDbus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QS
         if (jsonDoc.isNull())
         {
             KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-            return;
+            continue;
         }
 
         if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
@@ -277,6 +277,7 @@ void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QSt
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        return;
     }
 
     auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
@@ -313,6 +314,7 @@ void KSSDbus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QS
         if (jsonDoc.isNull())
         {
             KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+            continue;
         }
 
         auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
