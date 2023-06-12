@@ -999,7 +999,7 @@
     <message>
         <location filename="../src/ui/window.cpp" line="115"/>
         <source>Unactivated</source>
-        <translation>未授权</translation>
+        <translation>未激活</translation>
     </message>
     <message>
         <location filename="../src/ui/window.cpp" line="127"/>
