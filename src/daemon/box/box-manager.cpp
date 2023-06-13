@@ -135,6 +135,7 @@ QString BoxManager::GetBoxs()
         {
             continue;
         }
+        box->initBoxMountStatus();
         // 暂只返回以下三个数据给前台
         QJsonObject jsonObj{
             {BOX_NAME_KEY, box->getBoxName()},
@@ -145,6 +146,7 @@ QString BoxManager::GetBoxs()
     }
 
     jsonDoc.setArray(jsonArr);
+    m_serviceWatcher->addWatchedService(message().service());
     return QString(jsonDoc.toJson());
 }
 
@@ -205,7 +207,6 @@ void BoxManager::Mount(const QString &boxID, const QString &password)
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR, message())
     }
 
-    m_serviceWatcher->addWatchedService(message().service());
     emit BoxChanged(boxID);
 }
 
@@ -285,12 +286,12 @@ void BoxManager::init()
     connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &BoxManager::unMountAllBoxs);
 
     m_boxs.clear();
-    BoxDao *boxDao = new BoxDao;
+    auto boxDao = new BoxDao;
     auto boxInfoList = boxDao->getBoxs();
     for (auto boxInfo : boxInfoList)
     {
         auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
-        Box *box = new Box(boxInfo.boxName, decryptPassword, boxInfo.userUID, boxInfo.boxID);
+        auto box = new Box(boxInfo.boxName, decryptPassword, boxInfo.userUID, boxInfo.boxID);
         m_boxs.insert(boxInfo.boxID, box);
     }
 }
