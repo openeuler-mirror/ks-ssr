@@ -12,7 +12,7 @@
  * Author:     wangxiaoqing <wangxiaoqing@kylinos.com.cn>
  */
 
-#include "src/daemon/device/device-rule-manager.h"
+#include "src/daemon/device/device-configuration.h"
 #include <qt5-log-i.h>
 #include <QFile>
 #include <QFileInfo>
@@ -42,10 +42,6 @@ namespace KS
 #define DI_SK_TYPE "type"
 #define DI_SK_ENABLE "enable"
 
-#define PER_BIN_VALUE_READ 4     // 2的2次方
-#define PER_BIN_VALUE_WRITE 2    // 2的1次方
-#define PER_BIN_VALUE_EXECUTE 1  // 2的0次方
-
 #define GRUB_MKCONFIG_PROGRAM "/usr/sbin/grub2-mkconfig"
 #define NMCLI_PROGRAM "/usr/bin/nmcli"
 // legacy模式下的grub配置路径
@@ -53,75 +49,63 @@ namespace KS
 // efi模式下的grub配置路径
 #define GRUB_EFI_FILE_PATH "/etc/grub2-efi.cfg"
 
-#define DISABLE_USB_INTERFACE "ACTION!=\"remove\", SUBSYSTEMS==\"usb\", \
-ATTRS{bDeviceClass}!=\"09\", RUN=\"/bin/sh -c 'echo 0 >/sys/$devpath/authorized\""
-
-#define ENABLE_USB_KBD_INTERFACE "ACTION!=\"remove\", SUBSYSTEMS==\"usb\", \
-ATTRS{product}==\"*Keyboard\", RUN=\"/bin/sh -c 'echo 1 >/sys/$devpath/authorized\""
-
-#define ENABLE_USB_MOU_INTERFACE "ACTION!=\"remove\", SUBSYSTEMS==\"usb\", \
-ATTRS{product}==\"*Mouse\", RUN=\"/bin/sh -c 'echo 1 >/sys/$devpath/authorized\""
-
-DeviceRuleManager *DeviceRuleManager::instance()
+DeviceConfiguration *DeviceConfiguration::instance()
 {
-    // TODO: 一个单线程为啥要整这么复杂
-    static QMutex mutex;
-    static QScopedPointer<DeviceRuleManager> pInst;
+    static QScopedPointer<DeviceConfiguration> pInst;
     if (Q_UNLIKELY(!pInst))
     {
-        QMutexLocker locker(&mutex);
         if (pInst.isNull())
         {
-            pInst.reset(new DeviceRuleManager());
+            pInst.reset(new DeviceConfiguration());
         }
     }
     return pInst.data();
 }
 
-void DeviceRuleManager::addRule(const DeviceRule &rule)
+void DeviceConfiguration::addConfig(const DeviceConfig &config)
 {
-    m_deviceSettings->beginGroup(rule.uid);
-    m_deviceSettings->setValue(DEVICE_SK_ID, rule.id);
-    m_deviceSettings->setValue(DEVICE_SK_NAME, rule.name);
-    m_deviceSettings->setValue(DEVICE_SK_ID_PRODUCT, rule.idProduct);
-    m_deviceSettings->setValue(DEVICE_SK_ID_VENDOR, rule.idVendor);
-    m_deviceSettings->setValue(DEVICE_SK_TYPE, rule.type);
-    m_deviceSettings->setValue(DEVICE_SK_INTERFACE_TYPE, rule.interfaceType);
-    m_deviceSettings->setValue(DEVICE_SK_READ, rule.read);
-    m_deviceSettings->setValue(DEVICE_SK_WRITE, rule.write);
-    m_deviceSettings->setValue(DEVICE_SK_EXECUTE, rule.execute);
-    m_deviceSettings->setValue(DEVICE_SK_ENABLE, rule.enable);
+    m_deviceSettings->beginGroup(config.uid);
+    m_deviceSettings->setValue(DEVICE_SK_ID, config.id);
+    m_deviceSettings->setValue(DEVICE_SK_NAME, config.name);
+    m_deviceSettings->setValue(DEVICE_SK_ID_PRODUCT, config.idProduct);
+    m_deviceSettings->setValue(DEVICE_SK_ID_VENDOR, config.idVendor);
+    m_deviceSettings->setValue(DEVICE_SK_TYPE, config.type);
+    m_deviceSettings->setValue(DEVICE_SK_INTERFACE_TYPE, config.interfaceType);
+    m_deviceSettings->setValue(DEVICE_SK_READ, config.read);
+    m_deviceSettings->setValue(DEVICE_SK_WRITE, config.write);
+    m_deviceSettings->setValue(DEVICE_SK_EXECUTE, config.execute);
+    m_deviceSettings->setValue(DEVICE_SK_ENABLE, config.enable);
     m_deviceSettings->endGroup();
 
-    this->syncDeviceFile();
+    Q_EMIT this->deviceConfigChanged();
 }
 
-QSharedPointer<DeviceRule> DeviceRuleManager::getRule(const QString &uid)
+QSharedPointer<DeviceConfig> DeviceConfiguration::getDeviceConfig(const QString &uid)
 {
     RETURN_VAL_IF_FALSE(m_deviceSettings->childGroups().contains(uid), nullptr)
 
-    auto rule = QSharedPointer<DeviceRule>(new DeviceRule());
+    auto config = QSharedPointer<DeviceConfig>(new DeviceConfig());
 
     m_deviceSettings->beginGroup(uid);
 
-    rule->uid = uid;
-    rule->id = m_deviceSettings->value(DEVICE_SK_ID).toString();
-    rule->name = m_deviceSettings->value(DEVICE_SK_NAME).toString();
-    rule->idProduct = m_deviceSettings->value(DEVICE_SK_ID_PRODUCT).toString();
-    rule->idVendor = m_deviceSettings->value(DEVICE_SK_ID_VENDOR).toString();
-    rule->interfaceType = m_deviceSettings->value(DEVICE_SK_INTERFACE_TYPE).toInt();
-    rule->type = m_deviceSettings->value(DEVICE_SK_TYPE).toInt();
-    rule->enable = m_deviceSettings->value(DEVICE_SK_ENABLE).toBool();
-    rule->read = m_deviceSettings->value(DEVICE_SK_READ).toBool();
-    rule->write = m_deviceSettings->value(DEVICE_SK_WRITE).toBool();
-    rule->execute = m_deviceSettings->value(DEVICE_SK_EXECUTE).toBool();
+    config->uid = uid;
+    config->id = m_deviceSettings->value(DEVICE_SK_ID).toString();
+    config->name = m_deviceSettings->value(DEVICE_SK_NAME).toString();
+    config->idProduct = m_deviceSettings->value(DEVICE_SK_ID_PRODUCT).toString();
+    config->idVendor = m_deviceSettings->value(DEVICE_SK_ID_VENDOR).toString();
+    config->interfaceType = m_deviceSettings->value(DEVICE_SK_INTERFACE_TYPE).toInt();
+    config->type = m_deviceSettings->value(DEVICE_SK_TYPE).toInt();
+    config->enable = m_deviceSettings->value(DEVICE_SK_ENABLE).toBool();
+    config->read = m_deviceSettings->value(DEVICE_SK_READ).toBool();
+    config->write = m_deviceSettings->value(DEVICE_SK_WRITE).toBool();
+    config->execute = m_deviceSettings->value(DEVICE_SK_EXECUTE).toBool();
 
     m_deviceSettings->endGroup();
 
-    return rule;
+    return config;
 }
 
-bool DeviceRuleManager::isIFCEnable(int type)
+bool DeviceConfiguration::isIFCEnable(int type)
 {
     auto group = QString::asprintf("interface%d", type);
     bool ret = false;
@@ -136,10 +120,8 @@ bool DeviceRuleManager::isIFCEnable(int type)
     return ret;
 }
 
-void DeviceRuleManager::setIFCEnable(int type, bool enable)
+void DeviceConfiguration::setIFCEnable(int type, bool enable)
 {
-    // RETURN_VAL_IF_FALSE(this->verifyInterface(type), false)
-
     QString group = QString::asprintf("interface%d", type);
 
     m_interfaceSettings->beginGroup(group);
@@ -148,111 +130,33 @@ void DeviceRuleManager::setIFCEnable(int type, bool enable)
     m_interfaceSettings->endGroup();
 
     this->syncInterfaceFile();
-    this->syncDeviceFile();
 }
 
-DeviceRuleManager::DeviceRuleManager(QObject *parent) : QObject(parent),
-                                                        m_deviceSettings(nullptr),
-                                                        m_interfaceSettings(nullptr),
-                                                        m_grubUpdateThread(nullptr),
-                                                        m_waitingUpdateGrub(false)
+DeviceConfiguration::DeviceConfiguration(QObject *parent) : QObject(parent),
+                                                            m_deviceSettings(nullptr),
+                                                            m_interfaceSettings(nullptr),
+                                                            m_grubUpdateThread(nullptr),
+                                                            m_waitingUpdateGrub(false)
 {
     this->init();
 }
 
-void DeviceRuleManager::init()
+void DeviceConfiguration::init()
 {
-    m_deviceSettings = new QSettings(KSC_DEVICE_RULE_FILE, QSettings::NativeFormat, this);
-    m_interfaceSettings = new QSettings(KSC_DI_RULE_FILE, QSettings::NativeFormat, this);
+    m_deviceSettings = new QSettings(KSC_DEVICE_CONFIG_FILE, QSettings::NativeFormat, this);
+    m_interfaceSettings = new QSettings(KSC_DI_CONFIG_FILE, QSettings::NativeFormat, this);
 
-    this->syncDeviceFile();
     this->syncInterfaceFile();
 }
 
-void DeviceRuleManager::syncDeviceFile()
-{
-    this->syncToDeviceUdevFile();
-}
-
-QStringList DeviceRuleManager::getUSBIFCUdevRule()
-{
-    auto rules = QStringList() << QString(DISABLE_USB_INTERFACE);
-
-    if (this->isIFCEnable(INTERFACE_TYPE_USB_KBD))
-    {
-        rules << QString(ENABLE_USB_KBD_INTERFACE);
-    }
-
-    if (this->isIFCEnable(INTERFACE_TYPE_USB_MOUSE))
-    {
-        rules << QString(ENABLE_USB_MOU_INTERFACE);
-    }
-
-    return rules;
-}
-
-void DeviceRuleManager::syncToDeviceUdevFile()
-{
-    QStringList rules;
-    auto groups = m_deviceSettings->childGroups();
-
-    Q_FOREACH (auto group, groups)
-    {
-        auto udevRule = this->ruleObj2Str(this->getRule(group));
-
-        if (!udevRule.isNull())
-        {
-            rules.append(udevRule);
-        }
-    }
-
-    auto ifcRules = this->getUSBIFCUdevRule();
-    if (this->isIFCEnable(INTERFACE_TYPE_USB))
-    {
-        rules = ifcRules + rules;
-    }
-    else
-    {
-        rules = rules + ifcRules;
-    }
-
-    this->saveToFile(rules, KSC_DEVICE_UDEV_RULES_FILE);
-}
-
-QString DeviceRuleManager::ruleObj2Str(QSharedPointer<DeviceRule> rule)
-{
-    if (rule->interfaceType == INTERFACE_TYPE_USB)
-    {
-        return QString::asprintf("ACTION!=\"remove\", SUBSYSTEMS==\"usb\", \
-ATTRS{idVendor}==\"%s\", ATTRS{idProduct}==\"%s\", \
-MODE=\"%s\", RUN=\"/bin/sh -c 'echo %d >/sys/$devpath/authorized'\"",
-                                 rule->idVendor.toStdString().c_str(),
-                                 rule->idProduct.toStdString().c_str(),
-                                 this->getUdevModeValue(rule).toStdString().c_str(),
-                                 rule->enable);
-    }
-
-    return QString();
-}
-
-QString DeviceRuleManager::getUdevModeValue(QSharedPointer<DeviceRule> rule)
-{
-    auto permission = rule->read * PER_BIN_VALUE_READ +
-                      rule->write * PER_BIN_VALUE_WRITE +
-                      rule->execute * PER_BIN_VALUE_EXECUTE;
-
-    // 所有用户的读，写，执行权限一样
-    return QString::asprintf("0%d%d%d", permission, permission, permission);
-}
-
-void DeviceRuleManager::syncInterfaceFile()
+void DeviceConfiguration::syncInterfaceFile()
 {
     this->syncInterfaceToGrubFile();
     this->syncToBluetoothService();
     this->syncToNMService();
 }
 
-void DeviceRuleManager::syncInterfaceToGrubFile()
+void DeviceConfiguration::syncInterfaceToGrubFile()
 {
     QString grubValue;
     QString grubOption;
@@ -299,33 +203,33 @@ void DeviceRuleManager::syncInterfaceToGrubFile()
     this->checkWaitingUpdateGrubs();
 }
 
-void DeviceRuleManager::updateGrubsInThread()
+void DeviceConfiguration::updateGrubsInThread()
 {
     this->updateGrub(GRUB_LEGACY_FILE_PATH);
     this->updateGrub(GRUB_EFI_FILE_PATH);
 }
 
-void DeviceRuleManager::checkWaitingUpdateGrubs()
+void DeviceConfiguration::checkWaitingUpdateGrubs()
 {
     RETURN_IF_TRUE(m_grubUpdateThread);
 
     if (m_waitingUpdateGrub)
     {
         m_waitingUpdateGrub = false;
-        m_grubUpdateThread = QThread::create(std::bind(&DeviceRuleManager::updateGrubsInThread, this));
-        connect(m_grubUpdateThread, &QThread::finished, std::bind(&DeviceRuleManager::finishGrubsUpdate, this));
+        m_grubUpdateThread = QThread::create(std::bind(&DeviceConfiguration::updateGrubsInThread, this));
+        connect(m_grubUpdateThread, &QThread::finished, std::bind(&DeviceConfiguration::finishGrubsUpdate, this));
         m_grubUpdateThread->start();
     }
 }
 
-void DeviceRuleManager::finishGrubsUpdate()
+void DeviceConfiguration::finishGrubsUpdate()
 {
     this->m_grubUpdateThread->deleteLater();
     this->m_grubUpdateThread = nullptr;
     this->checkWaitingUpdateGrubs();
 }
 
-QStringList DeviceRuleManager::getHDMINames()
+QStringList DeviceConfiguration::getHDMINames()
 {
     QStringList hdmiNames;
     auto hdmiDevices = DeviceManager::instance()->getDevicesByInterface(InterfaceType::INTERFACE_TYPE_HDMI);
@@ -342,7 +246,7 @@ QStringList DeviceRuleManager::getHDMINames()
     return hdmiNames;
 }
 
-void DeviceRuleManager::syncToBluetoothService()
+void DeviceConfiguration::syncToBluetoothService()
 {
     auto enabled = this->isIFCEnable(InterfaceType::INTERFACE_TYPE_BLUETOOTH);
     if (enabled)
@@ -355,7 +259,7 @@ void DeviceRuleManager::syncToBluetoothService()
     }
 }
 
-void DeviceRuleManager::syncToNMService()
+void DeviceConfiguration::syncToNMService()
 {
     auto enabled = this->isIFCEnable(InterfaceType::INTERFACE_TYPE_NET);
     auto arguments = QStringList{QString("n"), (enabled ? "on" : "off")};
@@ -370,9 +274,8 @@ void DeviceRuleManager::syncToNMService()
     }
 }
 
-void DeviceRuleManager::saveToFile(const QStringList &lines, const QString &filename)
+void DeviceConfiguration::saveToFile(const QStringList &lines, const QString &filename)
 {
-    // 触发系统事件，让systemd-udevd服务重新加载规则文件
     QFile::remove(filename);
 
     RETURN_IF_TRUE(lines.isEmpty())
@@ -392,7 +295,7 @@ void DeviceRuleManager::saveToFile(const QStringList &lines, const QString &file
     file.close();
 }
 
-void DeviceRuleManager::updateGrub(const QString &filePath)
+void DeviceConfiguration::updateGrub(const QString &filePath)
 {
     auto arguments = QStringList{QString("-o"), filePath};
     auto command = QString("%1 %2").arg(GRUB_MKCONFIG_PROGRAM).arg(arguments.join(' '));
@@ -403,6 +306,26 @@ void DeviceRuleManager::updateGrub(const QString &filePath)
     {
         KLOG_WARNING() << "Failed to execute command " << command << ", exitcode is " << exitcode;
     }
+}
+
+DeviceConfigList DeviceConfiguration::getDeviceConfig()
+{
+    DeviceConfigList configs;
+
+    QStringList rules;
+    auto groups = m_deviceSettings->childGroups();
+
+    Q_FOREACH (auto group, groups)
+    {
+        QSharedPointer<DeviceConfig> config = this->getDeviceConfig(group);
+
+        if (config)
+        {
+            configs.append(config);
+        }
+    }
+
+    return configs;
 }
 
 }  // namespace KS
