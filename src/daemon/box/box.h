@@ -43,6 +43,7 @@ public:
     bool mount(const QString &currentPassword);
     bool umount();
     bool modifyBoxPassword(const QString &currentPassword, const QString &newPassword);
+    void initBoxMountStatus();
 
 private:
     void init();
