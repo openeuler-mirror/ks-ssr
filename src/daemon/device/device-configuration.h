@@ -22,11 +22,10 @@ class QThread;
 
 namespace KS
 {
-// TODO: 这里应该也不是DeviceRule，只有UDEV才叫Rule，这里只能说是控制参数
-struct DeviceRule
+struct DeviceConfig
 {
 public:
-    DeviceRule() = default;
+    DeviceConfig() = default;
     QString uid;
     QString id;
     QString name;
@@ -40,32 +39,30 @@ public:
     int interfaceType;
 };
 
-// TODO: 类名还要想一下，应该叫DeviceConfiguration好一些，如果换名字的话，类里面其他名字也要换
-class DeviceRuleManager : public QObject
+using DeviceConfigList = QList<QSharedPointer<DeviceConfig>>;
+
+class DeviceConfiguration : public QObject
 {
     Q_OBJECT
 
 public:
-    static DeviceRuleManager *instance();
-    void addRule(const DeviceRule &rule);
-    QSharedPointer<DeviceRule> getRule(const QString &uid);
+    static DeviceConfiguration *instance();
+    void addConfig(const DeviceConfig &Config);
+    QSharedPointer<DeviceConfig> getDeviceConfig(const QString &uid);
+    //获取所有的设备配置
+    DeviceConfigList getDeviceConfig();
 
     bool isIFCEnable(int type);
     void setIFCEnable(int type, bool enable);
 
+signals:
+    void deviceConfigChanged();
+
 private:
-    explicit DeviceRuleManager(QObject *parent = nullptr);
+    explicit DeviceConfiguration(QObject *parent = nullptr);
 
 private:
     void init();
-
-    // 将设备控制文件同步到对应的系统配置中
-    void syncDeviceFile();
-    // 将设备控制配置同步到udev规则文件
-    void syncToDeviceUdevFile();
-    // 设备规则对象转udev字符串
-    QString ruleObj2Str(QSharedPointer<DeviceRule> rule);
-    QString getUdevModeValue(QSharedPointer<DeviceRule> rule);
 
     // 将接口控制文件同步到对应的系统配置中
     void syncInterfaceFile();
@@ -87,9 +84,6 @@ private:
     void finishGrubsUpdate();
     // 更新单个grub配置
     void updateGrub(const QString &filePath);
-
-    //USB接口Udev规则
-    QStringList getUSBIFCUdevRule();
 
 private:
     // 设备控制相关配置

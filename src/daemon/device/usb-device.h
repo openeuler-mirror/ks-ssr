@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "src/daemon/device/device-rule-manager.h"
+#include "src/daemon/device/device-configuration.h"
 #include "src/daemon/device/device.h"
 
 namespace KS
@@ -46,6 +46,8 @@ private:
     int interfaceProtocol2DevcieType(const InterfaceClass &interface);
     int hidProtocol2DevcieType(const InterfaceClass &interface);
     void initPermission();
+    bool isEnable();
+    void setDeviceAuthorized();
 
 private:
     QString m_idProduct;
@@ -54,6 +56,6 @@ private:
     QString m_product;
     QString m_uid;
 
-    DeviceRuleManager *m_ruleManager;
+    DeviceConfiguration *m_devConfig;
 };
 }  // namespace KS

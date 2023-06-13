@@ -22,6 +22,7 @@
 #include "src/daemon/device/device-dbus.h"
 #include "src/daemon/device/device-factory.h"
 #include "src/daemon/device/sd/sd-device-enumerator.h"
+#include "src/daemon/device/udev-rule-manager.h"
 
 namespace KS
 {
@@ -57,6 +58,8 @@ void DeviceManager::init()
     m_deviceDBus->init();
 
     this->initDevices();
+
+    UdevRuleManager::instance();
 
     connect(&m_sdDeviceMonitor, &SDDeviceMonitor::deviceChanged, this, &DeviceManager::handleUdevEvent);
     connect(&m_mountMonitor, &DeviceMountMonitor::mountChanged, this, &DeviceManager::handleMountEvent);

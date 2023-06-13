@@ -53,7 +53,7 @@ namespace KS
 
 USBDevice::USBDevice(const QString &syspath, QObject *parent) : Device(syspath, parent)
 {
-    m_ruleManager = DeviceRuleManager::instance();
+    m_devConfig = DeviceConfiguration::instance();
 
     this->init();
     this->initPermission();
@@ -116,9 +116,7 @@ int USBDevice::parseDeviceInterfaceClassType()
 
     RETURN_VAL_IF_TRUE(syspath.isNull() || sysname.isNull(), DEVICE_TYPE_UNKNOWN)
 
-    auto childDeviceSyspath = QString::asprintf("%s/%s:1.0",
-                                                syspath.toStdString().c_str(),
-                                                sysname.toStdString().c_str());
+    auto childDeviceSyspath = QString("%1/%2:1.0").arg(syspath, sysname);
 
     RETURN_VAL_IF_FALSE(QFile::exists(childDeviceSyspath), DEVICE_TYPE_UNKNOWN)
 
@@ -193,49 +191,108 @@ int USBDevice::hidProtocol2DevcieType(const InterfaceClass &interface)
 
 void USBDevice::initPermission()
 {
-    auto rule = m_ruleManager->getRule(m_uid);
+    auto config = m_devConfig->getDeviceConfig(m_uid);
 
-    if (rule == nullptr)
+    if (config == nullptr)
     {
         this->setState(DEVICE_STATE_UNAUTHORIED);
+        this->setDeviceAuthorized();
         return;
     }
 
     this->setPermission(QSharedPointer<Permission>(new Permission{
-        .read = rule->read,
-        .write = rule->write,
-        .execute = rule->execute,
+        .read = config->read,
+        .write = config->write,
+        .execute = config->execute,
     }));
 
-    this->setState((rule->enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
+    this->setState((config->enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
+    this->setDeviceAuthorized();
 }
 
 bool USBDevice::setEnable(bool enable)
 {
-    DeviceRule rule;
+    DeviceConfig config;
 
-    rule.uid = m_uid;
-    rule.id = this->getID();
-    rule.name = this->getName();
-    rule.idVendor = m_idVendor;
-    rule.idProduct = m_idProduct;
-    rule.enable = enable;
-    rule.type = this->getType();
-    rule.interfaceType = this->getInterfaceType();
-    rule.read = this->getPermission()->read;
-    rule.write = this->getPermission()->write;
-    rule.execute = this->getPermission()->execute;
+    config.uid = m_uid;
+    config.id = this->getID();
+    config.name = this->getName();
+    config.idVendor = m_idVendor;
+    config.idProduct = m_idProduct;
+    config.enable = enable;
+    config.type = this->getType();
+    config.interfaceType = this->getInterfaceType();
+    config.read = this->getPermission()->read;
+    config.write = this->getPermission()->write;
+    config.execute = this->getPermission()->execute;
 
-    m_ruleManager->addRule(rule);
+    m_devConfig->addConfig(config);
+    this->setState((config.enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
 
-    this->setState((rule.enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
+    this->setDeviceAuthorized();
 
     return true;
 }
 
 void USBDevice::update()
 {
-    this->setType(this->parseDeviceType());
+    auto type = this->parseDeviceType();
+
+    if (type != DEVICE_TYPE_UNKNOWN)
+    {
+        this->setType(type);
+    }
+
+    this->setDeviceAuthorized();
+}
+
+void USBDevice::setDeviceAuthorized()
+{
+    auto filename = QString("%1/authorized").arg(this->getSyspath());
+    QFile file(filename);
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        KLOG_WARNING() << "Cannot open file " << filename;
+        return;
+    }
+
+    QTextStream out(&file);
+    out << (this->isEnable() ? "1" : "0");
+    file.close();
+}
+
+bool USBDevice::isEnable()
+{
+    auto usbEnable = m_devConfig->isIFCEnable(INTERFACE_TYPE_USB);
+    auto kdbEnable = m_devConfig->isIFCEnable(INTERFACE_TYPE_USB_KBD);
+    auto mouseEnable = m_devConfig->isIFCEnable(INTERFACE_TYPE_USB_MOUSE);
+    auto state = this->getState();
+    auto type = this->getType();
+
+    //禁用设备
+    RETURN_VAL_IF_TRUE(state == DEVICE_STATE_DISABLE, false)
+
+    //全局USB接口关闭
+    if (!usbEnable)
+    {
+        //鼠标键盘启用时，启用Hub
+        RETURN_VAL_IF_TRUE((kdbEnable || mouseEnable) && type == DEVICE_TYPE_HUB, true)
+        //启用键盘
+        RETURN_VAL_IF_TRUE(kdbEnable && type == DEVICE_TYPE_KEYBOARD, true)
+        //启用鼠标
+        RETURN_VAL_IF_TRUE(mouseEnable && type == DEVICE_TYPE_MOUSE, true)
+
+        return false;
+    }
+
+    //默认鼠标，键盘，Hub可以使用
+    RETURN_VAL_IF_TRUE((type == DEVICE_TYPE_HUB ||
+                        type == DEVICE_TYPE_KEYBOARD ||
+                        type == DEVICE_TYPE_MOUSE),
+                       true)
+
+    return state == DEVICE_STATE_ENABLE;
 }
 
 }  // namespace KS
