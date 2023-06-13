@@ -82,7 +82,7 @@ QSharedPointer<KSSWrapper> KSSWrapper::getDefault()
 QString KSSWrapper::addTrustedFile(const QString &filePath)
 {
     RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
-    auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_ADD_FILE_CMD, filePath);
+    auto cmd = QString("%1 '%2'").arg(KSS_DIGEST_SCAN_ADD_FILE_CMD, filePath);
     execute(cmd);
 
     return m_processOutput;
@@ -118,7 +118,7 @@ void KSSWrapper::removeTrustedFile(const QString &filePath)
         prohibitUnloading(false, filePath);
     }
     // 移除
-    auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_REMOVE_FILE_CMD, filePath);
+    auto cmd = QString("%1 '%2'").arg(KSS_DIGEST_SCAN_REMOVE_FILE_CMD, filePath);
     execute(cmd);
 }
 
@@ -178,14 +178,14 @@ QString KSSWrapper::getTrustedStatus()
 void KSSWrapper::addFile(const QString &fileName, const QString &filePath, const QString &insertTime)
 {
     RETURN_IF_TRUE(getInitialized() == 0)
-    auto cmd = QString("%1 -n %2 -p %3 -t '%4'").arg(KSS_ADD_FILE_CMD, fileName, filePath, insertTime);
+    auto cmd = QString("%1 -n '%2' -p '%3' -t '%4'").arg(KSS_ADD_FILE_CMD, fileName, filePath, insertTime);
     execute(cmd);
 }
 
 void KSSWrapper::removeFile(const QString &filePath)
 {
     RETURN_IF_TRUE(getInitialized() == 0)
-    auto cmd = QString("%1 -p %2").arg(KSS_REMOVE_FILE_CMD, filePath);
+    auto cmd = QString("%1 -p '%2'").arg(KSS_REMOVE_FILE_CMD, filePath);
     execute(cmd);
 }
 
