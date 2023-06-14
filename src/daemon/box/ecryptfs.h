@@ -41,7 +41,7 @@ public:
                  const QString &mountPath,
                  const QString &passphrase,
                  const QString &sig);
-    void mkdirBoxDir(const QString &path, const QString &userName);
+    bool mkdirBoxDir(const QString &path, const QString &userName);
     void rmBoxDir(const QString &path);
 
 public Q_SLOTS:

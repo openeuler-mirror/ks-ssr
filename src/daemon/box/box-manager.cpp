@@ -70,11 +70,19 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
     auto decryptPasswd = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
     auto box = new Box(name, decryptPasswd, getSenderUid());
     // 模块未加载
-    if (box->getPassphrase().isEmpty())
+    if (!box->createBox())
     {
-        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD));
-        KLOG_WARNING() << "The kernel module is not loaded.";
-        return QString();
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
+                                        KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD,
+                                        message())
+    }
+
+    // 创建数据目录，目录已存在或其它原因已在mkdirDataDir中处理，一般在空间不足的情况下才会创建失败
+    if (!box->mkdirDataDir())
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
+                                        KSCErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED,
+                                        message())
     }
 
     m_boxs.insert(box->getBoxID(), box);
@@ -253,8 +261,7 @@ void BoxManager::UnMount(const QString &boxID)
 
     if (!box->umount())
     {
-        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_UMOUNT_FAIL));
-        return;
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_UMOUNT_FAIL, message());
     }
 
     emit BoxChanged(boxID);

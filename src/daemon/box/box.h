@@ -43,11 +43,12 @@ public:
     bool mount(const QString &currentPassword);
     bool umount();
     bool modifyBoxPassword(const QString &currentPassword, const QString &newPassword);
+    // 新建保险箱才需执行createBox，获取数据库中的保险箱无需进行此操作
+    bool createBox();
     void initBoxMountStatus();
+    bool mkdirDataDir();
 
 private:
-    void init();
-
     QString getRandBoxUid();
     QString getRandStr(uint length);
     BoxRecord getBoxInfo();
