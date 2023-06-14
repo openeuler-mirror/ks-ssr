@@ -52,20 +52,39 @@ public Q_SLOTS:  // METHODS
     QString GetInterface(int type);
 
     // 修改权限
-    bool ChangePermission(const QString &id,
+    void ChangePermission(const QString &id,
                           const QString &permissions);
 
     // 启用设备
-    bool Enable(const QString &id);
+    void Enable(const QString &id);
 
     // 禁用设备
-    bool Disable(const QString &id);
+    void Disable(const QString &id);
 
     // 启用设备接口
     void EnableInterface(int type, bool enabled);
 
     // 获取连接记录
     QString GetRecords();
+
+private:
+    // 修改权限
+    void changePermission(const QDBusMessage &message,
+                          const QString &id,
+                          const QString &permissions);
+
+    // 启用设备
+    void enable(const QDBusMessage &message,
+                const QString &id);
+
+    // 禁用设备
+    void disable(const QDBusMessage &message,
+                 const QString &id);
+
+    // 启用设备接口
+    void enableInterface(const QDBusMessage &message,
+                         int type,
+                         bool enabled);
 
 private:
     DeviceManager *m_deviceManager;
