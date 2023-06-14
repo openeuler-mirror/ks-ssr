@@ -61,17 +61,20 @@ bool EcryptFS::decrypt(const QString &mountObjectPath,
     return false;
 }
 
-void EcryptFS::mkdirBoxDir(const QString &path, const QString &userName)
+bool EcryptFS::mkdirBoxDir(const QString &path, const QString &userName)
 {
     QDir dir(path);
+    RETURN_VAL_IF_TRUE(dir.exists(), true);
     // name+uid 命名 可区分不同用户下创建的相同文件夹名称
     if (!dir.mkpath(path))
     {
         KLOG_WARNING() << "Failed to mkdir folder. path = " << path;
+        return false;
     }
 
     QString cmd = QString("chown %2:%2 %1").arg(path, userName);
     execute(cmd);
+    return true;
 }
 
 void EcryptFS::rmBoxDir(const QString &path)
