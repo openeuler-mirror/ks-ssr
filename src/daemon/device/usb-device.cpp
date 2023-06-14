@@ -83,7 +83,7 @@ void USBDevice::init()
 
     m_uid = "USB" + m_idVendor + m_idProduct;
 
-    auto id = m_idVendor + ":" + m_idProduct;
+    auto id = QString("%1:%2:%3-%4").arg(m_idVendor, m_idProduct, device->getSysattrValue("busnum"), device->getSysattrValue("devnum"));
     this->setID(id);
     this->setName(m_product);
     this->setType(this->parseDeviceType());
@@ -248,12 +248,12 @@ void USBDevice::update()
 
 void USBDevice::setDeviceAuthorized()
 {
-    auto filename = QString("%1/authorized").arg(this->getSyspath());
-    QFile file(filename);
+    auto filePath = QString("%1/authorized").arg(this->getSyspath());
+    QFile file(filePath);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        KLOG_WARNING() << "Cannot open file " << filename;
+        KLOG_WARNING() << "Cannot open file " << filePath;
         return;
     }
 

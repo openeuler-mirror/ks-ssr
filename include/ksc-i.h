@@ -89,6 +89,8 @@ extern "C"
 #define KSC_DI_JK_TYPE "type"
 #define KSC_DI_JK_ENABLE "enable"
 
+#define KSC_PERMISSION_AUTHENTICATION "com.kylinsec.SC.PermissionAuthentication"
+
     enum DeviceType
     {
         DEVICE_TYPE_UNKNOWN = 0,

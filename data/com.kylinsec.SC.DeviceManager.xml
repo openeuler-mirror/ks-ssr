@@ -36,26 +36,17 @@
             <arg type="s" name="permissions" direction="in">
                 <summary>The permissions json string of device.</summary>
             </arg>
-            <arg type="b" name="result" direction="out">
-                <summary>The permissions change result.</summary>
-            </arg>
         </method>
 
         <method name="Enable">
             <arg type="s" name="id" direction="in">
                 <summary>The id of device.</summary>
             </arg>
-            <arg type="b" name="result" direction="out">
-                <summary>The enable result.</summary>
-            </arg>
         </method>
 
         <method name="Disable">
             <arg type="s" name="id" direction="in">
                 <summary>The id of device.</summary>
-            </arg>
-            <arg type="b" name="result" direction="out">
-                <summary>The disable result.</summary>
             </arg>
         </method>
 
