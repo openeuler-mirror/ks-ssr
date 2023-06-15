@@ -50,6 +50,12 @@ public:
     //检查设备挂载权限
     void checkDeviceMount(const QSharedPointer<Device> device);
 
+    //重放接口设备事件
+    void triggerInterfaceDevices(int interfaceType);
+
+    //是否支持HDMI关闭
+    bool isSupportHDMIDisable();
+
 private:
     DeviceManager(QObject *parent);
     virtual ~DeviceManager();
