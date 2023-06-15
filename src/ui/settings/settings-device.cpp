@@ -33,7 +33,7 @@ SettingsDevice::SettingsDevice(QWidget *parent) : QWidget(parent),
                                                   QDBusConnection::systemBus(),
                                                   this);
     m_interfaces = getInterfaces();
-    updateUI();
+    insertInterfaceWidget();
 }
 
 SettingsDevice::~SettingsDevice()
@@ -70,7 +70,7 @@ void SettingsDevice::initUI()
     vLayout->addStretch(1);
 }
 
-void SettingsDevice::updateUI()
+void SettingsDevice::insertInterfaceWidget()
 {
     RETURN_IF_TRUE(m_interfaces.size() < 1);
 
@@ -96,7 +96,7 @@ void SettingsDevice::updateUI()
         auto typeLabel = new QLabel(interfaceName, this);
         auto stateCheckBox = new QCheckBox(this);
         stateCheckBox->setChecked(interface.enable);
-        stateCheckBox->setProperty(INTERFACE_TYPE_PROPERTY, interface.type);
+        m_checkboxs.insert(interface.type, stateCheckBox);
         auto sparcerItem = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
 
         if (interface.type == InterfaceType::INTERFACE_TYPE_USB)
@@ -122,10 +122,27 @@ void SettingsDevice::updateUI()
             count++;
         }
 
-        connect(stateCheckBox, &QCheckBox::toggled, this, &SettingsDevice::handleInterfaceState);
+        connect(stateCheckBox, &QCheckBox::clicked, this, &SettingsDevice::setInterfaceState);
     }
 
     m_kbdMouseContent->setVisible(!usbEnabled);
+}
+
+void SettingsDevice::update()
+{
+    m_interfaces.clear();
+    m_interfaces = getInterfaces();
+
+    foreach (auto interface, m_interfaces)
+    {
+        auto checkbox = m_checkboxs.value(interface.type);
+        checkbox->setChecked(interface.enable);
+
+        if (interface.type == InterfaceType::INTERFACE_TYPE_USB)
+        {
+            m_kbdMouseContent->setVisible(!interface.enable);
+        }
+    }
 }
 
 QList<Interface> SettingsDevice::getInterfaces()
@@ -157,33 +174,20 @@ QList<Interface> SettingsDevice::getInterfaces()
     return interfaces;
 }
 
-bool SettingsDevice::setInterfaceState(bool isEnable, InterfaceType type)
+void SettingsDevice::setInterfaceState(bool checked)
 {
-    auto reply = m_deviceManagerProxy->EnableInterface(type, isEnable);
+    auto state = checked;
+    auto stateCheckBox = qobject_cast<QCheckBox *>(sender());
+    auto type = m_checkboxs.key(stateCheckBox);
+
+    auto reply = m_deviceManagerProxy->EnableInterface(type, state);
     reply.waitForFinished();
     if (reply.isError())
     {
         POPUP_MESSAGE_DIALOG(reply.error().message());
-        return false;
-    }
-    return true;
-}
-
-void SettingsDevice::handleInterfaceState(bool checked)
-{
-    auto state = checked;
-    auto stateCheckBox = qobject_cast<QCheckBox *>(sender());
-    auto type = (InterfaceType)stateCheckBox->property(INTERFACE_TYPE_PROPERTY).toInt();
-
-    if (!setInterfaceState(state, type))
-    {
-        state = !checked;
-        stateCheckBox->setChecked(state);
     }
 
-    if (type == InterfaceType::INTERFACE_TYPE_USB)
-    {
-        m_kbdMouseContent->setVisible(!state);
-    }
+    //更新界面checkbox状态
+    update();
 }
 }  // namespace KS
