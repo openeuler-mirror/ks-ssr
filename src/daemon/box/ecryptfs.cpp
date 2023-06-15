@@ -32,9 +32,9 @@ QString EcryptFS::addPassphrase(const QString &passphrase)
     return m_processOutput;
 }
 
-QString EcryptFS::encrypt(const QString &umountPath)
+QString EcryptFS::encrypt(const QString &umountPath, bool isForce)
 {
-    QString cmd = QString("umount %1").arg(umountPath);
+    QString cmd = isForce ? QString("umount -lf %1").arg(umountPath) : QString("umount %1").arg(umountPath);
     execute(cmd);
 
     return m_errorOutput;
