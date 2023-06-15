@@ -5,19 +5,16 @@
     <name>BoxPage</name>
     <message>
         <location filename="../src/ui/box/box-page.ui" line="14"/>
-        <location filename="../build/src/ui/ui_box-page.h" line="115"/>
         <source>Box manager</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-page.ui" line="71"/>
-        <location filename="../build/src/ui/ui_box-page.h" line="116"/>
         <source>Provides data isolation, hiding and encryption protection functions</source>
         <translation>提供数据隔离、隐藏和加密保护功能</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-page.ui" line="129"/>
-        <location filename="../build/src/ui/ui_box-page.h" line="117"/>
         <source>New</source>
         <translation>新建</translation>
     </message>
@@ -26,25 +23,21 @@
     <name>BoxPasswordChecked</name>
     <message>
         <location filename="../src/ui/box/box-password-checked.ui" line="14"/>
-        <location filename="../build/src/ui/ui_box-password-checked.h" line="107"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-checked.ui" line="68"/>
-        <location filename="../build/src/ui/ui_box-password-checked.h" line="108"/>
         <source>please input password:</source>
         <translation>请输入密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-checked.ui" line="112"/>
-        <location filename="../build/src/ui/ui_box-password-checked.h" line="109"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-checked.ui" line="131"/>
-        <location filename="../build/src/ui/ui_box-password-checked.h" line="110"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -53,43 +46,36 @@
     <name>BoxPasswordModification</name>
     <message>
         <location filename="../src/ui/box/box-password-modification.ui" line="14"/>
-        <location filename="../build/src/ui/ui_box-password-modification.h" line="182"/>
         <source>Modify password</source>
         <translation>修改密码</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-modification.ui" line="87"/>
-        <location filename="../build/src/ui/ui_box-password-modification.h" line="183"/>
         <source>Security box name</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-modification.ui" line="117"/>
-        <location filename="../build/src/ui/ui_box-password-modification.h" line="184"/>
         <source>Current password:</source>
         <translation>当前密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-modification.ui" line="138"/>
-        <location filename="../build/src/ui/ui_box-password-modification.h" line="185"/>
         <source>New password:       </source>
         <translation>新密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-modification.ui" line="159"/>
-        <location filename="../build/src/ui/ui_box-password-modification.h" line="186"/>
         <source>Confirm password:</source>
         <translation>确认密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-modification.ui" line="205"/>
-        <location filename="../build/src/ui/ui_box-password-modification.h" line="187"/>
         <source>OK</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-modification.ui" line="224"/>
-        <location filename="../build/src/ui/ui_box-password-modification.h" line="188"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -98,37 +84,31 @@
     <name>CreateBox</name>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="14"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="158"/>
         <source>Create security box</source>
         <translation>创建保险箱</translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="71"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="159"/>
         <source>Name:</source>
         <translation>名称：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="92"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="160"/>
         <source>Password:</source>
         <translation>密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="113"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="161"/>
         <source>Confirm password:</source>
         <translation>确认密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="159"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="162"/>
         <source>OK</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="178"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="163"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -137,13 +117,11 @@
     <name>DeviceList</name>
     <message>
         <location filename="../src/ui/device/device-list.ui" line="14"/>
-        <location filename="../build/src/ui/ui_device-list.h" line="102"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-list.ui" line="105"/>
-        <location filename="../build/src/ui/ui_device-list.h" line="105"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
@@ -163,13 +141,11 @@
     <name>DeviceLog</name>
     <message>
         <location filename="../src/ui/device/device-log.ui" line="14"/>
-        <location filename="../build/src/ui/ui_device-log.h" line="102"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-log.ui" line="105"/>
-        <location filename="../build/src/ui/ui_device-log.h" line="105"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
@@ -413,19 +389,16 @@
         <translation>总共%1条记录</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="141"/>
         <source>Failed to change permission of device!</source>
-        <translation>修改设备权限失败！</translation>
+        <translation type="vanished">修改设备权限失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="159"/>
         <source>Failed to enable device!</source>
-        <translation>启用设备失败！</translation>
+        <translation type="vanished">启用设备失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="166"/>
         <source>Failed to disable device!</source>
-        <translation>禁用设备失败！</translation>
+        <translation type="vanished">禁用设备失败！</translation>
     </message>
 </context>
 <context>
@@ -671,7 +644,7 @@
     <name>KS::FPPage</name>
     <message>
         <location filename="../src/ui/fp/fp-page.cpp" line="39"/>
-        <location filename="../src/ui/fp/fp-page.cpp" line="140"/>
+        <location filename="../src/ui/fp/fp-page.cpp" line="142"/>
         <source>A total of %1 records</source>
         <translation>总共%1条记录</translation>
     </message>
@@ -733,7 +706,7 @@
 <context>
     <name>KS::PolkitProxy</name>
     <message>
-        <location filename="../src/daemon/common/polkit-proxy.cpp" line="216"/>
+        <location filename="../src/daemon/common/polkit-proxy.cpp" line="217"/>
         <source>Authorization failed.</source>
         <translation>认证失败。</translation>
     </message>
@@ -788,17 +761,17 @@
     <name>KS::TPExecute</name>
     <message>
         <location filename="../src/ui/tp/tp-execute.cpp" line="47"/>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="90"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="91"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation>总共%1条记录，被篡改%2条</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="114"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="115"/>
         <source>Open file</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="143"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="146"/>
         <source>Please select the content that needs to be removed.</source>
         <translation>请选择要删除的内容。</translation>
     </message>
@@ -834,12 +807,12 @@
 <context>
     <name>KS::TPExecuteTable</name>
     <message>
-        <location filename="../src/ui/tp/tp-execute-table.cpp" line="369"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="363"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute-table.cpp" line="382"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="376"/>
         <source>%1</source>
         <translation></translation>
     </message>
@@ -848,17 +821,17 @@
     <name>KS::TPKernel</name>
     <message>
         <location filename="../src/ui/tp/tp-kernel.cpp" line="43"/>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="82"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="83"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation>总共%1条记录，被篡改%2条</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="106"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="107"/>
         <source>Open file</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="135"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="138"/>
         <source>Please select the content that needs to be removed.</source>
         <translation>请选择要删除的内容。</translation>
     </message>
@@ -894,13 +867,13 @@
 <context>
     <name>KS::TPKernelTable</name>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="381"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="374"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="395"/>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="412"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="388"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="405"/>
         <source>%1</source>
         <translation></translation>
     </message>
@@ -1143,57 +1116,91 @@
         <translation>文件已在列表中，无需重复添加。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="41"/>
         <source>Failed to switch storage mode.</source>
-        <translation>切换存储模式失败。</translation>
+        <translation type="vanished">切换存储模式失败。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="41"/>
+        <source>There is no trusted card or the trusted card is not supported.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../lib/base/error.cpp" line="44"/>
+        <source>The pin code is wrong!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="47"/>
         <source>Failed to delete box.</source>
         <translation>删除保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="47"/>
+        <location filename="../lib/base/error.cpp" line="50"/>
         <source>Failed to create box.</source>
         <translation>创建保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="50"/>
+        <location filename="../lib/base/error.cpp" line="53"/>
+        <source>Insufficient free space or unknown error, box creation failed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="56"/>
         <source>Box not found!</source>
         <translation>保险箱未找到！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="53"/>
+        <location filename="../lib/base/error.cpp" line="59"/>
         <source>The box is exist!</source>
         <translation>保险箱已存在！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="56"/>
+        <location filename="../lib/base/error.cpp" line="62"/>
         <source>The password set to the same as the current password is not supported.</source>
         <translation>新密码不能与当前密码相同。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="59"/>
+        <location filename="../lib/base/error.cpp" line="65"/>
         <source>Busy resources!</source>
         <translation>资源忙碌！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="62"/>
+        <location filename="../lib/base/error.cpp" line="68"/>
         <source>Failed to change the password, please check whether the password is correct.</source>
         <translation>修改密码失败，请检查密码是否正确。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="65"/>
+        <location filename="../lib/base/error.cpp" line="71"/>
         <source>Password error!</source>
         <translation>密码错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="68"/>
+        <location filename="../lib/base/error.cpp" line="74"/>
         <source>Passphrase error!</source>
         <translation>口令错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="72"/>
+        <location filename="../lib/base/error.cpp" line="77"/>
+        <source>Invalid device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="80"/>
+        <source>Invalid device permissions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="83"/>
+        <source>Invalid device interface type.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="86"/>
+        <source>The graphics card does not support HDMI interface shutdown.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="90"/>
         <source>Unknown error.</source>
         <translation>未知错误。</translation>
     </message>
@@ -1249,25 +1256,21 @@
     <name>RetrieveBoxPassword</name>
     <message>
         <location filename="../src/ui/box/box-password-retrieve.ui" line="14"/>
-        <location filename="../build/src/ui/ui_box-password-retrieve.h" line="114"/>
         <source>Create security box</source>
         <translation>创建保险箱</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-retrieve.ui" line="62"/>
-        <location filename="../build/src/ui/ui_box-password-retrieve.h" line="115"/>
         <source>Please input passphrase:</source>
         <translation>请输入口令：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-retrieve.ui" line="108"/>
-        <location filename="../build/src/ui/ui_box-password-retrieve.h" line="116"/>
         <source>OK</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-password-retrieve.ui" line="127"/>
-        <location filename="../build/src/ui/ui_box-password-retrieve.h" line="117"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -1504,7 +1507,6 @@
     <name>about</name>
     <message>
         <location filename="../src/ui/about.ui" line="14"/>
-        <location filename="../build/src/ui/ui_about.h" line="93"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -1512,9 +1514,6 @@
         <location filename="../src/ui/about.ui" line="72"/>
         <location filename="../src/ui/about.ui" line="88"/>
         <location filename="../src/ui/about.ui" line="104"/>
-        <location filename="../build/src/ui/ui_about.h" line="95"/>
-        <location filename="../build/src/ui/ui_about.h" line="96"/>
-        <location filename="../build/src/ui/ui_about.h" line="97"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
