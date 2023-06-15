@@ -76,6 +76,24 @@ void DeviceManager::initDevices()
     }
 }
 
+bool compareDeviceConnectedTime(const QSharedPointer<Device> deviceA,
+                                const QSharedPointer<Device> deviceB)
+{
+    return deviceA->getConnectedTime() > deviceB->getConnectedTime();
+}
+
+DeviceList DeviceManager::getDevices()
+{
+    auto devices = this->m_devices.values();
+
+    //根据连接时间进行排序
+    qSort(devices.begin(),
+          devices.end(),
+          compareDeviceConnectedTime);
+
+    return devices;
+};
+
 DeviceList DeviceManager::getDevicesByInterface(int interfaceType)
 {
     DeviceList devices;
@@ -86,6 +104,12 @@ DeviceList DeviceManager::getDevicesByInterface(int interfaceType)
             devices.push_back(device);
         }
     }
+
+    //根据连接时间进行排序
+    qSort(devices.begin(),
+          devices.end(),
+          compareDeviceConnectedTime);
+
     return devices;
 }
 
