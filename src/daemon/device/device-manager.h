@@ -38,7 +38,7 @@ public:
 
 public:
     // 获取所有设备信息
-    DeviceList getDevices() { return this->m_devices.values(); };
+    DeviceList getDevices();
     DeviceList getDevicesByInterface(int interfaceType);
     // 获取特定设备信息
     QSharedPointer<Device> getDevice(const QString &syspath) { return m_devices.value(syspath); };
