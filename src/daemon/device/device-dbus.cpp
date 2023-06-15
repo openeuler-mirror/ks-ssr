@@ -157,13 +157,13 @@ void DeviceDBus::changePermission(const QDBusMessage &message,
 
     if (error.error != QJsonParseError::NoError)
     {
-        KLOG_ERROR() << "Failed to create QJsonDocument with " << permissions;
+        KLOG_WARNING() << "Failed to create QJsonDocument with " << permissions;
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_PERM, message)
     }
 
     if (!jsonDoc.isObject())
     {
-        KLOG_ERROR() << "QJsonDocument is not object with " << permissions;
+        KLOG_WARNING() << "QJsonDocument is not object with " << permissions;
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_PERM, message)
     }
 
@@ -217,7 +217,7 @@ void DeviceDBus::disable(const QDBusMessage &message,
 
     if (!device)
     {
-        KLOG_ERROR() << "Failed to find device with id " << id;
+        KLOG_WARNING() << "Failed to find device with id " << id;
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
 
@@ -233,38 +233,20 @@ void DeviceDBus::enableInterface(const QDBusMessage &message,
                                  int type,
                                  bool enabled)
 {
-    auto devConfig = DeviceConfiguration::instance();
-    devConfig->setIFCEnable(type, enabled);
-    auto interfaceType = type;
-
     if (type <= INTERFACE_TYPE_UNKNOWN || type >= INTERFACE_TYPE_LAST)
     {
+        KLOG_WARNING() << "Illegal interface type " << type;
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, message)
     }
 
-    if (type == INTERFACE_TYPE_USB &&
-        enabled)
+    if ((type == INTERFACE_TYPE_HDMI) && !m_deviceManager->isSupportHDMIDisable())
     {
-        //开启USB口时，一起开启键盘，鼠标
-        devConfig->setIFCEnable(INTERFACE_TYPE_USB_KBD, true);
-        devConfig->setIFCEnable(INTERFACE_TYPE_USB_MOUSE, true);
+        KLOG_WARNING() << "Not support disable HDMI interface.";
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_DISABLE_HDMI, message)
     }
 
-    if (type == INTERFACE_TYPE_USB_KBD ||
-        type == INTERFACE_TYPE_USB_MOUSE)
-    {
-        interfaceType = INTERFACE_TYPE_USB;
-    }
-
-    auto devices = m_deviceManager->getDevices();
-    for (auto device : devices)
-    {
-        //重放此接口类型的设备的Udev事件
-        if (device->getInterfaceType() == interfaceType)
-        {
-            device->trigger();
-        }
-    }
+    DeviceConfiguration::instance()->setIFCEnable(type, enabled);
+    m_deviceManager->triggerInterfaceDevices(type);
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
