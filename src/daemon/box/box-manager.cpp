@@ -68,20 +68,12 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
     }
 
     auto decryptPasswd = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
-    auto box = new Box(name, decryptPasswd, getSenderUid());
-    // 模块未加载
-    if (!box->createBox())
+    auto errorEode = 0;
+    auto box = Box::create(name, decryptPasswd, getSenderUid(), errorEode, "", this);
+    if (errorEode != KSCErrorCode::SUCCESS)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                        KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD,
-                                        message())
-    }
-
-    // 创建数据目录，目录已存在或其它原因已在mkdirDataDir中处理，一般在空间不足的情况下才会创建失败
-    if (!box->mkdirDataDir())
-    {
-        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                        KSCErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED,
+                                        KSCErrorCode(errorEode),
                                         message())
     }
 
@@ -143,7 +135,6 @@ QString BoxManager::GetBoxs()
         {
             continue;
         }
-        box->initBoxMountStatus();
         // 暂只返回以下三个数据给前台
         QJsonObject jsonObj{
             {BOX_NAME_KEY, box->getBoxName()},
@@ -154,7 +145,6 @@ QString BoxManager::GetBoxs()
     }
 
     jsonDoc.setArray(jsonArr);
-    m_serviceWatcher->addWatchedService(message().service());
     return QString(jsonDoc.toJson());
 }
 
@@ -214,6 +204,7 @@ void BoxManager::Mount(const QString &boxID, const QString &password)
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR, message())
     }
+    m_serviceWatcher->addWatchedService(message().service());
 
     emit BoxChanged(boxID);
 }
@@ -298,7 +289,10 @@ void BoxManager::init()
     for (auto boxInfo : boxInfoList)
     {
         auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
-        auto box = new Box(boxInfo.boxName, decryptPassword, boxInfo.userUID, boxInfo.boxID);
+        auto errorCode = 0;
+        auto box = Box::create(boxInfo.boxName, decryptPassword, boxInfo.userUID, errorCode, boxInfo.boxID);
+        CONTINUE_IF_FALSE(box);
+        box->clearMountStatus();
         m_boxs.insert(boxInfo.boxID, box);
     }
 }
@@ -320,7 +314,7 @@ void BoxManager::unMountAllBoxs(const QString &service)
     {
         if (box->mounted())
         {
-            box->umount();
+            box->umount(true);
         }
     }
 }
