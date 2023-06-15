@@ -82,6 +82,9 @@ QString Error::getErrorDesc(KSCErrorCode errorCode)
     case KSCErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE:
         errorDesc = QObject::tr("Invalid device interface type.");
         break;
+    case KSCErrorCode::ERROR_DEVICE_DISABLE_HDMI:
+        errorDesc = QObject::tr("The graphics card does not support HDMI interface shutdown.");
+        break;
 
     default:
         errorDesc = QObject::tr("Unknown error.");
