@@ -44,7 +44,7 @@ UdevRuleManager::UdevRuleManager(QObject *parent) : QObject(parent)
     this->init();
 }
 
-void UdevRuleManager::handleDevConfigChanged()
+void UdevRuleManager::handleDevSettingChanged()
 {
     this->updateUdevRules();
 }
@@ -52,7 +52,7 @@ void UdevRuleManager::handleDevConfigChanged()
 void UdevRuleManager::init()
 {
     m_deviceConfig = DeviceConfiguration::instance();
-    connect(m_deviceConfig, &DeviceConfiguration::deviceConfigChanged, this, &UdevRuleManager::handleDevConfigChanged);
+    connect(m_deviceConfig, &DeviceConfiguration::deviceSettingChanged, this, &UdevRuleManager::handleDevSettingChanged);
 
     this->updateUdevRules();
 }
@@ -62,21 +62,21 @@ void UdevRuleManager::updateUdevRules()
     //清除所有项
     m_rules.clear();
 
-    for (auto config : m_deviceConfig->getDeviceConfig())
+    for (auto setting : m_deviceConfig->getDeviceSettings())
     {
-        if (config->enable || this->find(config->idVendor, config->idProduct))
+        if (setting->enable || this->find(setting->idVendor, setting->idProduct))
         {
             continue;
         }
 
         QSharedPointer<DeviceRule> devRule = QSharedPointer<DeviceRule>(new DeviceRule());
 
-        devRule->idVendor = config->idVendor;
-        devRule->idProduct = config->idProduct;
-        devRule->read = config->read;
-        devRule->write = config->write;
-        devRule->execute = config->execute;
-        devRule->interfaceType = config->interfaceType;
+        devRule->idVendor = setting->idVendor;
+        devRule->idProduct = setting->idProduct;
+        devRule->read = setting->read;
+        devRule->write = setting->write;
+        devRule->execute = setting->execute;
+        devRule->interfaceType = setting->interfaceType;
 
         m_rules.append(devRule);
     }

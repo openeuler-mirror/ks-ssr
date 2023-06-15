@@ -22,10 +22,10 @@ class QThread;
 
 namespace KS
 {
-struct DeviceConfig
+struct DeviceSetting
 {
 public:
-    DeviceConfig() = default;
+    DeviceSetting() = default;
     QString uid;
     QString id;
     QString name;
@@ -39,7 +39,7 @@ public:
     int interfaceType;
 };
 
-using DeviceConfigList = QList<QSharedPointer<DeviceConfig>>;
+using DeviceSettingList = QList<QSharedPointer<DeviceSetting>>;
 
 class DeviceConfiguration : public QObject
 {
@@ -47,16 +47,16 @@ class DeviceConfiguration : public QObject
 
 public:
     static DeviceConfiguration *instance();
-    void addConfig(const DeviceConfig &Config);
-    QSharedPointer<DeviceConfig> getDeviceConfig(const QString &uid);
+    void addSetting(const DeviceSetting &setting);
+    QSharedPointer<DeviceSetting> getDeviceSetting(const QString &uid);
     //获取所有的设备配置
-    DeviceConfigList getDeviceConfig();
+    DeviceSettingList getDeviceSettings();
 
     bool isIFCEnable(int type);
     void setIFCEnable(int type, bool enable);
 
 signals:
-    void deviceConfigChanged();
+    void deviceSettingChanged();
 
 private:
     explicit DeviceConfiguration(QObject *parent = nullptr);
