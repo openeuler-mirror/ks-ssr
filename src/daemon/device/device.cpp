@@ -14,6 +14,7 @@
 
 #include "src/daemon/device/device.h"
 #include <qt5-log-i.h>
+#include <QDateTime>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
 
@@ -32,6 +33,8 @@ Device::Device(const QString& syspath, QObject* parent) : QObject(parent),
 
     m_device = QSharedPointer<SDDevice>(new SDDevice(syspath));
     m_syspath = syspath;
+
+    m_connectedTime = QDateTime::currentMSecsSinceEpoch();
 }
 
 Device::~Device() {}
@@ -135,6 +138,11 @@ QJsonObject Device::toJsonObject()
         {KSC_DEVICE_JK_STATE, this->getState()}};
 
     return jsonObj;
+}
+
+qint64 Device::getConnectedTime()
+{
+    return m_connectedTime;
 }
 
 }  // namespace KS
