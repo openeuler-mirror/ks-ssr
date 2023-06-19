@@ -190,24 +190,38 @@ void KSSDbus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QS
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
-    // TODO：暂时使用循环调用kss添加，kss有添加文件列表接口后修改为该接口
+    QJsonDocument jsonDataDoc;
+    QJsonArray dataArray;
+
     for (auto filePath : fileList)
     {
-        auto output = KSSWrapper::getDefault()->addTrustedFile(filePath);
-        QJsonParseError jsonError;
+        QJsonObject jsonObj{
+            {KSC_KSS_JK_DATA_PATH, filePath},
+            {KSC_KSS_JK_DATA_TYPE, 0},
+            {KSC_KSS_JK_DATA_STATUS, 0},
+            {KSC_KSS_JK_DATA_HASH, ""},
+            {KSC_KSS_JK_DATA_GUARD, 0}};
 
-        auto jsonDoc = QJsonDocument::fromJson(output.toUtf8(), &jsonError);
+        dataArray.push_back(jsonObj);
+    }
+    QJsonObject jsonObj{
+        {KSC_KSS_JK_RES, 0},
+        {KSC_KSS_JK_COUNT, fileList.size()},
+        {KSC_KSS_JK_DATA, dataArray}};
+    jsonDataDoc.setObject(jsonObj);
+    auto output = KSSWrapper::getDefault()->addTrustedFiles(QString(jsonDataDoc.toJson()));
 
-        if (jsonDoc.isNull())
-        {
-            KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-            continue;
-        }
+    QJsonParseError jsonError;
+    auto jsonDoc = QJsonDocument::fromJson(output.toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_FAILED, message)
+    }
 
-        if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
-        {
-            DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
-        }
+    if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
 
     emit TrustedFilesChange();
@@ -236,11 +250,27 @@ void KSSDbus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
-    // TODO：暂时使用循环调用kss移除，kss有添加文件列表接口后修改为该接口
+    QJsonDocument jsonDoc;
+    QJsonArray dataArray;
+
     for (auto filePath : fileList)
     {
-        KSSWrapper::getDefault()->removeTrustedFile(filePath);
+        QJsonObject jsonObj{
+            {KSC_KSS_JK_DATA_PATH, filePath},
+            {KSC_KSS_JK_DATA_TYPE, 0},
+            {KSC_KSS_JK_DATA_STATUS, 0},
+            {KSC_KSS_JK_DATA_HASH, ""},
+            {KSC_KSS_JK_DATA_GUARD, 0}};
+
+        dataArray.push_back(jsonObj);
     }
+    QJsonObject jsonObj{
+        {KSC_KSS_JK_RES, 0},
+        {KSC_KSS_JK_COUNT, fileList.size()},
+        {KSC_KSS_JK_DATA, dataArray}};
+    jsonDoc.setObject(jsonObj);
+
+    KSSWrapper::getDefault()->removeTrustedFiles(QString(jsonDoc.toJson()));
 
     emit TrustedFilesChange();
 
@@ -303,7 +333,9 @@ void KSSDbus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QS
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
-    // TODO：暂时使用循环调用kss添加，kss有添加文件列表接口后修改为该接口
+    QJsonDocument jsonDoc;
+    QJsonArray dataArray;
+
     for (auto filePath : fileList)
     {
         // 检测列表中是否存在相同文件
@@ -321,14 +353,29 @@ void KSSDbus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QS
             auto jsonMod = module.toObject();
             if (jsonMod.value(KSC_KSS_JK_DATA_PATH).toString() == filePath)
             {
-                DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_TP_ADD_RECUR_FILE, message)
+                auto replyMessage = message.createErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_TP_ADD_RECUR_FILE));
+                QDBusConnection::systemBus().send(replyMessage);
+                continue;
             }
         }
-        // 添加文件
+
         QFileInfo fileInfo(filePath);
         auto fileName = fileInfo.fileName();
-        KSSWrapper::getDefault()->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+        QJsonObject jsonObj{
+            {KSC_KSS_JK_DATA_FILE_NAME, fileName},
+            {KSC_KSS_JK_DATA_PATH, filePath},
+            {KSC_KSS_JK_DATA_ADD_TIME, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")}};
+
+        dataArray.push_back(jsonObj);
     }
+
+    QJsonObject jsonObj{
+        {KSC_KSS_JK_RES, 0},
+        {KSC_KSS_JK_COUNT, fileList.size()},
+        {KSC_KSS_JK_DATA, dataArray}};
+    jsonDoc.setObject(jsonObj);
+
+    KSSWrapper::getDefault()->addFiles(QString(jsonDoc.toJson()));
 
     emit ProtectedFilesChange();
     auto replyMessage = message.createReply();
@@ -355,11 +402,27 @@ void KSSDbus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
-    // TODO：暂时使用循环调用kss移除，kss有添加文件列表接口后修改为该接口
+    QJsonDocument jsonDoc;
+    QJsonArray dataArray;
+
     for (auto filePath : fileList)
     {
-        KSSWrapper::getDefault()->removeFile(filePath);
+        QFileInfo fileInfo(filePath);
+        auto fileName = fileInfo.fileName();
+        QJsonObject jsonObj{
+            {KSC_KSS_JK_DATA_FILE_NAME, fileName},
+            {KSC_KSS_JK_DATA_PATH, filePath},
+            {KSC_KSS_JK_DATA_ADD_TIME, ""}};
+
+        dataArray.push_back(jsonObj);
     }
+    QJsonObject jsonObj{
+        {KSC_KSS_JK_RES, 0},
+        {KSC_KSS_JK_COUNT, fileList.size()},
+        {KSC_KSS_JK_DATA, dataArray}};
+    jsonDoc.setObject(jsonObj);
+
+    KSSWrapper::getDefault()->removeFiles(QString(jsonDoc.toJson()));
 
     emit ProtectedFilesChange();
     auto replyMessage = message.createReply();
