@@ -48,8 +48,7 @@ namespace KS
 #define KSS_SECURE_GET_STATUS_CMD "kss secure get-status"
 
 // 可信数据操作
-#define KSS_DIGEST_SCAN_ADD_FILE_CMD "kss digest scan -u"
-#define KSS_DIGEST_SCAN_REMOVE_FILE_CMD "kss digest scan -f -r"
+#define KSS_DIGEST_SCAN_CMD "kss digest scan"
 #define KSS_DIGEST_INFO_GET_EXECUTE_CMD "kss digest info -e"
 #define KSS_DIGEST_INFO_GET_KERNEL_CMD "kss digest info -m"
 
@@ -82,7 +81,16 @@ QSharedPointer<KSSWrapper> KSSWrapper::getDefault()
 QString KSSWrapper::addTrustedFile(const QString &filePath)
 {
     RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
-    auto cmd = QString("%1 '%2'").arg(KSS_DIGEST_SCAN_ADD_FILE_CMD, filePath);
+    auto cmd = QString("%1 -u '%2'").arg(KSS_DIGEST_SCAN_CMD, filePath);
+    execute(cmd);
+
+    return m_processOutput;
+}
+
+QString KSSWrapper::addTrustedFiles(const QString &json)
+{
+    RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
+    auto cmd = QString("%1 -u -j '%2'").arg(KSS_DIGEST_SCAN_CMD, json);
     execute(cmd);
 
     return m_processOutput;
@@ -118,7 +126,41 @@ void KSSWrapper::removeTrustedFile(const QString &filePath)
         prohibitUnloading(false, filePath);
     }
     // 移除
-    auto cmd = QString("%1 '%2'").arg(KSS_DIGEST_SCAN_REMOVE_FILE_CMD, filePath);
+    auto cmd = QString("%1 -f -r '%2'").arg(KSS_DIGEST_SCAN_CMD, filePath);
+    execute(cmd);
+}
+
+void KSSWrapper::removeTrustedFiles(const QString &json)
+{
+    RETURN_IF_TRUE(getInitialized() == 0)
+
+    // 需要判断内核模块是否开启防卸载
+    QJsonParseError jsonError;
+    auto jsonDoc = QJsonDocument::fromJson(getTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_KERNEL).toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        return;
+    }
+
+    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
+    for (const auto &module : jsonModules)
+    {
+        auto jsonMod = module.toObject();
+        if (!json.contains(jsonMod.value(KSC_KSS_JK_DATA_PATH).toString()))
+        {
+            continue;
+        }
+        if (jsonMod.value(KSC_KSS_JK_DATA_GUARD).toInt() == 0)
+        {
+            continue;
+        }
+
+        // path正确且防卸载开启则需先关闭防卸载
+        prohibitUnloading(false, jsonMod.value(KSC_KSS_JK_DATA_PATH).toString());
+    }
+    // 移除
+    auto cmd = QString("%1 -r -j '%2'").arg(KSS_DIGEST_SCAN_CMD, json);
     execute(cmd);
 }
 
@@ -182,10 +224,24 @@ void KSSWrapper::addFile(const QString &fileName, const QString &filePath, const
     execute(cmd);
 }
 
+void KSSWrapper::addFiles(const QString &json)
+{
+    RETURN_IF_TRUE(getInitialized() == 0)
+    auto cmd = QString("%1 -j '%2'").arg(KSS_ADD_FILE_CMD, json);
+    execute(cmd);
+}
+
 void KSSWrapper::removeFile(const QString &filePath)
 {
     RETURN_IF_TRUE(getInitialized() == 0)
     auto cmd = QString("%1 -p '%2'").arg(KSS_REMOVE_FILE_CMD, filePath);
+    execute(cmd);
+}
+
+void KSSWrapper::removeFiles(const QString &json)
+{
+    RETURN_IF_TRUE(getInitialized() == 0)
+    auto cmd = QString("%1 -j '%2'").arg(KSS_REMOVE_FILE_CMD, json);
     execute(cmd);
 }
 

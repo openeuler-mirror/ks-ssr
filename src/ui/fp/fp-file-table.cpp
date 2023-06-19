@@ -90,7 +90,6 @@ void FPFilesDelegate::paint(QPainter *painter,
 
     painter->restore();
 
-    // TODO: 两个问题：1）样式还存在问题; 2）当editorEvent设置状态改变时，当前函数不会立即调用，会等到鼠标移出窗口后才刷新
     if (index.column() == FileTableField::FILE_TABLE_FIELD_CHECKBOX)
     {
         auto checkboxOption = option;

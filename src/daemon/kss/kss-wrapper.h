@@ -35,8 +35,10 @@ public:
     // 可信保护
     // 添加文件
     QString addTrustedFile(const QString &filePath);
+    QString addTrustedFiles(const QString &json);
     // 移除文件
     void removeTrustedFile(const QString &filePath);
+    void removeTrustedFiles(const QString &json);
     // 获取可信文件
     QString getTrustedFiles(KSCKSSTrustedFileType type);
     // 防卸载功能开关
@@ -54,8 +56,10 @@ public:
     // 文件保护
     // 添加文件
     void addFile(const QString &fileName, const QString &filePath, const QString &insertTime);
+    void addFiles(const QString &json);
     // 移除文件
     void removeFile(const QString &filePath);
+    void removeFiles(const QString &json);
     // 获取文件保护列表
     QString getFiles();
 
