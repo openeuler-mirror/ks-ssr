@@ -172,18 +172,13 @@ int USBDevice::interfaceProtocol2DevcieType(const InterfaceClass &interface)
 
 int USBDevice::hidProtocol2DevcieType(const InterfaceClass &interface)
 {
-    auto type = DEVICE_TYPE_UNKNOWN;
+    //默认输入设备为鼠标
+    auto type = DEVICE_TYPE_MOUSE;
 
-    if (interface.bInterfaceSubClass == USB_HID_INTERFACE_SUB_CLASS_BOOT)
+    if (interface.bInterfaceSubClass == USB_HID_INTERFACE_SUB_CLASS_BOOT &&
+        interface.bInterfaceProtocol == USB_HID_INTERFACE_PROTOCOL_KEYBOARD)
     {
-        if (interface.bInterfaceProtocol == USB_HID_INTERFACE_PROTOCOL_KEYBOARD)
-        {
-            type = DEVICE_TYPE_KEYBOARD;
-        }
-        else if (interface.bInterfaceProtocol == USB_HID_INTERFACE_PROTOCOL_MOUSE)
-        {
-            type = DEVICE_TYPE_MOUSE;
-        }
+        type = DEVICE_TYPE_KEYBOARD;
     }
 
     return type;
