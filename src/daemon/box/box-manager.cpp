@@ -314,6 +314,7 @@ void BoxManager::unMountAllBoxs(const QString &service)
         if (box->mounted())
         {
             box->umount(true);
+            emit BoxChanged(box->getBoxID());
         }
     }
 }
