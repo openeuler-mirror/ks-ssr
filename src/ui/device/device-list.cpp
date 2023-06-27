@@ -109,11 +109,12 @@ void DeviceList::popupEditDialog(const QModelIndex &index)
         auto deviceID = m_ui->m_table->getID(index.row());
         auto state = m_ui->m_table->getState(index.row());
         auto permissions = m_ui->m_table->getPermission(index.row());
+        auto type = m_ui->m_table->getType(index.row());
 
         m_devicePermission->setTitle(deviceName);
         m_devicePermission->setDeviceID(deviceID);
         m_devicePermission->setDeviceStatus(state);
-        m_devicePermission->setDevicePermission(permissions);
+        m_devicePermission->setDevicePermission(type, permissions);
 
         int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
         int y = this->y() + this->height() / 4 + m_devicePermission->height() / 4;

@@ -19,6 +19,7 @@
 #include <QPainter>
 #include <QStyledItemDelegate>
 #include "src/ui/common/ksc-marcos-ui.h"
+#include "src/ui/device/device-utils.h"
 #include "ui_device-permission.h"
 
 namespace KS
@@ -92,13 +93,22 @@ void DevicePermission::setDeviceStatus(const DeviceState &status)
     }
 }
 
-void DevicePermission::setDevicePermission(int permission)
+void DevicePermission::setDevicePermission(const QString type, int permission)
 {
     m_permissions = permission;
 
-    m_ui->m_read->setChecked(m_permissions & PERMISSION_TYPE_READ);
-    m_ui->m_write->setChecked(m_permissions & PERMISSION_TYPE_WRITE);
-    m_ui->m_exec->setChecked(m_permissions & PERMISSION_TYPE_EXEC);
+    //针对挂载的存储设备，默认有可读权限，并且用户无法取消勾选
+    if (type == DeviceUtils::deviceTypeEnum2Str(DeviceType::DEVICE_TYPE_DISK))
+    {
+        m_ui->m_read->setChecked(true);
+        m_ui->m_read->setDisabled(true);
+    }
+    else
+    {
+        m_ui->m_read->setChecked(m_permissions & PERMISSION_TYPE_READ);
+        m_ui->m_write->setChecked(m_permissions & PERMISSION_TYPE_WRITE);
+        m_ui->m_exec->setChecked(m_permissions & PERMISSION_TYPE_EXEC);
+    }
 }
 
 DeviceState DevicePermission::getDeviceStatus()
