@@ -325,7 +325,8 @@ QPushButton#m_ok,
 QPushButton#m_add,
 QPushButton#m_newBox,
 KS--LicenseActivation QPushButton#m_activate,
-KS--DevicePermission QPushButton#m_confirm
+KS--DevicePermission QPushButton#m_confirm,
+KS--SettingsDevice #MessageWindow QPushButton#confirm
 {
     color:#FFFFFF;
     font:NotoSansCJKsc-Regular;
@@ -340,7 +341,8 @@ QPushButton#m_ok:hover,
 QPushButton#m_add:hover,
 QPushButton#m_newBox:hover,
 KS--LicenseActivation QPushButton#m_activate:hover,
-KS--DevicePermission QPushButton#m_confirm:hover
+KS--DevicePermission QPushButton#m_confirm:hover,
+KS--SettingsDevice #MessageWindow QPushButton#confirm:hover
 {
     background:#79C3FF;
     border:4px;
@@ -350,7 +352,8 @@ KS--DevicePermission QPushButton#m_confirm:hover
 QPushButton#passwdCancelBtn,
 QPushButton#m_cancel,
 QPushButton#m_recertification,
-QPushButton#m_unprotect
+QPushButton#m_unprotect,
+KS--SettingsDevice #MessageWindow QPushButton#cancel
 {
     color:#FFFFFF;
     font:NotoSansCJKsc-Regular;
@@ -362,7 +365,8 @@ QPushButton#m_unprotect
 QPushButton#passwdCancelBtn:hover,
 QPushButton#m_cancel:hover,
 QPushButton#m_recertification:hover,
-QPushButton#m_unprotect:hover
+QPushButton#m_unprotect:hover,
+KS--SettingsDevice #MessageWindow QPushButton#cancel:hover
 {
     background:#464646;
     border:4px;
@@ -573,6 +577,12 @@ KS--SettingsDevice QCheckBox::indicator:checked:hover {
 
 KS--SettingsDevice QCheckBox::indicator:checked:pressed {
     image: url(:/images/switch-open);
+}
+
+KS--SettingsDevice #customWidget
+{
+    border-radius: 6px;
+    background-color:#2d2d2d;
 }
 
 /*********License*****************/
