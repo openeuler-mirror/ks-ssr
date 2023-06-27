@@ -22,6 +22,7 @@
 #include "config.h"
 #include "include/ksc-error-i.h"
 #include "include/ksc-marcos.h"
+#include "ksc-error-i.h"
 #include "lib/base/crypto-helper.h"
 
 namespace KS
@@ -126,7 +127,7 @@ bool Box::mounted()
     return boxInfo.mounted;
 }
 
-bool Box::mount(const QString &currentPassword)
+int Box::mount(const QString &currentPassword)
 {
     // 密码认证
     auto boxInfo = getBoxInfo();
@@ -135,44 +136,61 @@ bool Box::mount(const QString &currentPassword)
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Mount password error!";
-        return false;
+        return KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
     }
 
     // 已挂载则返回
     if (boxInfo.mounted)
     {
         KLOG_WARNING() << "The box has been mounted and there is no need to repeat the operation. uid = " << m_boxID;
-        return true;
+        return KSCErrorCode::SUCCESS;
     }
 
-    //挂载
+    // 挂载
     auto decryptPspr = CryptoHelper::aesDecrypt(boxInfo.encryptPassphrase);  //Pspr
     auto decryptSig = CryptoHelper::aesDecrypt(boxInfo.encryptSig);
 
     // 在对应调用的用户根目录创建文件夹
     auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
-    m_ecryptFS->mkdirBoxDir(mountPath, getUser());
+    if (!m_ecryptFS->mkdirBoxDir(mountPath, getUser()))
+    {
+        return KSCErrorCode::ERROR_BM_INTERNAL_ERRORS;
+    }
 
     auto mountObjectPath = QString("%1/%2%3").arg(KSC_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
-
-    RETURN_VAL_IF_TRUE(!m_ecryptFS->decrypt(mountObjectPath, mountPath, decryptPspr, decryptSig), false)
+    if (!m_ecryptFS->decrypt(mountObjectPath, mountPath, decryptPspr, decryptSig))
+    {
+        return KSCErrorCode::ERROR_BM_INTERNAL_ERRORS;
+    }
 
     // 修改数据库中挂载状态
-    m_boxDao->modifyMountStatus(m_boxID, true);
-    return true;
+    if (!m_boxDao->modifyMountStatus(m_boxID, true))
+    {
+        return KSCErrorCode::ERROR_BM_INTERNAL_ERRORS;
+    }
+    return KSCErrorCode::SUCCESS;
 }
 
-bool Box::umount(bool isForce)
+int Box::umount(bool isForce)
 {
     auto boxInfo = getBoxInfo();
     auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
 
-    RETURN_VAL_IF_TRUE(!m_ecryptFS->encrypt(mountPath, isForce).isEmpty(), false)
     // 修改数据库中挂载状态
-    m_boxDao->modifyMountStatus(m_boxID, false);
+    if (!m_boxDao->modifyMountStatus(m_boxID, false))
+    {
+        return KSCErrorCode::ERROR_BM_INTERNAL_ERRORS;
+    }
+
+    if (!m_ecryptFS->encrypt(mountPath, isForce).isEmpty())
+    {
+        // 挂载失败，将数据库中的数据改回去
+        m_boxDao->modifyMountStatus(m_boxID, true);
+        return KSCErrorCode::ERROR_BM_UMOUNT_FAIL;
+    }
 
     m_ecryptFS->rmBoxDir(mountPath);
-    return true;
+    return KSCErrorCode::SUCCESS;
 }
 
 bool Box::modifyBoxPassword(const QString &currentPassword, const QString &newPassword)

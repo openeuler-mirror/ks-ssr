@@ -73,6 +73,9 @@ QString Error::getErrorDesc(KSCErrorCode errorCode)
     case KSCErrorCode::ERROR_BM_INPUT_PASSPHRASE_ERROR:
         errorDesc = QObject::tr("Passphrase error!");
         break;
+    case KSCErrorCode::ERROR_BM_INTERNAL_ERRORS:
+        errorDesc = QObject::tr("Internal error!");
+        break;
     case KSCErrorCode::ERROR_DEVICE_INVALID_ID:
         errorDesc = QObject::tr("Invalid device.");
         break;
