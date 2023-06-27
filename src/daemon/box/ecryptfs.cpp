@@ -88,12 +88,12 @@ void EcryptFS::rmBoxDir(const QString &path)
 
 void EcryptFS::processExited(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    KLOG_DEBUG() << "Command execution completed. exitcode = " << exitCode << "exitStatus = " << exitStatus;
+    // KLOG_DEBUG() << "Command execution completed. exitcode = " << exitCode << "exitStatus = " << exitStatus;
     m_process->disconnect();
 
     QByteArray standardOutput = m_process->readAllStandardOutput();
 
-    KLOG_DEBUG() << "Execute the command to successfully output: " << standardOutput;
+    // KLOG_DEBUG() << "Execute the command to successfully output: " << standardOutput;
     m_processOutput = standardOutput;
     QByteArray errordOutput = m_process->readAllStandardError();
     if (!errordOutput.isEmpty())
@@ -105,7 +105,7 @@ void EcryptFS::processExited(int exitCode, QProcess::ExitStatus exitStatus)
 
 void EcryptFS::execute(const QString &cmd)
 {
-    KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
+    // KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
     m_process->start("bash", QStringList() << "-c" << cmd);
     connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processExited(int, QProcess::ExitStatus)));
     m_process->waitForFinished();
