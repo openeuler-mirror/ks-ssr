@@ -176,6 +176,18 @@ DeviceState DeviceListTable::getState(int row)
     return DeviceUtils::deviceStateStr2Enum(m_filterProxy->data(index).toString());
 }
 
+QString DeviceListTable::getType(int row)
+{
+    if (row >= m_devicesInfo.size())
+    {
+        KLOG_WARNING() << "The index exceeds range limit.";
+        return QString();
+    }
+
+    auto index = m_filterProxy->index(row, ListTableField::LIST_TABLE_FIELD_TYPE);
+    return m_filterProxy->data(index).toString();
+}
+
 QString DeviceListTable::getID(int row)
 {
     if (row >= m_devicesInfo.size())
