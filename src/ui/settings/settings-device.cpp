@@ -18,13 +18,20 @@
 #include <QObject>
 #include "src/ui/common/ksc-marcos-ui.h"
 #include "src/ui/device/device-utils.h"
+#include "src/ui/settings/settings-respond-dialog.h"
 
 #define INTERFACE_TYPE_PROPERTY "interface type"
 
 namespace KS
 {
 SettingsDevice::SettingsDevice(QWidget *parent) : QWidget(parent),
-                                                  m_deviceManagerProxy(nullptr)
+                                                  m_deviceManagerProxy(nullptr),
+                                                  m_gridLayout(nullptr),
+                                                  m_usbLayout(nullptr),
+                                                  m_kbdMouseLayout(nullptr),
+                                                  m_kbdMouseContent(nullptr),
+                                                  m_clickedCheckbox(nullptr),
+                                                  m_respondDlg(nullptr)
 {
     initUI();
 
@@ -174,11 +181,46 @@ QList<Interface> SettingsDevice::getInterfaces()
     return interfaces;
 }
 
+void SettingsDevice::popupMessageDialog(const QString &text)
+{
+    if (!m_respondDlg)
+    {
+        m_respondDlg = new SettingsRespondDialog(this);
+        connect(m_respondDlg, &SettingsRespondDialog::accepted, this, &SettingsDevice::accept);
+        connect(m_respondDlg, &SettingsRespondDialog::rejected, this, &SettingsDevice::reject);
+    }
+    m_respondDlg->setMessage(text);
+    int x = window()->x() + window()->width() / 4 + m_respondDlg->width() / 4;
+    int y = window()->y() + window()->height() / 4 + m_respondDlg->height() / 8;
+    m_respondDlg->move(x, y);
+    m_respondDlg->show();
+}
+
 void SettingsDevice::setInterfaceState(bool checked)
 {
     auto state = checked;
     auto stateCheckBox = qobject_cast<QCheckBox *>(sender());
     auto type = m_checkboxs.key(stateCheckBox);
+    m_clickedCheckbox = stateCheckBox;
+
+    //当关闭usb、鼠标、键盘设备时，弹出二次确认窗口
+    if ((type == InterfaceType::INTERFACE_TYPE_USB ||
+         type == InterfaceType::INTERFACE_TYPE_USB_KBD ||
+         type == InterfaceType::INTERFACE_TYPE_USB_MOUSE) &&
+        state == false)
+    {
+        popupMessageDialog(tr("Are you sure to close the %1 interface").arg(DeviceUtils::interfaceTypeEnum2Str(type)));
+    }
+    else
+    {
+        accept();
+    }
+}
+
+void SettingsDevice::accept()
+{
+    auto type = m_checkboxs.key(m_clickedCheckbox);
+    auto state = m_clickedCheckbox->isChecked();
 
     auto reply = m_deviceManagerProxy->EnableInterface(type, state);
     reply.waitForFinished();
@@ -189,5 +231,10 @@ void SettingsDevice::setInterfaceState(bool checked)
 
     //更新界面checkbox状态
     update();
+}
+
+void SettingsDevice::reject()
+{
+    m_clickedCheckbox->setChecked(!m_clickedCheckbox->isChecked());
 }
 }  // namespace KS
