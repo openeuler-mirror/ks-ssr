@@ -199,10 +199,10 @@ void BoxManager::Mount(const QString &boxID, const QString &password)
     }
 
     RETURN_IF_TRUE(box->getBoxID() != boxID)
-
-    if (!box->mount(decryptedPassword))
+    auto errorEode = box->mount(decryptedPassword);
+    if (errorEode != KSCErrorCode::SUCCESS)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR, message())
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode(errorEode), message())
     }
     m_serviceWatcher->addWatchedService(message().service());
 
@@ -250,9 +250,10 @@ void BoxManager::UnMount(const QString &boxID)
 
     RETURN_IF_TRUE(box->getBoxID() != boxID)
 
-    if (!box->umount())
+    auto errorEode = box->umount();
+    if (errorEode != KSCErrorCode::SUCCESS)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_UMOUNT_FAIL, message());
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode(errorEode), message());
     }
 
     emit BoxChanged(boxID);
