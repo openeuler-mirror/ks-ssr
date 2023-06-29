@@ -18,10 +18,9 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QMessageBox>
-#include "include/ksc-i.h"
+#include "lib/license/license-proxy.h"
 #include "src/ui/common/ksc-marcos-ui.h"
 #include "src/ui/license/qrcode-dialog.h"
-#include "src/ui/license_manager_proxy.h"
 #include "ui_license-activation.h"
 
 #define QRCODE_PROPERTY "QRcode"
@@ -32,22 +31,19 @@ namespace KS
 {
 LicenseActivation::LicenseActivation(QWidget *parent) : TitlebarWindow(parent),
                                                         m_ui(new Ui::LicenseActivation),
-                                                        m_licenseManager(nullptr),
+                                                        m_licenseProxy(nullptr),
                                                         m_qrcodeDialog(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
     initUI();
 
-    m_licenseManager = new LicenseManagerProxy(KSC_DBUS_NAME,
-                                               KSC_LICENSE_DBUS_OBJECT_PATH,
-                                               QDBusConnection::systemBus(),
-                                               this);
+    m_licenseProxy = LicenseProxy::getDefault();
     update();
 
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &LicenseActivation::closed);
     connect(m_ui->m_activate, &QPushButton::clicked, this, &LicenseActivation::activate);
 
-    connect(m_licenseManager, &LicenseManagerProxy::LicenseChanged, this, &LicenseActivation::update, Qt::UniqueConnection);
+    connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &LicenseActivation::update, Qt::UniqueConnection);
 }
 
 LicenseActivation::~LicenseActivation()
@@ -109,8 +105,9 @@ void LicenseActivation::initUI()
 void LicenseActivation::activate()
 {
     QString errorMsg;
-    auto reply = m_licenseManager->ActivateByActivationCode(m_ui->m_activation_code->text());
-    CHECK_ERROR_FOR_DBUS_REPLY(reply)
+    auto isActivated = m_licenseProxy->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
+
+    POPUP_MESSAGE_DIALOG(isActivated ? tr("Activate app successful!") : errorMsg);
 }
 
 void LicenseActivation::handleQrcode()
@@ -120,9 +117,9 @@ void LicenseActivation::handleQrcode()
     auto title = tr("Scan QR code to get %1").arg(codeStr);
 
     if (codeStr == MACHINE_CODE)
-        popupQRcode(m_licenseManager->GetMachineCode(), title);
+        popupQRcode(m_licenseProxy->getMachineCode(), title);
     else
-        popupQRcode(m_licenseManager->GetActivationCode(), title);
+        popupQRcode(m_licenseProxy->getActivationCode(), title);
 }
 
 void LicenseActivation::popupQRcode(const QString &QRcode, const QString &title)
@@ -145,10 +142,10 @@ void LicenseActivation::popupQRcode(const QString &QRcode, const QString &title)
 
 void LicenseActivation::update()
 {
-    m_ui->m_machine_code->setText(m_licenseManager->GetMachineCode());
-    m_ui->m_activation_code->setText(m_licenseManager->GetActivationCode());
-    m_ui->m_expired_time->setText(m_licenseManager->GetExpiredTime());
-    m_ui->m_timeWidget->setVisible(m_licenseManager->activated());
+    m_ui->m_machine_code->setText(m_licenseProxy->getMachineCode());
+    m_ui->m_activation_code->setText(m_licenseProxy->getActivationCode());
+    m_ui->m_expired_time->setText(QDateTime::fromSecsSinceEpoch(m_licenseProxy->getExpiredTime()).toString("yyyy-MM-dd"));
+    m_ui->m_timeWidget->setVisible(m_licenseProxy->isActivated());
 }
 
 }  // namespace KS

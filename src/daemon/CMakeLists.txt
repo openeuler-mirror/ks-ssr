@@ -28,11 +28,6 @@ qt5_add_dbus_adaptor(
   device_manager_adaptor
   DeviceManagerAdaptor)
 
-qt5_add_dbus_adaptor(
-  LICENSE_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.License.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/license/license-manager.h KS::LicenseManager
-  license_manager_adaptor LicenseAdaptor)
-
 set(TARGET_NAME ks-sc-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
@@ -48,7 +43,6 @@ add_executable(
   ${FILES_PROTECTED_MANAGER_SRCS}
   ${SECURITY_DEVICE_MANAGER_SRCS}
   ${KSS_DBUS_SRCS}
-  ${LICENSE_SRCS}
   ${QM_FILES})
 
 target_include_directories(
@@ -56,8 +50,14 @@ target_include_directories(
                          ${PROJECT_SOURCE_DIR}/include)
 
 target_link_libraries(
-  ${TARGET_NAME} PRIVATE Qt5::Core Qt5::DBus Qt5::Sql Qt5::X11Extras lib-base
-                         ${LIBSYSTEMD_LIBRARIES})
+  ${TARGET_NAME}
+  PRIVATE Qt5::Core
+          Qt5::DBus
+          Qt5::Sql
+          Qt5::X11Extras
+          lib-base
+          lib-license
+          ${LIBSYSTEMD_LIBRARIES})
 
 install(FILES ${QM_FILES} DESTINATION ${KSC_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

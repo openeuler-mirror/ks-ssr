@@ -22,12 +22,12 @@ namespace Ui
 class Window;
 }
 
-class LicenseManagerProxy;
 namespace KS
 {
 class Navigation;
 
 class LicenseActivation;
+class LicenseProxy;
 class Window : public TitlebarWindow
 {
     Q_OBJECT
@@ -56,6 +56,6 @@ private:
     Ui::Window *m_ui;
     LicenseActivation *m_activation;
     QLabel *m_activateStatus;
-    LicenseManagerProxy *m_licenseManager;
+    QSharedPointer<LicenseProxy> m_licenseProxy;
 };
 }  // namespace KS
