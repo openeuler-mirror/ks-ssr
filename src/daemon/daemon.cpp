@@ -19,17 +19,21 @@
 #include "src/daemon/box/box-manager.h"
 #include "src/daemon/device/device-manager.h"
 #include "src/daemon/kss/kss-dbus.h"
+#include "src/daemon/license/license-manager.h"
 
 namespace KS
 {
 Daemon *Daemon::m_instance = nullptr;
 
-Daemon::Daemon() : QObject(nullptr)
+Daemon::Daemon() : QObject(nullptr), m_kssDBus(nullptr)
 {
-    BoxManager::globalInit(this);
-    DeviceManager::globalInit(this);
-    // FIXME: 最好需要提供一个模块入口类，可以时KSSContext或者KSSManager，来管理dbus和wrapper
-    m_kssDBus = new KSSDbus(this);
+    LicenseManager::globalInit(this);
+    if (LicenseManager::instance()->activated())
+    {
+        loadingDbus();
+    }
+
+    connect(LicenseManager::instance(), &LicenseManager::LicenseChanged, this, &Daemon::loadingDbus);
 }
 
 Daemon::~Daemon()
@@ -56,5 +60,13 @@ void Daemon::init()
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }
+}
+
+void Daemon::loadingDbus()
+{
+    BoxManager::globalInit(this);
+    DeviceManager::globalInit(this);
+    // FIXME: 最好需要提供一个模块入口类，可以时KSSContext或者KSSManager，来管理dbus和wrapper
+    m_kssDBus = new KSSDbus(this);
 }
 }  // namespace KS

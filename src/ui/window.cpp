@@ -21,13 +21,14 @@
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QX11Info>
+#include "include/ksc-i.h"
 #include "src/ui/about.h"
 #include "src/ui/box/box-page.h"
 #include "src/ui/common/single-application/single-application.h"
 #include "src/ui/device/device-page.h"
 #include "src/ui/fp/fp-page.h"
 #include "src/ui/license/license-activation.h"
-#include "src/ui/license/license-dbus.h"
+#include "src/ui/license_manager_proxy.h"
 #include "src/ui/navigation.h"
 #include "src/ui/settings/settings-page.h"
 #include "src/ui/tp/tp-page.h"
@@ -41,7 +42,7 @@ Window::Window() : TitlebarWindow(nullptr),
                    m_ui(new Ui::Window),
                    m_activation(nullptr),
                    m_activateStatus(nullptr),
-                   m_licenseDBus(nullptr)
+                   m_licenseManager(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
 
@@ -60,9 +61,12 @@ Window::~Window()
 void Window::initActivation()
 {
     m_activation = new LicenseActivation(this);
-    m_licenseDBus = LicenseDBus::getDefault();
+    m_licenseManager = new LicenseManagerProxy(KSC_DBUS_NAME,
+                                               KSC_LICENSE_DBUS_OBJECT_PATH,
+                                               QDBusConnection::systemBus(),
+                                               this);
 
-    if (!m_licenseDBus->isActivated())
+    if (!m_licenseManager->activated())
     {
         m_activateStatus->show();
         auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
@@ -75,12 +79,12 @@ void Window::initActivation()
             [this]
             {
                 //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
-                if (!m_licenseDBus->isActivated())
+                if (!m_licenseManager->activated())
                     qApp->quit();
                 else
                     m_activation->hide();
             });
-    connect(m_licenseDBus.data(), &LicenseDBus::licenseChanged, this, &Window::updateActivation, Qt::UniqueConnection);
+    connect(m_licenseManager, &LicenseManagerProxy::LicenseChanged, this, &Window::updateActivation, Qt::UniqueConnection);
 }
 
 void Window::initWindow()
@@ -170,7 +174,7 @@ void Window::popupActiveDialog()
 
 void Window::updateActivation()
 {
-    bool isActivate = m_licenseDBus->isActivated();
+    bool isActivate = m_licenseManager->activated();
     //设置激活对话框和激活状态标签是否可见
     m_activation->setVisible(!isActivate);
     m_activateStatus->setVisible(!isActivate);

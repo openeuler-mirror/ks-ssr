@@ -12,7 +12,7 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "src/ui/license/license-dbus.h"
+#include "src/daemon/license/license-proxy.h"
 
 #include <kiran-log/qt5-log-i.h>
 #include <QDBusArgument>
@@ -23,11 +23,12 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include "include/ksc-marcos.h"
+
 namespace KS
 {
-LicenseDBus::LicenseDBus(QObject* parent) : QObject(parent),
-                                            m_isActivated(false),
-                                            m_expiredTime(0)
+LicenseProxy::LicenseProxy(QObject* parent) : QObject(parent),
+                                              m_isActivated(false),
+                                              m_expiredTime(0)
 {
     m_objectPath = getObjectPath(LICENSE_OBJECT_NAME);
     updateLicense();
@@ -40,17 +41,17 @@ LicenseDBus::LicenseDBus(QObject* parent) : QObject(parent),
                                          SLOT(licenseChange(bool)));
 }
 
-QSharedPointer<LicenseDBus> LicenseDBus::getDefault()
+QSharedPointer<LicenseProxy> LicenseProxy::getDefault()
 {
-    static QSharedPointer<LicenseDBus> licenseDbus = QSharedPointer<LicenseDBus>(new LicenseDBus);
-    return licenseDbus;
+    static QSharedPointer<LicenseProxy> licenseProxy = QSharedPointer<LicenseProxy>(new LicenseProxy);
+    return licenseProxy;
 }
 
-LicenseDBus::~LicenseDBus()
+LicenseProxy::~LicenseProxy()
 {
 }
 
-QString LicenseDBus::getObjectPath(const QString& objectName)
+QString LicenseProxy::getObjectPath(const QString& objectName)
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_MANAGER_DBUS_NAME,
                                                                 LICENSE_MANAGER_OBJECT_PATH,
@@ -80,7 +81,7 @@ QString LicenseDBus::getObjectPath(const QString& objectName)
     return path->path();
 }
 
-void LicenseDBus::updateLicense()
+void LicenseProxy::updateLicense()
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_MANAGER_DBUS_NAME,
                                                                 m_objectPath,
@@ -125,7 +126,7 @@ void LicenseDBus::updateLicense()
     m_isActivated = activationStatus == LAS_ACTIVATED;
 }
 
-bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QString& errorMsg)
+bool LicenseProxy::activateByActivationCode(const QString& activation_Code, QString& errorMsg)
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_MANAGER_DBUS_NAME,
                                                                 m_objectPath,
@@ -146,27 +147,27 @@ bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QStri
     return true;
 }
 
-bool LicenseDBus::isActivated()
+bool LicenseProxy::isActivated()
 {
     return m_isActivated;
 }
 
-QString LicenseDBus::getActivationCode()
+QString LicenseProxy::getActivationCode()
 {
     return m_activationCode;
 }
 
-QString LicenseDBus::getMachineCode()
+QString LicenseProxy::getMachineCode()
 {
     return m_machineCode;
 }
 
-time_t LicenseDBus::getExpiredTime()
+time_t LicenseProxy::getExpiredTime()
 {
     return m_expiredTime;
 }
 
-void LicenseDBus::licenseChange(bool)
+void LicenseProxy::licenseChange(bool)
 {
     updateLicense();
     emit licenseChanged();
