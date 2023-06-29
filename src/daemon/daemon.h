@@ -15,10 +15,12 @@
 #pragma once
 
 #include <QObject>
+#include <QSharedPointer>
 
 namespace KS
 {
 class KSSDbus;
+class LicenseProxy;
 
 class Daemon : public QObject
 {
@@ -42,11 +44,12 @@ public:
 
 private:
     void init();
-    void loadingDbus();
+    void start();
 
 private:
     static Daemon *m_instance;
 
     KSSDbus *m_kssDBus;
+    QSharedPointer<LicenseProxy> m_licenseProxy;
 };
 }  // namespace KS
