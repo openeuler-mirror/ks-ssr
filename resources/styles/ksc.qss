@@ -555,6 +555,11 @@ KS--DevicePermission QPushButton#m_confirm:disabled
     background-color:#393939;
 }
 
+KS--DevicePermission QComboBox QLineEdit#lineEdit
+{
+    background-color:#222222;
+}
+
 KS--SettingsDevice QCheckBox::indicator:unchecked {
     image: url(:/images/switch-close);
 }

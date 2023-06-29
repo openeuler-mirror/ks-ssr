@@ -97,6 +97,7 @@ void DeviceList::popupEditDialog(const QModelIndex &index)
             m_devicePermission = new DevicePermission(this);
             connect(m_devicePermission, &DevicePermission::permissionChanged, this, &DeviceList::updatePermission);
             connect(m_devicePermission, &DevicePermission::stateChanged, this, &DeviceList::updateState);
+            connect(m_devicePermission, &DevicePermission::deviceChanged, this, &DeviceList::update);
             connect(m_devicePermission, &DevicePermission::destroyed,
                     [this]
                     {
@@ -138,6 +139,7 @@ void DeviceList::updatePermission()
     jsonDoc.setObject(jsonObj);
 
     auto reply = m_deviceManagerProxy->ChangePermission(id, QString(jsonDoc.toJson(QJsonDocument::Compact)));
+    reply.waitForFinished();
     if (reply.isError())
     {
         POPUP_MESSAGE_DIALOG(reply.error().message());
@@ -164,7 +166,7 @@ void DeviceList::updateState()
     {
         reply = m_deviceManagerProxy->Disable(id);
     }
-
+    reply.waitForFinished();
     if (reply.isError())
     {
         POPUP_MESSAGE_DIALOG(reply.error().message());
