@@ -528,7 +528,7 @@
     <message>
         <location filename="../src/ui/device/device-utils.cpp" line="23"/>
         <source>Disk</source>
-        <translation>磁盘</translation>
+        <translation>存储设备</translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-utils.cpp" line="25"/>
