@@ -33,6 +33,7 @@ class DeviceList : public QWidget
 public:
     DeviceList(QWidget *parent = nullptr);
     virtual ~DeviceList();
+    void update();
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -40,7 +41,6 @@ protected:
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void popupEditDialog(const QModelIndex &index);
-    void update();
     void updatePermission();
     void updateState();
 

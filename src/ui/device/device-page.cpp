@@ -36,6 +36,15 @@ DevicePage::~DevicePage()
     delete this->m_ui;
 }
 
+void DevicePage::update()
+{
+    DeviceList *listPage = qobject_cast<DeviceList *>(m_ui->m_stacked->widget(DevicePageType::DEVICE_PAGE_TYPE_LIST));
+    listPage->update();
+
+    DeviceLog *logPage = qobject_cast<DeviceLog *>(m_ui->m_stacked->widget(DevicePageType::DEVICE_PAGE_TYPE_LOG));
+    logPage->update();
+}
+
 void DevicePage::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
@@ -57,8 +66,8 @@ void DevicePage::initSidebar()
 
 void DevicePage::initSubPage()
 {
-    auto *deviceList = new DeviceList(this);
-    auto *deviceLog = new DeviceLog(this);
+    auto deviceList = new DeviceList(this);
+    auto deviceLog = new DeviceLog(this);
 
     m_ui->m_stacked->addWidget(deviceList);
     m_ui->m_stacked->addWidget(deviceLog);

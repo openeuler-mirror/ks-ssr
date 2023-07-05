@@ -31,13 +31,13 @@ class DeviceLog : public QWidget
 public:
     DeviceLog(QWidget *parent = nullptr);
     virtual ~DeviceLog();
+    void update();
 
 protected:
     void paintEvent(QPaintEvent *event);
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
-    void updateRecords(int number);
 
 private:
     Ui::DeviceLog *m_ui;
