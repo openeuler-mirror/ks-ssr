@@ -23,6 +23,12 @@ class DevicePage;
 
 namespace KS
 {
+enum DevicePageType
+{
+    DEVICE_PAGE_TYPE_LIST,
+    DEVICE_PAGE_TYPE_LOG
+};
+
 class SidebarItem;
 class DeviceLog;
 class DeviceList;
@@ -34,6 +40,7 @@ class DevicePage : public QWidget
 public:
     DevicePage(QWidget *parent = nullptr);
     virtual ~DevicePage();
+    void update();
 
 protected:
     void paintEvent(QPaintEvent *event);
