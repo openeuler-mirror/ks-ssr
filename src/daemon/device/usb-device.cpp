@@ -51,6 +51,8 @@ namespace KS
 
 #define USB_DEVICE_CLASS_HUB 0x09
 
+QMap<QString, int> USBDevice::m_fixedTypes{{"096e:0202", DEVICE_TYPE_STORAGE}};
+
 USBDevice::USBDevice(const QString &syspath, QObject *parent) : Device(syspath, parent)
 {
     m_devConfig = DeviceConfiguration::instance();
@@ -92,7 +94,8 @@ void USBDevice::init()
 
 int USBDevice::parseDeviceType()
 {
-    auto type = this->parseDeviceInterfaceClassType();
+    auto type = m_fixedTypes.value(m_idVendor + ":" + m_idProduct,
+                                   this->parseDeviceInterfaceClassType());
 
     RETURN_VAL_IF_TRUE(type != DEVICE_TYPE_UNKNOWN, type)
 
@@ -152,7 +155,7 @@ int USBDevice::interfaceProtocol2DevcieType(const InterfaceClass &interface)
         break;
 
     case USB_INTERFACE_CLASS_STORAGE:
-        type = DEVICE_TYPE_DISK;
+        type = DEVICE_TYPE_STORAGE;
         break;
 
     case USB_INTERFACE_CLASS_HUB:
@@ -172,7 +175,7 @@ int USBDevice::interfaceProtocol2DevcieType(const InterfaceClass &interface)
 
 int USBDevice::hidProtocol2DevcieType(const InterfaceClass &interface)
 {
-    //默认输入设备为鼠标
+    // 默认输入设备为鼠标
     auto type = DEVICE_TYPE_MOUSE;
 
     if (interface.bInterfaceSubClass == USB_HID_INTERFACE_SUB_CLASS_BOOT &&
@@ -265,23 +268,23 @@ bool USBDevice::isEnable()
     auto state = this->getState();
     auto type = this->getType();
 
-    //禁用设备
+    // 禁用设备
     RETURN_VAL_IF_TRUE(state == DEVICE_STATE_DISABLE, false)
 
-    //全局USB接口关闭
+    // 全局USB接口关闭
     if (!usbEnable)
     {
-        //鼠标键盘启用时，启用Hub
+        // 鼠标键盘启用时，启用Hub
         RETURN_VAL_IF_TRUE((kdbEnable || mouseEnable) && type == DEVICE_TYPE_HUB, true)
-        //启用键盘
+        // 启用键盘
         RETURN_VAL_IF_TRUE(kdbEnable && type == DEVICE_TYPE_KEYBOARD, true)
-        //启用鼠标
+        // 启用鼠标
         RETURN_VAL_IF_TRUE(mouseEnable && type == DEVICE_TYPE_MOUSE, true)
 
         return false;
     }
 
-    //默认鼠标，键盘，Hub可以使用
+    // 默认鼠标，键盘，Hub可以使用
     RETURN_VAL_IF_TRUE((type == DEVICE_TYPE_HUB ||
                         type == DEVICE_TYPE_KEYBOARD ||
                         type == DEVICE_TYPE_MOUSE),

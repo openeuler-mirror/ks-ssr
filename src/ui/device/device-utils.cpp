@@ -19,7 +19,7 @@ QString DeviceUtils::deviceTypeEnum2Str(DeviceType type)
 {
     switch (type)
     {
-    case DEVICE_TYPE_DISK:
+    case DEVICE_TYPE_STORAGE:
         return tr("Disk");
     case DEVICE_TYPE_CD:
         return tr("CD");
