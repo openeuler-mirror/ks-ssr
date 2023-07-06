@@ -86,7 +86,7 @@ DeviceList DeviceManager::getDevices()
 {
     auto devices = this->m_devices.values();
 
-    //根据连接时间进行排序
+    // 根据连接时间进行排序
     qSort(devices.begin(),
           devices.end(),
           compareDeviceConnectedTime);
@@ -105,7 +105,7 @@ DeviceList DeviceManager::getDevicesByInterface(int interfaceType)
         }
     }
 
-    //根据连接时间进行排序
+    // 根据连接时间进行排序
     qSort(devices.begin(),
           devices.end(),
           compareDeviceConnectedTime);
@@ -237,7 +237,7 @@ void DeviceManager::remountDevice(const QSharedPointer<Device> device,
 
 void DeviceManager::checkDeviceMount(const QSharedPointer<Device> device)
 {
-    RETURN_IF_TRUE(device->getType() != DEVICE_TYPE_DISK)
+    RETURN_IF_TRUE(device->getType() != DEVICE_TYPE_STORAGE)
     auto syspath = device->getSyspath();
     auto mounts = m_mountMonitor.getMounts();
 
@@ -325,7 +325,7 @@ void DeviceManager::triggerInterfaceDevices(int interfaceType)
 
     for (auto device : m_devices)
     {
-        //重放此接口类型的设备的Udev事件
+        // 重放此接口类型的设备的Udev事件
         if (device->getInterfaceType() == type)
         {
             device->trigger();
@@ -337,7 +337,7 @@ bool DeviceManager::isSupportHDMIDisable()
 {
     for (auto device : m_devices)
     {
-        //重放此接口类型的设备的Udev事件
+        // 重放此接口类型的设备的Udev事件
         if (device->getInterfaceType() == INTERFACE_TYPE_HDMI)
         {
             return true;
