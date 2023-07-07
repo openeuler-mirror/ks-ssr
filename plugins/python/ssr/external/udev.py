@@ -96,15 +96,17 @@ class CDROM(DRIVERS):
 
     def close(self):
         try:
-            if self.status():
+            if self.cdrom_status():
                 cdrom_drive_path = self.find_drive(CDROM_DRIVE)
                 sr_mod_drive_path = self.find_drive(SR_MOD_DRIVE)
 
                 # uninstall the driver
                 cmd_cdrom = '{0} {1}'.format(UNINSTALL_DRIVE,CDROM_DRIVE)
-                cmd_sr_mod = '{0} {1}'.format(UNINSTALL_DRIVE,SR_MOD_DRIVE)
-                output_sr_mod = ssr.utils.subprocess_has_output(cmd_sr_mod)
-                output_cdrom = ssr.utils.subprocess_has_output(cmd_cdrom)
+                cmd_sr_mod = '{0} {1}'.format(UNINSTALL_DRIVE, SR_MOD_DRIVE)
+                if self.sr_mod_status():
+                    ssr.utils.subprocess_has_output(cmd_sr_mod)
+                if len(ssr.utils.subprocess_has_output(cmd_cdrom)):
+                    ssr.utils.subprocess_has_output('{0} {1}'.format(INSTALL_DRIVE, sr_mod_drive_path))
                 
                 # change the driver name and retain the backup
                 if cdrom_drive_path.find('.bak') < 0:
@@ -121,10 +123,15 @@ class CDROM(DRIVERS):
             ssr.log.debug('Exception_close',e)
             return (False,str(e))
 
-    def status(self):
+    def sr_mod_status(self):
         cmd_sr_mod = '{0} {1}'.format(CDROM_STATUS_CMD,SR_MOD_DRIVE)
         output_sr_mod = ssr.utils.subprocess_has_output(cmd_sr_mod)
         return len(output_sr_mod) != 0
+
+    def cdrom_status(self):
+        cmd_cdrom = '{0} {1}'.format(CDROM_STATUS_CMD,CDROM_DRIVE)
+        output_cmd_cdrom = ssr.utils.subprocess_has_output(cmd_cdrom)
+        return len(output_cmd_cdrom) != 0
 
     def get(self):
         retdata = dict()

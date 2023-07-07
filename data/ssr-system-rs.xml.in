@@ -368,6 +368,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>The maximum permissions of important configuration files in the system is set to 0644</_label>
                 </layout>
+                <_note>The maximum permissions for configuration files/etc/passwd,/etc/bashrc/etc/shadow,/etc/group,/etc/xinetd. d/etc/security/limits. conf,/etc/pam. d/system auth ac,/etc/fstab are set to 0644</_note>
             </arg>
         </reinforcement>
         <reinforcement>
@@ -384,6 +385,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>The maximum permission of key directories in the system is 0755</_label>
                 </layout>
+                <_note>The permissions for the/usr,/usr/bin,/usr/sbin,/usr/lib,/usr/lib64,/etc,/var directories in the system are set to 0755</_note>
             </arg>
         </reinforcement>
         <reinforcement>
@@ -477,7 +479,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Maximum number of days a password may be used</_label>
+                    <_label>Maximum number of valid days for new users to use passwords</_label>
                 </layout>
             </arg>
             <arg>
@@ -755,6 +757,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>No master file in the scanning system</_label>
                 </layout>
+                <_note>Check if there are files in the /bin,/usr/bin,/sbin,/usr/sbin directories that do not belong to the user</_note>
             </arg>
         </reinforcement>
         <reinforcement>
@@ -771,6 +774,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>Scanning system files with 777 permissions</_label>
                 </layout>
+                <_note>Scan files with permissions of 777 in the /bin,/usr/bin,/sbin,/usr/sbin directory</_note>
             </arg>
         </reinforcement>
         <reinforcement>
@@ -787,6 +791,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>Scan system important directory suid-sgid file</_label>
                 </layout>
+                <_note>Scan files with SUID SGID permissions in the/bin,/usr/bin,/sbin, and/usr/sbin directories of the system</_note>
             </arg>
         </reinforcement>
         <reinforcement>
@@ -832,6 +837,43 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Turn on system auditd service</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>audit-auditd-rules</name>
+            <arg>
+                <name>add-path</name>
+                <value>""</value>
+                            <!-- ^((/[^\\\\/:*?\"<>|]+)*/[^\\\\/:*?\"<>|]+\\.[^\\\\/:*?\"<>|]+,)*(/[^\\\\/:*?\"<>|]+)*/[^\\\\/:*?\"<>|]+\\.[^\\\\/:*?\"<>|]+$ -->
+                <value_limits>^\/(\w+\/?)+$</value_limits>
+                <input_example>/etc/passwd</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Add audit rules to path.</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>del-path</name>
+                <value>""</value>
+                <value_limits>^\/(\w+\/?)+$</value_limits>
+                <input_example>/etc/passwd</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Delete audit rules to path.</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Delete all audit rules</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -953,7 +995,7 @@
                 <input_example>name1;name2...</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow account retention (Split with semicolon)</_label>
+                    <_label>Allow login to account (separated by semicolons)</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -1003,15 +1045,15 @@
             <name>external-sshd-root-login</name>
             <arg>
                 <name>enabled</name>
-                <value>false</value>
+                <value>true</value>
                 <value_limits>""</value_limits>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
+                    <value_fixed>true</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow remote login of root user via SSH</_label>
+                    <_label>Rrohibit remote login of root user via SSH</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -1094,12 +1136,9 @@
             </arg>
             <arg>
                 <name>port</name>
-                <value>false</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
-                </rule>
+                <value>""</value>
+                <value_limits>(((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3})))</value_limits>
+                <input_example>1~60999</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Modify the default SSH port</_label>
