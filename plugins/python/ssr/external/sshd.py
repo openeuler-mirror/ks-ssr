@@ -41,7 +41,7 @@ SSHD_CONF_PERMIT_EMPTY = "PermitEmptyPasswords"
 SSHD_CONF_PORT = "Port"
 SSHD_CONF_PAM = "UsePAM"
 
-SET_SFTP_USER_CMD = "useradd  -d /home/sftpuser -s /sbin/nologin sftpuser;chown root. /home/sftpuser;chmod 755 /home/sftpuser;mkdir /home/sftpuser/test;chown sftpuser. /home/sftpuser/test"
+SET_SFTP_USER_CMD = "useradd  -d /home/sftpuser -s /sbin/nologin sftpuser;chown root:sftpuser /home/sftpuser;chmod 755 /home/sftpuser;mkdir /home/sftpuser/test;chown sftpuser:sftpuser /home/sftpuser/test"
 SET_SFTP_USER_CONFIG = "Match User sftpuser\n\tChrootDirectory /home/sftpuser\n\tX11Forwarding no\n\tAllowTcpForwarding no\n\tForceCommand internal-sftp"
 
 class SSHD:
@@ -64,14 +64,14 @@ class SSHD:
 class RootLogin(SSHD):
     def get(self):
         retdata = dict()
-        retdata[ROOT_LOGIN_ARG_ENABLED] = (self.conf.get_value("PermitRootLogin") == "yes")
+        retdata[ROOT_LOGIN_ARG_ENABLED] = (self.conf.get_value("PermitRootLogin") == "no")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         if not self.service.is_active():
             return (False,'sshd.services is not running! \t\t')
         args = json.loads(args_json)
-        self.conf.set_all_value("PermitRootLogin", "yes" if args[ROOT_LOGIN_ARG_ENABLED] else "no")
+        self.conf.set_all_value("PermitRootLogin", "no" if args[ROOT_LOGIN_ARG_ENABLED] else "yes")
         # 重启服务生效
         self.service.reload()
         return (True, '')
@@ -196,7 +196,6 @@ class SshdService(SSHD):
         retdata = dict()
         retdata[SSHD_CONF_PROTOCOL_KEY] = (self.conf.get_value(SSHD_CONF_PROTOCOL) == "2")
         retdata[SSHD_CONF_PERMIT_EMPTY_KEY] = self.conf.get_value(SSHD_CONF_PERMIT_EMPTY) == "no"
-        retdata[SSHD_CONF_PORT_KEY] = (self.conf.get_value(SSHD_CONF_PORT) == "1022")
         retdata[SSHD_CONF_PAM_KEY] = (not (self.conf.get_value(SSHD_CONF_PAM) == "no"))
         # ssr.log.debug("arg['pam'] : ",args[SSHD_CONF_PAM_KEY] )
         return (True, json.dumps(retdata))
@@ -219,8 +218,8 @@ class SshdService(SSHD):
 
         self.conf.set_all_value(SSHD_CONF_PERMIT_EMPTY, "no" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "yes")
 
-        if  args[SSHD_CONF_PORT_KEY] :
-            self.conf.set_all_value(SSHD_CONF_PORT, "1022")
+        if  args[SSHD_CONF_PORT_KEY] != "":
+            self.conf.set_all_value(SSHD_CONF_PORT, args[SSHD_CONF_PORT_KEY])
             if self.get_selinux_status():
                 ssr.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_PORT_PATH))
         else:
@@ -249,6 +248,8 @@ class SftpUser(SSHD):
         if not self.service.is_active():
             return (False,'sshd.services is not running! \t\t')
         # self.conf_notes = ssr.configuration.PAM(SSHD_CONF_PATH,"#SSR\\s+SFTP\\s+configuration")
+        self.conf_sub = ssr.configuration.PAM(SSHD_CONF_PATH, "Subsystem\\s+sftp\\s+/usr/libexec/openssh/sftp-server")
+        self.conf_sub_tinternal = ssr.configuration.PAM(SSHD_CONF_PATH, "Subsystem\\s+sftp\\s+internal-sftp")
         self.conf_match = ssr.configuration.PAM(SSHD_CONF_PATH, "Match\\s+User\\s+sftpuser")
         self.conf_chroot = ssr.configuration.PAM(SSHD_CONF_PATH, "\\s+ChrootDirectory\\s+/home")
         self.conf_x11 = ssr.configuration.PAM(SSHD_CONF_PATH, "\\s+X11Forwarding\\s+no\\s+#")
@@ -260,6 +261,8 @@ class SftpUser(SSHD):
             if not self.user_exist("sftpuser"):
                 ssr.utils.subprocess_not_output(SET_SFTP_USER_CMD)
 
+            self.conf_sub_tinternal.set_line("Subsystem\tsftp\tinternal-sftp", "Subsystem\\s+sftp\\s+/usr/libexec/openssh/sftp-server")
+            self.conf_sub.del_line()
             # self.conf_force.set_line("\tForceCommand internal-sftp","#\\s+PermitTTY\\s+no")
             if len(ssr.utils.subprocess_has_output("cat {0} |grep 'ForceCommand internal-sftp' ".format(SSHD_CONF_PATH))) != 0:
                 self.conf_force.set_line("\tForceCommand internal-sftp","")
@@ -269,7 +272,6 @@ class SftpUser(SSHD):
             self.conf_x11.set_line("\tX11Forwarding no #SSR configuration, X11 forwarding forbidden","\tAllowTcpForwarding\\s+no\\s+#")
             self.conf_chroot.set_line("\tChrootDirectory /home/sftpuser","\tX11Forwarding\\s+no\\s+#")
             self.conf_match.set_line("Match User sftpuser","\tChrootDirectory\\s+/home/sftpuser")
-            # self.conf_notes.set_line("#SSR SFTP configuration should be placed at the end of the file.","Match\\s+User\\s+sftpuser")
 
             if self.get_selinux_status():
                 ssr.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_SFTP_PATH))
@@ -278,6 +280,9 @@ class SftpUser(SSHD):
             if self.user_exist("sftpuser"):
                 rm_cmd = "userdel -r sftpuser &> /dev/null;rm -rf /home/sftpuser"
                 ssr.utils.subprocess_not_output(rm_cmd)
+
+            self.conf_sub.set_line("Subsystem\tsftp\t/usr/libexec/openssh/sftp-server", "Subsystem\\s+sftp\\s+internal-sftp")
+            self.conf_sub_tinternal.del_line()
             self.conf_match.del_line()
             self.conf_chroot.del_line()
             self.conf_x11.del_line()

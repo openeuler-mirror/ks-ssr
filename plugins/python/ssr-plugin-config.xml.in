@@ -43,7 +43,7 @@
     <reinforcement>
         <name>config-password-complexity</name>
         <_label>Password complexity</_label>
-        <_description>Enhance password security and prevent passwords from being cracked</_description>
+        <_description>Enhance password security and prevent passwords from being cracked(Suitable for new users and existing users changing passwords)</_description>
     </reinforcement>
     <reinforcement>
         <name>config-resource-limits</name>

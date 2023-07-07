@@ -8,10 +8,10 @@
 #include "src/daemon/dbus.h"
 #include <json/json.h>
 #include <kylin-license/license-i.h>
-#include <iostream>
-#include <fstream>
 #include <libaudit.h>
 #include <unistd.h>
+#include <fstream>
+#include <iostream>
 #include "src/daemon/categories.h"
 #include "src/daemon/configuration.h"
 #include "src/daemon/plugins.h"
@@ -35,12 +35,13 @@ namespace Daemon
 // static std::shared_ptr<SSRReinforcementInterface> reinforcement_interface_;
 // static std::string param_str_ = "";
 
-static int _audit_log(int type, int rc, const char *op)
+static int _audit_log(int type, int rc, const char* op)
 {
     int audit_fd;
 
     audit_fd = audit_open();
-    if (audit_fd < 0) {
+    if (audit_fd < 0)
+    {
         /* You get these error codes only when the kernel doesn't have
          * audit compiled in. */
         if (errno == EINVAL || errno == EPROTONOSUPPORT ||
@@ -52,8 +53,9 @@ static int _audit_log(int type, int rc, const char *op)
     }
 
     rc = audit_log_acct_message(audit_fd, type, NULL, op,
-        NULL, -1, NULL, NULL, NULL, rc == 0);
-    if (rc == -EPERM && geteuid() != 0) {
+                                NULL, -1, NULL, NULL, NULL, rc == 0);
+    if (rc == -EPERM && geteuid() != 0)
+    {
         rc = 0;
     }
 
@@ -164,14 +166,14 @@ void DBus::ImportCustomRA(const std::string& encoded_strategy)
     try
     {
         std::ofstream ofs(CUSTOM_RA_STRATEGY_FILEPATH, std::ios_base::out);
-//        ssr_ra(ofs, *ra.get());
+        //        ssr_ra(ofs, *ra.get());
         ofs << encoded_strategy;
         ofs.close();
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        return ;
+        return;
     }
     SSRErrorCode error_code = SSRErrorCode::SUCCESS;
     if (!configuration_->check_ra_strategy())
@@ -181,13 +183,13 @@ void DBus::ImportCustomRA(const std::string& encoded_strategy)
     }
 }
 
-void DBus::SetCheckBox(const std::string &reinforcement_name, const bool &checkbox_status)
+void DBus::SetCheckBox(const std::string& reinforcement_name, const bool& checkbox_status)
 {
     KLOG_DEBUG("reinforcement_name: %s, SetCheckBox", reinforcement_name.c_str());
     configuration_->set_ra_checkbox(reinforcement_name, checkbox_status);
 }
 
-void DBus::SetResourceMonitorSwitch(const uint32_t &resource_monitor)
+void DBus::SetResourceMonitorSwitch(const uint32_t& resource_monitor)
 {
     KLOG_INFO("SetResourceMonitorSwitch. resource monitor: %d.", resource_monitor);
 
@@ -331,7 +333,7 @@ std::string DBus::GetReinforcement(const std::string& name)
 void DBus::SetReinforcement(const std::string& reinforcement_xml)
 {
     KLOG_INFO("Set reinforcement parameters.");
-    KLOG_PROFILE("reinforcement_xml : %s",reinforcement_xml.c_str());
+    KLOG_PROFILE("reinforcement_xml : %s", reinforcement_xml.c_str());
 
     try
     {
@@ -375,7 +377,7 @@ void DBus::ResetReinforcement(const std::string& name)
 int64_t DBus::Scan(const std::vector<std::string>& names)
 {
     KLOG_INFO("Scan. range : %s", StrUtils::join(names, " ").c_str());
-//    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
+    //    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
     // 已经在扫描则返回错误
     if (this->scan_job_ && this->scan_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
@@ -423,7 +425,7 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
                                            });
 
             // 重新扫描时需要清理加固项的安全状态
-//             reinforcement->state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNKNOWN;
+            //             reinforcement->state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNKNOWN;
         }
     }
     catch (const std::exception& e)
@@ -440,7 +442,7 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
         THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED);
     }
 
-//    is_frist_scan_ = false;
+    //    is_frist_scan_ = false;
     return this->scan_job_->get_id();
 }
 
@@ -463,7 +465,7 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
 int64_t DBus::Reinforce(const std::vector<std::string>& names)
 {
     KLOG_INFO("Reinforce. range : %s", StrUtils::join(names, " ").c_str());
-//    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
+    //    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
     // 未授权不允许加固
     if (this->license_values.isNull() ||
         this->license_values[LICENSE_JK_ACTIVATION_STATUS].isNull() ||
@@ -510,7 +512,7 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
         else
         {
             KLOG_DEBUG("Reinforce is_scan_flag_ = %d", is_scan_flag_);
-//            if (snapshot_status_ != SSR_INITIAL_STATUS)
+            //            if (snapshot_status_ != SSR_INITIAL_STATUS)
             Scan(names);
         }
 
@@ -590,7 +592,6 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
                 param_str = StrUtils::json2str(param);
             }
 
-
             this->reinforce_job_->add_operation(reinforcement->get_plugin_name(),
                                                 reinforcement->get_name(),
                                                 [reinforcement_interface, param_str]() -> std::string {
@@ -629,7 +630,7 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
 void DBus::Cancel(const int64_t& job_id)
 {
     KLOG_INFO("Cancel. job id: %d.", job_id);
-//    KLOG_PROFILE("job id: %d.", job_id);
+    //    KLOG_PROFILE("job id: %d.", job_id);
 
     SSRErrorCode error_code = SSRErrorCode::SUCCESS;
 
@@ -677,7 +678,7 @@ std::string DBus::GetLicense()
     return retval;
 }
 
-void DBus::SetFallback(const uint32_t &snapshot_status)
+void DBus::SetFallback(const uint32_t& snapshot_status)
 {
     KLOG_INFO("Set fallback. snapshot_status: %d.", snapshot_status);
     is_reinfoce_flag_ = false;
@@ -697,7 +698,7 @@ void DBus::SetFallback(const uint32_t &snapshot_status)
             // 需回退的加固项为空 不需要进行加固了 Reinforce Finish
             this->ProgressFinished();
             is_reinfoce_flag_ = true;
-            return ;
+            return;
         }
         Reinforce(names_rh);
 
@@ -711,7 +712,7 @@ void DBus::SetFallback(const uint32_t &snapshot_status)
             // 需回退的加固项为空 不需要进行加固了 Reinforce Finish
             this->ProgressFinished();
             is_reinfoce_flag_ = true;
-            return ;
+            return;
         }
         Reinforce(names_rh);
 
@@ -722,7 +723,7 @@ void DBus::SetFallback(const uint32_t &snapshot_status)
         snapshot_status_ = SSR_OTHER_STATUS;
         is_reinfoce_flag_ = true;
     }
-//    is_reinfoce_flag_ = true;
+    //    is_reinfoce_flag_ = true;
 }
 
 std::string DBus::ActivateByActivationCode(const std::string& activation_code)
@@ -934,7 +935,7 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
                 for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                 {
                     if (!result_values[JOB_RETURN_VALUE][iter_arg->name()].asString().empty())
-                       iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
+                        iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
                     KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]).c_str());
                     KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
                 }
@@ -955,23 +956,21 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
                 if (is_frist_reinfoce_finish_)
                 {
                     auto rh_frist = this->configuration_->read_rh_from_file(RH_SSR_OPERATE_DATA_FIRST);
-//                    KLOG_DEBUG("is_frist_reinfoce_finish_ : %s", RH_SSR_OPERATE_DATA_FIRST);
+                    //                    KLOG_DEBUG("is_frist_reinfoce_finish_ : %s", RH_SSR_OPERATE_DATA_FIRST);
 
                     auto& reinforcements = rh_frist->reinforcement();
                     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
                     {
                         CONTINUE_IF_TRUE(iter->name() != reinforcement_result.name());
-//                        KLOG_DEBUG("iter->name() = %s reinforcement_result.name = %s suscess", iter->name().c_str(), reinforcement_result.name().c_str());
+                        //                        KLOG_DEBUG("iter->name() = %s reinforcement_result.name = %s suscess", iter->name().c_str(), reinforcement_result.name().c_str());
                         auto& iter_args = iter->arg();
                         for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                         {
-
                             if (!result_values[JOB_RETURN_VALUE][iter_arg->name()].asString().empty())
-                               iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
-//                            KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]).c_str());
-//                            KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
+                                iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
+                            //                            KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]).c_str());
+                            //                            KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
                         }
-
                     }
                     this->configuration_->write_rh_to_file(rh_frist, RH_SSR_OPERATE_DATA_FIRST);
                 }
@@ -1102,7 +1101,7 @@ void DBus::rootFreeSpaceRatio(const float space_ratio)
     if (space_ratio < rootSpa)
     {
         KLOG_WARNING("root free space less than 10%.");
-        KLOG_WARNING("rootFreeSpaceRatio %f.",space_ratio);
+        KLOG_WARNING("rootFreeSpaceRatio %f.", space_ratio);
 
         _audit_log(1101, -1, "root free space less than 10%.");
 
@@ -1117,7 +1116,7 @@ void DBus::cpuAverageLoadRatio(const float load_ratio)
     if (load_ratio >= cpuLoad)
     {
         KLOG_WARNING("The average load of a single core CPU exceeds 1.");
-        KLOG_WARNING("cpuAverageLoadRatio %f.",load_ratio);
+        KLOG_WARNING("cpuAverageLoadRatio %f.", load_ratio);
 
         _audit_log(1101, -1, "The average load of a single core CPU exceeds 1.");
 
@@ -1130,25 +1129,25 @@ void DBus::vmstatSiSo(const std::vector<std::string> results)
     // vmstat swap 中si或者so不为0告警
     std::string si = results.at(0).c_str();
     std::string so = results.at(1).c_str();
-    if(si != "0")
+    if (si != "0")
     {
         KLOG_WARNING("The vmstat swap page si is not 0.");
-        KLOG_WARNING("vmstat si is %s.",results.at(0).c_str());
+        KLOG_WARNING("vmstat si is %s.", results.at(0).c_str());
 
         _audit_log(1101, -1, "The vmstat swap page si is not 0.");
 
-        this->VmstatSiSoabnormal(si,so);
+        this->VmstatSiSoabnormal(si, so);
     }
 
-    if(so != "0")
+    if (so != "0")
     {
         KLOG_WARNING("The vmstat swap page so is not 0.");
-        KLOG_WARNING("vmstat so is %s.",results.at(1).c_str());
+        KLOG_WARNING("vmstat so is %s.", results.at(1).c_str());
 
         _audit_log(1101, -1, "The vmstat swap page so is not 0.");
 
-        if(si == "0")
-            this->VmstatSiSoabnormal(si,so);
+        if (si == "0")
+            this->VmstatSiSoabnormal(si, so);
     }
 }
 
