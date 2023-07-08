@@ -69,7 +69,7 @@ class DRIVERS:
 class CDROM(DRIVERS):
     def open(self):
         try:
-            if not self.status():
+            if not self.cdrom_status():
                 cdrom_drive_path = self.find_drive(CDROM_DRIVE)
                 sr_mod_drive_path = self.find_drive(SR_MOD_DRIVE)
 
@@ -135,7 +135,7 @@ class CDROM(DRIVERS):
 
     def get(self):
         retdata = dict()
-        retdata[CDROM_ARG_ENABLED] = self.status()
+        retdata[CDROM_ARG_ENABLED] = self.cdrom_status()
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
