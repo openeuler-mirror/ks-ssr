@@ -113,6 +113,9 @@ bool DeviceConfiguration::isIFCEnable(int type)
     // 未配置情况下，接口为启用状态
     RETURN_VAL_IF_FALSE(m_interfaceSettings->childGroups().contains(group), true)
 
+    // FIXME: 为了 HDMI 接口禁用所特例化的功能
+    RETURN_VAL_IF_TRUE(INTERFACE_TYPE_HDMI == type, m_isEnableHDMI);
+
     m_interfaceSettings->beginGroup(group);
     ret = m_interfaceSettings->value(DI_SK_ENABLE).toBool();
     m_interfaceSettings->endGroup();
@@ -125,12 +128,20 @@ void DeviceConfiguration::setIFCEnable(int type, bool enable)
     if (type == INTERFACE_TYPE_USB &&
         enable)
     {
-        //开启USB口时，一起开启键盘，鼠标
+        // 开启USB口时，一起开启键盘，鼠标
         this->setIFCEnable(INTERFACE_TYPE_USB_KBD, true);
         this->setIFCEnable(INTERFACE_TYPE_USB_MOUSE, true);
     }
 
     QString group = QString::asprintf("interface%d", type);
+
+    // FIXME: 由于 HDMI 接口的禁用需要修改内核参数导致的特殊处理，下个版本将内核参数修改的操作改成开机和关机时自动运行
+    if (type == INTERFACE_TYPE_HDMI)
+    {
+        m_isEnableHDMI = enable;
+        this->syncInterfaceToGrubFile();
+        return;
+    }
 
     m_interfaceSettings->beginGroup(group);
     m_interfaceSettings->setValue(DI_SK_TYPE, type);
@@ -153,6 +164,10 @@ void DeviceConfiguration::init()
 {
     m_deviceSettings = new QSettings(KSC_DEVICE_CONFIG_FILE, QSettings::NativeFormat, this);
     m_interfaceSettings = new QSettings(KSC_DI_CONFIG_FILE, QSettings::NativeFormat, this);
+    // FIXME: 为了 HDMI 接口的特殊化处理
+    m_interfaceSettings->beginGroup(QString("interface%1").arg(INTERFACE_TYPE_HDMI));
+    m_isEnableHDMI = m_interfaceSettings->value(DI_SK_ENABLE).toBool();
+    m_interfaceSettings->endGroup();
 
     this->syncInterfaceFile();
 }
@@ -171,8 +186,9 @@ void DeviceConfiguration::syncInterfaceToGrubFile()
 
     // 生成grub选项
     auto hdmiNames = getHDMINames();
-    auto enabled = isIFCEnable(InterfaceType::INTERFACE_TYPE_HDMI);
-    if (!enabled && hdmiNames.size() != 0)
+    // FIXME: 为了 HDMI 接口的特殊化处理
+    // auto enabled = isIFCEnable(InterfaceType::INTERFACE_TYPE_HDMI);
+    if (!m_isEnableHDMI && hdmiNames.size() != 0)
     {
         for (const auto &hdmiName : hdmiNames)
         {
@@ -235,6 +251,13 @@ void DeviceConfiguration::finishGrubsUpdate()
     this->m_grubUpdateThread->deleteLater();
     this->m_grubUpdateThread = nullptr;
     this->checkWaitingUpdateGrubs();
+
+    // FIXME: 为了 HDMI 接口的特殊化处理
+    // 当更新内核参数配置命令更新完毕后再更新配置文件的标志位
+    m_interfaceSettings->beginGroup(QString("interface%1").arg(INTERFACE_TYPE_HDMI));
+    m_interfaceSettings->setValue(DI_SK_TYPE, INTERFACE_TYPE_HDMI);
+    m_interfaceSettings->setValue(DI_SK_ENABLE, m_isEnableHDMI);
+    m_interfaceSettings->endGroup();
 }
 
 QStringList DeviceConfiguration::getHDMINames()
