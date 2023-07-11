@@ -38,7 +38,8 @@ public:
     uint getUserUid();
     QString getPassphrase();
     QString retrievePassword(const QString &passphrase);
-    bool delBox(const QString &currentPassword);
+    // 返回错误码
+    int delBox(const QString &currentPassword);
     bool mounted();
     // 返回错误码
     int mount(const QString &currentPassword);
