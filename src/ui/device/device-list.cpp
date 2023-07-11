@@ -154,7 +154,6 @@ void DeviceList::updateState()
     auto state = m_devicePermission->getDeviceStatus();
     RETURN_IF_TRUE(state != DEVICE_STATE_ENABLE && state != DEVICE_STATE_DISABLE);
 
-    QString errMsg;
     QDBusPendingReply<> reply;
 
     //数据传入后台
