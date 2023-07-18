@@ -49,6 +49,9 @@ namespace KS
 #define USB_HID_INTERFACE_PROTOCOL_KEYBOARD 0x01
 #define USB_HID_INTERFACE_PROTOCOL_MOUSE 0x02
 
+#define USB_WC_INTERFACE_SUB_CLASS_BOOT 0x01
+#define USB_WC_INTERFACE_PROTOCOL_BLUETOOTH 0x01
+
 #define USB_DEVICE_CLASS_HUB 0x09
 
 QMap<QString, int> USBDevice::m_fixedTypes{{"096e:0202", DEVICE_TYPE_STORAGE}};
@@ -166,6 +169,10 @@ int USBDevice::interfaceProtocol2DevcieType(const InterfaceClass &interface)
         type = DEVICE_TYPE_VIDEO;
         break;
 
+    case USB_INTERFACE_CLASS_WIRELESS_CONTROLLER:
+        type = this->wcProtocol2DevcieType(interface);
+        break;
+
     default:
         break;
     }
@@ -182,6 +189,18 @@ int USBDevice::hidProtocol2DevcieType(const InterfaceClass &interface)
         interface.bInterfaceProtocol == USB_HID_INTERFACE_PROTOCOL_KEYBOARD)
     {
         type = DEVICE_TYPE_KEYBOARD;
+    }
+
+    return type;
+}
+
+int USBDevice::wcProtocol2DevcieType(const InterfaceClass &interface)
+{
+    auto type = DEVICE_TYPE_BLUETOOTH;
+    if (interface.bInterfaceSubClass == USB_WC_INTERFACE_SUB_CLASS_BOOT &&
+        interface.bInterfaceProtocol == USB_WC_INTERFACE_PROTOCOL_BLUETOOTH)
+    {
+        type = DEVICE_TYPE_BLUETOOTH;
     }
 
     return type;
