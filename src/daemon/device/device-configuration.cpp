@@ -328,6 +328,13 @@ void DeviceConfiguration::saveToFile(const QStringList &lines, const QString &fi
 
 void DeviceConfiguration::updateGrub(const QString &filePath)
 {
+    // FIXME: 下个版本将更新 grub 配置的命令替换为 grubby ，此命令不需要检查文件是否存在。
+    auto grubFile = QFileInfo(filePath);
+    if (!grubFile.isFile())
+    {
+        KLOG_WARNING() << "Grub file does not exits ! : " << filePath;
+        return;
+    }
     auto arguments = QStringList{QString("-o"), filePath};
     auto command = QString("%1 %2").arg(GRUB_MKCONFIG_PROGRAM).arg(arguments.join(' '));
 
