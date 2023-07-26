@@ -135,6 +135,7 @@ void DeviceConfiguration::setIFCEnable(int type, bool enable)
 
     QString group = QString::asprintf("interface%d", type);
 
+#ifdef _345_GC_
     // FIXME: 由于 HDMI 接口的禁用需要修改内核参数导致的特殊处理，下个版本将内核参数修改的操作改成开机和关机时自动运行
     if (type == INTERFACE_TYPE_HDMI)
     {
@@ -142,6 +143,7 @@ void DeviceConfiguration::setIFCEnable(int type, bool enable)
         this->syncInterfaceToGrubFile();
         return;
     }
+#endif
 
     m_interfaceSettings->beginGroup(group);
     m_interfaceSettings->setValue(DI_SK_TYPE, type);
@@ -184,11 +186,13 @@ void DeviceConfiguration::init()
 
 void DeviceConfiguration::syncInterfaceFile()
 {
+#ifdef _345_GC_
     this->syncInterfaceToGrubFile();
+#endif
     this->syncToBluetoothService();
     this->syncToNMService();
 }
-
+#ifdef _345_GC_
 void DeviceConfiguration::syncInterfaceToGrubFile()
 {
     QString grubValue;
@@ -236,6 +240,7 @@ void DeviceConfiguration::syncInterfaceToGrubFile()
     m_waitingUpdateGrub = true;
     this->checkWaitingUpdateGrubs();
 }
+#endif
 
 void DeviceConfiguration::updateGrubsInThread()
 {

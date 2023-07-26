@@ -4,6 +4,9 @@ project(ks-sc VERSION 1.0)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+if(_345_GC_)
+  add_definitions(-D_345_GC_)
+endif()
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
