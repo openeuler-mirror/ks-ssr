@@ -53,19 +53,19 @@ void SettingsDevice::initUI()
     vLayout->setSpacing(12);
     vLayout->setContentsMargins(12, 24, 12, 12);
 
-    //存放usb接口状态
+    // 存放usb接口状态
     m_usbLayout = new QGridLayout();
     m_usbLayout->setVerticalSpacing(12);
     m_usbLayout->setHorizontalSpacing(0);
 
-    //存放键盘鼠标接口状态
+    // 存放键盘鼠标接口状态
     m_kbdMouseContent = new QWidget(this);
     m_kbdMouseLayout = new QGridLayout(m_kbdMouseContent);
     m_kbdMouseLayout->setVerticalSpacing(12);
     m_kbdMouseLayout->setHorizontalSpacing(0);
     m_kbdMouseLayout->setContentsMargins(0, 0, 0, 0);
 
-    //存放其他接口状态
+    // 存放其他接口状态
     m_gridLayout = new QGridLayout();
     m_gridLayout->setVerticalSpacing(12);
     m_gridLayout->setHorizontalSpacing(0);
@@ -94,7 +94,7 @@ void SettingsDevice::insertInterfaceWidget()
         }
 
         auto interfaceName = DeviceUtils::interfaceTypeEnum2Str(interface.type);
-        //在HDMI接口后面添加（重启后生效）
+        // 在HDMI接口后面添加（重启后生效）
         if (interface.type == InterfaceType::INTERFACE_TYPE_HDMI)
         {
             interfaceName.append(tr(" (Effective after restart)"));
@@ -203,7 +203,7 @@ void SettingsDevice::setInterfaceState(bool checked)
     auto type = m_checkboxs.key(stateCheckBox);
     m_clickedCheckbox = stateCheckBox;
 
-    //当关闭usb、鼠标、键盘设备时，弹出二次确认窗口
+    // 当关闭usb、鼠标、键盘设备时，弹出二次确认窗口
     if ((type == InterfaceType::INTERFACE_TYPE_USB ||
          type == InterfaceType::INTERFACE_TYPE_USB_KBD ||
          type == InterfaceType::INTERFACE_TYPE_USB_MOUSE) &&
@@ -229,7 +229,7 @@ void SettingsDevice::accept()
         POPUP_MESSAGE_DIALOG(reply.error().message());
     }
 
-    //更新界面checkbox状态
+    // 更新界面checkbox状态
     update();
 }
 
