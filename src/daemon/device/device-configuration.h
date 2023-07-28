@@ -76,14 +76,12 @@ private:
     void syncToNMService();
 
     void saveToFile(const QStringList &lines, const QString &filename);
-    // 在线程中更新传统的grub配置
-    void updateLegacyGrubsInThread();
-    // 在线程中更新 efi 的grub配置
-    void updateEfiGrubsInThread();
+    // 在线程中更新相关的grub配置
+    void updateGrubsInThread();
     // 检查是否有等待grub配置更新的命令
     void checkWaitingUpdateGrubs();
     // grub配置更新完毕
-    void finishGrubsUpdate(QThread **);
+    void finishGrubsUpdate();
     // 更新单个grub配置
     void updateGrub(const QString &filePath);
 
@@ -92,10 +90,8 @@ private:
     QSettings *m_deviceSettings;
     // 接口控制相关配置
     QSettings *m_interfaceSettings;
-    // 传统 grub 更新线程
-    QThread *m_legacyGrubUpdateThread;
-    // efi grub 更新线程
-    QThread *m_efiGrubUpdateThread;
+    // grub更新线程
+    QThread *m_grubUpdateThread;
     // 是否需要更新grub配置
     bool m_waitingUpdateGrub;
 
