@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <QDir>
 #include <QObject>
 #include <QSettings>
 #include <QSharedPointer>
@@ -49,11 +50,12 @@ public:
     static DeviceConfiguration *instance();
     void addSetting(const DeviceSetting &setting);
     QSharedPointer<DeviceSetting> getDeviceSetting(const QString &uid);
-    //获取所有的设备配置
+    // 获取所有的设备配置
     DeviceSettingList getDeviceSettings();
 
     bool isIFCEnable(int type);
     void setIFCEnable(int type, bool enable);
+    ~DeviceConfiguration();
 
 signals:
     void deviceSettingChanged();
