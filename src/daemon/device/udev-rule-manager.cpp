@@ -59,7 +59,7 @@ void UdevRuleManager::init()
 
 void UdevRuleManager::updateUdevRules()
 {
-    //清除所有项
+    // 清除所有项
     m_rules.clear();
 
     for (auto setting : m_deviceConfig->getDeviceSettings())
