@@ -7,8 +7,10 @@
 
 #include <glib/gi18n.h>
 #include <gtk3-log-i.h>
-#include "lib/core/core-work.h"
+#include "src/daemon/sse-categories.h"
+#include "src/daemon/sse-configuration.h"
 #include "src/daemon/sse-manager.h"
+#include "src/daemon/sse-plugins.h"
 #include "sse-config.h"
 
 int main(int argc, char* argv[])
@@ -17,9 +19,6 @@ int main(int argc, char* argv[])
 
     auto program_name = Glib::path_get_basename(argv[0]);
     klog_gtk3_init(std::string(), "kylinsec-system", PROJECT_NAME, program_name.c_str());
-
-    Kiran::core_init();
-    Kiran::SSEManager::global_init();
 
     setlocale(LC_ALL, "");
     bindtextdomain(PROJECT_NAME, SSE_LOCALEDIR);
@@ -52,6 +51,11 @@ int main(int argc, char* argv[])
         KLOG_WARNING("%s", e.what().c_str());
         return EXIT_FAILURE;
     }
+
+    Kiran::SSEConfiguration::global_init(SSE_INSTALL_DATADIR "/sse.ini");
+    Kiran::SSECategories::global_init();
+    Kiran::SSEPlugins::global_init(Kiran::SSEConfiguration::get_instance());
+    Kiran::SSEManager::global_init();
 
     auto loop = Glib::MainLoop::create();
     loop->run();
