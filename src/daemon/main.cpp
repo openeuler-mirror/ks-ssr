@@ -6,18 +6,17 @@
  */
 
 #include <glib/gi18n.h>
+#include <gtk3-log-i.h>
 #include "lib/core/core-work.h"
 #include "src/daemon/sse-manager.h"
 #include "sse-config.h"
-#include "zlog_ex.h"
 
 int main(int argc, char* argv[])
 {
     Gio::init();
 
     auto program_name = Glib::path_get_basename(argv[0]);
-    dzlog_init_ex(NULL, "kylinsec-system", PROJECT_NAME, program_name.c_str());
-    Kiran::Log::global_init();
+    klog_gtk3_init(std::string(), "kylinsec-system", PROJECT_NAME, program_name.c_str());
 
     Kiran::core_init();
     Kiran::SSEManager::global_init();
@@ -50,7 +49,7 @@ int main(int argc, char* argv[])
     }
     catch (const Glib::Exception& e)
     {
-        LOG_WARNING("%s", e.what().c_str());
+        KLOG_WARNING("%s", e.what().c_str());
         return EXIT_FAILURE;
     }
 
