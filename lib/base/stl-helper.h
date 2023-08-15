@@ -17,6 +17,17 @@ public:
     virtual ~MapHelper(){};
 
     template <typename K, typename V>
+    static std::vector<V> get_keys(const std::map<K, V> &maps)
+    {
+        std::vector<K> values;
+        for (auto &iter : maps)
+        {
+            values.push_back(iter.first);
+        }
+        return values;
+    }
+
+    template <typename K, typename V>
     static std::vector<V> get_values(const std::map<K, V> &maps)
     {
         std::vector<V> values;
