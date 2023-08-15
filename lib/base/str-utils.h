@@ -42,9 +42,11 @@ public:
     static std::string toupper(const std::string &str);
     static std::vector<std::string> split_with_char(const std::string &s, char delimiter, bool is_merge_delimiter = false);
 
-    // 去掉字符串前后的空白字符
+    // 去掉字符串前面的空白字符
     static std::string ltrim(const std::string &s);
+    // 去掉字符串后面的空白字符
     static std::string rtrim(const std::string &s);
+    // 去掉字符串前后的空白字符
     static std::string trim(const std::string &s);
 
     static std::string json2str(const Json::Value &json);
