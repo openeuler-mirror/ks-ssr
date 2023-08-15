@@ -1,0 +1,61 @@
+/**
+ * @file          /kiran-sse-manager/include/error_i.h
+ * @brief         
+ * @author        tangjie02 <tangjie02@kylinos.com.cn>
+ * @copyright (c) 2020 KylinSec. All rights reserved. 
+ */
+
+#pragma once
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+    enum SSEErrorCode
+    {
+        // Common
+        SUCCESS,
+        ERROR_FAILED,
+
+        // Main
+        ERROR_PLUGIN_NOT_EXIST_1 = 0x00100,
+        // ERROR_SET_STANDARD_TYPE_FAILED,
+
+        // core
+        ERROR_CUSTOM_RS_DECRYPT_FAILED,
+        ERROR_CORE_REINFORCE_JOB_FAILED,
+
+        // deamon
+        ERROR_DAEMON_STANDARD_TYPE_INVALID,
+        ERROR_DAEMON_SET_STANDARD_TYPE_FAILED,
+        ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED,
+        ERROR_DAEMON_CONVERT_PLUGINS2JSON_FAILED,
+        ERROR_DAEMON_JSON2RS_FAILED,
+        ERROR_DAEMON_RS_CONTENT_INVALID,
+        ERROR_DAEMON_SET_REINFORCEMENT_ARGS_FAILED,
+        ERROR_DAEMON_REINFORCEMENT_NOTFOUND,
+        ERROR_DAEMON_SCAN_ALL_JOB_FAILED,
+        ERROR_DAEMON_SCAN_IS_RUNNING,
+        ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND,
+        ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND_2,
+        ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND,
+        ERROR_DAEMON_SCAN_RANGE_INVALID,
+        ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND_2,
+        ERROR_DAEMON_REINFORCE_IS_RUNNING,
+        ERROR_DAEMON_REINFORCE_RANGE_INVALID,
+        ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1,
+        ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2,
+        ERROR_DAEMON_CANCEL_NOTFOUND_JOB,
+
+        // plugins
+
+        // plugin config
+        ERROR_PLUGIN_CONFIG_REINFORCEMENT_NOTFOUND,
+        ERROR_PLUGIN_CONFIG_UNSUPPORTED_REQ,
+        ERROR_PLUGIN_CONFIG_JSON_EXCEPTION,
+
+    };
+#ifdef __cplusplus
+}
+#endif
