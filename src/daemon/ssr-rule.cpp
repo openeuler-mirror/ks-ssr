@@ -9,6 +9,8 @@
 
 namespace Kiran
 {
+using namespace RS;
+
 std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
 {
     RETURN_VAL_IF_TRUE(!rule[SSR_JSON_BODY_RULES_TYPE].isInt(), nullptr);
@@ -16,7 +18,8 @@ std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
 
     switch (type)
     {
-    case SSRRuleType::SSR_RULE_TYPE_RANGE:
+        // TODO: 实现FIXED/ENUM
+    case SSRRuleType::Value::RANGE:
     {
         RETURN_VAL_IF_TRUE(!rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) && !rule.isMember(SSR_JSON_BODY_RULES_MAX_VALUE), nullptr);
         if (rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) &&
@@ -27,6 +30,43 @@ std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
             return nullptr;
         }
         return std::make_shared<SSRRuleRange>(rule[SSR_JSON_BODY_RULES_MIN_VALUE], rule[SSR_JSON_BODY_RULES_MAX_VALUE]);
+    }
+    default:
+        break;
+    }
+    return nullptr;
+}
+
+std::shared_ptr<SSRRule> SSRRule::create(const SSRRSRule &rule)
+{
+    switch (rule.type())
+    {
+    case SSRRuleType::Value::FIXED:
+    {
+        RETURN_VAL_IF_FALSE(rule.value_fixed().present(), nullptr);
+        auto value = StrUtils::str2json(rule.value_fixed().get());
+        return std::make_shared<SSRRuleFixed>(value);
+    }
+    case SSRRuleType::Value::RANGE:
+    {
+        RETURN_VAL_IF_FALSE(rule.value_range().present(), nullptr);
+        auto &value_range = rule.value_range().get();
+        auto min_value = StrUtils::str2json(value_range.min_value());
+        auto max_value = StrUtils::str2json(value_range.max_value());
+        return std::make_shared<SSRRuleRange>(min_value, max_value);
+    }
+    case SSRRuleType::Value::ENUM:
+    {
+        RETURN_VAL_IF_FALSE(rule.value_enum().present(), nullptr);
+        auto &value_enum = rule.value_enum().get();
+        std::vector<Json::Value> values;
+        for (const auto &enum_value : value_enum.values())
+        {
+            auto value = StrUtils::str2json(enum_value);
+            values.push_back(value);
+        }
+        return std::make_shared<SSRRuleEnum>(values);
+        break;
     }
     default:
         break;
@@ -108,6 +148,10 @@ bool SSRRuleRange::match(const Json::Value &value)
     }
 
     return true;
+}
+
+SSRRuleFixed::SSRRuleFixed(const Json::Value &value) : SSRRuleRange(value, value)
+{
 }
 
 SSRRuleEnum::SSRRuleEnum(const std::vector<Json::Value> &values) : enum_values_(values)

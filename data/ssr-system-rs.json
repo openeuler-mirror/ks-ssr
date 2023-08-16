@@ -78,8 +78,45 @@
                 },
                 "default_args": {
                     "pass_max_days": 65
+                }
+            },
+            {
+                "name": "network-firewalld-switch",
+                "rules": {
+                    "enabled": true,
+                    "active": true
                 },
-                "layout": {}
+                "default_args": {
+                    "enabled": true,
+                    "active": true
+                }
+            },
+            {
+                "name": "network-firewalld-icmp-timestamp",
+                "rules": {
+                    "disable_timestamp_request": true
+                },
+                "default_args": {
+                    "disable_timestamp_request": true
+                }
+            },
+            {
+                "name": "network-sysctl-redirect",
+                "rules": {
+                    "enabled": false
+                },
+                "default_args": {
+                    "enabled": false
+                }
+            },
+            {
+                "name": "network-sysctl-source-route",
+                "rules": {
+                    "enabled": false
+                },
+                "default_args": {
+                    "enabled": false
+                }
             }
         ]
     }
