@@ -22,7 +22,7 @@ namespace Network
 
 FirewalldSwitch::FirewalldSwitch()
 {
-    this->systemd_proxy_ = DBusSystemdProxy::get_default();
+    this->systemd_proxy_ = std::make_shared<DBusSystemdProxy>();
 }
 
 bool FirewalldSwitch::get(std::string &args, SSRErrorCode &error_code)
