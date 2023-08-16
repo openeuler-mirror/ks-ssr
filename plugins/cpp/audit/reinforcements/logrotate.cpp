@@ -1,23 +1,25 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/audit-logrotate.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/logrotate.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
-#include "plugins/cpp/audit/reinforcements/audit-logrotate.h"
+#include "plugins/cpp/audit/reinforcements/logrotate.h"
 
 namespace Kiran
+{
+namespace Audit
 {
 #define LOGROTATE_CONF_PATH "/etc/logrotate.conf"
 #define LOGROTATE_CONF_KEY_ROTATE "rotate"
 
-AuditLogrotateRotate::AuditLogrotateRotate()
+LogrotateRotate::LogrotateRotate()
 {
     this->logrotate_config_ = ConfigPlain::create(LOGROTATE_CONF_PATH);
 }
 
-bool AuditLogrotateRotate::get(std::string &args, SSRErrorCode &error_code)
+bool LogrotateRotate::get(std::string &args, SSRErrorCode &error_code)
 {
     if (!this->logrotate_config_)
     {
@@ -41,7 +43,7 @@ bool AuditLogrotateRotate::get(std::string &args, SSRErrorCode &error_code)
     }
 }
 
-bool AuditLogrotateRotate::set(const std::string &args, SSRErrorCode &error_code)
+bool LogrotateRotate::set(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->logrotate_config_)
     {
@@ -69,4 +71,5 @@ bool AuditLogrotateRotate::set(const std::string &args, SSRErrorCode &error_code
     return true;
 }
 
+}  // namespace Audit
 }  // namespace Kiran
