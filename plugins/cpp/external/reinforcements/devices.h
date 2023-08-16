@@ -16,7 +16,7 @@ namespace Kiran
 namespace External
 {
 
-class DeviceSwitch : public SSEReinforcementInterface
+class DeviceSwitch : public SSRReinforcementInterface
 {
 public:
     DeviceSwitch(){};

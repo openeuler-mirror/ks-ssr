@@ -1,8 +1,8 @@
 /**
- * @file          /kiran-sse-manager/lib/base/base.h
+ * @file          /kiran-sse-manager/lib/config/config-pam.h
  * @brief         
- * @author        tangjie02 <tangjie02@kylinos.com.cn>
- * @copyright (c) 2020 KylinSec. All rights reserved. 
+ * @author        pengyulong <pengyulong@kylinos.com.cn>
+ * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
 #pragma once
@@ -10,9 +10,10 @@
 #include "lib/base/base.h"
 
 /* 
-plain类型配置：
-    没有任何固定格式的配置文件，读取时只保留由空白字符分割为两列的非注释行，该行的两列组成键值(key-value)对。
-    写入时首先判断文件是否已经存在key，如果存在则直接替换value，否则新增一行。
+pam类型配置：
+    pam类型配置文件，以so为分割符号进行分割为两列，然后给左侧添加.so，保证完整性，行成整体的键值对(key-value)，
+    然后对value，以空格为分隔符进行解析，得到单个参数内容，将其中两个数据中间出现操作符的时候，将三者组合，最后得到key 对应 参数组合的情况。
+    写入时首先判断文件是否已经存在key，如果存在，在value组中查找参数，存在则直接替换，否则添加至末尾；否则暂不进行操作，pam文件中存在顺序问题。
 */
 namespace Kiran
 {
@@ -28,6 +29,9 @@ public:
     bool set_value(const std::string &key, const std::string &value);
     //参数为表达式的情况， 不等式、等式等。
     bool set_value(const std::string &key, const std::string &value, const std::string &opera, const int num);
+
+    // std::vector<std::shared_ptr<ConfigPAMLine>> get_lines(const std::string &so_name);
+    // std::shared_ptr<ConfigPAMLine> get_line(const std::string &so_name, int32_t type, bool required);
 
     bool delete_key(const std::string &key);
 
@@ -53,7 +57,7 @@ private:
 private:
     std::string conf_path_;
 
-    static std::map<std::string, std::shared_ptr<ConfigPAM>> plains_;
+    static std::map<std::string, std::shared_ptr<ConfigPAM>> pams_;
 
     // 键值对（key-value pairs）
     std::map<std::string, std::string> kvs_;
