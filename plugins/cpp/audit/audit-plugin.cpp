@@ -8,12 +8,14 @@
 #include "plugins/cpp/audit/audit-plugin.h"
 #include <json/json.h>
 #include "lib/base/base.h"
-#include "plugins/cpp/audit/audit-reinforcement-manager.h"
+#include "plugins/cpp/audit/reinforcement-manager.h"
+
+PLUGIN_EXPORT_FUNC_DEF(Kiran::Audit::SSRPluginAudit);
 
 namespace Kiran
 {
-PLUGIN_EXPORT_FUNC_DEF(SSRPluginAudit);
-
+namespace Audit
+{
 void SSRPluginAudit::activate()
 {
 }
@@ -38,7 +40,7 @@ std::string SSRPluginAudit::execute(const std::string& in_json)
 
 #define CHECK_NAME                                                                                                               \
     auto name = in_values[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_NAME].asString();                                           \
-    auto reinforcement = AuditReinforcementManager::get_instance()->get_reinforcement(name);                                     \
+    auto reinforcement = ReinforcementManager::get_instance()->get_reinforcement(name);                                          \
     if (!reinforcement)                                                                                                          \
     {                                                                                                                            \
         KLOG_DEBUG("The reinforcement %s isn't found.", name.c_str());                                                           \
@@ -87,4 +89,5 @@ std::string SSRPluginAudit::execute(const std::string& in_json)
     return StrUtils::json2str(out_values);
 }
 
+}  // namespace Audit
 }  // namespace Kiran

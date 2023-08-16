@@ -66,9 +66,9 @@ using DelPluginFun = void (*)(void *);
 #define PLUGIN_EXPORT_FUNC_DEF(plugin_name)               \
     extern "C" DLLEXPORT void *new_plugin()               \
     {                                                     \
-        return new Kiran::plugin_name();                  \
+        return new plugin_name();                         \
     }                                                     \
     extern "C" DLLEXPORT void delete_plugin(void *plugin) \
     {                                                     \
-        delete (Kiran::plugin_name *)plugin;              \
+        delete (plugin_name *)plugin;                     \
     }
