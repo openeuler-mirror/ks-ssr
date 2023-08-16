@@ -40,6 +40,9 @@ public:
     // 获取指定分类的加固项
     SSRReinforcementVec get_reinforcements_by_category(const std::string& category_name);
 
+    std::shared_ptr<SSRReinforcementInterface> get_reinfocement_interface(const std::string& plugin_name,
+                                                                          const std::string& reinforcement_name);
+
 private:
     // 初始化
     void init();

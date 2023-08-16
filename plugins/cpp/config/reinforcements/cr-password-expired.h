@@ -1,12 +1,12 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/reinforcements/cr-password-expired.h
+ * @file          /kiran-ssr-manager/plugins/cpp/config/reinforcements/cr-password-expired.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 #pragma once
 
-#include "reinforcement-i.h"
+#include "plugin-i.h"
 
 namespace Kiran
 {

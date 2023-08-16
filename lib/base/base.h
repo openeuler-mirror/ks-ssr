@@ -24,4 +24,5 @@
 #include "lib/base/stl-helper.h"
 #include "lib/base/str-utils.h"
 #include "lib/base/thread-pool.h"
+#include "plugin-i.h"
 #include "ssr-i.h"
