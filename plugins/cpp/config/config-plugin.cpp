@@ -58,18 +58,18 @@ std::string SSEPluginConfig::execute(const std::string& in_json)
             out_values["body"]["match"] = reinforcement->RAMatchRS(StrUtils::json2str(rules), StrUtils::json2str(args));
             break;
         }
-        case SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_SC_MATCH_RS_REQ:
+        case SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_GET_REQ:
         {
             CHECK_NAME;
-            out_values["head"]["id"] = int32_t(SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_SC_MATCH_RS_RSP);
+            out_values["head"]["id"] = int32_t(SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_GET_RSP);
             auto rules = in_values["head"]["body"]["rules"];
             out_values["body"]["match"] = reinforcement->SCMatchRS(StrUtils::json2str(rules));
             break;
         }
-        case SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_REINFORCE_REQ:
+        case SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_SET_REQ:
         {
             CHECK_NAME;
-            out_values["head"]["id"] = int32_t(SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_REINFORCE_RSP);
+            out_values["head"]["id"] = int32_t(SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_SET_RSP);
             auto args = in_values["head"]["body"]["args"];
             SSEErrorCode error_code = SSEErrorCode::SUCCESS;
             out_values["body"]["result"] = reinforcement->Reinforce(StrUtils::json2str(args), error_code);
