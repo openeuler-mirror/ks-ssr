@@ -1,10 +1,8 @@
-/*
- * @Author       : tangjie02
- * @Date         : 2020-05-29 18:16:08
- * @LastEditors  : tangjie02
- * @LastEditTime : 2020-09-02 14:28:16
- * @Description  : 
- * @FilePath     : /kiran-cc-daemon/lib/base/def.h
+/**
+ * @file          /kiran-ssr-manager/lib/base/def.h
+ * @brief         
+ * @author        tangjie02 <tangjie02@kylinos.com.cn>
+ * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
 #pragma once

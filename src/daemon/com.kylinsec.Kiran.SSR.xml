@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
-    <interface name="com.kylinsec.Kiran.SSE">
+    <interface name="com.kylinsec.Kiran.SSR">
 
         <method name="SetStandardType">
             <arg type="u" name="standard_type" direction="in">
@@ -21,14 +21,14 @@
             <arg type="s" name="categories" direction="out">
                 <summary>The categories is a json string.</summary>
             </arg>
-            <description>Get the categories information of SSE.</description>
+            <description>Get the categories information of SSR.</description>
         </method>
 
         <!--<method name="GetPlugins">
             <arg type="s" name="plugins" direction="out">
                 <summary>The plugins is a json string.</summary>
             </arg>
-            <description>Get the plugins information of SSE.</description>
+            <description>Get the plugins information of SSR.</description>
         </method>
 
         <method name="GetPluginReinforcements">
@@ -45,7 +45,7 @@
             <arg type="s" name="reinforcements" direction="out">
                 <summary>The reinforcements is a json string.</summary>
             </arg>
-            <description>Get the reinforcements information of SSE.</description>
+            <description>Get the reinforcements information of SSR.</description>
         </method>
 
         <method name="SetReinforcementArgs">
@@ -87,7 +87,7 @@
 
         <property name="version" type="s" access="read">
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
-            <description>The SSE version.</description>
+            <description>The SSR version.</description>
         </property>
 
         <property name="standard_type" type="u" access="read">

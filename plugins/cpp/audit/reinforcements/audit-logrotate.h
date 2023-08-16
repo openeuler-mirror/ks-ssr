@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/audit/reinforcements/audit-logrotate.h
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/audit-logrotate.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -13,14 +13,14 @@
 
 namespace Kiran
 {
-class AuditLogrotateRotate : public SSEReinforcementInterface
+class AuditLogrotateRotate : public SSRReinforcementInterface
 {
 public:
     AuditLogrotateRotate();
     virtual ~AuditLogrotateRotate(){};
 
-    virtual bool get(std::string &args, SSEErrorCode &error_code);
-    virtual bool set(const std::string &args, SSEErrorCode &error_code);
+    virtual bool get(std::string &args, SSRErrorCode &error_code);
+    virtual bool set(const std::string &args, SSRErrorCode &error_code);
 
 private:
     std::shared_ptr<ConfigPlain> logrotate_config_;

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/cr-manager.h
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/audit-reinforcement-manager.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -26,7 +26,7 @@ public:
 
     static void global_deinit() { delete instance_; };
 
-    std::shared_ptr<SSEReinforcementInterface> get_reinforcement(const std::string& name) { return MapHelper::get_value(this->reinforcements_, name); };
+    std::shared_ptr<SSRReinforcementInterface> get_reinforcement(const std::string& name) { return MapHelper::get_value(this->reinforcements_, name); };
 
 private:
     void init();
@@ -34,6 +34,6 @@ private:
 private:
     static AuditReinforcementManager* instance_;
 
-    std::map<std::string, std::shared_ptr<SSEReinforcementInterface>> reinforcements_;
+    std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements_;
 };
 }  // namespace Kiran

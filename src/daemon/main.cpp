@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/src/daemon/main.cpp
+ * @file          /kiran-ssr-manager/src/daemon/main.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,11 +7,11 @@
 
 #include <glib/gi18n.h>
 #include <gtk3-log-i.h>
-#include "src/daemon/sse-categories.h"
-#include "src/daemon/sse-configuration.h"
-#include "src/daemon/sse-manager.h"
-#include "src/daemon/sse-plugins.h"
-#include "sse-config.h"
+#include "src/daemon/ssr-categories.h"
+#include "src/daemon/ssr-configuration.h"
+#include "src/daemon/ssr-manager.h"
+#include "src/daemon/ssr-plugins.h"
+#include "ssr-config.h"
 
 int main(int argc, char* argv[])
 {
@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     klog_gtk3_init(std::string(), "kylinsec-system", PROJECT_NAME, program_name.c_str());
 
     setlocale(LC_ALL, "");
-    bindtextdomain(PROJECT_NAME, SSE_LOCALEDIR);
+    bindtextdomain(PROJECT_NAME, SSR_LOCALEDIR);
     bind_textdomain_codeset(PROJECT_NAME, "UTF-8");
     textdomain(PROJECT_NAME);
 
@@ -52,10 +52,10 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    Kiran::SSEConfiguration::global_init(SSE_INSTALL_DATADIR "/sse.ini");
-    Kiran::SSECategories::global_init();
-    Kiran::SSEPlugins::global_init(Kiran::SSEConfiguration::get_instance());
-    Kiran::SSEManager::global_init();
+    Kiran::SSRConfiguration::global_init(SSR_INSTALL_DATADIR "/ssr.ini");
+    Kiran::SSRCategories::global_init();
+    Kiran::SSRPlugins::global_init(Kiran::SSRConfiguration::get_instance());
+    Kiran::SSRManager::global_init();
 
     auto loop = Glib::MainLoop::create();
     loop->run();

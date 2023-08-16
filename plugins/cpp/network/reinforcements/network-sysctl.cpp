@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/network/reinforcements/network-sysctl.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/network-sysctl.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -67,10 +67,10 @@ NetworkSysctlRedirect::NetworkSysctlRedirect()
 {
 }
 
-bool NetworkSysctlRedirect::get(std::string &args, SSEErrorCode &error_code)
+bool NetworkSysctlRedirect::get(std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN);
-    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSEErrorCode::ERROR_FAILED);
+    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
 
     try
     {
@@ -90,27 +90,27 @@ bool NetworkSysctlRedirect::get(std::string &args, SSEErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
 }
 
-bool NetworkSysctlRedirect::set(const std::string &args, SSEErrorCode &error_code)
+bool NetworkSysctlRedirect::set(const std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_REDIRECTS_PATTERN);
-    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSEErrorCode::ERROR_FAILED);
+    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
 
     try
     {
         auto values = StrUtils::str2json(args);
-        RETURN_ERROR_IF_TRUE(!values[SYSCTL_JSON_KEY_ENABLED].isBool(), SSEErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_TRUE(!values[SYSCTL_JSON_KEY_ENABLED].isBool(), SSRErrorCode::ERROR_FAILED);
         auto enabled = values[SYSCTL_JSON_KEY_ENABLED].asBool();
 
         // 写入文件中
         for (const auto &var : redirect_vars)
         {
-            RETURN_ERROR_IF_FALSE(this->sysctl_config_->set_value(var.first, enabled ? "1" : "0"), SSEErrorCode::ERROR_FAILED);
+            RETURN_ERROR_IF_FALSE(this->sysctl_config_->set_value(var.first, enabled ? "1" : "0"), SSRErrorCode::ERROR_FAILED);
         }
 
         // 从文件中刷新
@@ -127,20 +127,20 @@ bool NetworkSysctlRedirect::set(const std::string &args, SSEErrorCode &error_cod
         if (exit_status)
         {
             KLOG_WARNING("Failed to exec command %s, exit status: %d.", StrUtils::join(argv, " ").c_str(), exit_status);
-            error_code = SSEErrorCode::ERROR_FAILED;
+            error_code = SSRErrorCode::ERROR_FAILED;
             return false;
         }
     }
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     catch (const Glib::Error &e)
     {
         KLOG_WARNING("%s", e.what().c_str());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
@@ -150,10 +150,10 @@ NetworkSysctlSourceRoute::NetworkSysctlSourceRoute()
 {
 }
 
-bool NetworkSysctlSourceRoute::get(std::string &args, SSEErrorCode &error_code)
+bool NetworkSysctlSourceRoute::get(std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN);
-    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSEErrorCode::ERROR_FAILED);
+    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
 
     try
     {
@@ -173,27 +173,27 @@ bool NetworkSysctlSourceRoute::get(std::string &args, SSEErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
 }
 
-bool NetworkSysctlSourceRoute::set(const std::string &args, SSEErrorCode &error_code)
+bool NetworkSysctlSourceRoute::set(const std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN);
-    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSEErrorCode::ERROR_FAILED);
+    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
 
     try
     {
         auto values = StrUtils::str2json(args);
-        RETURN_ERROR_IF_TRUE(!values[SYSCTL_JSON_KEY_ENABLED].isBool(), SSEErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_TRUE(!values[SYSCTL_JSON_KEY_ENABLED].isBool(), SSRErrorCode::ERROR_FAILED);
         auto enabled = values[SYSCTL_JSON_KEY_ENABLED].asBool();
 
         // 写入文件中
         for (const auto &var : redirect_vars)
         {
-            RETURN_ERROR_IF_FALSE(this->sysctl_config_->set_value(var.first, enabled ? "1" : "0"), SSEErrorCode::ERROR_FAILED);
+            RETURN_ERROR_IF_FALSE(this->sysctl_config_->set_value(var.first, enabled ? "1" : "0"), SSRErrorCode::ERROR_FAILED);
         }
 
         // 从文件中刷新
@@ -210,20 +210,20 @@ bool NetworkSysctlSourceRoute::set(const std::string &args, SSEErrorCode &error_
         if (exit_status)
         {
             KLOG_WARNING("Failed to exec command %s, exit status: %d.", StrUtils::join(argv, " ").c_str(), exit_status);
-            error_code = SSEErrorCode::ERROR_FAILED;
+            error_code = SSRErrorCode::ERROR_FAILED;
             return false;
         }
     }
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     catch (const Glib::Error &e)
     {
         KLOG_WARNING("%s", e.what().c_str());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
