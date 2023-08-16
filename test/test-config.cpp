@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/test/crypto/test-crypto.cpp
+ * @file          /kiran-ssr-manager/test/test-config.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -80,12 +80,12 @@ TEST(ConfigTest, KVConfig)
     auto test_filename = "/tmp/kv-config-test.conf";
     Glib::file_set_contents(test_filename, login_defs);
 
-    auto kv_config1 = ConfigPlain::create(test_filename);
+    auto kv_config1 = std::make_shared<ConfigPlain>(test_filename);
     kv_config1->set_value("PASS_MAX_DAYS", "8888");
     kv_config1->set_value("USERGROUPS_ENAB", "no");
     kv_config1->delete_key("SYS_GID_MAX");
 
-    auto kv_config2 = ConfigPlain::create(test_filename);
+    auto kv_config2 = std::make_shared<ConfigPlain>(test_filename);
 
     ASSERT_EQ(kv_config2->has_key("SYS_GID_MAX"), false);
 
