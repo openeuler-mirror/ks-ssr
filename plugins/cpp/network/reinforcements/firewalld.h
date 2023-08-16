@@ -9,12 +9,13 @@
 
 #include "lib/base/base.h"
 #include "lib/dbus/dbus-proxy-systemd.h"
+#include "reinforcement-i.h"
 
 namespace Kiran
 {
 namespace Network
 {
-class FirewalldSwitch
+class FirewalldSwitch : public SSRReinforcementInterface
 {
 public:
     FirewalldSwitch();
@@ -27,7 +28,7 @@ private:
     std::shared_ptr<DBusSystemdProxy> systemd_proxy_;
 };
 
-class FirewalldICMPTimestamp
+class FirewalldICMPTimestamp : public SSRReinforcementInterface
 {
 public:
     FirewalldICMPTimestamp();

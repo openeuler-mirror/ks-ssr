@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-10 14:53+0800\n"
+"POT-Creation-Date: 2021-08-18 16:14+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,71 +33,88 @@ msgstr "加固项'{0}'未找到"
 msgid "The job is running, please don't repeat the operation."
 msgstr "任务正在运行，请不要重复操作。"
 
-#: ../lib/base/error.cpp:59
+#: ../lib/base/error.cpp:61
 msgid "Internel error."
 msgstr "内部错误。"
 
-#: ../lib/base/error.cpp:62
+#: ../lib/base/error.cpp:64
 msgid "Unknown error."
 msgstr "未知错误。"
 
-#: ../lib/base/error.cpp:66
+#: ../lib/base/error.cpp:68
 msgid " (error code: 0x{:x})"
 msgstr "（错误码：0x{:x}）"
 
-#: ../src/tool/sse-cmd-parser.cpp:25
+#: ../src/tool/ssr-cmd-parser.cpp:25
 msgid "Output version infomation and exit."
 msgstr "输出版本信息并退出。"
 
-#: ../src/tool/sse-cmd-parser.cpp:31
+#: ../src/tool/ssr-cmd-parser.cpp:31
 msgid "Generate public and private keys for RSA."
 msgstr "生成RSA公钥和私钥。"
 
-#: ../src/tool/sse-cmd-parser.cpp:37
+#: ../src/tool/ssr-cmd-parser.cpp:37
 msgid "Decrypt a file."
 msgstr "解密文件。"
 
-#: ../src/tool/sse-cmd-parser.cpp:44
+#: ../src/tool/ssr-cmd-parser.cpp:44
 msgid "Encrypt a file."
 msgstr "加密文件。"
 
-#: ../src/tool/sse-cmd-parser.cpp:51
+#: ../src/tool/ssr-cmd-parser.cpp:51
 msgid "RSA public file path."
 msgstr "RSA公钥路径。"
 
-#: ../src/tool/sse-cmd-parser.cpp:54
+#: ../src/tool/ssr-cmd-parser.cpp:54
 msgid "RSA private file path."
 msgstr "RSA私钥路径。"
 
-#: ../src/tool/sse-cmd-parser.cpp:57
+#: ../src/tool/ssr-cmd-parser.cpp:57
 msgid "Output file path."
 msgstr "输出文件路径。"
 
 #. namespace Kiran
-#: ../data/sse-categories.ini.in.h:1
+#: ../data/ssr-categories.ini.in.h:1
 msgid "configuration manager"
 msgstr "配置管理"
 
-#: ../data/sse-categories.ini.in.h:2
+#: ../data/ssr-categories.ini.in.h:2
 msgid "network manager"
 msgstr "网络管理"
 
-#: ../data/sse-plugin-config.ini.in.h:1
-msgid "config settings"
-msgstr "配置设置"
+#: ../data/ssr-system-rs.xml.in.h:1
+msgid "Level I safety standard"
+msgstr "一级安全标准"
 
-#: ../data/sse-plugin-config.ini.in.h:2
-msgid ""
-"The user will be locked if the number of login failed exceeds the limit."
-msgstr "登陆失败次数超过限制则锁定用户"
+#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:1
+msgid "network settings"
+msgstr "网络设置"
 
-#: ../data/sse-plugin-config.ini.in.h:3
-msgid "User password complexity"
-msgstr "用户密码复杂度"
+#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:2
+msgid "Turn on system firewall service"
+msgstr "开启系统防火墙服务"
 
-#: ../data/sse-plugin-config.ini.in.h:4
-msgid "Password expired date for user"
-msgstr "用户密码过期时间"
+#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:3
+msgid "Disable ICMP timestamp query"
+msgstr "禁止ICMP时间戳请求"
+
+#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:4
+msgid "Disable ICMP redirection"
+msgstr "禁止ICMP重定向"
+
+#: ../plugins/cpp/network/ssr-plugin-network.xml.in.h:5
+msgid "Disable IP source routing"
+msgstr "禁止IP源路由"
+
+#~ msgid ""
+#~ "The user will be locked if the number of login failed exceeds the limit."
+#~ msgstr "登陆失败次数超过限制则锁定用户"
+
+#~ msgid "User password complexity"
+#~ msgstr "用户密码复杂度"
+
+#~ msgid "Password expired date for user"
+#~ msgstr "用户密码过期时间"
 
 #~ msgid "Account login failure limit"
 #~ msgstr "账户登陆失败限制"

@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:simpleType name="SSRRuleType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="NONE" />
+            <xsd:enumeration value="FIXED" />
+            <xsd:enumeration value="RANGE" />
+            <xsd:enumeration value="ENUM" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="SSRWidgetType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="DEFAULT" />
+            <xsd:enumeration value="SWITCH" />
+            <xsd:enumeration value="TEXT" />
+            <xsd:enumeration value="DATETIME" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:complexType name="SSRRSHead">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" default="" />
+            <xsd:element name="label" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="version" type="xsd:string" default="" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SSRRSRuleRange">
+        <xsd:sequence>
+            <xsd:element name="min_value" type="xsd:string" />
+            <xsd:element name="max_value" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SSRRSRuleEnum">
+        <xsd:sequence>
+            <xsd:element name="values" type="xsd:string" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SSRRSRule">
+        <xsd:sequence>
+            <xsd:element name="type" type="SSRRuleType" />
+            <xsd:element name="value_fixed" type="xsd:string" minOccurs="0" />
+            <xsd:element name="value_range" type="SSRRSRuleRange" minOccurs="0" />
+            <xsd:element name="value_enum" type="SSRRSRuleEnum" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SSRRSLayout">
+        <xsd:sequence>
+            <xsd:element name="widget_type" type="SSRWidgetType" default="DEFAULT" />
+            <xsd:element name="label" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SSRRSReinforcementArg">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="value" type="xsd:string" />
+            <xsd:element name="rule" type="SSRRSRule" minOccurs="0" />
+            <xsd:element name="layout" type="SSRRSLayout" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SSRRSReinforcement">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="arg" type="SSRRSReinforcementArg" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SSRRSBody">
+        <xsd:sequence>
+            <xsd:element name="reinforcement" type="SSRRSReinforcement" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SSRRS">
+        <xsd:sequence>
+            <xsd:element name="head" type="SSRRSHead" />
+            <xsd:element name="body" type="SSRRSBody" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SSRRA">
+        <xsd:sequence>
+            <xsd:element name="reinforcement" type="SSRRSReinforcement" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="ssr_rs" type="SSRRS" />
+    <xsd:element name="ssr_ra" type="SSRRA" />
+</xsd:schema>

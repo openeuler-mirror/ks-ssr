@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<ssr_rs>
+    <head>
+        <name>CUSTOM_CLASS_I_SAFETY_STANDARD</name>
+        <_label>Level I safety standard</_label>
+        <version>1.0.0</version>
+    </head>
+    <body>
+        <reinforcement>
+            <name>network-firewalld-switch</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on system firewall service</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>active</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>network-firewalld-icmp-timestamp</name>
+            <arg>
+                <name>disable_timestamp_request</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>network-sysctl-redirect</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>network-sysctl-source-route</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+            </arg>
+        </reinforcement>
+    </body>
+</ssr_rs>
