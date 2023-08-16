@@ -1,14 +1,17 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/cr-manager.cpp
+ * @file          /kiran-sse-manager/plugins/cpp/audit/audit-reinforcement-manager.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 #include "plugins/cpp/audit/audit-reinforcement-manager.h"
+#include "plugins/cpp/audit/reinforcements/audit-auditd.h"
+#include "plugins/cpp/audit/reinforcements/audit-logrotate.h"
 
 namespace Kiran
 {
-#define CR_LOGIN_LOCK_GROUP_NAME "config-login-lock"
+#define AUDIT_REINFORCEMENT_AUDITD_SWITCH "audit-auditd-switch"
+#define AUDIT_REINFORCEMENT_LOGROTATE_ROTATE "audit-logrotate-rotate"
 
 AuditReinforcementManager::AuditReinforcementManager()
 {
@@ -27,6 +30,7 @@ void AuditReinforcementManager::global_init()
 
 void AuditReinforcementManager::init()
 {
-    // this->reinforcements_.emplace(CR_LOGIN_LOCK_GROUP_NAME, std::make_shared<CRLoginLock>());
+    this->reinforcements_.emplace(AUDIT_REINFORCEMENT_AUDITD_SWITCH, std::make_shared<AuditAuditdSwitch>());
+    this->reinforcements_.emplace(AUDIT_REINFORCEMENT_LOGROTATE_ROTATE, std::make_shared<AuditLogrotateRotate>());
 }
 }  // namespace Kiran
