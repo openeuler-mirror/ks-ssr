@@ -1,19 +1,19 @@
 /**
- * @file          /kiran-sse-manager/src/daemon/sse-reinforcement.cpp
+ * @file          /kiran-ssr-manager/src/daemon/ssr-reinforcement.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
-#include "src/daemon/sse-reinforcement.h"
+#include "src/daemon/ssr-reinforcement.h"
 
 namespace Kiran
 {
-SSEReinforcement::SSEReinforcement(const SSEReinforcementInfo &base_info) : base_info_(base_info)
+SSRReinforcement::SSRReinforcement(const SSRReinforcementInfo &base_info) : base_info_(base_info)
 {
 }
 
-Json::Value SSEReinforcement::get_args()
+Json::Value SSRReinforcement::get_args()
 {
     if (!this->custom_args_.isNull())
     {
@@ -22,14 +22,14 @@ Json::Value SSEReinforcement::get_args()
     return this->default_args_;
 }
 
-void SSEReinforcement::set_rules(const Json::Value &rules)
+void SSRReinforcement::set_rules(const Json::Value &rules)
 {
     try
     {
         this->rules_.clear();
         for (auto member : rules.getMemberNames())
         {
-            auto rule = SSERule::create(rules[member]);
+            auto rule = SSRRule::create(rules[member]);
             if (rule)
             {
                 auto iter = this->rules_.emplace(member, rule);
@@ -50,7 +50,7 @@ void SSEReinforcement::set_rules(const Json::Value &rules)
     }
 }
 
-bool SSEReinforcement::match_rules(const Json::Value &values)
+bool SSRReinforcement::match_rules(const Json::Value &values)
 {
     try
     {

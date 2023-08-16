@@ -1,95 +1,95 @@
 /**
- * @file          /kiran-sse-manager/lib/core/sse-configuration.cpp
+ * @file          /kiran-ssr-manager/src/daemon/ssr-configuration.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/sse-configuration.h"
-#include "sse-config.h"
+#include "src/daemon/ssr-configuration.h"
+#include "ssr-config.h"
 
 namespace Kiran
 {
-#define SSE_GROUP_NAME "base"
-#define SSE_BASE_KEY_MAX_THREAD_NUM "max_thread_num"
-#define SSE_BASE_KEY_STANDARD_TYPE "standard_type"
+#define SSR_GROUP_NAME "base"
+#define SSR_BASE_KEY_MAX_THREAD_NUM "max_thread_num"
+#define SSR_BASE_KEY_STANDARD_TYPE "standard_type"
 
 #define MAX_THREAD_NUM_DEFAULT 1
-#define SYSTEM_RS_FILEPATH SSE_INSTALL_DATADIR "/sse-system-rs.json"
-#define CUSTOM_RS_FILEPATH SSE_INSTALL_DATADIR "/sse-custom-rs.json"
-#define CUSTOM_RA_FILEPATH SSE_INSTALL_DATADIR "/sse-custom-ra.json"
-#define RSA_PUBLIC_KEY_FILEPATH SSE_INSTALL_DATADIR "/sse-public.key"
+#define SYSTEM_RS_FILEPATH SSR_INSTALL_DATADIR "/ssr-system-rs.json"
+#define CUSTOM_RS_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-rs.json"
+#define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.json"
+#define RSA_PUBLIC_KEY_FILEPATH SSR_INSTALL_DATADIR "/ssr-public.key"
 
-SSEConfiguration::SSEConfiguration(const std::string& config_path) : config_path_(config_path)
+SSRConfiguration::SSRConfiguration(const std::string& config_path) : config_path_(config_path)
 {
 }
 
-SSEConfiguration::~SSEConfiguration()
+SSRConfiguration::~SSRConfiguration()
 {
 }
 
-SSEConfiguration* SSEConfiguration::instance_ = nullptr;
-void SSEConfiguration::global_init(const std::string& config_path)
+SSRConfiguration* SSRConfiguration::instance_ = nullptr;
+void SSRConfiguration::global_init(const std::string& config_path)
 {
-    instance_ = new SSEConfiguration(config_path);
+    instance_ = new SSRConfiguration(config_path);
     instance_->init();
 }
 
-uint32_t SSEConfiguration::get_max_thread_num()
+uint32_t SSRConfiguration::get_max_thread_num()
 {
-    return this->get_integer(SSE_GROUP_NAME, SSE_BASE_KEY_MAX_THREAD_NUM, MAX_THREAD_NUM_DEFAULT);
+    return this->get_integer(SSR_GROUP_NAME, SSR_BASE_KEY_MAX_THREAD_NUM, MAX_THREAD_NUM_DEFAULT);
 }
 
-SSEStandardType SSEConfiguration::get_standard_type()
+SSRStandardType SSRConfiguration::get_standard_type()
 {
-    auto retval = this->get_integer(SSE_GROUP_NAME,
-                                    SSE_BASE_KEY_STANDARD_TYPE,
-                                    SSEStandardType::SSE_STANDARD_TYPE_SYSTEM);
+    auto retval = this->get_integer(SSR_GROUP_NAME,
+                                    SSR_BASE_KEY_STANDARD_TYPE,
+                                    SSRStandardType::SSR_STANDARD_TYPE_SYSTEM);
 
-    if (retval >= SEE_STANDARD_TYPE_LAST || retval < 0)
+    if (retval >= SSR_STANDARD_TYPE_LAST || retval < 0)
     {
         KLOG_WARNING("The standard type is invalid. standard type: %d.", retval);
-        return SSEStandardType::SSE_STANDARD_TYPE_SYSTEM;
+        return SSRStandardType::SSR_STANDARD_TYPE_SYSTEM;
     }
 
-    return SSEStandardType(retval);
+    return SSRStandardType(retval);
 }
 
-bool SSEConfiguration::set_standard_type(SSEStandardType standard_type)
+bool SSRConfiguration::set_standard_type(SSRStandardType standard_type)
 {
-    RETURN_VAL_IF_FALSE(standard_type < SSEStandardType::SEE_STANDARD_TYPE_LAST, false);
+    RETURN_VAL_IF_FALSE(standard_type < SSRStandardType::SSR_STANDARD_TYPE_LAST, false);
 
     // 如果设置的加固标准类型不存在对应的文件，则返回错误
-    if ((standard_type == SSEStandardType::SSE_STANDARD_TYPE_SYSTEM && this->system_rs_.empty()) ||
-        (standard_type == SSEStandardType::SEE_STANDARD_TYPE_CUSTOM && this->custom_rs_.empty()))
+    if ((standard_type == SSRStandardType::SSR_STANDARD_TYPE_SYSTEM && this->system_rs_.empty()) ||
+        (standard_type == SSRStandardType::SSR_STANDARD_TYPE_CUSTOM && this->custom_rs_.empty()))
     {
-        // error_code = SSEErrorCode::ERROR_CORE_RS_NOT_FOUND;
+        // error_code = SSRErrorCode::ERROR_CORE_RS_NOT_FOUND;
         return false;
     }
 
-    return this->set_integer(SSE_GROUP_NAME, SSE_BASE_KEY_STANDARD_TYPE, int32_t(standard_type));
+    return this->set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_STANDARD_TYPE, int32_t(standard_type));
 }
 
-std::string SSEConfiguration::get_rs()
+std::string SSRConfiguration::get_rs()
 {
     switch (this->get_standard_type())
     {
-    case SSEStandardType::SSE_STANDARD_TYPE_SYSTEM:
+    case SSRStandardType::SSR_STANDARD_TYPE_SYSTEM:
         return this->system_rs_;
-    case SSEStandardType::SEE_STANDARD_TYPE_CUSTOM:
+    case SSRStandardType::SSR_STANDARD_TYPE_CUSTOM:
         return this->custom_rs_;
     default:
         return std::string();
     }
 }
 
-bool SSEConfiguration::set_custom_rs(const std::string& encrypted_rs, SSEErrorCode& error_code)
+bool SSRConfiguration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code)
 {
     // 判断自定义加固标准
     auto decrypted_rs = CryptoHelper::rsa_decrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_rs);
     if (decrypted_rs.empty())
     {
-        error_code = SSEErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED;
+        error_code = SSRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED;
         return false;
     }
 
@@ -107,7 +107,7 @@ bool SSEConfiguration::set_custom_rs(const std::string& encrypted_rs, SSEErrorCo
     return false;
 }
 
-bool SSEConfiguration::set_custom_ra(const std::string& ra)
+bool SSRConfiguration::set_custom_ra(const std::string& ra)
 {
     try
     {
@@ -122,7 +122,7 @@ bool SSEConfiguration::set_custom_ra(const std::string& ra)
     return false;
 }
 
-void SSEConfiguration::init()
+void SSRConfiguration::init()
 {
     KLOG_PROFILE("");
 
@@ -140,7 +140,7 @@ void SSEConfiguration::init()
     this->load_ra_files();
 }
 
-void SSEConfiguration::load_rs_files()
+void SSRConfiguration::load_rs_files()
 {
     KLOG_PROFILE("");
 
@@ -152,7 +152,7 @@ void SSEConfiguration::load_rs_files()
     // KLOG_DEBUG("custom rs: %s.", this->custom_rs_.c_str());
 }
 
-void SSEConfiguration::load_ra_files()
+void SSRConfiguration::load_ra_files()
 {
     KLOG_PROFILE("");
 
@@ -169,7 +169,7 @@ void SSEConfiguration::load_ra_files()
     }
 }
 
-std::string SSEConfiguration::decrypt_file(const std::string& filename)
+std::string SSRConfiguration::decrypt_file(const std::string& filename)
 {
     KLOG_PROFILE("filename: %s.", filename.c_str());
 
@@ -179,7 +179,7 @@ std::string SSEConfiguration::decrypt_file(const std::string& filename)
     try
     {
         auto encrypted_contents = Glib::file_get_contents(filename);
-        return CryptoHelper::sse_decrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_contents);
+        return CryptoHelper::ssr_decrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_contents);
     }
     catch (const Glib::Error& e)
     {
@@ -188,40 +188,40 @@ std::string SSEConfiguration::decrypt_file(const std::string& filename)
     return std::string();
 }
 
-int32_t SSEConfiguration::get_integer(const std::string& group_name, const std::string& key, int32_t default_value)
+int32_t SSRConfiguration::get_integer(const std::string& group_name, const std::string& key, int32_t default_value)
 {
     int32_t retval = default_value;
     IGNORE_EXCEPTION(retval = this->configuration_.get_integer(group_name, key));
     return retval;
 }
 
-std::string SSEConfiguration::get_string(const std::string& group_name, const std::string& key)
+std::string SSRConfiguration::get_string(const std::string& group_name, const std::string& key)
 {
     std::string retval;
     IGNORE_EXCEPTION(retval = this->configuration_.get_string(group_name, key));
     return retval;
 }
 
-std::string SSEConfiguration::get_datadir_filename(const std::string& group_name, const std::string& key)
+std::string SSRConfiguration::get_datadir_filename(const std::string& group_name, const std::string& key)
 {
     auto basename = this->get_string(group_name, key);
     RETURN_VAL_IF_TRUE(basename.empty(), std::string());
-    return Glib::build_filename(SSE_INSTALL_DATADIR, basename);
+    return Glib::build_filename(SSR_INSTALL_DATADIR, basename);
 }
 
-bool SSEConfiguration::set_integer(const std::string& group_name, const std::string& key, int32_t value)
+bool SSRConfiguration::set_integer(const std::string& group_name, const std::string& key, int32_t value)
 {
-    this->configuration_.set_integer(SSE_GROUP_NAME, SSE_BASE_KEY_STANDARD_TYPE, value);
+    this->configuration_.set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_STANDARD_TYPE, value);
     return this->save_to_file();
 }
 
-bool SSEConfiguration::set_string(const std::string& group_name, const std::string& key, const std::string& value)
+bool SSRConfiguration::set_string(const std::string& group_name, const std::string& key, const std::string& value)
 {
     this->configuration_.set_string(group_name, key, value);
     return this->save_to_file();
 }
 
-bool SSEConfiguration::save_to_file()
+bool SSRConfiguration::save_to_file()
 {
     try
     {

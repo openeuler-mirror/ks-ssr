@@ -1,34 +1,34 @@
 /**
- * @file          /kiran-sse-manager/src/daemon/sse-plugin.cpp
+ * @file          /kiran-ssr-manager/src/daemon/ssr-plugin.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/sse-plugin.h"
+#include "src/daemon/ssr-plugin.h"
 
 namespace Kiran
 {
-#define SSE_PLUGIN_GROUP_NAME "plugin entry"
-#define SSE_PLUGIN_KEY_NAME "name"
-#define SSE_PLUGIN_KEY_LABEL "label"
-#define SSE_PLUGIN_KEY_LANGUAGE_TYPE "language_type"
-#define SSE_PLUGIN_KEY_AVAILABLE "available"
+#define SSR_PLUGIN_GROUP_NAME "plugin entry"
+#define SSR_PLUGIN_KEY_NAME "name"
+#define SSR_PLUGIN_KEY_LABEL "label"
+#define SSR_PLUGIN_KEY_LANGUAGE_TYPE "language_type"
+#define SSR_PLUGIN_KEY_AVAILABLE "available"
 
-#define SSE_PLUGIN_KEY_REINFORCEMENT_ITEMS "items"
+#define SSR_PLUGIN_KEY_REINFORCEMENT_ITEMS "items"
 
-#define SSE_REINFORCEMENT_KEY_CATEGORY_NAME "category_name"
-#define SSE_REINFORCEMENT_KEY_LABEL "label"
+#define SSR_REINFORCEMENT_KEY_CATEGORY_NAME "category_name"
+#define SSR_REINFORCEMENT_KEY_LABEL "label"
 
-SSEPlugin::SSEPlugin(const std::string& conf_path) : conf_path_(conf_path)
+SSRPlugin::SSRPlugin(const std::string& conf_path) : conf_path_(conf_path)
 {
 }
 
-SSEPlugin::~SSEPlugin()
+SSRPlugin::~SSRPlugin()
 {
 }
 
-bool SSEPlugin::init()
+bool SSRPlugin::init()
 {
     KLOG_DEBUG("plugin config path: %s.", this->conf_path_.c_str());
 
@@ -39,30 +39,30 @@ bool SSEPlugin::init()
     {
         keyfile.load_from_file(this->conf_path_);
 
-        this->plugin_info_.name = keyfile.get_string(SSE_PLUGIN_GROUP_NAME, SSE_PLUGIN_KEY_NAME);
+        this->plugin_info_.name = keyfile.get_string(SSR_PLUGIN_GROUP_NAME, SSR_PLUGIN_KEY_NAME);
 
-        auto available = keyfile.get_boolean(SSE_PLUGIN_GROUP_NAME, SSE_PLUGIN_KEY_AVAILABLE);
+        auto available = keyfile.get_boolean(SSR_PLUGIN_GROUP_NAME, SSR_PLUGIN_KEY_AVAILABLE);
         if (!available)
         {
             KLOG_DEBUG("Plugin %s is unavailable.", this->plugin_info_.name.c_str());
             return false;
         }
 
-        auto language_type_str = keyfile.get_string(SSE_PLUGIN_GROUP_NAME, SSE_PLUGIN_KEY_LANGUAGE_TYPE);
+        auto language_type_str = keyfile.get_string(SSR_PLUGIN_GROUP_NAME, SSR_PLUGIN_KEY_LANGUAGE_TYPE);
         switch (shash(language_type_str.c_str()))
         {
         case "cpp"_hash:
-            this->plugin_info_.language_type = SSEPluginLanguageType::SSE_PLUGIN_LANGUAGE_TYPE_CPP;
+            this->plugin_info_.language_type = SSRPluginLanguageType::SSR_PLUGIN_LANGUAGE_TYPE_CPP;
             break;
         case "python"_hash:
-            this->plugin_info_.language_type = SSEPluginLanguageType::SSE_PLUGIN_LANGUAGE_TYPE_PYTHON;
+            this->plugin_info_.language_type = SSRPluginLanguageType::SSR_PLUGIN_LANGUAGE_TYPE_PYTHON;
             break;
         default:
             KLOG_WARNING("Unsupported language type: %s.", language_type_str.c_str());
             return false;
         }
 
-        this->plugin_info_.reinforcements_name = keyfile.get_string_list(SSE_PLUGIN_GROUP_NAME, SSE_PLUGIN_KEY_REINFORCEMENT_ITEMS);
+        this->plugin_info_.reinforcements_name = keyfile.get_string_list(SSR_PLUGIN_GROUP_NAME, SSR_PLUGIN_KEY_REINFORCEMENT_ITEMS);
         KLOG_DEBUG("the reinforcements of plugin: %s.", StrUtils::join(this->plugin_info_.reinforcements_name, ",").c_str());
     }
     catch (const Glib::Error& e)
@@ -83,37 +83,37 @@ bool SSEPlugin::init()
     return true;
 }
 
-bool SSEPlugin::load_plugin_module()
+bool SSRPlugin::load_plugin_module()
 {
     KLOG_PROFILE("");
 
     auto dirname = Glib::path_get_dirname(this->conf_path_);
     switch (this->plugin_info_.language_type)
     {
-    case SSEPluginLanguageType::SSE_PLUGIN_LANGUAGE_TYPE_CPP:
+    case SSRPluginLanguageType::SSR_PLUGIN_LANGUAGE_TYPE_CPP:
     {
         auto so_filename = Glib::build_filename(dirname, "cpp", "lib" + this->plugin_info_.name + ".so");
-        this->loader_ = std::make_shared<SSEPluginCPPLoader>(so_filename);
+        this->loader_ = std::make_shared<SSRPluginCPPLoader>(so_filename);
         return this->loader_->load();
     }
-    // case SSEPluginLanguageType::SSE_PLUGIN_LANGUAGE_TYPE_PYTHON:
+    // case SSRPluginLanguageType::SSR_PLUGIN_LANGUAGE_TYPE_PYTHON:
     default:
         KLOG_WARNING("Unsupported language type: %d.", this->plugin_info_.language_type);
         return false;
     }
 }
 
-bool SSEPlugin::load_reinforcement(const Glib::KeyFile& keyfile, const std::string& reinforcement_name)
+bool SSRPlugin::load_reinforcement(const Glib::KeyFile& keyfile, const std::string& reinforcement_name)
 {
     KLOG_PROFILE("reinforcement name: %s.", reinforcement_name.c_str());
 
     try
     {
-        auto reinforcement = std::make_shared<SSEReinforcement>(
-            SSEReinforcementInfo{.name = reinforcement_name,
+        auto reinforcement = std::make_shared<SSRReinforcement>(
+            SSRReinforcementInfo{.name = reinforcement_name,
                                  .plugin_name = this->plugin_info_.name,
-                                 .category_name = keyfile.get_string(reinforcement_name, SSE_REINFORCEMENT_KEY_CATEGORY_NAME),
-                                 .label = keyfile.get_locale_string(reinforcement_name, SSE_REINFORCEMENT_KEY_LABEL)});
+                                 .category_name = keyfile.get_string(reinforcement_name, SSR_REINFORCEMENT_KEY_CATEGORY_NAME),
+                                 .label = keyfile.get_locale_string(reinforcement_name, SSR_REINFORCEMENT_KEY_LABEL)});
 
         return this->add_reinforcement(reinforcement);
     }
@@ -125,7 +125,7 @@ bool SSEPlugin::load_reinforcement(const Glib::KeyFile& keyfile, const std::stri
     return false;
 }
 
-bool SSEPlugin::add_reinforcement(std::shared_ptr<SSEReinforcement> reinforcement)
+bool SSRPlugin::add_reinforcement(std::shared_ptr<SSRReinforcement> reinforcement)
 {
     RETURN_VAL_IF_FALSE(reinforcement, false);
 

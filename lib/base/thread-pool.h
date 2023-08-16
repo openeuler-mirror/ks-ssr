@@ -1,8 +1,8 @@
 /**
- * @file          /kiran-sse-manager/lib/base/thread-pool.h
+ * @file          /kiran-ssr-manager/lib/base/thread-pool.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
- * @copyright (c) 2020 KylinSec. All rights reserved. 
+ * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
 #pragma once
