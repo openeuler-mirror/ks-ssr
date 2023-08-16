@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/src/daemon/sse-rule.h
+ * @file          /kiran-ssr-manager/src/daemon/ssr-rule.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -12,24 +12,24 @@
 
 namespace Kiran
 {
-enum SSERuleType
+enum SSRRuleType
 {
-    SSE_RULE_TYPE_NONE = 0,
+    SSR_RULE_TYPE_NONE = 0,
     // 值是否在一个连续范围内
-    SSE_RULE_TYPE_RANGE,
+    SSR_RULE_TYPE_RANGE,
     // 值是否在枚举集合中
-    SSE_RULE_TYPE_ENUM,
+    SSR_RULE_TYPE_ENUM,
 };
 
-class SSERule
+class SSRRule
 {
 public:
     // 规则类型
-    virtual SSERuleType get_type() { return SSERuleType::SSE_RULE_TYPE_NONE; };
+    virtual SSRRuleType get_type() { return SSRRuleType::SSR_RULE_TYPE_NONE; };
     // 判断该值是否符合规则
     virtual bool match(const Json::Value &value) { return false; };
 
-    static std::shared_ptr<SSERule> create(const Json::Value &rule);
+    static std::shared_ptr<SSRRule> create(const Json::Value &rule);
 
 protected:
     enum JsonCmpResult
@@ -47,18 +47,18 @@ protected:
     JsonCmpResult json_value_cmp(const Json::Value &v1, const Json::Value &v2);
 };
 
-using SSERuleVec = std::vector<std::shared_ptr<SSERule>>;
+using SSRRuleVec = std::vector<std::shared_ptr<SSRRule>>;
 
-class SSERuleRange : public SSERule
+class SSRRuleRange : public SSRRule
 {
 public:
     // 如果min_value为空，则表示无限小，如果max_value为空，则表示无限大
-    SSERuleRange(const Json::Value &min_value,
+    SSRRuleRange(const Json::Value &min_value,
                  const Json::Value &max_value);
-    virtual ~SSERuleRange(){};
+    virtual ~SSRRuleRange(){};
 
     // 规则类型
-    virtual SSERuleType get_type() override { return SSERuleType::SSE_RULE_TYPE_RANGE; };
+    virtual SSRRuleType get_type() override { return SSRRuleType::SSR_RULE_TYPE_RANGE; };
     // 判断该值是否符合规则
     virtual bool match(const Json::Value &value) override;
 
@@ -68,14 +68,14 @@ private:
     Json::ValueType value_type_;
 };
 
-class SSERuleEnum : public SSERule
+class SSRRuleEnum : public SSRRule
 {
 public:
-    SSERuleEnum(const std::vector<Json::Value> &values);
-    virtual ~SSERuleEnum(){};
+    SSRRuleEnum(const std::vector<Json::Value> &values);
+    virtual ~SSRRuleEnum(){};
 
     // 规则类型
-    virtual SSERuleType get_type() override { return SSERuleType::SSE_RULE_TYPE_ENUM; };
+    virtual SSRRuleType get_type() override { return SSRRuleType::SSR_RULE_TYPE_ENUM; };
     // 判断该值是否符合规则
     virtual bool match(const Json::Value &value) override;
 

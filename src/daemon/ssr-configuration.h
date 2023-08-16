@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/core/sse-configuration.h
+ * @file          /kiran-ssr-manager/src/daemon/ssr-configuration.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -11,13 +11,13 @@
 
 namespace Kiran
 {
-class SSEConfiguration
+class SSRConfiguration
 {
 public:
-    SSEConfiguration(const std::string& config_path);
-    virtual ~SSEConfiguration();
+    SSRConfiguration(const std::string& config_path);
+    virtual ~SSRConfiguration();
 
-    static SSEConfiguration* get_instance() { return instance_; };
+    static SSRConfiguration* get_instance() { return instance_; };
 
     static void global_init(const std::string& config_path);
 
@@ -26,13 +26,13 @@ public:
     // 获取最大线程数
     uint32_t get_max_thread_num();
     // 获取标准类型
-    SSEStandardType get_standard_type();
+    SSRStandardType get_standard_type();
     // 设置标准类型
-    bool set_standard_type(SSEStandardType standard_type);
+    bool set_standard_type(SSRStandardType standard_type);
     // 获取加固标准
     std::string get_rs();
     // 设置自定义加固标准
-    bool set_custom_rs(const std::string& encrypted_rs, SSEErrorCode& error_code);
+    bool set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code);
     // 获取加固参数
     std::string get_custom_ra() { return this->custom_ra_; };
     // 设置加固参数
@@ -61,7 +61,7 @@ private:
     bool save_to_file();
 
 private:
-    static SSEConfiguration* instance_;
+    static SSRConfiguration* instance_;
 
     // 配置文件路径
     std::string config_path_;

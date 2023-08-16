@@ -1,32 +1,32 @@
 /**
- * @file          /kiran-sse-manager/src/daemon/sse-rule.cpp
+ * @file          /kiran-ssr-manager/src/daemon/ssr-rule.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
-#include "src/daemon/sse-rule.h"
+#include "src/daemon/ssr-rule.h"
 
 namespace Kiran
 {
-std::shared_ptr<SSERule> SSERule::create(const Json::Value &rule)
+std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
 {
-    RETURN_VAL_IF_TRUE(!rule[SSE_JSON_BODY_RULES_TYPE].isInt(), nullptr);
-    auto type = rule[SSE_JSON_BODY_RULES_TYPE].asInt();
+    RETURN_VAL_IF_TRUE(!rule[SSR_JSON_BODY_RULES_TYPE].isInt(), nullptr);
+    auto type = rule[SSR_JSON_BODY_RULES_TYPE].asInt();
 
     switch (type)
     {
-    case SSERuleType::SSE_RULE_TYPE_RANGE:
+    case SSRRuleType::SSR_RULE_TYPE_RANGE:
     {
-        RETURN_VAL_IF_TRUE(!rule.isMember(SSE_JSON_BODY_RULES_MIN_VALUE) && !rule.isMember(SSE_JSON_BODY_RULES_MAX_VALUE), nullptr);
-        if (rule.isMember(SSE_JSON_BODY_RULES_MIN_VALUE) &&
-            rule.isMember(SSE_JSON_BODY_RULES_MAX_VALUE) &&
-            rule[SSE_JSON_BODY_RULES_MIN_VALUE].type() != rule[SSE_JSON_BODY_RULES_MAX_VALUE].type())
+        RETURN_VAL_IF_TRUE(!rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) && !rule.isMember(SSR_JSON_BODY_RULES_MAX_VALUE), nullptr);
+        if (rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) &&
+            rule.isMember(SSR_JSON_BODY_RULES_MAX_VALUE) &&
+            rule[SSR_JSON_BODY_RULES_MIN_VALUE].type() != rule[SSR_JSON_BODY_RULES_MAX_VALUE].type())
         {
             KLOG_WARNING("The type of min_value and max_value is not equal.");
             return nullptr;
         }
-        return std::make_shared<SSERuleRange>(rule[SSE_JSON_BODY_RULES_MIN_VALUE], rule[SSE_JSON_BODY_RULES_MAX_VALUE]);
+        return std::make_shared<SSRRuleRange>(rule[SSR_JSON_BODY_RULES_MIN_VALUE], rule[SSR_JSON_BODY_RULES_MAX_VALUE]);
     }
     default:
         break;
@@ -34,7 +34,7 @@ std::shared_ptr<SSERule> SSERule::create(const Json::Value &rule)
     return nullptr;
 }
 
-SSERule::JsonCmpResult SSERule::json_value_cmp(const Json::Value &v1, const Json::Value &v2)
+SSRRule::JsonCmpResult SSRRule::json_value_cmp(const Json::Value &v1, const Json::Value &v2)
 {
     RETURN_VAL_IF_TRUE(v1.isNull() && v2.isNull(), JsonCmpResult::JSON_CMP_RESULT_EQUAL);
     RETURN_VAL_IF_TRUE(v1.isNull(), JsonCmpResult::JSON_CMP_RESULT_LESS);
@@ -76,7 +76,7 @@ SSERule::JsonCmpResult SSERule::json_value_cmp(const Json::Value &v1, const Json
     return JsonCmpResult::JSON_CMP_RESULT_UNKNOWN;
 }
 
-SSERuleRange::SSERuleRange(const Json::Value &min_value,
+SSRRuleRange::SSRRuleRange(const Json::Value &min_value,
                            const Json::Value &max_value) : min_value_(min_value),
                                                            max_value_(max_value),
                                                            value_type_(Json::ValueType::nullValue)
@@ -91,7 +91,7 @@ SSERuleRange::SSERuleRange(const Json::Value &min_value,
     }
 }
 
-bool SSERuleRange::match(const Json::Value &value)
+bool SSRRuleRange::match(const Json::Value &value)
 {
     RETURN_VAL_IF_TRUE(value.type() != this->value_type_, false);
 
@@ -110,11 +110,11 @@ bool SSERuleRange::match(const Json::Value &value)
     return true;
 }
 
-SSERuleEnum::SSERuleEnum(const std::vector<Json::Value> &values) : enum_values_(values)
+SSRRuleEnum::SSRRuleEnum(const std::vector<Json::Value> &values) : enum_values_(values)
 {
 }
 
-bool SSERuleEnum::match(const Json::Value &value)
+bool SSRRuleEnum::match(const Json::Value &value)
 {
     for (const auto &enum_value : this->enum_values_)
     {

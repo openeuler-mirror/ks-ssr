@@ -1,5 +1,0 @@
-[D-BUS Service]
-Name=com.kylinsec.Kiran.SSE
-User=root
-Exec=@SSE_INSTALL_BINDIR@/kiran-sse-daemon
-SystemService=kiran-sse-daemon.service

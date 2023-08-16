@@ -1,9 +1,10 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/network/network-reinforcement-manager.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/network/network-reinforcement-manager.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
+
 #include "plugins/cpp/network/network-reinforcement-manager.h"
 
 namespace Kiran

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/network/reinforcements/network-firewall.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/network/reinforcements/network-firewall.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -18,7 +18,7 @@ NetworkFirewallSwitch::NetworkFirewallSwitch()
     this->systemd_proxy_ = DBusSystemdProxy::get_default();
 }
 
-bool NetworkFirewallSwitch::get(std::string &args, SSEErrorCode &error_code)
+bool NetworkFirewallSwitch::get(std::string &args, SSRErrorCode &error_code)
 {
     Json::Value values;
 
@@ -37,13 +37,13 @@ bool NetworkFirewallSwitch::get(std::string &args, SSEErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s.", e.what());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
 }
 
-bool NetworkFirewallSwitch::set(const std::string &args, SSEErrorCode &error_code)
+bool NetworkFirewallSwitch::set(const std::string &args, SSRErrorCode &error_code)
 {
     try
     {
@@ -71,7 +71,7 @@ bool NetworkFirewallSwitch::set(const std::string &args, SSEErrorCode &error_cod
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s.", e.what());
-        error_code = SSEErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 }
