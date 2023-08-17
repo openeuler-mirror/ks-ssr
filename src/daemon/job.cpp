@@ -1,30 +1,32 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-job.cpp
+ * @file          /kiran-ssr-manager/src/daemon/job.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/ssr-job.h"
-#include "src/daemon/ssr-plugins.h"
+#include "src/daemon/job.h"
+#include "src/daemon/plugins.h"
 
 namespace Kiran
 {
-int64_t SSRJob::job_count_ = 0;
-
-std::shared_ptr<SSRJob> SSRJob::create()
+namespace Daemon
 {
-    std::shared_ptr<SSRJob> job(new SSRJob(++SSRJob::job_count_));
+int64_t Job::job_count_ = 0;
+
+std::shared_ptr<Job> Job::create()
+{
+    std::shared_ptr<Job> job(new Job(++Job::job_count_));
     return job;
 }
 
-SSRJob::SSRJob(int64_t job_id) : job_id_(job_id),
-                                 state_(SSRJobState::SSR_JOB_STATE_IDLE),
-                                 need_cancel_(false)
+Job::Job(int64_t job_id) : job_id_(job_id),
+                           state_(SSRJobState::SSR_JOB_STATE_IDLE),
+                           need_cancel_(false)
 {
 }
 
-SSRJob::~SSRJob()
+Job::~Job()
 {
     if (this->idle_handler_)
     {
@@ -32,11 +34,11 @@ SSRJob::~SSRJob()
     }
 }
 
-std::shared_ptr<SSROperation> SSRJob::add_operation(const std::string &plugin_name,
-                                                    const std::string &reinforcement_name,
-                                                    std::function<std::string(void)> func)
+std::shared_ptr<Operation> Job::add_operation(const std::string &plugin_name,
+                                              const std::string &reinforcement_name,
+                                              std::function<std::string(void)> func)
 {
-    auto operation = std::make_shared<SSROperation>();
+    auto operation = std::make_shared<Operation>();
 
     operation->job_id = this->job_id_;
     operation->operation_id = this->operations_.size() + 1;
@@ -54,7 +56,7 @@ std::shared_ptr<SSROperation> SSRJob::add_operation(const std::string &plugin_na
     return operation;
 }
 
-bool SSRJob::run_sync()
+bool Job::run_sync()
 {
     KLOG_DEBUG("job id: %d.", this->job_id_);
 
@@ -65,7 +67,7 @@ bool SSRJob::run_sync()
 
     for (auto iter : this->operations_)
     {
-        SSROperationResult result;
+        OperationResult result;
         auto operation = iter.second;
         result.operation_id = operation->operation_id;
         result.result = operation->func();
@@ -84,7 +86,7 @@ bool SSRJob::run_sync()
     return true;
 }
 
-bool SSRJob::run_async()
+bool Job::run_async()
 {
     KLOG_DEBUG("job id: %d.", this->job_id_);
 
@@ -95,20 +97,20 @@ bool SSRJob::run_async()
 
     // 空闲时监听任务完成的情况
     auto idle = Glib::MainContext::get_default()->signal_idle();
-    this->idle_handler_ = idle.connect(sigc::mem_fun(this, &SSRJob::idle_check_operation));
+    this->idle_handler_ = idle.connect(sigc::mem_fun(this, &Job::idle_check_operation));
 
-    auto &thread_pool = SSRPlugins::get_instance()->get_thread_pool();
+    auto &thread_pool = Plugins::get_instance()->get_thread_pool();
     {
         std::lock_guard<std::mutex> guard(this->operations_mutex_);
         for (auto iter : this->operations_)
         {
-            thread_pool.enqueue(std::bind(&SSRJob::run_operation, this, iter.second));
+            thread_pool.enqueue(std::bind(&Job::run_operation, this, iter.second));
         }
     }
     return true;
 }
 
-bool SSRJob::cancel()
+bool Job::cancel()
 {
     // 只有在运行中的任务才可以取消
     RETURN_VAL_IF_FALSE(this->state_ == SSRJobState::SSR_JOB_STATE_RUNNING, false);
@@ -116,7 +118,7 @@ bool SSRJob::cancel()
     return true;
 }
 
-void SSRJob::run_init()
+void Job::run_init()
 {
     this->job_result_.job_id = this->job_id_;
     this->job_result_.sum_operation_num = this->operations_.size();
@@ -126,11 +128,11 @@ void SSRJob::run_init()
     this->need_cancel_ = false;
 }
 
-void SSRJob::run_operation(std::shared_ptr<SSROperation> operation)
+void Job::run_operation(std::shared_ptr<Operation> operation)
 {
     RETURN_IF_FALSE(operation);
 
-    SSROperationResult result;
+    OperationResult result;
     result.operation_id = operation->operation_id;
 
     KLOG_DEBUG("running operation: %d, job id: %d.", operation->operation_id, operation->job_id);
@@ -161,9 +163,9 @@ void SSRJob::run_operation(std::shared_ptr<SSROperation> operation)
     }
 }
 
-bool SSRJob::idle_check_operation()
+bool Job::idle_check_operation()
 {
-    SSRJobResult tmp_result;
+    JobResult tmp_result;
     {
         std::lock_guard<std::mutex> guard(this->operations_mutex_);
         if (this->job_result_.queue_is_changed)
@@ -200,4 +202,5 @@ bool SSRJob::idle_check_operation()
     }
     return true;
 }
+}  // namespace Daemon
 }  // namespace Kiran

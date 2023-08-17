@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-plugins.cpp
+ * @file          /kiran-ssr-manager/src/daemon/plugins.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,36 +8,37 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "src/daemon/ssr-configuration.h"
-#include "src/daemon/ssr-plugins.h"
-
+#include "src/daemon/configuration.h"
+#include "src/daemon/plugins.h"
 
 namespace Kiran
 {
-SSRPlugins::SSRPlugins(SSRConfiguration* configuration) : configuration_(configuration),
-                                                          thread_pool_(this->configuration_->get_max_thread_num())
+namespace Daemon
+{
+Plugins::Plugins(Configuration* configuration) : configuration_(configuration),
+                                                 thread_pool_(this->configuration_->get_max_thread_num())
 {
 }
 
-SSRPlugins::~SSRPlugins()
+Plugins::~Plugins()
 {
 }
 
-SSRPlugins* SSRPlugins::instance_ = nullptr;
-void SSRPlugins::global_init(SSRConfiguration* configuration)
+Plugins* Plugins::instance_ = nullptr;
+void Plugins::global_init(Configuration* configuration)
 {
-    instance_ = new SSRPlugins(configuration);
+    instance_ = new Plugins(configuration);
     instance_->init();
 }
 
-std::shared_ptr<SSRPlugin> SSRPlugins::get_plugin_by_reinforcement(const std::string& name)
+std::shared_ptr<Plugin> Plugins::get_plugin_by_reinforcement(const std::string& name)
 {
     auto iter = this->reinforcements_plugins_.find(name);
     RETURN_VAL_IF_TRUE(iter == this->reinforcements_plugins_.end(), nullptr);
     return iter->second.lock();
 }
 
-SSRReinforcementVec SSRPlugins::get_reinforcements_by_category(const std::string& category_name)
+SSRReinforcementVec Plugins::get_reinforcements_by_category(const std::string& category_name)
 {
     SSRReinforcementVec result;
     for (auto iter : this->reinforcements_)
@@ -50,8 +51,8 @@ SSRReinforcementVec SSRPlugins::get_reinforcements_by_category(const std::string
     return result;
 }
 
-std::shared_ptr<SSRReinforcementInterface> SSRPlugins::get_reinfocement_interface(const std::string& plugin_name,
-                                                                                  const std::string& reinforcement_name)
+std::shared_ptr<SSRReinforcementInterface> Plugins::get_reinfocement_interface(const std::string& plugin_name,
+                                                                               const std::string& reinforcement_name)
 {
     auto plugin = this->get_plugin(plugin_name);
     if (!plugin)
@@ -78,7 +79,7 @@ std::shared_ptr<SSRReinforcementInterface> SSRPlugins::get_reinfocement_interfac
     return reinforcement_interface;
 }
 
-void SSRPlugins::init()
+void Plugins::init()
 {
     auto import_package_path = fmt::format("sys.path.append('{0}')", SSR_PLUGIN_PYTHON_ROOT_DIR);
 
@@ -89,17 +90,17 @@ void SSRPlugins::init()
     this->load_plugins();
     this->load_reinforcements();
 
-    this->configuration_->signal_rs_changed().connect(sigc::mem_fun(this, &SSRPlugins::on_rs_changed_cb));
+    this->configuration_->signal_rs_changed().connect(sigc::mem_fun(this, &Plugins::on_rs_changed_cb));
 }
 
-void SSRPlugins::load_plugins()
+void Plugins::load_plugins()
 {
     KLOG_PROFILE("");
     this->load_plugins_from_dir(SSR_PLUGIN_CPP_ROOT_DIR);
     this->load_plugins_from_dir(SSR_PLUGIN_PYTHON_ROOT_DIR);
 }
 
-void SSRPlugins::load_plugins_from_dir(const std::string& dirname)
+void Plugins::load_plugins_from_dir(const std::string& dirname)
 {
     try
     {
@@ -115,7 +116,7 @@ void SSRPlugins::load_plugins_from_dir(const std::string& dirname)
                 KLOG_DEBUG("Skip file %s.", filename.c_str());
                 continue;
             }
-            auto plugin = std::make_shared<SSRPlugin>(filename);
+            auto plugin = std::make_shared<Plugin>(filename);
 
             // 初始化->激活->添加插件
             if (plugin->init())
@@ -135,7 +136,7 @@ void SSRPlugins::load_plugins_from_dir(const std::string& dirname)
     }
 }
 
-bool SSRPlugins::add_plugin(std::shared_ptr<SSRPlugin> plugin)
+bool Plugins::add_plugin(std::shared_ptr<Plugin> plugin)
 {
     RETURN_VAL_IF_FALSE(plugin, false);
 
@@ -167,7 +168,7 @@ bool SSRPlugins::add_plugin(std::shared_ptr<SSRPlugin> plugin)
     return true;
 }
 
-void SSRPlugins::load_reinforcements()
+void Plugins::load_reinforcements()
 {
     KLOG_PROFILE("");
 
@@ -205,8 +206,8 @@ void SSRPlugins::load_reinforcements()
             }
             reinforcement_arg.label(reinforcement_noarg->label());
 
-            auto reinforcement = std::make_shared<SSRReinforcement>(plugin->get_id(),
-                                                                    reinforcement_arg);
+            auto reinforcement = std::make_shared<Reinforcement>(plugin->get_id(),
+                                                                 reinforcement_arg);
 
             this->reinforcements_.emplace(reinforcement_name, reinforcement);
         }
@@ -218,9 +219,9 @@ void SSRPlugins::load_reinforcements()
     }
 }
 
-void SSRPlugins::on_rs_changed_cb()
+void Plugins::on_rs_changed_cb()
 {
     this->load_reinforcements();
 }
-
+}  // namespace Daemon
 }  // namespace Kiran

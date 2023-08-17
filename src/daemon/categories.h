@@ -11,7 +11,9 @@
 
 namespace Kiran
 {
-struct SSRCategory
+namespace Daemon
+{
+struct Category
 {
     // 分类名
     std::string name;
@@ -25,25 +27,25 @@ struct SSRCategory
     int32_t priority;
 };
 
-using SSRCategoryVec = std::vector<std::shared_ptr<SSRCategory>>;
+using CategoryVec = std::vector<std::shared_ptr<Category>>;
 
-class SSRCategories
+class Categories
 {
 public:
-    SSRCategories();
-    virtual ~SSRCategories(){};
+    Categories();
+    virtual ~Categories(){};
 
-    static SSRCategories* get_instance() { return instance_; };
+    static Categories* get_instance() { return instance_; };
 
     static void global_init();
 
     static void global_deinit() { delete instance_; };
 
     // 获取分类，如果不存在则返回空指针
-    std::shared_ptr<SSRCategory> get_category(const std::string& name) { return MapHelper::get_value(this->categories_, name); };
+    std::shared_ptr<Category> get_category(const std::string& name) { return MapHelper::get_value(this->categories_, name); };
 
     // 获取所有分类
-    SSRCategoryVec get_categories() { return MapHelper::get_values(this->categories_); };
+    CategoryVec get_categories() { return MapHelper::get_values(this->categories_); };
 
 private:
     // 初始化
@@ -53,15 +55,16 @@ private:
     void load();
 
     // 添加分类
-    bool add_category(std::shared_ptr<SSRCategory> category);
+    bool add_category(std::shared_ptr<Category> category);
 
 private:
-    static SSRCategories* instance_;
+    static Categories* instance_;
 
     // 配置文件路径
     std::string conf_path_;
 
     // 所有分类信息：<分类名，分类>
-    std::map<std::string, std::shared_ptr<SSRCategory>> categories_;
+    std::map<std::string, std::shared_ptr<Category>> categories_;
 };
+}  // namespace Daemon
 }  // namespace Kiran
