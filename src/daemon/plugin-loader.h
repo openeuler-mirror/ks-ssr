@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-plugin-loader.h
+ * @file          /kiran-ssr-manager/src/daemon/plugin-loader.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,7 +10,9 @@
 
 namespace Kiran
 {
-class SSRPluginLoader
+namespace Daemon
+{
+class PluginLoader
 {
 public:
     // 加载插件，获取插件句柄
@@ -23,11 +25,11 @@ public:
     virtual std::shared_ptr<SSRPluginInterface> get_interface() = 0;
 };
 
-class SSRPluginCPPLoader : public SSRPluginLoader
+class PluginCPPLoader : public PluginLoader
 {
 public:
-    SSRPluginCPPLoader(const std::string &so_path);
-    virtual ~SSRPluginCPPLoader(){};
+    PluginCPPLoader(const std::string &so_path);
+    virtual ~PluginCPPLoader(){};
 
     virtual bool load() override;
     virtual bool activate() override;
@@ -47,11 +49,11 @@ private:
     std::shared_ptr<SSRPluginInterface> interface_;
 };
 
-class SSRPluginPythonLoader : public SSRPluginLoader
+class PluginPythonLoader : public PluginLoader
 {
 public:
-    SSRPluginPythonLoader(const std::string &package_name);
-    virtual ~SSRPluginPythonLoader(){};
+    PluginPythonLoader(const std::string &package_name);
+    virtual ~PluginPythonLoader(){};
 
 public:
     virtual bool load() override;
@@ -67,4 +69,5 @@ private:
     std::shared_ptr<SSRPluginInterface> interface_;
 };
 
+}  // namespace Daemon
 }  // namespace Kiran

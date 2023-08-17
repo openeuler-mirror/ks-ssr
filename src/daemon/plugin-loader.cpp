@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-plugin-loader.cpp
+ * @file          /kiran-ssr-manager/src/daemon/plugin-loader.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,22 +8,24 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "src/daemon/ssr-plugin-loader.h"
-#include "src/daemon/ssr-plugin-python.h"
+#include "src/daemon/plugin-loader.h"
+#include "src/daemon/plugin-python.h"
 
 namespace Kiran
 {
-SSRPluginCPPLoader::SSRPluginCPPLoader(const std::string &so_path) : so_path_(so_path),
-                                                                     is_activate_(false)
+namespace Daemon
+{
+PluginCPPLoader::PluginCPPLoader(const std::string &so_path) : so_path_(so_path),
+                                                               is_activate_(false)
 {
 }
 
-bool SSRPluginCPPLoader::load()
+bool PluginCPPLoader::load()
 {
     return this->load_module();
 }
 
-bool SSRPluginCPPLoader::activate()
+bool PluginCPPLoader::activate()
 {
     KLOG_DEBUG("is activate: %d, so path: %s.", this->is_activate_, this->so_path_.c_str());
 
@@ -33,7 +35,7 @@ bool SSRPluginCPPLoader::activate()
     return true;
 }
 
-bool SSRPluginCPPLoader::deactivate()
+bool PluginCPPLoader::deactivate()
 {
     KLOG_PROFILE("");
     // 未激活不能取消激活
@@ -42,7 +44,7 @@ bool SSRPluginCPPLoader::deactivate()
     return true;
 }
 
-bool SSRPluginCPPLoader::load_module()
+bool PluginCPPLoader::load_module()
 {
     KLOG_PROFILE("load module %s", this->so_path_.c_str());
 
@@ -79,12 +81,12 @@ bool SSRPluginCPPLoader::load_module()
     return true;
 }
 
-SSRPluginPythonLoader::SSRPluginPythonLoader(const std::string &package_name) : package_name_(package_name),
-                                                                                is_activate_(false)
+PluginPythonLoader::PluginPythonLoader(const std::string &package_name) : package_name_(package_name),
+                                                                          is_activate_(false)
 {
 }
 
-bool SSRPluginPythonLoader::load()
+bool PluginPythonLoader::load()
 {
     auto module = PyImport_ImportModule(this->package_name_.c_str());
     if (!module)
@@ -93,11 +95,11 @@ bool SSRPluginPythonLoader::load()
         return false;
     }
 
-    this->interface_ = std::make_shared<SSRPluginPython>(module);
+    this->interface_ = std::make_shared<PluginPython>(module);
     return true;
 }
 
-bool SSRPluginPythonLoader::activate()
+bool PluginPythonLoader::activate()
 {
     KLOG_DEBUG("is activate: %d", this->is_activate_);
     // 不能重复激活
@@ -106,7 +108,7 @@ bool SSRPluginPythonLoader::activate()
     return true;
 }
 
-bool SSRPluginPythonLoader::deactivate()
+bool PluginPythonLoader::deactivate()
 {
     KLOG_PROFILE("");
     // 未激活不能取消激活
@@ -114,5 +116,5 @@ bool SSRPluginPythonLoader::deactivate()
     this->interface_->deactivate();
     return true;
 }
-
+}  // namespace Daemon
 }  // namespace  Kiran
