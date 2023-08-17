@@ -157,6 +157,7 @@ void SSRPlugins::load_reinforcements()
 {
     KLOG_PROFILE("");
 
+    // TODO: 更新优化，现有的加固项调用更新函数
     this->reinforcements_.clear();
 
     auto rs = this->configuration_->get_rs();
