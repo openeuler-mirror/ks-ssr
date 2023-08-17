@@ -15,7 +15,7 @@ SSRReinforcement::SSRReinforcement(const std::string &plugin_name,
                                    const Protocol::Reinforcement &rs) : plugin_name_(plugin_name),
                                                                         config_(rs)
 {
-    this->update_rules();
+    this->reload();
 }
 
 std::string SSRReinforcement::get_category_name()
@@ -39,7 +39,7 @@ std::string SSRReinforcement::get_label()
 void SSRReinforcement::set_rs(const Protocol::Reinforcement &rs)
 {
     this->config_ = rs;
-    this->update_rules();
+    this->reload();
 }
 
 bool SSRReinforcement::match_rules(const Json::Value &values)
@@ -58,6 +58,17 @@ bool SSRReinforcement::match_rules(const Json::Value &values)
         return false;
     }
     return true;
+}
+
+void SSRReinforcement::reload()
+{
+    // 如果加固项未指定分类，则使用插件的分类名
+    if (!this->config_.category().present())
+    {
+        auto plugin = SSRPlugins::get_instance()->get_plugin(this->plugin_name_);
+        this->config_.category(plugin->get_category_name());
+    }
+    this->update_rules();
 }
 
 void SSRReinforcement::update_rules()
