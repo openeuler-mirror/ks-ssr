@@ -1,4 +1,4 @@
 
 
-add_subdirectory(audit)
-add_subdirectory(network)
+#add_subdirectory(audit)
+#add_subdirectory(network)

@@ -67,21 +67,6 @@
                 </layout>
             </arg>
         </reinforcement>
-         <reinforcement>
-            <name>network-test</name>
-            <arg>
-                <name>enabled</name>
-                <value>true</value>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Network test</_label>
-                </layout>
-            </arg>
-        </reinforcement>
         <!-- 审计类 -->
         <reinforcement>
             <name>audit-auditd-switch</name>
