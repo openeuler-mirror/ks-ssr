@@ -7,7 +7,6 @@
 
 #include "src/daemon/ssr-configuration.h"
 #include <fstream>
-#include "ssr-config.h"
 
 namespace Kiran
 {
