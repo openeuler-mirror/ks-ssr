@@ -8,17 +8,16 @@
 #include "plugins/cpp/config/config-plugin.h"
 #include <json/json.h>
 #include "lib/base/base.h"
-#include "plugins/cpp/config/reinforcements/password.h"
-#include "plugins/cpp/config/reinforcements/login-lock.h"
 #include "plugins/cpp/config/reinforcements/history.h"
+#include "plugins/cpp/config/reinforcements/login-lock.h"
+#include "plugins/cpp/config/reinforcements/password.h"
 
-PLUGIN_EXPORT_FUNC_DEF(Kiran::Config::SSRPluginConfig);
+PLUGIN_EXPORT_FUNC_DEF(Kiran::Protocol::SSRPluginConfig);
 
 namespace Kiran
 {
 namespace Config
 {
-
 #define CONFIG_REINFORCEMENT_LOGIN_LOCK "config-login-lock"
 #define CONFIG_REINFORCEMENT_PASSWORD_COMPLEX "config-password-complexity"
 #define CONFIG_REINFORCEMENT_PASSWORD_EXPIRED "config-password-expired"
