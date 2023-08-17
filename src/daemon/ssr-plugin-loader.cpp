@@ -1,11 +1,15 @@
 /**
- * @file          /kiran-ssr-manager/lib/core/ssr-plugin-loader.cpp
+ * @file          /kiran-ssr-manager/src/daemon/ssr-plugin-loader.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+
 #include "src/daemon/ssr-plugin-loader.h"
+#include "src/daemon/ssr-plugin-python.h"
 
 namespace Kiran
 {
@@ -32,7 +36,6 @@ bool SSRPluginCPPLoader::activate()
 bool SSRPluginCPPLoader::deactivate()
 {
     KLOG_PROFILE("");
-
     // 未激活不能取消激活
     RETURN_VAL_IF_TRUE(!this->is_activate_, true);
     this->interface_->deactivate();
@@ -73,6 +76,42 @@ bool SSRPluginCPPLoader::load_module()
         return false;
     }
 
+    return true;
+}
+
+SSRPluginPythonLoader::SSRPluginPythonLoader(const std::string &package_name) : package_name_(package_name),
+                                                                                is_activate_(false)
+{
+}
+
+bool SSRPluginPythonLoader::load()
+{
+    auto module = PyImport_ImportModule(this->package_name_.c_str());
+    if (!module)
+    {
+        KLOG_WARNING("Failed to load module: %s.", this->package_name_.c_str());
+        return false;
+    }
+
+    this->interface_ = std::make_shared<SSRPluginPython>(module);
+    return true;
+}
+
+bool SSRPluginPythonLoader::activate()
+{
+    KLOG_DEBUG("is activate: %d", this->is_activate_);
+    // 不能重复激活
+    RETURN_VAL_IF_TRUE(this->is_activate_, true);
+    this->interface_->activate();
+    return true;
+}
+
+bool SSRPluginPythonLoader::deactivate()
+{
+    KLOG_PROFILE("");
+    // 未激活不能取消激活
+    RETURN_VAL_IF_TRUE(!this->is_activate_, true);
+    this->interface_->deactivate();
     return true;
 }
 
