@@ -49,3 +49,34 @@ ADD_CUSTOM_COMMAND (OUTPUT ${${UPPER}_GENERATED_CPP_FILES}
                     COMMENT "Generate the stub for the ${LOWER}")
 
 endmacro()
+
+
+macro(GEN_PROTOCOL)
+    set(SSR_PROTOCOL_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ssr-protocol.hxx
+                            ${CMAKE_CURRENT_BINARY_DIR}/ssr-protocol.cxx)
+
+    add_custom_command(OUTPUT ${SSR_PROTOCOL_OUTPUT}
+                       COMMAND ${XSDCXX} cxx-tree --std c++11 
+                                                   --namespace-map =Kiran::Protocol
+                                                   --type-naming ucc
+                                                   --generate-serialization
+                                                   --root-element-all
+                                                   ${PROJECT_SOURCE_DIR}/data/ssr-protocol.xsd
+                       DEPENDS ${PROJECT_SOURCE_DIR}/data/ssr-protocol.xsd
+                       COMMENT "generate the c++ file by ssr-protocol.xsd")
+endmacro()
+
+
+macro(GEN_AND_INSTALL_PLUGIN_XML XML_IN_FILE)
+    string(REGEX REPLACE "(.+)\\..*" "\\1" XML_FILE ${XML_IN_FILE})
+    execute_process(COMMAND ${INTLTOOL-MERGE} -x ${PROJECT_SOURCE_DIR}/po/
+                                                 ${CMAKE_CURRENT_SOURCE_DIR}/${XML_IN_FILE}
+                                                 ${CMAKE_CURRENT_BINARY_DIR}/${XML_FILE})
+
+    execute_process(COMMAND ${SED} -i -e "s/xml:lang/lang/g" ${CMAKE_CURRENT_BINARY_DIR}/${XML_FILE})
+
+
+    install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${XML_FILE}
+             DESTINATION ${SSR_PLUGIN_ROOT_DIR}/)
+
+endmacro()
