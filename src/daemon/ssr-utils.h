@@ -11,6 +11,9 @@
 #include <glib/gi18n.h>
 #include <xsd/cxx/tree/containers.hxx>
 
+struct _object;
+typedef struct _object PyObject;
+
 namespace Kiran
 {
 class SSRUtils
@@ -41,6 +44,8 @@ public:
         }
         return std::string();
     }
+
+    static std::string PyUnicode_AsString(PyObject *unicode);
 };
 
 }  // namespace Kiran

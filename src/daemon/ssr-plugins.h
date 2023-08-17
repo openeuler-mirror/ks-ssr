@@ -30,7 +30,7 @@ public:
     // 获取所有插件信息
     SSRPluginVec get_plugins() { return MapHelper::get_values(this->plugins_); };
     // 获取插件信息，如果不存在则返回空指针
-    std::shared_ptr<SSRPlugin> get_plugin(const std::string& name) { return MapHelper::get_value(this->plugins_, name); };
+    std::shared_ptr<SSRPlugin> get_plugin(const std::string& id) { return MapHelper::get_value(this->plugins_, id); };
     // 通过加固项名称获取插件
     std::shared_ptr<SSRPlugin> get_plugin_by_reinforcement(const std::string& name);
 
@@ -48,6 +48,7 @@ private:
     void init();
     // 加载所有插件配置
     void load_plugins();
+    void load_plugins_from_dir(const std::string& dirname);
     // 添加插件
     bool add_plugin(std::shared_ptr<SSRPlugin> plugin);
     // 加载与加固标准相关的加固项
@@ -63,7 +64,7 @@ private:
     // 线程池
     ThreadPool thread_pool_;
 
-    // 所有插件信息：<插件名，插件>
+    // 所有插件信息：<插件ID，插件>
     std::map<std::string, std::shared_ptr<SSRPlugin>> plugins_;
     // 正在使用的加固项信息：<加固项名称，加固信息>
     std::map<std::string, std::shared_ptr<SSRReinforcement>> reinforcements_;
