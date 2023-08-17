@@ -158,14 +158,15 @@ void SSRPlugins::load_reinforcements()
     KLOG_PROFILE("");
 
     this->reinforcements_.clear();
+
     auto rs = this->configuration_->get_rs();
     RETURN_IF_FALSE(rs);
 
     try
     {
-        for (const auto& rs_reinforcement : rs->body().reinforcement())
+        for (auto reinforcement_arg : rs->body().reinforcement())
         {
-            auto reinforcement_name = rs_reinforcement.name();
+            auto reinforcement_name = reinforcement_arg.name();
             auto plugin = this->get_plugin_by_reinforcement(reinforcement_name);
 
             // 加固标准中的加固项如果没有插件支持，则加载失败
@@ -176,17 +177,23 @@ void SSRPlugins::load_reinforcements()
                 return;
             }
 
-            auto reinforcement_config = plugin->get_reinforcement_config(reinforcement_name);
-            if (!reinforcement_config)
+            auto reinforcement_noarg = plugin->get_reinforcement_config(reinforcement_name);
+            if (!reinforcement_noarg)
             {
                 KLOG_WARNING("The config of reinforcement %s is empty.", reinforcement_name.c_str());
                 this->reinforcements_.clear();
                 return;
             }
 
+            // 添加加固项的基本信息（分类和标签）
+            if (reinforcement_noarg->category().present())
+            {
+                reinforcement_arg.category(reinforcement_noarg->category().get());
+            }
+            reinforcement_arg.label(reinforcement_noarg->label());
+
             auto reinforcement = std::make_shared<SSRReinforcement>(plugin->get_name(),
-                                                                    *reinforcement_config,
-                                                                    rs_reinforcement);
+                                                                    reinforcement_arg);
 
             this->reinforcements_.emplace(reinforcement_name, reinforcement);
         }
