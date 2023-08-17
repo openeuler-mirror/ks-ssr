@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<plugin_config>
+<ssr_plugin>
     <name>network</name>
     <category>network</category>
     <_label>network settings</_label>
@@ -21,4 +21,4 @@
         <name>network-sysctl-source-route</name>
         <_label>Disable IP source routing</_label>
     </reinforcement>
-</plugin_config>
+</ssr_plugin>

@@ -24,6 +24,13 @@
             <description>Get the categories information of SSR.</description>
         </method>
 
+        <method name="GetRS">
+            <arg type="s" name="encrypted_rs" direction="out">
+                <summary>The reinforcement standard is a base64 encrypted xml.</summary>
+            </arg>
+            <description>Get the reinforcement standard .</description>
+        </method>
+
         <method name="GetReinforcements">
             <arg type="s" name="reinforcements" direction="out">
                 <summary>The reinforcements is a json string.</summary>
@@ -35,25 +42,22 @@
             <arg type="s" name="name" direction="in">
                 <summary>The reinforcement name.</summary>
             </arg>
-            <arg type="s" name="reinforcement" direction="out">
+            <arg type="s" name="encrypted_reinforcement" direction="out">
                 <summary>The reinforcement is a json string.</summary>
             </arg>
             <description>Get the reinforcement information.</description>
         </method>
 
-        <method name="SetReinforcementArgs">
-            <arg type="s" name="name" direction="in">
-                <summary>The reinforcement name.</summary>
+        <method name="SetReinforcement">
+            <arg type="s" name="reinforcement_xml" direction="in">
+                <summary>The reinforcement info.</summary>
             </arg>
-            <arg type="s" name="custom_args" direction="in">
-                <summary>The custom reinforcement arguments.</summary>
-            </arg>
-            <description>Set the custom reinforcement arguments.</description>
+            <description>Set the custom reinforcement.</description>
         </method>
 
         <method name="Scan">
-            <arg type="s" name="range" direction="in">
-                <summary>the scan range which is a json string.</summary>
+            <arg type="as" name="names" direction="in">
+                <summary>The scanned reinforcent names.</summary>
             </arg>
             <arg type="x" name="job_id" direction="out">
                 <summary>The job id.</summary>
@@ -62,8 +66,8 @@
         </method>
 
         <method name="Reinforce">
-            <arg type="s" name="reinforcements" direction="in">
-                <summary>The reinforcements is a json string.</summary>
+            <arg type="as" name="names" direction="in">
+                <summary>The reinforced reinforcent names..</summary>
             </arg>
             <arg type="x" name="job_id" direction="out">
                 <summary>The job id.</summary>
