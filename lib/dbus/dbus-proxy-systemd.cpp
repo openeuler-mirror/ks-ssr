@@ -54,10 +54,18 @@ bool DBusSystemdProxy::enable_unit_file(const std::string &unit_name, bool enabl
 {
     try
     {
-        auto method_name = enabled ? SDMM_ENABLE_UNIT_FILES : SDMM_DISABLE_UNIT_FILES;
-        auto parameters = Glib::Variant<std::tuple<std::vector<Glib::ustring>, bool, bool>>::create(
-            std::make_tuple(std::vector<Glib::ustring>{unit_name}, false, false));
-        return this->call_manager_method_noresult(method_name, parameters);
+        if (enabled)
+        {
+            auto parameters = Glib::Variant<std::tuple<std::vector<Glib::ustring>, bool, bool>>::create(
+                std::make_tuple(std::vector<Glib::ustring>{unit_name}, false, false));
+            return this->call_manager_method_noresult(SDMM_ENABLE_UNIT_FILES, parameters);
+        }
+        else
+        {
+            auto parameters = Glib::Variant<std::tuple<std::vector<Glib::ustring>, bool>>::create(
+                std::make_tuple(std::vector<Glib::ustring>{unit_name}, false));
+            return this->call_manager_method_noresult(SDMM_DISABLE_UNIT_FILES, parameters);
+        }
     }
     catch (const Glib::Error &e)
     {

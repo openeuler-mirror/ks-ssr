@@ -169,20 +169,18 @@ void SSRPlugins::load_reinforcements()
             auto reinforcement_name = reinforcement_arg.name();
             auto plugin = this->get_plugin_by_reinforcement(reinforcement_name);
 
-            // 加固标准中的加固项如果没有插件支持，则加载失败
+            // 加固标准中的加固项如果没有插件支持，则不添加
             if (!plugin)
             {
                 KLOG_WARNING("The reinforcement %s is unsupported by any plugin.", reinforcement_name.c_str());
-                this->reinforcements_.clear();
-                return;
+                continue;
             }
 
             auto reinforcement_noarg = plugin->get_reinforcement_config(reinforcement_name);
             if (!reinforcement_noarg)
             {
                 KLOG_WARNING("The config of reinforcement %s is empty.", reinforcement_name.c_str());
-                this->reinforcements_.clear();
-                return;
+                continue;
             }
 
             // 添加加固项的基本信息（分类和标签）

@@ -14,6 +14,8 @@ namespace Kiran
 {
 #define CONF_FILE_PERMISSION 0644
 
+std::map<std::string, std::shared_ptr<ConfigPlain>> ConfigPlain::plains_ = std::map<std::string, std::shared_ptr<ConfigPlain>>();
+
 ConfigPlain::ConfigPlain(const std::string &conf_path,
                          const std::string &delimiter_pattern,
                          const std::string &insert_delimiter) : conf_path_(conf_path),
@@ -22,7 +24,6 @@ ConfigPlain::ConfigPlain(const std::string &conf_path,
                                                                 is_writing_(false)
 {
     this->read_from_file();
-
     FileUtils::make_monitor_file(this->conf_path_, sigc::mem_fun(this, &ConfigPlain::on_config_file_changed));
 }
 
@@ -32,12 +33,14 @@ ConfigPlain::~ConfigPlain()
 
 bool ConfigPlain::has_key(const std::string &key)
 {
+    std::unique_lock<std::mutex> lck(this->mutex_);
     auto iter = this->kvs_.find(key);
     return (iter != this->kvs_.end());
 }
 
 std::string ConfigPlain::get_value(const std::string &key)
 {
+    std::unique_lock<std::mutex> lck(this->mutex_);
     auto iter = this->kvs_.find(key);
     RETURN_VAL_IF_TRUE(iter == this->kvs_.end(), std::string());
     return iter->second;
@@ -47,7 +50,7 @@ bool ConfigPlain::set_value(const std::string &key, const std::string &value)
 {
     KLOG_DEBUG("Key: %s, value: %s.", key.c_str(), value.c_str());
 
-    auto key_regex = Glib::Regex::create("^[A-Za-z_][A-Za-z0-9_]*$");
+    auto key_regex = Glib::Regex::create("^[A-Za-z_][A-Za-z0-9_.]*$");
     auto value_regex = Glib::Regex::create("^([[:blank:]]|[^[:cntrl:]])*$");
     if (!key_regex->match(key))
     {
@@ -60,7 +63,11 @@ bool ConfigPlain::set_value(const std::string &key, const std::string &value)
         KLOG_WARNING("The format of value '%s' is invalid.", value.c_str());
         return false;
     }
-    this->kvs_[key] = value;
+
+    {
+        std::unique_lock<std::mutex> lck(this->mutex_);
+        this->kvs_[key] = value;
+    }
     this->write_to_file_ready();
     return true;
 }
@@ -69,9 +76,12 @@ bool ConfigPlain::delete_key(const std::string &key)
 {
     KLOG_DEBUG("Key: %s.", key.c_str());
 
-    auto iter = this->kvs_.find(key);
-    RETURN_VAL_IF_TRUE(iter == this->kvs_.end(), false);
-    this->kvs_.erase(iter);
+    {
+        std::unique_lock<std::mutex> lck(this->mutex_);
+        auto iter = this->kvs_.find(key);
+        RETURN_VAL_IF_TRUE(iter == this->kvs_.end(), false);
+        this->kvs_.erase(iter);
+    }
     this->write_to_file_ready();
     return true;
 }
@@ -144,6 +154,26 @@ double ConfigPlain::get_double(const std::string &key)
     return value;
 }
 
+std::shared_ptr<ConfigPlain> ConfigPlain::create(const std::string &conf_path,
+                                                 const std::string &delimiter_pattern,
+                                                 const std::string &insert_delimiter)
+{
+    auto iter = ConfigPlain::plains_.find(conf_path);
+    if (iter != ConfigPlain::plains_.end())
+    {
+        return iter->second;
+    }
+
+    std::shared_ptr<ConfigPlain> pam(new ConfigPlain(conf_path, delimiter_pattern, insert_delimiter));
+    auto retval = ConfigPlain::plains_.emplace(conf_path, pam);
+    if (!retval.second)
+    {
+        KLOG_WARNING("Failed to insert config %s.", conf_path.c_str());
+        return nullptr;
+    }
+    return pam;
+}
+
 bool ConfigPlain::read_from_file()
 {
     std::string contents;
@@ -169,20 +199,23 @@ bool ConfigPlain::read_from_file()
     auto lines = StrUtils::split_lines(contents);
     auto split_field_regex = Glib::Regex::create(this->delimiter_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
-    this->kvs_.clear();
-    for (const auto &line : lines)
     {
-        auto trim_line = StrUtils::trim(line);
-        // 忽略空行和注释行
-        CONTINUE_IF_TRUE(trim_line.empty() || trim_line[0] == '#');
-        std::vector<std::string> fields = split_field_regex->split(trim_line);
-        // 只考虑两列的行
-        CONTINUE_IF_TRUE(fields.size() != 2);
-        auto iter = this->kvs_.emplace(fields[0], fields[1]);
-        KLOG_DEBUG("Read Line: key: %s, value: %s.", fields[0].c_str(), fields[1].c_str());
-        if (!iter.second)
+        std::unique_lock<std::mutex> lck(this->mutex_);
+        this->kvs_.clear();
+        for (const auto &line : lines)
         {
-            KLOG_WARNING("The key %s is repeat, value: %s", fields[0].c_str(), fields[1].c_str());
+            auto trim_line = StrUtils::trim(line);
+            // 忽略空行和注释行
+            CONTINUE_IF_TRUE(trim_line.empty() || trim_line[0] == '#');
+            std::vector<std::string> fields = split_field_regex->split(trim_line);
+            // 只考虑两列的行
+            CONTINUE_IF_TRUE(fields.size() != 2);
+            auto iter = this->kvs_.emplace(fields[0], fields[1]);
+            KLOG_DEBUG("Read Line: key: %s, value: %s.", fields[0].c_str(), fields[1].c_str());
+            if (!iter.second)
+            {
+                KLOG_WARNING("The key %s is repeat, value: %s", fields[0].c_str(), fields[1].c_str());
+            }
         }
     }
     return true;
@@ -190,19 +223,24 @@ bool ConfigPlain::read_from_file()
 
 void ConfigPlain::write_to_file_ready()
 {
+    // 空闲时在主线程中保存数据
+    std::unique_lock<std::mutex> lck(this->mutex_);
     if (!this->write_file_idle_id_)
     {
-        auto thread_context = Glib::wrap(g_main_context_get_thread_default());
-        this->write_file_idle_id_ = thread_context->signal_idle().connect(sigc::mem_fun(this, &ConfigPlain::on_write_to_file_idle_cb));
+        auto context = Glib::MainContext::get_default();
+        this->write_file_idle_id_ = context->signal_idle().connect(sigc::mem_fun(this, &ConfigPlain::on_write_to_file_idle_cb));
     }
 }
 
 bool ConfigPlain::write_to_file()
 {
     std::set<std::string> keys;
-    for (auto &iter : this->kvs_)
     {
-        keys.insert(iter.first);
+        std::unique_lock<std::mutex> lck(this->mutex_);
+        for (auto &iter : this->kvs_)
+        {
+            keys.insert(iter.first);
+        }
     }
 
     std::string contents;

@@ -61,9 +61,10 @@ private:
 
 #define RETURN_ERROR_IF_TRUE(cond, error_code_value) \
     {                                                \
-        if (!(cond))                                 \
+        if (cond)                                    \
         {                                            \
             error_code = error_code_value;           \
+            KLOG_DEBUG("The condition is false.");   \
             return false;                            \
         }                                            \
     }
