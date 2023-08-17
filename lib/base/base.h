@@ -9,6 +9,7 @@
 
 #include <fmt/format.h>
 #include <giomm.h>
+#include <glib/gi18n.h>
 
 #include <gtk3-log-i.h>
 #include <map>
@@ -24,4 +25,5 @@
 #include "lib/base/stl-helper.h"
 #include "lib/base/str-utils.h"
 #include "lib/base/thread-pool.h"
+#include "ssr-config.h"
 #include "ssr-i.h"
