@@ -9,7 +9,7 @@
 #include <Python.h>
 
 #include "src/daemon/plugin-loader.h"
-#include "src/daemon/plugin-python.h"
+#include "src/daemon/python/plugin-python.h"
 
 namespace Kiran
 {
@@ -89,6 +89,10 @@ PluginPythonLoader::PluginPythonLoader(const std::string &package_name) : packag
 bool PluginPythonLoader::load()
 {
     auto module = PyImport_ImportModule(this->package_name_.c_str());
+    SCOPE_EXIT({
+        Py_XDECREF(module);
+    });
+
     if (!module)
     {
         KLOG_WARNING("Failed to load module: %s.", this->package_name_.c_str());
