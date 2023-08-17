@@ -45,16 +45,18 @@ public:
     /**
      * @brief 获取系统配置
      * @param {string} args 系统配置参数
+     * @param {string} error 如果出错则返回错误字符串
      * @return {*} 如果系统配置符合加固标准，则返回true，否则返回false
      */
-    virtual bool get(std::string &args, SSRErrorCode &error_code) = 0;
+    virtual bool get(std::string &args, std::string &error) = 0;
 
     /**
      * @brief 设置系统配置
      * @param {string} args 系统配置参数
+     * @param {string} error 如果出错则返回错误字符串
      * @return {*} 返回加固结果
      */
-    virtual bool set(const std::string &args, SSRErrorCode &error_code) = 0;
+    virtual bool set(const std::string &args, std::string &error) = 0;
 };
 
 class DLLEXPORT SSRPluginInterface

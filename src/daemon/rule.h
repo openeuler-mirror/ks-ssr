@@ -23,7 +23,6 @@ public:
     // 判断该值是否符合规则
     virtual bool match(const Json::Value &value) { return false; };
 
-    static std::shared_ptr<Rule> create(const Json::Value &rule);
     static std::shared_ptr<Rule> create(const Protocol::Rule &rule);
 
 protected:
