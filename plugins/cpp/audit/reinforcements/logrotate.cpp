@@ -16,7 +16,7 @@ namespace Audit
 
 LogrotateRotate::LogrotateRotate()
 {
-    this->logrotate_config_ = std::make_shared<ConfigPlain>(LOGROTATE_CONF_PATH);
+    this->logrotate_config_ = ConfigPlain::create(LOGROTATE_CONF_PATH);
 }
 
 bool LogrotateRotate::get(std::string &args, SSRErrorCode &error_code)
