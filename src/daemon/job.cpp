@@ -107,7 +107,8 @@ bool Job::run_async()
         std::lock_guard<std::mutex> guard(this->operations_mutex_);
         for (auto iter : this->operations_)
         {
-            thread_pool.enqueue(std::bind(&Job::run_operation, this, iter.second));
+            thread_pool.enqueue_by_idx(std::hash<std::string>()(iter.second->reinforcement_name),
+                                       std::bind(&Job::run_operation, this, iter.second));
         }
     }
     return true;
