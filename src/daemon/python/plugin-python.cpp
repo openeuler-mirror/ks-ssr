@@ -56,7 +56,14 @@ bool ReinforcementPython::get(std::string &args, std::string &error)
 {
     KLOG_DEBUG("Call get method in class %s.", this->class_name_.c_str());
 
+#if PY_MAJOR_VERSION >= 3
     auto py_retval = PyObject_CallMethod(this->class_instance_, "get", NULL);
+#else
+    char method[] = "get";
+    char *format = NULL;
+    auto py_retval = PyObject_CallMethod(this->class_instance_, method, format);
+#endif
+
     SCOPE_EXIT({
         Py_XDECREF(py_retval);
     });
@@ -66,12 +73,12 @@ bool ReinforcementPython::get(std::string &args, std::string &error)
     auto successed = PyTuple_GetItem(py_retval, 0);
     if (successed == Py_True)
     {
-        args = Utils::PyUnicode_AsString(PyTuple_GetItem(py_retval, 1));
+        args = Utils::pyobject_as_string(PyTuple_GetItem(py_retval, 1));
         return true;
     }
     else
     {
-        error = Utils::PyUnicode_AsString(PyTuple_GetItem(py_retval, 1));
+        error = Utils::pyobject_as_string(PyTuple_GetItem(py_retval, 1));
         return false;
     }
 }
@@ -80,14 +87,19 @@ bool ReinforcementPython::set(const std::string &args, std::string &error)
 {
     KLOG_DEBUG("Call set method in class %s.", this->class_name_.c_str());
 
+#if PY_MAJOR_VERSION >= 3
     auto py_retval = PyObject_CallMethod(this->class_instance_, "set", "(s)", args.c_str());
-
+#else
+    char method[] = "set";
+    char format[] = "(s)";
+    auto py_retval = PyObject_CallMethod(this->class_instance_, method, format, args.c_str());
+#endif
     RETURN_VAL_IF_FALSE(this->check_call_result(py_retval, this->class_name_ + ".set", error), false);
 
     auto successed = PyTuple_GetItem(py_retval, 0);
     if (successed == Py_False)
     {
-        error = Utils::PyUnicode_AsString(PyTuple_GetItem(py_retval, 1));
+        error = Utils::pyobject_as_string(PyTuple_GetItem(py_retval, 1));
         return false;
     }
 
@@ -116,7 +128,7 @@ bool ReinforcementPython::check_call_result(PyObject *py_retval, const std::stri
     auto py_arg1 = PyTuple_GetItem(py_retval, 0);
     auto py_arg2 = PyTuple_GetItem(py_retval, 1);
 
-    if (!PyBool_Check(py_arg1) || !PyUnicode_Check(py_arg2))
+    if (!PyBool_Check(py_arg1) || (!PyUnicode_Check(py_arg2) && !PyString_Check(py_arg2)))
     {
         error = fmt::format(_("The type of tuple item returned by {0} is invalid."), function_name);
         return false;
@@ -174,8 +186,8 @@ void PluginPython::activate()
 
         while (PyDict_Next(py_reinforcement, &py_pos, &py_key, &py_value))
         {
-            auto key = Utils::PyUnicode_AsString(py_key);
-            auto value = Utils::PyUnicode_AsString(py_value);
+            auto key = Utils::pyobject_as_string(py_key);
+            auto value = Utils::pyobject_as_string(py_value);
 
             KLOG_DEBUG("key: %s, value: %s.", key.c_str(), value.c_str());
 
@@ -236,7 +248,7 @@ void PluginPython::add_reinforcement(const std::string &package_name,
         py_module = PyImport_ImportModule(module_fullname.c_str());
         if (!py_module)
         {
-            KLOG_WARNING("Failed to load module: %s.", module_fullname.c_str());
+            KLOG_WARNING("Failed to load module: %s, error: %s.", module_fullname.c_str(), Utils::catch_exception().c_str());
             return;
         }
         this->reinforcements_modules_.emplace(module_fullname, py_module);

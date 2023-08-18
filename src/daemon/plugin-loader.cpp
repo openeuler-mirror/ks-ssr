@@ -10,6 +10,7 @@
 
 #include "src/daemon/plugin-loader.h"
 #include "src/daemon/python/plugin-python.h"
+#include "src/daemon/utils.h"
 
 namespace Kiran
 {
@@ -95,7 +96,7 @@ bool PluginPythonLoader::load()
 
     if (!module)
     {
-        KLOG_WARNING("Failed to load module: %s.", this->package_name_.c_str());
+        KLOG_WARNING("Failed to load module: %s, error: %s.", this->package_name_.c_str(), Utils::catch_exception().c_str());
         return false;
     }
 
