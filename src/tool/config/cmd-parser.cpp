@@ -6,6 +6,7 @@
  */
 
 #include "src/tool/config/cmd-parser.h"
+#include "src/tool/config/pam.h"
 #include "src/tool/config/plain.h"
 
 namespace Kiran
@@ -26,8 +27,9 @@ void CmdParser::init()
     this->option_group_.add_entry(MiscUtils::create_option_entry("get", N_("Specify the key to get value"), "KEY"), this->options_.get_key);
     this->option_group_.add_entry(MiscUtils::create_option_entry("set", N_("Specify the key to set value"), "KEY"), this->options_.set_key);
     this->option_group_.add_entry(MiscUtils::create_option_entry("value", N_("Specify the set value")), this->options_.set_value);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("split-regex", N_("Specify regular expression to split columns")), this->options_.split_regex);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("join-string", N_("Specify string to join columns")), this->options_.join_string);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("line-match-pattern", N_("Specify regular expression to match the line. If many lines is matched, then the first matched line is used only")), this->options_.line_match_pattern);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("kv-split-pattern", N_("Specify regular expression to split key-value pairs")), this->options_.kv_split_pattern);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("kv-join-str", N_("Specify string to join key-value pairs")), this->options_.kv_join_str);
 
     this->option_group_.set_translation_domain(PROJECT_NAME);
     this->option_context_.set_translation_domain(PROJECT_NAME);
@@ -70,6 +72,8 @@ int CmdParser::run(int& argc, char**& argv)
     {
     case CONNECT(CONFIG_TYPE_PLAIN, _hash):
         return this->process_plain();
+    case CONNECT(CONFIG_TYPE_PAM, _hash):
+        return this->process_pam();
     default:
         fmt::print(stderr, _("Unknown file type"));
         return EXIT_FAILURE;
@@ -80,7 +84,7 @@ int CmdParser::run(int& argc, char**& argv)
 
 int CmdParser::process_plain()
 {
-    auto plain = Plain(this->options_.file_path, this->options_.split_regex, this->options_.join_string);
+    auto plain = Plain(this->options_.file_path, this->options_.kv_split_pattern, this->options_.kv_join_str);
     if (!this->options_.get_key.empty())
     {
         std::string value;
@@ -103,6 +107,36 @@ int CmdParser::process_plain()
         }
     }
 
+    return EXIT_SUCCESS;
+}
+
+int CmdParser::process_pam()
+{
+    auto pam = PAM(this->options_.file_path, this->options_.line_match_pattern);
+
+    if (!this->options_.get_key.empty())
+    {
+        std::string value;
+        if (!pam.get(this->options_.get_key, this->options_.kv_split_pattern, value))
+        {
+            fmt::print(stderr, _("Failed to get value for {0}"), this->options_.get_key);
+            return EXIT_FAILURE;
+        }
+        fmt::print("{0}", value);
+        return EXIT_SUCCESS;
+    }
+
+    if (!this->options_.set_key.empty())
+    {
+        if (!pam.set(this->options_.set_key,
+                     this->options_.kv_split_pattern,
+                     this->options_.set_value,
+                     this->options_.kv_join_str))
+        {
+            fmt::print(stderr, _("Failed to set value for {0}"), this->options_.set_key);
+            return EXIT_FAILURE;
+        }
+    }
     return EXIT_SUCCESS;
 }
 }  // namespace Config
