@@ -1,11 +1,11 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/daemon.cpp
+ * @file          /kiran-ssr-manager/src/daemon/dbus.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/daemon.h"
+#include "src/daemon/dbus.h"
 #include <json/json.h>
 #include <iostream>
 #include "lib/base/base.h"
@@ -22,12 +22,12 @@ namespace Daemon
 #define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
 
-Daemon::Daemon() : dbus_connect_id_(0),
+DBus::DBus() : dbus_connect_id_(0),
                    object_register_id_(0)
 {
 }
 
-Daemon::~Daemon()
+DBus::~DBus()
 {
     if (this->dbus_connect_id_)
     {
@@ -35,14 +35,14 @@ Daemon::~Daemon()
     }
 }
 
-Daemon* Daemon::instance_ = nullptr;
-void Daemon::global_init()
+DBus* DBus::instance_ = nullptr;
+void DBus::global_init()
 {
-    instance_ = new Daemon();
+    instance_ = new DBus();
     instance_->init();
 }
 
-void Daemon::SetStandardType(guint32 standard_type, MethodInvocation& invocation)
+void DBus::SetStandardType(guint32 standard_type, MethodInvocation& invocation)
 {
     KLOG_PROFILE("standard type: %d.", standard_type);
 
@@ -64,7 +64,7 @@ void Daemon::SetStandardType(guint32 standard_type, MethodInvocation& invocation
     invocation.ret();
 }
 
-void Daemon::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvocation& invocation)
+void DBus::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvocation& invocation)
 {
     KLOG_PROFILE("encoded standard: %s.", encoded_standard.c_str());
 
@@ -76,7 +76,7 @@ void Daemon::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvocat
     invocation.ret();
 }
 
-void Daemon::GetCategories(MethodInvocation& invocation)
+void DBus::GetCategories(MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -95,6 +95,7 @@ void Daemon::GetCategories(MethodInvocation& invocation)
 
             values["items"][i]["name"] = category->name;
             values["items"][i]["label"] = category->label;
+            values["items"][i]["description"] = category->description;
             values["items"][i]["icon_name"] = category->icon_name;
         }
 
@@ -108,7 +109,7 @@ void Daemon::GetCategories(MethodInvocation& invocation)
     }
 }
 
-void Daemon::GetRS(MethodInvocation& invocation)
+void DBus::GetRS(MethodInvocation& invocation)
 {
     std::ostringstream ostring_stream;
     auto rs = this->configuration_->get_rs();
@@ -130,7 +131,7 @@ void Daemon::GetRS(MethodInvocation& invocation)
     }
 }
 
-void Daemon::GetReinforcements(MethodInvocation& invocation)
+void DBus::GetReinforcements(MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -155,7 +156,7 @@ void Daemon::GetReinforcements(MethodInvocation& invocation)
     }
 }
 
-void Daemon::GetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
+void DBus::GetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -179,7 +180,7 @@ void Daemon::GetReinforcement(const Glib::ustring& name, MethodInvocation& invoc
     }
 }
 
-void Daemon::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvocation& invocation)
+void DBus::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -200,7 +201,7 @@ void Daemon::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvo
     invocation.ret();
 }
 
-void Daemon::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
+void DBus::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
@@ -257,7 +258,7 @@ void Daemon::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& inv
         DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID);
     }
 
-    this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &Daemon::on_scan_process_changed_cb));
+    this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &DBus::on_scan_process_changed_cb));
 
     if (!this->scan_job_->run_async())
     {
@@ -269,7 +270,7 @@ void Daemon::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& inv
     }
 }
 
-void Daemon::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
+void DBus::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
@@ -324,7 +325,7 @@ void Daemon::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation
         DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID);
     }
 
-    this->reinforce_job_->signal_process_changed().connect(sigc::mem_fun(this, &Daemon::on_reinfoce_process_changed_cb));
+    this->reinforce_job_->signal_process_changed().connect(sigc::mem_fun(this, &DBus::on_reinfoce_process_changed_cb));
 
     if (!this->reinforce_job_->run_async())
     {
@@ -336,7 +337,7 @@ void Daemon::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation
     }
 }
 
-void Daemon::Cancel(gint64 job_id, MethodInvocation& invocation)
+void DBus::Cancel(gint64 job_id, MethodInvocation& invocation)
 {
     KLOG_PROFILE("job id: %d.", job_id);
 
@@ -372,17 +373,17 @@ void Daemon::Cancel(gint64 job_id, MethodInvocation& invocation)
     invocation.ret();
 }
 
-bool Daemon::standard_type_setHandler(guint32 value)
+bool DBus::standard_type_setHandler(guint32 value)
 {
     return this->configuration_->set_standard_type(SSRStandardType(value));
 }
 
-guint32 Daemon::standard_type_get()
+guint32 DBus::standard_type_get()
 {
     return this->configuration_->get_standard_type();
 }
 
-void Daemon::init()
+void DBus::init()
 {
     this->configuration_ = Configuration::get_instance();
     this->categories_ = Categories::get_instance();
@@ -390,12 +391,12 @@ void Daemon::init()
 
     this->dbus_connect_id_ = Gio::DBus::own_name(Gio::DBus::BUS_TYPE_SYSTEM,
                                                  SSR_DBUS_NAME,
-                                                 sigc::mem_fun(this, &Daemon::on_bus_acquired),
-                                                 sigc::mem_fun(this, &Daemon::on_name_acquired),
-                                                 sigc::mem_fun(this, &Daemon::on_name_lost));
+                                                 sigc::mem_fun(this, &DBus::on_bus_acquired),
+                                                 sigc::mem_fun(this, &DBus::on_name_acquired),
+                                                 sigc::mem_fun(this, &DBus::on_name_lost));
 }
 
-void Daemon::on_scan_process_changed_cb(const JobResult& job_result)
+void DBus::on_scan_process_changed_cb(const JobResult& job_result)
 {
     KLOG_PROFILE("");
 
@@ -471,7 +472,7 @@ void Daemon::on_scan_process_changed_cb(const JobResult& job_result)
     }
 }
 
-void Daemon::on_reinfoce_process_changed_cb(const JobResult& job_result)
+void DBus::on_reinfoce_process_changed_cb(const JobResult& job_result)
 {
     KLOG_PROFILE("");
 
@@ -530,7 +531,7 @@ void Daemon::on_reinfoce_process_changed_cb(const JobResult& job_result)
     }
 }
 
-void Daemon::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
+void DBus::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
     KLOG_PROFILE("name: %s", name.c_str());
     if (!connect)
@@ -548,12 +549,12 @@ void Daemon::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect,
     }
 }
 
-void Daemon::on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
+void DBus::on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
     KLOG_DEBUG("Success to register dbus name: %s", name.c_str());
 }
 
-void Daemon::on_name_lost(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
+void DBus::on_name_lost(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
     KLOG_WARNING("Failed to register dbus name: %s", name.c_str());
 }
