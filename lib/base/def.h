@@ -19,6 +19,7 @@ namespace Kiran
 
 #define SSR_CONNECTION(text1, text2) text1##text2
 #define SSR_CONNECT(text1, text2) SSR_CONNECTION(text1, text2)
+#define CONF_FILE_PERMISSION 0644
 
 class SSRDefer
 {

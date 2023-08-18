@@ -20,8 +20,9 @@ struct CommandOptions
     Glib::ustring get_key;
     Glib::ustring set_key;
     Glib::ustring set_value;
-    Glib::ustring split_regex;
-    Glib::ustring join_string;
+    Glib::ustring line_match_pattern;
+    Glib::ustring kv_split_pattern;
+    Glib::ustring kv_join_str;
 };
 
 class CmdParser
@@ -37,6 +38,7 @@ public:
 
 private:
     int process_plain();
+    int process_pam();
 
 private:
     Glib::OptionContext option_context_;

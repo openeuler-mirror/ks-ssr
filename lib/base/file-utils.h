@@ -30,6 +30,10 @@ public:
                                                                  const FileMonitorCallBack &callback,
                                                                  Gio::FileMonitorFlags flags = Gio::FILE_MONITOR_NONE);
 
+    // 获取文件内容，该函数会添加文件锁
+    static bool read_contents_with_lock(const std::string &path, std::string &contents);
+    // 写入文件内容，该函数会添加文件锁
+    static bool write_contents_with_lock(const std::string &path, const std::string &contents);
     // Glib::file_set_contents调用了rename函数，这里使用write函数写入内容到文件避免产生文件删除事件
     static bool write_contents(const std::string &path, const std::string &contents);
 };
