@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<ssr_plugin>
+    <name>config</name>
+    <category>config</category>
+    <_label>config settings</_label>
+    <language_type>python</language_type>
+    <available>true</available>
+    <reinforcement>
+        <name>config-sendmail-switch</name>
+        <_label>Turn off sendmail service</_label>
+    </reinforcement>
+</ssr_plugin>

@@ -15,6 +15,8 @@ set(SSR_PLUGIN_CPP_ROOT_DIR ${SSR_INSTALL_LIBDIR}/${PROJECT_NAME}/plugins/cpp)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
+option(USE_PYTHON3 "Use Python3 as python intepreter" OFF)
+
 
 # Platform-specific compiler/linker flags.
 list(APPEND SSR_COMPILER_FLAGS
