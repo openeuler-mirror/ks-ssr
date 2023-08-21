@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/include/plugin-i.h
+ * @file          /kiran-ssr-manager/include/ssr-plugin-i.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <error-i.h>
+#include <ssr-error-i.h>
 #include <memory>
 #include <string>
 
