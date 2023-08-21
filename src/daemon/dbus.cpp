@@ -156,6 +156,14 @@ void DBus::GetReinforcements(MethodInvocation& invocation)
     }
 }
 
+void DBus::ResetReinforcements(MethodInvocation& invocation)
+{
+    KLOG_PROFILE("");
+
+    this->configuration_->del_all_custom_ra();
+    invocation.ret();
+}
+
 void DBus::GetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
@@ -198,6 +206,14 @@ void DBus::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvoca
         KLOG_WARNING("%s", e.what());
         DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED);
     }
+    invocation.ret();
+}
+
+void DBus::ResetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
+{
+    KLOG_PROFILE("");
+
+    this->configuration_->del_custom_ra(name);
     invocation.ret();
 }
 
