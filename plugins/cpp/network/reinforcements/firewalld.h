@@ -9,7 +9,7 @@
 
 #include "lib/base/base.h"
 #include "lib/dbus/dbus-proxy-systemd.h"
-#include "plugin-i.h"
+#include "ssr-plugin-i.h"
 
 namespace Kiran
 {
