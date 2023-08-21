@@ -23,7 +23,7 @@ namespace Daemon
 #define JOB_RETURN_VALUE "return_value"
 
 DBus::DBus() : dbus_connect_id_(0),
-                   object_register_id_(0)
+               object_register_id_(0)
 {
 }
 
@@ -315,6 +315,11 @@ void DBus::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& 
                                                     {
                                                         retval[JOB_ERROR_STR] = error;
                                                     }
+                                                    else
+                                                    {
+                                                        // 设置为空字符串，这里主要是为了区分加固成功和取消加固两种状态，后续可能会调整改逻辑
+                                                        retval[JOB_RETURN_VALUE] = std::string();
+                                                    }
                                                     return StrUtils::json2str(retval);
                                                 });
         }
@@ -434,6 +439,11 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
             {
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNSCAN;
             }
+            else if (result_values[JOB_ERROR_STR].isString())
+            {
+                state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCAN_ERROR;
+                reinforcement_result.error(result_values[JOB_ERROR_STR].asString());
+            }
             else
             {
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCAN_DONE;
@@ -441,7 +451,7 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
 
             auto reinforcement = this->plugins_->get_reinforcement(operation->reinforcement_name);
 
-            if (!result_values[JOB_ERROR_STR].isString() &&
+            if ((state & SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCAN_DONE) != 0 &&
                 reinforcement &&
                 reinforcement->match_rules(result_values[JOB_RETURN_VALUE]))
             {
@@ -452,10 +462,6 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
                 state = SSRReinforcementState(state | SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNSAFE);
             }
 
-            if (result_values[JOB_ERROR_STR].isString())
-            {
-                reinforcement_result.error(result_values[JOB_ERROR_STR].asString());
-            }
             reinforcement_result.state(int32_t(state));
             scan_result.reinforcement().push_back(std::move(reinforcement_result));
             ++item_count;
@@ -506,9 +512,13 @@ void DBus::on_reinfoce_process_changed_cb(const JobResult& job_result)
             SSRReinforcementState state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNKNOWN;
             Json::Value result_values = StrUtils::str2json(operation_result.result);
 
-            if (result_values[JOB_ERROR_STR].isString())
+            if (result_values.isNull())
             {
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNREINFORCE;
+            }
+            else if (result_values[JOB_ERROR_STR].isString())
+            {
+                state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_REINFORCE_ERROR;
                 reinforcement_result.error(result_values[JOB_ERROR_STR].asString());
             }
             else
