@@ -35,7 +35,13 @@ Table::~Table()
 
 bool Table::get(std::function<bool(std::vector<std::string>)> pred, std::string &value)
 {
-    std::vector<std::string> retval;
+    // 文件如果不存在则返回空字符串
+    if (!Glib::file_test(this->conf_path_, Glib::FILE_TEST_EXISTS))
+    {
+        value = std::string();
+        return true;
+    }
+
     std::string contents;
     RETURN_VAL_IF_FALSE(FileUtils::read_contents_with_lock(this->conf_path_, contents), false);
 

@@ -45,6 +45,16 @@ reinforcements = (
         'class': 'SuWheel'
     },
     {
+        'name': 'external-hosts-login-limit',
+        'module': 'hosts',
+        'class': 'RemoteLogin'
+    },
+    {
+        'name': 'external-profile-session-timeout',
+        'module': 'profile',
+        'class': 'SessionTimeout'
+    },
+    {
         'name': 'external-radio-switch',
         'module': 'nm',
         'class': 'Switch'
