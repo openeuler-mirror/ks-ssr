@@ -26,13 +26,14 @@ CmdParser::CmdParser() : option_context_(N_("FILE")),
 void CmdParser::init()
 {
     this->option_group_.add_entry(MiscUtils::create_option_entry("type", N_("The configuration file type"), CONFIG_TYPE_KV "|" CONFIG_TYPE_PAM "|" CONFIG_TYPE_TABLE), this->options_.type);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("get", N_("Specify the key or rule to get value"), "KEY"), this->options_.get_key);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("set", N_("Specify the key or rule to set value"), "KEY"), this->options_.set_key);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("del", N_("Specify the key or rule to delete record"), "KEY"), this->options_.del_key);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("value", N_("Specify the set value")), this->options_.set_value);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("method", N_("The Operation method"), "GETVAL|SETVAL|DELVAL|GETLINE|SETLINE|DELLINE"), this->options_.method);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("key", N_("Specify the key or rule to get value"), "KEY"), this->options_.key);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("value", N_("Specify the set value")), this->options_.value);
     this->option_group_.add_entry(MiscUtils::create_option_entry("line-match-pattern", N_("Specify regular expression to match the line. If many lines is matched, then the first matched line is used only")), this->options_.line_match_pattern);
     this->option_group_.add_entry(MiscUtils::create_option_entry("split-pattern", N_("Specify regular expression to split line")), this->options_.split_pattern);
     this->option_group_.add_entry(MiscUtils::create_option_entry("join-str", N_("Specify string for joining fields to line")), this->options_.join_str);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("comment", N_("Specify comment string")), this->options_.comment);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("new-line", N_("Add new line when the speficied line pattern is dismatch in PAM")), this->options_.new_line);
 
     this->option_group_.set_translation_domain(PROJECT_NAME);
     this->option_context_.set_translation_domain(PROJECT_NAME);
@@ -89,40 +90,36 @@ int CmdParser::run(int& argc, char**& argv)
 
 int CmdParser::process_kv()
 {
-    auto kv = KV(this->options_.file_path, this->options_.split_pattern, this->options_.join_str);
-    if (!this->options_.get_key.empty())
+    auto kv = KV(this->options_.file_path, this->options_.split_pattern, this->options_.join_str, this->options_.comment);
+    bool retval = false;
+
+    switch (shash(this->options_.method.c_str()))
+    {
+    case "GETVAL"_hash:
     {
         std::string value;
-        if (!kv.get(this->options_.get_key, value))
+        retval = kv.get(this->options_.key, value);
+        if (retval)
         {
-            fmt::print(stderr, _("Failed to get value for {0}"), this->options_.get_key);
-            return EXIT_FAILURE;
+            fmt::print("{0}", value);
         }
-
-        fmt::print("{0}", value);
-        return EXIT_SUCCESS;
+        break;
+    }
+    case "SETVAL"_hash:
+        retval = kv.set(this->options_.key, this->options_.value);
+        break;
+    case "DELVAL"_hash:
+        retval = kv.del(this->options_.key);
+        break;
+    default:
+        break;
     }
 
-    if (!this->options_.set_key.empty())
+    if (!retval)
     {
-        if (!kv.set(this->options_.set_key, this->options_.set_value))
-        {
-            fmt::print(stderr, _("Failed to set value for {0}"), this->options_.set_key);
-            return EXIT_FAILURE;
-        }
-        return EXIT_SUCCESS;
+        fmt::print(stderr, _("Exec method {0} failed"), this->options_.method);
+        return EXIT_FAILURE;
     }
-
-    if (!this->options_.del_key.empty())
-    {
-        if (!kv.del(this->options_.set_key))
-        {
-            fmt::print(stderr, _("Failed to delete value for {0}"), this->options_.del_key);
-            return EXIT_FAILURE;
-        }
-        return EXIT_SUCCESS;
-    }
-
     return EXIT_SUCCESS;
 }
 
@@ -130,29 +127,50 @@ int CmdParser::process_pam()
 {
     auto pam = PAM(this->options_.file_path, this->options_.line_match_pattern);
 
-    if (!this->options_.get_key.empty())
+    bool retval = false;
+
+    switch (shash(this->options_.method.c_str()))
+    {
+    case "GETVAL"_hash:
     {
         std::string value;
-        if (!pam.get(this->options_.get_key, this->options_.split_pattern, value))
+        retval = pam.get_value(this->options_.key, this->options_.split_pattern, value);
+        if (retval)
         {
-            fmt::print(stderr, _("Failed to get value for {0}"), this->options_.get_key);
-            return EXIT_FAILURE;
+            fmt::print("{0}", value);
         }
-        fmt::print("{0}", value);
-        return EXIT_SUCCESS;
+        break;
+    }
+    case "SETVAL"_hash:
+        retval = pam.set_value(this->options_.key, this->options_.split_pattern, this->options_.value, this->options_.join_str);
+        break;
+    case "DELVAL"_hash:
+        retval = pam.del_value(this->options_.key, this->options_.split_pattern);
+        break;
+    case "SETLINE"_hash:
+        retval = pam.add_line(this->options_.new_line);
+        break;
+    case "DELLINE"_hash:
+        retval = pam.del_line();
+        break;
+    case "GETLINE"_hash:
+    {
+        std::string line;
+        retval = pam.get_line(line);
+        if (retval)
+        {
+            fmt::print("{0}", line);
+        }
+        break;
+    }
+    default:
+        break;
     }
 
-    if (!this->options_.set_key.empty())
+    if (!retval)
     {
-        if (!pam.set(this->options_.set_key,
-                     this->options_.split_pattern,
-                     this->options_.set_value,
-                     this->options_.join_str))
-        {
-            fmt::print(stderr, _("Failed to set value for {0}"), this->options_.set_key);
-            return EXIT_FAILURE;
-        }
-        return EXIT_SUCCESS;
+        fmt::print(stderr, _("Exec method {0} failed"), this->options_.method);
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
@@ -161,7 +179,7 @@ int CmdParser::process_pam()
 int CmdParser::process_table()
 {
     auto table = Table(this->options_.file_path, this->options_.split_pattern, this->options_.join_str);
-    std::vector<std::pair<int32_t, std::string>> cols;
+    std::vector<std::pair<int32_t, std::string>> cols = this->str2cols(this->options_.key);
     std::function<bool(std::vector<std::string>)> pred = [&cols](std::vector<std::string> fields) -> bool {
         for (auto& col : cols)
         {
@@ -176,42 +194,34 @@ int CmdParser::process_table()
         return true;
     };
 
-    if (!this->options_.get_key.empty())
+    bool retval = false;
+
+    switch (shash(this->options_.method.c_str()))
     {
-        cols = this->str2cols(this->options_.get_key);
+    case "GETVAL"_hash:
+    {
         std::string value;
-        auto retval = table.get(pred, value);
-
-        if (!retval)
+        retval = table.get(pred, value);
+        if (retval)
         {
-            fmt::print(stderr, _("Failed to get value for {0}"), this->options_.get_key);
-            return EXIT_FAILURE;
+            fmt::print("{0}", value);
         }
-
-        fmt::print("{0}", value);
-        return EXIT_SUCCESS;
+        break;
+    }
+    case "SETVAL"_hash:
+        retval = table.set(this->options_.value, pred);
+        break;
+    case "DELVAL"_hash:
+        retval = table.del(pred);
+        break;
+    default:
+        break;
     }
 
-    if (!this->options_.set_key.empty())
+    if (!retval)
     {
-        cols = this->str2cols(this->options_.set_key);
-        if (!table.set(this->options_.set_value, pred))
-        {
-            fmt::print(stderr, _("Failed to set value for {0}"), this->options_.set_key);
-            return EXIT_FAILURE;
-        }
-        return EXIT_SUCCESS;
-    }
-
-    if (!this->options_.del_key.empty())
-    {
-        cols = this->str2cols(this->options_.del_key);
-        if (!table.del(pred))
-        {
-            fmt::print(stderr, _("Failed to delete record for rule {0}"), this->options_.del_key);
-            return EXIT_FAILURE;
-        }
-        return EXIT_SUCCESS;
+        fmt::print(stderr, _("Exec method {0} failed"), this->options_.method);
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
