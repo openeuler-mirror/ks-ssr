@@ -311,6 +311,42 @@
             </arg>
         </reinforcement>
         <reinforcement>
+            <name>external-hosts-login-limit</name>
+            <arg>
+                <name>allow-hosts</name>
+                <value>""</value>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>List of IP addresses that allow remote access (comma separated)</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>deny-hosts</name>
+                <value>""</value>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>List of IP addresses for which remote access is prohibited (comma separated)</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-profile-tmout</name>
+            <arg>
+                <name>tmout</name>
+                <value>300</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>300</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>If no operation is performed for more than the following time (seconds), the session exits</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
             <name>external-radio-switch</name>
             <arg>
                 <name>enabled</name>
