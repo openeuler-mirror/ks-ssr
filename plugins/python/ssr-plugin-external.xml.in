@@ -31,6 +31,26 @@
         <_description>Avoid null password user in the system</_description>
     </reinforcement>
     <reinforcement>
+        <name>external-sshd-root-login</name>
+        <_label>Remote login restrictions for root user</_label>
+        <_description>Restrict remote login of root user through SSH connection</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>external-sshd-pubkey-auth</name>
+        <_label>SSH password free login</_label>
+        <_description>Password free login by storing public key</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>external-sshd-weak-encryption</name>
+        <_label>SSH weak encryption algorithm</_label>
+        <_description>Enhance the security of SSH data transmission and prevent data from being cracked</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>external-pam-su-wheel</name>
+        <_label>su command limit</_label>
+        <_description>Users outside the wheel group are prohibited from using the 'su root' command</_description>
+    </reinforcement>
+    <reinforcement>
         <name>external-radio-switch</name>
         <_label>Disable radio network</_label>
     </reinforcement>
