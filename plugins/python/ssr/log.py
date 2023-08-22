@@ -1,4 +1,27 @@
-import klog
+try:
+    import klog
+except:
+
+    class klog:
+        @staticmethod
+        def debug(msg):
+            print("[DEBUG] " + str(msg))
+
+        @staticmethod
+        def info(msg):
+            print("[INFO] " + str(msg))
+
+        @staticmethod
+        def warning(msg):
+            print("[WARN] " + str(msg))
+
+        @staticmethod
+        def error(msg):
+            print("[ERROR] " + str(msg))
+
+        @staticmethod
+        def fatal(msg):
+            print("[FATAL] " + str(msg))
 
 
 def debug(*args):

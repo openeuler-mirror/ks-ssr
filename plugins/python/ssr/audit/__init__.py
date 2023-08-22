@@ -9,4 +9,9 @@ reinforcements = (
         'module': 'logrotate',
         'class': 'Rotate'
     },
+    {
+        'name': 'audit-logfile-permissions',
+        'module': 'logfile',
+        'class': 'Permissions'
+    },
 )
