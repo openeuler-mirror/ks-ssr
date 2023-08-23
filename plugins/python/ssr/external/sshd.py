@@ -11,6 +11,7 @@ SSHD_CONF_PATH = "/etc/ssh/sshd_config"
 ROOT_LOGIN_ARG_ENABLED = "enabled"
 PUBKEY_AUTH_ARG_ENABLED = "enabled"
 WEAK_ENCRYPT_ARG_ENABLED = "enabled"
+BANNER_INFO_ARG_ENABLED = "enabled"
 
 DEFAULT_CIPHERS = ("aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-cbc", "3des-cbc")
 WEAK_CIPHERS = ("arcfour", "arcfour128", "arcfour256")
@@ -79,4 +80,17 @@ class WeakEncryption(SSHD):
                 self.conf.set_value("Ciphers", ','.join(ciphers))
             # 重启服务生效
             self.service.restart()
+        return (True, '')
+
+class BannerInfo(SSHD):
+    def get(self):
+        retdata = dict()
+        retdata[BANNER_INFO_ARG_ENABLED] = (self.conf.get_value("Banner") == "/etc/issue.net")
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+        self.conf.set_value("Banner", "/etc/issue.net" if args[ROOT_LOGIN_ARG_ENABLED] else "none")
+        # 重启服务生效
+        self.service.restart()
         return (True, '')
