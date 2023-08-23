@@ -305,16 +305,16 @@ msgid "Log files can only be appended"
 msgstr "日志文件仅能被添加"
 
 #: ../data/ssr-system-rs.xml.in.h:35
-msgid "Allow to use CD-ROM device"
-msgstr "允许使用光驱设备"
+msgid "Allow to use CD-ROM device (Effective after restart)"
+msgstr "允许使用光驱设备（重启后生效）"
 
 #: ../data/ssr-system-rs.xml.in.h:36
-msgid "Allow to use USB device"
-msgstr "允许使用USB设备"
+msgid "Allow to use USB device (Effective after restart)"
+msgstr "允许使用USB设备（重启后生效）"
 
 #: ../data/ssr-system-rs.xml.in.h:37
-msgid "Allow to use serial port device"
-msgstr "允许使用串口设备"
+msgid "Allow to use serial port device (Effective after restart)"
+msgstr "允许使用串口设备（重启后生效）"
 
 #: ../data/ssr-system-rs.xml.in.h:38
 #: ../plugins/python/ssr-plugin-external.xml.in.h:9
@@ -372,32 +372,8 @@ msgid "Disable radio network"
 msgstr "禁用无线网络"
 
 #: ../data/ssr-system-rs.xml.in.h:50
-msgid "Passwd file permissionse"
-msgstr "passwd文件权限"
-
-#: ../data/ssr-system-rs.xml.in.h:51
-msgid "Bashrc file permissionse"
-msgstr "bashrc文件权限"
-
-#: ../data/ssr-system-rs.xml.in.h:52
-msgid "Shadow file permissionse"
-msgstr "shadow文件权限"
-
-#: ../data/ssr-system-rs.xml.in.h:53
-msgid "Group file permissionse"
-msgstr "group文件权限"
-
-#: ../data/ssr-system-rs.xml.in.h:54
-msgid "Services file permissionse"
-msgstr "services文件权限"
-
-#: ../data/ssr-system-rs.xml.in.h:55
-msgid "Xinetd directory permissions"
-msgstr "xinetd目录权限"
-
-#: ../data/ssr-system-rs.xml.in.h:56
-msgid "Security directory permissions"
-msgstr "security目录权限"
+msgid "The maximum permissions of important configuration files in the system is set to 0644"
+msgstr "系统中重要配置文件的最大权限设置为0644"
 
 #: ../plugins/python/ssr-plugin-audit.xml.in.h:1
 msgid "audit settings"
