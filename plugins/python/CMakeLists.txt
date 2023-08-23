@@ -36,7 +36,7 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-ssr-config-password.conf
 
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-ssr-config-resource.conf
          RENAME "90-ssr-config.conf"
-         DESTINATION /etc/security/pwquality.conf.d/)
+         DESTINATION /etc/security/limit.d/)
 
 
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-audit.xml.in)
