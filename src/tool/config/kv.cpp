@@ -102,6 +102,7 @@ bool KV::set(const std::string &key, const std::string &value)
     auto second_field_regex = Glib::Regex::create(fmt::format("(\\s*\\S+{0})(\\S+)", this->kv_split_pattern_),
                                                   Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
+    bool is_matched = false;
     int32_t match_pos = 0;
     bool is_match_comment = false;
     std::string match_line;
@@ -126,13 +127,15 @@ bool KV::set(const std::string &key, const std::string &value)
             fields = split_field_regex->split(trim_line);
         }
 
-        if (fields.size() == 2 &&
+        if (!is_matched&&
+	    fields.size() == 2 &&
             fields[0] == key &&
             (match_line.size() == 0 || (int32_t(is_comment) <= int32_t(is_match_comment))))
         {
             match_pos = new_contents.size();
             match_line = line;
             is_match_comment = is_comment;
+	    is_matched = true;
         }
 
         new_contents.append(line);
