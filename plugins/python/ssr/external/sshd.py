@@ -13,6 +13,10 @@ PUBKEY_AUTH_ARG_ENABLED = "enabled"
 WEAK_ENCRYPT_ARG_ENABLED = "enabled"
 BANNER_INFO_ARG_ENABLED = "enabled"
 
+# 会话登录后超过指定时间未操作则自动退出
+PROFILE_CLIENT_TMOUT = "ClientAliveInterval"
+PROFILE_CLIENT_COUNT = "ClientAliveCountMax"
+
 DEFAULT_CIPHERS = ("aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-cbc", "3des-cbc")
 WEAK_CIPHERS = ("arcfour", "arcfour128", "arcfour256")
 
@@ -94,6 +98,31 @@ class BannerInfo(SSHD):
         #只对开启后关闭做处理
         if args[ROOT_LOGIN_ARG_ENABLED]:
             self.conf.set_value("Banner", "none")
+        # 重启服务生效
+        self.service.restart()
+        return (True, '')
+
+class SessionTimeout(SSHD):
+    def __init__(self):
+        self.conf = ssr.configuration.KV(SSHD_CONF_PATH, "", "=")
+
+    def get(self):
+        retdata = dict()
+        tmout = self.conf.get_value(PROFILE_CLIENT_TMOUT)
+        count = self.conf.get_value(PROFILE_CLIENT_COUNT)
+
+        retdata[PROFILE_CLIENT_TMOUT] = tmout
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+
+        if (args[PROFILE_CLIENT_TMOUT] <= 0):
+            self.conf.del_record(PROFILE_CLIENT_TMOUT)
+            self.conf.del_record(PROFILE_CLIENT_COUNT)
+        else:
+            self.conf.set_value(PROFILE_CLIENT_TMOUT, args[PROFILE_CLIENT_TMOUT])
+            self.conf.set_value(PROFILE_CLIENT_COUNT, 0)
         # 重启服务生效
         self.service.restart()
         return (True, '')
