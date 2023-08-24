@@ -36,7 +36,6 @@ RandomNumberGenerator &GlobalRNG()
 namespace Kiran
 {
 #define SSR_RSA_SEED_DEFAULT "kylinsec"
-#define SSR_DES_KEY "kylinsec"
 
 CryptoHelper::CryptoHelper()
 {
@@ -238,14 +237,14 @@ bool CryptoHelper::rsa_verify_file(const std::string &public_filename,
 //     return key;
 // }
 
-std::string CryptoHelper::des_encrypt(const std::string &message)
+std::string CryptoHelper::des_encrypt(const std::string &message, const std::string &key)
 {
     try
     {
         std::string result;
         ECB_Mode<DES>::Encryption encoder;
         // 这里的key长度必须为8
-        encoder.SetKey((const byte *)SSR_DES_KEY, DES::DEFAULT_KEYLENGTH);
+        encoder.SetKey((const byte *)key.c_str(), key.length());
         // auto key = get_des_key();
         // encoder.SetKey(key, key.size());
         StringSource(message, true, new StreamTransformationFilter(encoder, new Base64Encoder(new StringSink(result))));
@@ -258,13 +257,13 @@ std::string CryptoHelper::des_encrypt(const std::string &message)
     }
 }
 
-std::string CryptoHelper::des_decrypt(const std::string &message)
+std::string CryptoHelper::des_decrypt(const std::string &message, const std::string &key)
 {
     try
     {
         std::string result;
         ECB_Mode<DES>::Decryption decoder;
-        decoder.SetKey((const byte *)SSR_DES_KEY, DES::DEFAULT_KEYLENGTH);
+        decoder.SetKey((const byte *)key.c_str(), key.length());
         StringSource(message, true, new Base64Decoder(new StreamTransformationFilter(decoder, new StringSink(result))));
         return result;
     }
