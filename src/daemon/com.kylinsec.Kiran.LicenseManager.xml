@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+    <interface name="com.kylinsec.Kiran.LicenseManager">
+
+        <method name="GetLicenseObject">
+            <arg name="name" direction="in" type="s">
+                <summary>The name of license object.</summary>
+            </arg>
+            <arg name="object" direction="out" type="o">
+                <summary>The object path for object.</summary>
+            </arg>
+            <description>Get license object by name.</description>
+        </method>
+
+        <method name="GenerateActivationCode">
+            <arg name="machine_code" direction="in" type="s">
+                <summary>The machine code.</summary>
+            </arg>
+            <arg name="name" direction="in" type="s">
+                <summary>The name of license object.</summary>
+            </arg>
+            <arg name="vendor_id" direction="in" type="s">
+                <summary>The vendor ID of UKey.</summary>
+            </arg>
+            <arg name="activation_info" direction="out" type="s">
+                <summary>The activation info contains activation code and ukey informations.</summary>
+            </arg>
+            <description>Generate an activation code and ukey informations by UKey device.</description>
+        </method>
+
+        <property name="machine_code" type="s" access="read">
+            <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+            <description>The machine code.</description>
+        </property>
+
+    </interface>
+</node>

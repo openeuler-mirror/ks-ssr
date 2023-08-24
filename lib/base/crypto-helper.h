@@ -12,6 +12,8 @@
 
 namespace Kiran
 {
+#define SSR_DES_KEY "kylinsec"
+
 class CryptoHelper
 {
 public:
@@ -44,8 +46,8 @@ public:
                                 const std::string &signature_filename);
 
     // des加密和解密
-    static std::string des_encrypt(const std::string &message);
-    static std::string des_decrypt(const std::string &message);
+    static std::string des_encrypt(const std::string &message, const std::string &key = SSR_DES_KEY);
+    static std::string des_decrypt(const std::string &message, const std::string &key = SSR_DES_KEY);
 
     // 安全加固的加密和解密算法
     static std::string ssr_encrypt(const std::string &public_filename, const std::string &message);
