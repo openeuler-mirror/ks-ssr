@@ -4,6 +4,8 @@ import json
 import ssr.configuration
 import ssr.utils
 
+SYSCTL_PATH = '/usr/sbin/sysctl'
+
 SAK_KEY_SWITCH_CONF_FILE = "/etc/sysctl.d/90-ssr-config.conf"
 SAK_KEY_SWITCH_CONF_KEY_SYSRQ = "kernel.sysrq"
 
@@ -27,6 +29,7 @@ class SAKKey:
         else :
             value = 0
         self.conf.set_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ, value)
+        ssr.utils.subprocess_not_output('{0} --system'.format(SYSCTL_PATH))
 
         return (True, '')
 
@@ -52,9 +55,11 @@ class KeyRebootSwitch:
     def set(self, args_json):
         args = json.loads(args_json)
 
-        if args['enabled']:
-            self.open()
+        if self.status():
+            if args['enabled']:
+                self.open()
         else:
-            self.close()
+            if not args['enabled']:
+                self.close()
 
         return (True, '')

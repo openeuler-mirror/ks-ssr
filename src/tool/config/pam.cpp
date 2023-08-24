@@ -132,7 +132,7 @@ bool PAM::del_value(const std::string &key, const std::string &kv_split_pattern)
     return true;
 }
 
-bool PAM::add_line(const std::string &fallback_line)
+bool PAM::add_line(const std::string &fallback_line, const std::string &next_line_match_regex)
 {
     // 在读写期间都不应该让其他进程改动该文件，否则可能会导致结果不一致。
     auto file_lock = FileLock::create_excusive_lock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
@@ -155,9 +155,11 @@ bool PAM::add_line(const std::string &fallback_line)
     // 如果未匹配到行，则添加新行
     else if (match_info.match_line.size() == 0 && fallback_line.size() > 0)
     {
-        KLOG_DEBUG("New line: %s.", fallback_line.c_str());
-        match_info.content.append(fallback_line);
-        this->write_to_file(match_info.content);
+        // KLOG_DEBUG("New line: %s.", fallback_line.c_str());
+        // match_info.content.append(fallback_line);
+        // this->write_to_file(match_info.content);
+        auto new_match_info = this->add_behind(fallback_line, next_line_match_regex);
+        this->write_to_file(new_match_info.content);
     }
     return true;
 }
@@ -232,6 +234,37 @@ PAM::MatchLineInfo PAM::get_match_line()
     KLOG_DEBUG("match line: %s is comment: %d.", retval.match_line.c_str(), retval.is_match_comment);
     return retval;
 }
+
+PAM::MatchLineInfo PAM::add_behind(const std::string &fallback_line, const std::string &next_line_match_regex)
+{
+    MatchLineInfo retval;
+
+    auto contents = Glib::file_get_contents(this->conf_path_);
+    auto lines = StrUtils::split_lines(contents);
+    auto line_match_regex = Glib::Regex::create(next_line_match_regex, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
+
+    // 寻找匹配行，如果没有匹配的非注释行可用，则使用匹配的注释行（注释将被去掉）
+    for (const auto &line : lines)
+    {
+        std::vector<std::string> fields;
+
+        if (line_match_regex->match(line) &&
+            (retval.match_line.size() == 0))
+        {
+            retval.content.append(fallback_line);
+            retval.content.push_back('\n');
+            retval.match_pos = retval.content.size();
+            retval.match_line = line;
+        }
+
+        retval.content.append(line);
+        retval.content.push_back('\n');
+    }
+
+    KLOG_DEBUG("match line: %s is comment: %d.", retval.match_line.c_str(), retval.is_match_comment);
+    return retval;
+}
+
 
 bool PAM::write_to_file(const std::string &content)
 {
