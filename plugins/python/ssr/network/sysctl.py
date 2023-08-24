@@ -6,7 +6,8 @@ import ssr.log
 
 SYSCTL_PATH = '/usr/sbin/sysctl'
 
-SYSCTL_CONFI_FILE = "/etc/sysctl.d/90-ssr-network.conf"
+#SYSCTL_CONFI_FILE = "/etc/sysctl.d/90-ssr-network.conf"
+SYSCTL_CONFI_FILE = "/etc/sysctl.conf"
 SYSCTL_CONFIG_FIELD_PARTTERN = "\\s*=\\s*"
 SYSCTL_ACCEPT_REDIRECTS_PATTERN = "net.ipv4.conf.*.accept_redirects"
 SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN = "net.ipv4.conf.*.accept_source_route"
@@ -95,7 +96,7 @@ class SynFlood(Sysctl):
 
     def set(self, args_json):
         args = json.loads(args_json)
-        sysctl_config = ssr.configuration.KV(SYSCTL_CONFI_FILE)
+        sysctl_config = ssr.configuration.KV(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN, ' = ')
         enabled = args['enabled']
         sysctl_config.set_value("net.ipv4.tcp_syncookies", "1" if enabled else "0")
 
