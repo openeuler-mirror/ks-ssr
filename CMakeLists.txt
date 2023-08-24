@@ -21,6 +21,10 @@ pkg_search_module(GTEST REQUIRED gtest)
 pkg_search_module(FMT REQUIRED fmt)
 pkg_search_module(CRYPTOPP REQUIRED cryptopp)
 pkg_search_module(XERCES REQUIRED xerces-c)
+pkg_search_module(GUDEV REQUIRED gudev-1.0)
+pkg_search_module(LIBCRYPTO REQUIRED libcrypto)
+pkg_search_module(KYLIN_LICENSE REQUIRED kylin-license)
+
 
 if (USE_PYTHON3)
     pkg_search_module(PYTHON REQUIRED python3)
