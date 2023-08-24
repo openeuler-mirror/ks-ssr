@@ -17,7 +17,7 @@ class SAKKey:
 
     def get(self):
         retdata = dict()
-        retdata[SAK_KEY_SWITCH_CONF_KEY_SYSRQ] = bool(self.conf.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ) == "0")
+        retdata[SAK_KEY_SWITCH_CONF_KEY_SYSRQ] = bool(self.conf.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ) == "1")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
