@@ -11,7 +11,7 @@ PROFILE_ARG_TMOUT = "tmout"
 
 class SessionTimeout:
     def __init__(self):
-        self.conf = ssr.configuration.KV(PROFILE_CONF_PATH, "=")
+        self.conf = ssr.configuration.KV(PROFILE_CONF_PATH, "=", "=")
 
     def get(self):
         retdata = dict()
