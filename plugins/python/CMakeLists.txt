@@ -6,12 +6,16 @@
 
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ssr/vars.py.in ${CMAKE_BINARY_DIR}/ssr/vars.py)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ssr/translation.py.in ${CMAKE_BINARY_DIR}/ssr/translation.py)
 
 install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ssr
          DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}
          FILES_MATCHING REGEX ".*\\.(py|ini)$")
 
 install (FILES ${CMAKE_BINARY_DIR}/ssr/vars.py
+         DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}/ssr)
+
+install (FILES ${CMAKE_BINARY_DIR}/ssr/translation.py
          DESTINATION ${SSR_PLUGIN_PYTHON_ROOT_DIR}/ssr)
 
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/90-ssr-network-sysctl.conf
