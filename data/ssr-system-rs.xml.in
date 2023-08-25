@@ -127,8 +127,8 @@
             <name>config-file-permissions</name>
             <arg>
                 <name>mode-permissions-limit</name>
-                <value>true</value>
-                <rule>
+		<value>true</value>
+		<rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
                 </rule>
@@ -289,11 +289,11 @@
             </arg>
             <arg>
                 <name>ucredit</name>
-                <value>-1</value>
+                <value>0</value>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
-                        <max_value>-1</max_value>
+                        <min_value>0</min_value>
                     </value_range>
                 </rule>
                 <layout>
@@ -303,11 +303,11 @@
             </arg>
             <arg>
                 <name>lcredit</name>
-                <value>-1</value>
+                <value>0</value>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
-                        <max_value>-1</max_value>
+                        <min_value>0</min_value>
                     </value_range>
                 </rule>
                 <layout>
@@ -317,11 +317,11 @@
             </arg>
             <arg>
                 <name>dcredit</name>
-                <value>-4</value>
+                <value>1</value>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
-                        <max_value>-4</max_value>
+                        <min_value>1</min_value>
                     </value_range>
                 </rule>
                 <layout>
@@ -331,11 +331,11 @@
             </arg>
             <arg>
                 <name>ocredit</name>
-                <value>-1</value>
+                <value>1</value>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
-                        <max_value>-1</max_value>
+                        <min_value>1</min_value>
                     </value_range>
                 </rule>
                 <layout>
@@ -344,7 +344,21 @@
                 </layout>
             </arg>
             <arg>
-                <name>maxsequence</name>
+                <name>minclass</name>
+                <value>3</value>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>3</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Contains number of character types (special characters, numbers, letters)</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>maxclassrepeat</name>
                 <value>3</value>
                 <rule>
                     <type>RANGE</type>
@@ -480,7 +494,7 @@
             </arg>
             <arg>
                 <name>append-permissions-limit</name>
-                <value>true</value>
+		<value>true</value>
                 <rule>
                     <type>FIXED</type>
                     <value_fixed>true</value_fixed>
