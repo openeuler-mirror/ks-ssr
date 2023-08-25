@@ -290,7 +290,7 @@ msgstr "最大栈空间大小"
 
 #: ../data/ssr-system-rs.xml.in.h:29
 msgid "Max resident set size"
-msgstr "最大持久设置大小"
+msgstr "最大常驻内存集"
 
 #: ../data/ssr-system-rs.xml.in.h:30
 #: ../plugins/python/ssr-plugin-config.xml.in.h:18
@@ -384,6 +384,10 @@ msgstr "超过以下时间（秒）未操作则会话退出"
 #: ../plugins/python/ssr-plugin-external.xml.in.h:26
 msgid "Disable radio network"
 msgstr "禁用无线网络"
+
+#: ../data/ssr-system-rs.xml.in.h:51
+msgid "Contains number of character types (special characters, numbers, letters)"
+msgstr "包含字符类型数(特殊字符、数字、字母)"
 
 #: ../plugins/python/ssr-plugin-audit.xml.in.h:1
 msgid "audit settings"
