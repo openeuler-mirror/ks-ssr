@@ -185,12 +185,10 @@
             </arg>
             <arg>
                 <name>even_deny_root</name>
-                <value>300</value>
+                <value>true</value>
                 <rule>
                     <type>RANGE</type>
-                    <value_range>
-                        <min_value>300</min_value>
-                    </value_range>
+                    <value_fixed>true</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
