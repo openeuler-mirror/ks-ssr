@@ -89,7 +89,7 @@ class WeakEncryption(SSHD):
 class BannerInfo(SSHD):
     def get(self):
         retdata = dict()
-        retdata[BANNER_INFO_ARG_ENABLED] = (self.conf.get_value("Banner") != "none")
+        retdata[BANNER_INFO_ARG_ENABLED] = (self.conf.get_value("Banner") == "none") or (self.conf.get_value("Banner") == "")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
