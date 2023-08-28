@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/main.cpp
+ * @file          /ks-ssr-manager/src/daemon/main.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -12,7 +12,7 @@
 #include "src/daemon/dbus.h"
 #include "src/daemon/plugins.h"
 
-using namespace Kiran::Daemon;
+using namespace KS::Daemon;
 
 int main(int argc, char* argv[])
 {

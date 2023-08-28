@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/reinforcements/login-lock.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/config/reinforcements/login-lock.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -9,11 +9,10 @@
 #include <json/json.h>
 #include <unistd.h>
 
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
-
 #define LOGIN_LOCK_CONF_PATH "/etc/pam.d/system-auth"
 #define LOGIN_LOCK_CONF_KEY_TALLY "auth        required                                     pam_tally.so"
 
@@ -22,10 +21,9 @@ LoginLock::LoginLock()
     this->login_lock_config_ = ConfigPAM::create(LOGIN_LOCK_CONF_KEY_TALLY);
 }
 
-
 bool LoginLock::get(const std::string &args, SSRErrorCode &error_code)
 {
-    if(!this->password_complextiy_config_)
+    if (!this->password_complextiy_config_)
     {
         error_code = SSRErrorCode::ERROR_FAILED;
         return false;
@@ -39,7 +37,7 @@ bool LoginLock::get(const std::string &args, SSRErrorCode &error_code)
         args = StrUtils::json2str(values);
         return true;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
         error_code = SSRErrorCode::ERROR_FAILED;
@@ -50,7 +48,7 @@ bool LoginLock::get(const std::string &args, SSRErrorCode &error_code)
 //XXX：有关操作数的问题，需要对有操作数的内容进行处理。
 bool LoginLock::set(const std::string &args, SSRErrorCode &error_code)
 {
-    if(!this->password_complextiy_config_)
+    if (!this->password_complextiy_config_)
     {
         error_code = SSRErrorCode::ERROR_FAILED;
         return false;
@@ -61,13 +59,13 @@ bool LoginLock::set(const std::string &args, SSRErrorCode &error_code)
         Json::Value values = StrUtils::str2json(args);
         auto keys = values.getMemberNames();
 
-        for(auto iter : keys)
+        for (auto iter : keys)
         {
             this->login_lock_config_->set_value(iter, values[iter]);
         }
         return true;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
         error_code = SSRErrorCode::ERROR_FAILED;
@@ -76,4 +74,4 @@ bool LoginLock::set(const std::string &args, SSRErrorCode &error_code)
 }
 
 }  // namespace Config
-}  // namespace Kiran
+}  // namespace KS

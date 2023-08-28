@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/external/reinforcements/devices.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/external/reinforcements/devices.cpp
  * @brief         
  * @author        pengyulong <pengyulong@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -9,18 +9,16 @@
 #include <json/json.h>
 #include <unistd.h>
 
-namespace Kiran
+namespace KS
 {
 namespace External
 {
-
 #define DEVICE_CONF_PATH "/etc/security/console.perms"
 #define DEVICE_CONF_KEY "console"
 #define DEVICE_CONF_KEY_CONSOLE "<console>"
 #define DEVICE_CONF_KEY_XCONSOLE "<xconsole>"
 #define DEVICE_CONF_KEY_CONSOLE_VALUE "tty[0-9][0-9]* vc/[0-9][0-9]* :[0-9]+\\.[0-9]+ :[0-9]+"
 #define DEVICE_CONF_KEY_XCONSOLE_VALUE ":[0-9]+\\.[0-9]+ :[0-9]+"
-
 
 DeviceSwitch::DeviceSwitch()
 {
@@ -29,7 +27,7 @@ DeviceSwitch::DeviceSwitch()
 
 bool DeviceSwitch::get(const std::string &args, SSRErrorCode &error_code)
 {
-    if(!this->device_config_)
+    if (!this->device_config_)
     {
         error_code = SSRErrorCode::ERROR_FAILED;
         return false;
@@ -42,7 +40,7 @@ bool DeviceSwitch::get(const std::string &args, SSRErrorCode &error_code)
         auto console = this->device_config_->get_value(DEVICE_CONF_KEY_CONSOLE);
         auto xconsole = this->device_config_->get_value(DEVICE_CONF_KEY_XCONSOLE);
 
-        if( console.empty() && xconsole.empty())
+        if (console.empty() && xconsole.empty())
         {
             value[DEVICE_CONF_KEY] = false;
         }
@@ -51,7 +49,7 @@ bool DeviceSwitch::get(const std::string &args, SSRErrorCode &error_code)
         }
         return true;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         KLOG_WARNING("%s.", e.what());
         error_code = SSRErrorCode::ERROR_FAILED;
@@ -61,7 +59,7 @@ bool DeviceSwitch::get(const std::string &args, SSRErrorCode &error_code)
 
 bool DeviceSwitch::set(const std::string &args, SSRErrorCode &error_code)
 {
-    if(!this->device_config_)
+    if (!this->device_config_)
     {
         error_code = SSRErrorCode::ERROR_FAILED;
         return false;
@@ -72,7 +70,7 @@ bool DeviceSwitch::set(const std::string &args, SSRErrorCode &error_code)
         Json::Value values = StrUtils::str2json(args);
         RETURN_ERROR_IF_FALSE(values[DEVICE_CONF_KEY].isBool(), SSRErrorCode::ERROR_FAILED);
 
-        if(values[DEVICE_CONF_KEY])
+        if (values[DEVICE_CONF_KEY])
         {
             this->device_config_->set_value(DEVICE_CONF_KEY_CONSOLE, DEVICE_CONF_KEY_CONSOLE_VALUE);
             this->device_config_->set_value(DEVICE_CONF_KEY_XCONSOLE, DEVICE_CONF_KEY_XCONSOLE_VALUE);
@@ -93,4 +91,4 @@ bool DeviceSwitch::set(const std::string &args, SSRErrorCode &error_code)
 }
 
 }  // namespace External
-}  // namespace Kiran
+}  // namespace KS

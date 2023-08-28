@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/crypto/ssr-cmd-parser.h
+ * @file          /ks-ssr-manager/src/tool/crypto/ssr-cmd-parser.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "lib/base/base.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Crypto
 {
@@ -66,4 +66,4 @@ private:
     std::string output_filename_;
 };
 }  // namespace Crypto
-}  // namespace Kiran
+}  // namespace KS

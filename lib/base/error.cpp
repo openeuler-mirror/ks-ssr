@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/error.cpp
+ * @file          /ks-ssr-manager/lib/base/error.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,7 +10,7 @@
 #include <fmt/format.h>
 #include <glib/gi18n.h>
 
-namespace Kiran
+namespace KS
 {
 SSRError::SSRError()
 {
@@ -81,4 +81,4 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     error_desc += fmt::format(_(" (error code: 0x{:x})"), int32_t(error_code));
     return error_desc;
 }
-}  // namespace Kiran
+}  // namespace KS
