@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/dbus.h
+ * @file          /ks-ssr-manager/src/daemon/dbus.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -13,7 +13,7 @@
 #include "license_manager_dbus_proxy.h"
 #include "license_object_dbus_proxy.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -23,7 +23,7 @@ class Plugins;
 class Job;
 class LicenseObject;
 
-class DBus : public SSRStub
+class DBus : public kylinsec::SSRStub
 {
 public:
     DBus();
@@ -123,4 +123,4 @@ private:
     uint32_t object_register_id_;
 };
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

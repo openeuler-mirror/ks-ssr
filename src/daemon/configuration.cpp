@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/configuration.cpp
+ * @file          /ks-ssr-manager/src/daemon/configuration.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,7 +8,7 @@
 #include "src/daemon/configuration.h"
 #include <fstream>
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -351,4 +351,4 @@ bool Configuration::save_to_file()
 }
 
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

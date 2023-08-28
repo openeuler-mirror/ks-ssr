@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/crypto/main.cpp
+ * @file          /ks-ssr-manager/src/tool/crypto/main.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     bind_textdomain_codeset(PROJECT_NAME, "UTF-8");
     textdomain(PROJECT_NAME);
 
-    Kiran::Crypto::CmdParser cmd_parser;
+    KS::Crypto::CmdParser cmd_parser;
     cmd_parser.init();
     return cmd_parser.run(argc, argv);
 }

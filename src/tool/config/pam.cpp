@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/config/pam.cpp
+ * @file          /ks-ssr-manager/src/tool/config/pam.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -9,7 +9,7 @@
 #include <fcntl.h>
 #include "lib/base/file-lock.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
@@ -52,7 +52,7 @@ bool PAM::get_value(const std::string &key, const std::string &kv_split_pattern,
         if (kv_regex->match(line, match_info) &&
             match_info.matches())
         {
-            if(!kv_split_pattern.empty())
+            if (!kv_split_pattern.empty())
             {
                 std::vector<std::string> fields = split_field_regex->split(match_info.fetch(0));
                 value = fields[1].c_str();
@@ -276,7 +276,6 @@ PAM::MatchLineInfo PAM::add_behind(const std::string &fallback_line, const std::
     return retval;
 }
 
-
 bool PAM::write_to_file(const std::string &content)
 {
     try
@@ -300,4 +299,4 @@ bool PAM::is_whitespace_in_tail(const std::string &str)
 
 }  // namespace Config
 
-}  // namespace Kiran
+}  // namespace KS

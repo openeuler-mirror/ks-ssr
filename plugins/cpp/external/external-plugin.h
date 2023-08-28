@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-SSR-manager/plugins/cpp/external/external-plugin.h
+ * @file          /ks-ssr-manager/plugins/cpp/external/external-plugin.h
  * @brief         
  * @author        pengyulong <pengyulong@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,7 +8,7 @@
 #include "lib/base/base.h"
 #include "ssr-plugin-i.h"
 
-namespace Kiran
+namespace KS
 {
 namespace External
 {
@@ -29,4 +29,4 @@ private:
 };
 
 }  // namespace External
-}  // namespace Kiran
+}  // namespace KS

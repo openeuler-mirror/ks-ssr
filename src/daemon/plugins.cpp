@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/plugins.cpp
+ * @file          /ks-ssr-manager/src/daemon/plugins.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -13,7 +13,7 @@
 #include "src/daemon/python/python-klog.h"
 #include "src/daemon/utils.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -246,4 +246,4 @@ void Plugins::on_rs_changed_cb()
     this->load_reinforcements();
 }
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

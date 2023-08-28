@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/categories.cpp
+ * @file          /ks-ssr-manager/src/daemon/categories.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "src/daemon/categories.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -75,4 +75,4 @@ bool Categories::add_category(std::shared_ptr<Category> category)
     return true;
 }
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS
