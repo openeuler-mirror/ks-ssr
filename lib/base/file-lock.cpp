@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/file-lock.cpp
+ * @file          /ks-ssr-manager/lib/base/file-lock.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -13,7 +13,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-namespace Kiran
+namespace KS
 {
 FileLock::FileLock(int32_t file_descriptor, FileLockType lock_type) : file_descriptor_(file_descriptor),
                                                                       lock_type_(lock_type)
@@ -78,4 +78,4 @@ std::shared_ptr<FileLock> FileLock::create_excusive_lock(const std::string &path
     RETURN_VAL_IF_FALSE(file_lock->is_valid(), nullptr);
     return file_lock;
 }
-}  // namespace Kiran
+}  // namespace KS

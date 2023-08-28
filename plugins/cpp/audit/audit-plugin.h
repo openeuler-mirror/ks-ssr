@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/audit-plugin.h
+ * @file          /ks-ssr-manager/plugins/cpp/audit/audit-plugin.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "lib/base/base.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Audit
 {
@@ -29,4 +29,4 @@ private:
 
 }  // namespace Audit
 
-}  // namespace Kiran
+}  // namespace KS

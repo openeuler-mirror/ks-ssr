@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/dbus/dbus-proxy-systemd.h
+ * @file          /ks-ssr-manager/lib/dbus/dbus-proxy-systemd.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -9,7 +9,7 @@
 
 #include "lib/base/base.h"
 
-namespace Kiran
+namespace KS
 {
 class DBusSystemdProxy
 {
@@ -42,4 +42,4 @@ private:
     std::mutex mutex_;
     Glib::RefPtr<Gio::DBus::Proxy> systemd_proxy_;
 };
-}  // namespace Kiran
+}  // namespace KS

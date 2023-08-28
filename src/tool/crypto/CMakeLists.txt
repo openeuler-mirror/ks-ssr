@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set (TARGET_NAME kiran-ssr-crypto)
+set (TARGET_NAME ks-ssr-crypto)
 
 file(GLOB_RECURSE CRYPTO_H_FILES ./*.h)
 file(GLOB_RECURSE CRYPTO_CPP_FILES ./*.cpp)

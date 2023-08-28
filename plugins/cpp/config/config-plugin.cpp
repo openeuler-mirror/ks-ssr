@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/config-plugin.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/config/config-plugin.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -12,9 +12,9 @@
 #include "plugins/cpp/config/reinforcements/login-lock.h"
 #include "plugins/cpp/config/reinforcements/password.h"
 
-PLUGIN_EXPORT_FUNC_DEF(Kiran::Protocol::SSRPluginConfig);
+PLUGIN_EXPORT_FUNC_DEF(KS::Protocol::SSRPluginConfig);
 
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
@@ -39,4 +39,4 @@ void SSRPluginNetwork::deactivate()
 
 }  // namespace Config
 
-}  // namespace Kiran
+}  // namespace KS

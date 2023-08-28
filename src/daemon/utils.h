@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/utils.h
+ * @file          /ks-ssr-manager/src/daemon/utils.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -16,7 +16,7 @@ typedef struct _object PyObject;
 struct _ts;
 typedef struct _ts PyThreadState;
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -63,4 +63,4 @@ private:
 };
 
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/thread-pool.h
+ * @file          /ks-ssr-manager/lib/base/thread-pool.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -17,7 +17,7 @@
 #include <thread>
 #include <vector>
 
-namespace Kiran
+namespace KS
 {
 struct ThreadWorkerInfo
 {
@@ -115,4 +115,4 @@ inline ThreadPool::~ThreadPool()
     }
 }
 
-}  // namespace Kiran
+}  // namespace KS

@@ -1,0 +1,4 @@
+Name: KylinSec SSR Daemon
+Description: Development files for communicating with kylinsec system security reinforcement daemon
+Version: 1.0
+Cflags: -I@SSR_INSTALL_INCLUDE@

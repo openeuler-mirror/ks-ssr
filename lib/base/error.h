@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/error.h
+ * @file          /ks-ssr-manager/lib/base/error.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -12,7 +12,7 @@
 
 #include "ssr-error-i.h"
 
-namespace Kiran
+namespace KS
 {
 #define CC_ERROR2STR(error_code) SSRError::get_error_desc(error_code)
 
@@ -35,4 +35,4 @@ public:
     static std::string get_error_desc(SSRErrorCode error_code);
 };
 
-}  // namespace Kiran
+}  // namespace KS

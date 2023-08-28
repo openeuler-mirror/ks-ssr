@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/misc-utils.h
+ * @file          /ks-ssr-manager/lib/base/misc-utils.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -9,7 +9,7 @@
 
 #include <giomm.h>
 
-namespace Kiran
+namespace KS
 {
 class MiscUtils
 {
@@ -32,6 +32,6 @@ public:
                                                  const Glib::ustring &arg_description = Glib::ustring(),
                                                  int32_t flags = 0);
 
-};  // namespace Kiran
+};  // namespace KS
 
-}  // namespace Kiran
+}  // namespace KS
