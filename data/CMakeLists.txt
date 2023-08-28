@@ -36,6 +36,9 @@ install(FILES ${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
         DESTINATION ${SSR_INSTALL_DATADIR}/
         RENAME ssr-system-rs)
 
+#install(FILES ${PROJECT_BINARY_DIR}/data/ssr-custom-ra.encrypted
+#        DESTINATION ${SSR_INSTALL_DATADIR}/
+#        RENAME ssr-custom-rs)
 
 #install (FILES ${PROJECT_SOURCE_DIR}/data/ssr-custom-ra.xml
 #        DESTINATION ${SSR_INSTALL_DATADIR})
