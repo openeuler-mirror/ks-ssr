@@ -733,7 +733,7 @@
             <arg>
                 <name>Banner</name>
                 <value>"none"</value>
-                <value_limits>""</value_limits>
+                <value_limits>(none)|(\/([\w\.]+\/?)*)</value_limits>
                 <input_example>none || /etc/issue.net</input_example>
                 <rule>
                     <type>FIXED</type>
