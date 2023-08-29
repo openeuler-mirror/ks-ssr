@@ -10,20 +10,21 @@ import stat
 import ssr.utils
 import json
 import ssr.vars
+import ssr.configuration
 
 PERMISSIONS_INI_FILEPATH = ssr.vars.SSR_PLUGIN_PYTHON_ROOT_DIR + "/ssr/config/permissions.ini"
 FILE_GROUP_PERMISSIONS = "Permissions"
 # FPK: File Permissions Key
 FPK_MODE_FILE_LIST = "ModeFileList"
 
-EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH
+EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH | stat.S_IXUSR
 
 PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
 
 UMASK_LIMIT_PROFILE_PATH = '/etc/profile'
 UMASK_LIMIT_BASHRC_PATH  = '/etc/bashrc'
 
-UMASK_LIMIT_CMD = 'grep -r umask'
+UMASK_LIMIT_CONF_KEY_UMASK = 'umask'
 
 class PermissionSetting:
     def __init__(self):
@@ -68,25 +69,35 @@ class PermissionSetting:
         return (True, '')
 
 class UmaskLimit:
+    def __init__(self):
+        self.conf_profile = ssr.configuration.KV(UMASK_LIMIT_PROFILE_PATH)
+        self.conf_bashrc = ssr.configuration.KV(UMASK_LIMIT_BASHRC_PATH)
+
     def get(self):
         retdata = dict()
 
-        command = '{0} {1}'.format(UMASK_LIMIT_CMD, UMASK_LIMIT_PROFILE_PATH)
-        output = ssr.utils.subprocess_has_output(command)
+        profile_value = self.conf_profile.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
+        bashrc_vale = self.conf_bashrc.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
 
-        retdata['umask'] = output[-3:]
+        if profile_value == bashrc_vale and profile_value == '027':
+            retdata['enabled'] = True
+        else:
+            retdata['enabled'] = False
+
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
 
-        command = '{0} {1}'.format(UMASK_LIMIT_CMD, UMASK_LIMIT_PROFILE_PATH)
-        output = ssr.utils.subprocess_has_output(command)
+        if args['enabled']:
+            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
+            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
+        else:
+            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
+            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
 
-        profile_cmd = 'sed -i \'s/umask {0}/umask {1}/g\' {2}'.format(output[-3:], args['umask'], UMASK_LIMIT_PROFILE_PATH)
-        profile_output = ssr.utils.subprocess_not_output(profile_cmd)
-
-        bashrc_cmd = 'sed -i \'s/umask {0}/umask {1}/g\' {2}'.format(output[-3:], args['umask'], UMASK_LIMIT_BASHRC_PATH)
-        bashrc_output = ssr.utils.subprocess_not_output(bashrc_cmd)
+        cmd = "source" + " " + UMASK_LIMIT_BASHRC_PATH + " " + UMASK_LIMIT_PROFILE_PATH
+        limit_open_command = '{0}'.format(cmd)
+        open_output = ssr.utils.subprocess_not_output(limit_open_command)
 
         return (True, '')
