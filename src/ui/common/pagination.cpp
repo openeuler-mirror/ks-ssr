@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -15,8 +15,8 @@
 #include "src/ui/common/pagination.h"
 #include <QIntValidator>
 #include <QPushButton>
-#include "ksc-marcos.h"
 #include "src/ui/ui_pagination.h"
+#include "ssr-marcos.h"
 
 //页码按钮个数
 #define PAGE_BUTTON_SIZE 6

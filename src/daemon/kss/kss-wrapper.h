@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -17,7 +17,7 @@
 #include <QObject>
 #include <QProcess>
 #include <QSettings>
-#include "include/ksc-i.h"
+#include "include/ssr-i.h"
 
 namespace KS
 {
@@ -40,15 +40,15 @@ public:
     void removeTrustedFile(const QString &filePath);
     void removeTrustedFiles(const QString &json);
     // 获取可信文件
-    QString getTrustedFiles(KSCKSSTrustedFileType type);
+    QString getTrustedFiles(SSRKSSTrustedFileType type);
     // 防卸载功能开关
     void prohibitUnloading(bool prohibited, const QString &filePath);
     // 获取程序白名单
     QString getExecuteFiles();
 
     // 可信切换软模式
-    QString setStorageMode(KSCKSSTrustedStorageType type, const QString &userPin);
-    KSCKSSTrustedStorageType getCurrentStorageMode();
+    QString setStorageMode(SSRKSSTrustedStorageType type, const QString &userPin);
+    SSRKSSTrustedStorageType getCurrentStorageMode();
     // 可信开关
     void setTrustedStatus(bool status);
     QString getTrustedStatus();

@@ -7,7 +7,7 @@
   <vendor_url/>
   <icon_name>stock_person</icon_name>
 
-  <action id="com.kylinsec.SC.PermissionAuthentication">
+  <action id="com.kylinsec.SSR.PermissionAuthentication">
     <_description>Permission authentication of security control.</_description>
     <_message>Permission authentication is required for security control and data modification.</_message>
     <defaults>

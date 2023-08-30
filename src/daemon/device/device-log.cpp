@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -14,8 +14,8 @@
 
 #include "src/daemon/device/device-log.h"
 #include <config.h>
-#include "ksc-i.h"
-#include "ksc-marcos.h"
+#include "ssr-i.h"
+#include "ssr-marcos.h"
 
 namespace KS
 {
@@ -28,7 +28,7 @@ namespace KS
 DeviceLog::DeviceLog(QObject *parent)
     : QObject(parent)
 {
-    m_settings = new QSettings(KSC_DEVICE_CONNECT_LOG_FILE, QSettings::NativeFormat, this);
+    m_settings = new QSettings(SSR_DEVICE_CONNECT_LOG_FILE, QSettings::NativeFormat, this);
 }
 
 DeviceLog::~DeviceLog()
@@ -79,10 +79,10 @@ QSharedPointer<DeviceRecord> DeviceLog::getDeviceRecord(const QString &group)
 QJsonObject DeviceLog::toJsonObject(QSharedPointer<DeviceRecord> record)
 {
     QJsonObject jsonObj{
-        {KSC_DCR_JK_NAME, record->name},
-        {KSC_DCR_JK_TYPE, record->type},
-        {KSC_DCR_JK_TIME, record->time},
-        {KSC_DCR_JK_STATE, record->state}};
+        {SSR_DCR_JK_NAME, record->name},
+        {SSR_DCR_JK_TYPE, record->type},
+        {SSR_DCR_JK_TIME, record->time},
+        {SSR_DCR_JK_STATE, record->state}};
 
     return jsonObj;
 }

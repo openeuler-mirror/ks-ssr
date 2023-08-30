@@ -5,8 +5,8 @@ After=ksl-daemon.service
 
 [Service]
 Type=dbus
-BusName=com.kylinsec.SC
-ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/ks-sc-daemon
+BusName=com.kylinsec.SSR
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/ks-ssr-daemon
 
 [Install]
 WantedBy=multi-user.target

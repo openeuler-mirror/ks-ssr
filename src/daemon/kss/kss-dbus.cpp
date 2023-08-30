@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -22,9 +22,9 @@
 #include <QJsonObject>
 #include <QSharedPointer>
 #include "config.h"
-#include "include/ksc-error-i.h"
-#include "include/ksc-i.h"
-#include "include/ksc-marcos.h"
+#include "include/ssr-error-i.h"
+#include "include/ssr-i.h"
+#include "include/ssr-marcos.h"
 #include "lib/base/error.h"
 #include "src/daemon/common/polkit-proxy.h"
 #include "src/daemon/kss/kss-wrapper.h"
@@ -74,21 +74,21 @@ bool KSSDbus::trustedStatus() const
     return true;
 }
 
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFile, addTPFileAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFiles, addTPFilesAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFile, removeTPFileAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFiles, removeTPFilesAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_2ARGS(KSSDbus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, bool, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFile, addFPFileAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFiles, addFPFilesAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFile, removeFPFileAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFiles, removeFPFilesAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_2ARGS(KSSDbus, SetStorageMode, setStorageModeAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, uint, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, SetTrustedStatus, setTrustedStatusAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, bool);
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFile, addTPFileAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFiles, addTPFilesAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QStringList &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFile, removeTPFileAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFiles, removeTPFilesAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QStringList &)
+CHECK_AUTH_WITH_2ARGS(KSSDbus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, bool, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFile, addFPFileAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFiles, addFPFilesAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QStringList &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFile, removeFPFileAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFiles, removeFPFilesAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QStringList &)
+CHECK_AUTH_WITH_2ARGS(KSSDbus, SetStorageMode, setStorageModeAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, uint, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, SetTrustedStatus, setTrustedStatusAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, bool);
 
 QString KSSDbus::GetTrustedFiles(uint type)
 {
-    return KSSWrapper::getDefault()->getTrustedFiles(KSCKSSTrustedFileType(type));
+    return KSSWrapper::getDefault()->getTrustedFiles(SSRKSSTrustedFileType(type));
 }
 
 QString KSSDbus::GetProtectedFiles()
@@ -101,7 +101,7 @@ QString KSSDbus::Search(const QString &pathKey, uint searchType)
     if (pathKey.isEmpty())
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                        KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                                        SSRErrorCode::ERROR_COMMON_INVALID_ARGS,
                                         message())
     }
 
@@ -113,11 +113,11 @@ QString KSSDbus::Search(const QString &pathKey, uint searchType)
 
     if (KSSType(searchType) == KSSType::KSS_TYPE_TP_EXECUTE)
     {
-        fileList = KSSWrapper::getDefault()->getTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE);
+        fileList = KSSWrapper::getDefault()->getTrustedFiles(SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_EXECUTE);
     }
     else if (KSSType(searchType) == KSSType::KSS_TYPE_TP_KERNEL)
     {
-        fileList = KSSWrapper::getDefault()->getTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_KERNEL);
+        fileList = KSSWrapper::getDefault()->getTrustedFiles(SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_KERNEL);
     }
     else if (KSSType(searchType) == KSSType::KSS_TYPE_FP)
     {
@@ -131,13 +131,13 @@ QString KSSDbus::Search(const QString &pathKey, uint searchType)
         return QString();
     }
 
-    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
+    auto jsonModules = jsonDoc.object().value(SSR_KSS_JK_DATA).toArray();
     for (const auto &module : jsonModules)
     {
         auto jsonMod = module.toObject();
 
         // 通过输入的pathKey，判断list中path字段是否包含pathKey
-        if (jsonMod.value(KSC_KSS_JK_DATA_PATH).toString().contains(pathKey))
+        if (jsonMod.value(SSR_KSS_JK_DATA_PATH).toString().contains(pathKey))
         {
             jsonArr.push_back(jsonMod);
         }
@@ -150,7 +150,7 @@ void KSSDbus::init()
 {
     QDBusConnection connection = QDBusConnection::systemBus();
 
-    if (!connection.registerObject(KSC_KSS_INIT_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(SSR_KSS_INIT_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }
@@ -165,16 +165,16 @@ QJsonDocument KSSDbus::fileProtectedListToJsonDocument(const QStringList &fileLi
         QFileInfo fileInfo(filePath);
         auto fileName = fileInfo.fileName();
         QJsonObject jsonObj{
-            {KSC_KSS_JK_DATA_FILE_NAME, fileName},
-            {KSC_KSS_JK_DATA_PATH, filePath},
-            {KSC_KSS_JK_DATA_ADD_TIME, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")}};
+            {SSR_KSS_JK_DATA_FILE_NAME, fileName},
+            {SSR_KSS_JK_DATA_PATH, filePath},
+            {SSR_KSS_JK_DATA_ADD_TIME, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")}};
 
         jsonArray.push_back(jsonObj);
     }
     QJsonObject jsonObj{
-        {KSC_KSS_JK_RES, 0},
-        {KSC_KSS_JK_COUNT, fileList.size()},
-        {KSC_KSS_JK_DATA, jsonArray}};
+        {SSR_KSS_JK_RES, 0},
+        {SSR_KSS_JK_COUNT, fileList.size()},
+        {SSR_KSS_JK_DATA, jsonArray}};
     document.setObject(jsonObj);
 
     return document;
@@ -188,16 +188,16 @@ bool KSSDbus::checkFPDuplicateFiles(const QString &filePath, const QDBusMessage 
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, KSCErrorCode::ERROR_FAILED, message)
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_FAILED, message)
     }
 
-    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
+    auto jsonModules = jsonDoc.object().value(SSR_KSS_JK_DATA).toArray();
     for (const auto &module : jsonModules)
     {
         auto jsonMod = module.toObject();
-        if (jsonMod.value(KSC_KSS_JK_DATA_PATH).toString() == filePath)
+        if (jsonMod.value(SSR_KSS_JK_DATA_PATH).toString() == filePath)
         {
-            DBUS_ERROR_REPLY_AND_RETURN_VAL(false, KSCErrorCode::ERROR_TP_ADD_RECUR_FILE, message)
+            DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_TP_ADD_RECUR_FILE, message)
         }
     }
     return true;
@@ -211,18 +211,18 @@ QJsonDocument KSSDbus::trustedProtectedListToJsonDocument(const QStringList &fil
     for (auto filePath : fileList)
     {
         QJsonObject jsonObj{
-            {KSC_KSS_JK_DATA_PATH, filePath},
-            {KSC_KSS_JK_DATA_TYPE, 0},
-            {KSC_KSS_JK_DATA_STATUS, 0},
-            {KSC_KSS_JK_DATA_HASH, ""},
-            {KSC_KSS_JK_DATA_GUARD, 0}};
+            {SSR_KSS_JK_DATA_PATH, filePath},
+            {SSR_KSS_JK_DATA_TYPE, 0},
+            {SSR_KSS_JK_DATA_STATUS, 0},
+            {SSR_KSS_JK_DATA_HASH, ""},
+            {SSR_KSS_JK_DATA_GUARD, 0}};
 
         jsonArray.push_back(jsonObj);
     }
     QJsonObject jsonObj{
-        {KSC_KSS_JK_RES, 0},
-        {KSC_KSS_JK_COUNT, fileList.size()},
-        {KSC_KSS_JK_DATA, jsonArray}};
+        {SSR_KSS_JK_RES, 0},
+        {SSR_KSS_JK_COUNT, fileList.size()},
+        {SSR_KSS_JK_DATA, jsonArray}};
     document.setObject(jsonObj);
 
     return document;
@@ -232,7 +232,7 @@ void KSSDbus::addTPFileAfterAuthorization(const QDBusMessage &message, const QSt
 {
     if (filePath.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     auto output = KSSWrapper::getDefault()->addTrustedFile(filePath);
@@ -243,12 +243,12 @@ void KSSDbus::addTPFileAfterAuthorization(const QDBusMessage &message, const QSt
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_FAILED, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
 
-    if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
+    if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
     emit TrustedFilesChange();
 
@@ -260,7 +260,7 @@ void KSSDbus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QS
 {
     if (fileList.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     QJsonDocument jsonDataDoc = trustedProtectedListToJsonDocument(fileList);
     auto output = KSSWrapper::getDefault()->addTrustedFiles(QString(jsonDataDoc.toJson()));
@@ -270,12 +270,12 @@ void KSSDbus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QS
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_FAILED, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
 
-    if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
+    if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
 
     emit TrustedFilesChange();
@@ -288,7 +288,7 @@ void KSSDbus::removeTPFileAfterAuthorization(const QDBusMessage &message, const 
 {
     if (filePath.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     KSSWrapper::getDefault()->removeTrustedFile(filePath);
@@ -302,7 +302,7 @@ void KSSDbus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const
 {
     if (fileList.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     QJsonDocument jsonDoc = trustedProtectedListToJsonDocument(fileList);
     KSSWrapper::getDefault()->removeTrustedFiles(QString(jsonDoc.toJson()));
@@ -317,7 +317,7 @@ void KSSDbus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, b
 {
     if (filePath.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     KSSWrapper::getDefault()->prohibitUnloading(prohibited, filePath);
@@ -331,7 +331,7 @@ void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QSt
 {
     if (filePath.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     if (!checkFPDuplicateFiles(filePath, message))
     {
@@ -352,7 +352,7 @@ void KSSDbus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QS
 {
     if (fileList.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     QJsonDocument jsonDoc = fileProtectedListToJsonDocument(fileList);
@@ -367,7 +367,7 @@ void KSSDbus::removeFPFileAfterAuthorization(const QDBusMessage &message, const 
 {
     if (filePath.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     KSSWrapper::getDefault()->removeFile(filePath);
@@ -381,7 +381,7 @@ void KSSDbus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const
 {
     if (fileList.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     QJsonDocument jsonDoc = fileProtectedListToJsonDocument(fileList);
     KSSWrapper::getDefault()->removeFiles(QString(jsonDoc.toJson()));
@@ -395,14 +395,14 @@ void KSSDbus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint
 {
     if (KSS_DEFAULT_USER_PIN != userPin)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_USER_PIN_ERROR, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_USER_PIN_ERROR, message)
     }
 
-    auto error = KSSWrapper::getDefault()->setStorageMode(KSCKSSTrustedStorageType(type), userPin);
+    auto error = KSSWrapper::getDefault()->setStorageMode(SSRKSSTrustedStorageType(type), userPin);
 
     if (!error.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED, message)
     }
 
     auto replyMessage = message.createReply();

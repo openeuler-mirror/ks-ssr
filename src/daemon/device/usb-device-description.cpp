@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -16,7 +16,7 @@
 #include <qt5-log-i.h>
 #include <QFile>
 #include "config.h"
-#include "ksc-marcos.h"
+#include "ssr-marcos.h"
 
 namespace KS
 {
@@ -43,11 +43,11 @@ USBDeviceDescription::USBDeviceDescription(QObject *parent) : QObject(parent)
 
 void USBDeviceDescription::init()
 {
-    QFile file(KSC_DEVICE_USB_DESC_FILE);
+    QFile file(SSR_DEVICE_USB_DESC_FILE);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        KLOG_WARNING() << "Cannot open file " << KSC_DEVICE_USB_DESC_FILE;
+        KLOG_WARNING() << "Cannot open file " << SSR_DEVICE_USB_DESC_FILE;
         return;
     }
 
