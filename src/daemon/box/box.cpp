@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -20,10 +20,10 @@
 #include <QRandomGenerator>
 #include <QTime>
 #include "config.h"
-#include "include/ksc-error-i.h"
-#include "include/ksc-marcos.h"
-#include "ksc-error-i.h"
+#include "include/ssr-error-i.h"
+#include "include/ssr-marcos.h"
 #include "lib/base/crypto-helper.h"
+#include "ssr-error-i.h"
 
 namespace KS
 {
@@ -88,7 +88,7 @@ BoxRecord Box::getBoxInfo()
 
 int Box::delBox(const QString &currentPassword)
 {
-    int errorEode = KSCErrorCode::SUCCESS;
+    int errorEode = SSRErrorCode::SUCCESS;
     // 密码认证
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
@@ -96,7 +96,7 @@ int Box::delBox(const QString &currentPassword)
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Password error!";
-        errorEode = KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
+        errorEode = SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
         return errorEode;
     }
 
@@ -106,7 +106,7 @@ int Box::delBox(const QString &currentPassword)
         KLOG_DEBUG() << "The box has been mounted and cannot be deleted. uid = " << m_boxID;
 
         errorEode = umount();
-        if (errorEode != KSCErrorCode::SUCCESS)
+        if (errorEode != SSRErrorCode::SUCCESS)
         {
             return errorEode;
         }
@@ -114,10 +114,10 @@ int Box::delBox(const QString &currentPassword)
     }
 
     // 删除目录
-    QString dirPath = QString("%1/%2%3").arg(KSC_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
+    QString dirPath = QString("%1/%2%3").arg(SSR_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
     m_ecryptFS->rmBoxDir(dirPath);
 
-    QString mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
+    QString mountPath = QString("%1/%2").arg(SSR_BOX_MOUNT_DIR, boxInfo.boxName);
     m_ecryptFS->rmBoxDir(mountPath);
 
     // 删除数据库
@@ -142,14 +142,14 @@ int Box::mount(const QString &currentPassword)
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Mount password error!";
-        return KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
+        return SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
     }
 
     // 已挂载则返回
     if (boxInfo.mounted)
     {
         KLOG_WARNING() << "The box has been mounted and there is no need to repeat the operation. uid = " << m_boxID;
-        return KSCErrorCode::SUCCESS;
+        return SSRErrorCode::SUCCESS;
     }
 
     // 挂载
@@ -157,46 +157,46 @@ int Box::mount(const QString &currentPassword)
     auto decryptSig = CryptoHelper::aesDecrypt(boxInfo.encryptSig);
 
     // 在对应调用的用户根目录创建文件夹
-    auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
+    auto mountPath = QString("%1/%2").arg(SSR_BOX_MOUNT_DIR, boxInfo.boxName);
     if (!m_ecryptFS->mkdirBoxDir(mountPath, getUser()))
     {
-        return KSCErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
 
-    auto mountObjectPath = QString("%1/%2%3").arg(KSC_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
+    auto mountObjectPath = QString("%1/%2%3").arg(SSR_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
     if (!m_ecryptFS->decrypt(mountObjectPath, mountPath, decryptPspr, decryptSig))
     {
-        return KSCErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
 
     // 修改数据库中挂载状态
     if (!m_boxDao->modifyMountStatus(m_boxID, true))
     {
-        return KSCErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
-    return KSCErrorCode::SUCCESS;
+    return SSRErrorCode::SUCCESS;
 }
 
 int Box::umount(bool isForce)
 {
     auto boxInfo = getBoxInfo();
-    auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
+    auto mountPath = QString("%1/%2").arg(SSR_BOX_MOUNT_DIR, boxInfo.boxName);
 
     // 修改数据库中挂载状态
     if (!m_boxDao->modifyMountStatus(m_boxID, false))
     {
-        return KSCErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
 
     if (!m_ecryptFS->encrypt(mountPath, isForce).isEmpty())
     {
         // 挂载失败，将数据库中的数据改回去
         m_boxDao->modifyMountStatus(m_boxID, true);
-        return KSCErrorCode::ERROR_BM_UMOUNT_FAIL;
+        return SSRErrorCode::ERROR_BM_UMOUNT_FAIL;
     }
 
     m_ecryptFS->rmBoxDir(mountPath);
-    return KSCErrorCode::SUCCESS;
+    return SSRErrorCode::SUCCESS;
 }
 
 bool Box::modifyBoxPassword(const QString &currentPassword, const QString &newPassword)
@@ -234,13 +234,13 @@ bool Box::init(int &errorCode)
 {
     if (!addToDao())
     {
-        errorCode = KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD;
+        errorCode = SSRErrorCode::ERROR_BM_MOUDLE_UNLOAD;
         return false;
     }
 
     if (!mkdirSourceDir())
     {
-        errorCode = KSCErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED;
+        errorCode = SSRErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED;
         return false;
     }
     return true;
@@ -290,7 +290,7 @@ void Box::clearMountStatus()
     // 处理终端占用目录，且在挂载状态下重启的情况，重启后实际上已经取消挂载了，但目录依然存在
     if (!mounted())
     {
-        auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, m_name);
+        auto mountPath = QString("%1/%2").arg(SSR_BOX_MOUNT_DIR, m_name);
         m_ecryptFS->rmBoxDir(mountPath);
     }
     process->deleteLater();
@@ -300,13 +300,13 @@ bool Box::mkdirSourceDir()
 {
     // 创建对应文件夹 未挂载box
     // name+uid 命名 可区分不同用户下创建的相同文件夹名称
-    auto dataPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DATADIR, m_name + m_boxID);
+    auto dataPath = QString("%1/%2").arg(SSR_BOX_MOUNT_DATADIR, m_name + m_boxID);
     auto result = m_ecryptFS->mkdirBoxDir(dataPath, getUser());
     // 创建时失败需清除目录与数据库
     if (!result)
     {
         // 删除目录
-        QString dirPath = QString("%1/%2%3").arg(KSC_BOX_MOUNT_DATADIR, m_name, m_boxID);
+        QString dirPath = QString("%1/%2%3").arg(SSR_BOX_MOUNT_DATADIR, m_name, m_boxID);
         m_ecryptFS->rmBoxDir(dirPath);
         // 删除数据库
         m_boxDao->delBox(m_boxID);

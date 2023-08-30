@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -19,18 +19,18 @@
 #include <QJsonObject>
 #include <QThread>
 #include "config.h"
-#include "include/ksc-i.h"
-#include "include/ksc-marcos.h"
+#include "include/ssr-i.h"
+#include "include/ssr-marcos.h"
 
 namespace KS
 {
 // ini文件
-#define KSS_INI_PATH KSC_INSTALL_DATADIR "/ksc.ini"
-#define KSS_INI_KEY "ksc/initialized"
+#define KSS_INI_PATH SSR_INSTALL_DATADIR "/ssr.ini"
+#define KSS_INI_KEY "ssr/initialized"
 // 线程初始化 等待时长（30分钟）
 #define KSS_INIT_THREAD_TIMEOUT 30 * 60 * 1000
 
-#define KSS_JSON_KEY_DATA_PATH KSC_KSS_JK_DATA_PATH
+#define KSS_JSON_KEY_DATA_PATH SSR_KSS_JK_DATA_PATH
 
 // 暂时使用 -p 传入user pin，后续做需要做可信卡时再做修改
 #define KSS_INIT_CMD "kss card deploy -p"
@@ -102,22 +102,22 @@ void KSSWrapper::removeTrustedFile(const QString &filePath)
 
     // 需要判断内核模块是否开启防卸载
     QJsonParseError jsonError;
-    auto jsonDoc = QJsonDocument::fromJson(getTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_KERNEL).toUtf8(), &jsonError);
+    auto jsonDoc = QJsonDocument::fromJson(getTrustedFiles(SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_KERNEL).toUtf8(), &jsonError);
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
         return;
     }
 
-    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
+    auto jsonModules = jsonDoc.object().value(SSR_KSS_JK_DATA).toArray();
     for (const auto &module : jsonModules)
     {
         auto jsonMod = module.toObject();
-        if (filePath != jsonMod.value(KSC_KSS_JK_DATA_PATH).toString())
+        if (filePath != jsonMod.value(SSR_KSS_JK_DATA_PATH).toString())
         {
             continue;
         }
-        if (jsonMod.value(KSC_KSS_JK_DATA_GUARD).toInt() == 0)
+        if (jsonMod.value(SSR_KSS_JK_DATA_GUARD).toInt() == 0)
         {
             continue;
         }
@@ -136,40 +136,40 @@ void KSSWrapper::removeTrustedFiles(const QString &json)
 
     // 需要判断内核模块是否开启防卸载
     QJsonParseError jsonError;
-    auto jsonDoc = QJsonDocument::fromJson(getTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_KERNEL).toUtf8(), &jsonError);
+    auto jsonDoc = QJsonDocument::fromJson(getTrustedFiles(SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_KERNEL).toUtf8(), &jsonError);
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
         return;
     }
 
-    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
+    auto jsonModules = jsonDoc.object().value(SSR_KSS_JK_DATA).toArray();
     for (const auto &module : jsonModules)
     {
         auto jsonMod = module.toObject();
-        if (!json.contains(jsonMod.value(KSC_KSS_JK_DATA_PATH).toString()))
+        if (!json.contains(jsonMod.value(SSR_KSS_JK_DATA_PATH).toString()))
         {
             continue;
         }
-        if (jsonMod.value(KSC_KSS_JK_DATA_GUARD).toInt() == 0)
+        if (jsonMod.value(SSR_KSS_JK_DATA_GUARD).toInt() == 0)
         {
             continue;
         }
 
         // path正确且防卸载开启则需先关闭防卸载
-        prohibitUnloading(false, jsonMod.value(KSC_KSS_JK_DATA_PATH).toString());
+        prohibitUnloading(false, jsonMod.value(SSR_KSS_JK_DATA_PATH).toString());
     }
     // 移除
     auto cmd = QString("%1 -r -j '%2'").arg(KSS_DIGEST_SCAN_CMD, json);
     execute(cmd);
 }
 
-QString KSSWrapper::getTrustedFiles(KSCKSSTrustedFileType type)
+QString KSSWrapper::getTrustedFiles(SSRKSSTrustedFileType type)
 {
     RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
-    RETURN_VAL_IF_TRUE(type == KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_NONE, QString())
+    RETURN_VAL_IF_TRUE(type == SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_NONE, QString())
 
-    execute(type == KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE ? KSS_DIGEST_INFO_GET_EXECUTE_CMD : KSS_DIGEST_INFO_GET_KERNEL_CMD);
+    execute(type == SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_EXECUTE ? KSS_DIGEST_INFO_GET_EXECUTE_CMD : KSS_DIGEST_INFO_GET_KERNEL_CMD);
     return m_processOutput;
 }
 
@@ -179,28 +179,28 @@ void KSSWrapper::prohibitUnloading(bool prohibited, const QString &filePath)
     execute(cmd);
 }
 
-QString KSSWrapper::setStorageMode(KSCKSSTrustedStorageType type, const QString &userPin)
+QString KSSWrapper::setStorageMode(SSRKSSTrustedStorageType type, const QString &userPin)
 {
     RETURN_VAL_IF_TRUE(getInitialized() == 0, QString("Failed to set storage mode"))
-    RETURN_VAL_IF_TRUE(type == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_NONE, QString("Failed to set storage mode"))
+    RETURN_VAL_IF_TRUE(type == SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_NONE, QString("Failed to set storage mode"))
 
-    auto cmd = QString("%1 %2").arg(type == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ? KSS_SECURE_TCM_SOFT_CMD : KSS_SECURE_TCM_HARD_CMD, userPin);
+    auto cmd = QString("%1 %2").arg(type == SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_SOFT ? KSS_SECURE_TCM_SOFT_CMD : KSS_SECURE_TCM_HARD_CMD, userPin);
     execute(cmd);
 
     return m_errorOutput;
 }
 
-KSCKSSTrustedStorageType KSSWrapper::getCurrentStorageMode()
+SSRKSSTrustedStorageType KSSWrapper::getCurrentStorageMode()
 {
     execute(KSS_CARD_INFO_CMD);
 
     if (m_processOutput.trimmed() == "Software Backend")
     {
-        return KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT;
+        return SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_SOFT;
     }
     else
     {
-        return KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_HARD;
+        return SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_HARD;
     }
 }
 

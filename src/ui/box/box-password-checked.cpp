@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -13,7 +13,7 @@
  */
 #include "box-password-checked.h"
 #include <QRegularExpressionValidator>
-#include "include/ksc-i.h"
+#include "include/ssr-i.h"
 #include "ui_box-password-checked.h"
 namespace KS
 {
@@ -48,7 +48,7 @@ void BoxPasswordChecked::init()
     auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
     m_ui->m_inputPasswd->setValidator(validator);
     m_ui->m_inputPasswd->setEchoMode(QLineEdit::Password);
-    m_ui->m_inputPasswd->setMaxLength(KSC_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_inputPasswd->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
                 close();

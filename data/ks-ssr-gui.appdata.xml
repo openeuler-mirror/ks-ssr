@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-  <id>ks-sc-gui.desktop</id>
-  <pkgname>ks-sc</pkgname>
-  <name>Security Control</name>
-  <name xml:lang="zh_CN">安全管控</name>
-  <summary>Security Control</summary>
-  <summary xml:lang="zh_CN">安全管控</summary>
+  <id>ks-ssr-gui.desktop</id>
+  <pkgname>ks-ssr</pkgname>
+  <name>Security Reinforcement</name>
+  <name xml:lang="zh_CN">安全加固</name>
+  <summary>Security Reinforcement</summary>
+  <summary xml:lang="zh_CN">安全加固</summary>
   <developer_name>kylinsec</developer_name>
   <description>
   <p>
-   kylinsec system security control software.
+   kylinsec system security reinforcement software.
   </p>
   <p>
-   kylinsec system security control software.
+   kylinsec system security reinforcement software.
   </p>
   </description>
   <categories>
@@ -21,12 +21,12 @@
   </categories>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>No license</project_license>
-  <url type="homepage">http://gitlab.kylinsec.com.cn/ks-sc.git</url>
+  <url type="homepage">http://gitlab.kylinsec.com.cn/ks-ssr.git</url>
   <project_group>GNOME</project_group>
   <screenshots>
     <screenshot type="default">
       <caption>Describe the default screenshot</caption>
-      <image height="630" width="1120">http://gitlab.kylinsec.com.cn/ks-sc/appstream/ks-sc-gui.png</image>
+      <image height="630" width="1120">http://gitlab.kylinsec.com.cn/ks-ssr/appstream/ks-ssr-gui.png</image>
     </screenshot>
   </screenshots>
   <update_contact> yinhongchang@kylinsec.com.cn</update_contact>
