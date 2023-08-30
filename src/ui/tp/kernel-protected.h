@@ -14,45 +14,43 @@
 
 #pragma once
 
-#include <QListWidgetItem>
+#include <QTimer>
 #include <QWidget>
+#include "src/ui/tp/kernel-protected-table.h"
 
 namespace Ui
 {
-class TPPage;
+class KernelProtected;
 }
 
 namespace KS
 {
-class SidebarItem;
-class KernelProtected;
-class ExecuteProtected;
-class Loading;
-
-class TPPage : public QWidget
+class KernelProtected : public QWidget
 {
     Q_OBJECT
-
 public:
-    TPPage(QWidget *parent = nullptr);
-    virtual ~TPPage();
-
-protected:
-    void paintEvent(QPaintEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
+    KernelProtected(QWidget *parent = nullptr);
+    ~KernelProtected();
 
 private:
-    void initSidebar();
-    void initSubPage();
-    void checkTrustedLoadFinied(bool initialized);
-    void createSideBarItem(const QString &text, const QString &icon);
+    void updateTips(int total);
+    bool isExistSelectedItem();
 
-private slots:
-    void onItemClicked(QListWidgetItem *currItem);
+private Q_SLOTS:
+    void searchTextChanged(const QString &text);
+    void addKernelFile(bool checked);
+    void updateKernelList(bool checked);
+    void recertification(bool checked);
+    void popDeleteNotify(bool checked);
+    void removeKernelFiles();
+    void prohibitUnloading(bool status, const QString &path);
+    void updateRefreshIcon();
 
 private:
-    Ui::TPPage *m_ui;
-    QMap<QString, SidebarItem *> m_sidebarItems;
-    Loading *m_loading;
+    Ui::KernelProtected *m_ui;
+
+    KSSDbusProxy *m_dbusProxy;
+
+    QTimer *m_refreshTimer;
 };
 }  // namespace KS
