@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -15,11 +15,11 @@
 #define ERROR_H
 
 #include <QString>
-#include "ksc-error-i.h"
+#include "ssr-error-i.h"
 
 namespace KS
 {
-#define KSC_ERROR2STR(errorCode) Error::getErrorDesc(errorCode)
+#define SSR_ERROR2STR(errorCode) Error::getErrorDesc(errorCode)
 
 class Error
 {
@@ -27,7 +27,7 @@ public:
     Error();
     ~Error();
 
-    static QString getErrorDesc(KSCErrorCode errorCode);
+    static QString getErrorDesc(SSRErrorCode errorCode);
 };
 }  // namespace KS
 

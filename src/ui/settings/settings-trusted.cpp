@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -12,8 +12,8 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 #include "settings-trusted.h"
-#include "include/ksc-i.h"
-#include "src/ui/common/ksc-marcos-ui.h"
+#include "include/ssr-i.h"
+#include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/settings/trusted-user-pin.h"
 #include "ui_settings-trusted.h"
@@ -24,8 +24,8 @@ SettingsTrusted::SettingsTrusted(QWidget *parent) : QWidget(parent),
 {
     m_ui->setupUi(this);
 
-    m_kssDbusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
-                                      KSC_KSS_INIT_DBUS_OBJECT_PATH,
+    m_kssDbusProxy = new KSSDbusProxy(SSR_DBUS_NAME,
+                                      SSR_KSS_INIT_DBUS_OBJECT_PATH,
                                       QDBusConnection::systemBus(),
                                       this);
 
@@ -64,8 +64,8 @@ void SettingsTrusted::updateStorageMode()
 {
     // 通过后台是否设置成功修改按钮状态
     auto mode = m_kssDbusProxy->storageMode();
-    m_ui->m_soft->setChecked(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ? true : false);
-    m_ui->m_hard->setChecked(mode == KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT ? false : true);
+    m_ui->m_soft->setChecked(mode == SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_SOFT ? true : false);
+    m_ui->m_hard->setChecked(mode == SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_SOFT ? false : true);
 }
 
 bool SettingsTrusted::checkTrustedLoadFinied()
@@ -108,7 +108,7 @@ void SettingsTrusted::updateSoftRadio(bool checked)
         return;
     }
     m_userPin = new TrustedUserPin(this);
-    m_userPin->setType(KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT);
+    m_userPin->setType(SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_SOFT);
     connect(m_userPin, &TrustedUserPin::accepted, this, &SettingsTrusted::setStorageMode);
     connect(m_userPin, &TrustedUserPin::closed, this, &SettingsTrusted::updateStorageMode);
 
@@ -129,7 +129,7 @@ void SettingsTrusted::updateHardRadio(bool checked)
         return;
     }
     m_userPin = new TrustedUserPin(this);
-    m_userPin->setType(KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_HARD);
+    m_userPin->setType(SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_HARD);
     connect(m_userPin, &TrustedUserPin::accepted, this, &SettingsTrusted::setStorageMode);
     connect(m_userPin, &TrustedUserPin::closed, this, &SettingsTrusted::updateStorageMode);
 

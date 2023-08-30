@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -17,11 +17,11 @@
 #include <QFileDialog>
 #include <QPainter>
 #include <QWidgetAction>
-#include "ksc-i.h"
-#include "src/ui/common/ksc-marcos-ui.h"
+#include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_tp-kernel.h"
+#include "ssr-i.h"
 
 namespace KS
 {
@@ -32,8 +32,8 @@ TPKernel::TPKernel(QWidget *parent) : QWidget(parent),
 {
     m_ui->setupUi(this);
 
-    m_dbusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
-                                   KSC_KSS_INIT_DBUS_OBJECT_PATH,
+    m_dbusProxy = new KSSDbusProxy(SSR_DBUS_NAME,
+                                   SSR_KSS_INIT_DBUS_OBJECT_PATH,
                                    QDBusConnection::systemBus(),
                                    this);
     // 初始化完成自动刷新

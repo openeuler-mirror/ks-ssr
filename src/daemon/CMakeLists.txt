@@ -9,26 +9,26 @@ file(GLOB_RECURSE SRC_CPP_FILES ./*.cpp)
 
 qt5_add_dbus_adaptor(
   SECURITY_BOX_MANAGER_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BoxManager.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/box/box-manager.h
   KS::BoxManager
   box_manager_adaptor
   BoxManagerAdaptor)
 
 qt5_add_dbus_adaptor(
-  KSS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
+  KSS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.KSS.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/kss/kss-dbus.h KS::KSSDbus kss_dbus_adaptor
   KSSDbusAdaptor)
 
 qt5_add_dbus_adaptor(
   SECURITY_DEVICE_MANAGER_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.DeviceManager.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/device/device-dbus.h
   KS::DeviceDBus
   device_manager_adaptor
   DeviceManagerAdaptor)
 
-set(TARGET_NAME ks-sc-daemon)
+set(TARGET_NAME ks-ssr-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
@@ -59,5 +59,5 @@ target_link_libraries(
           lib-license
           ${LIBSYSTEMD_LIBRARIES})
 
-install(FILES ${QM_FILES} DESTINATION ${KSC_INSTALL_TRANSLATIONDIR})
+install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022 ~ 2023 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -25,7 +25,7 @@
 #include <cryptopp/rsa.h>
 #include <qt5-log-i.h>
 
-#include "include/ksc-marcos.h"
+#include "include/ssr-marcos.h"
 #include "lib/base/crypto-helper.h"
 
 using namespace CryptoPP;

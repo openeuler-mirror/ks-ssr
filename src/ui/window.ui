@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Security control</string>
+   <string>Security reinforcement</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">

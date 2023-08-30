@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -13,10 +13,10 @@
  */
 
 #include "src/daemon/device/device-dbus.h"
-#include <ksc-error-i.h>
-#include <ksc-i.h>
-#include <ksc-marcos.h>
 #include <qt5-log-i.h>
+#include <ssr-error-i.h>
+#include <ssr-i.h>
+#include <ssr-marcos.h>
 #include "lib/base/error.h"
 #include "src/daemon/common/polkit-proxy.h"
 #include "src/daemon/device/device-configuration.h"
@@ -34,7 +34,7 @@ DeviceDBus::DeviceDBus(DeviceManager *deviceManager, QObject *parent) : QObject(
 void DeviceDBus::init()
 {
     auto connection = QDBusConnection::systemBus();
-    if (!connection.registerObject(KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(SSR_DEVICE_MANAGER_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Failed to register object:" << connection.lastError();
     }
@@ -42,10 +42,10 @@ void DeviceDBus::init()
     connect(m_deviceManager, SIGNAL(deviceChanged(const QString &, int)), m_dbusAdaptor, SIGNAL(DeviceChanged(const QString &, int)));
 }
 
-CHECK_AUTH_WITH_2ARGS(DeviceDBus, ChangePermission, changePermission, KSC_PERMISSION_AUTHENTICATION, const QString &, const QString &)
-CHECK_AUTH_WITH_1ARGS(DeviceDBus, Enable, enable, KSC_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(DeviceDBus, Disable, disable, KSC_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_2ARGS(DeviceDBus, EnableInterface, enableInterface, KSC_PERMISSION_AUTHENTICATION, int, bool)
+CHECK_AUTH_WITH_2ARGS(DeviceDBus, ChangePermission, changePermission, SSR_PERMISSION_AUTHENTICATION, const QString &, const QString &)
+CHECK_AUTH_WITH_1ARGS(DeviceDBus, Enable, enable, SSR_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(DeviceDBus, Disable, disable, SSR_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_2ARGS(DeviceDBus, EnableInterface, enableInterface, SSR_PERMISSION_AUTHENTICATION, int, bool)
 
 QString DeviceDBus::GetDevices()
 {
@@ -70,7 +70,7 @@ QString DeviceDBus::GetDevicesByInterface(int interfaceType)
 
     if (interfaceType <= INTERFACE_TYPE_UNKNOWN || interfaceType >= INTERFACE_TYPE_LAST)
     {
-        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), KSCErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, this->message())
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, this->message())
     }
 
     auto devices = m_deviceManager->getDevicesByInterface(interfaceType);
@@ -96,7 +96,7 @@ QString DeviceDBus::GetDevice(const QString &id)
     else
     {
         KLOG_WARNING() << "Not found device which id is  " << id;
-        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), KSCErrorCode::ERROR_DEVICE_INVALID_ID, this->message())
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_DEVICE_INVALID_ID, this->message())
     }
 
     return QString(jsonDoc.toJson(QJsonDocument::Compact));
@@ -117,8 +117,8 @@ QString DeviceDBus::GetInterfaces()
         }
 #endif
         QJsonObject jsonObj{
-            {KSC_DI_JK_TYPE, type},
-            {KSC_DI_JK_ENABLE, deviceConfiguration->isIFCEnable(type)}};
+            {SSR_DI_JK_TYPE, type},
+            {SSR_DI_JK_ENABLE, deviceConfiguration->isIFCEnable(type)}};
 
         jsonArray.append(jsonObj);
     }
@@ -132,15 +132,15 @@ QString DeviceDBus::GetInterface(int type)
 {
     if (type <= INTERFACE_TYPE_UNKNOWN || type >= INTERFACE_TYPE_LAST)
     {
-        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), KSCErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, this->message())
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, this->message())
     }
 
     QJsonDocument jsonDoc;
     auto deviceConfiguration = DeviceConfiguration::instance();
 
     QJsonObject jsonObj{
-        {KSC_DI_JK_TYPE, type},
-        {KSC_DI_JK_ENABLE, deviceConfiguration->isIFCEnable(type)}};
+        {SSR_DI_JK_TYPE, type},
+        {SSR_DI_JK_ENABLE, deviceConfiguration->isIFCEnable(type)}};
     jsonDoc.setObject(jsonObj);
 
     return QString(jsonDoc.toJson(QJsonDocument::Compact));
@@ -155,7 +155,7 @@ void DeviceDBus::changePermission(const QDBusMessage &message,
     if (!device)
     {
         KLOG_WARNING() << "Failed to find device with id " << id;
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_ID, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
 
     QJsonParseError error;
@@ -164,13 +164,13 @@ void DeviceDBus::changePermission(const QDBusMessage &message,
     if (error.error != QJsonParseError::NoError)
     {
         KLOG_WARNING() << "Failed to create QJsonDocument with " << permissions;
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_PERM, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_PERM, message)
     }
 
     if (!jsonDoc.isObject())
     {
         KLOG_WARNING() << "QJsonDocument is not object with " << permissions;
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_PERM, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_PERM, message)
     }
 
 #define GET_JSON_STRING_VALUE(obj, key) ((obj).value(key).isString() ? (obj).value(key).toString() : nullptr)
@@ -178,9 +178,9 @@ void DeviceDBus::changePermission(const QDBusMessage &message,
 
     auto jsonObj = jsonDoc.object();
     auto permission = QSharedPointer<Permission>(new Permission{
-        .read = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_JK_READ),
-        .write = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_JK_WRITE),
-        .execute = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_JK_EXECUTE),
+        .read = GET_JSON_BOOL_VALUE(jsonObj, SSR_DEVICE_JK_READ),
+        .write = GET_JSON_BOOL_VALUE(jsonObj, SSR_DEVICE_JK_WRITE),
+        .execute = GET_JSON_BOOL_VALUE(jsonObj, SSR_DEVICE_JK_EXECUTE),
     });
 
 #undef GET_JSON_STRING_VALUE
@@ -205,7 +205,7 @@ void DeviceDBus::enable(const QDBusMessage &message,
     if (!device)
     {
         KLOG_WARNING() << "Failed to find device with id " << id;
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_ID, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
 
     device->setEnable(true);
@@ -224,7 +224,7 @@ void DeviceDBus::disable(const QDBusMessage &message,
     if (!device)
     {
         KLOG_WARNING() << "Failed to find device with id " << id;
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_ID, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
 
     device->setEnable(false);
@@ -242,13 +242,13 @@ void DeviceDBus::enableInterface(const QDBusMessage &message,
     if (type <= INTERFACE_TYPE_UNKNOWN || type >= INTERFACE_TYPE_LAST)
     {
         KLOG_WARNING() << "Illegal interface type " << type;
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, message)
     }
 
     if ((type == INTERFACE_TYPE_HDMI) && !m_deviceManager->isSupportHDMIDisable())
     {
         KLOG_WARNING() << "Not support disable HDMI interface.";
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_DISABLE_HDMI, message)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_DISABLE_HDMI, message)
     }
 
     DeviceConfiguration::instance()->setIFCEnable(type, enabled);
