@@ -57,25 +57,18 @@ class ResourceLimits:
     def set(self, args_json):
         args = json.loads(args_json)
 
-        self.conf.del_record(RESOURCE_LIMITS_KEY_STACK_SOFT)
-        self.conf.del_record(RESOURCE_LIMITS_KEY_STACK_HARD)
-        self.conf.del_record(RESOURCE_LIMITS_KEY_RSS_SOFT)
-        self.conf.del_record(RESOURCE_LIMITS_KEY_RSS_HARD)
+        ssr.utils.subprocess_not_output('echo \' \' > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
 
         if args['enabled']:
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, '8192')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, '10240')
-            ssr.utils.subprocess_not_output('ulimit -s {0}'.format('10240'))
-            ssr.utils.subprocess_not_output('ulimit -m {0}'.format('10240'))
         else:
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, 'unlimited')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, 'unlimited')
-            ssr.utils.subprocess_not_output('ulimit -s {0}'.format('unlimited'))
-            ssr.utils.subprocess_not_output('ulimit -m {0}'.format('unlimited'))
 
 
         return (True, '')
@@ -94,7 +87,7 @@ class HistorySizeLimit:
         else:
             retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = False
 
-        retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT] =  int(self.conf_bashrc.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE)) 
+        retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT] =  int(self.conf_bashrc.get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE))
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
