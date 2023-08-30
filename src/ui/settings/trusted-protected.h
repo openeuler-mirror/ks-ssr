@@ -14,45 +14,43 @@
 
 #pragma once
 
-#include <QListWidgetItem>
+#include <QButtonGroup>
 #include <QWidget>
 
 namespace Ui
 {
-class TPPage;
+class TrustedProtected;
 }
+
+class KSSDbusProxy;
 
 namespace KS
 {
-class SidebarItem;
-class KernelProtected;
-class ExecuteProtected;
-class Loading;
+class TrustedUserPin;
 
-class TPPage : public QWidget
+class TrustedProtected : public QWidget
 {
     Q_OBJECT
 
 public:
-    TPPage(QWidget *parent = nullptr);
-    virtual ~TPPage();
-
-protected:
-    void paintEvent(QPaintEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
+    TrustedProtected(QWidget *parent = nullptr);
+    ~TrustedProtected();
 
 private:
-    void initSidebar();
-    void initSubPage();
-    void checkTrustedLoadFinied(bool initialized);
-    void createSideBarItem(const QString &text, const QString &icon);
+    void initUI();
+    void updateStorageMode();
+    bool checkTrustedLoadFinied();
 
 private slots:
-    void onItemClicked(QListWidgetItem *currItem);
+    void setTrustedStatus(bool checked);
+    void updateSoftRadio(bool checked);
+    void updateHardRadio(bool checked);
+    void setStorageMode();
 
 private:
-    Ui::TPPage *m_ui;
-    QMap<QString, SidebarItem *> m_sidebarItems;
-    Loading *m_loading;
+    Ui::TrustedProtected *m_ui;
+
+    TrustedUserPin *m_userPin;
+    KSSDbusProxy *m_kssDbusProxy;
 };
 }  // namespace KS

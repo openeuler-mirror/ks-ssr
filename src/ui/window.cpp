@@ -25,11 +25,11 @@
 #include "src/ui/about.h"
 #include "src/ui/box/box-page.h"
 #include "src/ui/common/single-application/single-application.h"
-#include "src/ui/device/device-page.h"
+#include "src/ui/dm/device-page.h"
 #include "src/ui/fp/fp-page.h"
-#include "src/ui/license/license-activation.h"
+#include "src/ui/license/activation.h"
 #include "src/ui/navigation.h"
-#include "src/ui/settings/settings-page.h"
+#include "src/ui/settings/dialog.h"
 #include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
 
@@ -59,7 +59,7 @@ Window::~Window()
 
 void Window::initActivation()
 {
-    m_activation = new LicenseActivation(this);
+    m_activation = new Activation(this);
     m_licenseProxy = LicenseProxy::getDefault();
 
     if (!m_licenseProxy->isActivated())
@@ -71,7 +71,7 @@ void Window::initActivation()
         m_activation->raise();
         m_activation->show();
     }
-    connect(m_activation, &LicenseActivation::closed,
+    connect(m_activation, &Activation::closed,
             [this]
             {
                 //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
@@ -180,7 +180,7 @@ void Window::updateActivation()
 
 void Window::popupSettingsDialog()
 {
-    auto settingsDialog = new SettingsPage(this);
+    auto settingsDialog = new Dialog(this);
 
     auto x = this->x() + this->width() / 4 + settingsDialog->width() / 16;
     auto y = this->y() + this->height() / 4 + settingsDialog->height() / 16;

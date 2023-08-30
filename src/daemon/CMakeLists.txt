@@ -23,7 +23,7 @@ qt5_add_dbus_adaptor(
 qt5_add_dbus_adaptor(
   SECURITY_DEVICE_MANAGER_SRCS
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.DeviceManager.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/device/device-dbus.h
+  ${CMAKE_SOURCE_DIR}/src/daemon/dm/device-dbus.h
   KS::DeviceDBus
   device_manager_adaptor
   DeviceManagerAdaptor)

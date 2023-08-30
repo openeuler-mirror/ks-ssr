@@ -52,7 +52,7 @@ FPPage::FPPage(QWidget *parent) : QWidget(parent),
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addProtectedFile(bool)));
     //    connect(m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
     connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(popDeleteNotify(bool)));
-    connect(m_ui->m_fileTable, &FPFileTable::filesUpdate, this, &FPPage::updateTips);
+    connect(m_ui->m_fileTable, &FileTable::filesUpdate, this, &FPPage::updateTips);
 }
 
 FPPage::~FPPage()
