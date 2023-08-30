@@ -249,7 +249,7 @@ msgstr "系统中重要配置文件的最大权限设置为0644"
 #: ../data/ssr-system-rs.xml.in.h:16
 #: ../plugins/python/ssr-plugin-config.xml.in.h:8
 msgid "Turn on composite key reboot"
-msgstr "开启组合键重启"
+msgstr "开启组合键重启（注销用户后生效）"
 
 #: ../data/ssr-system-rs.xml.in.h:17
 msgid "Password error times"
@@ -348,7 +348,7 @@ msgstr "日志文件仅能被添加"
 
 #: ../data/ssr-system-rs.xml.in.h:41
 msgid "Allow to use CD-ROM device"
-msgstr "允许使用光驱设备"
+msgstr "允许使用光驱设备（加固时间较长，请耐心等待）"
 
 #: ../data/ssr-system-rs.xml.in.h:42
 msgid "Allow to use USB device"
