@@ -13,10 +13,10 @@
 #define PROJECT_VERSION "@PROJECT_VERSION@"
 #define PROJECT_SOURCE_DIR "@PROJECT_SOURCE_DIR@"
 #define SSR_DEVICE_UDEV_RULES_FILE "@SSR_DEVICE_UDEV_RULES_FILE@"
-#define SSR_DEVICE_CONFIG_FILE "@SSR_INSTALL_DATADIR@/device/device-config.ini"
-#define SSR_DI_CONFIG_FILE "@SSR_INSTALL_DATADIR@/device/device-interface-config.ini"
+#define SSR_DEVICE_CONFIG_FILE "@SSR_INSTALL_DATADIR@/dm/device-config.ini"
+#define SSR_DI_CONFIG_FILE "@SSR_INSTALL_DATADIR@/dm/device-interface-config.ini"
 #define SSR_DI_GRUB_FILE "@CMAKE_INSTALL_FULL_SYSCONFDIR@/default/grub"
-#define SSR_DEVICE_CONNECT_LOG_FILE "@SSR_INSTALL_DATADIR@/device/device-connect-record.ini"
+#define SSR_DEVICE_CONNECT_LOG_FILE "@SSR_INSTALL_DATADIR@/dm/device-connect-record.ini"
 #define DBUS_TIMEOUT_MS 300
 #define SSR_DEVICE_USB_DESC_FILE "@SSR_DEVICE_USB_DESC_FILE@"
 #define SSR_DEVICE_SYS_MOUNT_FILE "/proc/mounts"

@@ -19,8 +19,8 @@
 #include <QJsonObject>
 #include <QLineEdit>
 #include "lib/base/crypto-helper.h"
+#include "src/ui/box/box-creation.h"
 #include "src/ui/box/box.h"
-#include "src/ui/box/create-box.h"
 #include "src/ui/box_manager_proxy.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/ui_box-page.h"
@@ -138,14 +138,14 @@ void BoxPage::boxChanged(const QString &boxUID)
 
 void BoxPage::newBoxClicked(bool checked)
 {
-    m_createBox = new CreateBox(this);
+    m_createBox = new BoxCreation(this);
     m_createBox->setFixedSize(419, 369);
     m_createBox->setTitle(tr("Create box"));
 
     connect(m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
-    connect(m_createBox, &CreateBox::passwdInconsistent, this, [this]
+    connect(m_createBox, &BoxCreation::passwdInconsistent, this, [this]
             { POPUP_MESSAGE_DIALOG(tr("Please confirm whether the password is consistent.")); });
-    connect(m_createBox, &CreateBox::inputEmpty, this, [this]
+    connect(m_createBox, &BoxCreation::inputEmpty, this, [this]
             { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
 
     int x = window()->x() + window()->width() / 4 + m_createBox->width() / 4;
@@ -161,8 +161,8 @@ void BoxPage::createBoxAccepted()
     // rsa加密
     auto encryptPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_createBox->getPassword());
     auto reply = m_boxManagerProxy->CreateBox(m_createBox->getName(),
-                                              encryptPassword,
-                                              passphrase);
+                                                encryptPassword,
+                                                passphrase);
     auto boxID = reply.value();
     if (!reply.error().message().isEmpty())
     {

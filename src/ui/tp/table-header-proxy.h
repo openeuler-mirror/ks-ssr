@@ -14,45 +14,32 @@
 
 #pragma once
 
-#include <QListWidgetItem>
-#include <QWidget>
-
-namespace Ui
-{
-class TPPage;
-}
-
+#include <QHeaderView>
 namespace KS
 {
-class SidebarItem;
-class KernelProtected;
-class ExecuteProtected;
-class Loading;
-
-class TPPage : public QWidget
+class TableHeaderProxy : public QHeaderView
 {
     Q_OBJECT
-
 public:
-    TPPage(QWidget *parent = nullptr);
-    virtual ~TPPage();
+    explicit TableHeaderProxy(QWidget *parent = nullptr);
 
 protected:
-    void paintEvent(QPaintEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void paintSection(QPainter *painter,
+                      const QRect &rect,
+                      int logicalIndex) const override;
+
+signals:
+    void toggled(Qt::CheckState checkState);
+
+public slots:
+    void setCheckState(Qt::CheckState checkState);
 
 private:
-    void initSidebar();
-    void initSubPage();
-    void checkTrustedLoadFinied(bool initialized);
-    void createSideBarItem(const QString &text, const QString &icon);
+    bool m_stateChanged;
+    Qt::CheckState m_checkState;
 
-private slots:
-    void onItemClicked(QListWidgetItem *currItem);
-
-private:
-    Ui::TPPage *m_ui;
-    QMap<QString, SidebarItem *> m_sidebarItems;
-    Loading *m_loading;
+    QRect *m_rect;
 };
+
 }  // namespace KS
