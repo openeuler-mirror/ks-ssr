@@ -26,7 +26,7 @@
                 <name>ports</name>
                 <value>""</value>
                 <value_limits>((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))((\/tcp)|(\/udp))(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))((\/tcp)|(\/udp)))*</value_limits>
-                <input_example>0~60999/(tcp|udp)</input_example>
+                <input_example>1~60999/(tcp|udp)</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Opened ports (Split with semicolon)</_label>
