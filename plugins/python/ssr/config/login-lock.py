@@ -7,6 +7,7 @@ import ssr.configuration
 #对3.3和3.4做不同的处理
 #对于需要插入配置的情况处理,未开启登录锁定.
 
+LIGHTDM_CONF_PATH = "/etc/pam.d/lightdm"
 LOGIN_LOCK_SYSTEM_CONF_PATH = "/etc/pam.d/system-auth"
 LOGIN_LOCK_PASSWORD_CONF_PATH = "/etc/pam.d/password-auth"
 LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH = "auth        requisite                                    pam_faillock.so preauth audit"
@@ -23,6 +24,8 @@ LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN = "auth\\s+required\\s+pam_faild
 LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN = "auth\\s+requisite\\s+pam_succeed_if.so"
 LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN = "auth\\s+requisite\\s+pam_succeed_if.so"
 LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN = "account\\s+required\\s+pam_unix.so"
+
+LIGHTDM_CONF_REGEX = "auth\\s+required\\pam_tally2.so"
 
 LOGIN_LOCK_CONF_KEY_FAILURES = "deny"
 LOGIN_LOCK_CONF_KEY_UNLOCK_TIME = "unlock_time"
@@ -41,6 +44,8 @@ class LoginLock:
         self.password_faillock_authsucc = ssr.configuration.PAM(LOGIN_LOCK_PASSWORD_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC_REGEX)
         self.password_faillock_account = ssr.configuration.PAM(LOGIN_LOCK_PASSWORD_CONF_PATH, LOGIN_LOCK_CONF_KEY_FAILLOCK_REGEX)
 
+        self.lightdm_tally2 = ssr.configuration.PAM(LIGHTDM_CONF_PATH, LIGHTDM_CONF_REGEX)
+
     def get(self):
         retdata = dict()
 
@@ -58,6 +63,9 @@ class LoginLock:
 
     def set(self, args_json):
         args = json.loads(args_json)
+
+        ## Delete ligthdm tally2.so
+        self.lightdm_tally2.del_line()
 
         ##system-auth
         if len(self.system_faillock_preauth.get_line()) == 0:
