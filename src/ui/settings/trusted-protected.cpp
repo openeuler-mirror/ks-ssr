@@ -11,11 +11,11 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+#include "trusted-protected.h"
 #include "include/ssr-i.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/settings/trusted-user-pin.h"
-#include "trusted-protected.h"
 #include "ui_trusted-protected.h"
 namespace KS
 {
