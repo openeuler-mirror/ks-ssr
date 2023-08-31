@@ -11,11 +11,11 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+#include "kernel-protected-delegate.h"
 #include <QApplication>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
-#include "kernel-protected-delegate.h"
 
 namespace KS
 {

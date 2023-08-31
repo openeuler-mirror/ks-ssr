@@ -11,6 +11,7 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+#include "src/ui/tp/kernel-protected.h"
 #include <qt5-log-i.h>
 #include <QDir>
 #include <QFileDialog>
@@ -18,7 +19,6 @@
 #include <QWidgetAction>
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/kss_dbus_proxy.h"
-#include "src/ui/tp/kernel-protected.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_kernel-protected.h"
 #include "ssr-i.h"
