@@ -23,19 +23,19 @@ EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH | stat.
 PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
 PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT = "append-permissions-limit"
 
-LOGFILE_ROTETE_CONF = '### KSSRManager ###\
-/var/log/messages\
-{\
-    missingok\
-    sharedscripts\
-    prerotate\
-        /usr/bin/chattr -a /var/log/messages\
-    endscript\
-    postrotate\
-        /usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true\
-        /usr/bin/chattr +a /var/log/messages\
-    endscript\
-}\
+LOGFILE_ROTETE_CONF = '### KSSRManager ###\n\
+/var/log/messages\n\
+{\n\
+    missingok\n\
+    sharedscripts\n\
+    prerotate\n\
+        /usr/bin/chattr -a /var/log/messages\n\
+    endscript\n\
+    postrotate\n\
+        /usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true\n\
+        /usr/bin/chattr +a /var/log/messages\n\
+    endscript\n\
+}\n\
 ### KSSRManager ###'
 
 
@@ -123,8 +123,8 @@ class Permissions:
             if len(output) != 0:
                 line = output.split()
                 ssr.utils.subprocess_not_output('sed -i \'{0},{1}d\' {2}'.format(line[0], line[1], LOGFILE_CONF_FILEPATH))
+                ssr.utils.subprocess_not_output('sed -i "1i{0}" {1}'.format('/var/log/messages', LOGFILE_CONF_FILEPATH))
 
             ssr.utils.subprocess_not_output('chattr -a {0}'.format('/var/log/messages'))
-            ssr.utils.subprocess_not_output('sed -i "1i{0}" {1}'.format('/var/log/messages', LOGFILE_CONF_FILEPATH))
 
         return (True, '')
