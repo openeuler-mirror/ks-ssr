@@ -101,8 +101,8 @@ class SwitchBase(object):
             else:
                 if self.systemd_proxy.exist():
                     if self.systemd_proxy.stop():
-                        if not self.systemd_proxy.service_stop():
-                            return (False, 'Unable to stop service! \t\t')
+                        # if not self.systemd_proxy.service_stop():
+                        return (False, 'Unable to stop service! \t\t')
                     #self.systemd_proxy.kill()
                     self.systemd_proxy.disable()
             return (True, '')
