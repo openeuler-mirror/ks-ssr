@@ -34,7 +34,7 @@ Configuration::~Configuration()
 {
 }
 
-Configuration* Configuration::instance_ = nullptr;
+Configuration* Configuration::instance_ = NULL;
 void Configuration::global_init(const std::string& config_path)
 {
     instance_ = new Configuration(config_path);
@@ -107,17 +107,20 @@ bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcemen
 
     bool match_reinforcement = false;
 
-    for (auto& reinforcement : ra->reinforcement())
+    auto& reinforcements = ra->reinforcement();
+    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        CONTINUE_IF_TRUE(reinforcement.name() != rs_reinforcement.name());
+        CONTINUE_IF_TRUE(iter->name() != rs_reinforcement.name());
 
         match_reinforcement = true;
-        for (auto& new_arg : rs_reinforcement.arg())
+        auto& new_args = rs_reinforcement.arg();
+        for (auto new_arg_iter = new_args.begin(); new_arg_iter != new_args.end(); ++new_arg_iter)
         {
-            for (auto& old_arg : reinforcement.arg())
+            auto& old_args = iter->arg();
+            for (auto old_arg_iter = old_args.begin(); old_arg_iter != old_args.end(); ++old_arg_iter)
             {
-                CONTINUE_IF_TRUE(old_arg.name() != new_arg.name());
-                old_arg.value(new_arg.value());
+                CONTINUE_IF_TRUE(old_arg_iter->name() != new_arg_iter->name());
+                old_arg_iter->value(new_arg_iter->value());
                 break;
             }
         }
@@ -129,8 +132,11 @@ bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcemen
     {
         Protocol::Reinforcement used_reinforcement(rs_reinforcement.name());
 
-        for (auto& arg : rs_reinforcement.arg())
+        const auto& args = rs_reinforcement.arg();
+
+        for (auto iter = args.begin(); iter != args.end(); ++iter)
         {
+            auto& arg = (*iter);
             Protocol::ReinforcementArg used_arg(arg.name(), arg.value());
             used_reinforcement.arg().push_back(used_arg);
         }
@@ -203,17 +209,19 @@ void Configuration::load_rs()
 
     auto ra = this->read_ra_from_file();
     // 将固定不变的加固标准部分和用户修改的自定义部分进行整合
-    for (const auto& custom_r : ra->reinforcement())
+    auto& custom_reinforcements = ra->reinforcement();
+    for (auto custom_iter = custom_reinforcements.begin(); custom_iter != custom_reinforcements.end(); ++custom_iter)
     {
-        for (auto& fixed_r : this->rs_->body().reinforcement())
+        auto& fixed_reinforcements = this->rs_->body().reinforcement();
+        for (auto fixed_iter = fixed_reinforcements.begin(); fixed_iter != fixed_reinforcements.end(); ++fixed_iter)
         {
-            CONTINUE_IF_TRUE(custom_r.name() != fixed_r.name());
-            this->join_reinforcement(fixed_r, custom_r);
+            CONTINUE_IF_TRUE(custom_iter->name() != fixed_iter->name());
+            this->join_reinforcement((*fixed_iter), (*custom_iter));
         }
     }
 }
 
-std::shared_ptr<RS> Configuration::get_fixed_rs()
+std::shared_ptr<Protocol::RS> Configuration::get_fixed_rs()
 {
     KLOG_PROFILE("");
 
@@ -225,16 +233,16 @@ std::shared_ptr<RS> Configuration::get_fixed_rs()
         auto rs_decrypted = this->decrypt_file(rs_file_path);
         KLOG_DEBUG("%s", rs_decrypted.c_str());
         std::istringstream rs_istream(rs_decrypted);
-        return ssr_rs(rs_istream, xml_schema::Flags::dont_validate);
+        return std::make_shared<Protocol::RS>(*ssr_rs(rs_istream, xml_schema::Flags::dont_validate));
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
     }
-    return nullptr;
+    return std::shared_ptr<Protocol::RS>();
 }
 
-std::shared_ptr<RA> Configuration::read_ra_from_file()
+std::shared_ptr<Protocol::RA> Configuration::read_ra_from_file()
 {
     KLOG_PROFILE("");
 
@@ -243,13 +251,13 @@ std::shared_ptr<RA> Configuration::read_ra_from_file()
 
     try
     {
-        return ssr_ra(CUSTOM_RA_FILEPATH, xml_schema::Flags::dont_validate);
+        return std::make_shared<Protocol::RA>(*ssr_ra(CUSTOM_RA_FILEPATH, xml_schema::Flags::dont_validate));
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
     }
-    return std::make_shared<RA>();
+    return std::make_shared<Protocol::RA>();
 }
 
 bool Configuration::write_ra_to_file(std::shared_ptr<Protocol::RA> ra)
@@ -273,13 +281,15 @@ void Configuration::join_reinforcement(Reinforcement& to_r, const Reinforcement&
 {
     KLOG_DEBUG("Join reinforcement %s.", from_r.name().c_str());
 
-    for (const auto& from_ra : from_r.arg())
+    const auto& from_args = from_r.arg();
+    for (auto from_arg_iter = from_args.begin(); from_arg_iter != from_args.end(); ++from_arg_iter)
     {
-        for (auto& to_ra : to_r.arg())
+        auto& to_args = to_r.arg();
+        for (auto to_arg_iter = to_args.begin(); to_arg_iter != to_args.end(); ++to_arg_iter)
         {
-            CONTINUE_IF_TRUE(from_ra.name() != to_ra.name());
-            KLOG_DEBUG("New argument: %s, old argument: %s.", from_ra.value().c_str(), to_ra.value().c_str());
-            to_ra.value(from_ra.value());
+            CONTINUE_IF_TRUE(from_arg_iter->name() != to_arg_iter->name());
+            KLOG_DEBUG("New argument: %s, old argument: %s.", from_arg_iter->value().c_str(), to_arg_iter->value().c_str());
+            to_arg_iter->value(from_arg_iter->value());
             break;
         }
     }
@@ -341,13 +351,15 @@ bool Configuration::save_to_file()
 {
     try
     {
-        return this->configuration_.save_to_file(this->config_path_);
+        auto data = this->configuration_.to_data();
+        Glib::file_set_contents(this->config_path_, data);
     }
     catch (const Glib::Error& e)
     {
         KLOG_WARNING("%s.", e.what().c_str());
         return false;
     }
+    return true;
 }
 
 }  // namespace Daemon

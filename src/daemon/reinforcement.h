@@ -47,7 +47,7 @@ private:
     std::map<std::string, std::shared_ptr<Rule>> rules_;
 };
 
-using SSRReinforcementVec = std::vector<std::shared_ptr<Reinforcement>>;
+typedef std::vector<std::shared_ptr<Reinforcement>> SSRReinforcementVec;
 
 }  // namespace Daemon
 }  // namespace KS

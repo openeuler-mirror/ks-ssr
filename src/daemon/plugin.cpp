@@ -49,20 +49,22 @@ bool Plugin::init()
 std::vector<std::string> Plugin::get_reinforcement_names()
 {
     std::vector<std::string> names;
-    for (const auto& reinforcement_config : this->plugin_config_->reinforcement())
+    const auto& reinforcements = this->plugin_config_->reinforcement();
+    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        names.push_back(reinforcement_config.name());
+        names.push_back((*iter).name());
     }
     return names;
 }
 
 const Protocol::Reinforcement* Plugin::get_reinforcement_config(const std::string& name)
 {
-    for (const auto& reinforcement_config : this->plugin_config_->reinforcement())
+    const auto& reinforcements = this->plugin_config_->reinforcement();
+    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        RETURN_VAL_IF_TRUE(reinforcement_config.name() == name, &reinforcement_config);
+        RETURN_VAL_IF_TRUE((*iter).name() == name, &(*iter));
     }
-    return nullptr;
+    return NULL;
 }
 
 bool Plugin::load_plugin_module()

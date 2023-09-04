@@ -21,20 +21,15 @@ namespace KS
 #define SSR_CONNECT(text1, text2) SSR_CONNECTION(text1, text2)
 #define CONF_FILE_PERMISSION 0644
 
-class SSRDefer
-{
-public:
-    SSRDefer(std::function<void(std::string)> func, std::string fun_name) : func_(func),
-                                                                            fun_name_(fun_name) {}
-    ~SSRDefer() { func_(fun_name_); }
+#define BREAK_IF_FALSE(cond) \
+    {                        \
+        if (!(cond)) break;  \
+    }
 
-private:
-    std::function<void(std::string)> func_;
-    std::string fun_name_;
-};
-
-// helper macro for Defer class
-#define SSR_SCOPE_EXIT(block) SSRDefer SSR_CONNECT(_defer_, __LINE__)([&](std::string _arg_function) block, __FUNCTION__)
+#define BREAK_IF_TRUE(cond) \
+    {                       \
+        if (cond) break;    \
+    }
 
 #define RETURN_VAL_IF_FALSE(cond, val)             \
     {                                              \
@@ -111,35 +106,5 @@ private:
     }
 
 #define POINTER_TO_STRING(p) ((p) ? p : std::string())
-
-using StringHash = uint32_t;
-
-constexpr StringHash prime = 9973;
-constexpr StringHash basis = 0xCBF29CE4ul;
-constexpr StringHash hash_compile_time(char const *str, StringHash last_value = basis)
-{
-    return *str ? hash_compile_time(str + 1, (StringHash)((*str ^ last_value) * (uint64_t)prime)) : last_value;
-}
-
-inline StringHash shash(char const *str)
-{
-    StringHash ret{basis};
-
-    while (*str)
-    {
-        ret ^= *str;
-        ret *= prime;
-        str++;
-    }
-
-    return ret;
-}
-
-/// compile-time hash of string.
-/// usage: "XXX"_hash
-constexpr StringHash operator"" _hash(char const *p, size_t)
-{
-    return hash_compile_time(p);
-}
 
 }  // namespace KS
