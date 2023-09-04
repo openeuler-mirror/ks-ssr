@@ -54,6 +54,6 @@ private:
     // std::map<std::string, std::shared_ptr<SSRReinforcement>> reinforcements_;
 };
 
-using SSRPluginVec = std::vector<std::shared_ptr<Plugin>>;
+typedef std::vector<std::shared_ptr<Plugin>> SSRPluginVec;
 }  // namespace Daemon
 }  // namespace KS
