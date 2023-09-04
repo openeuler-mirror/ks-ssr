@@ -31,6 +31,11 @@
         <_description>Avoid null password user in the system</_description>
     </reinforcement>
     <reinforcement>
+        <name>external-accounts-surplus-user</name>
+        <_label>Delete redundant users</_label>
+        <_description>Delete lp, games, operator, adm by default and add and delete by user</_description>
+    </reinforcement>
+    <reinforcement>
         <name>external-sshd-root-login</name>
         <_label>Remote login restrictions for root user</_label>
         <_description>Restrict remote login of root user through SSH connection</_description>
@@ -49,6 +54,11 @@
         <name>external-sshd-banner-info</name>
         <_label>SSH login banner information</_label>
         <_description>Avoid the leakage of operating system version information through SSH</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>external-sshd-service</name>
+        <_label>Sshd service reinforcement</_label>
+        <_description>Restricted security protocol, empty password user login, SSH port, PAM</_description>
     </reinforcement>
     <reinforcement>
         <name>external-pam-su-wheel</name>

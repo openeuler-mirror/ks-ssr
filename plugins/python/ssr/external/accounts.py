@@ -33,6 +33,17 @@ LOGIN_LIMIT_ARG_PERMISSION_USERS = "permission-users"
 # 禁止存在空密码账号
 NULL_PASSWORD_ARG_ENABLED = "enabled"
 
+# 多余用户
+ACCOUNTS_GROUP_SURPLUS = "SurplusUser"
+# 用户自定义删除用户
+SURPLUS_DELETE_USERS = "delete-users"
+# LPK: Accounts LoginLimit Key
+ALK_MODE_DELETE_USERS = "DeleteUsers"
+# 默认删除用户
+DEAFULT_DELETE_USERS = ("lp","games","operator","adm")
+
+SURPLUS_DELETE_ENABLED = "enabled"
+
 # GET_USER_NAME_CMD = "eval getent passwd {$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)..$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)} | cut -d: -f1"
 GET_MINIMUM_UID = "awk '/^UID_MIN/ {print $2}' /etc/login.defs"
 GET_MAXIMUM_UID = "awk '/^UID_MAX/ {print $2}' /etc/login.defs"
@@ -139,5 +150,45 @@ class NullPassword(Accounts):
                 if self.is_null_password(pwdent.pw_name) and pwdent.pw_uid != 0:
                     ssr.log.debug("del  pwdent.pw_name = ", pwdent.pw_name, "pw_uid = ", pwdent.pw_uid)
                     ssr.utils.subprocess_not_output("userdel -r {0}".format(pwdent.pw_name))
+
+        return (True, '')
+
+class SurplusUser():
+    def __init__(self):
+        self.conf = configparser.ConfigParser()
+        self.conf.read(ACCOUNTS_INI_FILEPATH)
+    
+    def get(self):
+        retdata = dict()
+        retdata[SURPLUS_DELETE_ENABLED] = True
+        retdata[SURPLUS_DELETE_USERS] = self.conf.get(ACCOUNTS_GROUP_SURPLUS, ALK_MODE_DELETE_USERS)
+        delete_users = retdata[SURPLUS_DELETE_USERS].split(";")
+
+        for pwdent in pwd.getpwall():
+            if ( DEAFULT_DELETE_USERS.__contains__(pwdent.pw_name)
+                    or delete_users.__contains__(pwdent.pw_name)):
+                retdata[SURPLUS_DELETE_ENABLED] = False
+                break
+            else:
+                continue
+
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+
+        self.conf.set(ACCOUNTS_GROUP_SURPLUS, ALK_MODE_DELETE_USERS, args[SURPLUS_DELETE_USERS])
+        self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
+        delete_users = args[SURPLUS_DELETE_USERS].split(";")
+
+        if args[SURPLUS_DELETE_ENABLED]:
+            for pwdent in pwd.getpwall():
+                if (DEAFULT_DELETE_USERS.__contains__(pwdent.pw_name)
+                    or delete_users.__contains__(pwdent.pw_name)):
+                    ssr.log.debug(str(pwdent.pw_name))
+                    if pwdent.pw_uid != 0:
+                        ssr.utils.subprocess_not_output("userdel -r {0}".format(pwdent.pw_name))
+                else:
+                    continue
 
         return (True, '')
