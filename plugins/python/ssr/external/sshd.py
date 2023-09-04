@@ -26,6 +26,18 @@ PROFILE_TMOUT_RXPORT = "export TMOUT"
 DEFAULT_CIPHERS = ("aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-cbc", "3des-cbc")
 WEAK_CIPHERS = ("arcfour", "arcfour128", "arcfour256")
 
+# sshd服务限制
+
+SSHD_CONF_PROTOCOL_KEY = "protocol"
+SSHD_CONF_PERMIT_EMPTY_KEY = "permitEmpty"
+SSHD_CONF_PORT_KEY = "port"
+SSHD_CONF_PAM_KEY = "pam"
+
+# sshd服务限制匹配字段
+SSHD_CONF_PROTOCOL = "Protocol"
+SSHD_CONF_PERMIT_EMPTY = "PermitEmptyPasswords"
+SSHD_CONF_PORT = "Port"
+SSHD_CONF_PAM = "UsePAM"
 
 class SSHD:
     def __init__(self):
@@ -143,6 +155,26 @@ class SessionTimeout(SSHD):
                 self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,args[PROFILE_CLIENT_TMOUT])
             #self.conf_bashrc.set_all_value(PROFILE_TMOUT,"")
             #self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
+
+        # 重启服务生效
+        self.service.restart()
+        return (True, '')
+
+class SshdService(SSHD):
+    def get(self):
+        retdata = dict()
+        retdata[SSHD_CONF_PROTOCOL_KEY] = (self.conf.get_value(SSHD_CONF_PROTOCOL) == "2")
+        retdata[SSHD_CONF_PERMIT_EMPTY_KEY] = (not (self.conf.get_value(SSHD_CONF_PERMIT_EMPTY) == "no"))
+        retdata[SSHD_CONF_PORT_KEY] = (self.conf.get_value(SSHD_CONF_PORT) == "1022")
+        retdata[SSHD_CONF_PAM_KEY] = (not (self.conf.get_value(SSHD_CONF_PAM) == "no"))
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+        self.conf.set_value(SSHD_CONF_PROTOCOL, "2" if args[SSHD_CONF_PROTOCOL_KEY] else "")
+        self.conf.set_value(SSHD_CONF_PERMIT_EMPTY, "yes" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "no")
+        self.conf.set_value(SSHD_CONF_PORT, "1022" if args[SSHD_CONF_PORT_KEY] else "")
+        self.conf.set_value(SSHD_CONF_PAM, "yes" if args[SSHD_CONF_PAM_KEY] else "no")
 
         # 重启服务生效
         self.service.restart()
