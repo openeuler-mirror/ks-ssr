@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <ssr_dbus_stub.h>
 #include "src/daemon/job.h"
 
 #include "license_manager_dbus_proxy.h"
 #include "license_object_dbus_proxy.h"
+#include "ssr_dbus_stub.h"
 
 namespace KS
 {
@@ -23,66 +23,96 @@ class Plugins;
 class Job;
 class LicenseObject;
 
-class DBus : public kylinsec::SSRStub
+class DBus : public com::kylinsec::SSR_adaptor,
+             public ::DBus::IntrospectableAdaptor,
+             public ::DBus::ObjectAdaptor,
+             public ::DBus::PropertiesAdaptor
 {
+    class LicenseManagerProxy : public com::kylinsec::Kiran::LicenseManager_proxy,
+                                public ::DBus::IntrospectableProxy,
+                                public ::DBus::ObjectProxy
+    {
+    public:
+        LicenseManagerProxy(::DBus::Connection &connection,
+                            const std::string &path,
+                            const std::string &service_name) : ::DBus::ObjectProxy(connection, path, service_name.c_str()){};
+        virtual ~LicenseManagerProxy(){};
+    };
+
+    class LicenseObjectProxy : public com::kylinsec::Kiran::LicenseObject_proxy,
+                               public ::DBus::IntrospectableProxy,
+                               public ::DBus::ObjectProxy
+    {
+    public:
+        LicenseObjectProxy(::DBus::Connection &connection,
+                           const std::string &path,
+                           const std::string &service_name) : ::DBus::ObjectProxy(connection, path, service_name.c_str()){};
+        virtual ~LicenseObjectProxy(){};
+
+        sigc::signal<void, bool> signal_license_changed() { return this->license_changed_; };
+
+    protected:
+        virtual void LicenseChanged(const bool &placeholder) { this->license_changed_.emit(placeholder); };
+
+    private:
+        sigc::signal<void, bool> license_changed_;
+    };
+
 public:
-    DBus();
+    DBus(::DBus::Connection &connection);
     virtual ~DBus();
 
     static DBus *get_instance() { return instance_; };
 
-    static void global_init();
+    static void global_init(::DBus::Connection &connection);
 
     static void global_deinit() { delete instance_; };
 
 protected:
     // 设置标准类型
-    virtual void SetStandardType(guint32 standard_type, MethodInvocation &invocation);
+    virtual void SetStandardType(const uint32_t &standard_type);
 
     // 设置自定义加固标准
-    virtual void ImportCustomRS(const Glib::ustring &encoded_standard, MethodInvocation &invocation);
+    virtual void ImportCustomRS(const std::string &encoded_standard);
 
     // 获取分类
-    virtual void GetCategories(MethodInvocation &invocation);
+    virtual std::string GetCategories();
 
     // 获取加固标准配置
-    virtual void GetRS(MethodInvocation &invocation);
+    virtual std::string GetRS();
 
     // 获取所有加固项的基本信息和加固参数
-    virtual void GetReinforcements(MethodInvocation &invocation);
+    virtual std::string GetReinforcements();
 
     // 重置所有加固项的信息到默认值
-    virtual void ResetReinforcements(MethodInvocation &invocation);
+    virtual void ResetReinforcements();
 
     // 获取指定加固项的基本信息和加固参数
-    virtual void GetReinforcement(const Glib::ustring &name, MethodInvocation &invocation);
+    virtual std::string GetReinforcement(const std::string &name);
 
     // 设置自定义加固参数
-    virtual void SetReinforcement(const Glib::ustring &reinforcement_xml, MethodInvocation &invocation);
+    virtual void SetReinforcement(const std::string &reinforcement_xml);
 
     // 重置指定的加固项
-    virtual void ResetReinforcement(const Glib::ustring &name, MethodInvocation &invocation);
+    virtual void ResetReinforcement(const std::string &name);
 
     // 扫描指定加固项
-    virtual void Scan(const std::vector<Glib::ustring> &names, MethodInvocation &invocation);
+    virtual int64_t Scan(const std::vector<std::string> &names);
 
     // 对加固项进行加固
-    virtual void Reinforce(const std::vector<Glib::ustring> &names, MethodInvocation &invocation);
+    virtual int64_t Reinforce(const std::vector<std::string> &names);
 
     // 取消一个任务
-    virtual void Cancel(gint64 job_id, MethodInvocation &invocation);
+    virtual void Cancel(const int64_t &job_id);
 
     // 获取授权信息
-    virtual void GetLicense(MethodInvocation &invocation);
+    virtual std::string GetLicense();
 
     // 通过激活码注册
-    virtual void ActivateByActivationCode(const Glib::ustring &activation_code, MethodInvocation &invocation);
+    virtual void ActivateByActivationCode(const std::string &activation_code);
 
-    virtual bool version_setHandler(const Glib::ustring &value) { return true; };
-    virtual bool standard_type_setHandler(guint32 value);
-
-    virtual Glib::ustring version_get() { return PROJECT_VERSION; };
-    virtual guint32 standard_type_get();
+    virtual void on_get_property(::DBus::InterfaceAdaptor &interface, const std::string &property, ::DBus::Variant &value);
+    virtual void on_set_property(::DBus::InterfaceAdaptor &interface, const std::string &property, const ::DBus::Variant &value);
 
 private:
     void init();
@@ -97,12 +127,10 @@ private:
     // 授权发生变化
     void on_license_info_changed_cb(bool placeholder);
 
-    void on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
-    void on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
-    void on_name_lost(const Glib::RefPtr<Gio::DBus::Connection> &connect, Glib::ustring name);
-
 private:
     static DBus *instance_;
+
+    ::DBus::Connection dbus_connection_;
 
     Configuration *configuration_;
     Categories *categories_;
@@ -113,14 +141,11 @@ private:
     // 加固任务
     std::shared_ptr<Job> reinforce_job_;
 
-    Glib::RefPtr<Kiran::LicenseManagerProxy> license_manager_proxy_;
-    Glib::RefPtr<Kiran::LicenseObjectProxy> license_object_proxy_;
+    std::shared_ptr<LicenseManagerProxy> license_manager_proxy_;
+    std::shared_ptr<LicenseObjectProxy> license_object_proxy_;
 
     // 激活信息
     Json::Value license_values;
-
-    uint32_t dbus_connect_id_;
-    uint32_t object_register_id_;
 };
 }  // namespace Daemon
 }  // namespace KS
