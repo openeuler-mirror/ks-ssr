@@ -61,7 +61,7 @@ class PasswordExpired:
                 else:
                     retdata[PASSWORD_EXPIRED_ACCOUNTS_EXPIRATION_KEY]  = False
 
-        retdata[PASSWORD_EXPIRED_ACCOUNTS_KEY] =90
+        retdata[PASSWORD_EXPIRED_ACCOUNTS_KEY] = 90
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
