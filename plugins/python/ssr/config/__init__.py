@@ -59,4 +59,19 @@ reinforcements = (
         'module': 'permissions',
         'class': 'UmaskLimit'
     },
+    {
+        'name': 'config-nouser-files',
+        'module': 'scan-files',
+        'class': 'NouserFiles'
+    },
+    {
+        'name': 'config-authority-files',
+        'module': 'scan-files',
+        'class': 'AuthorityFiles'
+    },
+    {
+        'name': 'config-suid-sgid-files',
+        'module': 'scan-files',
+        'class': 'SuidSgidFiles'
+    },
 )
