@@ -12,7 +12,6 @@ SYSCTL_CONFIG_FIELD_PARTTERN = "\\s*=\\s*"
 SYSCTL_ACCEPT_REDIRECTS_PATTERN = "net.ipv4.conf.*.accept_redirects"
 SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN = "net.ipv4.conf.*.accept_source_route"
 
-
 class Sysctl:
     def get_items_by_pattern(self, partten):
         output = ssr.utils.subprocess_has_output('{0} -a -r {1}'.format(SYSCTL_PATH, partten))

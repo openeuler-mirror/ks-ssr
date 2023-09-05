@@ -30,6 +30,11 @@ reinforcements = (
         'class': 'PermissionSetting'
     },
     {
+        'name': 'config-directory-permissions',
+        'module': 'permissions',
+        'class': 'DirectoryPermissionSetting'
+    },
+    {
         'name': 'config-key-reboot',
         'module': 'sysctl',
         'class': 'KeyRebootSwitch'
@@ -43,6 +48,11 @@ reinforcements = (
         'name': 'config-sak-key',
         'module': 'sysctl',
         'class': 'SAKKey'
+    },
+    {
+        'name': 'config-dmesg',
+        'module': 'sysctl',
+        'class': 'Dmesg'
     },
     {
         'name': 'config-umask-limit',
