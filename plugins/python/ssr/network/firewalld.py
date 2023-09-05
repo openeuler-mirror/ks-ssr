@@ -6,6 +6,10 @@ import ssr.log
 
 FIREWALL_CMD_PATH = '/usr/bin/firewall-cmd'
 
+# 禁止Traceroute探测
+DISABLE_TRACEROUTE_CMD = "iptables -A INPUT -p ICMP --icmp-type time-exceeded -j DROP;  iptables -A OUTPUT -p ICMP --icmp-type time-exceeded -j DROP"
+OPEN_TRACEROUTE_CMD = "iptables -D INPUT -p ICMP --icmp-type time-exceeded -j DROP;  iptables -D OUTPUT -p ICMP --icmp-type time-exceeded -j DROP"
+STATUS_TRACEROUTE_CMD = "iptables -L -n |grep DROP |grep 11"
 
 class Firewalld:
     def __init__(self):
@@ -126,5 +130,29 @@ class IcmpTimestamp(Firewalld):
             self.reload()
         else:
             if not args['timestamp_request']:
+                raise Exception('FirewallD is not running')
+        return (True, '')
+
+class Traceroute(Firewalld):
+    def get(self):
+        retdata = dict()
+        if self.firewalld_systemd.is_active():
+            command_output = ssr.utils.subprocess_has_output(STATUS_TRACEROUTE_CMD)
+            ssr.log.debug(command_output)
+            retdata['enabled'] = len(command_output) != 0
+        else:
+            retdata['enabled'] = False
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+        if self.firewalld_systemd.is_active():
+            if args['enabled']:
+                ssr.utils.subprocess_not_output(DISABLE_TRACEROUTE_CMD)
+            else:
+                ssr.utils.subprocess_not_output(OPEN_TRACEROUTE_CMD)
+            # self.reload()
+        else:
+            if not args['enabled']:
                 raise Exception('FirewallD is not running')
         return (True, '')
