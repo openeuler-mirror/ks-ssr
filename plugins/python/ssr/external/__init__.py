@@ -55,6 +55,16 @@ reinforcements = (
         'class': 'SshdService'
     },
     {
+        'name': 'external-profile-tmout',
+        'module': 'sshd',
+        'class': 'SessionTimeout'
+    },
+    {
+        'name': 'external-sftp-user',
+        'module': 'sshd',
+        'class': 'SftpUser'
+    },
+    {
         'name': 'external-pam-su-wheel',
         'module': 'pam',
         'class': 'SuWheel'
@@ -68,11 +78,6 @@ reinforcements = (
         'name': 'external-hosts-login-limit',
         'module': 'hosts',
         'class': 'RemoteLogin'
-    },
-    {
-        'name': 'external-profile-tmout',
-        'module': 'sshd',
-        'class': 'SessionTimeout'
     },
     {
         'name': 'external-radio-switch',

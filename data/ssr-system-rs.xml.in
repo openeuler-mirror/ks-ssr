@@ -1026,6 +1026,22 @@
             </arg>
         </reinforcement>
         <reinforcement>
+            <name>external-sftp-user</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Whether to configure sftpuser special account</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
             <name>external-radio-switch</name>
             <arg>
                 <name>enabled</name>
