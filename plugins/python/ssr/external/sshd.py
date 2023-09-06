@@ -39,6 +39,9 @@ SSHD_CONF_PERMIT_EMPTY = "PermitEmptyPasswords"
 SSHD_CONF_PORT = "Port"
 SSHD_CONF_PAM = "UsePAM"
 
+SET_SFTP_USER_CMD = "useradd sftpuser"
+SET_SFTP_USER_CONFIG = "Match User sftpuser\nChrootDirectory /home\nX11Forwarding no\nAllowTcpForwarding no\nForceCommand internal-sftp"
+
 class SSHD:
     def __init__(self):
         self.conf = ssr.configuration.KV(SSHD_CONF_PATH, join_string=" ")
@@ -175,6 +178,39 @@ class SshdService(SSHD):
         self.conf.set_value(SSHD_CONF_PERMIT_EMPTY, "yes" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "no")
         self.conf.set_value(SSHD_CONF_PORT, "1022" if args[SSHD_CONF_PORT_KEY] else "")
         self.conf.set_value(SSHD_CONF_PAM, "yes" if args[SSHD_CONF_PAM_KEY] else "no")
+
+        # 重启服务生效
+        self.service.restart()
+        return (True, '')
+
+class SftpUser:
+    def __init__(self):
+        self.conf_table = ssr.configuration.Table(SSHD_CONF_PATH, ",\\s+")
+        self.service = ssr.systemd.Proxy("sshd")
+
+    def user_exist(self,username):
+        cmd = 'if id -u {0} >/dev/null 2>&1 ; then echo exist; fi'.format(username)
+        if len(ssr.utils.subprocess_has_output(cmd)) == 0:
+            return False
+        else:
+            return True
+
+    def get(self):
+        retdata = dict()
+        retdata["enabled"] = self.user_exist("sftpuser")
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+        if args["enabled"]:
+            if not self.user_exist("sftpuser"):
+                ssr.utils.subprocess_not_output(SET_SFTP_USER_CMD)
+            self.conf_table.set_value("Match User",SET_SFTP_USER_CONFIG)
+        else:
+            if self.user_exist("sftpuser"):
+                rm_cmd = "userdel -r sftpuser"
+                ssr.utils.subprocess_not_output(rm_cmd)
+            self.conf_table.del_record("Match User")
 
         # 重启服务生效
         self.service.restart()
