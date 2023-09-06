@@ -6,81 +6,112 @@ import ssr.log
 
 FIREWALL_CMD_PATH = '/usr/bin/firewall-cmd'
 
-# 禁止Traceroute探测
-DISABLE_TRACEROUTE_CMD = "iptables -A INPUT -p ICMP --icmp-type time-exceeded -j DROP;  iptables -A OUTPUT -p ICMP --icmp-type time-exceeded -j DROP"
-OPEN_TRACEROUTE_CMD = "iptables -D INPUT -p ICMP --icmp-type time-exceeded -j DROP;  iptables -D OUTPUT -p ICMP --icmp-type time-exceeded -j DROP"
-STATUS_TRACEROUTE_CMD = "iptables -L -n |grep DROP |grep 11"
+# 开放443端口(HTTPS)
+OPEN_IPTABLES_PORTS = 'iptables -I INPUT -p tcp --dport 443 -j ACCEPT'
+CHECK_IPTABLES_PORTS = 'iptables -C INPUT -p tcp --dport 443 -j ACCEPT'
+CLOSE_IPTABLES_PORTS = 'iptables -D INPUT -p tcp --dport 443 -j ACCEPT'
 
-class Firewalld:
+IPTABLES_LIMITS_PORTS = "21,25,110,137,138,67,68,161,162,139,389,873,445,631"
+
+# iptables INPUT icmp  DROP
+DISABLE_IPTABLES_INPUT_ICMP = "iptables -I INPUT -p ICMP --icmp-type"
+CHECK_IPTABLES_INPUT_ICMP = "iptables -C INPUT -p ICMP --icmp-type"
+OPEN_IPTABLES_INPUT_ICMP = "iptables -D INPUT -p ICMP --icmp-type"
+# iptables OUTPUT icmp  DROP
+DISABLE_IPTABLES_OUTPUT_ICMP = "iptables -I OUTPUT -p ICMP --icmp-type"
+CHECK_IPTABLES_OUTPUT_ICMP = "iptables -C OUTPUT -p ICMP --icmp-type"
+OPEN_IPTABLES_OUTPUT_ICMP = "iptables -D OUTPUT -p ICMP --icmp-type"
+# iptables INPUT tcp 
+ADD_IPTABLES_INPUT_TCP = "iptables -I INPUT -p tcp"
+CHECK_IPTABLES_INPUT_TCP = "iptables -C INPUT -p tcp"
+DELETE_IPTABLES_INPUT_TCP = "iptables -D INPUT -p tcp"
+# iptables OUTPUT tcp 
+ADD_IPTABLES_OUTPUT_TCP = "iptables -I OUTPUT -p tcp"
+CHECK_IPTABLES_OUTPUT_TCP = "iptables -C OUTPUT -p tcp"
+DELETE_IPTABLES_OUTPUT_TCP = "iptables -D OUTPUT -p tcp"
+
+# iptables INPUT udp 
+ADD_IPTABLES_INPUT_UDP = "iptables -I INPUT -p udp"
+CHECK_IPTABLES_INPUT_UDP = "iptables -C INPUT -p udp"
+DELETE_IPTABLES_INPUT_UDP = "iptables -D INPUT -p udp"
+# iptables OUTPUT udp 
+ADD_IPTABLES_OUTPUT_UDP = "iptables -I OUTPUT -p udp"
+CHECK_IPTABLES_OUTPUT_UDP = "iptables -C OUTPUT -p udp"
+DELETE_IPTABLES_OUTPUT_UDP = "iptables -D OUTPUT -p udp"
+
+CLEAR_IPTABLES = "iptables -F"
+CLEAR_IPTABLES_INPUT = "iptables -F INPUT"
+CLEAR_IPTABLES_OUTPUT = "iptables -F OUTPUT"
+
+# 禁止主机被Traceroute检测 time-exceeded
+TRACEROUTE_DETAIL = "time-exceeded -j DROP"
+
+# ICMP时间戳请求 time-exceeded
+TIMESTAMP_REQUEST_DETAIL = "timestamp-request -j DROP"
+TIMESTAMP_REPLY_DETAIL = "timestamp-reply -j DROP"
+
+
+class Firewall:
     def __init__(self):
         self.firewalld_systemd = ssr.systemd.Proxy('firewalld')
+        self.iptables_systemd = ssr.systemd.Proxy('iptables')
 
-    def __has_port(self, port):
-        command = '{0} --query-port={1} --permanent'.format(FIREWALL_CMD_PATH, port)
-        output = ssr.utils.subprocess_has_output(command)
-        return (output == 'yes')
+    def open_iptables(self):
+        if self.firewalld_systemd.exist():
+            if self.firewalld_systemd.stop():
+                return (False, 'Unable to stop firewalld service! \t\t')
+            self.firewalld_systemd.disable()
+            self.firewalld_systemd.mask()
+        
+        if self.iptables_systemd.exist():
+            self.iptables_systemd.unmask()
+            self.iptables_systemd.enable()
+            if len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_PORTS)) != 0:
+                ssr.utils.subprocess_not_output(OPEN_IPTABLES_PORTS)
+            self.iptables_systemd.start()
+            self.iptables_systemd.service_save()
 
-    def __add_port(self, port):
-        if self.__has_port(port):
-            return
-        command = '{0} --add-port={1} --permanent'.format(FIREWALL_CMD_PATH, port)
-        ssr.utils.subprocess_not_output(command)
+    def close_iptables(self):
+        if self.iptables_systemd.exist():
+            if len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_PORTS)) == 0:
+                ssr.utils.subprocess_not_output(CLOSE_IPTABLES_PORTS)
+            if self.iptables_systemd.stop():
+                return (False, 'Unable to stop iptables service! \t\t')
+            self.iptables_systemd.disable()
+            self.iptables_systemd.service_save()
+            self.iptables_systemd.mask()
+        
+        if self.firewalld_systemd.exist():
+            self.firewalld_systemd.unmask()
+            self.firewalld_systemd.enable()
+            self.firewalld_systemd.start()
 
-    def __remove_port(self, port):
-        if not self.__has_port(port):
-            return
-        command = '{0} --remove-port={1} --permanent'.format(FIREWALL_CMD_PATH, port)
-        ssr.utils.subprocess_not_output(command)
+    def set_iptables(self,iptables_set_cmd,iptables_check_cmd,set_name,set_type):
+        set_cmd = '{0}  {1}  {2}'.format(iptables_set_cmd ,set_name ,set_type)
+        check_cmd = '{0}  {1}  {2}'.format(iptables_check_cmd ,set_name ,set_type)
+        ssr.log.debug(ssr.utils.subprocess_has_output_ignore_error_handling(check_cmd))
+        if len(ssr.utils.subprocess_has_output_ignore_error_handling(check_cmd)) != 0:
+            ssr.utils.subprocess_not_output(set_cmd)
 
-    def list_ports(self):
-        command = '{0} --list-ports --permanent'.format(FIREWALL_CMD_PATH)
-        return ssr.utils.subprocess_has_output(command).split()
-
-    def set_ports(self, ports):
-        old_ports = self.list_ports()
-        common_ports = set(ports).intersection(set(old_ports))
-
-        for port in ports:
-            if not common_ports.__contains__(port):
-                self.__add_port(port)
-
-        for port in old_ports:
-            if not common_ports.__contains__(port):
-                self.__remove_port(port)
-
-    def clear_ports(self):
-        ports = self.list_ports()
-        for port in ports:
-            self.__remove_port(port)
-
-    def reload(self):
-        command = '{0} --reload'.format(FIREWALL_CMD_PATH)
-        return ssr.utils.subprocess_not_output(command)
-
-    def list_icmp_blocks(self):
-        command = '{0} --list-icmp-blocks --permanent'.format(FIREWALL_CMD_PATH)
-        return ssr.utils.subprocess_has_output(command)
-
-    def add_icmp_blocks(self, block):
-        command = '{0} --add-icmp-block={1} --permanent'.format(FIREWALL_CMD_PATH, block)
-        ssr.utils.subprocess_not_output(command)
-
-    def remove_icmp_blocks(self, block):
-        command = '{0} --remove-icmp-block={1} --permanent'.format(FIREWALL_CMD_PATH, block)
-        ssr.utils.subprocess_not_output(command)
+    def del_iptables(self,iptables_del_cmd,iptables_check_cmd,set_name,set_type):
+        set_cmd = '{0}  {1}  {2}'.format(iptables_del_cmd ,set_name ,set_type)
+        check_cmd = '{0}  {1}  {2}'.format(iptables_check_cmd ,set_name ,set_type)
+        ssr.log.debug(ssr.utils.subprocess_has_output_ignore_error_handling(check_cmd))
+        if len(ssr.utils.subprocess_has_output_ignore_error_handling(check_cmd)) == 0:
+            ssr.utils.subprocess_not_output(set_cmd)
 
 
 # 系统防火墙服务
-class Switch(Firewalld):
+class Switch(Firewall):
     def get(self):
         retdata = dict()
-        retdata['enabled'] = self.firewalld_systemd.is_active()
-
-        # 只有防火墙开启状态下才可以查询开放端口信息
-        if retdata['enabled']:
-            retdata['ports'] = ';'.join(self.list_ports())
-        else:
-            retdata['ports'] = str()
+        retdata['enabled'] = self.iptables_systemd.is_active()
+        retdata['threat-port'] = len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_TCP + " --dport 21 -j DROP")) == 0
+        # 设置tcp或udp都符合
+        retdata['tcp-udp'] = True
+        # 是否清空规则由用户决定，默认为否，服务启动则符合
+        retdata['clear-configuration'] = not self.iptables_systemd.is_active()
+        
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
@@ -89,70 +120,149 @@ class Switch(Firewalld):
         # 也可以不用捕获异常，后台框架会对异常进行处理
         try:
             if args['enabled']:
-                self.firewalld_systemd.enable()
-                self.firewalld_systemd.start()
+                self.open_iptables()
             else:
-                if self.firewalld_systemd.stop():
-                    return (False, 'Unable to stop firewalld service! \t\t')
-                self.firewalld_systemd.disable()
+                self.close_iptables()
         except Exception as e:
             return (False, e)
-
-        if self.firewalld_systemd.is_active():
-            if len(args['ports']) == 0:
-                self.clear_ports()
+        
+        if self.iptables_systemd.is_active():
+            # Disable FTP, SMTP and other ports that may threaten the system
+            if args['threat-port']:
+                for port in IPTABLES_LIMITS_PORTS.split(","):
+                    if args['tcp-udp']:
+                        self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
+                    else:
+                        self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
             else:
-                self.set_ports(args['ports'].split(';'))
-            self.reload()
+                for port in IPTABLES_LIMITS_PORTS.split(","):
+                    if args['tcp-udp']:
+                        self.set_iptables(DELETE_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
+                        self.set_iptables(DELETE_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
+                    else:
+                        self.set_iptables(DELETE_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
+                        self.set_iptables(DELETE_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
+            # 允许网段
+            if len(args['allow-network-segment']) != 0:
+                for network_segment in args['allow-network-segment'].split(","):
+                    if args['tcp-udp']:
+                        self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"-s " + network_segment ,"-j ACCEPT")
+                    else:
+                        self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"-s " + network_segment ,"-j ACCEPT")
+            # 禁用网段
+            if len(args['disable-network-segment']) != 0:
+                for network_segment in args['disable-network-segment'].split(","):
+                    if args['tcp-udp']:
+                        self.set_iptables(ADD_IPTABLES_INPUT_TCP,CHECK_IPTABLES_INPUT_TCP,"-s " + network_segment ,"-j DROP")
+                    else:
+                        self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP,"-s " + network_segment ,"-j DROP")
+            # 开放端口
+            if len(args['ports']) != 0:
+                for port in args['ports'].split(";"):
+                    if args['tcp-udp']:
+                        self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j ACCEPT")
+                    else:
+                        self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j ACCEPT")
+            # 禁用端口
+            if len(args['disable-ports']) != 0:
+                for port in args['disable-ports'].split(";"):
+                    if args['tcp-udp']:
+                        self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
+                    else:
+                        self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
+
+            # 允许网段 output
+            if len(args['allow-network-segment-output']) != 0:
+                for network_segment in args['allow-network-segment-output'].split(","):
+                    if args['tcp-udp']:
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"-s " + network_segment ,"-j ACCEPT")
+                    else:
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"-s " + network_segment ,"-j ACCEPT")
+            # 禁用网段 output
+            if len(args['disable-network-segment-output']) != 0:
+                for network_segment in args['disable-network-segment-output'].split(","):
+                    if args['tcp-udp']:
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_TCP,CHECK_IPTABLES_OUTPUT_TCP,"-s " + network_segment ,"-j DROP")
+                    else:
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP,"-s " + network_segment ,"-j DROP")
+            # 开放端口 output
+            if len(args['ports-output']) != 0:
+                for port in args['ports'].split(";"):
+                    if args['tcp-udp']:
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j ACCEPT")
+                    else:
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j ACCEPT")
+            # 禁用端口 output
+            if len(args['disable-ports-output']) != 0:
+                for port in args['disable-ports'].split(";"):
+                    if args['tcp-udp']:
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
+                    else:
+                        self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
+            if args['clear-configuration']:
+                ssr.utils.subprocess_not_output(CLEAR_IPTABLES)
+        
+            self.iptables_systemd.service_save()
         return (True, '')
 
 
 # ICMP时间戳请求
-class IcmpTimestamp(Firewalld):
+class IcmpTimestamp(Firewall):
     def get(self):
         retdata = dict()
-        if self.firewalld_systemd.is_active():
-            command_output = self.list_icmp_blocks()
-            ssr.log.debug(command_output)
-            icmp_blocks = command_output.split()
-            retdata['timestamp_request'] = (not icmp_blocks.__contains__('timestamp-request'))
+        if self.iptables_systemd.is_active():
+            iptable_input = ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_ICMP + " " + TIMESTAMP_REQUEST_DETAIL)
+            iptable_output = ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_ICMP + " " + TIMESTAMP_REPLY_DETAIL)
+            # ssr.log.debug(command_output)
+            if len(iptable_output) == 0 and len(iptable_input) == 0:
+                retdata['timestamp_request'] = False
+            else:
+                retdata['timestamp_request'] = True
         else:
             retdata['timestamp_request'] = True
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        if self.firewalld_systemd.is_active():
+        if self.iptables_systemd.is_active():
             if args['timestamp_request']:
-                self.remove_icmp_blocks('timestamp-request')
+                self.del_iptables(OPEN_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TIMESTAMP_REQUEST_DETAIL ,"")
+                self.del_iptables(OPEN_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TIMESTAMP_REPLY_DETAIL ,"")
             else:
-                self.add_icmp_blocks('timestamp-request')
-            self.reload()
+                self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TIMESTAMP_REQUEST_DETAIL ,"")
+                self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TIMESTAMP_REPLY_DETAIL ,"")
+            self.iptables_systemd.service_save()
         else:
             if not args['timestamp_request']:
-                raise Exception('FirewallD is not running')
+                raise Exception('iptables is not running')
         return (True, '')
 
-class Traceroute(Firewalld):
+# 禁止主机被Traceroute检测
+class Traceroute(Firewall):
     def get(self):
         retdata = dict()
-        if self.firewalld_systemd.is_active():
-            command_output = ssr.utils.subprocess_has_output(STATUS_TRACEROUTE_CMD)
-            ssr.log.debug(command_output)
-            retdata['enabled'] = len(command_output) != 0
+        if self.iptables_systemd.is_active():
+            iptable_input = ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_ICMP + " " + TRACEROUTE_DETAIL)
+            iptable_output = ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_OUTPUT_ICMP + " " + TRACEROUTE_DETAIL)
+            # ssr.log.debug(command_output)
+            retdata['enabled'] = len(iptable_output) == 0 and len(iptable_input) == 0
         else:
             retdata['enabled'] = False
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        if self.firewalld_systemd.is_active():
+        if self.iptables_systemd.is_active():
             if args['enabled']:
-                ssr.utils.subprocess_not_output(DISABLE_TRACEROUTE_CMD)
+                self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TRACEROUTE_DETAIL ,"")
+                self.set_iptables(DISABLE_IPTABLES_OUTPUT_ICMP ,CHECK_IPTABLES_OUTPUT_ICMP ,TRACEROUTE_DETAIL ,"")
             else:
-                ssr.utils.subprocess_not_output(OPEN_TRACEROUTE_CMD)
-            # self.reload()
+                self.del_iptables(OPEN_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TRACEROUTE_DETAIL ,"")
+                self.del_iptables(OPEN_IPTABLES_OUTPUT_ICMP ,CHECK_IPTABLES_OUTPUT_ICMP ,TRACEROUTE_DETAIL ,"")
+            self.iptables_systemd.service_save()
         else:
             if not args['enabled']:
-                raise Exception('FirewallD is not running')
+                raise Exception('iptables is not running')
         return (True, '')
