@@ -44,10 +44,10 @@ bool Reinforcement::match_rules(const Json::Value &values)
 {
     try
     {
-        for (auto iter : this->rules_)
-        {
-            RETURN_VAL_IF_TRUE(!values.isMember(iter.first), false);
-            RETURN_VAL_IF_TRUE(!iter.second->match(values[iter.first]), false);
+        std::map<std::string, std::shared_ptr<Rule>>::iterator iter;
+        for (iter = this->rules_.begin(); iter != this->rules_.end(); iter++) {
+           RETURN_VAL_IF_TRUE(!values.isMember(iter->first), false);
+           RETURN_VAL_IF_TRUE(!iter->second->match(values[iter->first]), false);
         }
     }
     catch (const std::exception &e)
@@ -72,25 +72,28 @@ void Reinforcement::reload()
 void Reinforcement::update_rules()
 {
     this->rules_.clear();
-    for (const auto &arg : this->config_.arg())
-    {
-        CONTINUE_IF_TRUE(!arg.rule().present());
 
-        auto rule = Rule::create(arg.rule().get());
+//    this->config_.arg().
+//    Protocol::Reinforcement::
+    for (auto arg = this->config_.arg().begin(); arg != this->config_.arg().end(); ++arg)
+    {
+        CONTINUE_IF_TRUE(!arg->rule().present());
+
+        auto rule = Rule::create(arg->rule().get());
         if (rule)
         {
-            if (this->rules_.find(arg.name()) != this->rules_.end())
+            if (this->rules_.find(arg->name()) != this->rules_.end())
             {
-                KLOG_WARNING("The rule name %s is repeat.", arg.name().c_str());
+                KLOG_WARNING("The rule name %s is repeat.", arg->name().c_str());
             }
             else
             {
-                this->rules_[arg.name()] = rule;
+                this->rules_[arg->name()] = rule;
             }
         }
         else
         {
-            KLOG_WARNING("The rule is created failed. name: %s.", arg.name().c_str());
+            KLOG_WARNING("The rule is created failed. name: %s.", arg->name().c_str());
         }
     }
 }
