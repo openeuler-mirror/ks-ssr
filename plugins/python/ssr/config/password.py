@@ -152,7 +152,6 @@ class PasswordComplexity:
 
         dict_check = self.conf.get_value(
             PASSWORD_COMPLEXITY_CONF_KEY_DICT_CHECK)
-        ssr.log.debug("dict_check = {0}".format(dict_check))
         retdata[PASSWORD_COMPLEXITY_CONF_KEY_DICT_CHECK] = str(
             dict_check) != "0"
 
