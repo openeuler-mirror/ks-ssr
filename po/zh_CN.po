@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-25 14:13+0800\n"
+"POT-Creation-Date: 2023-09-06 15:01+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -292,13 +292,12 @@ msgstr "系统中重要配置文件的最大权限设置为0644"
 
 #: ../data/ssr-system-rs.xml.in.h:24
 msgid ""
-"The maximum permissions for configuration files/etc/passwd,/etc/bashrc/etc/"
-"shadow,/etc/group,/etc/xinetd. d/etc/security/limits. conf,/etc/pam. d/"
-"system auth ac,/etc/fstab are set to 0644"
+"The maximum permissions for configuration files /etc/passwd, /etc/bashrc/etc/"
+"shadow, /etc/group, /etc/security/limits.conf, /etc/pam.d/system-auth-ac, /"
+"etc/fstab are set to 0644"
 msgstr ""
-"配置文件/etc/passwd、/etc/bashrc、/etc/shadow、/etc/group、/etc/xinetd.d、/"
-"etc/security/limits.conf、/etc/pam.d/system-auth-ac、/etc/fstab最大权限设置为"
-"0644"
+"配置文件/etc/passwd、/etc/bashrc、/etc/shadow、/etc/group、/etc/security/"
+"limits.conf、/etc/pam.d/system-auth-ac、/etc/fstab最大权限设置为0644"
 
 #: ../data/ssr-system-rs.xml.in.h:25
 msgid "The maximum permission of key directories in the system is 0755"
@@ -387,180 +386,184 @@ msgid "Allow user names"
 msgstr "允许包含用户名"
 
 #: ../data/ssr-system-rs.xml.in.h:45
+msgid "Enable dictionary check"
+msgstr "启用字典检查"
+
+#: ../data/ssr-system-rs.xml.in.h:46
 msgid "Stack and RSS sizes are limited (10240)"
 msgstr "限制Stack和Rss的大小(10240)"
 
-#: ../data/ssr-system-rs.xml.in.h:46
+#: ../data/ssr-system-rs.xml.in.h:47
 #: ../plugins/python/ssr-plugin-config.xml.in.h:20
 msgid "Turn on SAK key"
 msgstr "开启SAK键"
 
-#: ../data/ssr-system-rs.xml.in.h:47
+#: ../data/ssr-system-rs.xml.in.h:48
 msgid "Allow administrators to view dmesg only"
 msgstr "仅允许管理员查看dmesg"
 
-#: ../data/ssr-system-rs.xml.in.h:48
+#: ../data/ssr-system-rs.xml.in.h:49
 #: ../plugins/python/ssr-plugin-config.xml.in.h:24
 msgid "File directory default permission"
 msgstr "文件目录缺省权限"
 
-#: ../data/ssr-system-rs.xml.in.h:49
+#: ../data/ssr-system-rs.xml.in.h:50
 msgid "No master file in the scanning system"
 msgstr "扫描系统中的无属主文件"
 
-#: ../data/ssr-system-rs.xml.in.h:50
+#: ../data/ssr-system-rs.xml.in.h:51
 msgid ""
 "Check if there are files in the /bin,/usr/bin,/sbin,/usr/sbin directories "
 "that do not belong to the user"
 msgstr "扫描/bin、/usr/bin、/sbin、/usr/sbin关键目录中的无属主文件"
 
-#: ../data/ssr-system-rs.xml.in.h:51
+#: ../data/ssr-system-rs.xml.in.h:52
 msgid "Scanning system files with 777 permissions"
 msgstr "扫描系统中权限为777的文件"
 
-#: ../data/ssr-system-rs.xml.in.h:52
+#: ../data/ssr-system-rs.xml.in.h:53
 msgid ""
 "Scan files with permissions of 777 in the /bin,/usr/bin,/sbin,/usr/sbin "
 "directory"
 msgstr "扫描/bin、/usr/bin、/sbin、/usr/sbin目录中权限为777的文件"
 
-#: ../data/ssr-system-rs.xml.in.h:53
+#: ../data/ssr-system-rs.xml.in.h:54
 msgid "Scan system important directory suid-sgid file"
 msgstr "扫描系统重要目录中有suid-sgid权限的文件"
 
-#: ../data/ssr-system-rs.xml.in.h:54
+#: ../data/ssr-system-rs.xml.in.h:55
 msgid ""
 "Scan files with SUID SGID permissions in the/bin,/usr/bin,/sbin, and/usr/"
 "sbin directories of the system"
 msgstr "扫描系统/bin、/usr/bin、/sbin、/usr/sbin目录中有SUID-SGID权限的文件"
 
-#: ../data/ssr-system-rs.xml.in.h:55
+#: ../data/ssr-system-rs.xml.in.h:56
 msgid "Built in common vulnerability version version number scanning"
 msgstr "内置常见漏洞版本号扫描"
 
-#: ../data/ssr-system-rs.xml.in.h:56
+#: ../data/ssr-system-rs.xml.in.h:57
 msgid "Turn on system auditd service"
 msgstr "开启系统审计服务"
 
-#: ../data/ssr-system-rs.xml.in.h:57
+#: ../data/ssr-system-rs.xml.in.h:58
 msgid "Add audit rules to path."
 msgstr "添加审计规则"
 
-#: ../data/ssr-system-rs.xml.in.h:58
+#: ../data/ssr-system-rs.xml.in.h:59
 msgid "Delete audit rules to path."
 msgstr "删除审计规则"
 
-#: ../data/ssr-system-rs.xml.in.h:59
+#: ../data/ssr-system-rs.xml.in.h:60
 msgid "Delete all audit rules"
 msgstr "删除所有审计规则"
 
-#: ../data/ssr-system-rs.xml.in.h:60
+#: ../data/ssr-system-rs.xml.in.h:61
 msgid "System log save cycle（weekly）"
 msgstr "系统日志保存周期（周）"
 
-#: ../data/ssr-system-rs.xml.in.h:61
+#: ../data/ssr-system-rs.xml.in.h:62
 msgid "The maximum permission of log files and configurations is set to 0644"
 msgstr "日志文件和配置的最大权限为0644"
 
-#: ../data/ssr-system-rs.xml.in.h:62
+#: ../data/ssr-system-rs.xml.in.h:63
 msgid "Log files can only be appended"
 msgstr "日志文件仅能被添加"
 
-#: ../data/ssr-system-rs.xml.in.h:63
+#: ../data/ssr-system-rs.xml.in.h:64
 msgid "Allow to use CD-ROM device"
 msgstr "允许使用光驱设备（首次加固时间长，请耐心等待）"
 
-#: ../data/ssr-system-rs.xml.in.h:64
+#: ../data/ssr-system-rs.xml.in.h:65
 msgid "Allow to use USB device"
 msgstr "允许使用USB设备"
 
-#: ../data/ssr-system-rs.xml.in.h:65
+#: ../data/ssr-system-rs.xml.in.h:66
 msgid "Allow to use serial port device"
 msgstr "允许使用串口设备"
 
-#: ../data/ssr-system-rs.xml.in.h:66
+#: ../data/ssr-system-rs.xml.in.h:67
 #: ../plugins/python/ssr-plugin-external.xml.in.h:9
 msgid "Restrict system independent user login"
 msgstr "限制系统无关用户登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:67
+#: ../data/ssr-system-rs.xml.in.h:68
 msgid "Allow login to account (separated by semicolons)"
 msgstr "允许登录账号 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:68
+#: ../data/ssr-system-rs.xml.in.h:69
 msgid "Disable null password user present"
 msgstr "禁止空密码用户出现"
 
-#: ../data/ssr-system-rs.xml.in.h:69
+#: ../data/ssr-system-rs.xml.in.h:70
 msgid "Delete lp, games, operator and adm by default"
 msgstr "默认删除lp, games, operator, adm"
 
-#: ../data/ssr-system-rs.xml.in.h:70
+#: ../data/ssr-system-rs.xml.in.h:71
 msgid "Add users to delete (Split with semicolon)"
 msgstr "添加需删除用户 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:71
+#: ../data/ssr-system-rs.xml.in.h:72
 msgid "Rrohibit remote login of root user via SSH"
 msgstr "禁止通过ssh远程登陆root用户"
 
-#: ../data/ssr-system-rs.xml.in.h:72
+#: ../data/ssr-system-rs.xml.in.h:73
 msgid "Allow SSH password free login"
 msgstr "允许SSH免密登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:73
+#: ../data/ssr-system-rs.xml.in.h:74
 msgid "Allow to use SSH weak encryption algorithm"
 msgstr "允许使用SSH弱加密算法"
 
-#: ../data/ssr-system-rs.xml.in.h:74
+#: ../data/ssr-system-rs.xml.in.h:75
 msgid "Hiding operating system version information"
 msgstr "隐藏操作系统版本信息"
 
-#: ../data/ssr-system-rs.xml.in.h:75
+#: ../data/ssr-system-rs.xml.in.h:76
 msgid "Enforce V2 security protocol"
 msgstr "强制使用V2安全协议"
 
-#: ../data/ssr-system-rs.xml.in.h:76
+#: ../data/ssr-system-rs.xml.in.h:77
 msgid "Prohibit SSH users with empty password from logging in"
 msgstr "禁止主机密码为空的用户SSH登录"
 
-#: ../data/ssr-system-rs.xml.in.h:77
+#: ../data/ssr-system-rs.xml.in.h:78
 msgid "Modify the default SSH port"
 msgstr "修改默认SSH端口"
 
-#: ../data/ssr-system-rs.xml.in.h:78
+#: ../data/ssr-system-rs.xml.in.h:79
 msgid "Enable PAM login mechanism"
 msgstr "启用PAM登录机制"
 
-#: ../data/ssr-system-rs.xml.in.h:79
+#: ../data/ssr-system-rs.xml.in.h:80
 #: ../plugins/python/ssr-plugin-external.xml.in.h:25
 msgid ""
 "Users outside the wheel group are prohibited from using the 'su root' command"
 msgstr "禁止wheel组以外的用户使用'su root'命令"
 
-#: ../data/ssr-system-rs.xml.in.h:80
+#: ../data/ssr-system-rs.xml.in.h:81
 msgid "Restrict user sudo command permission"
 msgstr "限制用户sudo命令使用权限(开启selinux失效)"
 
-#: ../data/ssr-system-rs.xml.in.h:81
+#: ../data/ssr-system-rs.xml.in.h:82
 msgid "List of IP addresses that allow remote access (Split with comma)"
 msgstr "允许远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:82
+#: ../data/ssr-system-rs.xml.in.h:83
 msgid ""
 "List of IP addresses for which remote access is prohibited (Split with comma)"
 msgstr "禁止远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:83
+#: ../data/ssr-system-rs.xml.in.h:84
 msgid ""
 "If no operation is performed for more than the following time (seconds), the "
 "session exits"
 msgstr "超过以下时间（秒）未操作则会话退出"
 
-#: ../data/ssr-system-rs.xml.in.h:84
+#: ../data/ssr-system-rs.xml.in.h:85
 msgid "Whether to configure sftpuser special account"
 msgstr "是否配置sftpuser用户（请自行设置用户密码）"
 
-#: ../data/ssr-system-rs.xml.in.h:85
+#: ../data/ssr-system-rs.xml.in.h:86
 #: ../plugins/python/ssr-plugin-external.xml.in.h:34
 msgid "Disable radio network"
 msgstr "禁用无线网络"

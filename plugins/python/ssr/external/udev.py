@@ -22,7 +22,7 @@ CDROM_DRIVE = "cdrom"
 SR_MOD_DRIVE = "sr_mod"
 USB_STORAGE_DRIVE = "usb-storage"
 FIND_DRIVE_CMD = "find /lib/modules/"
-UNINSTALL_DRIVE = "rmmod"
+UNINSTALL_DRIVE = "modprobe -r"
 INSTALL_DRIVE = "insmod"
 RELOAD_INITRAMFS = "dracut -f"
 
@@ -116,7 +116,17 @@ class CDROM(DRIVERS):
                 cmd_sr_mod = '{0} {1}'.format(UNINSTALL_DRIVE, SR_MOD_DRIVE)
                 if self.sr_mod_status():
                     ssr.utils.subprocess_has_output(cmd_sr_mod)
-                ssr.utils.subprocess_has_output(cmd_cdrom)
+
+                other_mod = str(ssr.utils.subprocess_has_output(
+                    "cat /proc/modules |grep cdrom"))
+                other_names = other_mod.split(" ")[3].split(",")
+                for other_name in other_names:
+                    if other_name == '':
+                        continue
+                    ssr.utils.subprocess_not_output(
+                        "{0} {1}".format(UNINSTALL_DRIVE, other_name))
+
+                ssr.utils.subprocess_not_output(cmd_cdrom)
 
                 # change the driver name and retain the backup
                 if cdrom_drive_path.find('.bak') < 0:
@@ -200,7 +210,7 @@ class USB(DRIVERS):
                 if usb_storage_drive_path.find('.bak') > 0:
                     mv_usb_storage = 'mv {0} {1}'.format(
                         usb_storage_drive_path, usb_storage_drive_path.replace('.bak', ''))
-                    output = ssr.utils.subprocess_not_output(mv_usb_storage)
+                    ssr.utils.subprocess_not_output(mv_usb_storage)
 
                 # reload initramfs
                 # self.reload_drive(self.get_kernel_version())
@@ -220,12 +230,10 @@ class USB(DRIVERS):
                 cmd_uas = '{0} {1}'.format(UNINSTALL_DRIVE, "uas")
 
                 if len(ssr.utils.subprocess_has_output("lsmod |grep usb |grep uas")) != 0:
-                    output_uas = ssr.utils.subprocess_has_output(cmd_uas)
-                    output_usb_storage = ssr.utils.subprocess_has_output(
-                        cmd_usb_storage)
+                    ssr.utils.subprocess_not_output(cmd_uas)
+                    ssr.utils.subprocess_not_output(cmd_usb_storage)
                 else:
-                    output_usb_storage = ssr.utils.subprocess_has_output(
-                        cmd_usb_storage)
+                    ssr.utils.subprocess_not_output(cmd_usb_storage)
 
                 # change the driver name and retain the backup
                 if usb_storage_drive_path.find('.bak') < 0:
