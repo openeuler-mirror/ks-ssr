@@ -849,7 +849,7 @@ void DBus::init()
     this->resource_monitor_->signal_home_free_space_ratio().connect(sigc::mem_fun(this, &DBus::homeFreeSpaceRatio));
     this->resource_monitor_->signal_root_free_space_ratio().connect(sigc::mem_fun(this, &DBus::rootFreeSpaceRatio));
     this->resource_monitor_->signal_cpu_average_load_ratio().connect(sigc::mem_fun(this, &DBus::cpuAverageLoadRatio));
-    this->resource_monitor_->signal_vmstat_siso().connect(sigc::mem_fun(this, &DBus::vmstatSiSo));
+    this->resource_monitor_->signal_memory_remaining_ratio().connect(sigc::mem_fun(this, &DBus::memoryRemainingRatio));
 
     if (configuration_->get_resource_monitor_status() == SSRResourceMonitor::SSR_RESOURCE_MONITOR_OPEN)
     {
@@ -1083,72 +1083,66 @@ void DBus::homeFreeSpaceRatio(const float space_ratio)
 {
     // 家目录可用空间小于10%告警
     float homeSpa = 0.1;
-    if (space_ratio < homeSpa)
+    if (space_ratio >= homeSpa)
     {
-        KLOG_WARNING("home free space less than 10%.");
-        KLOG_WARNING("homeFreeSpaceRatio %f.", space_ratio);
-
-        _audit_log(1101, -1, "home free space less than 10%.");
-
-        this->HomeFreeSpaceRatioLower(std::to_string(space_ratio));
+        return;
     }
+
+    KLOG_WARNING("home free space less than 10%.");
+    KLOG_WARNING("homeFreeSpaceRatio %f.", space_ratio);
+
+    _audit_log(1101, -1, "home free space less than 10%.");
+
+    this->HomeFreeSpaceRatioLower(std::to_string(space_ratio));
 }
 
 void DBus::rootFreeSpaceRatio(const float space_ratio)
 {
     // 根目录可用空间小于10%告警
     float rootSpa = 0.1;
-    if (space_ratio < rootSpa)
+    if (space_ratio >= rootSpa)
     {
-        KLOG_WARNING("root free space less than 10%.");
-        KLOG_WARNING("rootFreeSpaceRatio %f.", space_ratio);
-
-        _audit_log(1101, -1, "root free space less than 10%.");
-
-        this->RootFreeSpaceRatioLower(std::to_string(space_ratio));
+        return;
     }
+
+    KLOG_WARNING("root free space less than 10%.");
+    KLOG_WARNING("rootFreeSpaceRatio %f.", space_ratio);
+
+    _audit_log(1101, -1, "root free space less than 10%.");
+
+    this->RootFreeSpaceRatioLower(std::to_string(space_ratio));
 }
 
 void DBus::cpuAverageLoadRatio(const float load_ratio)
 {
     // cpu单核五分钟平均负载大于1告警
     float cpuLoad = 1;
-    if (load_ratio >= cpuLoad)
+    if (load_ratio < cpuLoad)
     {
-        KLOG_WARNING("The average load of a single core CPU exceeds 1.");
-        KLOG_WARNING("cpuAverageLoadRatio %f.", load_ratio);
-
-        _audit_log(1101, -1, "The average load of a single core CPU exceeds 1.");
-
-        this->CpuAverageLoadRatioHigher(std::to_string(load_ratio));
+        return;
     }
+
+    KLOG_WARNING("The average load of a single core CPU exceeds 1.");
+    KLOG_WARNING("cpuAverageLoadRatio %f.", load_ratio);
+
+    _audit_log(1101, -1, "The average load of a single core CPU exceeds 1.");
+
+    this->CpuAverageLoadRatioHigher(std::to_string(load_ratio));
 }
 
-void DBus::vmstatSiSo(const std::vector<std::string> results)
+void DBus::memoryRemainingRatio(const float memory_ratio)
 {
-    // vmstat swap 中si或者so不为0告警
-    std::string si = results.at(0).c_str();
-    std::string so = results.at(1).c_str();
-    if (si != "0")
+    // memory ratio 小于10% 告警
+    if (memory_ratio >= 0.1)
     {
-        KLOG_WARNING("The vmstat swap page si is not 0.");
-        KLOG_WARNING("vmstat si is %s.", results.at(0).c_str());
-
-        _audit_log(1101, -1, "The vmstat swap page si is not 0.");
-
-        this->VmstatSiSoabnormal(si, so);
+        return;
     }
 
-    if (so != "0")
-    {
-        KLOG_WARNING("The vmstat swap page so is not 0.");
-        KLOG_WARNING("vmstat so is %s.", results.at(1).c_str());
+    KLOG_WARNING("Memory space remaining %f, below 10%", memory_ratio);
 
-        _audit_log(1101, -1, "The vmstat swap page so is not 0.");
+    _audit_log(1101, -1, "Memory space less than 10%");
 
-        if (si == "0")
-            this->VmstatSiSoabnormal(si, so);
-    }
+    this->MemoryAbnormal(std::to_string(memory_ratio));
 }
 
 }  // namespace Daemon

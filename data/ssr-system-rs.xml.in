@@ -368,7 +368,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>The maximum permissions of important configuration files in the system is set to 0644</_label>
                 </layout>
-                <_note>The maximum permissions for configuration files/etc/passwd,/etc/bashrc/etc/shadow,/etc/group,/etc/xinetd. d/etc/security/limits. conf,/etc/pam. d/system auth ac,/etc/fstab are set to 0644</_note>
+                <_note>The maximum permissions for configuration files /etc/passwd, /etc/bashrc/etc/shadow, /etc/group, /etc/security/limits.conf, /etc/pam.d/system-auth-ac, /etc/fstab are set to 0644</_note>
             </arg>
         </reinforcement>
         <reinforcement>
@@ -674,6 +674,19 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Allow user names</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>dictcheck</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Enable dictionary check</_label>
                 </layout>
             </arg>
         </reinforcement>
