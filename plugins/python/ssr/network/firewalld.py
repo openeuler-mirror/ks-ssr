@@ -135,7 +135,7 @@ class Switch(Firewall):
     def get(self):
         retdata = dict()
         # retdata['enabled'] = self.iptables_systemd.is_active()
-        retdata['threat-port'] = len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_TCP + " --dport 21 -j DROP")) == 0 or len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_UDP + " --dport 21 -j DROP")) == 0
+        retdata['threat-port'] = len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_TCP + " --dport 21 -j REJECT")) == 0 or len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_UDP + " --dport 21 -j REJECT")) == 0
         # 设置tcp或udp都符合
         retdata['tcp-udp'] = "tcp"
         # 是否清空规则与最大连接数由用户决定，默认为否,都为符合
@@ -167,26 +167,26 @@ class Switch(Firewall):
             self.del_iptables_history('1:60999')
         else:
             self.del_iptables_history('1:60999')
-            self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j REJECT")
-            self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j REJECT")
+            self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(args['input-ports-connect-nums']) ,"-j REJECT")
+            self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(args['input-ports-connect-nums']) ,"-j REJECT")
  
         # Disable FTP, SMTP and other ports that may threaten the system
         if args['threat-port']:
             for port in IPTABLES_LIMITS_PORTS.split(","):
                 if args['tcp-udp'] == "tcp":
-                    self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
-                    self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
+                    self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j REJECT")
+                    self.set_iptables(ADD_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j REJECT")
                 else:
-                    self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
-                    self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
+                    self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j REJECT")
+                    self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j REJECT")
         else:
             for port in IPTABLES_LIMITS_PORTS.split(","):
                 if args['tcp-udp'] == "tcp":
-                    self.del_iptables(DELETE_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j DROP")
-                    self.del_iptables(DELETE_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j DROP")
+                    self.del_iptables(DELETE_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport " + port ,"-j REJECT")
+                    self.del_iptables(DELETE_IPTABLES_OUTPUT_TCP ,CHECK_IPTABLES_OUTPUT_TCP ,"--dport " + port ,"-j REJECT")
                 else:
-                    self.del_iptables(DELETE_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
-                    self.del_iptables(DELETE_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j DROP")
+                    self.del_iptables(DELETE_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j REJECT")
+                    self.del_iptables(DELETE_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP ,"--dport " + port ,"-j REJECT")
         # 允许网段
         # if len(args['allow-network-segment']) != 0:
         #     for network_segment in args['allow-network-segment'].split(","):
