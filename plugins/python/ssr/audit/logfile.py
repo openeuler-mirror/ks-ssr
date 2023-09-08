@@ -11,7 +11,11 @@ import ssr.utils
 import json
 import ssr.vars
 
-LOGFILE_CONF_FILEPATH = '/etc/logrotate.d/syslog'
+if os.path.exists('/etc/logrotate.d/rsyslog'):
+    LOGFILE_CONF_FILEPATH = '/etc/logrotate.d/rsyslog'
+else:
+    LOGFILE_CONF_FILEPATH = '/etc/logrotate.d/syslog' 
+
 LOGFILE_INI_FILEPATH = ssr.vars.SSR_PLUGIN_PYTHON_ROOT_DIR + "/ssr/audit/logfile.ini"
 LOGFILE_GROUP_PERMISSIONS = "Permissions"
 # LPK: Logfile Permissions Key
