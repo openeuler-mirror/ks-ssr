@@ -104,15 +104,16 @@
             </arg> -->
             <arg>
                 <name>tcp-udp</name>
-                <value>true</value>
-                <value_limits>""</value_limits>
+                <value>"tcp"</value>
+                <value_limits>(tcp)|(udp)</value_limits>
+                <input_example>tcp || udp</input_example>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
+                    <value_fixed>"tcp"</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Whether to set TCP (otherwise UDP)</_label>
+                    <_label>transport protocol</_label>
                 </layout>
             </arg>
             <arg>
