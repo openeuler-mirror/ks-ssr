@@ -41,8 +41,8 @@ SSHD_CONF_PERMIT_EMPTY = "PermitEmptyPasswords"
 SSHD_CONF_PORT = "Port"
 SSHD_CONF_PAM = "UsePAM"
 
-SET_SFTP_USER_CMD = "useradd sftpuser"
-SET_SFTP_USER_CONFIG = "Match User sftpuser\n\tChrootDirectory /home\n\tX11Forwarding no\n\tAllowTcpForwarding no\n\tForceCommand internal-sftp"
+SET_SFTP_USER_CMD = "useradd  -d /home/sftpuser -s /sbin/nologin sftpuser;chown root. /home/sftpuser;chmod 755 /home/sftpuser;mkdir /home/sftpuser/test;chown sftpuser. /home/sftpuser/test"
+SET_SFTP_USER_CONFIG = "Match User sftpuser\n\tChrootDirectory /home/sftpuser\n\tX11Forwarding no\n\tAllowTcpForwarding no\n\tForceCommand internal-sftp"
 
 class SSHD:
     def __init__(self):
@@ -256,8 +256,8 @@ class SftpUser(SSHD):
             self.conf_force.set_line("\tForceCommand internal-sftp","#\\s+PermitTTY\\s+no")
             self.conf_allowtcp.set_line("\tAllowTcpForwarding no","\tForceCommand internal-sftp")
             self.conf_x11.set_line("\tX11Forwarding no","\tAllowTcpForwarding\\s+no")
-            self.conf_chroot.set_line("\tChrootDirectory /home","\tX11Forwarding\\s+no")
-            self.conf_match.set_line("Match User sftpuser","\tChrootDirectory\\s+/home")
+            self.conf_chroot.set_line("\tChrootDirectory /home/sftpuser","\tX11Forwarding\\s+no")
+            self.conf_match.set_line("Match User sftpuser","\tChrootDirectory\\s+/home/sftpuser")
 
             if self.get_selinux_status():
                 ssr.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_SFTP_PATH))
