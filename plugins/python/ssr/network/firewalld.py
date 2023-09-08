@@ -61,6 +61,7 @@ class Firewall:
     def __init__(self):
         self.firewalld_systemd = ssr.systemd.Proxy('firewalld')
         self.iptables_systemd = ssr.systemd.Proxy('iptables')
+        self.flag_first = True
 
     def open_iptables(self):
         if self.firewalld_systemd.exist():
@@ -155,6 +156,11 @@ class Switch(Firewall):
 
         # ssr.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
         
+        if self.flag_first:
+            ssr.utils.subprocess_not_output(CLEAR_IPTABLES)
+            ssr.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
+            self.flag_first = False
+
         if args['input-ports-connect-nums']  == 0:
             self.del_iptables_history('1:60999')
         else:
