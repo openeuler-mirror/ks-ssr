@@ -99,10 +99,10 @@ class SuidSgidFiles:
                     tmp_guid_output += '\n'
                 
                 scan_suid_output += tmp_suid_output
-                scan_suid_output += tmp_guid_output
+                scan_guid_output += tmp_guid_output
                 # ssr.log.debug("scan_777_files_output = ")
                 # ssr.log.debug(scan_output)
-            self.conf.set_value("", "[  SUID ]\n" + scan_suid_output + "[  GUID ]\n" + scan_suid_output)
+            self.conf.set_value("", "[  SUID ]\n" + scan_suid_output + "[  GUID ]\n" + scan_guid_output)
 
         return (True, '')
             
