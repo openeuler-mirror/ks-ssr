@@ -79,5 +79,6 @@ endforeach()
 # selinux mode files
 install(FILES ${PROJECT_SOURCE_DIR}/data/ssr-sshd-port.pp
                 ${PROJECT_SOURCE_DIR}/data/ssr-sshd-sftp.pp
+                ${PROJECT_SOURCE_DIR}/data/ssr-ulimit.pp
         DESTINATION ${SSR_INSTALL_DATADIR}/)
 
