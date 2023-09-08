@@ -58,7 +58,7 @@ class RootLogin(SSHD):
         args = json.loads(args_json)
         self.conf.set_value("PermitRootLogin", "yes" if args[ROOT_LOGIN_ARG_ENABLED] else "no")
         # 重启服务生效
-        self.service.restart()
+        self.service.reload()
         return (True, '')
 
 
@@ -72,7 +72,7 @@ class PubkeyAuth(SSHD):
         args = json.loads(args_json)
         self.conf.set_value("PubkeyAuthentication", "yes" if args[PUBKEY_AUTH_ARG_ENABLED] else "no")
         # 重启服务生效
-        self.service.restart()
+        self.service.reload()
         return (True, '')
 
 class WeakEncryption(SSHD):
@@ -103,7 +103,7 @@ class WeakEncryption(SSHD):
             else:
                 self.conf.set_value("Ciphers", ','.join(ciphers))
             # 重启服务生效
-            self.service.restart()
+            self.service.reload()
         return (True, '')
 
 class BannerInfo(SSHD):
@@ -119,7 +119,7 @@ class BannerInfo(SSHD):
         # if args[ROOT_LOGIN_ARG_ENABLED]:
         self.conf.set_value("Banner", args[BANNER_INFO_KEY])
         # 重启服务生效
-        self.service.restart()
+        self.service.reload()
         return (True, '')
 
 class SessionTimeout(SSHD):
@@ -145,8 +145,6 @@ class SessionTimeout(SSHD):
             self.conf_bashrc.set_all_value(PROFILE_TMOUT,"")
             self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
         else:
-            self.conf.set_value(PROFILE_CLIENT_TMOUT, args[PROFILE_CLIENT_TMOUT])
-            self.conf.set_value(PROFILE_CLIENT_COUNT, 0)
             # 如果/etc/profile /etc/bashrc 中有TMOUT的值，则进行修改
             if self.conf_profile.get_value(PROFILE_TMOUT):
                 self.conf_profile.set_all_value(PROFILE_TMOUT,args[PROFILE_CLIENT_TMOUT])
@@ -158,9 +156,13 @@ class SessionTimeout(SSHD):
                 self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,args[PROFILE_CLIENT_TMOUT])
             #self.conf_bashrc.set_all_value(PROFILE_TMOUT,"")
             #self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
+            if self.conf.get_value(PROFILE_CLIENT_TMOUT) != str(args[PROFILE_CLIENT_TMOUT]):
+                self.conf.set_value(PROFILE_CLIENT_TMOUT, args[PROFILE_CLIENT_TMOUT])
+            if self.conf.get_value(PROFILE_CLIENT_COUNT) != 0:
+                self.conf.set_value(PROFILE_CLIENT_COUNT, 0)
 
         # 重启服务生效
-        self.service.restart()
+        self.service.reload()
         return (True, '')
 
 class SshdService(SSHD):
@@ -180,14 +182,10 @@ class SshdService(SSHD):
         self.conf.set_value(SSHD_CONF_PAM, "yes" if args[SSHD_CONF_PAM_KEY] else "no")
 
         # 重启服务生效
-        self.service.restart()
+        self.service.reload()
         return (True, '')
 
-class SftpUser:
-    def __init__(self):
-        self.conf_table = ssr.configuration.Table(SSHD_CONF_PATH, ",\\s+")
-        self.service = ssr.systemd.Proxy("sshd")
-
+class SftpUser(SSHD):
     def user_exist(self,username):
         cmd = 'if id -u {0} >/dev/null 2>&1 ; then echo exist; fi'.format(username)
         if len(ssr.utils.subprocess_has_output(cmd)) == 0:
@@ -201,6 +199,7 @@ class SftpUser:
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        self.conf_table = ssr.configuration.Table(SSHD_CONF_PATH, ",\\s+")
         args = json.loads(args_json)
         if args["enabled"]:
             if not self.user_exist("sftpuser"):
@@ -213,5 +212,5 @@ class SftpUser:
             self.conf_table.del_record("Match User")
 
         # 重启服务生效
-        self.service.restart()
+        self.service.reload()
         return (True, '')
