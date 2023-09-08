@@ -19,8 +19,8 @@ class Hosts:
 class RemoteLogin(Hosts):
     def get(self):
         retdata = dict()
-        retdata[REMOTE_LOGIN_ARG_ALLOW_HOSTS] = self.allow_conf.get_value("sshd")
-        retdata[REMOTE_LOGIN_ARG_DENY_HOSTS] = self.deny_conf.get_value("sshd")
+        retdata[REMOTE_LOGIN_ARG_ALLOW_HOSTS] = str(self.allow_conf.get_value("sshd"))
+        retdata[REMOTE_LOGIN_ARG_DENY_HOSTS] = str(self.deny_conf.get_value("sshd"))
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
