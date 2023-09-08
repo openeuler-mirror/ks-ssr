@@ -470,8 +470,8 @@ msgid ""
 msgstr "禁止wheel组以外的用户使用'su root'命令"
 
 #: ../data/ssr-system-rs.xml.in.h:70
-msgid "Only root is allowed to use sudo command"
-msgstr "仅允许root用户使用sudo命令(开启selinux失效)"
+msgid "Restrict user sudo command permission"
+msgstr "限制用户sudo命令使用权限(开启selinux失效)"
 
 #: ../data/ssr-system-rs.xml.in.h:71
 msgid "List of IP addresses that allow remote access (Split with comma)"

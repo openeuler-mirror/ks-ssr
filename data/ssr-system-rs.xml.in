@@ -1104,7 +1104,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Only root is allowed to use sudo command</_label>
+                    <_label>Restrict user sudo command permission</_label>
                 </layout>
             </arg>
         </reinforcement>

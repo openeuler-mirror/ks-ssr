@@ -42,9 +42,9 @@ class SuWheel:
 class SudoLimits:
     def __init__(self):
         self.conf = ssr.configuration.PAM(SUDO_LIMIT_PATH, "%wheel\\s+ALL")
-        self.conf_sys = ssr.configuration.PAM(SUDO_LIMIT_PATH, "sysadm\\s+ALL")
-        self.conf_sec = ssr.configuration.PAM(SUDO_LIMIT_PATH, "secadm\\s+ALL")
-        self.conf_aud = ssr.configuration.PAM(SUDO_LIMIT_PATH, "audadm\\s+ALL")
+        # self.conf_sys = ssr.configuration.PAM(SUDO_LIMIT_PATH, "sysadm\\s+ALL")
+        # self.conf_sec = ssr.configuration.PAM(SUDO_LIMIT_PATH, "secadm\\s+ALL")
+        # self.conf_aud = ssr.configuration.PAM(SUDO_LIMIT_PATH, "audadm\\s+ALL")
 
     def get_selinux_status(self):
         output = ssr.utils.subprocess_has_output("getenforce")
@@ -57,6 +57,8 @@ class SudoLimits:
     def get(self):
         retdata = dict()
         retdata["enabled"] = (len(self.conf.get_line()) == 0)
+        if self.get_selinux_status():
+            retdata["enabled"]  =  (len(self.conf.get_line()) != 0)
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
@@ -66,17 +68,17 @@ class SudoLimits:
             self.conf.del_line()
             if self.get_selinux_status():
                 self.conf.set_line(SUDO_LIMIT_FALLBACK_LINE,"## Same thing without a password")
-            else:
-                self.conf_sys.del_line()
-                self.conf_sec.del_line()
-                self.conf_aud.del_line()
+            # else:
+            #     self.conf_sys.del_line()
+            #     self.conf_sec.del_line()
+            #     self.conf_aud.del_line()
         else:
             if self.get_selinux_status():
                 # self.conf.set_line(SUDO_LIMIT_FALLBACK_LINE,"## Same thing without a password")
                 return (False,"Please close SELinux and use it! \t\n")
-            else:
-                self.conf_aud.set_line(SUDO_LIMIT_AUD_LINE,"")
-                self.conf_sec.set_line(SUDO_LIMIT_SEC_LINE,"audadm\\s+ALL")
-                self.conf_sys.set_line(SUDO_LIMIT_SYS_LINE,"secadm\\s+ALL")
+            # else:
+                # self.conf_aud.set_line(SUDO_LIMIT_AUD_LINE,"")
+                # self.conf_sec.set_line(SUDO_LIMIT_SEC_LINE,"audadm\\s+ALL")
+                # self.conf_sys.set_line(SUDO_LIMIT_SYS_LINE,"secadm\\s+ALL")
             self.conf.set_line(SUDO_LIMIT_FALLBACK_LINE,"## Same thing without a password")
         return (True, '')
