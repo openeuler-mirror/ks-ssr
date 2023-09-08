@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-23 15:24+0800\n"
+"POT-Creation-Date: 2022-06-30 11:02+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -187,76 +187,76 @@ msgid "Level I safety standard"
 msgstr "一级安全标准"
 
 #: ../data/ssr-system-rs.xml.in.h:2
-msgid "Turn on system firewall service"
-msgstr "开启系统防火墙服务"
-
-#: ../data/ssr-system-rs.xml.in.h:3
-msgid "Whether to set TCP (otherwise UDP)"
-msgstr "是否设置TCP（否则为UDP）"
-
-#: ../data/ssr-system-rs.xml.in.h:4
-msgid "Disable FTP, SMTP and other ports that may threaten the system"
-msgstr "禁用FTP、SMTP等可能威胁系统的端口"
-
-#: ../data/ssr-system-rs.xml.in.h:5
-msgid "clear iptables configuration"
-msgstr "清除iptables配置"
-
-#: ../data/ssr-system-rs.xml.in.h:6
-msgid "allow network segment (Split with comma)"
-msgstr "允许输入网段 (逗号分割)"
-
-#: ../data/ssr-system-rs.xml.in.h:7
-msgid "disable network segment (Split with comma)"
-msgstr "禁止输入网段 (逗号分割)"
-
-#: ../data/ssr-system-rs.xml.in.h:8
-msgid "Opened ports (Split with semicolon)"
-msgstr "开放输入端口 (分号分割)"
-
-#: ../data/ssr-system-rs.xml.in.h:9
-msgid "disable ports (Split with semicolon)"
-msgstr "禁用输入端口 (分号分割)"
-
-#: ../data/ssr-system-rs.xml.in.h:10
-msgid "Limit input port maximum connections(0 means unlimited)"
-msgstr "限制输入端口最大连接数（0为不限制）"
-
-#: ../data/ssr-system-rs.xml.in.h:11
-msgid "allow output network segment (Split with comma)"
-msgstr "允许输出网段 (逗号分割)"
-
-#: ../data/ssr-system-rs.xml.in.h:12
-msgid "disable output network segment (Split with comma)"
-msgstr "禁止输出网段 (逗号分割)"
-
-#: ../data/ssr-system-rs.xml.in.h:13
-msgid "Opened output ports (Split with semicolon)"
-msgstr "开放输出端口 (分号分割)"
-
-#: ../data/ssr-system-rs.xml.in.h:14
-msgid "disable output ports (Split with semicolon)"
-msgstr "禁用输入端口 (分号分割)"
-
-#: ../data/ssr-system-rs.xml.in.h:15
 msgid "Turn on ICMP redirection"
 msgstr "开启ICMP重定向"
 
-#: ../data/ssr-system-rs.xml.in.h:16
+#: ../data/ssr-system-rs.xml.in.h:3
 msgid "Prevent syn flood attacks"
 msgstr "防止syn flood攻击"
 
-#: ../data/ssr-system-rs.xml.in.h:17
+#: ../data/ssr-system-rs.xml.in.h:4
 msgid "Turn on IP source routing"
 msgstr "开启IP源路由"
 
-#: ../data/ssr-system-rs.xml.in.h:18
+#: ../data/ssr-system-rs.xml.in.h:5
 msgid "Allow ICMP timestamp query"
 msgstr "允许ICMP时间戳请求"
 
-#: ../data/ssr-system-rs.xml.in.h:19
+#: ../data/ssr-system-rs.xml.in.h:6
 msgid "Prohibit the host from being detected by traceroute"
 msgstr "禁止主机被Traceroute探测"
+
+#: ../data/ssr-system-rs.xml.in.h:7
+msgid "Turn on system firewall service"
+msgstr "开启系统防火墙服务"
+
+#: ../data/ssr-system-rs.xml.in.h:8
+msgid "Whether to set TCP (otherwise UDP)"
+msgstr "是否设置TCP（否则为UDP）"
+
+#: ../data/ssr-system-rs.xml.in.h:9
+msgid "Disable FTP, SMTP and other ports that may threaten the system"
+msgstr "禁用FTP、SMTP等可能威胁系统的端口"
+
+#: ../data/ssr-system-rs.xml.in.h:10
+msgid "clear iptables configuration"
+msgstr "清除iptables配置"
+
+#: ../data/ssr-system-rs.xml.in.h:11
+msgid "allow network segment (Split with comma)"
+msgstr "允许输入网段 (逗号分割)"
+
+#: ../data/ssr-system-rs.xml.in.h:12
+msgid "disable network segment (Split with comma)"
+msgstr "禁止输入网段 (逗号分割)"
+
+#: ../data/ssr-system-rs.xml.in.h:13
+msgid "Opened ports (Split with semicolon)"
+msgstr "开放输入端口 (分号分割)"
+
+#: ../data/ssr-system-rs.xml.in.h:14
+msgid "disable ports (Split with semicolon)"
+msgstr "禁用输入端口 (分号分割)"
+
+#: ../data/ssr-system-rs.xml.in.h:15
+msgid "Limit input port maximum connections(0 means unlimited)"
+msgstr "限制输入端口最大连接数（0为不限制）"
+
+#: ../data/ssr-system-rs.xml.in.h:16
+msgid "allow output network segment (Split with comma)"
+msgstr "允许输出网段 (逗号分割)"
+
+#: ../data/ssr-system-rs.xml.in.h:17
+msgid "disable output network segment (Split with comma)"
+msgstr "禁止输出网段 (逗号分割)"
+
+#: ../data/ssr-system-rs.xml.in.h:18
+msgid "Opened output ports (Split with semicolon)"
+msgstr "开放输出端口 (分号分割)"
+
+#: ../data/ssr-system-rs.xml.in.h:19
+msgid "disable output ports (Split with semicolon)"
+msgstr "禁用输入端口 (分号分割)"
 
 #: ../data/ssr-system-rs.xml.in.h:20
 msgid "Turn on system bluetooth service"
@@ -476,8 +476,8 @@ msgid "Prohibit SSH users with empty password from logging in"
 msgstr "禁止密码为空的SSH用户登录"
 
 #: ../data/ssr-system-rs.xml.in.h:72
-msgid "Modify the default SSH port"
-msgstr "修改默认SSH端口"
+msgid "Modify the default SSH port(SELinux needs to be turned off for use)"
+msgstr "修改默认SSH端口（需关闭selinux使用）"
 
 #: ../data/ssr-system-rs.xml.in.h:73
 msgid "Enable PAM login mechanism"
@@ -856,6 +856,9 @@ msgstr "禁止高危漏洞服务"
 #: ../plugins/python/ssr-plugin-network.xml.in.h:15
 msgid "Disable high risk vulnerability services"
 msgstr "预防bluetooth、cups、avahi-daemon、rpcbind、smb服务潜在的危险"
+
+#~ msgid "Modify the default SSH port"
+#~ msgstr "修改默认SSH端口"
 
 #~ msgid "Minimum acceptable password length"
 #~ msgstr "可接受的最小密码长度"
