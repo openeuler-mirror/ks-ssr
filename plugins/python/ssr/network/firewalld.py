@@ -260,7 +260,7 @@ class IcmpTimestamp(Firewall):
                 self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TIMESTAMP_REPLY_DETAIL ,"")
             self.iptables_systemd.service_save()
         else:
-            return (True, 'iptables is not running \t')
+            return (False, 'iptables is not running \t')
         return (True, '')
 
 # 禁止主机被Traceroute检测
@@ -287,5 +287,5 @@ class Traceroute(Firewall):
                 self.del_iptables(OPEN_IPTABLES_OUTPUT_ICMP ,CHECK_IPTABLES_OUTPUT_ICMP ,TRACEROUTE_DETAIL ,"")
             self.iptables_systemd.service_save()
         else:
-            return (True, 'iptables is not running \t')
+            return (False, 'iptables is not running \t')
         return (True, '')
