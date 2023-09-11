@@ -9,5 +9,5 @@ variables:
 
 include:
   - project: 'os/gitlab-ci'
-  - ref: main
-  - file: '/cxx.gitlab-ci.yml'
+    ref: main
+    file: '/cxx.gitlab-ci.yml'
