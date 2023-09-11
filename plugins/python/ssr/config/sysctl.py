@@ -14,6 +14,7 @@ MODIFY_RULE_CLOSE = "[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'\'"
 MODIFY_RULE_OPEN = "[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'<Control><Alt>Delete\'"
 
 SAK_KEY_SWITCH_CONF_FILE = "/etc/sysctl.d/90-ssr-config.conf"
+SAK_KEY_SWITCH_CONF_SYS_FILE = "/etc/sysctl.conf"
 SAK_KEY_SWITCH_CONF_KEY_SYSRQ = "kernel.sysrq"
 DMESG_SWITCH_CONF_KEY_SYSRQ = "kernel.dmesg_restrict"
 
@@ -24,6 +25,7 @@ COMPOSITE_KEY_REBOOT_ENABLE_CMD = "systemctl   unmask   ctrl-alt-del.target"
 class SAKKey:
     def __init__(self):
         self.conf = ssr.configuration.KV(SAK_KEY_SWITCH_CONF_FILE, "=", "=")
+        self.conf_sys = ssr.configuration.KV(SAK_KEY_SWITCH_CONF_SYS_FILE, "=", "=")
 
     def get(self):
         retdata = dict()
@@ -37,6 +39,8 @@ class SAKKey:
         else :
             value = 0
         self.conf.set_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ, value)
+        if len(self.conf_sys.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ)) != 0:
+            self.conf_sys.set_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ, value)
         ssr.utils.subprocess_not_output('{0} --system'.format(SYSCTL_PATH))
 
         return (True, '')
@@ -44,6 +48,7 @@ class SAKKey:
 class Dmesg:
     def __init__(self):
         self.conf = ssr.configuration.KV(SAK_KEY_SWITCH_CONF_FILE, "=", "=")
+        self.conf_sys = ssr.configuration.KV(SAK_KEY_SWITCH_CONF_SYS_FILE, "=", "=")
 
     def get(self):
         retdata = dict()
@@ -57,6 +62,8 @@ class Dmesg:
         else :
             value = 0
         self.conf.set_value(DMESG_SWITCH_CONF_KEY_SYSRQ, value)
+        if len(self.conf_sys.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)) != 0:
+            self.conf_sys.set_value(DMESG_SWITCH_CONF_KEY_SYSRQ, value)
         ssr.utils.subprocess_not_output('{0} --system'.format(SYSCTL_PATH))
 
         return (True, '')
