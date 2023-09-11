@@ -32,6 +32,16 @@ extern "C"
         SSR_STANDARD_TYPE_LAST,
     };
 
+    // 加固策略类型
+    enum SSRStrategyType
+    {
+        // 系统默认加固策略
+        SSR_STRATEGY_TYPE_SYSTEM = 0,
+        // 用户导入的策略（自定义加固策略）
+        SSR_STRATEGY_TYPE_CUSTOM,
+        SSR_STRATEGY_TYPE_LAST,
+    };
+
     // 加固项状态
     enum SSRReinforcementState
     {

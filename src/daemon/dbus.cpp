@@ -9,6 +9,7 @@
 #include <json/json.h>
 #include <kylin-license/license-i.h>
 #include <iostream>
+#include <fstream>
 #include "src/daemon/categories.h"
 #include "src/daemon/configuration.h"
 #include "src/daemon/plugins.h"
@@ -21,6 +22,8 @@ namespace Daemon
 {
 #define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
+#define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.xml"
+#define CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra-strategy.xml"
 
 // static std::shared_ptr<SSRReinforcementInterface> reinforcement_interface_;
 // static std::string param_str_ = "";
@@ -67,6 +70,51 @@ void DBus::ImportCustomRS(const std::string& encoded_standard)
     {
         THROW_DBUSCXX_ERROR(error_code);
     }
+}
+
+void DBus::SetStrategyType(const uint32_t& strategy_type)
+{
+    KLOG_PROFILE("strategy type: %d.", strategy_type);
+
+    if (strategy_type >= SSRStrategyType::SSR_STRATEGY_TYPE_LAST)
+    {
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID);
+    }
+    RETURN_IF_TRUE(strategy_type == this->configuration_->get_strategy_type())
+
+    if (!this->configuration_->set_strategy_type(SSRStrategyType(strategy_type)))
+    {
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SET_STRATEGY_TYPE_FAILED);
+    }
+}
+
+void DBus::ImportCustomRA(const std::string& encoded_strategy)
+{
+    KLOG_PROFILE("encoded strategy: %s.", encoded_strategy.c_str());
+    try
+    {
+        std::ofstream ofs(CUSTOM_RA_STRATEGY_FILEPATH, std::ios_base::out);
+//        ssr_ra(ofs, *ra.get());
+        ofs << encoded_strategy;
+        ofs.close();
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+        return ;
+    }
+    SSRErrorCode error_code = SSRErrorCode::SUCCESS;
+    if (!configuration_->check_ra_strategy())
+    {
+        remove(CUSTOM_RA_STRATEGY_FILEPATH);
+        THROW_DBUSCXX_ERROR(error_code);
+    }
+}
+
+void DBus::SetCheckBox(const std::string &reinforcement_name, const std::string &checkbox_status)
+{
+    KLOG_PROFILE("reinforcement_name: %s, checkbox_status: %s", reinforcement_name.c_str(), checkbox_status.c_str());
+    configuration_->set_ra_checkbox(reinforcement_name, checkbox_status);
 }
 
 std::string DBus::GetCategories()
@@ -184,7 +232,7 @@ std::string DBus::GetReinforcement(const std::string& name)
 
 void DBus::SetReinforcement(const std::string& reinforcement_xml)
 {
-    KLOG_PROFILE("");
+    KLOG_PROFILE("reinforcement_xml : %s",reinforcement_xml.c_str());
 
     try
     {
