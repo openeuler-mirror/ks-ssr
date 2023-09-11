@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 2.8.12)
 
 if(POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
-    project(ks-ssr-manager VERSION 1.0)
+    project(ks-ssr-manager VERSION 1.1)
 else()
     project(ks-ssr-manager)
-    set (PROJECT_VERSION 1.0)
+    set (PROJECT_VERSION 1.1)
 endif()
 
 
