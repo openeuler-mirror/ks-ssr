@@ -32,6 +32,14 @@ public:
     SSRStandardType get_standard_type();
     // 设置标准类型
     bool set_standard_type(SSRStandardType standard_type);
+    // 获取加固策略类型
+    SSRStrategyType get_strategy_type();
+    // 设置加固策略类型
+    bool set_strategy_type(SSRStrategyType strategy_type);
+    // 检测导入ra文件是否正确
+    bool check_ra_strategy();
+    // 前台复选框勾选调用，checkbox后台默认为false
+    void set_ra_checkbox(const std::string &name, const std::string &status);
     // 获取加固标准
     std::shared_ptr<Protocol::RS> get_rs() { return this->rs_; }
     // 设置自定义加固标准
@@ -52,6 +60,8 @@ private:
     // 重新加载加固标准，这里会发送变化的信号
     void reload_rs();
     void load_rs();
+    // 修改加固参数，重载加固项
+    void reload_strategy();
     // 加载加固标准文件(不变化的部分)
     std::shared_ptr<Protocol::RS> get_fixed_rs();
     // 加载加固参数文件

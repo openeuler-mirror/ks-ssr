@@ -108,10 +108,10 @@ class CDROM(DRIVERS):
                 # change the driver name and retain the backup
                 if cdrom_drive_path.find('.bak') < 0:
                     mv_cdrom = 'mv {0} {1}'.format(cdrom_drive_path,cdrom_drive_path + '.bak')
-                    output = ssr.utils.subprocess_not_output(mv_cdrom)
+                    ssr.utils.subprocess_not_output(mv_cdrom)
                 if not sr_mod_drive_path.find('.bak') < 0:
                     mv_sr_mod = 'mv {0} {1}'.format(sr_mod_drive_path,sr_mod_drive_path + '.bak')
-                    output = ssr.utils.subprocess_not_output(mv_sr_mod)
+                    ssr.utils.subprocess_not_output(mv_sr_mod)
 
                 # reload initramfs
                 #self.reload_drive(self.get_kernel_version())
@@ -226,7 +226,7 @@ class TTYS(UDev):
                 ttys_close_cmd = TTYPS_CMD_STR + str(open_index) + "  " + "uart none"
                 self.conf_rc.del_record("1={0}".format(ttys_close_cmd))
                 if len(flag_open) != 0:
-                    open_output = ssr.utils.subprocess_not_output(ttys_open_command)
+                    ssr.utils.subprocess_not_output(ttys_open_command)
                 open_index += 1
         else:
             while close_index < output_nums:
@@ -237,7 +237,7 @@ class TTYS(UDev):
                 ttys_close_command = '{0}'.format(ttys_close_cmd)
                 self.conf_rc.set_value("1={0}".format(ttys_close_cmd), ttys_close_cmd)
                 if len(flag_close) == 0:
-                    close_output = ssr.utils.subprocess_not_output(ttys_close_command)
+                    ssr.utils.subprocess_not_output(ttys_close_command)
                 close_index += 1
 
         self.reload()
