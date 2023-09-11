@@ -22,7 +22,7 @@ namespace Daemon
 {
 #define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
-#define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.xml"
+// #define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.xml"
 #define CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra-strategy.xml"
 
 // static std::shared_ptr<SSRReinforcementInterface> reinforcement_interface_;
@@ -511,6 +511,10 @@ void DBus::on_get_property(::DBus::InterfaceAdaptor& interface, const std::strin
     {
         value.writer().append_uint32(this->configuration_->get_standard_type());
     }
+    else if (property == "strategy_type")
+    {
+        value.writer().append_uint32(this->configuration_->get_strategy_type());
+    }
     else
     {
         KLOG_WARNING("Unknown property: %s.", property.c_str());
@@ -527,6 +531,11 @@ void DBus::on_set_property(::DBus::InterfaceAdaptor& interface, const std::strin
     {
         uint32_t standard_type = value;
         this->configuration_->set_standard_type(SSRStandardType(standard_type));
+    }
+    else if (property == "strategy_type")
+    {
+        uint32_t strategy_type = value;
+        this->configuration_->set_strategy_type(SSRStrategyType(strategy_type));
     }
     else
     {
