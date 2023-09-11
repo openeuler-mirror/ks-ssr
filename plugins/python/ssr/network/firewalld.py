@@ -234,9 +234,9 @@ class Switch(Firewall):
             self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
             for network_segment in args['disable-network-segment-output'].split(","):
                 if args['tcp-udp'] == "tcp":
-                    self.set_iptables(ADD_IPTABLES_OUTPUT_TCP,CHECK_IPTABLES_OUTPUT_TCP,"-s " + network_segment ,"-j REJECT")
+                    self.set_iptables(ADD_IPTABLES_OUTPUT_TCP,CHECK_IPTABLES_OUTPUT_TCP,"-d " + network_segment ,"--dport 1:1023 -j REJECT")
                 else:
-                    self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP,"-s " + network_segment ,"-j REJECT")
+                    self.set_iptables(ADD_IPTABLES_OUTPUT_UDP ,CHECK_IPTABLES_OUTPUT_UDP,"-d " + network_segment ,"--dport 1:1023 -j REJECT")
         else:
             self.del_iptables_history("-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
         # 开放端口 output
