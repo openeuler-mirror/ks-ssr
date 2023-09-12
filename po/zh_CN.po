@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-21 17:22+0800\n"
+"POT-Creation-Date: 2022-09-26 17:20+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -392,116 +392,120 @@ msgid "Built in common vulnerability version version number scanning"
 msgstr "内置常见漏洞版本号扫描"
 
 #: ../data/ssr-system-rs.xml.in.h:50
+msgid "Open monitor(Takes effect after the backend service is restarted)"
+msgstr "开启监控（重启后端服务生效）"
+
+#: ../data/ssr-system-rs.xml.in.h:51
 msgid "Turn on system auditd service"
 msgstr "开启系统审计服务"
 
-#: ../data/ssr-system-rs.xml.in.h:51
+#: ../data/ssr-system-rs.xml.in.h:52
 msgid "System log save cycle（weekly）"
 msgstr "系统日志保存周期（周）"
 
-#: ../data/ssr-system-rs.xml.in.h:52
+#: ../data/ssr-system-rs.xml.in.h:53
 msgid "The maximum permission of log files and configurations is set to 0644"
 msgstr "日志文件和配置的最大权限为0644"
 
-#: ../data/ssr-system-rs.xml.in.h:53
+#: ../data/ssr-system-rs.xml.in.h:54
 msgid "Log files can only be appended"
 msgstr "日志文件仅能被添加"
 
-#: ../data/ssr-system-rs.xml.in.h:54
+#: ../data/ssr-system-rs.xml.in.h:55
 msgid "Allow to use CD-ROM device"
 msgstr "允许使用光驱设备（首次加固时间长，请耐心等待）"
 
-#: ../data/ssr-system-rs.xml.in.h:55
+#: ../data/ssr-system-rs.xml.in.h:56
 msgid "Allow to use USB device"
 msgstr "允许使用USB设备"
 
-#: ../data/ssr-system-rs.xml.in.h:56
+#: ../data/ssr-system-rs.xml.in.h:57
 msgid "Allow to use serial port device"
 msgstr "允许使用串口设备"
 
-#: ../data/ssr-system-rs.xml.in.h:57
+#: ../data/ssr-system-rs.xml.in.h:58
 #: ../plugins/python/ssr-plugin-external.xml.in.h:9
 msgid "Restrict system independent user login"
 msgstr "限制系统无关用户登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:58
+#: ../data/ssr-system-rs.xml.in.h:59
 msgid "Allow account retention (Split with semicolon)"
 msgstr "允许保留账号 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:59
+#: ../data/ssr-system-rs.xml.in.h:60
 msgid "Disable null password user present"
 msgstr "禁止空密码用户出现"
 
-#: ../data/ssr-system-rs.xml.in.h:60
+#: ../data/ssr-system-rs.xml.in.h:61
 msgid "Delete lp, games, operator and adm by default"
 msgstr "默认删除lp, games, operator, adm"
 
-#: ../data/ssr-system-rs.xml.in.h:61
+#: ../data/ssr-system-rs.xml.in.h:62
 msgid "Add users to delete (Split with semicolon)"
 msgstr "添加需删除用户 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:62
+#: ../data/ssr-system-rs.xml.in.h:63
 msgid "Allow remote login of root user via SSH"
 msgstr "允许通过ssh远程登陆root用户"
 
-#: ../data/ssr-system-rs.xml.in.h:63
+#: ../data/ssr-system-rs.xml.in.h:64
 msgid "Allow SSH password free login"
 msgstr "允许SSH免密登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:64
+#: ../data/ssr-system-rs.xml.in.h:65
 msgid "Allow to use SSH weak encryption algorithm"
 msgstr "允许使用SSH弱加密算法"
 
-#: ../data/ssr-system-rs.xml.in.h:65
+#: ../data/ssr-system-rs.xml.in.h:66
 msgid "Hiding operating system version information"
 msgstr "隐藏操作系统版本信息"
 
-#: ../data/ssr-system-rs.xml.in.h:66
+#: ../data/ssr-system-rs.xml.in.h:67
 msgid "Enforce V2 security protocol"
 msgstr "强制使用V2安全协议"
 
-#: ../data/ssr-system-rs.xml.in.h:67
+#: ../data/ssr-system-rs.xml.in.h:68
 msgid "Prohibit SSH users with empty password from logging in"
 msgstr "禁止主机密码为空的用户SSH登录"
 
-#: ../data/ssr-system-rs.xml.in.h:68
+#: ../data/ssr-system-rs.xml.in.h:69
 msgid "Modify the default SSH port"
 msgstr "修改默认SSH端口"
 
-#: ../data/ssr-system-rs.xml.in.h:69
+#: ../data/ssr-system-rs.xml.in.h:70
 msgid "Enable PAM login mechanism"
 msgstr "启用PAM登录机制"
 
-#: ../data/ssr-system-rs.xml.in.h:70
+#: ../data/ssr-system-rs.xml.in.h:71
 #: ../plugins/python/ssr-plugin-external.xml.in.h:25
 msgid ""
 "Users outside the wheel group are prohibited from using the 'su root' command"
 msgstr "禁止wheel组以外的用户使用'su root'命令"
 
-#: ../data/ssr-system-rs.xml.in.h:71
+#: ../data/ssr-system-rs.xml.in.h:72
 msgid "Restrict user sudo command permission"
 msgstr "限制用户sudo命令使用权限(开启selinux失效)"
 
-#: ../data/ssr-system-rs.xml.in.h:72
+#: ../data/ssr-system-rs.xml.in.h:73
 msgid "List of IP addresses that allow remote access (Split with comma)"
 msgstr "允许远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:73
+#: ../data/ssr-system-rs.xml.in.h:74
 msgid ""
 "List of IP addresses for which remote access is prohibited (Split with comma)"
 msgstr "禁止远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:74
+#: ../data/ssr-system-rs.xml.in.h:75
 msgid ""
 "If no operation is performed for more than the following time (seconds), the "
 "session exits"
 msgstr "超过以下时间（秒）未操作则会话退出"
 
-#: ../data/ssr-system-rs.xml.in.h:75
+#: ../data/ssr-system-rs.xml.in.h:76
 msgid "Whether to configure sftpuser special account"
 msgstr "是否配置sftpuser用户（请自行设置用户密码）"
 
-#: ../data/ssr-system-rs.xml.in.h:76
+#: ../data/ssr-system-rs.xml.in.h:77
 #: ../plugins/python/ssr-plugin-external.xml.in.h:34
 msgid "Disable radio network"
 msgstr "禁用无线网络"
@@ -660,6 +664,14 @@ msgstr "漏洞扫描"
 #: ../plugins/python/ssr-plugin-config.xml.in.h:33
 msgid "Scanning system CVE vulnerability"
 msgstr "扫描系统CVE漏洞"
+
+#: ../plugins/python/ssr-plugin-config.xml.in.h:34
+msgid "Resource monitor"
+msgstr "资源监控"
+
+#: ../plugins/python/ssr-plugin-config.xml.in.h:35
+msgid "Monitoring system resources"
+msgstr "监控系统资源"
 
 #: ../plugins/python/ssr-plugin-external.xml.in.h:1
 msgid "external settings"
