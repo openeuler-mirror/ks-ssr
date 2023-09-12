@@ -80,4 +80,9 @@
         <_label>Scan suid-sgid permission file</_label>
         <_description>Check whether there is a file with suid-sgid permission under the important directory</_description>
     </reinforcement>
+    <reinforcement>
+        <name>config-vulnerability-scanning</name>
+        <_label>Vulnerability scanning</_label>
+        <_description>Scanning system CVE vulnerability</_description>
+    </reinforcement>
 </ssr_plugin>
