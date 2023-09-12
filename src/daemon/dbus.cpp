@@ -622,6 +622,7 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
             Protocol::ReinforcementResult reinforcement_result(std::string(), 0);
             reinforcement_result.name(operation->reinforcement_name);
             reinforcement_result.state(SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCANNING);
+            reinforcement_result.args("");
             scan_result.reinforcement().push_back(std::move(reinforcement_result));
             ++item_count;
         }
@@ -728,7 +729,7 @@ void DBus::on_reinfoce_process_changed_cb(const JobResult& job_result)
             else
             {
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_REINFORCE_DONE;
-                reinforcement_result.args(StrUtils::json2str(result_values));
+                // reinforcement_result.args(StrUtils::json2str(result_values));
             }
             reinforcement_result.state(int32_t(state));
             reinforce_result.reinforcement().push_back(std::move(reinforcement_result));
