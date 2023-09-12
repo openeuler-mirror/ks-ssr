@@ -16,17 +16,19 @@
 #include "src/daemon/ssr-protocol.hxx"
 #include "src/daemon/utils.h"
 
-// 十分钟
-#define RESOURCEMONITORMS 1000 * 60 * 10
-
 namespace KS
 {
 namespace Daemon
 {
+// 十分钟
+#define RESOURCEMONITORMS 1000 * 60 * 10
+
 #define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
 // #define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.xml"
 #define CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra-strategy.xml"
+#define RH_SSR_OPERATE_DATA_FIRST SSR_INSTALL_DATADIR "/ssr-rh-first.xml"
+#define RH_SSR_OPERATE_DATA_LAST SSR_INSTALL_DATADIR "/ssr-rh-last.xml"
 
 // static std::shared_ptr<SSRReinforcementInterface> reinforcement_interface_;
 // static std::string param_str_ = "";
@@ -292,7 +294,8 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
     try
     {
         this->scan_job_ = Job::create();
-
+        if (!is_frist_reinfoce_)
+            is_frist_reinfoce_finish_ = false;
         for (auto iter = names.begin(); iter != names.end(); ++iter)
         {
             auto& name = (*iter);
@@ -328,7 +331,7 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
                                            });
 
             // 重新扫描时需要清理加固项的安全状态
-            // reinforcement->state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNKNOWN;
+//             reinforcement->state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNKNOWN;
         }
     }
     catch (const std::exception& e)
@@ -338,12 +341,14 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
     }
 
     this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &DBus::on_scan_process_changed_cb));
+    this->scan_job_->signal_process_finished().connect(sigc::mem_fun(this, &DBus::scan_progress_finished));
 
     if (!this->scan_job_->run_async())
     {
         THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED);
     }
 
+    is_frist_scan_ = false;
     return this->scan_job_->get_id();
 }
 
@@ -366,7 +371,7 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
 int64_t DBus::Reinforce(const std::vector<std::string>& names)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
-
+    is_scan_flag_ = false;
     // 未授权不允许加固
     if (this->license_values.isNull() ||
         this->license_values[LICENSE_JK_ACTIVATION_STATUS].isNull() ||
@@ -385,11 +390,42 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
     {
         this->reinforce_job_ = Job::create();
 
+        // 首次加固保存所有加固前配置
+        is_frist_reinfoce_finish_ = false;
+
+        if (is_frist_reinfoce_)
+        {
+            std::vector<std::string> names_rh;
+
+            auto rh = this->configuration_->read_rh_from_file(RH_SSR_OPERATE_DATA_FIRST);
+            if (rh->reinforcement().empty())
+            {
+                auto reinforcements = this->plugins_->get_reinforcements();
+                for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
+                {
+                    auto& rs_reinforcement = (*iter)->get_rs();
+                    names_rh.push_back(rs_reinforcement.name());
+                    rh->reinforcement().push_back(rs_reinforcement);
+                }
+                this->configuration_->write_rh_to_file(rh, RH_SSR_OPERATE_DATA_FIRST);
+
+                is_frist_reinfoce_finish_ = true;
+                Scan(names_rh);
+                // 此处需等待扫描进程完成后置为false
+                is_frist_reinfoce_ = false;
+            }
+
+        }
+        else
+        {
+            if (snapshot_status_ != SSR_INITIAL_STATUS)
+                Scan(names);
+        }
+
         for (auto iter = names.begin(); iter != names.end(); ++iter)
         {
             auto& name = (*iter);
             auto reinforcement = this->plugins_->get_reinforcement(name);
-
             if (!reinforcement)
             {
                 THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND, name);
@@ -403,12 +439,66 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
             }
 
             Json::Value param;
-            auto& args = reinforcement->get_rs().arg();
-            for (auto arg_iter = args.begin(); arg_iter != args.end(); ++arg_iter)
+            std::string param_str = "";
+
+            if (snapshot_status_ == SSR_INITIAL_STATUS)
             {
-                param[arg_iter->name()] = StrUtils::str2json(arg_iter->value());
+                auto rh = this->configuration_->read_rh_from_file(RH_SSR_OPERATE_DATA_FIRST);
+                auto& rh_reinforcements = rh->reinforcement();
+                for (auto iter = rh_reinforcements.begin(); iter != rh_reinforcements.end(); ++iter)
+                {
+                    CONTINUE_IF_TRUE(iter->name() != name);
+                    auto& iter_args = iter->arg();
+                    for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
+                    {
+                        param[iter_arg->name()] = StrUtils::str2json(iter_arg->value());
+                    }
+                    param_str = StrUtils::json2str(param);
+                }
+                KLOG_DEBUG("frist fallback name : %s", name.c_str());
+                KLOG_DEBUG("frist fallback param_str : %s", param_str.c_str());
             }
-            auto param_str = StrUtils::json2str(param);
+            else if (snapshot_status_ == SSR_LAST_REINFORCEMENT_STATUS)
+            {
+                //
+                auto rh = this->configuration_->read_rh_from_file(RH_SSR_OPERATE_DATA_FIRST);
+                auto& rh_reinforcements = rh->reinforcement();
+                for (auto iter = rh_reinforcements.begin(); iter != rh_reinforcements.end(); ++iter)
+                {
+                    CONTINUE_IF_TRUE(iter->name() != name);
+                    auto& iter_args = iter->arg();
+                    for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
+                    {
+                        param[iter_arg->name()] = StrUtils::str2json(iter_arg->value());
+                    }
+                    param_str = StrUtils::json2str(param);
+                }
+                auto rh_last = this->configuration_->read_rh_from_file(RH_SSR_OPERATE_DATA_LAST);
+                auto& rh_last_reinforcements = rh_last->reinforcement();
+
+                for (auto iter = rh_last_reinforcements.begin(); iter != rh_last_reinforcements.end(); ++iter)
+                {
+                    CONTINUE_IF_TRUE(iter->name() != name);
+                    auto& iter_args = iter->arg();
+                    for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
+                    {
+                        param[iter_arg->name()] = StrUtils::str2json(iter_arg->value());
+                    }
+                }
+
+                param_str = StrUtils::json2str(param);
+            }
+            else
+            {
+                auto& args = reinforcement->get_rs().arg();
+                for (auto arg_iter = args.begin(); arg_iter != args.end(); ++arg_iter)
+                {
+                    param[arg_iter->name()] = StrUtils::str2json(arg_iter->value());
+                }
+                param_str = StrUtils::json2str(param);
+            }
+
+
             this->reinforce_job_->add_operation(reinforcement->get_plugin_name(),
                                                 reinforcement->get_name(),
                                                 [reinforcement_interface, param_str]() -> std::string {
@@ -434,6 +524,7 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
     }
 
     this->reinforce_job_->signal_process_changed().connect(sigc::mem_fun(this, &DBus::on_reinfoce_process_changed_cb));
+    this->reinforce_job_->signal_process_finished().connect(sigc::mem_fun(this, &DBus::reinfoce_progress_finished));
 
     if (!this->reinforce_job_->run_async())
     {
@@ -491,6 +582,41 @@ std::string DBus::GetLicense()
         throw e;
     }
     return retval;
+}
+
+void DBus::SetFallback(const uint32_t &snapshot_status)
+{
+    is_reinfoce_flag_ = false;
+    std::vector<std::string> names_rh;
+    auto rh = this->configuration_->read_rh_from_file(RH_SSR_OPERATE_DATA_FIRST);
+    auto& rh_reinforcements = rh->reinforcement();
+    for (auto iter = rh_reinforcements.begin(); iter != rh_reinforcements.end(); ++iter)
+    {
+        names_rh.push_back(iter->name());
+    }
+
+    if (snapshot_status == SSR_INITIAL_STATUS)
+    {
+        snapshot_status_ = SSR_INITIAL_STATUS;
+
+        Reinforce(names_rh);
+
+        snapshot_status_ = SSR_OTHER_STATUS;
+    }
+    else if (snapshot_status == SSR_LAST_REINFORCEMENT_STATUS)
+    {
+        snapshot_status_ = SSR_LAST_REINFORCEMENT_STATUS;
+
+        Reinforce(names_rh);
+
+        snapshot_status_ = SSR_OTHER_STATUS;
+    }
+    else
+    {
+        snapshot_status_ = SSR_OTHER_STATUS;
+        is_reinfoce_flag_ = true;
+    }
+//    is_reinfoce_flag_ = true;
 }
 
 void DBus::ActivateByActivationCode(const std::string& activation_code)
@@ -654,8 +780,22 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCAN_DONE;
                 reinforcement_result.args(StrUtils::json2str(result_values));
             }
-
             auto reinforcement = this->plugins_->get_reinforcement(operation->reinforcement_name);
+
+            // 上一次历史操作存入rh文件
+            if (!is_frist_scan_)
+            {
+                auto rh_reinforcement = reinforcement->get_rs();
+                auto& iter_args = rh_reinforcement.arg();
+                for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
+                {
+                    if (result_values[JOB_RETURN_VALUE][iter_arg->name()])
+                       iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
+                    KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]).c_str());
+                    KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
+                }
+                this->configuration_->set_custom_rh(rh_reinforcement, RH_SSR_OPERATE_DATA_LAST);
+            }
 
             if ((state & SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCAN_DONE) != 0 &&
                 reinforcement &&
@@ -666,16 +806,43 @@ void DBus::on_scan_process_changed_cb(const JobResult& job_result)
             else
             {
                 state = SSRReinforcementState(state | SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNSAFE);
-            }
 
+                // 首次加固修改保存的历史操作文件，改为获取到的值
+                if (is_frist_reinfoce_finish_)
+                {
+                    auto rh_frist = this->configuration_->read_rh_from_file(RH_SSR_OPERATE_DATA_FIRST);
+//                    KLOG_DEBUG("is_frist_reinfoce_finish_ : %s", RH_SSR_OPERATE_DATA_FIRST);
+
+                    auto& reinforcements = rh_frist->reinforcement();
+                    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
+                    {
+                        CONTINUE_IF_TRUE(iter->name() != reinforcement_result.name());
+//                        KLOG_DEBUG("iter->name() = %s reinforcement_result.name = %s suscess", iter->name().c_str(), reinforcement_result.name().c_str());
+                        auto& iter_args = iter->arg();
+                        for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
+                        {
+
+                            if (result_values[JOB_RETURN_VALUE][iter_arg->name()])
+                               iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]));
+//                            KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name()]).c_str());
+//                            KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
+                        }
+
+                    }
+                    this->configuration_->write_rh_to_file(rh_frist, RH_SSR_OPERATE_DATA_FIRST);
+                }
+            }
             reinforcement_result.state(int32_t(state));
             scan_result.reinforcement().push_back(std::move(reinforcement_result));
             ++item_count;
         }
 
-        std::ostringstream ostring_stream;
-        Protocol::ssr_job_result(ostring_stream, scan_result);
-        this->ScanProgress(ostring_stream.str());
+        if (is_scan_flag_)
+        {
+            std::ostringstream ostring_stream;
+            Protocol::ssr_job_result(ostring_stream, scan_result);
+            this->ScanProgress(ostring_stream.str());
+        }
     }
     catch (const std::exception& e)
     {
@@ -737,10 +904,12 @@ void DBus::on_reinfoce_process_changed_cb(const JobResult& job_result)
             reinforce_result.reinforcement().push_back(std::move(reinforcement_result));
             ++item_count;
         }
-
-        std::ostringstream ostring_stream;
-        Protocol::ssr_job_result(ostring_stream, reinforce_result);
-        this->ReinforceProgress(ostring_stream.str());
+        if (is_reinfoce_flag_)
+        {
+            std::ostringstream ostring_stream;
+            Protocol::ssr_job_result(ostring_stream, reinforce_result);
+            this->ReinforceProgress(ostring_stream.str());
+        }
     }
     catch (const std::exception& e)
     {

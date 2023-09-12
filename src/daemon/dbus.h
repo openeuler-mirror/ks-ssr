@@ -119,6 +119,8 @@ protected:
     // 获取授权信息
     virtual std::string GetLicense();
 
+    virtual void SetFallback(const uint32_t &snapshot_status);
+
     // 通过激活码注册
     virtual void ActivateByActivationCode(const std::string &activation_code);
 
@@ -139,6 +141,10 @@ private:
     void on_license_info_changed_cb(bool placeholder);
     // 资源监控开启/关闭
     bool on_resource_monitor();
+    // 进程完成处理函数
+    void scan_progress_finished() { is_scan_flag_ = true; };
+    // 加固完成处理函数
+    void reinfoce_progress_finished() { is_reinfoce_flag_ = true; is_scan_flag_ = true; this->ProgressFinished();};
 
     void homeFreeSpaceRatio(const float space_ratio);
     void rootFreeSpaceRatio(const float space_ratio);
@@ -167,6 +173,16 @@ private:
 
     // 激活信息
     Json::Value license_values;
+
+    // 首次加固 全盘扫描
+    bool is_frist_scan_ = true; //是否首次扫描
+    bool is_frist_reinfoce_ = true; //是否首次加固
+    bool is_frist_reinfoce_finish_ = false; //首次加固是否完成
+
+    bool is_scan_flag_ = true;
+    bool is_reinfoce_flag_ = true;
+
+    SSRSnapshotStatus snapshot_status_ = SSR_OTHER_STATUS;
 };
 }  // namespace Daemon
 }  // namespace KS

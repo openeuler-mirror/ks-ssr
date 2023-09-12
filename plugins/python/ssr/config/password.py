@@ -28,8 +28,8 @@ PASSWORD_COMPLEXITY_CONF_NEXT_MATCH_LINE_PATTERN = "password\\s+sufficient\\s+pa
 
 # 账户设置过期时间
 
-# 不修改三权用户和root的账户过期时间
-THREE_RIGHTS_USERS = ("sysadm","secadm","audadm","root")
+# 不修改三权用户和root的账户过期时间 , 排除sftpuser
+THREE_RIGHTS_USERS = ("sysadm","secadm","audadm","root","sftpuser")
 
 PASSWORD_EXPIRED_ACCOUNTS_KEY = "accounts"
 PASSWORD_EXPIRED_ACCOUNTS_EXPIRATION_KEY = "accounts_expiration"
