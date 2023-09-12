@@ -89,7 +89,7 @@
         </reinforcement>
         <reinforcement>
             <name>network-firewalld-switch</name>
-            <!-- <arg>
+            <arg>
                 <name>enabled</name>
                 <value>true</value>
                 <value_limits>""</value_limits>
@@ -101,7 +101,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>Turn on system firewall service</_label>
                 </layout>
-            </arg> -->
+            </arg>
             <arg>
                 <name>tcp-udp</name>
                 <value>"tcp"</value>
