@@ -32,6 +32,13 @@ add_custom_target(ssr-system-rs.encrypted ALL
                                                                               --output-file=${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
                   DEPENDS ks-ssr-crypto)
 
+#add_custom_target(ssr-custom-rs.encrypted ALL
+#                  COMMAND sed -i -e 's/xml:lang/lang/g' ${PROJECT_BINARY_DIR}/data/ssr-custom-rs.xml
+#                  COMMAND ${PROJECT_BINARY_DIR}/src/tool/crypto/ks-ssr-crypto --encrypt-file=${PROJECT_BINARY_DIR}/data/ssr-custom-rs.xml
+#                                                                              --private-key=${PROJECT_SOURCE_DIR}/data/ssr-private.key
+#                                                                              --output-file=${PROJECT_BINARY_DIR}/data/ssr-custom-rs.encrypted
+#                  DEPENDS ks-ssr-crypto)
+
 install(FILES ${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
         DESTINATION ${SSR_INSTALL_DATADIR}/
         RENAME ssr-system-rs)
