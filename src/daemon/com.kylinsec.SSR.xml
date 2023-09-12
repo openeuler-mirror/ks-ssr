@@ -167,5 +167,36 @@
             <description>The license info is changed, you need call function GetLicense to get the newest license info.</description>
         </signal>
 
+        <signal name="HomeFreeSpaceRatioLower">
+            <arg name="ratio" type="s">
+                <summary>The ratio.</summary>
+            </arg>
+            <description>Home free space less than 10%.</description>
+        </signal>
+
+        <signal name="RootFreeSpaceRatioLower">
+            <arg name="ratio" type="s">
+                <summary>The ratio.</summary>
+            </arg>
+            <description>Root free space less than 10%.</description>
+        </signal>
+
+        <signal name="CpuAverageLoadRatioHigher">
+            <arg name="ratio" type="s">
+                <summary>The ratio.</summary>
+            </arg>
+            <description>The average load of a single core CPU exceeds 1.</description>
+        </signal>
+
+        <signal name="VmstatSiSoabnormal">
+            <arg name="si" type="s">
+                <summary>The vmstat si.</summary>
+            </arg>
+            <arg name="so" type="s">
+                <summary>The vmstat so.</summary>
+            </arg>
+            <description>The vmstat swap page si or so is not 0.</description>
+        </signal>
+
     </interface>
 </node>
