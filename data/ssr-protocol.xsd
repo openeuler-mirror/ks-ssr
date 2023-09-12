@@ -161,6 +161,13 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:complexType name="ReinforcementHistory">
+        <xsd:sequence>
+            <!-- 加固项 -->
+            <xsd:element name="reinforcement" type="Reinforcement" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
     <xsd:complexType name="Reinforcements">
         <xsd:sequence>
             <!-- 加固项 -->
@@ -213,6 +220,8 @@
     <xsd:element name="ssr_reinforcements" type="Reinforcements" />
     <!-- 自定义加固参数 -->
     <xsd:element name="ssr_ra" type="RA" />
+    <!-- 加固历史 -->
+    <xsd:element name="ssr_rh" type="ReinforcementHistory" />
     <!-- 插件配置 -->
     <xsd:element name="ssr_plugin" type="Plugin" />
     <!-- 任务执行结果 -->

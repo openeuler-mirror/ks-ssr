@@ -43,6 +43,9 @@ install(FILES ${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
 #install (FILES ${PROJECT_SOURCE_DIR}/data/ssr-custom-ra.xml
 #        DESTINATION ${SSR_INSTALL_DATADIR})
 
+#install (FILES ${PROJECT_SOURCE_DIR}/data/ssr-custom-ra-strategy.xml
+#        DESTINATION ${SSR_INSTALL_DATADIR})
+
 # service files
 if (USE_SYSTEMD)
     pkg_get_variable(SYSTEM_UNIT_DIR systemd systemdsystemunitdir)
