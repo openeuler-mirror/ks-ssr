@@ -67,10 +67,10 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
         }
     }
 
-    auto decryptPasswd = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto decryptPasswd = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, password);
     auto errorEode = 0;
     auto box = Box::create(name, decryptPasswd, getSenderUid(), errorEode, "", this);
-    if (errorEode != SSRErrorCode::SUCCESS)
+    if (errorEode != (int)SSRErrorCode::SUCCESS)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                         SSRErrorCode(errorEode),
@@ -91,9 +91,9 @@ void BoxManager::DelBox(const QString &boxID, const QString &password)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
     }
 
-    auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto decryptedPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, password);
     auto errorEode = box->delBox(decryptedPassword);
-    if (errorEode != SSRErrorCode::SUCCESS)
+    if (errorEode != (int)SSRErrorCode::SUCCESS)
     {
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode(errorEode), message())
     }
@@ -171,8 +171,8 @@ void BoxManager::ModifyBoxPassword(const QString &boxID,
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message())
     }
 
-    auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, currentPassword);
-    auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
+    auto decryptedPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, currentPassword);
+    auto decryptNewPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, newPassword);
     if (decryptedPassword == decryptNewPassword)
     {
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_SETTINGS_SAME_PASSWORD, message())
@@ -192,7 +192,7 @@ void BoxManager::ModifyBoxPassword(const QString &boxID,
 // 解锁
 void BoxManager::Mount(const QString &boxID, const QString &password)
 {
-    auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto decryptedPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, password);
     auto box = m_boxs.value(boxID);
     if (!box)
     {
@@ -201,7 +201,7 @@ void BoxManager::Mount(const QString &boxID, const QString &password)
 
     RETURN_IF_TRUE(box->getBoxID() != boxID)
     auto errorEode = box->mount(decryptedPassword);
-    if (errorEode != SSRErrorCode::SUCCESS)
+    if (errorEode != (int)SSRErrorCode::SUCCESS)
     {
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode(errorEode), message())
     }
@@ -219,7 +219,7 @@ QString BoxManager::RetrieveBoxPassword(const QString &boxID, const QString &pas
                                         message())
     }
 
-    auto decryptPassphrase = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, passphrase);
+    auto decryptPassphrase = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, passphrase);
     auto box = m_boxs.value(boxID);
     if (!box)
     {
@@ -252,7 +252,7 @@ void BoxManager::UnMount(const QString &boxID)
     RETURN_IF_TRUE(box->getBoxID() != boxID)
 
     auto errorEode = box->umount();
-    if (errorEode != SSRErrorCode::SUCCESS)
+    if (errorEode != (int)SSRErrorCode::SUCCESS)
     {
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode(errorEode), message());
     }
