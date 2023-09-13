@@ -15,7 +15,7 @@ ResourceMonitor::~ResourceMonitor()
 
 void ResourceMonitor::startMonitor()
 {
-    KLOG_INFO("startMonitor.");
+    KLOG_DEBUG("startMonitor.");
 
     monitorResource();
 }
