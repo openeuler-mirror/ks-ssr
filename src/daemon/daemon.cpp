@@ -69,6 +69,10 @@ void Daemon::start()
     m_licenseProxy->disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
     BoxManager::globalInit(this);
     DeviceManager::globalInit(this);
+    BRDaemon::Configuration::globalInit(SSR_BR_INSTALL_DATADIR "/ssr.ini");
+    BRDaemon::Categories::globalInit();
+    BRDaemon::Plugins::globalInit(BRDaemon::Configuration::getInstance());
+    BRDaemon::BRDBus::globalInit(nullptr);
     // FIXME: 最好需要提供一个模块入口类，可以时KSSContext或者KSSManager，来管理dbus和wrapper
     m_kssDBus = new KSSDbus(this);
 }

@@ -158,7 +158,7 @@ void Window::initNavigation()
     m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_DEVICE, new DevicePage());
     m_ui->m_pages->setCurrentIndex(0);
 
-    connect(m_ui->m_navigation, SIGNAL(currentCategoryChanged(int)), m_ui->m_pages, SLOT(setCurrentIndex(int)));
+    connect(m_ui->m_navigation, SIGNAL(currentCategoryChanged), m_ui->m_pages, SLOT(setCurrentIndex));
 }
 
 void Window::popupActiveDialog()

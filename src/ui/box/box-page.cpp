@@ -159,7 +159,7 @@ void BoxPage::createBoxAccepted()
     // 口令
     QString passphrase;
     // rsa加密
-    auto encryptPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_createBox->getPassword());
+    auto encryptPassword = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_createBox->getPassword());
     auto reply = m_boxManagerProxy->CreateBox(m_createBox->getName(),
                                               encryptPassword,
                                               passphrase);
