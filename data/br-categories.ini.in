@@ -1,0 +1,20 @@
+
+[config]
+_label=configuration class
+icon_name=br-configuration-category
+priority=1
+
+[network]
+_label=network class
+icon_name=br-network-category
+priority=2
+
+[audit]
+_label=audit class
+icon_name=br-audit-category
+priority=3
+
+[external]
+_label=external class
+icon_name=br-external-category
+priority=4
