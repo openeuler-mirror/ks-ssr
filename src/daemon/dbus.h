@@ -83,7 +83,7 @@ protected:
     virtual void ImportCustomRA(const std::string &encoded_strategy);
 
     // 设置复选框状态
-    virtual void SetCheckBox(const std::string &reinforcement_name, const bool &checkbox_status);
+    virtual void SetCheckBox(const std::string &reinforcement_name, const std::string &checkbox_status);
 
     // 获取分类
     virtual std::string GetCategories();

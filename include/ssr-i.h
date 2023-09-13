@@ -22,22 +22,22 @@ extern "C"
 // 激活对象名称
 #define LICENSE_OBJECT_SSR_NAME "KSSSRManager"
 
-    // 加固标准类型 加固标准对应着各个加固项，有的加固项用户不需要，就可以自定义导入
+    // 加固标准类型
     enum SSRStandardType
     {
-        // 系统默认标准 显示所有加固项，可对所有加固项进行操作
+        // 系统默认标准
         SSR_STANDARD_TYPE_SYSTEM = 0,
-        // 用户导入的标准（自定义加固标准）显示部分加固项，可对自定义导入的加固项进行操作
+        // 用户导入的标准（自定义加固标准）
         SSR_STANDARD_TYPE_CUSTOM,
         SSR_STANDARD_TYPE_LAST
     };
 
-    // 加固策略类型 加固策略相当于一个动作类型，可以保留用户的操作（设置加固参数、勾选复选框）
+    // 加固策略类型
     enum SSRStrategyType
     {
-        // 系统默认加固策略 所有加固项默认选中并使用默认加固参数
+        // 系统默认加固策略
         SSR_STRATEGY_TYPE_SYSTEM = 0,
-        // 用户导入的策略（自定义加固策略）用户可自定义加固参数，勾选状态，可导入导出
+        // 用户导入的策略（自定义加固策略）
         SSR_STRATEGY_TYPE_CUSTOM,
         SSR_STRATEGY_TYPE_LAST
     };

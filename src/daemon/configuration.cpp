@@ -110,6 +110,8 @@ bool Configuration::set_strategy_type(SSRStrategyType strategy_type)
 
 bool Configuration::check_ra_strategy()
 {
+    KLOG_PROFILE("");
+
     try
     {
          std::make_shared<Protocol::RA>(*ssr_ra(CUSTOM_RA_STRATEGY_FILEPATH, xml_schema::Flags::dont_validate));
@@ -123,7 +125,7 @@ bool Configuration::check_ra_strategy()
     return true;
 }
 
-void Configuration::set_ra_checkbox(const std::string &name, const bool &status)
+void Configuration::set_ra_checkbox(const std::string &name, const std::string &status)
 {
     auto ra = this->read_ra_from_file();
     auto& reinforcements = ra->reinforcement();
@@ -210,7 +212,7 @@ bool Configuration::set_custom_ra(const Protocol::Reinforcement& rs_reinforcemen
 
 void Configuration::del_custom_ra(const std::string& name)
 {
-    KLOG_DEBUG("del_custom_ra name = %s", name.c_str());
+    KLOG_PROFILE("del_custom_ra name = %s", name.c_str());
     auto ra = this->read_ra_from_file();
     bool is_del = false;
 
@@ -376,6 +378,8 @@ bool Configuration::write_ra_to_file(std::shared_ptr<Protocol::RA> ra)
 
 std::shared_ptr<Protocol::ReinforcementHistory> Configuration::read_rh_from_file(const std::string path)
 {
+    KLOG_PROFILE("");
+
     RETURN_VAL_IF_TRUE(!Glib::file_test(path , Glib::FILE_TEST_IS_REGULAR),
                        std::make_shared<ReinforcementHistory>());
 

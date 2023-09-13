@@ -32,7 +32,6 @@ add_custom_target(ssr-system-rs.encrypted ALL
                                                                               --output-file=${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
                   DEPENDS ks-ssr-crypto)
 
-#The following comments can be cancelled when you need to generate a custom reforcement standard file.
 #add_custom_target(ssr-custom-rs.encrypted ALL
 #                  COMMAND sed -i -e 's/xml:lang/lang/g' ${PROJECT_BINARY_DIR}/data/ssr-custom-rs.xml
 #                  COMMAND ${PROJECT_BINARY_DIR}/src/tool/crypto/ks-ssr-crypto --encrypt-file=${PROJECT_BINARY_DIR}/data/ssr-custom-rs.xml
