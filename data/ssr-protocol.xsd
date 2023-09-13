@@ -136,7 +136,7 @@
             <!-- 加固项参数 -->
             <xsd:element name="arg" type="ReinforcementArg" maxOccurs="unbounded" minOccurs="0" />
             <!-- 复选框 -->
-            <xsd:element name="checkbox" type="xsd:string" minOccurs="0"/>   
+            <xsd:element name="checkbox" type="xsd:boolean" minOccurs="0"/>   
         </xsd:sequence>
     </xsd:complexType>
 
