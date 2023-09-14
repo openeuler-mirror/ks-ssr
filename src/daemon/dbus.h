@@ -152,12 +152,17 @@ private:
     // 进程完成处理函数
     void scan_progress_finished() { is_scan_flag_ = true; };
     // 加固完成处理函数
-    void reinfoce_progress_finished() { is_reinfoce_flag_ = true; is_scan_flag_ = true; this->ProgressFinished();};
+    void reinfoce_progress_finished()
+    {
+        is_reinfoce_flag_ = true;
+        is_scan_flag_ = true;
+        this->ProgressFinished();
+    };
 
     void homeFreeSpaceRatio(const float space_ratio);
     void rootFreeSpaceRatio(const float space_ratio);
     void cpuAverageLoadRatio(const float load_ratio);
-    void vmstatSiSo(const std::vector<std::string> results);
+    void memoryRemainingRatio(const float memory_ratio);
 
 private:
     static DBus *instance_;
@@ -183,8 +188,8 @@ private:
     Json::Value license_values;
 
     // 首次加固 全盘扫描
-    bool is_frist_reinfoce_ = true; //是否首次加固
-    bool is_frist_reinfoce_finish_ = false; //首次加固是否完成
+    bool is_frist_reinfoce_ = true;          //是否首次加固
+    bool is_frist_reinfoce_finish_ = false;  //首次加固是否完成
 
     bool is_scan_flag_ = true;
     bool is_reinfoce_flag_ = true;
