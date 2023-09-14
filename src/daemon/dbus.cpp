@@ -83,7 +83,7 @@ void DBus::ImportCustomRS(const std::string& encoded_standard)
 
 void DBus::SetStrategyType(const uint32_t& strategy_type)
 {
-    KLOG_PROFILE("strategy type: %d.", strategy_type);
+    KLOG_DEBUG("strategy type: %d.", strategy_type);
 
     if (strategy_type >= SSRStrategyType::SSR_STRATEGY_TYPE_LAST)
     {
@@ -99,7 +99,7 @@ void DBus::SetStrategyType(const uint32_t& strategy_type)
 
 void DBus::ImportCustomRA(const std::string& encoded_strategy)
 {
-    KLOG_PROFILE("encoded strategy: %s.", encoded_strategy.c_str());
+    KLOG_DEBUG("encoded strategy: %s.", encoded_strategy.c_str());
     try
     {
         std::ofstream ofs(CUSTOM_RA_STRATEGY_FILEPATH, std::ios_base::out);
@@ -120,9 +120,9 @@ void DBus::ImportCustomRA(const std::string& encoded_strategy)
     }
 }
 
-void DBus::SetCheckBox(const std::string &reinforcement_name, const std::string &checkbox_status)
+void DBus::SetCheckBox(const std::string &reinforcement_name, const bool &checkbox_status)
 {
-    KLOG_PROFILE("reinforcement_name: %s, checkbox_status: %s", reinforcement_name.c_str(), checkbox_status.c_str());
+    KLOG_DEBUG("reinforcement_name: %s, SetCheckBox", reinforcement_name.c_str());
     configuration_->set_ra_checkbox(reinforcement_name, checkbox_status);
 }
 

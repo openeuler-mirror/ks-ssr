@@ -35,7 +35,7 @@
             <arg type="s" name="reinforcement_name" direction="in">
                 <summary>Name of reinforcement item.</summary>
             </arg>
-            <arg type="s" name="checkbox_status" direction="in">
+            <arg type="b" name="checkbox_status" direction="in">
                 <summary>Check whether the check box is checked.</summary>
             </arg>
             <description>Set check box selection status.</description>
