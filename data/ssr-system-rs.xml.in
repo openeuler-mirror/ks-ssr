@@ -141,6 +141,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>clear iptables configuration</_label>
                 </layout>
+                <_note>If this configuration is enabled, all firewall configurations will be cleared, and the firewall rules reinforced this time will not take effect</_note>
             </arg>
             <!-- <arg>
                 <name>allow-network-segment</name>
