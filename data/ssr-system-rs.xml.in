@@ -433,7 +433,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Automatic unlocking time after locking (Sec)</_label>
+                    <_label>Automatic unlocking time for non root users after locking (seconds)</_label>
                 </layout>
             </arg>
             <arg>
