@@ -26,6 +26,7 @@ pkg_search_module(CRYPTOPP REQUIRED cryptopp)
 pkg_search_module(XERCES REQUIRED xerces-c)
 pkg_search_module(GUDEV REQUIRED gudev-1.0)
 pkg_search_module(LIBCRYPTO REQUIRED libcrypto)
+pkg_search_module(LIBAUDIT REQUIRED audit)
 pkg_search_module(KYLIN_LICENSE REQUIRED kylin-license)
 
 if(ENABLE_GTEST)

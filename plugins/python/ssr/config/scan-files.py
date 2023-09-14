@@ -27,7 +27,10 @@ class NouserFiles:
                 scan_output += tmp_output
                 # ssr.log.debug("scan_onuser_output = ")
                 # ssr.log.debug(scan_output)
-        retdata["nouser_files"] = scan_output
+        if scan_output == "":
+            retdata["nouser_files"] = "\n"
+        else:        
+            retdata["nouser_files"] = scan_output
 
         return (True, json.dumps(retdata))
 
@@ -58,7 +61,11 @@ class AuthorityFiles:
                 scan_output += tmp_output
                 # ssr.log.debug("scan_777_files_output = ")
                 # ssr.log.debug(scan_output)
-        retdata["authority_files"] = scan_output
+
+        if scan_output == "":
+            retdata["authority_files"] = "\n"
+        else:
+            retdata["authority_files"] = scan_output
 
         return (True, json.dumps(retdata))
 
@@ -98,7 +105,7 @@ class SuidSgidFiles:
 
             retdata["suid_sgid_files"] = "[  SUID ]\n" + scan_suid_output + "[  GUID ]\n" + scan_guid_output 
         else:
-            retdata["suid_sgid_files"] = ""
+            retdata["suid_sgid_files"] = "\n"
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
