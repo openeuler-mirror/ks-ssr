@@ -141,7 +141,7 @@ class Switch(Firewall):
                     else:
                         ssr.utils.subprocess_has_output("{0} {1} --dport {2}  -j REJECT".format(FIREWALL_ADD_RULE_CMD, IPTABLES_INPUT_UDP, port))
             else:
-                self.del_iptables_history("|grep INPUT |grep dport |grep -v -E '{0}| \-s' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
+                self.del_iptables_history("|grep INPUT |grep dport |grep -v -E '{0}| \-s|connlimit' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
             self.reload()
 
             # 禁用网段 output
