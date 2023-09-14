@@ -192,11 +192,20 @@ class SessionTimeout(SSHD):
         return (True, '')
 
 class SshdService(SSHD):
+    def clear_port(self):
+        output = ssr.utils.subprocess_has_output("semanage port -l |grep ssh")
+        port_list = output.replace(' ','').split("tcp")[1].split(",")
+        for port in port_list:
+            if port == "22" or port == "":
+                continue
+            ssr.utils.subprocess_has_output_ignore_error_handling("semanage port -d -t ssh_port_t -p tcp {0}".format(port))
+
     def get(self):
         retdata = dict()
         retdata[SSHD_CONF_PROTOCOL_KEY] = (self.conf.get_value(SSHD_CONF_PROTOCOL) == "2")
         retdata[SSHD_CONF_PERMIT_EMPTY_KEY] = self.conf.get_value(SSHD_CONF_PERMIT_EMPTY) == "no"
         retdata[SSHD_CONF_PAM_KEY] = (not (self.conf.get_value(SSHD_CONF_PAM) == "no"))
+        retdata[SSHD_CONF_PORT_KEY] = self.conf.get_value(SSHD_CONF_PORT)
         # ssr.log.debug("arg['pam'] : ",args[SSHD_CONF_PAM_KEY] )
         return (True, json.dumps(retdata))
 
@@ -218,10 +227,12 @@ class SshdService(SSHD):
 
         self.conf.set_all_value(SSHD_CONF_PERMIT_EMPTY, "no" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "yes")
 
+        self.clear_port()
         if  args[SSHD_CONF_PORT_KEY] != "":
             self.conf.set_all_value(SSHD_CONF_PORT, args[SSHD_CONF_PORT_KEY])
             if self.get_selinux_status():
                 ssr.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_PORT_PATH))
+                ssr.utils.subprocess_not_output("semanage port -a -t ssh_port_t -p tcp {0}".format(args[SSHD_CONF_PORT_KEY]))
         else:
             self.conf.set_all_value(SSHD_CONF_PORT, "")
             if self.get_selinux_status():
