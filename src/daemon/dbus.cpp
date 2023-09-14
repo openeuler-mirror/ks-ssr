@@ -10,6 +10,8 @@
 #include <kylin-license/license-i.h>
 #include <iostream>
 #include <fstream>
+#include <libaudit.h>
+#include <unistd.h>
 #include "src/daemon/categories.h"
 #include "src/daemon/configuration.h"
 #include "src/daemon/plugins.h"
@@ -33,6 +35,33 @@ namespace Daemon
 // static std::shared_ptr<SSRReinforcementInterface> reinforcement_interface_;
 // static std::string param_str_ = "";
 
+static int _audit_log(int type, int rc, const char *op)
+{
+    int audit_fd;
+
+    audit_fd = audit_open();
+    if (audit_fd < 0) {
+        /* You get these error codes only when the kernel doesn't have
+         * audit compiled in. */
+        if (errno == EINVAL || errno == EPROTONOSUPPORT ||
+            errno == EAFNOSUPPORT)
+            return 0;
+
+        KLOG_WARNING("audit_open() failed: %d", LOG_CRIT);
+        return -1;
+    }
+
+    rc = audit_log_acct_message(audit_fd, type, NULL, op,
+        NULL, -1, NULL, NULL, NULL, rc == 0);
+    if (rc == -EPERM && geteuid() != 0) {
+        rc = 0;
+    }
+
+    audit_close(audit_fd);
+
+    return rc < 0 ? -1 : 0;
+}
+
 DBus::DBus(::DBus::Connection& connection) : ::DBus::ObjectAdaptor(connection, SSR_DBUS_OBJECT_PATH),
                                              dbus_connection_(connection)
 {
@@ -55,6 +84,7 @@ void DBus::global_init(::DBus::Connection& connection)
 
 void DBus::SetStandardType(const uint32_t& standard_type)
 {
+    KLOG_INFO("SetStandardType. standard type: %d.", standard_type);
     KLOG_PROFILE("standard type: %d.", standard_type);
 
     if (standard_type >= SSRStandardType::SSR_STANDARD_TYPE_LAST)
@@ -72,6 +102,7 @@ void DBus::SetStandardType(const uint32_t& standard_type)
 
 void DBus::ImportCustomRS(const std::string& encoded_standard)
 {
+    KLOG_INFO("Import custom reinforce standard.");
     KLOG_PROFILE("encoded standard: %s.", encoded_standard.c_str());
 
     SSRErrorCode error_code = SSRErrorCode::SUCCESS;
@@ -83,6 +114,7 @@ void DBus::ImportCustomRS(const std::string& encoded_standard)
 
 void DBus::SetStrategyType(const uint32_t& strategy_type)
 {
+    KLOG_INFO("SetStrategyType. strategy type: %d.", strategy_type);
     KLOG_DEBUG("strategy type: %d.", strategy_type);
 
     if (strategy_type >= SSRStrategyType::SSR_STRATEGY_TYPE_LAST)
@@ -97,8 +129,37 @@ void DBus::SetStrategyType(const uint32_t& strategy_type)
     }
 }
 
+void DBus::SetTimeScan(const uint32_t& time_scan)
+{
+    KLOG_INFO("Set time scan: %d.", time_scan);
+
+    RETURN_IF_TRUE(time_scan == uint32_t(this->configuration_->get_time_scan()))
+
+    if (!this->configuration_->set_time_scan(int(time_scan)))
+    {
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SET_TIME_SCAN_FAILED);
+    }
+}
+
+void DBus::SetNotificationStatus(const uint32_t& notification_status)
+{
+    KLOG_INFO("Set notification status: %d.", notification_status);
+
+    if (notification_status >= SSRNotificationStatus::SSR_NOTIFICATION_OTHER)
+    {
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID);
+    }
+    RETURN_IF_TRUE(notification_status == this->configuration_->get_notification_status())
+
+    if (!this->configuration_->set_notification_status(SSRNotificationStatus(notification_status)))
+    {
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_SET_NOTIFICATION_STATUS_FAILED);
+    }
+}
+
 void DBus::ImportCustomRA(const std::string& encoded_strategy)
 {
+    KLOG_INFO("Import custom reinforce strategy.");
     KLOG_DEBUG("encoded strategy: %s.", encoded_strategy.c_str());
     try
     {
@@ -128,7 +189,7 @@ void DBus::SetCheckBox(const std::string &reinforcement_name, const bool &checkb
 
 void DBus::SetResourceMonitorSwitch(const uint32_t &resource_monitor)
 {
-    KLOG_PROFILE("resource monitor: %d.", resource_monitor);
+    KLOG_INFO("SetResourceMonitorSwitch. resource monitor: %d.", resource_monitor);
 
     if (resource_monitor >= SSRResourceMonitor::SSR_RESOURCE_MONITOR_OR)
     {
@@ -237,6 +298,7 @@ std::string DBus::GetReinforcements()
 
 void DBus::ResetReinforcements()
 {
+    KLOG_INFO("Reset all reinforcement parameters.");
     KLOG_PROFILE("");
 
     this->configuration_->del_all_custom_ra();
@@ -268,6 +330,7 @@ std::string DBus::GetReinforcement(const std::string& name)
 
 void DBus::SetReinforcement(const std::string& reinforcement_xml)
 {
+    KLOG_INFO("Set reinforcement parameters.");
     KLOG_PROFILE("reinforcement_xml : %s",reinforcement_xml.c_str());
 
     try
@@ -288,6 +351,7 @@ void DBus::SetReinforcement(const std::string& reinforcement_xml)
 
 void DBus::ResetReinforcement(const std::string& name)
 {
+    KLOG_INFO("Reset reinforcement parameters. name = %s", name.c_str());
     KLOG_PROFILE("");
     this->configuration_->del_custom_ra(name);
 }
@@ -310,7 +374,8 @@ void DBus::ResetReinforcement(const std::string& name)
 
 int64_t DBus::Scan(const std::vector<std::string>& names)
 {
-    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
+    KLOG_INFO("Scan. range : %s", StrUtils::join(names, " ").c_str());
+//    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
     // 已经在扫描则返回错误
     if (this->scan_job_ && this->scan_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
@@ -397,7 +462,8 @@ int64_t DBus::Scan(const std::vector<std::string>& names)
 
 int64_t DBus::Reinforce(const std::vector<std::string>& names)
 {
-    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
+    KLOG_INFO("Reinforce. range : %s", StrUtils::join(names, " ").c_str());
+//    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
     // 未授权不允许加固
     if (this->license_values.isNull() ||
         this->license_values[LICENSE_JK_ACTIVATION_STATUS].isNull() ||
@@ -562,7 +628,8 @@ int64_t DBus::Reinforce(const std::vector<std::string>& names)
 
 void DBus::Cancel(const int64_t& job_id)
 {
-    KLOG_PROFILE("job id: %d.", job_id);
+    KLOG_INFO("Cancel. job id: %d.", job_id);
+//    KLOG_PROFILE("job id: %d.", job_id);
 
     SSRErrorCode error_code = SSRErrorCode::SUCCESS;
 
@@ -612,6 +679,7 @@ std::string DBus::GetLicense()
 
 void DBus::SetFallback(const uint32_t &snapshot_status)
 {
+    KLOG_INFO("Set fallback. snapshot_status: %d.", snapshot_status);
     is_reinfoce_flag_ = false;
     std::vector<std::string> names_rh;
     auto rh = this->configuration_->read_rh_from_file(RH_SSR_OPERATE_DATA_FIRST);
@@ -624,7 +692,13 @@ void DBus::SetFallback(const uint32_t &snapshot_status)
     if (snapshot_status == SSR_INITIAL_STATUS)
     {
         snapshot_status_ = SSR_INITIAL_STATUS;
-
+        if (names_rh.empty())
+        {
+            // 需回退的加固项为空 不需要进行加固了 Reinforce Finish
+            this->ProgressFinished();
+            is_reinfoce_flag_ = true;
+            return ;
+        }
         Reinforce(names_rh);
 
         snapshot_status_ = SSR_OTHER_STATUS;
@@ -632,7 +706,13 @@ void DBus::SetFallback(const uint32_t &snapshot_status)
     else if (snapshot_status == SSR_LAST_REINFORCEMENT_STATUS)
     {
         snapshot_status_ = SSR_LAST_REINFORCEMENT_STATUS;
-
+        if (names_rh.empty())
+        {
+            // 需回退的加固项为空 不需要进行加固了 Reinforce Finish
+            this->ProgressFinished();
+            is_reinfoce_flag_ = true;
+            return ;
+        }
         Reinforce(names_rh);
 
         snapshot_status_ = SSR_OTHER_STATUS;
@@ -683,6 +763,16 @@ void DBus::on_get_property(::DBus::InterfaceAdaptor& interface, const std::strin
         value.writer().append_uint32(this->configuration_->get_resource_monitor_status());
         KLOG_DEBUG("get resource monitor status");
     }
+    else if (property == "time_scan")
+    {
+        value.writer().append_uint32(this->configuration_->get_time_scan());
+        KLOG_DEBUG("get time scan");
+    }
+    else if (property == "notification_status")
+    {
+        value.writer().append_uint32(this->configuration_->get_notification_status());
+        KLOG_DEBUG("get notification status");
+    }
     else
     {
         KLOG_WARNING("Unknown property: %s.", property.c_str());
@@ -709,6 +799,16 @@ void DBus::on_set_property(::DBus::InterfaceAdaptor& interface, const std::strin
     {
         uint32_t resource_monitor = value;
         this->configuration_->set_resource_monitor_status(SSRResourceMonitor(resource_monitor));
+    }
+    else if (property == "time_scan")
+    {
+        uint32_t time_scan = value;
+        this->configuration_->set_time_scan(int(time_scan));
+    }
+    else if (property == "notification_status")
+    {
+        uint32_t notification_status = value;
+        this->configuration_->set_notification_status(SSRNotificationStatus(notification_status));
     }
     else
     {
@@ -985,8 +1085,10 @@ void DBus::homeFreeSpaceRatio(const float space_ratio)
     float homeSpa = 0.1;
     if (space_ratio < homeSpa)
     {
-        KLOG_DEBUG("home free space less than 10%.");
-        KLOG_DEBUG("homeFreeSpaceRatio %f.", space_ratio);
+        KLOG_WARNING("home free space less than 10%.");
+        KLOG_WARNING("homeFreeSpaceRatio %f.", space_ratio);
+
+        _audit_log(1101, -1, "home free space less than 10%.");
 
         this->HomeFreeSpaceRatioLower(std::to_string(space_ratio));
     }
@@ -998,8 +1100,10 @@ void DBus::rootFreeSpaceRatio(const float space_ratio)
     float rootSpa = 0.1;
     if (space_ratio < rootSpa)
     {
-        KLOG_DEBUG("root free space less than 10%.");
-        KLOG_DEBUG("rootFreeSpaceRatio %f.",space_ratio);
+        KLOG_WARNING("root free space less than 10%.");
+        KLOG_WARNING("rootFreeSpaceRatio %f.",space_ratio);
+
+        _audit_log(1101, -1, "root free space less than 10%.");
 
         this->RootFreeSpaceRatioLower(std::to_string(space_ratio));
     }
@@ -1011,8 +1115,10 @@ void DBus::cpuAverageLoadRatio(const float load_ratio)
     float cpuLoad = 1;
     if (load_ratio >= cpuLoad)
     {
-        KLOG_DEBUG("The average load of a single core CPU exceeds 1.");
-        KLOG_DEBUG("cpuAverageLoadRatio %f.",load_ratio);
+        KLOG_WARNING("The average load of a single core CPU exceeds 1.");
+        KLOG_WARNING("cpuAverageLoadRatio %f.",load_ratio);
+
+        _audit_log(1101, -1, "The average load of a single core CPU exceeds 1.");
 
         this->CpuAverageLoadRatioHigher(std::to_string(load_ratio));
     }
@@ -1025,16 +1131,21 @@ void DBus::vmstatSiSo(const std::vector<std::string> results)
     std::string so = results.at(1).c_str();
     if(si != "0")
     {
-        KLOG_DEBUG("The vmstat swap page si is not 0.");
-        KLOG_DEBUG("vmstat si is %s.",results.at(0).c_str());
+        KLOG_WARNING("The vmstat swap page si is not 0.");
+        KLOG_WARNING("vmstat si is %s.",results.at(0).c_str());
+
+        _audit_log(1101, -1, "The vmstat swap page si is not 0.");
 
         this->VmstatSiSoabnormal(si,so);
     }
 
     if(so != "0")
     {
-        KLOG_DEBUG("The vmstat swap page so is not 0.");
-        KLOG_DEBUG("vmstat so is %s.",results.at(1).c_str());
+        KLOG_WARNING("The vmstat swap page so is not 0.");
+        KLOG_WARNING("vmstat so is %s.",results.at(1).c_str());
+
+        _audit_log(1101, -1, "The vmstat swap page so is not 0.");
+
         if(si == "0")
             this->VmstatSiSoabnormal(si,so);
     }
