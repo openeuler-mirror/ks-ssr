@@ -120,6 +120,10 @@ class LoginLimit(Accounts):
                     continue
                 if not self.is_nologin_shell(pwdent.pw_shell):
                     ssr.utils.subprocess_not_output("usermod -s /sbin/nologin {0}".format(pwdent.pw_name))
+        # 过检需求，这个名单直接设置为可登录
+        for permission_user in permission_users:
+            if permission_user != "":
+                ssr.utils.subprocess_not_output("usermod -s /bin/bash {0}".format(permission_user))
 
         return (True, '')
 
