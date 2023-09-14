@@ -33,6 +33,9 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     case SSRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID:
         error_desc = _("The strategy type is invalid.");
         break;
+    case SSRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID:
+        error_desc = _("The resource monitor is invalid.");
+        break;
     case SSRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED:
     case SSRErrorCode::ERROR_DAEMON_JSON2RS_FAILED:
     case SSRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID:
