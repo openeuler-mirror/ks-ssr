@@ -256,6 +256,19 @@ SSRResourceMonitor Configuration::get_resource_monitor_status()
     return SSRResourceMonitor(retval);
 }
 
+bool Configuration::set_resource_monitor_status(SSRResourceMonitor resource_monitor)
+{
+    RETURN_VAL_IF_FALSE(resource_monitor < SSRResourceMonitor::SSR_RESOURCE_MONITOR_OR, false);
+    RETURN_VAL_IF_TRUE(resource_monitor == this->get_resource_monitor_status(), true);
+
+    if (!this->set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_RESOURCE_MONITOR, int32_t(resource_monitor)))
+    {
+        KLOG_WARNING("Failed to set resource monitor.");
+        return false;
+    }
+    return true;
+}
+
 void Configuration::init()
 {
     KLOG_PROFILE("");
