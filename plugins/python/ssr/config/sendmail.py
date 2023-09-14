@@ -1,20 +1,22 @@
-#--coding:utf8 --
+# -*- coding: utf-8 -*-
 
 import json
 import ssr.systemd
+from ssr.translation import _
 
 
 class SendMailProxy:
     def __init__(self):
         self.sendmail_service = 'sendmail'
-        self.postfix_service =  'postfix'
+        self.postfix_service = 'postfix'
         self.key = 'enabled'
         self.sendmail = False
         self.postfix = False
 
     # 判断服务是否存在
     def exist(self, service):
-        command = 'systemctl list-unit-files {0}.service | grep {1} | wc -l'.format(service, service)
+        command = 'systemctl list-unit-files {0}.service | grep {1} | wc -l'.format(
+            service, service)
         num = ssr.utils.subprocess_has_output(command)
         return (num == '1')
 
@@ -57,6 +59,7 @@ class SendMailProxy:
         command = 'systemctl {0} {1}.service'.format(action, service)
         return ssr.utils.subprocess_has_output(command)
 
+
 class Switch(SendMailProxy):
     def get(self):
         retdata = dict()
@@ -67,7 +70,8 @@ class Switch(SendMailProxy):
             self.postfix = True
 
         if self.sendmail and self.postfix:
-            retdata[self.key] = self.is_active(self.sendmail_service) or self.is_active(self.postfix_service)
+            retdata[self.key] = self.is_active(
+                self.sendmail_service) or self.is_active(self.postfix_service)
 
         elif self.sendmail:
             retdata[self.key] = self.is_active(self.sendmail_service)
@@ -76,7 +80,7 @@ class Switch(SendMailProxy):
             retdata[self.key] = self.is_active(self.postfix_service)
 
         else:
-            retdata[self.key] = False   
+            retdata[self.key] = False
 
         return (True, json.dumps(retdata))
 
@@ -102,4 +106,5 @@ class Switch(SendMailProxy):
                     self.stop(self.postfix_service)
             return (True, '')
         except Exception as e:
-            return (False, str(e))
+            ssr.log.error(str(e))
+            return (False, _("Failed to execute command. Please check the log information for details.\t"))

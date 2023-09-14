@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-06 15:22+0800\n"
+"POT-Creation-Date: 2023-08-25 14:13+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -322,8 +322,8 @@ msgid "Password error times"
 msgstr "密码错误次数"
 
 #: ../data/ssr-system-rs.xml.in.h:29
-msgid "Automatic unlocking time after locking (Sec)"
-msgstr "锁定后自动解锁时间(秒)"
+msgid "Automatic unlocking time for non root users after locking (seconds)"
+msgstr "非root用户锁定后自动解锁时间(秒)"
 
 #: ../data/ssr-system-rs.xml.in.h:30
 msgid "Root login failed lock"
@@ -923,6 +923,102 @@ msgstr "禁止高危漏洞服务"
 #: ../plugins/python/ssr-plugin-network.xml.in.h:15
 msgid "Disable high risk vulnerability services"
 msgstr "预防bluetooth、cups、avahi-daemon、rpcbind、smb服务潜在的危险"
+
+#. if not self.systemd_proxy.service_stop():
+#: ../plugins/python/ssr/systemd.py:137
+msgid "Unable to stop service!\t"
+msgstr "服务无法停止！\t"
+
+#: ../plugins/python/ssr/systemd.py:143
+msgid "Abnormal service!\t"
+msgstr "服务异常！\t"
+
+#. self.conf.set_line(SUDO_LIMIT_FALLBACK_LINE,"## Same thing without a password")
+#: ../plugins/python/ssr/audit/auditd.py:64
+#: ../plugins/python/ssr/external/pam.py:85
+msgid "Please close SELinux and use it!\t"
+msgstr "请关闭SELinux使用！\t"
+
+#: ../plugins/python/ssr/audit/auditd.py:68
+msgid "No such file or directory\t"
+msgstr "文件或目录不存在。\t"
+
+#: ../plugins/python/ssr/config/sendmail.py:110
+msgid ""
+"Failed to execute command. Please check the log information for details.\t"
+msgstr "无法执行命令。详情请查看日志信息。\t"
+
+#: ../plugins/python/ssr/external/sshd.py:79
+#: ../plugins/python/ssr/external/sshd.py:97
+#: ../plugins/python/ssr/external/sshd.py:152
+#: ../plugins/python/ssr/external/sshd.py:174
+#: ../plugins/python/ssr/external/sshd.py:239
+#: ../plugins/python/ssr/external/sshd.py:291
+msgid "sshd.services is not running!\t"
+msgstr "sshd服务未运行！\t"
+
+#: ../plugins/python/ssr/external/sshd.py:244
+msgid ""
+"UsePAM is not recommended to be closed,\n"
+"which will cause many problems!\t"
+msgstr "不建议关闭UsePAM，这将导致许多问题！\t"
+
+#: ../plugins/python/ssr/external/udev.py:171
+msgid "Device busy, please pop up!\t"
+msgstr "设备正忙，请弹出！\t"
+
+#: ../plugins/python/ssr/external/udev.py:177
+#: ../plugins/python/ssr/external/udev.py:272
+msgid "Please contact the admin.\t"
+msgstr "请联系管理员。\t"
+
+#: ../plugins/python/ssr/external/udev.py:267
+msgid "Device busy , please pop up!\t"
+msgstr "设备正忙，请弹出！\t"
+
+#: ../plugins/python/ssr/network/firewalld.py:86
+#: ../plugins/python/ssr/network/firewalld.py:177
+#: ../plugins/python/ssr/network/firewalld.py:318
+#: ../plugins/python/ssr/network/firewalld.py:357
+msgid "Unable to stop firewalld service!\t"
+msgstr "firewalld服务无法停止！\t"
+
+#: ../plugins/python/ssr/network/firewalld.py:103
+#: ../plugins/python/ssr/network/firewalld.py:118
+msgid "Unable to stop iptables service!\t"
+msgstr "iptables服务无法停止！\t"
+
+#: ../plugins/python/ssr/network/vulnerability.py:54
+msgid "Unable to stop bluetooth service!\t"
+msgstr "bluetooth服务无法停止！\t"
+
+#: ../plugins/python/ssr/network/vulnerability.py:64
+msgid "Unable to stop cups service!\t"
+msgstr "cups服务无法停止！\t"
+
+#: ../plugins/python/ssr/network/vulnerability.py:88
+msgid "Unable to stop avahi service!\t"
+msgstr "avahi服务无法停止！\t"
+
+#: ../plugins/python/ssr/network/vulnerability.py:98
+msgid "Unable to stop rpcbind service!\t"
+msgstr "rpcbind服务无法停止！\t"
+
+#: ../plugins/python/ssr/network/vulnerability.py:108
+msgid "Unable to stop smb service!\t"
+msgstr "smb服务无法停止！\t"
+
+#: ../plugins/python/ssr/network/vulnerability.py:113
+msgid "Abnormal service! Please check the log information for details.\t"
+msgstr "服务异常！详情请查看日志信息。\t"
+
+#~ msgid "Unable to stop firewalld service!"
+#~ msgstr "firewalld服务无法停止！\t"
+
+#~ msgid ""
+#~ "Device busy, please pop up!\t\n"
+#~ "You can use the eject command to eject the device.\t"
+#~ msgstr "设备正忙，请弹出！\t"
 
 #~ msgid "Maximum number of days a password may be used"
 #~ msgstr "可使用密码的最大有效天数"
