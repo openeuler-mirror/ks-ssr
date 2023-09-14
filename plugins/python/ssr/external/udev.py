@@ -18,6 +18,7 @@ USB_SUM_DEV_CMD = "ls /proc/scsi/ |grep usb-storage"
 CDROM_STATUS_CMD = " cat /proc/modules |grep "
 CDROM_DRIVE = "cdrom"
 SR_MOD_DRIVE = "sr_mod"
+USB_STORAGE_DRIVE = "usb-storage"
 FIND_DRIVE_CMD = "find /lib/modules/"
 UNINSTALL_DRIVE = "rmmod"
 INSTALL_DRIVE = "insmod"
@@ -41,7 +42,8 @@ class UDev:
 class DRIVERS:
     def __init__(self):
         self.conf = ssr.configuration.Table(DRIVER_BLACKLIST_PATH, ",\\s+")
-        self.flag = False
+        self.flag_cdrom = False
+        self.flag_usb = False
 
     def find_drive(self,key):
         command = '{0}{1}  -name {2}.ko*'.format(FIND_DRIVE_CMD,str(self.get_kernel_version()),key)
@@ -50,10 +52,9 @@ class DRIVERS:
         return str(drivers)
 
     def get_kernel_version(self) :
-        cmd = 'uname -a'
+        cmd = 'uname -r'
         output = ssr.utils.subprocess_has_output(cmd)
-        kernel_version = str(output).split(' ')
-        return kernel_version[2]
+        return output
 
     def reload_drive(self,kernel_version):
         ssr.log.debug('kernel_version = ',kernel_version)
@@ -132,9 +133,9 @@ class CDROM(DRIVERS):
 
     def set(self, args_json):
         args = json.loads(args_json)
-        if not self.flag:
+        if not self.flag_cdrom:
             self.ignore_drive("-o cdrom","-o sr_mod")
-            self.flag = True
+            self.flag_cdrom = True
 
         if not args[CDROM_ARG_ENABLED]:
             self.conf.set_value("1=blacklist cdrom","blacklist cdrom")
@@ -152,30 +153,88 @@ class CDROM(DRIVERS):
         return (True, '')
 
 
-class USB(UDev):
+class USB(DRIVERS):
     def usb_status(self):
         cmd_usb = '{0}'.format(USB_SUM_DEV_CMD)
         output = ssr.utils.subprocess_has_output(cmd_usb)
         return len(output) != 0
 
+    def open(self):
+        try:
+            if not self.status():
+                usb_storage_drive_path = self.find_drive(USB_STORAGE_DRIVE)
+
+                # install the driver
+                cmd_usb_storage = '{0} {1}'.format(INSTALL_DRIVE,self.find_drive(USB_STORAGE_DRIVE))
+                output_usb_storage = ssr.utils.subprocess_has_output(cmd_usb_storage)
+
+                # change the driver name
+                if usb_storage_drive_path.find('.bak') > 0:
+                    mv_usb_storage = 'mv {0} {1}'.format(usb_storage_drive_path,usb_storage_drive_path.replace('.bak',''))
+                    output = ssr.utils.subprocess_not_output(mv_usb_storage)
+
+                # reload initramfs
+                #self.reload_drive(self.get_kernel_version())
+
+        except Exception as e:
+            ssr.log.debug('Exception_open',e)
+            return (False,str(e))
+
+    def close(self):
+        try:
+            if self.status():
+                usb_storage_drive_path = self.find_drive(USB_STORAGE_DRIVE)
+
+                # uninstall the driver
+                cmd_usb_storage = '{0} {1}'.format(UNINSTALL_DRIVE, USB_STORAGE_DRIVE)
+                cmd_uas = '{0} {1}'.format(UNINSTALL_DRIVE, "uas")
+
+                if len(ssr.utils.subprocess_has_output("lsmod |grep usb |grep uas")) != 0:
+                    output_uas = ssr.utils.subprocess_has_output(cmd_uas)
+                    output_usb_storage = ssr.utils.subprocess_has_output(cmd_usb_storage)
+                else:
+                    output_usb_storage = ssr.utils.subprocess_has_output(cmd_usb_storage)
+                
+                # change the driver name and retain the backup
+                if usb_storage_drive_path.find('.bak') < 0:
+                    mv_usb_storage = 'mv {0} {1}'.format(usb_storage_drive_path, usb_storage_drive_path + '.bak')
+                    ssr.utils.subprocess_not_output(mv_usb_storage)
+
+                # reload initramfs
+                #self.reload_drive(self.get_kernel_version())
+
+        except Exception as e:
+            ssr.log.debug('Exception_close',e)
+            return (False,str(e))
+
+    def status(self):
+        cmd_usb_mod = '{0} {1}'.format(CDROM_STATUS_CMD, "usb_storage")
+        output_usb_mod = ssr.utils.subprocess_has_output(cmd_usb_mod)
+        return len(output_usb_mod) != 0
+
     def get(self):
         retdata = dict()
-        value = self.conf.get_value("1=ACTION==\\\"add\\\";2=SUBSYSTEMS==\\\"usb\\\"")
-        retdata[USB_ARG_ENABLED] = (len(value) == 0)
+        retdata[USB_ARG_ENABLED] = self.status() or (len(ssr.utils.subprocess_has_output("cat {0} |grep {1}".format(DRIVER_BLACKLIST_PATH, USB_STORAGE_DRIVE))) == 0)
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
+        if not self.flag_usb:
+            output = ssr.utils.subprocess_has_output_ignore_error_handling("modprobe {0}".format(USB_STORAGE_DRIVE))
+            self.ignore_drive("-o {0}".format(USB_STORAGE_DRIVE))
+            self.flag_usb = True
 
-        if self.usb_status():
-            return (False, 'Device busy , please pop up! \t\t')
-
-        if args[USB_ARG_ENABLED]:
-            self.conf.del_record("1=ACTION==\\\"add\\\";2=SUBSYSTEMS==\\\"usb\\\"")
+        if not args[USB_ARG_ENABLED]:
+            self.conf.set_value("1=blacklist usb-storage","blacklist usb-storage")
+            output = self.close()
+            if output:
+                return (False,"Device busy , please pop up! \t\t")
         else:
-            self.conf.set_value("1=ACTION==\\\"add\\\";2=SUBSYSTEMS==\\\"usb\\\"", DISABLE_USB_RULE)
+            self.conf.del_record("1=blacklist usb-storage")
+            output = self.open()
+            if output:
+                return (False,"Please contact the admin. \t\t")
 
-        self.reload()
         return (True, '')
 
 
