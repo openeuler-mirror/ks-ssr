@@ -128,6 +128,9 @@
             <arg name="activation_code" direction="in" type="s">
                 <summary>The activation code.</summary>
             </arg>
+            <arg name="activation_retval" direction="out" type="s">
+                <summary>Activation failure return value.</summary>
+            </arg>
             <description>Activate by activation code.</description>
         </method>
 
