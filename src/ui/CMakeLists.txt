@@ -14,9 +14,11 @@ qt_add_dbus_interface(
   box_manager_proxy)
 
 qt5_wrap_ui(
-  UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
+  UI_FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-manager.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/create-box.ui)
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/create-box.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/modify-password.ui)
 
 set(TARGET_NAME ks-sc-gui)
 
@@ -28,11 +30,14 @@ add_executable(
                  ${UI_FILES} "${PROJECT_SOURCE_DIR}/resources/resources.qrc")
 
 target_include_directories(
-  ${TARGET_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
-                         ${PROJECT_SOURCE_DIR}/include ${KLOG_QT5_INCLUDE_DIRS})
+  ${TARGET_NAME}
+  PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
+          ${PROJECT_SOURCE_DIR}/include ${KLOG_QT5_INCLUDE_DIRS}
+          ${X11_INCLUDE_DIRS})
 
-target_link_libraries(${TARGET_NAME} PRIVATE ${KLOG_QT5_LIBRARIES} Qt5::DBus
-                                             Qt5::Widgets)
+target_link_libraries(
+  ${TARGET_NAME} PRIVATE ${KLOG_QT5_LIBRARIES} ${X11_LIBRARIES} Qt5::DBus
+                         Qt5::Widgets Qt5::X11Extras)
 
 install(FILES ${QM_FILES} DESTINATION ${SC_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
