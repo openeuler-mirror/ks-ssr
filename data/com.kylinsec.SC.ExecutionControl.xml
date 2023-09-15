@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+    <interface name="com.kylinsec.SC.ExecutionControl">
+
+        <method name="GetFiles">
+            <arg type="s" name="files" direction="out">
+                <summary>The json string describes the execution control files which contain file path, file type and authentication status, etc..</summary>
+            </arg>
+            <description>Get execution control files information.</description>
+        </method>
+
+        <method name="AddFile">
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Add file to execution control whitelist.</description>
+        </method>
+
+        <method name="RemoveFile">
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Remove file from execution control whitelist.</description>
+        </method>
+    </interface>
+</node>
