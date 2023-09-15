@@ -75,7 +75,7 @@ void Box::switchMountedStatus()
     }
     else
     {
-        this->m_boxManagerProxy->Mount(this->m_boxUID, this->m_modifyPassword->getCurrentPassword()).waitForFinished();
+        this->m_boxManagerProxy->Mount(this->m_uid, this->m_modifyPassword->getCurrentPassword()).waitForFinished();
     }
 }
 
