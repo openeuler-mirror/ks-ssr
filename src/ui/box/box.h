@@ -14,35 +14,39 @@
 
 #pragma once
 
-#include <QLabel>
+#include <QLineEdit>
+#include <QWidget>
 
 class QMouseEvent;
 class QMenu;
 class BoxManagerProxy;
+class QPushButton;
+class QLabel;
 
 namespace KS
 {
-// struct BoxInfo
-// {
-//     // uid
-//     QString uid;
-//     // 名称
-//     QString name;
-//     // 是否挂载
-//     bool mounted;
-// };
+struct BoxInfo
+{
+    // uid
+    QString uid;
+    // 名称
+    QString name;
+    // 是否挂载
+    bool mounted;
+};
 
 class ModifyPassword;
 
-class Box : public QLabel
+class Box : public QWidget
 {
     Q_OBJECT
 
 public:
-    Box(const QString &boxUID);
+    Box(const QString &uid);
     virtual ~Box(){};
 
-    QString getBoxUID() { return this->m_boxUID; }
+    // 获取保险箱UID
+    QString getUID() { return this->m_uid; }
 
 public Q_SLOTS:
     void boxChanged();
@@ -51,18 +55,38 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
+    void initBox();
+    void initBoxInfo();
+    void initMenu();
+
     void switchMountedStatus();
     void modifyPassword();
+
+    // 解锁时需输入密码
+    QWidget *buildInputPasswdPage();
 
 private Q_SLOTS:
     void modifyPasswordAccepted();
 
 private:
-    QString m_boxUID;
+    // 保险箱唯一标识
+    QString m_uid;
+    // 保险箱名称
+    QString m_name;
+    // 保险箱打开状态
+    bool m_mounted;
+
+    // 保险箱显示图标
+    QPushButton *m_showingIcon;
+    // 保险箱显示名称
+    QLabel *m_showingName;
+
     BoxManagerProxy *m_boxManagerProxy;
     ModifyPassword *m_modifyPassword;
     QMenu *m_popupMenu;
     QAction *m_mountedStatusAction;
+
+    QLineEdit *m_passwdEdit;
 };
 
 }  // namespace KS

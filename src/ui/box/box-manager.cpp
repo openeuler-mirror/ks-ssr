@@ -17,6 +17,8 @@
 #include <QDBusConnection>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLineEdit>
+#include "lib/base/crypto-helper.h"
 #include "sc-i.h"
 #include "src/ui/box/box.h"
 #include "src/ui/box/create-box.h"
@@ -31,10 +33,15 @@ BoxManager::BoxManager() : QWidget(nullptr),
 {
     this->m_ui->setupUi(this);
 
+    // this->setStyleSheet("background-color: #FF0000");
+
     this->m_boxManagerProxy = new BoxManagerProxy(SC_DBUS_NAME,
                                                   SC_BOX_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
+
+    this->m_ui->m_boxsScroll->setFrameStyle(QFrame::NoFrame);
+    this->m_ui->m_boxsScroll->viewport()->setStyleSheet("background-color:transparent;");
 
     initBoxs();
 
@@ -46,12 +53,12 @@ BoxManager::BoxManager() : QWidget(nullptr),
 
 void BoxManager::initBoxs()
 {
-    // TODO: test
-    for (int i = 0; i <= 20; ++i)
-    {
-        auto box = new Box(QString("ID%1").arg(i));
-        this->m_ui->m_boxs->addBox(box);
-    }
+    //    // TODO: test
+    //    for (int i = 0; i <= 50; ++i)
+    //    {
+    //        auto box = new Box(QString("ID%1").arg(i));
+    //        this->m_ui->m_boxs->addBox(box);
+    //    }
 
     QJsonParseError jsonError;
     auto reply = this->m_boxManagerProxy->GetBoxs();
@@ -70,6 +77,7 @@ void BoxManager::initBoxs()
     {
         auto jsonBox = iter.toObject();
         auto box = this->buildBox(jsonBox);
+        this->addBox(box);
     }
 }
 
@@ -83,7 +91,8 @@ Box *BoxManager::buildBox(const QJsonObject &jsonBox)
 void BoxManager::addBox(Box *box)
 {
     this->m_ui->m_boxs->addBox(box);
-    this->m_boxs.insert(box->getBoxUID(), box);
+    this->m_boxs.insert(box->getUID(), box);
+    KLOG_DEBUG() << "insert box uid = " << box->getUID();
 }
 
 void BoxManager::removeBox(const QString &boxUID)
@@ -92,7 +101,7 @@ void BoxManager::removeBox(const QString &boxUID)
     if (box)
     {
         this->m_ui->m_boxs->removeBox(box);
-        this->m_boxs.remove(box->getBoxUID());
+        this->m_boxs.remove(box->getUID());
     }
 }
 
@@ -119,8 +128,8 @@ void BoxManager::boxAdded(const QString &boxUID)
     }
 
     auto jsonBox = jsonDoc.object();
-    auto box = this->buildBox(jsonBox);
-    this->addBox(box);
+    //    auto box = this->buildBox(jsonBox);
+    //    this->addBox(box);
 }
 
 void BoxManager::boxDeleted(const QString &boxUID)
@@ -130,11 +139,9 @@ void BoxManager::boxDeleted(const QString &boxUID)
 
 void BoxManager::boxChanged(const QString &boxUID)
 {
+    KLOG_DEBUG() << "boxUID = " << boxUID;
     auto box = this->m_boxs.value(boxUID);
-    if (box)
-    {
-        box->boxChanged();
-    }
+    box->boxChanged();
 }
 
 void BoxManager::newBoxClicked(bool checked)
@@ -153,14 +160,14 @@ void BoxManager::newBoxClicked(bool checked)
 
 void BoxManager::createBoxAccepted()
 {
-    // TODO: 换成dbus
-    if (0)
-    {
-        auto reply = this->m_boxManagerProxy->CreateBox(this->m_createBox->getName(),
-                                                        this->m_createBox->getPassword());
-        auto boxID = reply.value();
-        auto box = new Box(boxID);
-        this->m_ui->m_boxs->addBox(box);
-    }
+    // rsa加密
+    std::string encryptPassword = CryptoHelper::rsa_encrypt(this->m_boxManagerProxy->rSAPublicKey().toStdString(), this->m_createBox->getPassword().toStdString());
+    auto reply = this->m_boxManagerProxy->CreateBox(this->m_createBox->getName(),
+                                                    QString::fromStdString(encryptPassword));
+
+    auto boxID = reply.value();
+    auto box = new Box(boxID);
+    //    this->m_ui->m_boxs->addBox(box);
+    this->addBox(box);
 }
 }  // namespace KS
