@@ -13,6 +13,8 @@
  */
 
 #include "src/ui/window.h"
+#include <qt5-log-i.h>
+#include <QFile>
 #include <QPushButton>
 #include <QStackedWidget>
 #include "src/ui/box/box-manager.h"
@@ -21,13 +23,43 @@
 
 namespace KS
 {
-Window::Window() : QWidget(nullptr),
+#define SC_STYLE_PATH ":/styles/sc"
+
+Window::Window() : TitlebarWindow(nullptr),
                    m_ui(new Ui::Window())
 {
-    m_ui->setupUi(this);
+    m_ui->setupUi(this->getWindowContentWidget());
 
+    this->initWindow();
+    this->initCategories();
+}
+
+void Window::initWindow()
+{
+    this->setTitle(tr("Security center"));
+    this->setIcon(QIcon(":/images/logo"));
+    this->setFixedWidth(984);
+    this->setFixedHeight(648);
+
+    // 初始化样式表
+    QFile file(SC_STYLE_PATH);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QString windowStyle = file.readAll();
+        this->setStyleSheet(this->styleSheet() + windowStyle);
+    }
+    else
+    {
+        KLOG_WARNING() << "Failed to open file " << SC_STYLE_PATH;
+    }
+}
+
+void Window::initCategories()
+{
     // 初始化分类选项
-    this->m_ui->m_navigation->addItem(new NavigationItem(":/box-little"));
+    // this->m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected"));
+    // this->m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected"));
+    this->m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Private box")));
 
     // 移除qt designer默认创建的widget
     while (this->m_ui->m_categoryPages->currentWidget() != nullptr)
