@@ -38,5 +38,7 @@ void Boxs::addBox(Box *box)
 
 void Boxs::removeBox(Box *box)
 {
+    box->deleteLater();
+    box = nullptr;
 }
 }  // namespace KS
