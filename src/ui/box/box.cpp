@@ -25,6 +25,7 @@
 #include "lib/base/crypto-helper.h"
 #include "sc-i.h"
 #include "src/ui/box/modify-password.h"
+#include "src/ui/box/retrieve-password.h"
 #include "src/ui/box_manager_proxy.h"
 
 namespace KS
@@ -33,6 +34,7 @@ Box::Box(const QString &uid) : m_uid(uid),
                                m_name("Unknown"),
                                m_mounted(false),
                                m_modifyPassword(nullptr),
+                               m_retrievePassword(nullptr),
                                m_popupMenu(nullptr)
 {
     this->m_boxManagerProxy = new BoxManagerProxy(SC_DBUS_NAME,
@@ -41,6 +43,7 @@ Box::Box(const QString &uid) : m_uid(uid),
                                                   this);
 
     m_passwdEdit = new QLineEdit;
+    m_passwdEdit->setEchoMode(QLineEdit::Password);
     m_process = new QProcess;
     m_imageLock = new BoxImage(this, ":/images/box-locked");
     m_imageUnlock = new BoxImage(this);
@@ -122,6 +125,7 @@ void Box::initMenu()
                                                                &Box::switchMountedStatus);
     this->m_popupMenu->addAction(tr("Modify password"), this, &Box::modifyPassword);
     this->m_popupMenu->addAction(tr("Delete"), this, &Box::delBox);
+    this->m_popupMenu->addAction(tr("Retrieve the password"), this, &Box::retrievePassword);
 }
 
 void Box::boxChanged()
@@ -256,6 +260,23 @@ void Box::delBox()
     widget->show();
 }
 
+void Box::retrievePassword()
+{
+    if (this->m_retrievePassword)
+    {
+        this->m_retrievePassword->show();
+        return;
+    }
+
+    this->m_retrievePassword = new RetrievePassword();
+    connect(this->m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
+
+    int x = this->x() + this->width() / 4 + m_retrievePassword->width() / 4;
+    int y = this->y() + this->height() / 4 + m_retrievePassword->height() / 4;
+    this->m_retrievePassword->move(x, y);
+    this->m_retrievePassword->show();
+}
+
 QWidget *Box::buildMountInputPasswdPage()
 {
     QWidget *widget = new QWidget;
@@ -317,6 +338,7 @@ QWidget *Box::buildNotifyPage(const QString &notify)
     QVBoxLayout *vlay = new QVBoxLayout(widget);
 
     QLabel *label = new QLabel(notify);
+    label->setTextInteractionFlags(Qt::TextSelectableByMouse);
     QPushButton *ok = new QPushButton(tr("ok"));
     connect(ok, &QPushButton::clicked, widget, &QWidget::close);
 
@@ -357,7 +379,38 @@ void Box::modifyPasswordAccepted()
     }
     else
     {
-        KLOG_DEBUG() << "modify password failed. ret = " << ret;
+        KLOG_WARNING() << "modify password failed. ret = " << ret;
+    }
+}
+
+void Box::retrievePasswordAccepted()
+{
+    auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), this->m_retrievePassword->getNewPassword());
+    auto encryptPassphrase = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), this->m_retrievePassword->getPassphrase());
+
+    auto reply = this->m_boxManagerProxy->RetrievePassword(this->m_uid,
+                                                           encryptPassphrase,
+                                                           encryptNewPassword);
+
+    bool ret = false;
+    reply.waitForFinished();
+    if (reply.isValid())
+    {
+        ret = reply.value();
+        if (!ret)
+        {
+            QWidget *widget = buildNotifyPage(QString(tr("Passphrase error!")));
+            widget->show();
+        }
+        else
+        {
+            QWidget *widget = buildNotifyPage(QString(tr("Retrieve success!")));
+            widget->show();
+        }
+    }
+    else
+    {
+        KLOG_WARNING() << "Retrieve password failed. ret = " << ret;
     }
 }
 }  // namespace KS
