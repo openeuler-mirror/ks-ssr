@@ -21,7 +21,7 @@
 
 namespace KS
 {
-struct BoxDaoInfo
+struct BoxRecord
 {
     QString boxName;
     QString boxId;
@@ -29,7 +29,7 @@ struct BoxDaoInfo
     QString encryptpassword;
     QString encryptPspr;
     QString encryptSig;
-    int senderUserUid;
+    int userUid;
 };
 
 class BoxDao
@@ -45,7 +45,7 @@ public:
                 const QString &encryptpassword,
                 const QString &encryptPspr,
                 const QString &encryptSig,
-                int senderUserUid);
+                int userUid);
     // 为box修改数据库中储存的挂载状态
     void modifyMountStatus(const QString &boxId, bool isMount);
     // 为box修改数据库中储存的密码
@@ -53,17 +53,15 @@ public:
     // 删除数据库中的box
     bool delBox(const QString &boxId);
     // 通过boxId获取box
-    BoxDaoInfo getBox(const QString &boxId);
+    BoxRecord getBox(const QString &boxId);
     // 获取boxs表中所有box
-    QList<BoxDaoInfo> getBoxs();
+    QList<BoxRecord> getBoxs();
     // 获取boxs表中的条数
     int getBoxCount();
 
 private:
     void init();
-    // 判断表格是否存在
-    bool sqlTableExist(QSqlQuery query);
-    bool executeQueryCmd(const QString &cmd);
+    bool execute(const QString &cmd);
 
 private:
     QSqlDatabase m_boxDb;

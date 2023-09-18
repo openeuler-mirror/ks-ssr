@@ -220,7 +220,7 @@ void Box::delBox()
     QPushButton *canel = new QPushButton(tr("canel"));
     connect(ok, &QPushButton::clicked, this, [this]
             {
-                auto encryptPasswd = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey(), m_passwdEdit->text());
+                auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_passwdEdit->text());
                 auto reply = this->m_boxManagerProxy->DelBox(this->m_uid, encryptPasswd);
                 bool ret = false;
                 reply.waitForFinished();
@@ -273,7 +273,7 @@ QWidget *Box::buildMountInputPasswdPage()
     QPushButton *canel = new QPushButton(tr("canel"));
     connect(ok, &QPushButton::clicked, this, [this]
             {
-                auto encryptPasswd = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey(), m_passwdEdit->text());
+                auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_passwdEdit->text());
                 auto reply = this->m_boxManagerProxy->Mount(this->m_uid, encryptPasswd);
                 bool ret = false;
                 reply.waitForFinished();
@@ -332,8 +332,8 @@ QWidget *Box::buildNotifyPage(const QString &notify)
 
 void Box::modifyPasswordAccepted()
 {
-    auto encryptCurrentPassword = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey(), this->m_modifyPassword->getCurrentPassword());
-    auto encryptNewPassword = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey(), this->m_modifyPassword->getNewPassword());
+    auto encryptCurrentPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), this->m_modifyPassword->getCurrentPassword());
+    auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), this->m_modifyPassword->getNewPassword());
 
     auto reply = this->m_boxManagerProxy->ModifyBoxPassword(this->m_uid,
                                                             encryptCurrentPassword,
