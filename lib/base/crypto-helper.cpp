@@ -13,6 +13,7 @@
  */
 
 #define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
+#include <cryptopp/aes.h>
 #include <cryptopp/base64.h>
 #include <cryptopp/des.h>
 #include <cryptopp/files.h>
@@ -263,6 +264,44 @@ std::string CryptoHelper::des_decrypt(const std::string &message, const std::str
         ECB_Mode<DES>::Decryption decoder;
         decoder.SetKey((const byte *)key.c_str(), key.length());
         StringSource(message, true, new Base64Decoder(new StreamTransformationFilter(decoder, new StringSink(result))));
+        return result;
+    }
+    catch (const CryptoPP::Exception &e)
+    {
+        KLOG_WARNING("%s.", e.what());
+        return std::string();
+    }
+}
+
+std::string CryptoHelper::aes_encrypt(const std::string &message, const std::string &key)
+{
+    try
+    {
+        std::string result;
+        ECB_Mode<AES>::Encryption encoder;
+
+        encoder.SetKey((const byte *)key.c_str(), key.length());
+        StringSource(message, true, new StreamTransformationFilter(encoder, new Base64Encoder(new StringSink(result))));
+
+        return result;
+    }
+    catch (const CryptoPP::Exception &e)
+    {
+        KLOG_WARNING("%s.", e.what());
+        return std::string();
+    }
+}
+
+std::string CryptoHelper::aes_decrypt(const std::string &message, const std::string &key)
+{
+    try
+    {
+        std::string result;
+        ECB_Mode<AES>::Decryption decoder;
+
+        decoder.SetKey((const byte *)key.c_str(), key.length());
+        StringSource(message, true, new Base64Decoder(new StreamTransformationFilter(decoder, new StringSink(result))));
+
         return result;
     }
     catch (const CryptoPP::Exception &e)
