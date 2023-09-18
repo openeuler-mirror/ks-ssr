@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * kiran-session-manager is licensed under Mulan PSL v2.
+ * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     auto argv0 = QFileInfo(argv[0]);
     auto programName = argv0.baseName();
 
-    if (klog_qt5_init(QString(), "kylinsec-session", PROJECT_NAME, programName) < 0)
+    if (klog_qt5_init(QString(), "kylinsec-system", PROJECT_NAME, programName) < 0)
     {
         fprintf(stderr, "Failed to init kiran-log.");
     }
@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName(programName);
     QApplication::setApplicationVersion(PROJECT_VERSION);
     app.setStyle("Fusion");
-
     QTranslator translator;
 
     if (!translator.load(QLocale(), qAppName(), ".", SC_INSTALL_TRANSLATIONDIR, ".qm"))

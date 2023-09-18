@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * kiran-session-manager is licensed under Mulan PSL v2.
+ * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -17,7 +17,7 @@
 #include <QFile>
 #include <QPushButton>
 #include <QStackedWidget>
-#include "src/ui/box/box-manager.h"
+#include "src/ui/box/box-page.h"
 #include "src/ui/file-protected/fp-page.h"
 #include "src/ui/navigation.h"
 #include "src/ui/ui_window.h"
@@ -71,8 +71,7 @@ void Window::initCategories()
     }
 
     this->m_ui->m_categoryPages->addWidget(new FPPage());
-    // TODO:更换为BoxPage
-    this->m_ui->m_categoryPages->addWidget(new BoxManager());
+    this->m_ui->m_categoryPages->addWidget(new BoxPage());
     this->m_ui->m_categoryPages->setCurrentIndex(0);
 
     connect(this->m_ui->m_navigation, SIGNAL(currentCategoryChanged(int)), this->m_ui->m_categoryPages, SLOT(setCurrentIndex(int)));

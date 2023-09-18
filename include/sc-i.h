@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * kiran-session-manager is licensed under Mulan PSL v2.
+ * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -20,6 +20,8 @@ extern "C"
 #endif
 
 #define SC_DBUS_NAME "com.kylinsec.SC"
+#define SC_DBUS_OBJECT_PATH "/com/kylinsec/SC"
+#define SC_DBUS_INTERFACE_NAME "com.kylinsec.SC"
 
 // 保密箱相关定义
 #define SC_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/BoxManager"
@@ -28,7 +30,7 @@ extern "C"
 // BM: Box Manager
 #define SCBM_JK_BOX_UID "uid"
 #define SCBM_JK_BOX_NAME "name"
-#define SCBM_JK_BOX_MOUNTED "mounted"
+#define SCBM_JK_BOX_MOUNTED "isMount"
 
 // 文件保护相关定义
 #define SC_FILE_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/SC/FileProtected"
