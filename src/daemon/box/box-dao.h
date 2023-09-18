@@ -18,46 +18,38 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-#include "lib/base/base.h"
 
 namespace KS
 {
+struct BoxInfo
+{
+    QString boxName;
+    QString boxId;
+    bool isMount;
+    QString encryptpassword;
+    QString encryptKey;
+    QString encryptPspr;
+    int senderUserUid;
+};
+
 class BoxDao
 {
 public:
     BoxDao();
     ~BoxDao();
 
-    static BoxDao *getInstance()
-    {
-        return m_instance;
-    };
-
-    static QSqlDatabase getInstanceDb()
-    {
-        return m_instance->m_boxDb;
-    };
-
-    static void globalInit()
-    {
-        m_instance = new BoxDao();
-        m_instance->init();
-    };
-
-    static void globalDeinit() { delete m_instance; };
-
-    void addQuery(const QString boxName, const QString boxId, bool isMount, const QString encryptpassword, const QString encryptKey, const QString encryptPspr, int senderUserUid);
-    void modifyQueryMountStatus(const QString boxId, bool isMount);
-    void ModifyQueryPasswd(const QString boxId, const QString encryptpassword);
-    bool delQuery(const QString boxId);
-    QSqlQuery findQuery(const QString boxId);
-    int getQueryCount();
+    void addBox(const QString boxName, const QString boxId, bool isMount, const QString encryptpassword, const QString encryptKey, const QString encryptPspr, int senderUserUid);
+    void modifyMountStatus(const QString boxId, bool isMount);
+    void modifyPasswd(const QString boxId, const QString encryptpassword);
+    bool delBox(const QString boxId);
+    BoxInfo getBox(const QString boxId);
+    QList<BoxInfo> getBoxs();
+    int getBoxCount();
 
 private:
     void init();
 
 private:
-    static BoxDao *m_instance;
     QSqlDatabase m_boxDb;
 };
 }  // namespace KS

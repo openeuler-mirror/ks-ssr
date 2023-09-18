@@ -19,8 +19,8 @@ install(FILES ${PROJECT_BINARY_DIR}/data/com.kylinsec.SC.service
 install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.conf
         DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d/)
 
-# box sql
-install(FILES ${PROJECT_SOURCE_DIR}/data/box-dao.dat
+# sc sql
+install(FILES ${PROJECT_SOURCE_DIR}/data/sc.dat
         DESTINATION ${SC_INSTALL_DATADIR})
 
 # box dir
