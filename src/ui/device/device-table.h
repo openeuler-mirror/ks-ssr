@@ -21,6 +21,17 @@
 
 namespace KS
 {
+struct DeviceInfo
+{
+    int number;
+    QString name;
+    int type;
+    QString id;
+    int interface;
+    int status;
+    int permission;
+};
+
 struct RecordsInfo
 {
     QString name;
@@ -29,33 +40,23 @@ struct RecordsInfo
     int status;
 };
 
-class RecordDelegate : public QStyledItemDelegate
-{
-    Q_OBJECT
-
-public:
-    RecordDelegate(QObject *parent = 0);
-    virtual ~RecordDelegate();
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
-};
-
 class TableFilterModel;
-class DeviceRecordsTable : public QTableView
+class DeviceListDelegate;
+class DeviceTable : public QTableView
 {
     Q_OBJECT
 public:
-    DeviceRecordsTable(QWidget *parent = nullptr);
+    DeviceTable(QWidget *parent = nullptr);
+    void setHeaderSections(QStringList sections);
+    void setDelegate(QAbstractItemDelegate *delegate);
+    void setData(const QList<DeviceInfo> &infos);
     void setData(const QList<RecordsInfo> &infos);
     int getColCount();
     int getRowCount();
     TableFilterModel *getFilterProxy();
 
 private:
-    void setHeaderSections(QStringList sections);
-
-private:
     TableFilterModel *m_filterProxy;
     QStandardItemModel *m_model;
-    RecordDelegate *m_delegate;
 };
 }  // namespace KS
