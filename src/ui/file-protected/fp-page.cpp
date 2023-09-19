@@ -16,19 +16,19 @@
 #include <qt5-log-i.h>
 #include <QDir>
 #include <QFileDialog>
-#include "sc-i.h"
+#include "ksc-i.h"
 #include "src/ui/file_protected_proxy.h"
 #include "src/ui/ui_fp-page.h"
 
 namespace KS
 {
-FPPage::FPPage() : QWidget(nullptr),
+FPPage::FPPage(QWidget *parent) : QWidget(parent),
                    m_ui(new Ui::FPPage())
 {
     this->m_ui->setupUi(this);
 
-    this->m_fileProtectedProxy = new FileProtectedProxy(SC_DBUS_NAME,
-                                                        SC_FILE_PROTECTED_DBUS_OBJECT_PATH,
+    this->m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
+                                                        KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
                                                         QDBusConnection::systemBus(),
                                                         this);
     // 更新表格右上角提示信息
@@ -42,6 +42,11 @@ FPPage::FPPage() : QWidget(nullptr),
     connect(this->m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
     connect(this->m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
     connect(this->m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(unprotectClicked(bool)));
+}
+
+FPPage::~FPPage()
+{
+    delete m_ui;
 }
 
 void FPPage::searchTextChanged(const QString &text)

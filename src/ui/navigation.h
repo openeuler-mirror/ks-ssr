@@ -55,7 +55,8 @@ Q_SIGNALS:
     void currentCategoryChanged(int index);
 
 private:
-    QButtonGroup *m_buttons;
+    // 导航图标按钮组
+    QButtonGroup *m_items;
 };
 
 }  // namespace KS
