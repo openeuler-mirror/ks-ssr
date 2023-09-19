@@ -40,6 +40,7 @@ private Q_SLOTS:
     void updateClicked(bool checked);
     void unprotectClicked(bool checked);
     void unprotectAccepted();
+    void prohibitUnloadingStatusChanged(bool status, const QString &path);
 
 private:
     Ui::TPKernel *m_ui;
