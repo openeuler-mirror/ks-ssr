@@ -27,6 +27,7 @@ TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
                                         m_ui(new Ui::TPExecute)
 {
     m_ui->setupUi(this);
+    m_ui->m_note->setWordWrap(true);
     m_dbusProxy = new TPProxy(KSC_DBUS_NAME,
                               KSC_TP_DBUS_OBJECT_PATH,
                               QDBusConnection::systemBus(),

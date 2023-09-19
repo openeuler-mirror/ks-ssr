@@ -39,6 +39,7 @@ void SubWindow::buildNotify(const QString &notify)
 {
     setTitle(tr("Notify"));
     auto label = new QLabel(notify, this);
+    label->setMinimumWidth(180);
     // 自动换行
     label->setWordWrap(true);
     // 可复制
