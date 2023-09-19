@@ -12,13 +12,13 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#include "src/ui/trusted/tp-page.h"
+#include "src/ui/tp/tp-page.h"
 #include "config.h"
 #include "ksc-marcos.h"
 #include "src/ui/common/sub-window.h"
 #include "src/ui/device/sidebar-item.h"
-#include "src/ui/trusted/tp-execute.h"
-#include "src/ui/trusted/tp-kernel.h"
+#include "src/ui/tp/tp-execute.h"
+#include "src/ui/tp/tp-kernel.h"
 #include "src/ui/ui_tp-page.h"
 
 #include <QListWidgetItem>
