@@ -14,15 +14,15 @@
 
 #include "tp-table-header-proxy.h"
 
+#include <QCheckBox>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QCheckBox>
 
 namespace KS
 {
 TPTableHeaderProxy::TPTableHeaderProxy(QWidget *parent) : QHeaderView(Qt::Horizontal, parent),
-                                                m_stateChanged(false),
-                                                m_checkState(Qt::Unchecked)
+                                                          m_stateChanged(false),
+                                                          m_checkState(Qt::Unchecked)
 {
     m_rect = new QRect(15, 2, 20, 20);
     // 做下拉筛选功能时可能会用到这个属性，暂设置为false
@@ -33,8 +33,8 @@ TPTableHeaderProxy::TPTableHeaderProxy(QWidget *parent) : QHeaderView(Qt::Horizo
 }
 
 void TPTableHeaderProxy::paintSection(QPainter *painter,
-                                 const QRect &rect,
-                                 int logicalIndex) const
+                                      const QRect &rect,
+                                      int logicalIndex) const
 {
     painter->save();
     QHeaderView::paintSection(painter, rect, logicalIndex);
