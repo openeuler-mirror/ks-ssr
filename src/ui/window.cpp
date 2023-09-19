@@ -17,8 +17,7 @@
 #include <QFile>
 #include <QPushButton>
 #include <QStackedWidget>
-#include "src/ui/box/box-page.h"
-#include "src/ui/file-protected/fp-page.h"
+#include "src/ui/box/box-manager.h"
 #include "src/ui/navigation.h"
 #include "src/ui/ui_window.h"
 
@@ -37,7 +36,7 @@ Window::Window() : TitlebarWindow(nullptr),
 
 void Window::initWindow()
 {
-    this->setTitle(tr("Security control"));
+    this->setTitle(tr("Security center"));
     this->setIcon(QIcon(":/images/logo"));
     this->setFixedWidth(984);
     this->setFixedHeight(648);
@@ -58,8 +57,8 @@ void Window::initWindow()
 void Window::initCategories()
 {
     // 初始化分类选项
-    // this->m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected"));
-    this->m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected", tr("File protected")));
+     this->m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected", tr("Trusted protected")));
+    // this->m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected"));
     this->m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Private box")));
 
     // 移除qt designer默认创建的widget
@@ -70,8 +69,7 @@ void Window::initCategories()
         delete currentWidget;
     }
 
-    this->m_ui->m_categoryPages->addWidget(new FPPage());
-    this->m_ui->m_categoryPages->addWidget(new BoxPage());
+    this->m_ui->m_categoryPages->addWidget(new BoxManager());
     this->m_ui->m_categoryPages->setCurrentIndex(0);
 
     connect(this->m_ui->m_navigation, SIGNAL(currentCategoryChanged(int)), this->m_ui->m_categoryPages, SLOT(setCurrentIndex(int)));

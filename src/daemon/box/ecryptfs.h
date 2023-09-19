@@ -27,7 +27,7 @@ class EcryptFS : public QObject
 {
     Q_OBJECT
 public:
-    explicit EcryptFS(QObject *parent = nullptr);
+    EcryptFS(QObject *parent = nullptr);
     virtual ~EcryptFS(){};
 
     // 添加口令 ，返回ecryptfs_sig

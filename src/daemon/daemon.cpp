@@ -23,7 +23,9 @@ Daemon *Daemon::m_instance = nullptr;
 
 Daemon::Daemon() : QObject(nullptr)
 {
-    boxManger = new BoxManager(this);
+    m_boxManager = new BoxManager(this);
+    m_trusted = new Trusted(this);
+    m_fileProtected = new FileProtected(this);
 }
 
 Daemon::~Daemon()

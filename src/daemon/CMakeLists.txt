@@ -8,6 +8,16 @@ qt_add_dbus_adaptor(
   ${CMAKE_SOURCE_DIR}/src/daemon/box/box-manager.h KS::BoxManager
   box_manager_adaptor BoxManagerAdaptor)
 
+qt_add_dbus_adaptor(
+  TRUSTED_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.Trusted.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/trusted/trusted.h KS::Trusted
+  trusted_adaptor TrustedAdaptor)
+
+qt_add_dbus_adaptor(
+  FILES_PROTECTED_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/protected/file-protected.h KS::FileProtected
+  file_protected_adaptor FileProtectedAdaptor)
+
 set(TARGET_NAME ks-sc-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
@@ -18,6 +28,8 @@ add_executable(
   ${SRC_H_FILES}
   ${SRC_CPP_FILES}
   ${SECURITY_BOX_MANAGER_SRCS}
+  ${TRUSTED_MANAGER_SRCS}
+  ${FILES_PROTECTED_MANAGER_SRCS}
   ${QM_FILES})
 
 target_include_directories(

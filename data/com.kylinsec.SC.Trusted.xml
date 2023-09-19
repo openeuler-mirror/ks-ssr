@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
-    <interface name="com.kylinsec.SC.KernelProtected">
+    <interface name="com.kylinsec.SC.Trusted">
 
         <method name="GetModuleFiles">
             <arg type="s" name="files" direction="out">
@@ -10,11 +10,18 @@
             <description>Get kernel module files information.</description>
         </method>
 
+        <method name="GetExecuteFiles">
+            <arg type="s" name="files" direction="out">
+                <summary>The json string describes the Execute files which contain file path and authentication status, etc..</summary>
+            </arg>
+            <description>Get Execute files information.</description>
+        </method>
+
         <method name="AddFile">
             <arg type="s" name="file_path" direction="in">
                 <summary>A file path.</summary>
             </arg>
-            <description>Add file to kernel module whitelist.</description>
+            <description>Add file to trusted whitelist.</description>
         </method>
 
         <method name="ProhibitUnloading">
@@ -31,7 +38,20 @@
             <arg type="s" name="file_path" direction="in">
                 <summary>A file path.</summary>
             </arg>
-            <description>Remove file from kernel module whitelist.</description>
+            <description>Remove file from trusted whitelist.</description>
+        </method>
+
+        <method name="Search">
+            <arg type="s" name="path_key" direction="in">
+                <summary>A search key.</summary>
+            </arg>
+            <arg type="u" name="search_type" direction="in">
+                <summary>A search type, which can be module or executable program.</summary>
+            </arg>
+            <arg type="s" name="files" direction="out">
+                <summary>The json string describes the trusted files which contain file path and authentication status, etc..</summary>
+            </arg>
+            <description>Search for trusted protection list.</description>
         </method>
 
     </interface>
