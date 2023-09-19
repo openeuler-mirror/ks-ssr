@@ -12,35 +12,33 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "src/ui/peripheral-management/pm-page.h"
-#include "src/ui/ui_pm-page.h"
-#include "src/ui/peripheral-management/sidebar-item.h"
-#include "src/ui/peripheral-management/pm-connect-page.h"
-#include "src/ui/peripheral-management/pm-device-page.h"
+#include "src/ui/device/device-page.h"
+#include "src/ui/device/device-list-page.h"
+#include "src/ui/device/device-log-page.h"
+#include "src/ui/device/sidebar-item.h"
+#include "src/ui/ui_device-page.h"
 
 #include <QListWidgetItem>
 #include <QPainter>
 
 namespace KS
 {
-
-PMPage::PMPage(QWidget *parent) :
-    QWidget(parent),
-    m_ui(new Ui::PMPage)
+DevicePage::DevicePage(QWidget *parent) : QWidget(parent),
+                                          m_ui(new Ui::DevicePage)
 {
     this->m_ui->setupUi(this);
     initSidebar();
     initSubPage();
 
-    connect(m_ui->m_sidebar,&QListWidget::currentRowChanged, m_ui->m_stacked,&QStackedWidget::setCurrentIndex);
+    connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, m_ui->m_stacked, &QStackedWidget::setCurrentIndex);
 }
 
-PMPage::~PMPage()
+DevicePage::~DevicePage()
 {
     delete this->m_ui;
 }
 
-void PMPage::paintEvent(QPaintEvent *event)
+void DevicePage::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QStyleOption opt;
@@ -49,38 +47,38 @@ void PMPage::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void PMPage::initSidebar()
+void DevicePage::initSidebar()
 {
-    createSideBarItem(tr("Device List"),"");
-    createSideBarItem(tr("Connect Record"),"");
+    createSideBarItem(tr("Device List"), "");
+    createSideBarItem(tr("Connect Record"), "");
     m_ui->m_sidebar->setCurrentRow(0);
 }
 
-void PMPage::initSubPage()
+void DevicePage::initSubPage()
 {
-    PMDevicePage *deviceList = new PMDevicePage(this);
-    PMConnectPage *connectRecord = new PMConnectPage(this);
+    DeviceListPage *deviceList = new DeviceListPage(this);
+    DeviceLogPage *connectRecord = new DeviceLogPage(this);
 
     m_ui->m_stacked->addWidget(deviceList);
     m_ui->m_stacked->addWidget(connectRecord);
 }
 
-void PMPage::createSideBarItem(const QString text, const QString icon)
+void DevicePage::createSideBarItem(const QString &text, const QString &icon)
 {
     QListWidgetItem *newItem = nullptr;
     SidebarItem *customItem = nullptr;
 
     newItem = new QListWidgetItem(m_ui->m_sidebar);
-    customItem = new SidebarItem(text,icon,m_ui->m_sidebar);
+    customItem = new SidebarItem(text, icon, m_ui->m_sidebar);
 
     m_ui->m_sidebar->addItem(newItem);
-    m_ui->m_sidebar->setItemWidget(newItem,customItem);
+    m_ui->m_sidebar->setItemWidget(newItem, customItem);
 
     newItem->setTextAlignment(Qt::AlignVCenter);
-    newItem->setSizeHint(QSize(166,50));
+    newItem->setSizeHint(QSize(166, 50));
 
-    m_ui->m_sidebar->setGridSize(QSize(166,66));
-    newItem->setData(Qt::UserRole,text);
+    m_ui->m_sidebar->setGridSize(QSize(166, 66));
+    newItem->setData(Qt::UserRole, text);
 }
 
 }  // namespace KS
