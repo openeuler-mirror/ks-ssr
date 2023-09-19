@@ -40,7 +40,7 @@ public:
     QString getPassphrase();
     bool retrievePassword(const QString &passphrase, const QString &newPassword);
     bool delBox(const QString &inputPassword);
-    bool isMount();
+    bool mounted();
     bool mount(const QString &inputPassword);
     void umount();
     bool modifyBoxPassword(const QString &inputPassword, const QString &newPassword);

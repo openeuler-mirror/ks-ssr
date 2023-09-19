@@ -43,7 +43,7 @@ private slots:
     void prevClick();
     void nextClick();
     void pageBtnClick();
-    void updatetPageBtns(int number);
+    void updatePageBtns(int number);
 
 signals:
     void jumperClicked(int number);

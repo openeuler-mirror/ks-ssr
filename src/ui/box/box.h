@@ -51,7 +51,7 @@ public:
     virtual ~Box(){};
 
     // 获取保险箱UID
-    QString getUID() { return this->m_uid; }
+    QString getUID() { return m_uid; }
 
 public slots:
     void boxChanged();
