@@ -12,16 +12,12 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
-#include <QWidget>
+#include "src/ui/trusted-protected/tp-page.h"
 
 namespace KS
 {
-class TrustedProtected : public QWidget
+TPPage::TPPage()
 {
-    Q_OBJECT
-public:
-    TrustedProtected();
-    virtual ~TrustedProtected(){};
-};
-
 }
+
+}  // namespace KS
