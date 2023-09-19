@@ -13,7 +13,7 @@ QPushButton
     border-radius: 4px;
 }
 
-QPushButton:checked
+QPushButton:pressed
 {
     background-color: #00a2ff;
 }
@@ -176,6 +176,56 @@ QTableView#m_fileTable > QWidget
 {
     margin: 0px 22px 0px 0px;
 }
+
+/* peripheral-management */
+KS--EditPermissions
+{
+    background-color:#2d2d2d;
+    color: #ffffff;
+}
+
+KS--EditPermissions > QComboBox
+{
+    background: #222222;
+}
+
+KS--PMDevicePage,
+KS--PMConnectPage
+{
+    background-color:#2d2d2d;
+}
+
+KS--PMPage
+{
+   background-color:#222222;
+}
+
+QListWidget#m_sidebar
+{
+    background-color:#2d2d2d;
+    border-radius: 6px;
+    padding-left: 10px;
+    padding-top: 16px;
+    padding-right: 24px;
+}
+
+QListWidget#m_sidebar::item
+{
+    border-radius: 6px;
+    background:#393939;
+}
+
+QListWidget#m_sidebar::item:selected
+{
+    background:#00A2FF;
+}
+
+QListWidget#m_sidebar::item:hover
+{
+
+}
+
+
 
 
 
