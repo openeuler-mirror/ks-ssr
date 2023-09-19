@@ -189,13 +189,13 @@ KS--DevicePermissions > QComboBox
     background: #222222;
 }
 
-KS--DeviceListPage,
-KS--DeviceLogPage
+KS--DeviceList,
+KS--DeviceLog
 {
     background-color:#2d2d2d;
 }
 
-KS--PMPage
+KS--DevicePage
 {
    background-color:#222222;
 }
