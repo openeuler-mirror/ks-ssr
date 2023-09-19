@@ -48,7 +48,8 @@ QString BoxManager::CreateBox(const QString &name, const QString &password)
 
     m_boxs.insert(box->getBoxID(), box);
 
-    emit BoxAdded(box->getBoxID());
+    //    auto decryptPassphrase = CryptoHelper::rsaEncrypt(this->m_rsaPublicKey, box->getPassphrase());
+    emit BoxAdded(box->getBoxID(), box->getPassphrase());
     return box->getBoxID();
 }
 
@@ -109,12 +110,7 @@ bool BoxManager::IsMounted(const QString &boxId)
 {
     auto box = m_boxs.value(boxId);
 
-    if (box->getBoxID() == boxId)
-    {
-        return box->isMount();
-    }
-
-    return false;
+    return box->isMount();
 }
 
 bool BoxManager::ModifyBoxPassword(const QString &boxId,
@@ -126,12 +122,7 @@ bool BoxManager::ModifyBoxPassword(const QString &boxId,
 
     auto box = m_boxs.value(boxId);
 
-    if (box->getBoxID() == boxId)
-    {
-        return box->modifyBoxPassword(decryptInputPassword, decryptNewPassword);
-    }
-
-    return false;
+    return box->modifyBoxPassword(decryptInputPassword, decryptNewPassword);
 }
 
 // 解锁
@@ -147,6 +138,15 @@ bool BoxManager::Mount(const QString &boxId, const QString &password)
     }
 
     return false;
+}
+
+bool BoxManager::RetrievePassword(const QString &boxId, const QString &passphrase, const QString &newPassword)
+{
+    auto decryptPassphrase = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, passphrase);
+    auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
+
+    auto box = m_boxs.value(boxId);
+    return box->retrievePassword(decryptPassphrase, decryptNewPassword);
 }
 
 // 上锁

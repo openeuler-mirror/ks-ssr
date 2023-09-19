@@ -1,8 +1,23 @@
+/**
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
+ * ks-sc is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2 
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
+ * See the Mulan PSL v2 for more details.  
+ * 
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ */
+
 #ifndef KSS_H
 #define KSS_H
 
 #include <QObject>
 #include <QProcess>
+#include <QSettings>
 
 namespace KS
 {
@@ -19,6 +34,8 @@ enum TRUSTED_FILE_TYPE
     // 可执行脚本
     EXECUTABLE_SCRIPT
 };
+
+class KssInit;
 
 class Kss : public QObject
 {
@@ -55,11 +72,20 @@ public Q_SLOTS:
 
 private:
     void execute(const QString &cmd);
+    void initData();
+
+private slots:
+    void initDataResults();
+
+signals:
+    void initFinished();
 
 private:
     QProcess *m_process;
     QString m_processOutput;
     QString m_errorOutput;
+    KssInit *m_kssInit;
+    QSettings *m_ini;
 };
-}
-#endif // KSS_H
+}  // namespace KS
+#endif  // KSS_H

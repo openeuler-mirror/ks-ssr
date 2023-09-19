@@ -92,6 +92,22 @@
             <description>Return true if the box is mounted else return false.</description>
         </method>
 
+        <method name="RetrievePassword">
+            <arg type="s" name="box_uid" direction="in">
+                <summary>The box UID.</summary>
+            </arg>
+            <arg type="s" name="passphrase" direction="in">
+                <summary>The box passphrase which needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
+            </arg>
+            <arg type="s" name="new_password" direction="in">
+                <summary>The new password which needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
+            </arg>
+            <arg type="b" name="retrieve" direction="out">
+                <summary>Whether to retrieve.</summary>
+            </arg>
+            <description>Retrieve box password.</description>
+        </method>
+
         <property name="RSAPublicKey" type="s" access="read">
             <description>The RSA public key.</description>
         </property>
@@ -99,6 +115,9 @@
         <signal name="BoxAdded">
             <arg name="box_uid" type="s">
                 <summary>The box UID.</summary>
+            </arg>
+            <arg name="passphrase" type="s">
+                <summary>The box passphrase.</summary>
             </arg>
             <description>Emit the signal when box is added.</description>
         </signal>

@@ -54,11 +54,13 @@ public Q_SLOTS:  // METHODS
                            const QString &newPassword);
     // 挂载box（解锁）
     bool Mount(const QString &boxId, const QString &password);
+    // 通过口令找回密码
+    bool RetrievePassword(const QString &boxId, const QString &passphrase, const QString &newPassword);
     // 取消挂载（加锁）
     void UnMount(const QString &boxId);
 Q_SIGNALS:  // SIGNALS
     // box增加
-    void BoxAdded(const QString &boxId);
+    void BoxAdded(const QString &boxId, const QString &passphrase);
     // box信息改变
     void BoxChanged(const QString &boxId);
     // 删除box
