@@ -47,6 +47,6 @@ private:
 
 private:
     FileProtectedAdaptor *m_dbusAdaptor;
-    Kss *m_kss;
+    KSS *m_kss;
 };
 }  // namespace KS

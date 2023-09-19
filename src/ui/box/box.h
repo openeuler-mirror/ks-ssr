@@ -76,22 +76,22 @@ private slots:
     void retrievePasswordAccepted();
 
 signals:
-    void sigInputMountPasswd(const QString &boxUID);
+    void unlockedClicked(const QString &boxUID);
     // mount密码检测结果
-    void sigMountPasswdResult(bool status);
-    void sigDelBox(const QString &boxUID);
+    void checkMountPasswdResult(bool status);
+    void delBoxClicked(const QString &boxUID);
     // 左键点击未解锁图标
     void unUnlockedIconClicked();
     // 删除box密码检测结果
-    void sigDelPasswdResult(bool status);
+    void checkDelPasswdResult(bool status);
     // 修改密码 输入密码检测结果
-    void sigModifyPasswdResult(bool status);
+    void checkModifyPasswdResult(bool status);
     // 找回密码 口令检测结果
-    void sigRetrievePasswordResult(bool status);
+    void checkRetrievePasswordResult(bool status);
     // 显示修改密码页面
-    void showModifyPassword(ModifyPassword *modifyPassword);
+    void modifyPasswordClicked(ModifyPassword *modifyPassword);
     // 显示找回密码页面
-    void showRetrievePassword(RetrievePassword *retrievePassword);
+    void retrievePasswordClicked(RetrievePassword *retrievePassword);
 
 private:
     // 保险箱唯一标识
