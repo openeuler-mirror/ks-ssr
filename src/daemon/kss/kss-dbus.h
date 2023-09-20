@@ -42,6 +42,12 @@ public:  // PROPERTIES
     Q_PROPERTY(bool Initialized READ initialized)
     bool initialized() const;
 
+    Q_PROPERTY(uint StorageMode READ storageMode)
+    uint storageMode() const;
+
+    Q_PROPERTY(bool TrustedStatus READ trustedStatus)
+    bool trustedStatus() const;
+
 public Q_SLOTS:  // METHODS
     // 添加文件保护文件
     void AddProtectedFile(const QString &filePath);
@@ -57,10 +63,8 @@ public Q_SLOTS:  // METHODS
     void RemoveProtectedFile(const QString &filePath);
     // 移除可信保护文件
     void RemoveTrustedFile(const QString &filePath);
-    // 切换硬模式
-    void HardModeChecked(const QString &userPin);
-    // 切换软模式
-    void SoftModeChecked();
+    // 存储模式切换
+    void SetStorageMode(uint type, const QString &userPin);
     // 设置可信状态
     void SetTrustedStatus(bool status);
 
@@ -78,8 +82,7 @@ private:
     void prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool prohibited, const QString &filePath);
     void addFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath);
     void removeFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath);
-    void hardModeCheckedAfterAuthorization(const QDBusMessage &message, const QString &userPin);
-    void softModeCheckedAfterAuthorization(const QDBusMessage &message);
+    void setStorageModeAfterAuthorization(const QDBusMessage &message, uint type, const QString &userPin);
     void setTrustedStatusAfterAuthorization(const QDBusMessage &message, bool status);
 
 private:
