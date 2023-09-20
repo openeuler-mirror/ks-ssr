@@ -36,7 +36,6 @@
 #include "src/ui/device/device-page.h"
 #include "src/ui/fp/fp-page.h"
 #include "src/ui/license/license-activation.h"
-#include "src/ui/license/license-dbus.h"
 #include "src/ui/navigation.h"
 #include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
@@ -48,7 +47,8 @@ namespace KS
 Window::Window() : TitlebarWindow(nullptr),
                    m_ui(new Ui::Window),
                    m_activation(nullptr),
-                   m_activateStatus(nullptr)
+                   m_activateStatus(nullptr),
+                   m_licenseDBus(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
 
@@ -65,7 +65,12 @@ Window::~Window()
 void Window::initActivation()
 {
     m_activation = new LicenseActivation(this);
-    if (!m_activation->isActivate())
+
+    m_licenseDBus = LicenseDBus::getDefault();
+    auto licenseInfo = m_licenseDBus->getLicense();
+    bool isActivate = (licenseInfo.data()->activationStatus == LicenseActivationStatus::LAS_ACTIVATED) &&
+                      (licenseInfo.data()->expiredTime >= QDateTime::currentDateTime().toSecsSinceEpoch());
+    if (!isActivate)
     {
         m_activateStatus->show();
         auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
@@ -74,22 +79,16 @@ void Window::initActivation()
         m_activation->raise();
         m_activation->show();
     }
-    connect(m_activation, &LicenseActivation::activated,
-            [this](bool isActived)
-            {
-                //设置激活对话框和激活状态标签是否可见
-                m_activation->setVisible(!isActived);
-                m_activateStatus->setVisible(!isActived);
-            });
     connect(m_activation, &LicenseActivation::closed,
             [this]
             {
                 //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
-                if (!m_activation->isActivate())
+                if (!m_licenseDBus->isActivated())
                     qApp->quit();
                 else
                     m_activation->hide();
             });
+    connect(m_licenseDBus.data(), &LicenseDBus::licenseChanged, this, &Window::updateActivation, Qt::UniqueConnection);
 }
 
 void Window::initWindow()
@@ -171,5 +170,15 @@ void Window::popupActiveDialog()
     auto y = this->y() + this->height() / 4 + m_activation->height() / 4;
     m_activation->move(x, y);
     m_activation->show();
+}
+
+void Window::updateActivation(QSharedPointer<LicenseInfo> licenseInfo)
+{
+    bool isActivate = (licenseInfo.data()->activationStatus == LicenseActivationStatus::LAS_ACTIVATED) &&
+                      (licenseInfo.data()->expiredTime >= QDateTime::currentDateTime().toSecsSinceEpoch());
+
+    //设置激活对话框和激活状态标签是否可见
+    m_activation->setVisible(!isActivate);
+    m_activateStatus->setVisible(!isActivate);
 }
 }  // namespace KS

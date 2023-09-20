@@ -20,7 +20,7 @@
 
 namespace KS
 {
-LicenseDBus::LicenseDBus(QObject* parent) : QObject(parent)
+LicenseDBus::LicenseDBus(QObject* parent) : QObject(parent), m_isActivated(false)
 {
     creatObjectName(LICENSE_OBJECT_NAME);
     QDBusConnection::systemBus().connect(LICENSE_HELPER_DBUS_NAME,
@@ -29,6 +29,12 @@ LicenseDBus::LicenseDBus(QObject* parent) : QObject(parent)
                                          QLatin1String(SIGNAL_LICENSE_CHANGED),
                                          this,
                                          SLOT(licenseChange(bool)));
+}
+
+QSharedPointer<LicenseDBus> LicenseDBus::getDefault()
+{
+    static QSharedPointer<LicenseDBus> licenseDbus = QSharedPointer<LicenseDBus>(new LicenseDBus);
+    return licenseDbus;
 }
 
 LicenseDBus::~LicenseDBus()
@@ -67,7 +73,7 @@ bool LicenseDBus::creatObjectName(const QString& objectName)
     return false;
 }
 
-QString LicenseDBus::getLicense()
+QSharedPointer<LicenseInfo> LicenseDBus::getLicense()
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_HELPER_DBUS_NAME,
                                                                 LICENSE_OBJECT_OBJECT_PATH "/" LICENSE_OBJECT_NAME,
@@ -79,6 +85,7 @@ QString LicenseDBus::getLicense()
     KLOG_DEBUG() << "getLicense msgReply: " << msgReply;
 
     QString errorMsg;
+    QSharedPointer<LicenseInfo> licenseInfo = QSharedPointer<LicenseInfo>(new LicenseInfo);
     do
     {
         if (msgReply.type() == QDBusMessage::ReplyMessage)
@@ -90,7 +97,30 @@ QString LicenseDBus::getLicense()
                 break;
             }
             QVariant firstArg = args.takeFirst();
-            return firstArg.toString();
+            auto licenseInfoJson = firstArg.toString();
+
+            //解析授权信息Json字符串
+            QJsonParseError jsonError;
+            auto jsonDoc = QJsonDocument::fromJson(licenseInfoJson.toUtf8(), &jsonError);
+            if (jsonDoc.isNull())
+            {
+                errorMsg = jsonError.errorString();
+                break;
+            }
+            else
+            {
+                auto data = jsonDoc.object();
+                licenseInfo.data()->activationCode = data.value(LICENSE_JK_ACTIVATION_CODE).toString();
+                licenseInfo.data()->machineCode = data.value(LICENSE_JK_MACHINE_CODE).toString();
+                licenseInfo.data()->activationStatus = (LicenseActivationStatus)data.value(LICENSE_JK_ACTIVATION_STATUS).toInt();
+                licenseInfo.data()->expiredTime = time_t(data.value(LICENSE_JK_EXPIRED_TIME).toVariant().toUInt());
+
+                //获取激活状态
+                auto currTime = QDateTime::currentDateTime().toSecsSinceEpoch();
+                m_isActivated = (licenseInfo.data()->activationStatus == LAS_ACTIVATED) && (currTime <= licenseInfo.data()->expiredTime);
+
+                return licenseInfo;
+            }
         }
     } while (0);
 
@@ -99,7 +129,7 @@ QString LicenseDBus::getLicense()
                    << "method: " << METHOD_GET_LICENSE
                    << "error: " << msgReply.errorMessage() << errorMsg;
 
-    return "";
+    return licenseInfo;
 }
 
 bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QString& errorMsg)
@@ -125,9 +155,15 @@ bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QStri
     return false;
 }
 
+bool LicenseDBus::isActivated()
+{
+    return m_isActivated;
+}
+
 void LicenseDBus::licenseChange(bool)
 {
-    emit licenseChanged();
+    auto licenseInfo = getLicense();
+    emit licenseChanged(licenseInfo);
 }
 
 }  // namespace KS
