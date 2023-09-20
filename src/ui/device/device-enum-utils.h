@@ -14,29 +14,19 @@
 
 #pragma once
 
-#include <QStyledItemDelegate>
+#include <QObject>
+#include "include/ksc-i.h"
 
 namespace KS
 {
-enum DeviceTableField
-{
-    DEVICE_TABLE_FIELD_NUMBER,
-    DEVICE_TABLE_FIELD_NAME,
-    DEVICE_TABLE_FIELD_TYPE,
-    DEVICE_TABLE_FIELD_ID,
-    DEVICE_TABLE_FIELD_INTERFACE,
-    DEVICE_TABLE_FIELD_STATUS,
-    DEVICE_TABLE_FIELD_PERMISSION,
-    DEVICE_TABLE_FIELD_LAST
-};
-
-class DeviceListDelegate : public QStyledItemDelegate
+class DeviceEnumUtils : public QObject
 {
     Q_OBJECT
-
 public:
-    DeviceListDelegate(QObject *parent = 0);
-    virtual ~DeviceListDelegate();
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    static QString enum2Str(DeviceType enumVal);
+    static QString enum2Str(InterfaceType enumVal);
+    static QString enum2Str(DeviceState enumVal);
+
+    static DeviceState str2StateEnum(QString str);
 };
 }  // namespace KS

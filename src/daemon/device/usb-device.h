@@ -15,7 +15,7 @@
 #pragma once
 
 #include <QObject>
-#include "src/daemon/device/device-rule.h"
+#include "src/daemon/device/device-rule-manager.h"
 #include "src/daemon/device/device.h"
 
 namespace KS
@@ -36,7 +36,7 @@ class USBDevice : public Device
 public:
     USBDevice(const QString &syspath, QObject *parent = nullptr);
     virtual ~USBDevice();
-    virtual int setEnable(bool enable);
+    virtual bool setEnable(bool enable);
 
 private:
     void init();
@@ -54,6 +54,6 @@ private:
     QString m_product;
     QString m_uid;
 
-    DeviceRule *m_DevRule;
+    DeviceRuleManager *m_ruleManager;
 };
 }  // namespace KS

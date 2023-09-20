@@ -19,8 +19,9 @@
 #include <QMap>
 #include <QObject>
 #include "src/daemon/device/device-factory.h"
+#include "src/daemon/device/device-interface.h"
 #include "src/daemon/device/device.h"
-#include "src/daemon/device/record.h"
+#include "src/daemon/device/device-log.h"
 #include "src/daemon/device/sd/sd-device-monitor.h"
 
 class DeviceManagerAdaptor;
@@ -42,6 +43,12 @@ public Q_SLOTS:  // METHODS
     // 获取特定设备信息
     QString GetDevice(const QString &id);
 
+    // 获取所有接口信息
+    QString GetInterfaces();
+
+    // 获取特定特定信息
+    QString GetInterface(int type);
+
     // 修改权限
     bool ChangePermission(const QString &id,
                           const QString &permissions);
@@ -52,10 +59,16 @@ public Q_SLOTS:  // METHODS
     // 禁用设备
     bool Disable(const QString &id);
 
+    // 启用设备接口
+    bool EnableInterface(int type);
+
+    // 禁用设备接口
+    bool DisableInterface(int type);
+
     // 获取连接记录
     QString GetRecords();
 
-private:
+private slots:
     void handleUdevEvent(SDDevice *device,
                          int action);
 
@@ -67,13 +80,14 @@ private:
     void handleUdevAddEvent(SDDevice *sdDevice);
     void handleUdevRemoveEvent(SDDevice *sdDevice);
     void handleUdevChangeEvent(SDDevice *sdDevice);
-    void recordDeviceConnected(QSharedPointer<Device> device);
+    void recordDeviceConnection(QSharedPointer<Device> device);
 
 private:
     DeviceManagerAdaptor *m_dbusAdaptor;
     QMap<QString, QSharedPointer<Device>> m_devices;
     DeviceFactory m_devFactory;
+    DeviceInterface m_devInterface;
     SDDeviceMonitor m_devMonitor;
-    Record m_record;
+    DeviceLog m_devLog;
 };
 }  // namespace KS

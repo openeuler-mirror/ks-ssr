@@ -15,32 +15,35 @@
 #pragma once
 
 #include <QWidget>
+#include "src/ui/device_manager_proxy.h"
 
 namespace Ui
 {
-class DeviceRecord;
+class DeviceLog;
 }
 
 namespace KS
 {
-class DeviceRecord : public QWidget
+class DeviceLog : public QWidget
 {
     Q_OBJECT
 
 public:
-    DeviceRecord(QWidget *parent = nullptr);
-    virtual ~DeviceRecord();
+    DeviceLog(QWidget *parent = nullptr);
+    virtual ~DeviceLog();
 
 protected:
     void paintEvent(QPaintEvent *event);
 
 private:
     void initTableStyle();
+    void update();
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
 
 private:
-    Ui::DeviceRecord *m_ui;
+    Ui::DeviceLog *m_ui;
+    DeviceManagerProxy *m_deviceManagerProxy;
 };
 }  //namespace KS

@@ -32,9 +32,13 @@ extern "C"
 #define KSC_BM_JK_BOX_NAME "name"
 #define KSC_BM_JK_BOX_MOUNTED "mounted"
 
-// KSS相关定义, 包括TP FP的接口
-#define KSC_KSS_INIT_DBUS_OBJECT_PATH "/com/kylinsec/SC/KSS"
-#define KSC_KSS_INIT_DBUS_INTERFACE_NAME "com.kylinsec.SC.KSS"
+// 可信保护相关定义
+#define KSC_TP_DBUS_OBJECT_PATH "/com/kylinsec/SC/TrustedProtected"
+#define KSC_TP_DBUS_INTERFACE_NAME "com.kylinsec.SC.TrustedProtected"
+
+// 文件保护相关定义
+#define KSC_FP_DBUS_OBJECT_PATH "/com/kylinsec/SC/FileProtected"
+#define KSC_FP_DBUS_INTERFACE_NAME "com.kylinsec.SC.FileProtected"
 
 // kss命令 key相关定义 JK: JSON_KEY
 #define KSC_KSS_JK_RES "res"
@@ -49,15 +53,9 @@ extern "C"
 #define KSC_KSS_JK_DATA_ADD_TIME "time"
 #define KSC_KSS_JK_DATA_GUARD "guard"
 
-    enum KSCKSSTrustedFileType
-    {
-        KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE = 0,
-        KSC_KSS_TRUSTED_FILE_TYPE_KERNEL,
-        KSC_KSS_TRUSTED_FILE_TYPE_NONE
-    };
-
 // 外设管理相关定义
 #define KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/DeviceManager"
+#define KSC_DEVICE_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SC.DeviceManager"
 
 #define KSC_DEVICE_KEY_ID "id"
 #define KSC_DEVICE_KEY_NAME "name"
@@ -106,6 +104,16 @@ extern "C"
         DEVICE_ACTION_ADD = 0,
         DEVICE_ACTION_REMOVE,
         DEVICE_ACTION_CHANGE
+    };
+
+    /**
+     * @brief 设备权限
+     */
+    enum PermissionType
+    {
+        PERMISSION_TYPE_READ = (1 << 0),
+        PERMISSION_TYPE_WRITE = (1 << 1),
+        PERMISSION_TYPE_EXEC = (1 << 2)
     };
 
 #ifdef __cplusplus

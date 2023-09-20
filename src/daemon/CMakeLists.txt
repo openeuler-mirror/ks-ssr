@@ -6,15 +6,15 @@ endif()
 
 file(GLOB_RECURSE SRC_H_FILES ./box/*.h
                         ./common/*.h
-                        ./kss/*.h
                         ./fp/*.h
                         ./tp/*.h
+                        ./device/*.h
                         ./daemon.h)
 file(GLOB_RECURSE SRC_CPP_FILES ./box/*.cpp
                         ./common/*.cpp
-                        ./kss/*.cpp
                         ./fp/*.cpp
                         ./tp/*.cpp
+                        ./device/*.cpp
                         ./daemon.cpp
                         ./main.cpp)
 
@@ -28,12 +28,14 @@ qt5_add_dbus_adaptor(
   BoxManagerAdaptor)
 
 qt5_add_dbus_adaptor(
-  KSS_DBUS_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.KSS.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/kss/kss-dbus.h
-  KS::KSSDbus
-  kss_dbus_adaptor
-  KSSDbusAdaptor)
+  TRUSTED_MANAGER_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.TrustedProtected.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/tp/tp.h KS::TP tp_adaptor TPAdaptor)
+
+qt5_add_dbus_adaptor(
+  FILES_PROTECTED_MANAGER_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/fp/fp.h KS::FP fp_adaptor FPAdaptor)
 
 qt5_add_dbus_adaptor(
   SECURITY_DEVICE_MANAGER_SRCS
@@ -46,15 +48,17 @@ qt5_add_dbus_adaptor(
 set(TARGET_NAME ks-sc-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
+                                ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}
   ${SRC_H_FILES}
   ${SRC_CPP_FILES}
   ${SECURITY_BOX_MANAGER_SRCS}
-  ${KSS_DBUS_SRCS}
-  # ${SECURITY_DEVICE_MANAGER_SRCS}
+  ${TRUSTED_MANAGER_SRCS}
+  ${FILES_PROTECTED_MANAGER_SRCS}
+  ${SECURITY_DEVICE_MANAGER_SRCS}
   ${QM_FILES})
 
 target_include_directories(

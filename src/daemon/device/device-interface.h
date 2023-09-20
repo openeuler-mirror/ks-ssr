@@ -9,31 +9,37 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     yuanxing <yuanxing@kylinos.com.cn>
+ * Author:     wangxiaoqing <wangxiaoqing@kylinos.com.cn>
  */
 
 #pragma once
 
-#include <QStyledItemDelegate>
+#include <QObject>
+#include "src/daemon/device/device-rule-manager.h"
 
 namespace KS
 {
-enum RecordTableField
-{
-    RECORD_TABLE_FIELD_NAME,
-    RECORD_TABLE_FIELD_TYPE,
-    RECORD_TABLE_FIELD_TIME,
-    RECORD_TABLE_FIELD_STATUS,
-    RECORD_TABLE_FIELD_LAST
-};
 
-class DeviceRecordDelegate : public QStyledItemDelegate
+class Device;
+
+class DeviceInterface : public QObject
 {
     Q_OBJECT
 
 public:
-    DeviceRecordDelegate(QObject *parent = 0);
-    virtual ~DeviceRecordDelegate();
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    DeviceInterface(QObject* parent = nullptr);
+
+    QString getInterfaces();
+    QString getInterface(int type);
+
+    bool setInterfaceEnable(int type,
+                            bool enable);
+
+private:
+    bool
+    verifyInterface(int type);
+
+private:
+    DeviceRuleManager* m_ruleManager;
 };
 }  // namespace KS

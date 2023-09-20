@@ -15,8 +15,8 @@
 #pragma once
 
 #include <QWidget>
+#include "include/ksc-i.h"
 #include "src/ui/common/titlebar-window.h"
-
 namespace Ui
 {
 class DevicePermission;
@@ -24,40 +24,17 @@ class DevicePermission;
 
 namespace KS
 {
-/**
- * @brief 设备状态
- */
-enum DeviceStatus
-{
-    //启用
-    DEVICE_STATUS_ENABLE,
-    //禁用
-    DEVICE_STATUS_DISABLE,
-    //未授权
-    DEVICE_STATUS_UNACTIVE,
-    DEVICE_STATUS_LAST
-};
-
-/**
- * @brief 设备权限
- */
-enum DevicePermissionType
-{
-    DEVICE_PERMISSION_TYPE_READ = (1 << 0),
-    DEVICE_PERMISSION_TYPE_WRITE = (1 << 1),
-    DEVICE_PERMISSION_TYPE_EXEC = (1 << 2)
-};
-
 class DevicePermission : public TitlebarWindow
 {
     Q_OBJECT
 
 public:
-    DevicePermission(const QString &name, QWidget *parent = nullptr);
+    DevicePermission(const QString &name, const QString &id, QWidget *parent = nullptr);
     virtual ~DevicePermission();
-    void setDeviceStatus(const DeviceStatus &status);
+    QString getDeviceID();
+    void setDeviceStatus(const DeviceState &status);
     void setDevicePermission(int permission);
-    DeviceStatus getDeviceStatus();
+    DeviceState getDeviceStatus();
     int getDevicePermission();
 
 protected:
@@ -74,7 +51,8 @@ signals:
 private:
     Ui::DevicePermission *m_ui;
     QString m_name;
-    DeviceStatus m_status;
+    QString m_id;
+    DeviceState m_status;
     int m_permissions;
 };
 }  //namespace KS
