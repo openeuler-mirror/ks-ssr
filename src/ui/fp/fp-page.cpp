@@ -65,7 +65,7 @@ void FPPage::searchTextChanged(const QString &text)
 
 void FPPage::addClicked(bool checked)
 {
-    RETURN_IF_TRUE(!checkTrustedLoadFinied())
+    RETURN_IF_TRUE(!checkTrustedLoadFinied(m_fileProtectedProxy->initialized()))
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     if (!fileName.isEmpty())
     {
@@ -83,15 +83,14 @@ void FPPage::updateInfo()
     m_ui->m_tips->setText(text);
 }
 
-bool FPPage::checkTrustedLoadFinied()
+bool FPPage::checkTrustedLoadFinied(int initialized)
 {
     // 可信未初始化完成，不允许操作
-    auto settings = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
-    if (settings->value(KSC_INI_KEY).toInt() == 0)
+    if (initialized == 0)
     {
         auto messgeDialog = new MessageDialog(this);
         messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
-                                "please wait a few minutes before trying."));
+                                    "please wait a few minutes before trying."));
 
         int x = this->x() + width() / 4 + messgeDialog->width() / 4;
         int y = this->y() + height() / 4 + messgeDialog->height() / 4;
@@ -104,7 +103,7 @@ bool FPPage::checkTrustedLoadFinied()
 
 void FPPage::unprotectClicked(bool checked)
 {
-    RETURN_IF_TRUE(!checkTrustedLoadFinied())
+    RETURN_IF_TRUE(!checkTrustedLoadFinied(m_fileProtectedProxy->initialized()))
     auto unprotectNotify = new TableDeleteNotify(this);
     unprotectNotify->show();
 

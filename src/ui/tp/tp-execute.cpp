@@ -57,6 +57,11 @@ TPExecute::~TPExecute()
     delete m_ui;
 }
 
+int TPExecute::getInitialized()
+{
+    return m_dbusProxy->initialized();
+}
+
 void TPExecute::updateInfo()
 {
     m_ui->m_executeTable->updateRecord();

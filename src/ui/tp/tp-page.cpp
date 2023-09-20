@@ -24,21 +24,15 @@
 
 #include <QListWidgetItem>
 #include <QPainter>
-#include <QSettings>
 
 namespace KS
 {
-// ini文件
-#define KSC_INI_PATH KSC_INSTALL_DATADIR "/ksc.ini"
-#define KSC_INI_KEY "ksc/initialized"
-
 TPPage::TPPage(QWidget *parent) : QWidget(parent),
                                   m_ui(new Ui::TPPage)
 {
     m_ui->setupUi(this);
     initSidebar();
     initSubPage();
-    checkTrustedLoadFinied();
 
     connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, m_ui->m_stacked, &QStackedWidget::setCurrentIndex);
     connect(m_ui->m_sidebar, &QListWidget::itemClicked, this, &TPPage::onItemClicked);
@@ -89,22 +83,22 @@ void TPPage::initSubPage()
 
                 m_ui->m_sidebar->setEnabled(true);
             });
-
     auto *kernel = new TPKernel(m_ui->m_stacked);
 
     m_ui->m_stacked->addWidget(execute);
     m_ui->m_stacked->addWidget(kernel);
+
+    checkTrustedLoadFinied(execute->getInitialized());
 }
 
-void TPPage::checkTrustedLoadFinied()
+void TPPage::checkTrustedLoadFinied(int initialized)
 {
     m_maskWidget = new Loading(m_ui->m_stacked);
-    auto settings = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
-    RETURN_IF_TRUE(settings->value(KSC_INI_KEY).toInt() != 0)
+    RETURN_IF_TRUE(initialized != 0)
 
     auto messgeDialog = new MessageDialog(this);
     messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
-                            "please wait a few minutes to refresh."));
+                                "please wait a few minutes to refresh."));
 
     int x = this->x() + width() / 4 + messgeDialog->width() / 4;
     int y = this->y() + height() / 4 + messgeDialog->height() / 4;
