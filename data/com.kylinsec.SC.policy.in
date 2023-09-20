@@ -7,49 +7,9 @@
   <vendor_url/>
   <icon_name>stock_person</icon_name>
 
-  <action id="com.kylinsec.SC.TrustedProtected.AddFile">
-    <_description>Trusted to add files</_description>
-    <_message>Authentication is required to change your trusted data</_message>
-    <defaults>
-      <allow_any>auth_admin</allow_any>
-      <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>auth_admin_keep</allow_active>
-    </defaults>
-  </action>
-
-  <action id="com.kylinsec.SC.TrustedProtected.ProhibitUnloading">
-    <_description>Trusted to prohibit unloading</_description>
-    <_message>Authentication is required to change your trusted data</_message>
-    <defaults>
-      <allow_any>auth_admin</allow_any>
-      <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>auth_admin_keep</allow_active>
-    </defaults>
-  </action>
-
-  <action id="com.kylinsec.SC.TrustedProtected.RemoveFile">
-    <_description>Trusted to remove file</_description>
-    <_message>Authentication is required to change your trusted data</_message>
-    <defaults>
-      <allow_any>auth_admin</allow_any>
-      <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>auth_admin_keep</allow_active>
-    </defaults>
-  </action>
-
-  <action id="com.kylinsec.SC.FileProtected.AddFile">
-    <_description>File Protection add files</_description>
-    <_message>Authentication is required to change your file protection data</_message>
-    <defaults>
-      <allow_any>auth_admin</allow_any>
-      <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>auth_admin_keep</allow_active>
-    </defaults>
-  </action>
-
-  <action id="com.kylinsec.SC.FileProtected.RemoveFile">
-    <_description>File Protection remove files</_description>
-    <_message>Authentication is required to change your file protection data</_message>
+  <action id="com.kylinsec.SC.PermissionAuthentication">
+    <_description>Permission authentication of security control.</_description>
+    <_message>Permission authentication is required for security control and data modification.</_message>
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>
