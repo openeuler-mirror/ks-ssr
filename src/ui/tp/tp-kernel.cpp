@@ -44,7 +44,7 @@ TPKernel::TPKernel(QWidget *parent) : QWidget(parent),
     m_ui->m_tips->setText(text);
 
     // TODO:需要绘制颜色
-    m_ui->m_search->addAction(QIcon(":/images/search").pixmap(16, 16), QLineEdit::ActionPosition::LeadingPosition);
+    m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
 
     connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
