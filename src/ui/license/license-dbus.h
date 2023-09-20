@@ -44,7 +44,7 @@ public:
     bool activateByActivationCode(const QString& activation_Code, QString& errorMsg);
 
 signals:
-    void licenseChanged(bool);
+    void licenseChanged();
 
 private slots:
     void licenseChange(bool);
