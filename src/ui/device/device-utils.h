@@ -19,14 +19,15 @@
 
 namespace KS
 {
-class DeviceEnumUtils : public QObject
+class DeviceUtils : public QObject
 {
     Q_OBJECT
 public:
-    static QString enum2Str(DeviceType enumVal);
-    static QString enum2Str(InterfaceType enumVal);
-    static QString enum2Str(DeviceState enumVal);
+    static QString deviceTypeEnum2Str(DeviceType type);
+    static QString interfaceTypeEnum2Str(InterfaceType type);
+    static QString deviceStateEnum2Str(DeviceState state);
+    static QString deviceConnectStateEnum2Str(DeviceConnectState state);
 
-    static DeviceState str2StateEnum(QString str);
+    static DeviceState deviceStateStr2Enum(const QString &state);
 };
 }  // namespace KS
