@@ -16,7 +16,6 @@
 #include <qt5-log-i.h>
 #include <QDir>
 #include <QFileDialog>
-#include <QSettings>
 #include <QWidgetAction>
 #include "config.h"
 #include "ksc-i.h"
@@ -28,10 +27,6 @@
 
 namespace KS
 {
-// ini文件
-#define KSC_INI_PATH KSC_INSTALL_DATADIR "/ksc.ini"
-#define KSC_INI_KEY "ksc/initialized"
-
 FPPage::FPPage(QWidget *parent) : QWidget(parent),
                                   m_ui(new Ui::FPPage())
 {
@@ -74,7 +69,7 @@ void FPPage::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     if (!fileName.isEmpty())
     {
-        m_fileProtectedProxy->AddFPFile(fileName).waitForFinished();
+        m_fileProtectedProxy->AddProtectedFile(fileName).waitForFinished();
         //        m_ui->m_fileTable->updateInfo();
         updateInfo();
     }
@@ -88,10 +83,10 @@ void FPPage::updateInfo()
     m_ui->m_tips->setText(text);
 }
 
-bool FPPage::checkTrustedLoadFinied(int initialized)
+bool FPPage::checkTrustedLoadFinied(bool initialized)
 {
     // 可信未初始化完成，不允许操作
-    if (initialized == 0)
+    if (!initialized)
     {
         auto messgeDialog = new MessageDialog(this);
         messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
@@ -122,7 +117,7 @@ void FPPage::unprotectAccepted()
     {
         if (trustedInfo.selected)
         {
-            m_fileProtectedProxy->RemoveFPFile(trustedInfo.filePath).waitForFinished();
+            m_fileProtectedProxy->RemoveProtectedFile(trustedInfo.filePath).waitForFinished();
         }
     }
     updateInfo();
