@@ -16,6 +16,7 @@
 
 #include <QWidget>
 #include "qrcode.h"
+#include "src/ui/common/titlebar-window.h"
 
 namespace Ui
 {
@@ -24,7 +25,7 @@ class QRCodeDialog;
 
 namespace KS
 {
-class QRCodeDialog : public QWidget
+class QRCodeDialog : public TitlebarWindow
 {
     Q_OBJECT
 
@@ -36,10 +37,9 @@ private:
     void iniUI();
 
 public:
-    void setQRCode(const QString &text, bool isMachineCode);
+    void setQRCode(const QString &text);
 
 private:
     Ui::QRCodeDialog *ui;
-    QRCode *qrcode;
 };
 }  // namespace KS

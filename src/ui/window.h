@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <QLabel>
 #include "src/ui/common/titlebar-window.h"
 
 namespace Ui
@@ -25,6 +26,7 @@ namespace KS
 {
 class Navigation;
 
+class Activation;
 class Window : public TitlebarWindow
 {
     Q_OBJECT
@@ -35,7 +37,7 @@ public:
     static Ui::Window *instance();
 
 private:
-    bool isActive();
+    void initActivation();
     // 窗口整体初始化
     void initWindow();
     // 导航和导航项初始化
@@ -46,5 +48,7 @@ private slots:
 
 private:
     Ui::Window *m_ui;
+    Activation *m_activation;
+    QLabel *m_activateStatus;
 };
 }  // namespace KS

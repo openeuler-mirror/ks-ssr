@@ -24,9 +24,8 @@
         <file alias="execution-control">images/execution-control.svg</file>
         <file alias="kernel-module-protected">images/kernel-module-protected.svg</file>
         <file alias="right-arrow">images/right-arrow.svg</file>
-        <file alias="switch-open">images/switch-open.svg</file>
-        <file alias="switch-close">images/switch-close.svg</file>
-        <file alias="loading">images/loading.gif</file>
+        <file alias="qrcode">images/qrcode.png</file>
+        <file alias="more">images/more.svg</file>
     </qresource>
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>
