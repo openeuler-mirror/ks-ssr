@@ -2,95 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
-    <name>Box</name>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="126"/>
-        <location filename="../src/ui/box/box.cpp" line="139"/>
-        <source>Lock</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="126"/>
-        <location filename="../src/ui/box/box.cpp" line="139"/>
-        <location filename="../src/ui/box/box.cpp" line="187"/>
-        <source>Unlock</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="129"/>
-        <location filename="../src/ui/box/box.cpp" line="208"/>
-        <source>Modify password</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="130"/>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="131"/>
-        <source>Retrieve the password</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="214"/>
-        <source>Please confirm whether the password is consistent.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="218"/>
-        <location filename="../src/ui/box/box.cpp" line="263"/>
-        <source>The input cannot be empty, please improve the information.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="237"/>
-        <source>Del box</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="257"/>
-        <source>Retrieve password</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="302"/>
-        <location filename="../src/ui/box/box.cpp" line="339"/>
-        <source>Password error!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="306"/>
-        <source>Modify success!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="321"/>
-        <source>Passphrase error!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="325"/>
-        <source>Your box password is %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="343"/>
-        <source>Unlock success!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="356"/>
-        <source>The Password is wrong or has been mounted!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box.cpp" line="360"/>
-        <source>Delete success!</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>BoxPage</name>
     <message>
         <location filename="../src/ui/box/box-page.ui" line="14"/>
@@ -110,31 +21,6 @@
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="142"/>
-        <source>Create box</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="149"/>
-        <source>Please confirm whether the password is consistent.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="159"/>
-        <source>The input cannot be empty, please improve the information.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="194"/>
-        <source>Please check whether ecryptfs.ko is loaded!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="208"/>
-        <source>Please remember this box passphrase : %1, Can be used to retrieve passwords.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>CreateBox</name>
@@ -148,31 +34,31 @@
         <location filename="../src/ui/box/create-box.ui" line="35"/>
         <location filename="../build/src/ui/ui_create-box.h" line="144"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>名字：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="56"/>
         <location filename="../build/src/ui/ui_create-box.h" line="145"/>
         <source>Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="77"/>
         <location filename="../build/src/ui/ui_create-box.h" line="146"/>
         <source>Confirm password:</source>
-        <translation type="unfinished"></translation>
+        <translation>确认密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="123"/>
         <location filename="../build/src/ui/ui_create-box.h" line="147"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="142"/>
         <location filename="../build/src/ui/ui_create-box.h" line="148"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>取消</translation>
     </message>
 </context>
 <context>
@@ -189,59 +75,6 @@
         <source>Please enter keyword search</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="33"/>
-        <source>Device List</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="36"/>
-        <source>0 records in total</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="80"/>
-        <source>Number</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="81"/>
-        <source>Device Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="82"/>
-        <source>Device Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="83"/>
-        <source>Device Id</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="84"/>
-        <source>Device Interface</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="85"/>
-        <source>Device Status</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="86"/>
-        <source>Device Permission</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DeviceListDelegate</name>
-    <message>
-        <location filename="../src/ui/device/device-list-delegate.cpp" line="76"/>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>DevicePage</name>
@@ -249,16 +82,6 @@
         <location filename="../src/ui/device/device-page.ui" line="14"/>
         <location filename="../build/src/ui/ui_device-page.h" line="59"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-page.cpp" line="50"/>
-        <source>Device List</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-page.cpp" line="51"/>
-        <source>Connect Record</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -327,59 +150,6 @@
         <source>Please enter keyword search</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/ui/device/device-record.cpp" line="32"/>
-        <source>Connect Record</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-record.cpp" line="33"/>
-        <source>0 records in total</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-record.cpp" line="57"/>
-        <source>Device Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-record.cpp" line="58"/>
-        <source>Device Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-record.cpp" line="59"/>
-        <source>Device Time</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-record.cpp" line="60"/>
-        <source>Device Status</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>FPFilesModel</name>
-    <message>
-        <location filename="../src/ui/fp/fp-file-table.cpp" line="236"/>
-        <source>Number</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/fp/fp-file-table.cpp" line="238"/>
-        <source>File name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/fp/fp-file-table.cpp" line="240"/>
-        <source>File path</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/fp/fp-file-table.cpp" line="242"/>
-        <source>Add time</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>FPPage</name>
@@ -419,22 +189,6 @@
         <source>Unprotect</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/ui/fp/fp-page.cpp" line="44"/>
-        <location filename="../src/ui/fp/fp-page.cpp" line="82"/>
-        <source>A total of %1 records</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/fp/fp-page.cpp" line="69"/>
-        <source>Open file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/fp/fp-page.cpp" line="94"/>
-        <source>Trusted data needs to be initialised,please wait a few minutes before trying.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>InputPassword</name>
@@ -460,6 +214,176 @@
         <location filename="../src/ui/box/input-password.ui" line="101"/>
         <location filename="../build/src/ui/ui_input-password.h" line="96"/>
         <source>cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::Box</name>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="125"/>
+        <location filename="../src/ui/box/box.cpp" line="138"/>
+        <source>Lock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="125"/>
+        <location filename="../src/ui/box/box.cpp" line="138"/>
+        <location filename="../src/ui/box/box.cpp" line="186"/>
+        <source>Unlock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="128"/>
+        <location filename="../src/ui/box/box.cpp" line="207"/>
+        <source>Modify password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="129"/>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="130"/>
+        <source>Retrieve the password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="213"/>
+        <source>Please confirm whether the password is consistent.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="218"/>
+        <location filename="../src/ui/box/box.cpp" line="262"/>
+        <source>The input cannot be empty, please improve the information.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="236"/>
+        <source>Del box</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="256"/>
+        <source>Retrieve password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="301"/>
+        <source>Modify success!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="312"/>
+        <source>Your box password is %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="322"/>
+        <source>Unlock success!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="332"/>
+        <source>Delete success!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::BoxPage</name>
+    <message>
+        <location filename="../src/ui/box/box-page.cpp" line="142"/>
+        <source>Create box</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box-page.cpp" line="149"/>
+        <source>Please confirm whether the password is consistent.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box-page.cpp" line="159"/>
+        <source>The input cannot be empty, please improve the information.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box-page.cpp" line="194"/>
+        <source>Please check whether ecryptfs.ko is loaded!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box-page.cpp" line="208"/>
+        <source>Please remember this box passphrase : %1, Can be used to retrieve passwords.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::DeviceList</name>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="33"/>
+        <source>Device List</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="36"/>
+        <source>0 records in total</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="80"/>
+        <source>Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="81"/>
+        <source>Device Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="82"/>
+        <source>Device Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="83"/>
+        <source>Device Id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="84"/>
+        <source>Device Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="85"/>
+        <source>Device Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-list.cpp" line="86"/>
+        <source>Device Permission</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::DeviceListDelegate</name>
+    <message>
+        <location filename="../src/ui/device/device-list-delegate.cpp" line="76"/>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::DevicePage</name>
+    <message>
+        <location filename="../src/ui/device/device-page.cpp" line="50"/>
+        <source>Device List</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-page.cpp" line="51"/>
+        <source>Connect Record</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -497,23 +421,104 @@
     </message>
 </context>
 <context>
+    <name>KS::DeviceRecord</name>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="32"/>
+        <source>Connect Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="33"/>
+        <source>0 records in total</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="57"/>
+        <source>Device Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="58"/>
+        <source>Device Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="59"/>
+        <source>Device Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/device/device-record.cpp" line="60"/>
+        <source>Device Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::FPFilesModel</name>
+    <message>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="236"/>
+        <source>Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="238"/>
+        <source>File name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="240"/>
+        <source>File path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="242"/>
+        <source>Add time</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::FPPage</name>
+    <message>
+        <location filename="../src/ui/fp/fp-page.cpp" line="44"/>
+        <location filename="../src/ui/fp/fp-page.cpp" line="82"/>
+        <source>A total of %1 records</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/fp/fp-page.cpp" line="69"/>
+        <source>Open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/fp/fp-page.cpp" line="94"/>
+        <source>Trusted data needs to be initialised,please wait a few minutes before trying.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>KS::MessageDialog</name>
     <message>
-        <location filename="../src/ui/common/sub-window.cpp" line="40"/>
+        <location filename="../src/ui/common/message-dialog.cpp" line="42"/>
         <source>Notify</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/common/sub-window.cpp" line="48"/>
+        <location filename="../src/ui/common/message-dialog.cpp" line="50"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>KS::TP</name>
+    <name>KS::TPExecute</name>
     <message>
-        <location filename="../src/daemon/tp/tp.cpp" line="56"/>
-        <source>Added file types are not supported.</source>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="43"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="64"/>
+        <source>A total of %1 records, Being tampered with %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="75"/>
+        <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -559,6 +564,20 @@
     </message>
 </context>
 <context>
+    <name>KS::TPKernel</name>
+    <message>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="41"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="65"/>
+        <source>A total of %1 records, Being tampered with %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="78"/>
+        <source>Open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>KS::TPKernelModel</name>
     <message>
         <location filename="../src/ui/tp/tp-kernel-table.cpp" line="145"/>
@@ -597,6 +616,24 @@
         <location filename="../src/ui/tp/tp-kernel-table.cpp" line="391"/>
         <location filename="../src/ui/tp/tp-kernel-table.cpp" line="408"/>
         <source>%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::TPPage</name>
+    <message>
+        <location filename="../src/ui/tp/tp-page.cpp" line="73"/>
+        <source>Execute protecked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/tp-page.cpp" line="74"/>
+        <source>Kernel protecked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/tp-page.cpp" line="107"/>
+        <source>Trusted data needs to be initialised,please wait a few minutes to refresh.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -752,6 +789,59 @@
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <location filename="../lib/base/error.cpp" line="29"/>
+        <source>Success.</source>
+        <translation>成功。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="32"/>
+        <source>Invalid args.</source>
+        <translation>非法参数。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="35"/>
+        <source>Added file types are not supported.</source>
+        <translation>不允许添加不支持的文件类型。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="38"/>
+        <source>Failed to delete box.</source>
+        <translation>保险箱删除失败。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="41"/>
+        <source>Failed to create box.</source>
+        <translation>创建保险箱失败。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="44"/>
+        <source>Box not found!</source>
+        <translation>保险箱未找到！</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="47"/>
+        <source>Failed to change the password, please check whether the password is correct.</source>
+        <translation>修改密码失败，请检查密码是否正确。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="50"/>
+        <source>Password error!</source>
+        <translation>密码错误！</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="53"/>
+        <source>Passphrase error!</source>
+        <translation>口令错误！</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="57"/>
+        <source>Unknown error.</source>
+        <translation>未知错误。</translation>
+    </message>
+</context>
+<context>
     <name>RetrievePassword</name>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="14"/>
@@ -837,17 +927,6 @@
         <source>Unprotect</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="42"/>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="63"/>
-        <source>A total of %1 records, Being tampered with %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="75"/>
-        <source>Open file</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>TPKernel</name>
@@ -893,17 +972,6 @@
         <source>Unprotect</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="40"/>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="64"/>
-        <source>A total of %1 records, Being tampered with %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="77"/>
-        <source>Open file</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>TPPage</name>
@@ -911,21 +979,6 @@
         <location filename="../src/ui/tp/tp-page.ui" line="14"/>
         <location filename="../build/src/ui/ui_tp-page.h" line="59"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/tp/tp-page.cpp" line="73"/>
-        <source>Execute protecked</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/tp/tp-page.cpp" line="74"/>
-        <source>Kernel protecked</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/tp/tp-page.cpp" line="106"/>
-        <source>Trusted data needs to be initialised,please wait a few minutes to refresh.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -962,7 +1015,7 @@
         <location filename="../src/ui/window.ui" line="20"/>
         <location filename="../build/src/ui/ui_window.h" line="112"/>
         <source>Security control</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>
