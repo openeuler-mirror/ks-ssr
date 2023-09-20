@@ -43,6 +43,12 @@ public:
     // 获取程序白名单
     QString getExecuteFiles();
 
+    // 可信切换软模式
+    void softModeChecked();
+    void hardModeChecked(const QString &userPin);
+    // 可信开关
+    void setTrustedStatus(bool status);
+
     // 文件保护
     // 添加文件
     void addFile(const QString &fileName, const QString &filePath, const QString &insertTime);
