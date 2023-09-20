@@ -11,31 +11,35 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+
 #pragma once
 
-#include <QVBoxLayout>
-#include "src/ui/common/titlebar-window.h"
-
-namespace KS
+#ifdef __cplusplus
+extern "C"
 {
-class SubWindow : public TitlebarWindow
-{
-    Q_OBJECT
-public:
-    SubWindow(QWidget *parent = nullptr);
-    virtual ~SubWindow();
+#endif
 
-    QVBoxLayout *getContentLayout();
+    enum KSCErrorCode
+    {
+        // Common
+        SUCCESS,
+        ERROR_FAILED,
+        ERROR_COMMON_INVALID_ARGS,
 
-    void buildNotify(const QString &notify);
+        // FP File protect
 
-private:
-    void initUI();
+        // TP Trusted protect
+        ERROR_TP_ADD_INVALID_FILE,
 
-protected:
-    void paintEvent(QPaintEvent *event);
+        // BM Box manager
+        ERROR_BM_DELETE_FAILED,
+        ERROR_BM_MOUDLE_UNLOAD,
+        ERROR_BM_NOT_FOUND,
+        ERROR_BM_MODIFY_PASSWORD_FAILED,
+        ERROR_BM_INPUT_PASSWORD_ERROR,
+        ERROR_BM_INPUT_PASSPHRASE_ERROR
+    };
 
-private:
-    QVBoxLayout *m_contentLayout;
-};
-}  // namespace KS
+#ifdef __cplusplus
+}
+#endif

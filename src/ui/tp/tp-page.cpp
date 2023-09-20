@@ -15,8 +15,8 @@
 #include "src/ui/tp/tp-page.h"
 #include "config.h"
 #include "ksc-marcos.h"
-#include "src/ui/common/mask-widget.h"
-#include "src/ui/common/sub-window.h"
+#include "src/ui/common/loading.h"
+#include "src/ui/common/message-dialog.h"
 #include "src/ui/device/sidebar-item.h"
 #include "src/ui/tp/tp-execute.h"
 #include "src/ui/tp/tp-kernel.h"
@@ -80,14 +80,15 @@ void TPPage::initSidebar()
 void TPPage::initSubPage()
 {
     auto *execute = new TPExecute(m_ui->m_stacked);
-    connect(execute, &TPExecute::initFinished, this, [this] {
-        if (m_maskWidget->isVisible())
-        {
-            m_maskWidget->setMaskVisible(false);
-        }
+    connect(execute, &TPExecute::initFinished, this, [this]
+            {
+                if (m_maskWidget->isVisible())
+                {
+                    m_maskWidget->setVisible(false);
+                }
 
-        m_ui->m_sidebar->setEnabled(true);
-    });
+                m_ui->m_sidebar->setEnabled(true);
+            });
 
     auto *kernel = new TPKernel(m_ui->m_stacked);
 
@@ -97,11 +98,11 @@ void TPPage::initSubPage()
 
 void TPPage::checkTrustedLoadFinied()
 {
-    m_maskWidget = new MaskWidget(m_ui->m_stacked);
+    m_maskWidget = new Loading(m_ui->m_stacked);
     auto settings = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
     RETURN_IF_TRUE(settings->value(KSC_INI_KEY).toInt() != 0)
 
-    auto message = new SubWindow(this);
+    auto message = new MessageDialog(this);
     message->setFixedSize(240, 200);
     message->buildNotify(tr("Trusted data needs to be initialised,"
                             "please wait a few minutes to refresh."));
@@ -113,7 +114,7 @@ void TPPage::checkTrustedLoadFinied()
 
     if (!m_maskWidget->isVisible())
     {
-        m_maskWidget->setMaskVisible(true);
+        m_maskWidget->setVisible(true);
     }
 
     m_ui->m_sidebar->setEnabled(false);

@@ -20,7 +20,7 @@
 #include "config.h"
 #include "ksc-i.h"
 #include "ksc-marcos.h"
-#include "src/ui/common/sub-window.h"
+#include "src/ui/common/message-dialog.h"
 #include "src/ui/file_protected_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_fp-page.h"
@@ -89,7 +89,7 @@ bool FPPage::checkTrustedLoadFinied()
     auto settings = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
     if (settings->value(KSC_INI_KEY).toInt() == 0)
     {
-        auto message = new SubWindow(this);
+        auto message = new MessageDialog(this);
         message->setFixedSize(240, 200);
         message->buildNotify(tr("Trusted data needs to be initialised,"
                                 "please wait a few minutes before trying."));

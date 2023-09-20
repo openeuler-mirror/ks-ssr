@@ -23,7 +23,7 @@
 #include "src/ui/box/box.h"
 #include "src/ui/box/create-box.h"
 #include "src/ui/box_manager_proxy.h"
-#include "src/ui/common/sub-window.h"
+#include "src/ui/common/message-dialog.h"
 #include "src/ui/ui_box-page.h"
 
 namespace KS
@@ -137,7 +137,7 @@ void BoxPage::boxChanged(const QString &boxUID)
 
 void BoxPage::newBoxClicked(bool checked)
 {
-    auto createBox = new SubWindow(this);
+    auto createBox = new MessageDialog(this);
     createBox->setFixedSize(400, 350);
     createBox->setTitle(tr("Create box"));
 
@@ -145,7 +145,7 @@ void BoxPage::newBoxClicked(bool checked)
     connect(m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
     connect(m_createBox, &CreateBox::passwdInconsistent, this, [this]
             {
-                auto messge = new SubWindow(this);
+                auto messge = new MessageDialog(this);
                 messge->buildNotify(tr("Please confirm whether the password is consistent."));
                 messge->setFixedSize(240, 180);
                 int x = window()->x() + window()->width() / 4 + messge->width() / 4;
@@ -155,7 +155,7 @@ void BoxPage::newBoxClicked(bool checked)
             });
     connect(m_createBox, &CreateBox::inputEmpty, this, [this]
             {
-                auto messge = new SubWindow(this);
+                auto messge = new MessageDialog(this);
                 messge->buildNotify(QString(tr("The input cannot be empty, please improve the information.")));
                 messge->setFixedSize(240, 180);
                 int x = window()->x() + window()->width() / 4 + messge->width() / 4;
@@ -164,8 +164,8 @@ void BoxPage::newBoxClicked(bool checked)
                 messge->show();
             });
 
-    connect(m_createBox, &CreateBox::accepted, createBox, &SubWindow::close);
-    connect(m_createBox, &CreateBox::rejected, createBox, &SubWindow::close);
+    connect(m_createBox, &CreateBox::accepted, createBox, &MessageDialog::close);
+    connect(m_createBox, &CreateBox::rejected, createBox, &MessageDialog::close);
 
     //    m_modifyPassword->show();
 
@@ -190,7 +190,7 @@ void BoxPage::createBoxAccepted()
     auto boxID = reply.value();
     if (boxID.isEmpty())
     {
-        auto messge = new SubWindow(this);
+        auto messge = new MessageDialog(this);
         messge->buildNotify(QString(tr("Please check whether ecryptfs.ko is loaded!")));
         messge->setFixedSize(240, 180);
         int x = window()->x() + window()->width() / 4 + messge->width() / 4;
@@ -204,7 +204,7 @@ void BoxPage::createBoxAccepted()
     //    m_ui->m_boxs->addBox(box);
     addBox(box);
     // 显示消息
-    auto messge = new SubWindow(this);
+    auto messge = new MessageDialog(this);
     messge->buildNotify(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase));
     messge->setFixedSize(240, 200);
     int x = window()->x() + window()->width() / 4 + messge->width() / 4;

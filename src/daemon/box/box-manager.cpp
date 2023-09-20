@@ -17,9 +17,11 @@
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include "config.h"
+#include "include/ksc-error-i.h"
 #include "include/ksc-i.h"
 #include "include/ksc-marcos.h"
 #include "lib/base/crypto-helper.h"
+#include "lib/base/error.h"
 #include "src/daemon/box/box-dao.h"
 #include "src/daemon/box_manager_adaptor.h"
 
@@ -43,9 +45,21 @@ BoxManager::~BoxManager()
 
 QString BoxManager::CreateBox(const QString &name, const QString &password, QString &passphrase)
 {
+    if (name.isEmpty() || password.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return QString();
+    }
+
     auto decryptPasswd = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
     auto box = new Box(name, decryptPasswd, getSenderUid());
-    RETURN_VAL_IF_TRUE(box->getPassphrase().isEmpty(), QString())
+    // 模块未加载
+    if (box->getPassphrase().isEmpty())
+    {
+        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD));
+        KLOG_WARNING() << "The kernel module is not loaded.";
+        return QString();
+    }
 
     m_boxs.insert(box->getBoxID(), box);
     passphrase = box->getPassphrase();
@@ -53,16 +67,25 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
     return box->getBoxID();
 }
 
-bool BoxManager::DelBox(const QString &boxID, const QString &password)
+void BoxManager::DelBox(const QString &boxID, const QString &password)
 {
     auto box = m_boxs.value(boxID);
+    if (!box)
+    {
+        sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
+        return ;
+    }
     auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
 
-    RETURN_VAL_IF_TRUE(!box->delBox(decryptInputPassword), false)
+    if (!box->delBox(decryptInputPassword))
+    {
+        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_DELETE_FAILED));
+        KLOG_WARNING() << "Failed to delete box.";
+        return;
+    }
+
     m_boxs.remove(boxID);
     emit BoxDeleted(boxID);
-
-    return true;
 }
 
 QString BoxManager::GetBoxByUID(const QString &boxID)
@@ -70,7 +93,11 @@ QString BoxManager::GetBoxByUID(const QString &boxID)
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
     auto box = m_boxs.value(boxID);
-
+    if (!box)
+    {
+        sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
+        return QString();
+    }
     jsonObj = QJsonObject{
         {BOX_NAME_KEY, box->getBoxName()},
         {BOX_UID_KEY, boxID},
@@ -109,55 +136,102 @@ QString BoxManager::GetBoxs()
 bool BoxManager::IsMounted(const QString &boxID)
 {
     auto box = m_boxs.value(boxID);
-
+    if (!box)
+    {
+        sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
+        return false;
+    }
     return box->mounted();
 }
 
-bool BoxManager::ModifyBoxPassword(const QString &boxID,
+void BoxManager::ModifyBoxPassword(const QString &boxID,
                                    const QString &currentPassword,
                                    const QString &newPassword)
 {
+    if (boxID.isEmpty() || currentPassword.isEmpty() || newPassword.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return ;
+    }
+
     auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, currentPassword);
     auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
 
     auto box = m_boxs.value(boxID);
-
-    return box->modifyBoxPassword(decryptInputPassword, decryptNewPassword);
+    if (!box)
+    {
+        sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
+        return ;
+    }
+    if (!box->modifyBoxPassword(decryptInputPassword, decryptNewPassword))
+    {
+        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_MODIFY_PASSWORD_FAILED));
+        return ;
+    }
 }
 
 // 解锁
-bool BoxManager::Mount(const QString &boxID, const QString &password)
+void BoxManager::Mount(const QString &boxID, const QString &password)
 {
     auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
     auto box = m_boxs.value(boxID);
-
-    if (box->getBoxID() == boxID)
+    if (!box)
     {
-        emit BoxChanged(boxID);
-        return box->mount(decryptInputPassword);
+        sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
+        return ;
     }
 
-    return false;
+    RETURN_IF_TRUE(box->getBoxID() != boxID)
+
+    if (!box->mount(decryptInputPassword))
+    {
+        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR));
+        return ;
+    }
+
+    emit BoxChanged(boxID);
 }
 
 QString BoxManager::RetrievePassword(const QString &boxID, const QString &passphrase)
 {
+    if (passphrase.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return QString();
+    }
+
     auto decryptPassphrase = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, passphrase);
 
     auto box = m_boxs.value(boxID);
-    return box->retrievePassword(decryptPassphrase);
+    if (!box)
+    {
+        sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
+        return QString();
+    }
+    auto password = box->retrievePassword(decryptPassphrase);
+    // 口令错误
+    if (password.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_INPUT_PASSPHRASE_ERROR));
+        return QString();
+    }
+    return password;
 }
 
 // 上锁
 void BoxManager::UnMount(const QString &boxID)
 {
     auto box = m_boxs.value(boxID);
-
-    if (box->getBoxID() == boxID)
+    if (!box)
     {
-        emit BoxChanged(boxID);
-        return box->umount();
+        sendErrorReply(QDBusError::InvalidMember, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_NOT_FOUND));
+        return ;
     }
+
+    RETURN_IF_TRUE(box->getBoxID() != boxID)
+
+    box->umount();
+    emit BoxChanged(boxID);
 }
 
 void BoxManager::init()

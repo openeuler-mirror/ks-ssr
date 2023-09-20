@@ -17,7 +17,7 @@
 #include <QFileDialog>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
-#include "src/ui/common/sub-window.h"
+#include "src/ui/common/message-dialog.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/tp_proxy.h"
 #include "src/ui/ui_tp-execute.h"
@@ -34,10 +34,11 @@ TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
                               QDBusConnection::systemBus(),
                               this);
     // 初始化完成自动刷新
-    connect(m_dbusProxy, &TPProxy::InitFinished, this, [this] {
-        updateInfo();
-        emit initFinished();
-    });
+    connect(m_dbusProxy, &TPProxy::InitFinished, this, [this]
+            {
+                updateInfo();
+                emit initFinished();
+            });
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2")).arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()), QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
     m_ui->m_tips->setText(text);
@@ -60,8 +61,7 @@ void TPExecute::updateInfo()
 {
     m_ui->m_executeTable->updateRecord();
     // 更新表格右上角提示信息
-    auto text = QString(tr("A total of %1 records, Being tampered with %2")).arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()),
-                                                                                 QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
+    auto text = QString(tr("A total of %1 records, Being tampered with %2")).arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()), QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
     m_ui->m_tips->setText(text);
 }
 
@@ -81,7 +81,7 @@ void TPExecute::addClicked(bool checked)
     if (reply.isError())
     {
         KLOG_WARNING() << "Failed to add files: " << reply.error().message();
-        auto message = new SubWindow(this);
+        auto message = new MessageDialog(this);
         message->setFixedSize(240, 200);
         message->buildNotify(reply.error().message());
 

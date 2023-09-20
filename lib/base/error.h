@@ -11,40 +11,24 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+#ifndef ERROR_H
+#define ERROR_H
 
-#pragma once
-
-#include <QDBusContext>
-#include <QDBusObjectPath>
-#include <QObject>
-#include <QStringList>
-
-class FPAdaptor;
+#include <QString>
+#include "ksc-error-i.h"
 
 namespace KS
 {
-class FP : public QObject,
-           protected QDBusContext
+#define KSC_ERROR2STR(errorCode) Error::getErrorDesc(errorCode)
+
+class Error
 {
-    Q_OBJECT
 public:
-    FP(QObject *parent);
-    virtual ~FP();
+    Error();
+    ~Error();
 
-public Q_SLOTS:  // METHODS
-    // 添加文件
-    void AddFile(const QString &filePath);
-    // 获取文件列表
-    QString GetFiles();
-    // 移除文件
-    void RemoveFile(const QString &filePath);
-    // 搜索
-    QString Search(const QString &pathKey);
-
-private:
-    void init();
-
-private:
-    FPAdaptor *m_dbusAdaptor;
+    static QString getErrorDesc(KSCErrorCode errorCode);
 };
 }  // namespace KS
+
+#endif  // ERROR_H
