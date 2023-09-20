@@ -11,8 +11,7 @@
  * 
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
- 
- 
+
 #ifndef KIRANSTYLE_SWITCH_BUTTON_H
 #define KIRANSTYLE_SWITCH_BUTTON_H
 
@@ -36,15 +35,17 @@ class KiranSwitchButtonPrivate;
  * @since 2.1.0
  * @see QAbstractButton
  */
-class Q_DECL_EXPORT KiranSwitchButton : public QAbstractButton{
+class Q_DECL_EXPORT KiranSwitchButton : public QAbstractButton
+{
     Q_OBJECT
     Q_DECLARE_PRIVATE(KiranSwitchButton);
+
 public:
     /**
      * @brief KiranSwitchButton构造方法
      * @param parent 父控件
      */
-    explicit KiranSwitchButton(QWidget* parent = nullptr);
+    explicit KiranSwitchButton(QWidget *parent = nullptr);
     /**
      * @brief KiranSwitchButton析构方法
      */
@@ -61,7 +62,7 @@ public:
     virtual QSize minimumSizeHint() const override;
 
 private:
-    void initStyleOption(QStyleOptionButton* option) const;
+    void initStyleOption(QStyleOptionButton *option) const;
     bool event(QEvent *e) override;
     void paintEvent(QPaintEvent *e) override;
 
@@ -71,4 +72,4 @@ private:
 };
 }  // namespace KS
 
-#endif //KIRANSTYLE_SWITCH_BUTTON_H
+#endif  //KIRANSTYLE_SWITCH_BUTTON_H

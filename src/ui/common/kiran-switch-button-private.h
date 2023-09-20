@@ -11,7 +11,7 @@
  * 
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
- 
+
 #ifndef KIRANSTYLE_SWITCH_BUTTON_PRIVATE_H
 #define KIRANSTYLE_SWITCH_BUTTON_PRIVATE_H
 
@@ -19,15 +19,15 @@
 
 namespace KS
 {
-class KiranSwitchButtonPrivate{
+class KiranSwitchButtonPrivate
+{
     Q_DECLARE_PUBLIC(KiranSwitchButton)
 public:
-    KiranSwitchButtonPrivate(KiranSwitchButton *ptr)
-    :q_ptr(ptr)
+    KiranSwitchButtonPrivate(KiranSwitchButton* ptr)
+        : q_ptr(ptr)
     {
-
     }
-    ~KiranSwitchButtonPrivate()=default;
+    ~KiranSwitchButtonPrivate() = default;
 
     /**
      * 计算布局，返回尺寸大小
@@ -36,10 +36,10 @@ public:
      * \param textRect                  文本矩形
      * \return 总计大小
      */
-    void doLayout(QRect& indicatorRect,QRect& indicatorCircularRect,QRect& textRect);
+    void doLayout(QRect& indicatorRect, QRect& indicatorCircularRect, QRect& textRect);
 
 private:
     KiranSwitchButton* q_ptr;
 };
 }  // namespace KS
-#endif //KIRANSTYLE_SWITCH_BUTTON_PRIVATE_H
+#endif  //KIRANSTYLE_SWITCH_BUTTON_PRIVATE_H
