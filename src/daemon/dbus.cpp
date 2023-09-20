@@ -37,9 +37,7 @@ namespace Daemon
 
 static int _audit_log(int type, int rc, const char* op)
 {
-    int audit_fd;
-
-    audit_fd = audit_open();
+    int audit_fd= audit_open();
     if (audit_fd < 0)
     {
         /* You get these error codes only when the kernel doesn't have
@@ -52,12 +50,9 @@ static int _audit_log(int type, int rc, const char* op)
         return -1;
     }
 
-    rc = audit_log_acct_message(audit_fd, type, NULL, op,
-                                NULL, -1, NULL, NULL, NULL, rc == 0);
+    rc = audit_log_acct_message(audit_fd, type, NULL, op,NULL, -1, NULL, NULL, NULL, rc == 0);
     if (rc == -EPERM && geteuid() != 0)
-    {
         rc = 0;
-    }
 
     audit_close(audit_fd);
 
@@ -632,35 +627,26 @@ void DBus::Cancel(const int64_t& job_id)
     KLOG_INFO("Cancel. job id: %d.", job_id);
     //    KLOG_PROFILE("job id: %d.", job_id);
 
-    SSRErrorCode error_code = SSRErrorCode::SUCCESS;
-
-    if (this->scan_job_ &&
-        job_id == this->scan_job_->get_id() &&
-        this->scan_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
+    if (CancelJob(this->scan_job_, job_id, SSRJobState::SSR_JOB_STATE_RUNNING))
     {
-        if (!this->scan_job_->cancel())
-        {
-            error_code = SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1;
-        }
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1);
     }
-    else if (this->reinforce_job_ &&
-             job_id == this->reinforce_job_->get_id() &&
-             this->reinforce_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
+    else if (CancelJob(this->reinforce_job_, job_id, SSRJobState::SSR_JOB_STATE_RUNNING))
     {
-        if (!this->reinforce_job_->cancel())
-        {
-            error_code = SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2;
-        }
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2);
     }
     else
     {
-        error_code = SSRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB;
+        THROW_DBUSCXX_ERROR(SSRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB);
     }
+}
 
-    if (error_code != SSRErrorCode::SUCCESS)
-    {
-        THROW_DBUSCXX_ERROR(error_code);
+bool DBus::CancelJob(std::shared_ptr<Job> job, const int64_t& job_id, SSRJobState target_state) {
+    if (job && job_id == job->get_id() && job->get_state() == target_state) {
+        return !job->cancel();
     }
+    return false;
+
 }
 
 std::string DBus::GetLicense()

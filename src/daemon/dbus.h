@@ -123,6 +123,7 @@ protected:
 
     // 取消一个任务
     virtual void Cancel(const int64_t &job_id);
+    virtual bool CancelJob(std::shared_ptr<Job> job, const int64_t& job_id, SSRJobState target_state);
 
     // 获取授权信息
     virtual std::string GetLicense();
