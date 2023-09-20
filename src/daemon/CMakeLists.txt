@@ -4,8 +4,18 @@ if(POLICY CMP0071)
   cmake_policy(SET CMP0071 NEW)
 endif()
 
-file(GLOB_RECURSE SRC_H_FILES ./*.h)
-file(GLOB_RECURSE SRC_CPP_FILES ./*.cpp)
+file(GLOB_RECURSE SRC_H_FILES ./box/*.h
+                        ./common/*.h
+                        ./fp/*.h
+                        ./tp/*.h
+                        ./daemon.h)
+file(GLOB_RECURSE SRC_CPP_FILES ./box/*.cpp
+                        ./common/*.cpp
+                        ./fp/*.cpp
+                        ./tp/*.cpp
+                        ./daemon.cpp
+                        ./main.cpp)
+
 
 qt5_add_dbus_adaptor(
   SECURITY_BOX_MANAGER_SRCS
@@ -45,7 +55,7 @@ add_executable(
   ${SECURITY_BOX_MANAGER_SRCS}
   ${TRUSTED_MANAGER_SRCS}
   ${FILES_PROTECTED_MANAGER_SRCS}
-  ${SECURITY_DEVICE_MANAGER_SRCS}
+  # ${SECURITY_DEVICE_MANAGER_SRCS}
   ${QM_FILES})
 
 target_include_directories(
