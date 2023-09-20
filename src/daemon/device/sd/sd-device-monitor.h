@@ -13,13 +13,18 @@
  */
 #pragma once
 
-#include <systemd/sd-device.h>
+#include <QMap>
 #include <QObject>
+#include <QSocketNotifier>
+#include "src/daemon/device/sd/sd-device.h"
+
+typedef struct sd_device_monitor sd_device_monitor;
+typedef struct sd_event sd_event;
 
 namespace KS
 {
 
-enum UdevAction
+enum SDDeviceAction
 {
     SD_DEVICE_ACTION_INVALID = 0,
     SD_DEVICE_ACTION_ADD,
@@ -27,24 +32,31 @@ enum UdevAction
     SD_DEVICE_ACTION_CHANGE
 };
 
-class SdDevice : public QObject
+class SDDeviceMonitor : public QObject
 {
     Q_OBJECT
 
 public:
-    SdDevice(sd_device *device, QObject *parent = nullptr);
-    SdDevice(const QString &syspath, QObject *parent = nullptr);
-    virtual ~SdDevice();
-    QString get_syspath() const;
-    QString get_subsystem() const;
-    QString get_devtype() const;
-    QString get_sysname() const;
-    QString get_sysattr_value(const QString &attr) const;
-    int get_action() const;
-    void trigger();
+    SDDeviceMonitor(QObject *parent = nullptr);
+    virtual ~SDDeviceMonitor();
+    void handleDeviceChange(sd_device *device);
+
+    static int deviceMonitorHandler(sd_device_monitor *monitor, sd_device *device, void *userdata);
+
+signals:
+    void deviceChanged(SDDevice *device, int action);
 
 private:
-    sd_device *m_device;
+    void init();
+    void initDevices();
+    void recivUdevMessage(int fd);
+    bool isDeviceExisted(const QString &syspath);
+
+private:
+    sd_device_monitor *m_monitor;
+    sd_event *m_event;
+    QSocketNotifier *m_socketNotify;
+    QMap<QString, QSharedPointer<SDDevice>> m_devices;
 };
 
 }  // namespace KS

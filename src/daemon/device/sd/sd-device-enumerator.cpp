@@ -12,63 +12,56 @@
  * Author:     wangxiaoqing <wangxiaoqing@kylinos.com.cn>
  */
 
-#include "src/daemon/device/sd-device-enumerator.h"
+#include "src/daemon/device/sd/sd-device-enumerator.h"
 #include <qt5-log-i.h>
+#include <systemd/sd-device.h>
 
 namespace KS
 {
-SdDeviceEnumerator::SdDeviceEnumerator(QObject* parent)
+SDDeviceEnumerator::SDDeviceEnumerator(QObject* parent)
     : QObject(parent),
       m_enumerator(nullptr)
 {
     this->init();
 }
 
-SdDeviceEnumerator::~SdDeviceEnumerator()
+SDDeviceEnumerator::~SDDeviceEnumerator()
 {
+    Q_FOREACH (auto device, m_devices)
+    {
+        device->deleteLater();
+    }
+
     if (m_enumerator)
     {
         sd_device_enumerator_unref(m_enumerator);
     }
 }
 
-void SdDeviceEnumerator::init()
+void SDDeviceEnumerator::init()
 {
-    auto ret = sd_device_enumerator_new(&m_enumerator);
-
-    if (ret < 0)
+    if (sd_device_enumerator_new(&m_enumerator) < 0)
     {
         KLOG_ERROR() << "Failed to create device enumerator.";
         return;
     }
 
-    ret = sd_device_enumerator_add_match_subsystem(m_enumerator, "usb", true);
-    if (ret < 0)
-    {
-        KLOG_ERROR() << "Failed to add match subsystem usb.";
-    }
-
-    ret = sd_device_enumerator_allow_uninitialized(m_enumerator);
-    if (ret < 0)
+    if (sd_device_enumerator_allow_uninitialized(m_enumerator) < 0)
     {
         KLOG_ERROR() << "Failed to allow uninitialized.";
     }
-}
-
-QList<QSharedPointer<SdDevice>> SdDeviceEnumerator::getDevices()
-{
-    QList<QSharedPointer<SdDevice>> list;
 
     for (auto device = sd_device_enumerator_get_device_first(m_enumerator);
          device != nullptr;
          device = sd_device_enumerator_get_device_next(m_enumerator))
     {
-        auto newDevice = QSharedPointer<SdDevice>(new SdDevice(device));
-
-        list.append(newDevice);
+        m_devices.append(new SDDevice(device));
     }
+}
 
-    return list;
+QList<SDDevice*> SDDeviceEnumerator::getDevices() const
+{
+    return m_devices;
 }
 
 }  // namespace KS
