@@ -12,8 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#ifndef BOXDAO_H
-#define BOXDAO_H
+#pragma once
 
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -75,4 +74,3 @@ private:
     QSqlDatabase m_boxDb;
 };
 }  // namespace KS
-#endif  // BOXDAO_H

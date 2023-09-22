@@ -123,7 +123,8 @@ void SettingsDevice::setInterfaceState(bool isEnable, InterfaceType type)
     // TODO: 这里改成监控dbus错误消息，这种弹框用到的地方比较多，可以做一下封装，没必要每个地方都写一遍
     if (!errMsg.isEmpty())
     {
-        POPUP_MESSAGE_DIALOG_RETURN(errMsg, this);
+        POPUP_MESSAGE_DIALOG(errMsg);
+        return;
     }
 }
 
