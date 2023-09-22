@@ -65,6 +65,7 @@ extern "C"
 
 // 外设管理相关定义
 #define KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/DeviceManager"
+#define KSC_DEVICE_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SC.DeviceManager"
 
 #define KSC_DEVICE_JK_ID "id"
 #define KSC_DEVICE_JK_NAME "name"
@@ -129,6 +130,15 @@ extern "C"
         DEVICE_CONNECT_FAILED
     };
 
+    /**
+     * @brief 设备权限
+     */
+    enum PermissionType
+    {
+        PERMISSION_TYPE_READ = (1 << 0),
+        PERMISSION_TYPE_WRITE = (1 << 1),
+        PERMISSION_TYPE_EXEC = (1 << 2)
+    };
 #ifdef __cplusplus
 }
 #endif

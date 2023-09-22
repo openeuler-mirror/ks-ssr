@@ -34,9 +34,9 @@ TPKernel::TPKernel(QWidget *parent) : QWidget(parent),
     m_ui->setupUi(this);
 
     m_dbusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
-                                     KSC_KSS_INIT_DBUS_OBJECT_PATH,
-                                     QDBusConnection::systemBus(),
-                                     this);
+                                   KSC_KSS_INIT_DBUS_OBJECT_PATH,
+                                   QDBusConnection::systemBus(),
+                                   this);
     // 初始化完成自动刷新
     connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this]
             { updateInfo(); });

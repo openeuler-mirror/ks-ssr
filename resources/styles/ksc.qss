@@ -545,27 +545,27 @@ KS--DeviceLogTable QHeaderView::section
     padding-left:10px;
 }
 
-KS--DeviceSettings QCheckBox::indicator:unchecked {
+KS--SettingsDevice QCheckBox::indicator:unchecked {
     image: url(:/images/switch-close);
 }
 
-KS--DeviceSettings QCheckBox::indicator:unchecked:hover {
+KS--SettingsDevice QCheckBox::indicator:unchecked:hover {
     image: url(:/images/switch-close);
 }
 
-KS--DeviceSettings QCheckBox::indicator:unchecked:pressed {
+KS--SettingsDevice QCheckBox::indicator:unchecked:pressed {
     image: url(:/images/switch-close);
 }
 
-KS--DeviceSettings QCheckBox::indicator:checked {
+KS--SettingsDevice QCheckBox::indicator:checked {
     image: url(:/images/switch-open);
 }
 
-KS--DeviceSettings QCheckBox::indicator:checked:hover {
+KS--SettingsDevice QCheckBox::indicator:checked:hover {
     image: url(:/images/switch-open);
 }
 
-KS--DeviceSettings QCheckBox::indicator:checked:pressed {
+KS--SettingsDevice QCheckBox::indicator:checked:pressed {
     image: url(:/images/switch-open);
 }
 
