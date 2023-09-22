@@ -62,7 +62,14 @@ void SettingsDevice::updateUI()
     int count = 0;
     foreach (auto interface, m_interfaces)
     {
-        auto typeLabel = new QLabel(DeviceUtils::interfaceTypeEnum2Str(interface.type), this);
+        auto interfaceName = DeviceUtils::interfaceTypeEnum2Str(interface.type);
+        //在HDMI接口后面添加（重启后生效）
+        if (interfaceName == DeviceUtils::interfaceTypeEnum2Str(InterfaceType::INTERFACE_TYPE_HDMI))
+        {
+            interfaceName.append(tr("(Effective after restart)"));
+        }
+
+        auto typeLabel = new QLabel(interfaceName, this);
         auto stateCheckBox = new QCheckBox(this);
         stateCheckBox->setChecked(interface.enable);
         stateCheckBox->setProperty(INTERFACE_TYPE_PROPERTY, interface.type);

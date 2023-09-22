@@ -19,6 +19,7 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusVariant>
+#include <QDateTime>
 #include <QJsonObject>
 #include <QJsonParseError>
 #include "include/ksc-marcos.h"
