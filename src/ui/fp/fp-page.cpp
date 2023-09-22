@@ -42,9 +42,7 @@ FPPage::FPPage(QWidget *parent) : QWidget(parent),
 
     // TODO:需要绘制颜色
     auto searchButton = new QPushButton(m_ui->m_search);
-    searchButton->setObjectName("searchButton");
     searchButton->setIcon(QIcon(":/images/search"));
-    searchButton->setIconSize(QSize(16, 16));
     auto action = new QWidgetAction(m_ui->m_search);
     action->setDefaultWidget(searchButton);
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);

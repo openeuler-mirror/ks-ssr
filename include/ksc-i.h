@@ -56,13 +56,6 @@ extern "C"
         KSC_KSS_TRUSTED_FILE_TYPE_NONE
     };
 
-    enum KSCKSSTrustedStorageType
-    {
-        KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT = 0,
-        KSC_KSS_TRUSTED_STORAGE_TYPE_HARD,
-        KSC_KSS_TRUSTED_STORAGE_TYPE_NONE
-    };
-
 // 外设管理相关定义
 #define KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/DeviceManager"
 #define KSC_DEVICE_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SC.DeviceManager"

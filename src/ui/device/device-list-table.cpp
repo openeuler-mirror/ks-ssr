@@ -337,10 +337,10 @@ void DeviceListTable::showDetails(const QModelIndex &index)
 void DeviceListTable::update()
 {
     m_devicesInfo.clear();
-    auto reply = m_deviceManagerProxy->GetDevices();
+    auto reply = m_deviceManagerProxy->GetDevicesByInterface(InterfaceType::INTERFACE_TYPE_USB);
     reply.waitForFinished();
     auto devicesJson = reply.value();
-    KLOG_DEBUG() << "The reply of dbus method GetDevices:" << devicesJson;
+    KLOG_DEBUG() << "The reply of dbus method GetDevicesByInterface:" << devicesJson;
 
     QJsonParseError jsonError;
     auto jsonDoc = QJsonDocument::fromJson(devicesJson.toUtf8(), &jsonError);
