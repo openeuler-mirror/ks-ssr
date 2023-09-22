@@ -512,6 +512,11 @@ KS--DevicePermission #m_groupBox QCheckBox
    padding-left:12px;
 }
 
+KS--DevicePermission #m_groupBox QCheckBox:disabled
+{
+   color:#919191;
+}
+
 KS--DevicePermission #m_confirm
 {
     background-color:#00a2ff;
