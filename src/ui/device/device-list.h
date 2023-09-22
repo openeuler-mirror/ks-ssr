@@ -37,12 +37,10 @@ public:
 protected:
     void paintEvent(QPaintEvent *event);
 
-private:
-    void update();
-
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void popupEditDialog(const QModelIndex &index);
+    void update();
     void updatePermission();
     void updateState();
 

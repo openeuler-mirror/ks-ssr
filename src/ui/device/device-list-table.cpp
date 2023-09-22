@@ -133,7 +133,6 @@ DeviceListTable::DeviceListTable(QWidget *parent) : QTableView(parent),
                                                   KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
-    connect(m_deviceManagerProxy, &DeviceManagerProxy::DeviceChanged, this, &DeviceListTable::update);
     initTable();
 }
 

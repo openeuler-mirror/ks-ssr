@@ -218,6 +218,7 @@ void DeviceLogTable::setData(const QList<RecordInfo> &infos)
         m_model->setData(m_model->index(row, LogTableField::LOG_TABLE_FIELD_STATUS), state);
         row++;
     }
+    emit logNumChanged(infos.size());
 }
 
 int DeviceLogTable::getColCount()
