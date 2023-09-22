@@ -184,6 +184,7 @@ void DeviceManager::handleUdevChangeEvent(SDDevice *sdDevice)
     if (device)
     {
         KLOG_INFO() << "Device changed with syspath " << syspath;
+        device->update();
         Q_EMIT this->deviceChanged(device->getID(), DEVICE_ACTION_CHANGE);
     }
 }

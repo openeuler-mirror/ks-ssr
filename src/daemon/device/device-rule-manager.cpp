@@ -53,6 +53,15 @@ namespace KS
 // efi模式下的grub配置路径
 #define GRUB_EFI_FILE_PATH "/etc/grub2-efi.cfg"
 
+#define DISABLE_USB_INTERFACE "ACTION!=\"remove\", SUBSYSTEMS==\"usb\", \
+ATTRS{bDeviceClass}!=\"09\", RUN=\"/bin/sh -c 'echo 0 >/sys/$devpath/authorized\""
+
+#define ENABLE_USB_KBD_INTERFACE "ACTION!=\"remove\", SUBSYSTEMS==\"usb\", \
+ATTRS{product}==\"*Keyboard\", RUN=\"/bin/sh -c 'echo 1 >/sys/$devpath/authorized\""
+
+#define ENABLE_USB_MOU_INTERFACE "ACTION!=\"remove\", SUBSYSTEMS==\"usb\", \
+ATTRS{product}==\"*Mouse\", RUN=\"/bin/sh -c 'echo 1 >/sys/$devpath/authorized\""
+
 DeviceRuleManager *DeviceRuleManager::instance()
 {
     // TODO: 一个单线程为啥要整这么复杂
@@ -139,6 +148,7 @@ void DeviceRuleManager::setIFCEnable(int type, bool enable)
     m_interfaceSettings->endGroup();
 
     this->syncInterfaceFile();
+    this->syncDeviceFile();
 }
 
 DeviceRuleManager::DeviceRuleManager(QObject *parent) : QObject(parent),
@@ -164,6 +174,23 @@ void DeviceRuleManager::syncDeviceFile()
     this->syncToDeviceUdevFile();
 }
 
+QStringList DeviceRuleManager::getUSBIFCUdevRule()
+{
+    auto rules = QStringList() << QString(DISABLE_USB_INTERFACE);
+
+    if (this->isIFCEnable(INTERFACE_TYPE_USB_KBD))
+    {
+        rules << QString(ENABLE_USB_KBD_INTERFACE);
+    }
+
+    if (this->isIFCEnable(INTERFACE_TYPE_USB_MOUSE))
+    {
+        rules << QString(ENABLE_USB_MOU_INTERFACE);
+    }
+
+    return rules;
+}
+
 void DeviceRuleManager::syncToDeviceUdevFile()
 {
     QStringList rules;
@@ -178,6 +205,17 @@ void DeviceRuleManager::syncToDeviceUdevFile()
             rules.append(udevRule);
         }
     }
+
+    auto ifcRules = this->getUSBIFCUdevRule();
+    if (this->isIFCEnable(INTERFACE_TYPE_USB))
+    {
+        rules = ifcRules + rules;
+    }
+    else
+    {
+        rules = rules + ifcRules;
+    }
+
     this->saveToFile(rules, KSC_DEVICE_UDEV_RULES_FILE);
 }
 
@@ -209,55 +247,9 @@ QString DeviceRuleManager::getUdevModeValue(QSharedPointer<DeviceRule> rule)
 
 void DeviceRuleManager::syncInterfaceFile()
 {
-    this->syncToInterfaceUdevFile();
     this->syncInterfaceToGrubFile();
     this->syncToBluetoothService();
     this->syncToNMService();
-}
-
-void DeviceRuleManager::syncToInterfaceUdevFile()
-{
-    QStringList rules;
-
-    auto udevRule = this->getInterfaceUdevRule(InterfaceType::INTERFACE_TYPE_USB);
-    if (!udevRule.isNull())
-    {
-        rules.append(udevRule);
-    }
-    this->saveToFile(rules, KSC_DI_UDEV_RULE_FILE);
-}
-
-QString DeviceRuleManager::getInterfaceUdevRule(int type)
-{
-    auto enable = this->isIFCEnable(type);
-
-    switch (type)
-    {
-    case INTERFACE_TYPE_USB:
-    {
-        // 只有禁用的时候需要设置udev规则，启用时删除规则即可
-        if (!enable)
-        {
-            return QString::asprintf("ACTION==\"*\", SUBSYSTEMS==\"usb\", \
-RUN=\"/bin/sh -c 'echo 0 >/sys/$devpath/authorized'\"");
-        }
-    }
-    case INTERFACE_TYPE_BLUETOOTH:
-        break;
-
-    case INTERFACE_TYPE_NET:
-        return QString::asprintf("ACTION==\"*\", SUBSYSTEM==\"net\", SUBSYSTEMS==\"pci\", \
-RUN=\"/bin/sh -c 'nmcli n %s'\"",
-                                 enable ? "on" : "off");
-    case INTERFACE_TYPE_HDMI:
-        break;
-
-    default:
-        KLOG_WARNING() << "Unkown device interface type " << type;
-        break;
-    }
-
-    return QString();
 }
 
 void DeviceRuleManager::syncInterfaceToGrubFile()
