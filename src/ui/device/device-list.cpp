@@ -136,9 +136,10 @@ void DeviceList::updatePermission()
         {KSC_DEVICE_JK_EXECUTE, (permissions & PermissionType::PERMISSION_TYPE_EXEC) > 0}};
     jsonDoc.setObject(jsonObj);
 
-    if (!m_deviceManagerProxy->ChangePermission(id, QString(jsonDoc.toJson(QJsonDocument::Compact))))
+    auto reply = m_deviceManagerProxy->ChangePermission(id, QString(jsonDoc.toJson(QJsonDocument::Compact)));
+    if (reply.isError())
     {
-        POPUP_MESSAGE_DIALOG(tr("Failed to change permission of device!"));
+        POPUP_MESSAGE_DIALOG(reply.error().message());
         return;
     }
 }
@@ -151,25 +152,21 @@ void DeviceList::updateState()
     RETURN_IF_TRUE(state != DEVICE_STATE_ENABLE && state != DEVICE_STATE_DISABLE);
 
     QString errMsg;
+    QDBusPendingReply<> reply;
+
     //数据传入后台
     if (state == DeviceState::DEVICE_STATE_ENABLE)
     {
-        if (!m_deviceManagerProxy->Enable(id))
-        {
-            errMsg = tr("Failed to enable device!");
-        }
+        reply = m_deviceManagerProxy->Enable(id);
     }
     else
     {
-        if (!m_deviceManagerProxy->Disable(id))
-        {
-            errMsg = tr("Failed to disable device!");
-        }
+        reply = m_deviceManagerProxy->Disable(id);
     }
 
-    if (!errMsg.isEmpty())
+    if (reply.isError())
     {
-        POPUP_MESSAGE_DIALOG(errMsg);
+        POPUP_MESSAGE_DIALOG(reply.error().message());
         return;
     }
 }

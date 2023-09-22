@@ -13,8 +13,12 @@
  */
 
 #include "src/daemon/device/device-dbus.h"
+#include <ksc-error-i.h>
 #include <ksc-i.h>
+#include <ksc-marcos.h>
 #include <qt5-log-i.h>
+#include "lib/base/error.h"
+#include "src/daemon/common/polkit-proxy.h"
 #include "src/daemon/device/device-configuration.h"
 #include "src/daemon/device/device-manager.h"
 #include "src/daemon/device_manager_adaptor.h"
@@ -38,6 +42,11 @@ void DeviceDBus::init()
     connect(m_deviceManager, SIGNAL(deviceChanged(const QString &, int)), m_dbusAdaptor, SIGNAL(DeviceChanged(const QString &, int)));
 }
 
+CHECK_AUTH_WITH_2ARGS(DeviceDBus, ChangePermission, changePermission, KSC_PERMISSION_AUTHENTICATION, const QString &, const QString &)
+CHECK_AUTH_WITH_1ARGS(DeviceDBus, Enable, enable, KSC_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(DeviceDBus, Disable, disable, KSC_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_2ARGS(DeviceDBus, EnableInterface, enableInterface, KSC_PERMISSION_AUTHENTICATION, int, bool)
+
 QString DeviceDBus::GetDevices()
 {
     QJsonDocument jsonDoc;
@@ -58,6 +67,11 @@ QString DeviceDBus::GetDevicesByInterface(int interfaceType)
 {
     QJsonDocument jsonDoc;
     QJsonArray jsonArray;
+
+    if (interfaceType <= INTERFACE_TYPE_UNKNOWN || interfaceType >= INTERFACE_TYPE_LAST)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), KSCErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, this->message())
+    }
 
     auto devices = m_deviceManager->getDevicesByInterface(interfaceType);
     for (auto device : devices)
@@ -82,6 +96,7 @@ QString DeviceDBus::GetDevice(const QString &id)
     else
     {
         KLOG_WARNING() << "Not found device which id is  " << id;
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), KSCErrorCode::ERROR_DEVICE_INVALID_ID, this->message())
     }
 
     return QString(jsonDoc.toJson(QJsonDocument::Compact));
@@ -109,7 +124,10 @@ QString DeviceDBus::GetInterfaces()
 
 QString DeviceDBus::GetInterface(int type)
 {
-    // TODO: 判断type的合法性
+    if (type <= INTERFACE_TYPE_UNKNOWN || type >= INTERFACE_TYPE_LAST)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), KSCErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, this->message())
+    }
 
     QJsonDocument jsonDoc;
     auto deviceConfiguration = DeviceConfiguration::instance();
@@ -122,7 +140,8 @@ QString DeviceDBus::GetInterface(int type)
     return QString(jsonDoc.toJson(QJsonDocument::Compact));
 }
 
-bool DeviceDBus::ChangePermission(const QString &id,
+void DeviceDBus::changePermission(const QDBusMessage &message,
+                                  const QString &id,
                                   const QString &permissions)
 {
     auto device = m_deviceManager->getDeviceByID(id);
@@ -130,7 +149,7 @@ bool DeviceDBus::ChangePermission(const QString &id,
     if (!device)
     {
         KLOG_WARNING() << "Failed to find device with id " << id;
-        return false;
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
 
     QJsonParseError error;
@@ -139,13 +158,13 @@ bool DeviceDBus::ChangePermission(const QString &id,
     if (error.error != QJsonParseError::NoError)
     {
         KLOG_ERROR() << "Failed to create QJsonDocument with " << permissions;
-        return false;
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_PERM, message)
     }
 
     if (!jsonDoc.isObject())
     {
         KLOG_ERROR() << "QJsonDocument is not object with " << permissions;
-        return false;
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_PERM, message)
     }
 
 #define GET_JSON_STRING_VALUE(obj, key) ((obj).value(key).isString() ? (obj).value(key).toString() : nullptr)
@@ -168,47 +187,60 @@ bool DeviceDBus::ChangePermission(const QString &id,
     // 重放该设备Udev事件
     device->trigger();
 
-    return true;
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
 }
 
-bool DeviceDBus::Enable(const QString &id)
+void DeviceDBus::enable(const QDBusMessage &message,
+                        const QString &id)
 {
     auto device = m_deviceManager->getDeviceByID(id);
 
-    // FIXME: 这个函数应该是没有返回值的，应该要返回错误信息才对，其他DBUS接口也一样
     if (!device)
     {
         KLOG_WARNING() << "Failed to find device with id " << id;
-        return false;
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
 
     device->setEnable(true);
     // 重放该设备Udev事件
     device->trigger();
-    return true;
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
 }
 
-bool DeviceDBus::Disable(const QString &id)
+void DeviceDBus::disable(const QDBusMessage &message,
+                         const QString &id)
 {
     auto device = m_deviceManager->getDeviceByID(id);
 
     if (!device)
     {
         KLOG_ERROR() << "Failed to find device with id " << id;
-        return false;
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
 
     device->setEnable(false);
     // 重放该设备Udev事件
     device->trigger();
-    return true;
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
 }
 
-void DeviceDBus::EnableInterface(int type, bool enabled)
+void DeviceDBus::enableInterface(const QDBusMessage &message,
+                                 int type,
+                                 bool enabled)
 {
     auto devConfig = DeviceConfiguration::instance();
     devConfig->setIFCEnable(type, enabled);
     auto interfaceType = type;
+
+    if (type <= INTERFACE_TYPE_UNKNOWN || type >= INTERFACE_TYPE_LAST)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, message)
+    }
 
     if (type == INTERFACE_TYPE_USB &&
         enabled)
@@ -233,6 +265,9 @@ void DeviceDBus::EnableInterface(int type, bool enabled)
             device->trigger();
         }
     }
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
 }
 
 QString DeviceDBus::GetRecords()

@@ -274,17 +274,17 @@ void DeviceConfiguration::syncToNMService()
     }
 }
 
-void DeviceConfiguration::saveToFile(const QStringList &lines, const QString &filename)
+void DeviceConfiguration::saveToFile(const QStringList &lines, const QString &filepath)
 {
-    QFile::remove(filename);
+    QFile::remove(filepath);
 
     RETURN_IF_TRUE(lines.isEmpty())
 
-    QFile file(filename);
+    QFile file(filepath);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        KLOG_WARNING() << "Cannot open file " << filename;
+        KLOG_WARNING() << "Cannot open file " << filepath;
         return;
     }
 
@@ -311,8 +311,6 @@ void DeviceConfiguration::updateGrub(const QString &filePath)
 DeviceConfigList DeviceConfiguration::getDeviceConfig()
 {
     DeviceConfigList configs;
-
-    QStringList rules;
     auto groups = m_deviceSettings->childGroups();
 
     Q_FOREACH (auto group, groups)

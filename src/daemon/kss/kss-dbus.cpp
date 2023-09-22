@@ -32,8 +32,6 @@
 
 namespace KS
 {
-#define KSS_PERMISSION_AUTHENTICATION "com.kylinsec.SC.PermissionAuthentication"
-
 #define TRUSTED_STATUS_INITIALT_VALUE 0
 #define TRUSTED_STATUS_OPEN 1
 #define TRUSTED_STATUS_CLOSE 2
@@ -76,17 +74,17 @@ bool KSSDbus::trustedStatus() const
     return true;
 }
 
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFile, addTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFiles, addTPFilesAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFile, removeTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFiles, removeTPFilesAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_2ARGS(KSSDbus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFile, addFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFiles, addFPFilesAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFile, removeFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFiles, removeFPFilesAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_2ARGS(KSSDbus, SetStorageMode, setStorageModeAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, uint, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, SetTrustedStatus, setTrustedStatusAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool);
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFile, addTPFileAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFiles, addTPFilesAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QStringList &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFile, removeTPFileAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFiles, removeTPFilesAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QStringList &)
+CHECK_AUTH_WITH_2ARGS(KSSDbus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, bool, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFile, addFPFileAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFiles, addFPFilesAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QStringList &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFile, removeFPFileAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFiles, removeFPFilesAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, const QStringList &)
+CHECK_AUTH_WITH_2ARGS(KSSDbus, SetStorageMode, setStorageModeAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, uint, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, SetTrustedStatus, setTrustedStatusAfterAuthorization, KSC_PERMISSION_AUTHENTICATION, bool);
 
 QString KSSDbus::GetTrustedFiles(uint type)
 {

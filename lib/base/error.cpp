@@ -70,6 +70,15 @@ QString Error::getErrorDesc(KSCErrorCode errorCode)
     case KSCErrorCode::ERROR_BM_INPUT_PASSPHRASE_ERROR:
         errorDesc = QObject::tr("Passphrase error!");
         break;
+    case KSCErrorCode::ERROR_DEVICE_INVALID_ID:
+        errorDesc = QObject::tr("Invalid device id.");
+        break;
+    case KSCErrorCode::ERROR_DEVICE_INVALID_PERM:
+        errorDesc = QObject::tr("Invalid device permissions.");
+        break;
+    case KSCErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE:
+        errorDesc = QObject::tr("Invalid device interface type.");
+        break;
 
     default:
         errorDesc = QObject::tr("Unknown error.");
