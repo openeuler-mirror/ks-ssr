@@ -14,10 +14,10 @@
 
 #pragma once
 
+#include <QJsonObject>
 #include <QObject>
 #include <QSharedPointer>
 #include "src/daemon/device/sd/sd-device.h"
-#include <QJsonObject>
 
 namespace KS
 {
@@ -82,4 +82,6 @@ private:
     QSharedPointer<Permission> m_permission;
     QSharedPointer<SDDevice> m_device;
 };
+
+using DeviceList = QList<QSharedPointer<Device>>;
 }  // namespace KS
