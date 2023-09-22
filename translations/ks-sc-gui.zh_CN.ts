@@ -185,7 +185,6 @@
     <name>DevicePage</name>
     <message>
         <location filename="../src/ui/device/device-page.ui" line="14"/>
-        <location filename="../build/src/ui/ui_device-page.h" line="59"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -194,49 +193,41 @@
     <name>DevicePermission</name>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="32"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="168"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="76"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="169"/>
         <source>Device status:</source>
         <translation>设备状态：</translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="122"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="170"/>
         <source>Permission control:</source>
         <translation>权限控制：</translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="141"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="171"/>
         <source>read</source>
         <translation>读</translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="160"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="172"/>
         <source>write</source>
         <translation>写</translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="179"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="173"/>
         <source>exec</source>
         <translation>执行</translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="235"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="174"/>
         <source>Confirm</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="254"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="175"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -252,37 +243,31 @@
     <name>FPPage</name>
     <message>
         <location filename="../src/ui/fp/fp-page.ui" line="14"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="125"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/fp/fp-page.ui" line="46"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="126"/>
         <source>Protect critical file paths from malicious tampering and deletion</source>
         <translation>保护关键文件路径，防止恶意篡改、删除</translation>
     </message>
     <message>
         <location filename="../src/ui/fp/fp-page.ui" line="66"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="127"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/fp/fp-page.ui" line="111"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="128"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/fp/fp-page.ui" line="143"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="129"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
     <message>
         <location filename="../src/ui/fp/fp-page.ui" line="162"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="130"/>
         <source>Unprotect</source>
         <translation>移除</translation>
     </message>
@@ -318,72 +303,72 @@
 <context>
     <name>KS::Box</name>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="124"/>
-        <location filename="../src/ui/box/box.cpp" line="137"/>
+        <location filename="../src/ui/box/box.cpp" line="143"/>
+        <location filename="../src/ui/box/box.cpp" line="156"/>
         <source>Lock</source>
         <translation>上锁</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="124"/>
-        <location filename="../src/ui/box/box.cpp" line="137"/>
-        <location filename="../src/ui/box/box.cpp" line="186"/>
+        <location filename="../src/ui/box/box.cpp" line="143"/>
+        <location filename="../src/ui/box/box.cpp" line="156"/>
+        <location filename="../src/ui/box/box.cpp" line="205"/>
         <source>Unlock</source>
         <translation>解锁</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="127"/>
-        <location filename="../src/ui/box/box.cpp" line="200"/>
+        <location filename="../src/ui/box/box.cpp" line="146"/>
+        <location filename="../src/ui/box/box.cpp" line="219"/>
         <source>Modify password</source>
         <translation>修改密码</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="128"/>
+        <location filename="../src/ui/box/box.cpp" line="147"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="129"/>
+        <location filename="../src/ui/box/box.cpp" line="148"/>
         <source>Retrieve the password</source>
         <translation>找回密码</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="204"/>
+        <location filename="../src/ui/box/box.cpp" line="223"/>
         <source>Please confirm whether the password is consistent.</source>
         <translation>请确认两次密码是否一致。</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="206"/>
-        <location filename="../src/ui/box/box.cpp" line="235"/>
+        <location filename="../src/ui/box/box.cpp" line="225"/>
+        <location filename="../src/ui/box/box.cpp" line="254"/>
         <source>The input cannot be empty, please improve the information.</source>
         <translation>输入不能为空，请输入正确的信息。</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="219"/>
+        <location filename="../src/ui/box/box.cpp" line="238"/>
         <source>Del box</source>
         <translation>删除保险箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="232"/>
+        <location filename="../src/ui/box/box.cpp" line="251"/>
         <source>Retrieve password</source>
         <translation>找回密码</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="253"/>
+        <location filename="../src/ui/box/box.cpp" line="272"/>
         <source>Modify success!</source>
         <translation>修改成功！</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="264"/>
+        <location filename="../src/ui/box/box.cpp" line="283"/>
         <source>Your box password is %1</source>
         <translation>您的保险箱密码为：%1</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="275"/>
+        <location filename="../src/ui/box/box.cpp" line="294"/>
         <source>Unlock success!</source>
         <translation>解锁成功！</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="286"/>
+        <location filename="../src/ui/box/box.cpp" line="305"/>
         <source>Delete success!</source>
         <translation>删除成功！</translation>
     </message>
@@ -579,11 +564,13 @@
     </message>
     <message>
         <location filename="../src/ui/device/device-utils.cpp" line="27"/>
+        <location filename="../src/ui/device/device-utils.cpp" line="65"/>
         <source>Mouse</source>
         <translation>鼠标</translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-utils.cpp" line="29"/>
+        <location filename="../src/ui/device/device-utils.cpp" line="67"/>
         <source>Keyboard</source>
         <translation>键盘</translation>
     </message>
@@ -624,7 +611,7 @@
     </message>
     <message>
         <location filename="../src/ui/device/device-utils.cpp" line="45"/>
-        <location filename="../src/ui/device/device-utils.cpp" line="65"/>
+        <location filename="../src/ui/device/device-utils.cpp" line="69"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
@@ -766,7 +753,7 @@
         <translation type="vanished">(重启后生效)</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/settings-device.cpp" line="68"/>
+        <location filename="../src/ui/settings/settings-device.cpp" line="93"/>
         <source> (Effective after restart)</source>
         <translation> (重启后生效)</translation>
     </message>
@@ -1010,6 +997,11 @@
         <translation type="vanished">授权信息</translation>
     </message>
     <message>
+        <location filename="../src/ui/window.cpp" line="115"/>
+        <source>Unactivated</source>
+        <translation>未授权</translation>
+    </message>
+    <message>
         <location filename="../src/ui/window.cpp" line="127"/>
         <source>Settings</source>
         <translation>设置</translation>
@@ -1049,37 +1041,31 @@
     <name>LicenseActivation</name>
     <message>
         <location filename="../src/ui/license/license-activation.ui" line="26"/>
-        <location filename="../build/src/ui/ui_license-activation.h" line="165"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/license/license-activation.ui" line="83"/>
-        <location filename="../build/src/ui/ui_license-activation.h" line="166"/>
         <source>Expired time</source>
         <translation>质保期</translation>
     </message>
     <message>
         <location filename="../src/ui/license/license-activation.ui" line="114"/>
-        <location filename="../build/src/ui/ui_license-activation.h" line="167"/>
         <source>Machine code</source>
         <translation>机器码</translation>
     </message>
     <message>
         <location filename="../src/ui/license/license-activation.ui" line="144"/>
-        <location filename="../build/src/ui/ui_license-activation.h" line="168"/>
         <source>Activation code</source>
         <translation>激活码</translation>
     </message>
     <message>
         <location filename="../src/ui/license/license-activation.ui" line="215"/>
-        <location filename="../build/src/ui/ui_license-activation.h" line="169"/>
         <source>Activate</source>
         <translation>激活</translation>
     </message>
     <message>
         <location filename="../src/ui/license/license-activation.ui" line="234"/>
-        <location filename="../build/src/ui/ui_license-activation.h" line="170"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -1115,25 +1101,21 @@
     <name>Pagination</name>
     <message>
         <location filename="../src/ui/common/pagination.ui" line="14"/>
-        <location filename="../build/src/ui/ui_pagination.h" line="94"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/common/pagination.ui" line="33"/>
-        <location filename="../build/src/ui/ui_pagination.h" line="95"/>
         <source>Prev</source>
         <translation>上一页</translation>
     </message>
     <message>
         <location filename="../src/ui/common/pagination.ui" line="50"/>
-        <location filename="../build/src/ui/ui_pagination.h" line="96"/>
         <source>Next</source>
         <translation>下一页</translation>
     </message>
     <message>
         <location filename="../src/ui/common/pagination.ui" line="60"/>
-        <location filename="../build/src/ui/ui_pagination.h" line="97"/>
         <source>Go to</source>
         <translation>前往</translation>
     </message>
@@ -1153,7 +1135,7 @@
     <message>
         <location filename="../lib/base/error.cpp" line="35"/>
         <source>Added file types are not supported.</source>
-        <translation></translation>
+        <translation>不允许添加不支持的文件类型。</translation>
     </message>
     <message>
         <location filename="../lib/base/error.cpp" line="38"/>
@@ -1255,7 +1237,6 @@
     <name>QRCodeDialog</name>
     <message>
         <location filename="../src/ui/license/qrcode-dialog.ui" line="20"/>
-        <location filename="../build/src/ui/ui_qrcode-dialog.h" line="80"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -1314,7 +1295,6 @@
     <name>SettingsPage</name>
     <message>
         <location filename="../src/ui/settings/settings-page.ui" line="26"/>
-        <location filename="../build/src/ui/ui_settings-page.h" line="71"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -1323,7 +1303,6 @@
     <name>SettingsTrusted</name>
     <message>
         <location filename="../src/ui/settings/settings-trusted.ui" line="14"/>
-        <location filename="../build/src/ui/ui_settings-trusted.h" line="143"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -1333,25 +1312,21 @@
     </message>
     <message>
         <location filename="../src/ui/settings/settings-trusted.ui" line="31"/>
-        <location filename="../build/src/ui/ui_settings-trusted.h" line="144"/>
         <source>Trusted protected(Effective after reboot):</source>
         <translation>可信保护 （重启后生效）：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/settings-trusted.ui" line="64"/>
-        <location filename="../build/src/ui/ui_settings-trusted.h" line="146"/>
         <source>Root key storage method:</source>
         <translation>根密钥存储方式：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/settings-trusted.ui" line="103"/>
-        <location filename="../build/src/ui/ui_settings-trusted.h" line="148"/>
         <source>Soft storage</source>
         <translation>软存储</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/settings-trusted.ui" line="145"/>
-        <location filename="../build/src/ui/ui_settings-trusted.h" line="150"/>
         <source>Hard storage</source>
         <translation>硬存储</translation>
     </message>
@@ -1360,13 +1335,11 @@
     <name>SidebarItem</name>
     <message>
         <location filename="../src/ui/device/sidebar-item.ui" line="26"/>
-        <location filename="../build/src/ui/ui_sidebar-item.h" line="74"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/device/sidebar-item.ui" line="66"/>
-        <location filename="../build/src/ui/ui_sidebar-item.h" line="76"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
@@ -1375,43 +1348,36 @@
     <name>TPExecute</name>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="14"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="143"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="46"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="144"/>
         <source>System core component integrity protection,protection and implementation environment safety</source>
         <translation>系统核心组件的完整性保护，保护执行环境安全</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="66"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="145"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="162"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="148"/>
         <source>Recertification</source>
         <translation>重新认证</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="111"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="146"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="197"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="150"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="143"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="147"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
@@ -1421,7 +1387,6 @@
     </message>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="181"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="149"/>
         <source>Unprotect</source>
         <translation>移除</translation>
     </message>
@@ -1430,43 +1395,36 @@
     <name>TPKernel</name>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="14"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="144"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="49"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="145"/>
         <source>Manage kernel driver modules to prevent illegal loading and uninstallation</source>
         <translation>管理内核驱动模块，阻止非法加载、卸载</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="69"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="146"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="165"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="149"/>
         <source>Recertification</source>
         <translation>重新认证</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="114"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="147"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="200"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="151"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="146"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="148"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
@@ -1476,7 +1434,6 @@
     </message>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="184"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="150"/>
         <source>Unprotect</source>
         <translation>移除</translation>
     </message>
@@ -1485,7 +1442,6 @@
     <name>TPPage</name>
     <message>
         <location filename="../src/ui/tp/tp-page.ui" line="14"/>
-        <location filename="../build/src/ui/ui_tp-page.h" line="59"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -1494,25 +1450,21 @@
     <name>TableDeleteNotify</name>
     <message>
         <location filename="../src/ui/tp/table-delete-notify.ui" line="14"/>
-        <location filename="../build/src/ui/ui_table-delete-notify.h" line="109"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/table-delete-notify.ui" line="65"/>
-        <location filename="../build/src/ui/ui_table-delete-notify.h" line="110"/>
         <source>text</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/table-delete-notify.ui" line="114"/>
-        <location filename="../build/src/ui/ui_table-delete-notify.h" line="111"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/table-delete-notify.ui" line="133"/>
-        <location filename="../build/src/ui/ui_table-delete-notify.h" line="112"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -1521,25 +1473,21 @@
     <name>TrustedUserPin</name>
     <message>
         <location filename="../src/ui/settings/trusted-user-pin.ui" line="14"/>
-        <location filename="../build/src/ui/ui_trusted-user-pin.h" line="107"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-user-pin.ui" line="68"/>
-        <location filename="../build/src/ui/ui_trusted-user-pin.h" line="108"/>
         <source>Please input the pin code:</source>
         <translation>请输入pin码：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-user-pin.ui" line="112"/>
-        <location filename="../build/src/ui/ui_trusted-user-pin.h" line="109"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-user-pin.ui" line="131"/>
-        <location filename="../build/src/ui/ui_trusted-user-pin.h" line="110"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -1548,7 +1496,6 @@
     <name>Window</name>
     <message>
         <location filename="../src/ui/window.ui" line="20"/>
-        <location filename="../build/src/ui/ui_window.h" line="112"/>
         <source>Security control</source>
         <translation>安全管控</translation>
     </message>
@@ -1557,6 +1504,7 @@
     <name>about</name>
     <message>
         <location filename="../src/ui/about.ui" line="14"/>
+        <location filename="../build/src/ui/ui_about.h" line="93"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -1564,6 +1512,9 @@
         <location filename="../src/ui/about.ui" line="72"/>
         <location filename="../src/ui/about.ui" line="88"/>
         <location filename="../src/ui/about.ui" line="104"/>
+        <location filename="../build/src/ui/ui_about.h" line="95"/>
+        <location filename="../build/src/ui/ui_about.h" line="96"/>
+        <location filename="../build/src/ui/ui_about.h" line="97"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
