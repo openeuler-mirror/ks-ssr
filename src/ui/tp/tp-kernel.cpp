@@ -68,7 +68,8 @@ TPKernel::TPKernel(QWidget *parent) : QWidget(parent),
     connect(m_ui->m_refresh, SIGNAL(clicked(bool)), this, SLOT(updateKernelList(bool)));
     connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(popDeleteNotify(bool)));
     connect(m_ui->m_kernelTable, SIGNAL(prohibitUnloadingStatusChange(bool, const QString &)), this, SLOT(prohibitUnloading(bool, const QString &)));
-    connect(m_ui->m_kernelTable, SIGNAL(filesUpdate(int)), this, SLOT(updateTips(int)));
+    // 防止有重名信号干扰，不使用SIGNAL-SLOT宏
+    connect(m_ui->m_kernelTable, &TPKernelTable::filesUpdate, this, &TPKernel::updateTips);
 }
 
 TPKernel::~TPKernel()
@@ -166,6 +167,10 @@ void TPKernel::prohibitUnloading(bool status, const QString &path)
 {
     RETURN_IF_TRUE(path.isEmpty())
     m_dbusProxy->ProhibitUnloading(status, path).waitForFinished();
+
+    // 防卸载开关的刷新需要特殊处理，授权取消后没有进行数据操作，不会发出数据改变信号，
+    // 此时前台swicth已经为open状态，因此需要手动刷新
+    m_ui->m_kernelTable->updateInfo();
 }
 
 void TPKernel::updateRefreshIcon()
