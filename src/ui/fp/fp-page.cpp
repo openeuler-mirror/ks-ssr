@@ -19,8 +19,7 @@
 #include <QWidgetAction>
 #include "config.h"
 #include "ksc-i.h"
-#include "ksc-marcos.h"
-#include "src/ui/common/message-dialog.h"
+#include "src/ui/common/ksc-marcos-ui.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_fp-page.h"
@@ -50,9 +49,9 @@ FPPage::FPPage(QWidget *parent) : QWidget(parent),
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
     connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
-    connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
+    connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addProtectedFile(bool)));
     //    connect(m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
-    connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(unprotectClicked(bool)));
+    connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(popDeleteNotify(bool)));
 }
 
 FPPage::~FPPage()
@@ -65,27 +64,17 @@ void FPPage::searchTextChanged(const QString &text)
     m_ui->m_fileTable->searchTextChanged(text);
 }
 
-void FPPage::addClicked(bool checked)
+void FPPage::addProtectedFile(bool checked)
 {
     RETURN_IF_TRUE(!checkTrustedLoadFinied(m_fileProtectedProxy->initialized()))
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     if (!fileName.isEmpty())
     {
         auto reply = m_fileProtectedProxy->AddProtectedFile(fileName);
-        reply.waitForFinished();
+        CHECK_ERROR_FOR_DBUS_REPLY(reply, QString(""), this);
 
-        if (reply.isError())
-        {
-            auto messgeDialog = new MessageDialog(this);
-            messgeDialog->setMessage(reply.error().message());
-
-            int x = window()->x() + width() / 4 + messgeDialog->width() / 4;
-            int y = window()->y() + height() / 4 + messgeDialog->height() / 4;
-            messgeDialog->move(x, y);
-            messgeDialog->show();
-            return;
-        }
         updateInfo();
+        return;
     }
 }
 
@@ -102,15 +91,10 @@ bool FPPage::checkTrustedLoadFinied(bool initialized)
     // 可信未初始化完成，不允许操作
     if (!initialized)
     {
-        auto messgeDialog = new MessageDialog(this);
-        messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
-                                    "please wait a few minutes before trying."));
-
-        int x = window()->x() + width() / 4 + messgeDialog->width() / 4;
-        int y = window()->y() + height() / 4 + messgeDialog->height() / 4;
-        messgeDialog->move(x, y);
-        messgeDialog->show();
-        return false;
+        POPUP_MESSAGE_DIALOG_RETURN_VAL(tr("Trusted data needs to be initialised,"
+                                           "please wait a few minutes before trying."),
+                                        false,
+                                        this);
     }
     return true;
 }
@@ -126,20 +110,13 @@ bool FPPage::isExistSelectedItem()
     return false;
 }
 
-void FPPage::unprotectClicked(bool checked)
+void FPPage::popDeleteNotify(bool checked)
 {
     RETURN_IF_TRUE(!checkTrustedLoadFinied(m_fileProtectedProxy->initialized()))
 
     if (!isExistSelectedItem())
     {
-        auto messgeDialog = new MessageDialog(this);
-        messgeDialog->setMessage(tr("Please select the content that needs to be removed."));
-
-        int x = window()->x() + width() / 4 + messgeDialog->width() / 4;
-        int y = window()->y() + height() / 4 + messgeDialog->height() / 4;
-        messgeDialog->move(x, y);
-        messgeDialog->show();
-        return;
+        POPUP_MESSAGE_DIALOG_RETURN(tr("Please select the content that needs to be removed."), this)
     }
 
     auto unprotectNotify = new TableDeleteNotify(this);
@@ -150,10 +127,10 @@ void FPPage::unprotectClicked(bool checked)
     unprotectNotify->move(x, y);
     unprotectNotify->show();
 
-    connect(unprotectNotify, &TableDeleteNotify::accepted, this, &FPPage::unprotectAccepted);
+    connect(unprotectNotify, &TableDeleteNotify::accepted, this, &FPPage::removeProtectedFile);
 }
 
-void FPPage::unprotectAccepted()
+void FPPage::removeProtectedFile()
 {
     auto trustedInfos = m_ui->m_fileTable->getFPFileInfos();
     for (auto trustedInfo : trustedInfos)

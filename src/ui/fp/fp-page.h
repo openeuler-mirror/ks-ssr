@@ -39,9 +39,9 @@ private:
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
-    void addClicked(bool checked);
-    void unprotectClicked(bool checked);
-    void unprotectAccepted();
+    void addProtectedFile(bool checked);
+    void popDeleteNotify(bool checked);
+    void removeProtectedFile();
 
 private:
     Ui::FPPage *m_ui;

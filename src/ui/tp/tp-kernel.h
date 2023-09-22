@@ -34,6 +34,7 @@ public:
 
 private:
     void updateInfo();
+    bool isExistSelectedItem();
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);

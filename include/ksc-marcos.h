@@ -72,21 +72,23 @@ private:
         if (cond) continue;    \
     }
 
-// dbus marcos invalid args
-#define RETURN_DBUS_ERROR_IF_TRUE(cond)                                                                      \
-    {                                                                                                        \
-        if (cond)                                                                                            \
-        {                                                                                                    \
-            sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS)); \
-            return;                                                                                          \
-        }                                                                                                    \
+// dbus marcos
+#define RETURN_DBUS_ERROR_IF_TRUE(cond, errorCode, message)                                             \
+    {                                                                                                   \
+        if (cond)                                                                                       \
+        {                                                                                               \
+            auto replyMessage = message.createErrorReply(QDBusError::Failed, KSC_ERROR2STR(errorCode)); \
+            QDBusConnection::systemBus().send(replyMessage);                                            \
+            return;                                                                                     \
+        }                                                                                               \
     }
 
-#define RETURN_VAL_DBUS_ERROR_IF_TRUE(cond, val)                                                             \
-    {                                                                                                        \
-        if (cond)                                                                                            \
-        {                                                                                                    \
-            sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS)); \
-            return val;                                                                                      \
-        }                                                                                                    \
+#define RETURN_VAL_DBUS_ERROR_IF_TRUE(cond, val, errorCode, message)                                    \
+    {                                                                                                   \
+        if (cond)                                                                                       \
+        {                                                                                               \
+            auto replyMessage = message.createErrorReply(QDBusError::Failed, KSC_ERROR2STR(errorCode)); \
+            QDBusConnection::systemBus().send(replyMessage);                                            \
+            return val;                                                                                 \
+        }                                                                                               \
     }
