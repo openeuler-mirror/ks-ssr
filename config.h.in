@@ -15,6 +15,7 @@
 #define KSC_DEVICE_UDEV_RULES_FILE "@KSC_DEVICE_UDEV_RULES_FILE@"
 #define KSC_DEVICE_RULE_FILE "@KSC_INSTALL_DATADIR@/device/device-rule.ini"
 #define KSC_DI_RULE_FILE "@KSC_INSTALL_DATADIR@/device/device-interface-rule.ini"
+#define KSC_DI_GRUB_FILE "@CMAKE_INSTALL_FULL_SYSCONFDIR@/default/grub.d/10-ksc-device-interface"
 #define KSC_DEVICE_CONNECT_LOG_FILE "@KSC_INSTALL_DATADIR@/device/device-connect.log"
 #define KSC_DI_UDEV_RULE_FILE "@KSC_DI_UDEV_RULES_FILE@"
 #define DBUS_TIMEOUT_MS 300

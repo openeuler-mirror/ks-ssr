@@ -50,8 +50,7 @@ namespace KS
 
 #define USB_DEVICE_CLASS_HUB 0x09
 
-USBDevice::USBDevice(const QString &syspath, QObject *parent)
-    : Device(syspath, parent)
+USBDevice::USBDevice(const QString &syspath, QObject *parent) : Device(syspath, parent)
 {
     m_ruleManager = DeviceRuleManager::instance();
 
@@ -222,7 +221,7 @@ bool USBDevice::setEnable(bool enable)
     m_ruleManager->addRule(rule);
 
     this->setState((rule.enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
-    
+
     return true;
 }
 
