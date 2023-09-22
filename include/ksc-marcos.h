@@ -34,13 +34,9 @@ private:
 // helper macro for Defer class
 #define SCOPE_EXIT(block) Defer CONNECT(_defer_, __LINE__)([&](std::string _arg_function) block, __FUNCTION__)
 
-#define RETURN_VAL_IF_FALSE(cond, val)             \
-    {                                              \
-        if (!(cond))                               \
-        {                                          \
-            KLOG_DEBUG("The condition is false."); \
-            return val;                            \
-        }                                          \
+#define RETURN_VAL_IF_FALSE(cond, val) \
+    {                                  \
+        if (!(cond)) return val;       \
     }
 
 #define RETURN_VAL_IF_TRUE(cond, val) \
