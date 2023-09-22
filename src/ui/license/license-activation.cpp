@@ -18,10 +18,15 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QMessageBox>
-#include "src/ui/common/ksc-marcos-ui.h"
+#include "include/ksc-marcos.h"
+#include "src/ui/common/message-dialog.h"
 #include "src/ui/license/license-dbus.h"
 #include "src/ui/license/qrcode-dialog.h"
 #include "ui_license-activation.h"
+
+#define QRCODE_PROPERTY "QRcode"
+#define MACHINE_CODE QObject::tr("machine code")
+#define ACTIVATION_CODE QObject::tr("activation code")
 
 namespace KS
 {
@@ -64,23 +69,37 @@ void LicenseActivation::initUI()
     setIcon(QIcon(":/images/logo"));
     setTitle(tr("Activation"));
     setButtonHints(TitlebarCloseButtonHint);
-    setFixedSize(469, 409);
+    setFixedSize(450, 390);
 
-    //创建二维码按钮
-    auto hLayout = new QHBoxLayout(m_ui->m_machine_code);
-    hLayout->setMargin(0);
-    hLayout->setContentsMargins(10, 0, 10, 0);
-    auto qrcodeBtn = new QPushButton(m_ui->m_machine_code);
-    qrcodeBtn->setFixedSize(16, 16);
-    qrcodeBtn->setIcon(QIcon(":/images/qrcode"));
-    hLayout->addStretch();
-    hLayout->addWidget(qrcodeBtn);
-    connect(qrcodeBtn, &QPushButton::clicked, this, &LicenseActivation::popupQrencode);
+    //创建机器码二维码按钮
+    auto machineLayout = new QHBoxLayout(m_ui->m_machine_code);
+    machineLayout->setMargin(0);
+    machineLayout->setContentsMargins(10, 0, 10, 0);
+    auto machineQRCodeBtn = new QPushButton(m_ui->m_machine_code);
+    machineQRCodeBtn->setProperty(QRCODE_PROPERTY, MACHINE_CODE);
+    machineQRCodeBtn->setFixedSize(16, 16);
+    machineQRCodeBtn->setIcon(QIcon(":/images/qrcode"));
+    machineLayout->addStretch();
+    machineLayout->addWidget(machineQRCodeBtn);
+    connect(machineQRCodeBtn, &QPushButton::clicked, this, &LicenseActivation::handleQrcode);
+
+    //创建激活码二维码按钮
+    auto activationLayout = new QHBoxLayout(m_ui->m_activation_code);
+    activationLayout->setMargin(0);
+    activationLayout->setContentsMargins(10, 0, 10, 0);
+    auto activationQRcodeBtn = new QPushButton(m_ui->m_activation_code);
+    activationQRcodeBtn->setCursor(Qt::ArrowCursor);
+    activationQRcodeBtn->setProperty(QRCODE_PROPERTY, ACTIVATION_CODE);
+    activationQRcodeBtn->setFixedSize(16, 16);
+    activationQRcodeBtn->setIcon(QIcon(":/images/qrcode"));
+    activationLayout->addStretch();
+    activationLayout->addWidget(activationQRcodeBtn);
+    connect(activationQRcodeBtn, &QPushButton::clicked, this, &LicenseActivation::handleQrcode);
 
     m_ui->m_machine_code->setReadOnly(true);
     m_ui->m_expired_time->setReadOnly(true);
-    m_ui->m_machine_code->setTextMargins(10, 0, qrcodeBtn->width(), 0);
-    m_ui->m_activation_code->setTextMargins(10, 0, 10, 0);
+    m_ui->m_machine_code->setTextMargins(10, 0, machineQRCodeBtn->width(), 0);
+    m_ui->m_activation_code->setTextMargins(10, 0, activationQRcodeBtn->width() + activationLayout->contentsMargins().right(), 0);
     m_ui->m_expired_time->setTextMargins(10, 0, 10, 0);
 }
 
@@ -89,25 +108,37 @@ void LicenseActivation::activate()
     QString errorMsg;
     auto isActivated = m_licenseDBus->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
 
-    if (isActivated)
-    {
-        POPUP_MESSAGE_DIALOG_RETURN(tr("Activate app successful!"), this)
-    }
-    else
-    {
-        POPUP_MESSAGE_DIALOG_RETURN(errorMsg, this)
-    }
+    auto msgDialog = new MessageDialog(this);
+    msgDialog->setMessage(isActivated ? tr("Activate app successful!") : errorMsg);
+
+    int x = window()->x() + window()->width() / 4 + msgDialog->width() / 4;
+    int y = window()->y() + window()->height() / 4 + msgDialog->height() / 4;
+    msgDialog->move(x, y);
+    msgDialog->show();
 }
 
-void LicenseActivation::popupQrencode()
+void LicenseActivation::handleQrcode()
 {
-    RETURN_IF_TRUE(m_licenseDBus->getMachineCode().isEmpty());
+    auto qrcodeBtn = qobject_cast<QPushButton *>(sender());
+    auto codeStr = qrcodeBtn->property(QRCODE_PROPERTY).toString();
+    auto title = tr("Scan QR code to get %1").arg(codeStr);
+
+    if (codeStr == MACHINE_CODE)
+        popupQRcode(m_licenseDBus->getMachineCode(), title);
+    else
+        popupQRcode(m_licenseDBus->getActivationCode(), title);
+}
+
+void LicenseActivation::popupQRcode(const QString &QRcode, const QString &title)
+{
+    RETURN_IF_TRUE(QRcode.isEmpty());
 
     if (!m_qrcodeDialog)
     {
         m_qrcodeDialog = new QRCodeDialog(this);
-        m_qrcodeDialog->setText(m_licenseDBus->getMachineCode());
     }
+    m_qrcodeDialog->setText(QRcode);
+    m_qrcodeDialog->setSummary(title);
 
     auto x = this->x() + this->width() / 4 + m_qrcodeDialog->width() / 4;
     auto y = this->y() + this->height() / 4 + m_qrcodeDialog->height() / 4;

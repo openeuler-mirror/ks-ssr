@@ -134,12 +134,11 @@ void DeviceLogTable::initTable()
     setItemDelegate(new DeviceLogDelegate(this));
 
     // 设置水平行表头
-    horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     horizontalHeader()->setStretchLastSection(true);
     horizontalHeader()->setSectionsMovable(false);
-    horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     horizontalHeader()->setFixedHeight(24);
-    horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter);
+
     setHeaderSections(QStringList() << tr("Device Name")
                                     << tr("Device Type")
                                     << tr("Time")
@@ -211,7 +210,7 @@ void DeviceLogTable::setData(const QList<RecordInfo> &infos)
 
         auto type = DeviceUtils::deviceTypeEnum2Str(recordsInfo.type);
         auto state = DeviceUtils::deviceConnectStateEnum2Str(recordsInfo.state);
-        auto time = QDateTime::fromSecsSinceEpoch(recordsInfo.time);
+        auto time = QDateTime::fromSecsSinceEpoch(recordsInfo.time).toString("yyyy/MM/dd HH:mm");
 
         m_model->setData(m_model->index(row, LogTableField::LOG_TABLE_FIELD_NAME), recordsInfo.name);
         m_model->setData(m_model->index(row, LogTableField::LOG_TABLE_FIELD_TYPE), type);
