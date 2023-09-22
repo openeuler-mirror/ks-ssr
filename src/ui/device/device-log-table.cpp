@@ -29,9 +29,6 @@ namespace KS
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-static QMap<QString, QColor> colorMap = {{DeviceUtils::deviceConnectStateEnum2Str(DeviceConnectState::DEVICE_CONNECT_SUCCESSED), QColor("#00a2ff")},
-                                         {DeviceUtils::deviceConnectStateEnum2Str(DeviceConnectState::DEVICE_CONNECT_FAILED), QColor("#d30000")}};
-
 DeviceLogDelegate::DeviceLogDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
 }
@@ -77,7 +74,17 @@ void DeviceLogDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     //绘制状态列:根据状态显示字体颜色
     if (index.column() == LogTableField::LOG_TABLE_FIELD_STATUS)
     {
-        viewOption.palette.setColor(QPalette::Text, colorMap.value(index.data().toString()));
+        //TODO: 由于翻译成中文后使用map方式获取不到颜色值，后面要优化逻辑
+        auto state = index.data().toString();
+        QColor color;
+        if (state == SUCCESSFUL)
+        {
+            color.setNamedColor("00a2ff");
+        }
+        else
+            color.setNamedColor("d30000");
+        viewOption.palette.setColor(QPalette::Text, color);
+
         QApplication::style()->drawItemText(painter,
                                             textRect,
                                             Qt::AlignLeft | Qt::AlignVCenter,
@@ -133,7 +140,7 @@ void DeviceLogTable::initTable()
     horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter);
     setHeaderSections(QStringList() << tr("Device Name")
                                     << tr("Device Type")
-                                    << tr("Connection Time")
+                                    << tr("Time")
                                     << tr("Device Status"));
     horizontalHeader()->resizeSection(LogTableField::LOG_TABLE_FIELD_NAME, 200);
     horizontalHeader()->resizeSection(LogTableField::LOG_TABLE_FIELD_TIME, 200);
