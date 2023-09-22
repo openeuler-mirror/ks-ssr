@@ -171,10 +171,12 @@ void DeviceLogTable::update()
     }
 
     auto jsonDataArray = jsonDoc.array();
-    for (auto jsonData : jsonDataArray)
+    // 倒序排序
+    auto jsonData = jsonDataArray.end();
+    while (jsonData != jsonDataArray.begin())
     {
-        auto data = jsonData.toObject();
-
+        jsonData--;
+        auto data = jsonData->toObject();
         auto recordInfo = RecordInfo{.name = data.value(KSC_DCR_JK_NAME).toString(),
                                      .type = (DeviceType)data.value(KSC_DCR_JK_TYPE).toInt(),
                                      .time = data.value(KSC_DCR_JK_TIME).toVariant().toUInt(),

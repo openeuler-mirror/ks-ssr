@@ -35,7 +35,7 @@ void QRCodeDialog::iniUI()
     setTitle(tr("QR code"));
     setIcon(QIcon(":/images/logo"));
     setButtonHints(TitlebarCloseButtonHint);
-    setFixedSize(350, 300);
+    setFixedSize(359, 319);
 }
 
 QPixmap QRCodeDialog::createQRcodePixmap(const QString &text)

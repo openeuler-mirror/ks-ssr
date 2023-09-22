@@ -270,7 +270,7 @@ bool FPFilesModel::setData(const QModelIndex &index, const QVariant &value, int 
 
     if (role == Qt::UserRole || role == Qt::EditRole)
     {
-        onSingleStateChanged();
+        checkSelectStatus();
     }
     return true;
 }
@@ -306,9 +306,12 @@ void FPFilesModel::updateInfo()
     {
         // 后台返回数据需先转为obj后，将obj中的data字段转为arr
         auto jsonDataArray = jsonDoc.object().value(KSS_JSON_KEY_DATA).toArray();
-        for (auto jsonData : jsonDataArray)
+        // 倒序排序
+        auto jsonData = jsonDataArray.end();
+        while (jsonData != jsonDataArray.begin())
         {
-            auto data = jsonData.toObject();
+            jsonData--;
+            auto data = jsonData->toObject();
             auto fileInfo = FPFileInfo{.selected = false,
                                        .fileName = data.value(KSS_JSON_KEY_DATA_FILE_NAME).toString(),
                                        .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
@@ -324,17 +327,7 @@ QList<FPFileInfo> FPFilesModel::getFPFileInfos()
     return m_filesInfo;
 }
 
-void FPFilesModel::onStateChanged(Qt::CheckState checkState)
-{
-    QModelIndex index;
-    for (int i = 0; i < rowCount(); ++i)
-    {
-        index = this->index(i, 0);
-        setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
-    }
-}
-
-void FPFilesModel::onSingleStateChanged()
+void FPFilesModel::checkSelectStatus()
 {
     auto state = Qt::Unchecked;
     int selectCount = 0;
@@ -368,7 +361,7 @@ FPFileTable::FPFileTable(QWidget *parent) : QTableView(parent),
     m_headerViewProxy = new TPTableHeaderProxy(this);
     setHorizontalHeader(m_headerViewProxy);
     setMouseTracking(true);
-    connect(m_headerViewProxy, &TPTableHeaderProxy::toggled, m_model, &FPFilesModel::onStateChanged);
+    connect(m_headerViewProxy, &TPTableHeaderProxy::toggled, this, &FPFileTable::checkedAllItem);
     connect(m_model, &FPFilesModel::stateChanged, m_headerViewProxy, &TPTableHeaderProxy::setCheckState);
 
     m_filterProxy = new FPFilesFilterModel(this);
@@ -404,6 +397,13 @@ void FPFileTable::searchTextChanged(const QString &text)
     KLOG_DEBUG() << "The search text is change to " << text;
 
     m_filterProxy->setFilterFixedString(text);
+
+    emit m_model->stateChanged(Qt::Unchecked);
+    for (int i = 0; i < m_model->rowCount(); ++i)
+    {
+        auto index = m_model->index(i, 0);
+        m_model->setData(index, Qt::Unchecked);
+    }
 }
 
 void FPFileTable::updateInfo()
@@ -424,6 +424,18 @@ void FPFileTable::mouseEnter(const QModelIndex &index)
     }
     auto mod = selectionModel()->model()->data(index);
     QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
+}
+
+void FPFileTable::checkedAllItem(Qt::CheckState checkState)
+{
+    QModelIndex index;
+    for (int i = 0; i < selectionModel()->model()->rowCount(); ++i)
+    {
+        // 取到该行的序号列
+        auto number = selectionModel()->model()->data(model()->index(index.row(), 1)).toInt();
+        index = m_model->index(number, 0);
+        m_model->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
+    }
 }
 
 }  // namespace KS

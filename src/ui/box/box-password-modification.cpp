@@ -14,6 +14,7 @@
 
 #include "src/ui/box/box-password-modification.h"
 #include <QMessageBox>
+#include <QRegularExpressionValidator>
 #include "src/ui/ui_box-password-modification.h"
 
 namespace KS
@@ -49,6 +50,11 @@ void BoxPasswordModification::init()
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
+
+    auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
+    m_ui->m_currentPassword->setValidator(validator);
+    m_ui->m_newPassword->setValidator(validator);
+    m_ui->m_confirmPassword->setValidator(validator);
 
     m_ui->m_currentPassword->setEchoMode(QLineEdit::Password);
     m_ui->m_newPassword->setEchoMode(QLineEdit::Password);
