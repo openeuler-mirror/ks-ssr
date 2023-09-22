@@ -11,47 +11,47 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef TPKERNEL_H
-#define TPKERNEL_H
+#ifndef SETTINGSTRUSTED_H
+#define SETTINGSTRUSTED_H
 
-#include <QTimer>
+#include <QButtonGroup>
 #include <QWidget>
-#include "src/ui/tp/tp-kernel-table.h"
 
 namespace Ui
 {
-class TPKernel;
+class SettingsTrusted;
 }
+
+class KSSDbusProxy;
 
 namespace KS
 {
-class TPKernel : public QWidget
+class TrustedUserPin;
+
+class SettingsTrusted : public QWidget
 {
     Q_OBJECT
+
 public:
-    TPKernel(QWidget *parent = nullptr);
-    ~TPKernel();
+    SettingsTrusted(QWidget *parent = nullptr);
+    ~SettingsTrusted();
 
 private:
-    void updateInfo();
+    void initUI();
+    void updateStorageMode();
+    bool checkTrustedLoadFinied();
 
-private Q_SLOTS:
-    void searchTextChanged(const QString &text);
-    void addKernelFile(bool checked);
-    void updateKernelList(bool checked);
-    void recertification(bool checked);
-    void popDeleteNotify(bool checked);
-    void removeKernelFile();
-    void prohibitUnloading(bool status, const QString &path);
-    void updateRefreshIcon();
+private slots:
+    void setTrustedStatus(bool checked);
+    void updateSoftRadio(bool checked);
+    void updateHardRadio(bool checked);
+    void setStorageMode();
 
 private:
-    Ui::TPKernel *m_ui;
+    Ui::SettingsTrusted *m_ui;
 
-    KSSDbusProxy *m_dbusProxy;
-
-    QTimer *m_refreshTimer;
+    TrustedUserPin *m_userPin;
+    KSSDbusProxy *m_kssDbusProxy;
 };
 }  // namespace KS
-
-#endif  // TPKERNEL_H
+#endif  // SETTINGSTRUSTED_H

@@ -19,10 +19,9 @@
 
 namespace KS
 {
-Device::Device(const QString& syspath, QObject* parent) : QObject(parent),
-                                                          m_type(DeviceType::DEVICE_TYPE_UNKNOWN),
-                                                          m_interfaceType(InterfaceType::INTERFACE_TYPE_UNKNOWN),
-                                                          m_state(DeviceState::DEVICE_STATE_UNAUTHORIED)
+
+Device::Device(const QString& syspath, QObject* parent)
+    : QObject(parent)
 {
     m_permission = QSharedPointer<Permission>(new Permission{
         .read = false,
@@ -101,6 +100,7 @@ QSharedPointer<Permission> Device::getPermission() const
     return m_permission;
 }
 
+
 void Device::setPermission(QSharedPointer<Permission> permission)
 {
     m_permission = permission;
@@ -119,7 +119,7 @@ QSharedPointer<SDDevice> Device::getSDDevcie()
 QJsonObject Device::toJsonObject()
 {
     auto permission = this->getPermission();
-
+    
     QJsonObject jsonObj{
         {KSC_DEVICE_JK_ID, this->getID()},
         {KSC_DEVICE_JK_NAME, this->getName()},
