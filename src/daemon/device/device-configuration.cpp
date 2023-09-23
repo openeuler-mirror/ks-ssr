@@ -62,47 +62,47 @@ DeviceConfiguration *DeviceConfiguration::instance()
     return pInst.data();
 }
 
-void DeviceConfiguration::addConfig(const DeviceConfig &config)
+void DeviceConfiguration::addSetting(const DeviceSetting &setting)
 {
-    m_deviceSettings->beginGroup(config.uid);
-    m_deviceSettings->setValue(DEVICE_SK_ID, config.id);
-    m_deviceSettings->setValue(DEVICE_SK_NAME, config.name);
-    m_deviceSettings->setValue(DEVICE_SK_ID_PRODUCT, config.idProduct);
-    m_deviceSettings->setValue(DEVICE_SK_ID_VENDOR, config.idVendor);
-    m_deviceSettings->setValue(DEVICE_SK_TYPE, config.type);
-    m_deviceSettings->setValue(DEVICE_SK_INTERFACE_TYPE, config.interfaceType);
-    m_deviceSettings->setValue(DEVICE_SK_READ, config.read);
-    m_deviceSettings->setValue(DEVICE_SK_WRITE, config.write);
-    m_deviceSettings->setValue(DEVICE_SK_EXECUTE, config.execute);
-    m_deviceSettings->setValue(DEVICE_SK_ENABLE, config.enable);
+    m_deviceSettings->beginGroup(setting.uid);
+    m_deviceSettings->setValue(DEVICE_SK_ID, setting.id);
+    m_deviceSettings->setValue(DEVICE_SK_NAME, setting.name);
+    m_deviceSettings->setValue(DEVICE_SK_ID_PRODUCT, setting.idProduct);
+    m_deviceSettings->setValue(DEVICE_SK_ID_VENDOR, setting.idVendor);
+    m_deviceSettings->setValue(DEVICE_SK_TYPE, setting.type);
+    m_deviceSettings->setValue(DEVICE_SK_INTERFACE_TYPE, setting.interfaceType);
+    m_deviceSettings->setValue(DEVICE_SK_READ, setting.read);
+    m_deviceSettings->setValue(DEVICE_SK_WRITE, setting.write);
+    m_deviceSettings->setValue(DEVICE_SK_EXECUTE, setting.execute);
+    m_deviceSettings->setValue(DEVICE_SK_ENABLE, setting.enable);
     m_deviceSettings->endGroup();
 
-    Q_EMIT this->deviceConfigChanged();
+    Q_EMIT this->deviceSettingChanged();
 }
 
-QSharedPointer<DeviceConfig> DeviceConfiguration::getDeviceConfig(const QString &uid)
+QSharedPointer<DeviceSetting> DeviceConfiguration::getDeviceSetting(const QString &uid)
 {
     RETURN_VAL_IF_FALSE(m_deviceSettings->childGroups().contains(uid), nullptr)
 
-    auto config = QSharedPointer<DeviceConfig>(new DeviceConfig());
+    auto setting = QSharedPointer<DeviceSetting>(new DeviceSetting());
 
     m_deviceSettings->beginGroup(uid);
 
-    config->uid = uid;
-    config->id = m_deviceSettings->value(DEVICE_SK_ID).toString();
-    config->name = m_deviceSettings->value(DEVICE_SK_NAME).toString();
-    config->idProduct = m_deviceSettings->value(DEVICE_SK_ID_PRODUCT).toString();
-    config->idVendor = m_deviceSettings->value(DEVICE_SK_ID_VENDOR).toString();
-    config->interfaceType = m_deviceSettings->value(DEVICE_SK_INTERFACE_TYPE).toInt();
-    config->type = m_deviceSettings->value(DEVICE_SK_TYPE).toInt();
-    config->enable = m_deviceSettings->value(DEVICE_SK_ENABLE).toBool();
-    config->read = m_deviceSettings->value(DEVICE_SK_READ).toBool();
-    config->write = m_deviceSettings->value(DEVICE_SK_WRITE).toBool();
-    config->execute = m_deviceSettings->value(DEVICE_SK_EXECUTE).toBool();
+    setting->uid = uid;
+    setting->id = m_deviceSettings->value(DEVICE_SK_ID).toString();
+    setting->name = m_deviceSettings->value(DEVICE_SK_NAME).toString();
+    setting->idProduct = m_deviceSettings->value(DEVICE_SK_ID_PRODUCT).toString();
+    setting->idVendor = m_deviceSettings->value(DEVICE_SK_ID_VENDOR).toString();
+    setting->interfaceType = m_deviceSettings->value(DEVICE_SK_INTERFACE_TYPE).toInt();
+    setting->type = m_deviceSettings->value(DEVICE_SK_TYPE).toInt();
+    setting->enable = m_deviceSettings->value(DEVICE_SK_ENABLE).toBool();
+    setting->read = m_deviceSettings->value(DEVICE_SK_READ).toBool();
+    setting->write = m_deviceSettings->value(DEVICE_SK_WRITE).toBool();
+    setting->execute = m_deviceSettings->value(DEVICE_SK_EXECUTE).toBool();
 
     m_deviceSettings->endGroup();
 
-    return config;
+    return setting;
 }
 
 bool DeviceConfiguration::isIFCEnable(int type)
@@ -308,22 +308,22 @@ void DeviceConfiguration::updateGrub(const QString &filePath)
     }
 }
 
-DeviceConfigList DeviceConfiguration::getDeviceConfig()
+DeviceSettingList DeviceConfiguration::getDeviceSettings()
 {
-    DeviceConfigList configs;
+    DeviceSettingList settings;
     auto groups = m_deviceSettings->childGroups();
 
     Q_FOREACH (auto group, groups)
     {
-        QSharedPointer<DeviceConfig> config = this->getDeviceConfig(group);
+        QSharedPointer<DeviceSetting> setting = this->getDeviceSetting(group);
 
-        if (config)
+        if (setting)
         {
-            configs.append(config);
+            settings.append(setting);
         }
     }
 
-    return configs;
+    return settings;
 }
 
 }  // namespace KS

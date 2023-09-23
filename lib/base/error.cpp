@@ -74,7 +74,7 @@ QString Error::getErrorDesc(KSCErrorCode errorCode)
         errorDesc = QObject::tr("Passphrase error!");
         break;
     case KSCErrorCode::ERROR_DEVICE_INVALID_ID:
-        errorDesc = QObject::tr("Invalid device id.");
+        errorDesc = QObject::tr("Invalid device.");
         break;
     case KSCErrorCode::ERROR_DEVICE_INVALID_PERM:
         errorDesc = QObject::tr("Invalid device permissions.");
