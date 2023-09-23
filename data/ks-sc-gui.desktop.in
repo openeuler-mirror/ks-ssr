@@ -9,5 +9,5 @@ Exec=ks-sc-gui
 Icon=ks-sc.png
 Terminal=false
 Type=Application
-Categories=System
+Categories=System;Security;
 #StartupNotify=true
