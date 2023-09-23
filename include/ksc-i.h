@@ -23,6 +23,10 @@ extern "C"
 #define KSC_DBUS_OBJECT_PATH "/com/kylinsec/SC"
 #define KSC_DBUS_INTERFACE_NAME "com.kylinsec.SC"
 
+// 授权相关定义
+#define KSC_LICENSE_DBUS_OBJECT_PATH "/com/kylinsec/SC/License"
+#define KSC_LICENSE_DBUS_INTERFACE_NAME "com.kylinsec.SC.License"
+
 // 保密箱相关定义
 #define KSC_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/BoxManager"
 #define KSC_BOX_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SC.BoxManager"

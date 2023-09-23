@@ -17,6 +17,8 @@
 #include <ks-license/license-i.h>
 #include <QObject>
 
+namespace KS
+{
 #define LICENSE_OBJECT_NAME "KSSC"
 #define TIMEOUT_MS 5000
 #define METHOD_GET_LICENSE "GetLicense"
@@ -24,15 +26,13 @@
 #define METHOD_ACTIVATE_BY_ACTIVATION_CODE "ActivateByActivationCode"
 #define SIGNAL_LICENSE_CHANGED "LicenseChanged"
 
-namespace KS
-{
-class LicenseDBus : public QObject
+class LicenseProxy : public QObject
 {
     Q_OBJECT
 public:
-    LicenseDBus(QObject* parent = 0);
-    static QSharedPointer<LicenseDBus> getDefault();
-    virtual ~LicenseDBus();
+    LicenseProxy(QObject* parent = 0);
+    static QSharedPointer<LicenseProxy> getDefault();
+    virtual ~LicenseProxy();
 
 public:
     /**

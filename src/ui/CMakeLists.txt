@@ -32,6 +32,14 @@ qt5_add_dbus_interface(
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
   device_manager_proxy)
 
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.License.xml
+  PROPERTIES CLASSNAME LicenseManagerProxy NO_NAMESPACE true)
+
+qt5_add_dbus_interface(
+  LICNESE_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.License.xml
+  license_manager_proxy)
+
 qt5_wrap_ui(
   UI_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
@@ -71,6 +79,7 @@ add_executable(
   ${BOX_MANAGER_SRCS}
   ${DEVICE_MANAGER_SRCS}
   ${KSS_DBUS_SRCS}
+  ${LICNESE_SRCS}
   ${QM_FILES}
   ${UI_FILES}
   "${PROJECT_SOURCE_DIR}/resources/resources.qrc")
