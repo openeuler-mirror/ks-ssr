@@ -39,7 +39,7 @@ public:
     static void globalDeinit() { delete m_instance; };
 
     void addQuery(const QString boxName, const QString boxId, bool isMount, const QString encryptpassword, const QString encryptKey, const QString encryptPspr, int senderUserUid);
-    void ModifyQueryMountStatus(const QString boxId, bool isMount);
+    void modifyQueryMountStatus(const QString boxId, bool isMount);
     void ModifyQueryPasswd(const QString boxId, const QString encryptpassword);
     bool delQuery(const QString boxId);
     QSqlQuery findQuery(const QString boxId);

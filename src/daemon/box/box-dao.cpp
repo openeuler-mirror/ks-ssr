@@ -23,14 +23,14 @@ void BoxDao::addQuery(const QString boxName, const QString boxId, bool isMount, 
         KLOG_DEBUG() << "BoxDao insert error!";
 }
 
-void BoxDao::ModifyQueryMountStatus(const QString boxId, bool isMount)
+void BoxDao::modifyQueryMountStatus(const QString boxId, bool isMount)
 {
     QSqlQuery query(m_boxDb);
 
     QString cmd = QString("update notes set isMount ='%1' where boxId='%2';").arg(QString::number(isMount), boxId);
     KLOG_DEBUG() << "fixedQueryMountStatus cmd = " << cmd;
     if (!query.exec(cmd))
-        KLOG_DEBUG() << "ModifyQueryMountStatus error!";
+        KLOG_DEBUG() << "modifyQueryMountStatus error!";
 }
 
 void BoxDao::ModifyQueryPasswd(const QString boxId, const QString encryptpassword)
