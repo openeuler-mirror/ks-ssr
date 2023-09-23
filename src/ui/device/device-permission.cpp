@@ -101,14 +101,14 @@ void DevicePermission::setDevicePermission(const QString type, int permission)
     //针对挂载的存储设备，默认有可读权限，并且用户无法取消勾选
     if (type == DeviceUtils::deviceTypeEnum2Str(DeviceType::DEVICE_TYPE_STORAGE))
     {
-        m_ui->m_read->setChecked(true);
+        m_permissions |= PERMISSION_TYPE_READ;
         m_ui->m_read->setDisabled(true);
     }
     else
     {
-        m_ui->m_read->setChecked(m_permissions & PERMISSION_TYPE_READ);
         m_ui->m_read->setDisabled(false);
     }
+    m_ui->m_read->setChecked(m_permissions & PERMISSION_TYPE_READ);
     m_ui->m_write->setChecked(m_permissions & PERMISSION_TYPE_WRITE);
     m_ui->m_exec->setChecked(m_permissions & PERMISSION_TYPE_EXEC);
 }
@@ -126,6 +126,7 @@ int DevicePermission::getDevicePermission()
 void DevicePermission::confirm()
 {
     int permissions = 0;
+    bool changed = false;
     if (m_ui->m_read->isChecked())
     {
         permissions |= PERMISSION_TYPE_READ;
@@ -149,20 +150,19 @@ void DevicePermission::confirm()
     if (state != m_status)
     {
         m_status = state;
+        changed = true;
         emit stateChanged();
     }
 
-    if (permissions != m_permissions)
+    //禁用状态下无法修改权限，只有在启用状态下才能修改权限
+    if (state == DeviceState::DEVICE_STATE_ENABLE)
     {
-        //禁用状态下无法修改权限，只有在启用状态下才能修改权限
-        if (state == DeviceState::DEVICE_STATE_ENABLE)
-        {
-            m_permissions = permissions;
-            emit permissionChanged();
-        }
+        m_permissions = permissions;
+        changed = true;
+        emit permissionChanged();
     }
 
-    if (state != m_status || permissions != m_permissions)
+    if (changed)
     {
         emit deviceChanged();
     }
