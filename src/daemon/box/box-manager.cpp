@@ -1,8 +1,15 @@
 /**
- * @file          /ks-sc/src/daemon/box/box-manager.cpp
- * @brief
- * @author        chendingjian <chendingjian@kylinos.com>
- * @copyright (c) 2023 KylinSec. All rights reserved.
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
+ * ks-sc is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2 
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
+ * See the Mulan PSL v2 for more details.  
+ * 
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 #include "src/daemon/box/box-manager.h"
 #include <pwd.h>
@@ -129,7 +136,7 @@ QString BoxManager::CreateBox(const QString &name, const QString &password)
     }
 }
 
-void BoxManager::DelBox(const QString &box_uid, const QString &password)
+bool BoxManager::DelBox(const QString &box_uid, const QString &password)
 {
     try
     {
@@ -141,13 +148,13 @@ void BoxManager::DelBox(const QString &box_uid, const QString &password)
         if (decryptInputPassword != decryptPassword)
         {
             KLOG_DEBUG() << "DelBox password error!";
-            return;
+            return false;
         }
 
         if (QVariant(query.value(2).toString()).toBool())
         {
             KLOG_DEBUG() << "Is mounted. uid = " << box_uid;
-            return;
+            return false;
         }
 
         // 删除目录
@@ -166,10 +173,12 @@ void BoxManager::DelBox(const QString &box_uid, const QString &password)
         BoxDao::getInstance()->delQuery(box_uid);
 
         emit BoxDeleted(box_uid);
+        return true;
     }
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
+        return false;
     }
 }
 
@@ -245,7 +254,7 @@ bool BoxManager::IsMounted(const QString &box_uid)
     }
 }
 
-void BoxManager::ModifyBoxPassword(const QString &box_uid, const QString &current_password, const QString &new_password)
+bool BoxManager::ModifyBoxPassword(const QString &box_uid, const QString &current_password, const QString &new_password)
 {
     try
     {
@@ -257,16 +266,17 @@ void BoxManager::ModifyBoxPassword(const QString &box_uid, const QString &curren
         if (decryptInputPassword != decryptPassword)
         {
             KLOG_DEBUG() << "ModifyBoxPassword password error!";
-            return;
+            return false;
         }
 
         //        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, new_password.toStdString());
         BoxDao::getInstance()->ModifyQueryPasswd(box_uid, new_password);
+        return true;
     }
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        return;
+        return false;
     }
 }
 

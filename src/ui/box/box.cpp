@@ -32,14 +32,14 @@ Box::Box(const QString &uid) : m_uid(uid),
                                m_name("Unknown"),
                                m_mounted(false),
                                m_modifyPassword(nullptr),
-                               m_popupMenu(nullptr),
-                               m_passwdEdit(nullptr)
+                               m_popupMenu(nullptr)
 {
     this->m_boxManagerProxy = new BoxManagerProxy(SC_DBUS_NAME,
                                                   SC_BOX_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
 
+    m_passwdEdit = new QLineEdit;
     this->initBox();
     this->initMenu();
 }
@@ -100,7 +100,7 @@ void Box::initMenu()
                                                                this,
                                                                &Box::switchMountedStatus);
     this->m_popupMenu->addAction(tr("Modify password"), this, &Box::modifyPassword);
-    this->m_popupMenu->addAction(tr("Delete"));
+    this->m_popupMenu->addAction(tr("Delete"), this, &Box::delBox);
 }
 
 void Box::boxChanged()
@@ -131,7 +131,10 @@ void Box::switchMountedStatus()
     }
     else
     {
-        QWidget *widget = buildInputPasswdPage();
+        QWidget *widget = buildMountInputPasswdPage();
+        int x = this->x() + this->width() / 2 + widget->width() / 2;
+        int y = this->y() + this->height() / 2 + widget->height() / 2;
+        widget->move(x, y);
         widget->show();
     }
 }
@@ -146,28 +149,50 @@ void Box::modifyPassword()
 
     this->m_modifyPassword = new ModifyPassword();
     connect(this->m_modifyPassword, SIGNAL(accepted()), this, SLOT(modifyPasswordAccepted()));
+
+    int x = this->x() + this->width() / 4 + m_modifyPassword->width() / 4;
+    int y = this->y() + this->height() / 4 + m_modifyPassword->height() / 4;
+    this->m_modifyPassword->move(x, y);
+    this->m_modifyPassword->setBoxName(this->m_name);
     this->m_modifyPassword->show();
 }
 
-QWidget *Box::buildInputPasswdPage()
+void Box::delBox()
 {
     QWidget *widget = new QWidget;
     widget->setWindowTitle(tr("input password"));
     widget->setWindowModality(Qt::ApplicationModal);
+    widget->setWindowIcon(QIcon(":/images/logo"));
 
     QVBoxLayout *vlay = new QVBoxLayout(widget);
 
     QLabel *label = new QLabel(tr("Please input password:"));
-    m_passwdEdit = new QLineEdit(widget);
+    //     m_passwdEdit = new QLineEdit(widget);
 
     QHBoxLayout *hlay = new QHBoxLayout;
     QPushButton *ok = new QPushButton(tr("ok"));
     QPushButton *canel = new QPushButton(tr("canel"));
-    connect(ok, &QPushButton::clicked, this, [this]
+    connect(ok, &QPushButton::clicked, this, [this] {
+        std::string encryptPasswd = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey().toStdString(), m_passwdEdit->text().toStdString());
+        auto reply = this->m_boxManagerProxy->DelBox(this->m_uid, QString::fromStdString(encryptPasswd));
+        bool ret = false;
+        reply.waitForFinished();
+        if (reply.isValid())
+        {
+            ret = reply.value();
+            if (!ret)
             {
-                std::string encryptPasswd = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey().toStdString(), m_passwdEdit->text().toStdString());
-                this->m_boxManagerProxy->Mount(this->m_uid, QString::fromStdString(encryptPasswd)).waitForFinished();
-            });
+                QWidget *widget = buildPasswdNotifyPage(QString(tr("The Password is wrong or has been mounted!")));
+                widget->show();
+            }
+            else
+            {
+                QWidget *widget = buildPasswdNotifyPage(QString(tr("Delete success!")));
+                widget->show();
+            }
+        }
+        this->m_passwdEdit->setText("");
+    });
     connect(ok, &QPushButton::clicked, widget, &QWidget::close);
     connect(canel, &QPushButton::clicked, widget, &QWidget::close);
 
@@ -178,15 +203,113 @@ QWidget *Box::buildInputPasswdPage()
     vlay->addWidget(m_passwdEdit);
     vlay->addLayout(hlay);
 
+    int x = this->x() + this->width() / 4 + widget->width() / 4;
+    int y = this->y() + this->height() / 4 + widget->height() / 4;
+    widget->move(x, y);
+    widget->show();
+}
+
+QWidget *Box::buildMountInputPasswdPage()
+{
+    QWidget *widget = new QWidget;
+    widget->setWindowTitle(tr("input password"));
+    widget->setWindowModality(Qt::ApplicationModal);
+    widget->setWindowIcon(QIcon(":/images/logo"));
+
+    QVBoxLayout *vlay = new QVBoxLayout(widget);
+
+    QLabel *label = new QLabel(tr("Please input password:"));
+    //    m_passwdEdit = new QLineEdit(widget);
+
+    QHBoxLayout *hlay = new QHBoxLayout;
+    QPushButton *ok = new QPushButton(tr("ok"));
+    QPushButton *canel = new QPushButton(tr("canel"));
+    connect(ok, &QPushButton::clicked, this, [this] {
+        std::string encryptPasswd = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey().toStdString(), m_passwdEdit->text().toStdString());
+        auto reply = this->m_boxManagerProxy->Mount(this->m_uid, QString::fromStdString(encryptPasswd));
+        bool ret = false;
+        reply.waitForFinished();
+        if (reply.isValid())
+        {
+            ret = reply.value();
+            if (!ret)
+            {
+                QWidget *widget = buildPasswdNotifyPage(QString(tr("Password error!")));
+                widget->show();
+            }
+            else
+            {
+                QWidget *widget = buildPasswdNotifyPage(QString(tr("Unlock success!")));
+                widget->show();
+            }
+        }
+        this->m_passwdEdit->setText("");
+    });
+    connect(ok, &QPushButton::clicked, widget, &QWidget::close);
+    connect(canel, &QPushButton::clicked, widget, &QWidget::close);
+
+    hlay->addWidget(ok);
+    hlay->addWidget(canel);
+
+    vlay->addWidget(label);
+    vlay->addWidget(m_passwdEdit);
+    vlay->addLayout(hlay);
+
+    widget->hide();
+
+    return widget;
+}
+
+QWidget *Box::buildPasswdNotifyPage(const QString notify)
+{
+    QWidget *widget = new QWidget();
+    widget->setWindowModality(Qt::ApplicationModal);
+    widget->setWindowTitle(tr("notice"));
+    widget->setWindowIcon(QIcon(":/images/logo"));
+    QVBoxLayout *vlay = new QVBoxLayout(widget);
+
+    QLabel *label = new QLabel(notify);
+    QPushButton *ok = new QPushButton(tr("ok"));
+    connect(ok, &QPushButton::clicked, widget, &QWidget::close);
+
+    vlay->addWidget(label);
+    vlay->addWidget(ok);
+
+    int x = this->x() + this->width() / 4 + widget->width() / 4;
+    int y = this->y() + this->height() / 4 + widget->height() / 4;
+    widget->move(x, y);
+
     return widget;
 }
 
 void Box::modifyPasswordAccepted()
 {
-    auto reply = this->m_boxManagerProxy->ModifyBoxPassword(this->m_uid,
-                                                            this->m_modifyPassword->getCurrentPassword(),
-                                                            this->m_modifyPassword->getNewPassword());
+    std::string encryptCurrentPassword = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey().toStdString(), this->m_modifyPassword->getCurrentPassword().toStdString());
+    std::string encryptNewPassword = CryptoHelper::rsa_encrypt(m_boxManagerProxy->rSAPublicKey().toStdString(), this->m_modifyPassword->getNewPassword().toStdString());
 
+    auto reply = this->m_boxManagerProxy->ModifyBoxPassword(this->m_uid,
+                                                            QString::fromStdString(encryptCurrentPassword),
+                                                            QString::fromStdString(encryptNewPassword));
+
+    bool ret = false;
     reply.waitForFinished();
+    if (reply.isValid())
+    {
+        ret = reply.value();
+        if (!ret)
+        {
+            QWidget *widget = buildPasswdNotifyPage(QString(tr("Password error!")));
+            widget->show();
+        }
+        else
+        {
+            QWidget *widget = buildPasswdNotifyPage(QString(tr("Modify success!")));
+            widget->show();
+        }
+    }
+    else
+    {
+        KLOG_DEBUG() << "modify password failed. ret = " << ret;
+    }
 }
 }  // namespace KS
