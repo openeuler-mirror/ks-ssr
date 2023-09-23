@@ -59,5 +59,5 @@ install(FILES ${PROJECT_BINARY_DIR}/data/ks-sc-gui.desktop
         DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/applications/)
 
 # appdata.xml
-install(FILES ${PROJECT_BINARY_DIR}/data/ks-sc-gui.appdata.xml
+install(FILES ${PROJECT_SOURCE_DIR}/data/ks-sc-gui.appdata.xml
         DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/metainfo/)
