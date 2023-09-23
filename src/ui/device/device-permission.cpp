@@ -99,7 +99,7 @@ void DevicePermission::setDevicePermission(const QString type, int permission)
     m_permissions = permission;
 
     //针对挂载的存储设备，默认有可读权限，并且用户无法取消勾选
-    if (type == DeviceUtils::deviceTypeEnum2Str(DeviceType::DEVICE_TYPE_DISK))
+    if (type == DeviceUtils::deviceTypeEnum2Str(DeviceType::DEVICE_TYPE_STORAGE))
     {
         m_ui->m_read->setChecked(true);
         m_ui->m_read->setDisabled(true);
