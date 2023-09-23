@@ -156,7 +156,8 @@ void DeviceConfiguration::setIFCEnable(int type, bool enable)
 DeviceConfiguration::DeviceConfiguration(QObject *parent) : QObject(parent),
                                                             m_deviceSettings(nullptr),
                                                             m_interfaceSettings(nullptr),
-                                                            m_grubUpdateThread(nullptr),
+                                                            m_legacyGrubUpdateThread(nullptr),
+                                                            m_efiGrubUpdateThread(nullptr),
                                                             m_waitingUpdateGrub(false)
 {
     this->init();
@@ -242,29 +243,38 @@ void DeviceConfiguration::syncInterfaceToGrubFile()
 }
 #endif
 
-void DeviceConfiguration::updateGrubsInThread()
+void DeviceConfiguration::updateLegacyGrubsInThread()
 {
     this->updateGrub(GRUB_LEGACY_FILE_PATH);
+}
+
+void DeviceConfiguration::updateEfiGrubsInThread()
+{
     this->updateGrub(GRUB_EFI_FILE_PATH);
 }
 
 void DeviceConfiguration::checkWaitingUpdateGrubs()
 {
-    RETURN_IF_TRUE(m_grubUpdateThread);
+    // 理论上说，如果两次更新 grub 触发的足够快，这里是会存在问题的。
+    RETURN_IF_TRUE(m_legacyGrubUpdateThread);
+    RETURN_IF_TRUE(m_efiGrubUpdateThread);
 
     if (m_waitingUpdateGrub)
     {
         m_waitingUpdateGrub = false;
-        m_grubUpdateThread = QThread::create(std::bind(&DeviceConfiguration::updateGrubsInThread, this));
-        connect(m_grubUpdateThread, &QThread::finished, std::bind(&DeviceConfiguration::finishGrubsUpdate, this));
-        m_grubUpdateThread->start();
+        m_legacyGrubUpdateThread = QThread::create(std::bind(&DeviceConfiguration::updateLegacyGrubsInThread, this));
+        connect(m_legacyGrubUpdateThread, &QThread::finished, std::bind(&DeviceConfiguration::finishGrubsUpdate, this, &m_legacyGrubUpdateThread));
+        m_efiGrubUpdateThread = QThread::create(std::bind(&DeviceConfiguration::updateEfiGrubsInThread, this));
+        connect(m_efiGrubUpdateThread, &QThread::finished, std::bind(&DeviceConfiguration::finishGrubsUpdate, this, &m_efiGrubUpdateThread));
+        m_legacyGrubUpdateThread->start();
+        m_efiGrubUpdateThread->start();
     }
 }
 
-void DeviceConfiguration::finishGrubsUpdate()
+void DeviceConfiguration::finishGrubsUpdate(QThread **grubUpdateThread)
 {
-    this->m_grubUpdateThread->deleteLater();
-    this->m_grubUpdateThread = nullptr;
+    (*grubUpdateThread)->deleteLater();
+    (*grubUpdateThread) = nullptr;
     this->checkWaitingUpdateGrubs();
 
     // FIXME: 为了 HDMI 接口的特殊化处理
