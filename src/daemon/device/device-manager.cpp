@@ -166,8 +166,9 @@ QSharedPointer<Device> DeviceManager::getParentDevice(const QString syspath) con
 {
     Q_FOREACH (auto device, m_devices)
     {
+        auto path = device->getSyspath();
         if ((device->getType() != DEVICE_TYPE_HUB) &&
-            syspath.startsWith(device->getSyspath()))
+            syspath.startsWith(path.endsWith('/') ? path : path + '/'))
         {
             return device;
         }
