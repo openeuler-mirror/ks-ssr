@@ -18,12 +18,6 @@
 
 namespace KS
 {
-/* BoxsLayout::BoxsLayout(QWidget *parent) : QWidget(parent),
-                                          m_lastBoxRow(0),
-                                          m_lastBoxCol(-1)
-{
-} */
-
 FlowLayout::FlowLayout(QWidget *parent, int margin, int hSpacing, int vSpacing) : QLayout(parent),
                                                                                   m_hSpace(hSpacing),
                                                                                   m_vSpace(vSpacing)
@@ -102,7 +96,7 @@ void FlowLayout::setGeometry(const QRect &rect)
 
 QSize FlowLayout::sizeHint() const
 {
-    return minimumSize();
+    return this->minimumSize();
 }
 
 QSize FlowLayout::minimumSize() const
@@ -126,26 +120,10 @@ int FlowLayout::doLayout(const QRect &rect) const
     int bottom = 0;
     int boxTotalHeight = 0;
 
+    //    KLOG_DEBUG() << "FlowLayout rect: " << rect;
+
     getContentsMargins(&left, &top, &right, &bottom);
     QRect effectiveRect = rect.adjusted(+left, +top, -right, -bottom);
-
-    /* 假设总宽度为TW，保密箱的宽度为BW，保密箱间隙为S，一行能摆放的最大保密箱数量为boxColN，
-       则应该满足：BW*boxColN + S*(boxColN-1) <= TW，
-       因此boxColN <= (TW+S)/(BW+S)。
-       假设保密箱总数为BTN，则需要的行数为：(BTN + boxColN - 1) / boxColN
-    */
-
-    // if (this->m_itemList.size() > 0)
-    // {
-    //     auto boxWidth = this->m_itemList.first()->sizeHint().width();
-    //     auto boxHeight = this->m_itemList.first()->sizeHint().height();
-    //     auto boxColN = (effectiveRect.width() + this->horizontalSpacing()) / (boxWidth + this->horizontalSpacing());
-    //     auto boxRowN = (this->m_itemList.size() + boxColN - 1) / boxColN;
-
-    //     boxTotalHeight = boxRowN * boxHeight + (boxRowN - 1) * this->verticalSpacing();
-    // }
-
-    // return boxTotalHeight + rect;
 
     int x = effectiveRect.x();
     int y = effectiveRect.y();
@@ -173,6 +151,8 @@ int FlowLayout::doLayout(const QRect &rect) const
             nextX = x + item->sizeHint().width() + spaceX;
             lineHeight = 0;
         }
+
+        // KLOG_DEBUG() << "item geometry: " << QPoint(x, y) << " , size: " << item->sizeHint();
 
         item->setGeometry(QRect(QPoint(x, y), item->sizeHint()));
 

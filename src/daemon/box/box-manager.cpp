@@ -93,7 +93,7 @@ QString BoxManager::CreateBox(const QString &name, const QString &password)
         // 加密处理
         std::string encryptKey = CryptoHelper::rsa_encrypt(m_rSAPublicKey, key.toStdString());
         std::string encryptPassphrase = CryptoHelper::rsa_encrypt(m_rSAPublicKey, StrUtils::rtrim(passphrase.toStdString()));
-//        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, password.toStdString());
+        //        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, password.toStdString());
 
         KLOG_DEBUG() << "key = " << key << "passphrase = " << passphrase;
 
@@ -136,7 +136,7 @@ void BoxManager::DelBox(const QString &box_uid, const QString &password)
         // 密码认证
         QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
         std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(3).toString().toStdString());
-        std::string decryptInputPassword  = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, password.toStdString());
+        std::string decryptInputPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, password.toStdString());
 
         if (decryptInputPassword != decryptPassword)
         {
@@ -154,7 +154,7 @@ void BoxManager::DelBox(const QString &box_uid, const QString &password)
         QString dirPath = UNMOUNTED_DIR_CREAT_PATH "/" + query.value(0).toString() + query.value(1).toString();
         m_ecryptFS->rmBoxDir(dirPath);
 
-        if (0 != query.value(6).toInt())
+        if (0 == query.value(6).toInt())
             dirPath = "~/box/" + query.value(0).toString();
         else
         {
@@ -251,15 +251,16 @@ void BoxManager::ModifyBoxPassword(const QString &box_uid, const QString &curren
     {
         QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
         std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(3).toString().toStdString());
-        std::string decryptInputPassword  = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, current_password.toStdString());
+        std::string decryptInputPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, current_password.toStdString());
 
+        KLOG_DEBUG() << "decryptPassword = " << QString::fromStdString(decryptPassword) << "decryptInputPassword = " << QString::fromStdString(decryptInputPassword);
         if (decryptInputPassword != decryptPassword)
         {
             KLOG_DEBUG() << "ModifyBoxPassword password error!";
             return;
         }
 
-//        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, new_password.toStdString());
+        //        std::string encryptPassword = CryptoHelper::rsa_encrypt(m_rSAPublicKey, new_password.toStdString());
         BoxDao::getInstance()->ModifyQueryPasswd(box_uid, new_password);
     }
     catch (const std::exception &e)
@@ -277,7 +278,7 @@ bool BoxManager::Mount(const QString &box_uid, const QString &password)
         // 密码认证
         QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
         std::string decryptPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, query.value(3).toString().toStdString());
-        std::string decryptInputPassword  = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, password.toStdString());
+        std::string decryptInputPassword = CryptoHelper::rsa_decrypt(m_rSAPrivateKey, password.toStdString());
 
         if (decryptInputPassword != decryptPassword)
         {
@@ -299,7 +300,7 @@ bool BoxManager::Mount(const QString &box_uid, const QString &password)
         KLOG_DEBUG() << "decryptKeyPspr = " << QString::fromStdString(decryptPspr);
 
         QString mountPath;
-        if (0 != query.value(6).toInt())
+        if (0 == query.value(6).toInt())
             mountPath = "~/box/" + query.value(0).toString();
         else
         {
@@ -333,7 +334,7 @@ void BoxManager::UnMount(const QString &box_uid)
     {
         QSqlQuery query = BoxDao::getInstance()->findQuery(box_uid);
         QString mountPath;
-        if (0 != query.value(6).toInt())
+        if (0 == query.value(6).toInt())
             mountPath = "~/box/" + query.value(0).toString();
         else
         {
