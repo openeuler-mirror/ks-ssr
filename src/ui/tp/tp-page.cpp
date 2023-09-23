@@ -76,11 +76,7 @@ void TPPage::initSubPage()
     auto execute = new TPExecute(m_ui->m_stacked);
     connect(execute, &TPExecute::initFinished, this, [this]
             {
-                if (m_loading->isVisible())
-                {
-                    m_loading->setVisible(false);
-                }
-
+                m_loading->setVisible(false);
                 m_ui->m_sidebar->setEnabled(true);
             });
     auto kernel = new TPKernel(m_ui->m_stacked);
