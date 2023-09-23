@@ -29,6 +29,7 @@ struct Interface
 
 namespace KS
 {
+class SettingsRespondDialog;
 class SettingsDevice : public QWidget
 {
     Q_OBJECT
@@ -42,9 +43,12 @@ private:
     void insertInterfaceWidget();
     void update();
     QList<Interface> getInterfaces();
+    void popupMessageDialog(const QString &text);
 
 private slots:
     void setInterfaceState(bool checked);
+    void accept();
+    void reject();
 
 private:
     DeviceManagerProxy *m_deviceManagerProxy;
@@ -55,5 +59,7 @@ private:
     QWidget *m_kbdMouseContent;
     //绑定接口控制QCheckbox以及接口类型
     QMap<InterfaceType, QCheckBox *> m_checkboxs;
+    QCheckBox *m_clickedCheckbox;
+    SettingsRespondDialog *m_respondDlg;
 };
 }  // namespace KS
