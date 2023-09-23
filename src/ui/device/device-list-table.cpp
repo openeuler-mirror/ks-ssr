@@ -380,6 +380,12 @@ void DeviceListTable::update()
     {
         auto data = jsonData.toObject();
 
+        // 供应商 ID 1d6b 代表是 linux 内核提供的虚拟 usb 设备，所以不在我们管控范围内，故不予显示。
+        if (data.value(KSC_DEVICE_JK_ID).toString().startsWith("1d6b", Qt::CaseInsensitive))
+        {
+            continue;
+        }
+
         auto deviceInfo = DeviceInfo{.number = count,
                                      .name = data.value(KSC_DEVICE_JK_NAME).toString(),
                                      .type = (DeviceType)data.value(KSC_DEVICE_JK_TYPE).toInt(),
