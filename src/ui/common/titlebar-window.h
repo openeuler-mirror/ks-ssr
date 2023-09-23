@@ -48,6 +48,12 @@ public:
     Q_DECLARE_FLAGS(TitlebarButtonHintFlags, TitlebarButtonHint)
     Q_FLAG(TitlebarButtonHintFlags)
 
+    /* 样式表中提供设置窗口内容Margin */
+    Q_PROPERTY(int contentWrapperMarginLeft READ contentWrapperMarginLeft WRITE setContentWrapperMarginLeft)
+    Q_PROPERTY(int contentWrapperMarginRight READ contentWrapperMarginRight WRITE setContentWrapperMarginRight)
+    Q_PROPERTY(int contentWrapperMarginBottom READ contentWrapperMarginBottom WRITE setContentWrapperMarginBottom)
+    Q_PROPERTY(bool compositingRunning READ compositingRunning)
+
 public:
     /**
      * @brief KiranTitlebarWindow构造方法
@@ -124,6 +130,30 @@ public:
      */
     void setResizeable(bool resizeable);
 
+    /**
+     * @brief 内容窗口距底部边距
+     * @return 边距
+     */
+    int contentWrapperMarginBottom() const;
+
+    /**
+      * @brief 内容窗口距右边边距
+      * @return 边距
+      */
+    int contentWrapperMarginRight() const;
+
+    /**
+     * @brief 内容窗口距左边边距
+     * @return 边距
+     */
+    int contentWrapperMarginLeft() const;
+
+    /**
+      * 初始化时缓存QX11Info::isCompositingManagerRunning的值
+      * 提供给样式表一个属性值，方便设置混成开关两种样式
+      */
+    bool compositingRunning() const;
+
     QSize sizeHint() const override;
 
     void setTitleBarHeight(int height);
@@ -134,6 +164,24 @@ public:
      * 获取窗口透明边框的宽度
      */
     int transparentWidth();
+public slots:
+    /**
+     * @brief 设置内容窗口距底部边距
+     * @param margin 边距
+     */
+    void setContentWrapperMarginBottom(int margin);
+
+    /**
+     * @brief 设置内容窗口距右边边距
+     * @param margin 边距
+     */
+    void setContentWrapperMarginRight(int margin);
+
+    /**
+     * @brief 设置内容窗口距左边距
+     * @param margin 边距
+     */
+    void setContentWrapperMarginLeft(int margin);
 
 protected:
     /* 事件处理 */

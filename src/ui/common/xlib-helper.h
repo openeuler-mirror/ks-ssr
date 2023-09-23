@@ -16,7 +16,7 @@
 
 #include <QX11Info>
 
-#include "src/ui/common/global-define.h"
+#include "src/ui/common/global_define.h"
 
 namespace KS
 {

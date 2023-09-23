@@ -1,32 +1,28 @@
 /**
- * Copyright (c) 2020 ~ 2021 KylinSec Co., Ltd. 
- * kiran-session-manager is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
- * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * @file          /ks-sc/src/daemon/main.cpp
+ * @brief         
+ * @author        chendingjian <chendingjian@kylinos.com>
+ * @copyright (c) 2023 KylinSec. All rights reserved.
  */
 
 #include <QCommandLineParser>
 #include <QCoreApplication>
+#include <QFileInfo>
 #include <QTranslator>
+#include <QtDBus/QDBusConnection>
 #include <QtGlobal>
 #include <iostream>
 #include "config.h"
+#include "src/daemon/daemon-manager.h"
 
-using namespace Kiran;
+using namespace KS;
 
 int main(int argc, char *argv[])
 {
     auto argv0 = QFileInfo(argv[0]);
     auto programName = argv0.baseName();
 
-    if (klog_qt5_init(QString(), "kylinsec-session", PROJECT_NAME, programName) < 0)
+    if (klog_qt5_init(QString(), "kylinsec-system", PROJECT_NAME, programName) < 0)
     {
         fprintf(stderr, "Failed to init kiran-log.");
     }
@@ -37,7 +33,7 @@ int main(int argc, char *argv[])
 
     QTranslator translator;
 
-    if (!translator.load(QLocale(), qAppName(), ".", KSM_INSTALL_TRANSLATIONDIR, ".qm"))
+    if (!translator.load(QLocale(), qAppName(), ".", SC_INSTALL_TRANSLATIONDIR, ".qm"))
     {
         KLOG_WARNING() << "Load translator failed!";
     }
@@ -49,13 +45,11 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    // parser.addOption(QCommandLineOption(QStringList({"s", "session-type"}),
-    //                                     app.translate("main", "Specify a session type that contains required components."),
-    //                                     app.translate("main", "SESSION_NAME"),
-    //                                     QStringLiteral("kiran")));
+    // parser.addOption();
+
     parser.process(app);
 
-    SessionManager::getInstance()->start();
+    KS::DaemonManager::globalInit();
 
     auto retval = app.exec();
 
