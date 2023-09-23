@@ -131,6 +131,8 @@ void Window::initWindow()
     layout->addWidget(m_activateStatus);
     layout->addWidget(btnForMenu);
     layout->setAlignment(Qt::AlignRight);
+
+    connect(m_ui->m_pages, &QStackedWidget::currentChanged, this, &Window::updatePage);
 }
 
 void Window::initNavigation()
@@ -150,10 +152,10 @@ void Window::initNavigation()
         delete currentWidget;
     }
 
-    m_ui->m_pages->addWidget(new TPPage(this));
-    m_ui->m_pages->addWidget(new FPPage());
-    m_ui->m_pages->addWidget(new BoxPage());
-    m_ui->m_pages->addWidget(new DevicePage());
+    m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_TP, new TPPage(this));
+    m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_FP, new FPPage());
+    m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_BOX, new BoxPage());
+    m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_DEVICE, new DevicePage());
     m_ui->m_pages->setCurrentIndex(0);
 
     connect(m_ui->m_navigation, SIGNAL(currentCategoryChanged(int)), m_ui->m_pages, SLOT(setCurrentIndex(int)));
@@ -214,5 +216,14 @@ void Window::activateMetaObject()
     showNormal();
     raise();
     activateWindow();
+}
+
+void Window::updatePage(int index)
+{
+    if (index == CategoryPageType::CATEGORY_PAGE_TYPE_DEVICE)
+    {
+        DevicePage *page = qobject_cast<DevicePage *>(m_ui->m_pages->widget(index));
+        page->update();
+    }
 }
 }  // namespace KS
