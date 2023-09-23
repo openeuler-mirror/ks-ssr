@@ -165,8 +165,11 @@ void DeviceConfiguration::init()
     m_deviceSettings = new QSettings(KSC_DEVICE_CONFIG_FILE, QSettings::NativeFormat, this);
     m_interfaceSettings = new QSettings(KSC_DI_CONFIG_FILE, QSettings::NativeFormat, this);
     // FIXME: 为了 HDMI 接口的特殊化处理
-    m_interfaceSettings->beginGroup(QString("interface%1").arg(INTERFACE_TYPE_HDMI));
-    m_isEnableHDMI = m_interfaceSettings->value(DI_SK_ENABLE).toBool();
+    auto group = QString("interface%1").arg(INTERFACE_TYPE_HDMI);
+    m_interfaceSettings->beginGroup(group);
+    // 当配置文件中 HDMI 配置，优先使用配置文件的配置，没有配置时默认值为 true
+    m_isEnableHDMI = m_interfaceSettings->childGroups().contains(group) ? m_interfaceSettings->value(DI_SK_ENABLE).toBool()
+                                                                        : true;
     m_interfaceSettings->endGroup();
 
     this->syncInterfaceFile();
