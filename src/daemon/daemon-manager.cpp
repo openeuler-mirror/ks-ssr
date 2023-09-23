@@ -5,8 +5,8 @@
  * @copyright (c) 2023 KylinSec. All rights reserved.
  */
 #include "src/daemon/daemon-manager.h"
-#include "src/daemon/box/box-dao.h"
 #include <QDBusConnection>
+#include "src/daemon/box/box-dao.h"
 
 namespace KS
 {
