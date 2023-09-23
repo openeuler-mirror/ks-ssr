@@ -13,30 +13,80 @@
  */
 
 #include "src/ui/box/box.h"
+#include <qt5-log-i.h>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QLabel>
 #include <QMenu>
 #include <QMouseEvent>
+#include <QPushButton>
+#include <QVBoxLayout>
 #include "sc-i.h"
 #include "src/ui/box/modify-password.h"
 #include "src/ui/box_manager_proxy.h"
 
 namespace KS
 {
-Box::Box(const QString &boxUID) : m_boxUID(boxUID),
-                                  m_modifyPassword(nullptr),
-                                  m_popupMenu(nullptr)
+Box::Box(const QString &uid) : m_uid(uid),
+                               m_name("Unknown"),
+                               m_mounted(false),
+                               m_modifyPassword(nullptr),
+                               m_popupMenu(nullptr)
 {
     this->m_boxManagerProxy = new BoxManagerProxy(SC_DBUS_NAME,
                                                   SC_BOX_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
 
-    this->setPixmap(QPixmap(":/box-big"));
-    // this->setIcon(QIcon(":/box-big"));
-    // this->setIconSize(QSize(64, 64));
-    // this->setFlat(true);
-    // this->setCheckable(false);
+    this->initBox();
+    this->initMenu();
+}
 
-    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_boxUID).value();
+void Box::initBox()
+{
+    this->initBoxInfo();
+
+    /* this->setFixedWidth(102); */
+
+    auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    this->m_showingIcon = new QPushButton(this);
+    this->m_showingIcon->setFlat(true);
+    this->m_showingIcon->setFixedSize(QSize(102, 102));
+    this->m_showingIcon->setIcon(QIcon(":/images/box-big"));
+    this->m_showingIcon->setIconSize(QSize(70, 70));
+    layout->addWidget(this->m_showingIcon);
+
+    this->m_showingName = new QLabel(this);
+    this->m_showingName->setText(this->m_name);
+    this->m_showingName->setAlignment(Qt::AlignCenter);
+    layout->addWidget(this->m_showingName);
+
+    this->setLayout(layout);
+}
+
+void Box::initBoxInfo()
+{
+    auto reply = this->m_boxManagerProxy->GetBoxByUID(this->m_uid);
+    auto jsonStr = reply.value();
+
+    QJsonParseError jsonError;
+
+    auto jsonDoc = QJsonDocument::fromJson(jsonStr.toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser box information failed: " << jsonError.errorString();
+        return;
+    }
+
+    auto jsonBox = jsonDoc.object();
+    this->m_name = jsonBox.value(SCBM_JK_BOX_NAME).toString();
+    this->m_mounted = jsonBox.value(SCBM_JK_BOX_MOUNTED).toBool();
+}
+
+void Box::initMenu()
+{
+    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_uid).value();
 
     // this->m_modifyPassword = new ModifyPassword();
 
@@ -51,7 +101,7 @@ Box::Box(const QString &boxUID) : m_boxUID(boxUID),
 void Box::boxChanged()
 {
     // 保密箱属性发生变化，需要进行更新
-    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_boxUID).value();
+    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_uid).value();
     this->m_mountedStatusAction->setText(mounted ? tr("Lock") : tr("Unlock"));
 }
 
@@ -62,20 +112,20 @@ void Box::mousePressEvent(QMouseEvent *event)
         this->m_popupMenu->popup(event->globalPos());
     }
 
-    QLabel::mousePressEvent(event);
+    QWidget::mousePressEvent(event);
 }
 
 void Box::switchMountedStatus()
 {
-    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_boxUID).value();
+    auto mounted = this->m_boxManagerProxy->IsMounted(this->m_uid).value();
 
     if (mounted)
     {
-        this->m_boxManagerProxy->UnMount(this->m_boxUID).waitForFinished();
+        this->m_boxManagerProxy->UnMount(this->m_uid).waitForFinished();
     }
     else
     {
-        this->m_boxManagerProxy->Mount(this->m_boxUID).waitForFinished();
+        this->m_boxManagerProxy->Mount(this->m_uid).waitForFinished();
     }
 }
 
@@ -94,7 +144,7 @@ void Box::modifyPassword()
 
 void Box::modifyPasswordAccepted()
 {
-    auto reply = this->m_boxManagerProxy->ModifyBoxPassword(this->m_boxUID,
+    auto reply = this->m_boxManagerProxy->ModifyBoxPassword(this->m_uid,
                                                             this->m_modifyPassword->getCurrentPassword(),
                                                             this->m_modifyPassword->getNewPassword());
 
