@@ -20,33 +20,48 @@
 #include <QStringList>
 #include "src/daemon/common/kss.h"
 
-class FileProtectedAdaptor;
+class TPAdaptor;
 
 namespace KS
 {
-class FileProtected : public QObject,
-                      protected QDBusContext
+enum TrustedProtectType
+{
+    TRUSTED_PROTECT_TYPE_EXECUTE = 0,
+    TRUSTED_PROTECT_TYPE_KERNEL,
+    TRUSTED_PROTECT_TYPE_NONE
+};
+
+class TP : public QObject,
+           protected QDBusContext
 {
     Q_OBJECT
 public:
-    FileProtected(QObject *parent);
-    virtual ~FileProtected();
+    TP(QObject *parent);
+    virtual ~TP();
 
+public:          // PROPERTIES
 public Q_SLOTS:  // METHODS
     // 添加文件
     void AddFile(const QString &filePath);
-    // 获取文件列表
-    QString GetFiles();
+    // 获取程序白名单
+    QString GetExecuteFiles();
+    // 获取内核白名单
+    QString GetModuleFiles();
+    // 防卸载功能开关
+    void ProhibitUnloading(bool prohibited, const QString &filePath);
     // 移除文件
     void RemoveFile(const QString &filePath);
     // 搜索
-    QString Search(const QString &pathKey);
+    QString Search(const QString &pathKey, uint searchType);
+Q_SIGNALS:  // SIGNALS
+    // 初始化完成
+    void InitFinished();
 
 private:
     void init();
 
 private:
-    FileProtectedAdaptor *m_dbusAdaptor;
+    TPAdaptor *m_dbusAdaptor;
     KSS *m_kss;
 };
 }  // namespace KS

@@ -4,19 +4,30 @@ file(GLOB_RECURSE SRC_H_FILES ./*.h)
 file(GLOB_RECURSE SRC_CPP_FILES ./*.cpp)
 
 qt5_add_dbus_adaptor(
-  SECURITY_BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/box/box-manager.h KS::BoxManager
-  box_manager_adaptor BoxManagerAdaptor)
+  SECURITY_BOX_MANAGER_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/box/box-manager.h
+  KS::BoxManager
+  box_manager_adaptor
+  BoxManagerAdaptor)
 
 qt5_add_dbus_adaptor(
-  TRUSTED_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.Trusted.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/trusted/trusted.h KS::Trusted
-  trusted_adaptor TrustedAdaptor)
+  TRUSTED_MANAGER_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.TrustedProtected.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/tp/tp.h KS::TP tp_adaptor TPAdaptor)
 
 qt5_add_dbus_adaptor(
-  FILES_PROTECTED_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/protected/file-protected.h KS::FileProtected
-  file_protected_adaptor FileProtectedAdaptor)
+  FILES_PROTECTED_MANAGER_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.FileProtected.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/fp/fp.h KS::FP fp_adaptor FPAdaptor)
+
+qt5_add_dbus_adaptor(
+  SECURITY_DEVICE_MANAGER_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.DeviceManager.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/device/device-manager.h
+  KS::DeviceManager
+  device_manager_adaptor
+  DeviceManagerAdaptor)
 
 set(TARGET_NAME ks-sc-daemon)
 
@@ -30,21 +41,15 @@ add_executable(
   ${SECURITY_BOX_MANAGER_SRCS}
   ${TRUSTED_MANAGER_SRCS}
   ${FILES_PROTECTED_MANAGER_SRCS}
+  ${SECURITY_DEVICE_MANAGER_SRCS}
   ${QM_FILES})
 
 target_include_directories(
-  ${TARGET_NAME}
-  PRIVATE ${PROJECT_BINARY_DIR}
-          ${PROJECT_SOURCE_DIR}
-          ${PROJECT_SOURCE_DIR}/include
-          )
+  ${TARGET_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
+                         ${PROJECT_SOURCE_DIR}/include)
 
-target_link_libraries(
-  ${TARGET_NAME}
-  PRIVATE Qt5::Core
-          Qt5::DBus
-          Qt5::Sql
-          lib-base)
+target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Core Qt5::DBus Qt5::Sql
+                                             lib-base ${LIBSYSTEMD_LIBRARIES})
 
 install(FILES ${QM_FILES} DESTINATION ${KSC_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

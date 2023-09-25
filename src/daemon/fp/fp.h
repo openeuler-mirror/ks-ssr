@@ -11,38 +11,42 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+
 #pragma once
 
-#include <QWidget>
-#include "src/ui/trusted/tp-execute-table.h"
+#include <QDBusContext>
+#include <QDBusObjectPath>
+#include <QObject>
+#include <QStringList>
+#include "src/daemon/common/kss.h"
 
-namespace Ui
-{
-class TPExecute;
-}
+class FPAdaptor;
 
 namespace KS
 {
-class TPExecute : public QWidget
+class FP : public QObject,
+           protected QDBusContext
 {
     Q_OBJECT
 public:
-    TPExecute(QWidget *parent = nullptr);
-    ~TPExecute();
+    FP(QObject *parent);
+    virtual ~FP();
+
+public Q_SLOTS:  // METHODS
+    // 添加文件
+    void AddFile(const QString &filePath);
+    // 获取文件列表
+    QString GetFiles();
+    // 移除文件
+    void RemoveFile(const QString &filePath);
+    // 搜索
+    QString Search(const QString &pathKey);
 
 private:
-    void updateInfo();
-
-private Q_SLOTS:
-    void searchTextChanged(const QString &text);
-    void addClicked(bool checked);
-    void updateClicked(bool checked);
-    void unprotectClicked(bool checked);
-    void unprotectAccepted();
+    void init();
 
 private:
-    Ui::TPExecute *m_ui;
-
-    TrustedProxy *m_trustedProtectedProxy;
+    FPAdaptor *m_dbusAdaptor;
+    KSS *m_kss;
 };
 }  // namespace KS
