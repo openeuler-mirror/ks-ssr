@@ -205,8 +205,8 @@ void BoxPage::createBoxAccepted()
     addBox(box);
     // 显示消息
     auto messge = new SubWindow(this);
-    messge->buildNotify(QString(tr("Please remember this box passphrase : %1")).arg(passphrase));
-    messge->setFixedSize(240, 180);
+    messge->buildNotify(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase));
+    messge->setFixedSize(240, 200);
     int x = window()->x() + window()->width() / 4 + messge->width() / 4;
     int y = window()->y() + window()->height() / 4 + messge->height() / 4;
     messge->move(x, y);

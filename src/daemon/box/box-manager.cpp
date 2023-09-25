@@ -140,13 +140,12 @@ bool BoxManager::Mount(const QString &boxID, const QString &password)
     return false;
 }
 
-bool BoxManager::RetrievePassword(const QString &boxID, const QString &passphrase, const QString &newPassword)
+QString BoxManager::RetrievePassword(const QString &boxID, const QString &passphrase)
 {
     auto decryptPassphrase = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, passphrase);
-    auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
 
     auto box = m_boxs.value(boxID);
-    return box->retrievePassword(decryptPassphrase, decryptNewPassword);
+    return box->retrievePassword(decryptPassphrase);
 }
 
 // 上锁
