@@ -173,10 +173,18 @@ void DevicePermission::paintEvent(QPaintEvent *event)
 
 bool DevicePermission::eventFilter(QObject *watched, QEvent *event)
 {
-    RETURN_VAL_IF_FALSE(watched == m_ui->m_status->lineEdit() && event->type() == QEvent::MouseButtonRelease, false);
-
-    m_ui->m_status->showPopup();
-    return true;
+    RETURN_VAL_IF_FALSE(watched == m_ui->m_status->lineEdit(), false);
+    if (event->type() == QEvent::MouseButtonRelease)
+    {
+        m_ui->m_status->showPopup();
+        return true;
+    }
+    //由于QCombobox在鼠标双击后会选中输入框的文字 ，因此过滤鼠标双击事件，不进行任何处理，避免选中情况
+    else if (event->type() == QEvent::MouseButtonDblClick)
+    {
+        return true;
+    }
+    return false;
 }
 
 }  // namespace KS
