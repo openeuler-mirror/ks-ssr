@@ -31,12 +31,12 @@
 
 namespace KS
 {
-class LicenseUtils : public QObject
+class LicenseDBus : public QObject
 {
     Q_OBJECT
 public:
-    LicenseUtils(QObject* parent = 0);
-    virtual ~LicenseUtils();
+    LicenseDBus(QObject* parent = 0);
+    virtual ~LicenseDBus();
 
 public:
     bool creatObjectName(const QString& objectName);

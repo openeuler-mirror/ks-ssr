@@ -12,34 +12,35 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "activation.h"
+#include "license-activation.h"
 #include <kiran-log/qt5-log-i.h>
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QMessageBox>
-#include "ksc-marcos.h"
-#include "src/ui/license/license-utils.h"
+#include "include/ksc-marcos.h"
+#include "src/ui/license/license-dbus.h"
 #include "src/ui/license/qrcode-dialog.h"
-#include "ui_activation.h"
+#include "ui_license-activation.h"
+
 namespace KS
 {
-Activation::Activation(QWidget *parent) : TitlebarWindow(parent),
-                                          m_ui(new Ui::Activation),
-                                          m_licenseUtils(nullptr),
-                                          m_qrcodeDialog(nullptr)
+LicenseActivation::LicenseActivation(QWidget *parent) : TitlebarWindow(parent),
+                                                        m_ui(new Ui::LicenseActivation),
+                                                        m_licenseUtils(nullptr),
+                                                        m_qrcodeDialog(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
     initUI();
 
-    m_licenseUtils = new LicenseUtils(this);
+    m_licenseUtils = new LicenseDBus(this);
     updateLicenseInfo();
 
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, &Activation::closed);
-    connect(m_ui->m_activate, &QPushButton::clicked, this, &Activation::activate);
-    connect(m_licenseUtils, &LicenseUtils::licenseChanged, this, &Activation::getLicense);
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, &LicenseActivation::closed);
+    connect(m_ui->m_activate, &QPushButton::clicked, this, &LicenseActivation::activate);
+    connect(m_licenseUtils, &LicenseDBus::licenseChanged, this, &LicenseActivation::getLicense);
 }
 
-Activation::~Activation()
+LicenseActivation::~LicenseActivation()
 {
     delete m_ui;
     if (m_qrcodeDialog)
@@ -49,7 +50,7 @@ Activation::~Activation()
     }
 }
 
-bool Activation::isActivate()
+bool LicenseActivation::isActivate()
 {
     RETURN_VAL_IF_TRUE(m_licenseInfo.activationStatus != LAS_ACTIVATED, false);
 
@@ -58,13 +59,13 @@ bool Activation::isActivate()
     return currTime <= m_licenseInfo.expiredTime;
 }
 
-void Activation::closeEvent(QCloseEvent *event)
+void LicenseActivation::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     emit closed();
 }
 
-void Activation::getLicenseInfo()
+void LicenseActivation::getLicenseInfo()
 {
     auto licenseInfoJson = m_licenseUtils->getLicense();
     RETURN_IF_TRUE(licenseInfoJson.isEmpty());
@@ -86,7 +87,7 @@ void Activation::getLicenseInfo()
     }
 }
 
-void Activation::initUI()
+void LicenseActivation::initUI()
 {
     setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
@@ -98,21 +99,21 @@ void Activation::initUI()
     auto hLayout = new QHBoxLayout(m_ui->m_machine_code);
     hLayout->setMargin(0);
     hLayout->setContentsMargins(10, 0, 10, 0);
-    auto qrencodeBtn = new QPushButton(m_ui->m_machine_code);
-    qrencodeBtn->setFixedSize(16, 16);
-    qrencodeBtn->setIcon(QIcon(":/images/qrcode"));
+    auto qrcodeBtn = new QPushButton(m_ui->m_machine_code);
+    qrcodeBtn->setFixedSize(16, 16);
+    qrcodeBtn->setIcon(QIcon(":/images/qrcode"));
     hLayout->addStretch();
-    hLayout->addWidget(qrencodeBtn);
-    connect(qrencodeBtn, &QPushButton::clicked, this, &Activation::popupQrencode);
+    hLayout->addWidget(qrcodeBtn);
+    connect(qrcodeBtn, &QPushButton::clicked, this, &LicenseActivation::popupQrencode);
 
     m_ui->m_machine_code->setReadOnly(true);
     m_ui->m_expired_time->setReadOnly(true);
-    m_ui->m_machine_code->setTextMargins(10, 0, qrencodeBtn->width(), 0);
+    m_ui->m_machine_code->setTextMargins(10, 0, qrcodeBtn->width(), 0);
     m_ui->m_activation_code->setTextMargins(10, 0, 10, 0);
     m_ui->m_expired_time->setTextMargins(10, 0, 10, 0);
 }
 
-void Activation::activate()
+void LicenseActivation::activate()
 {
     QString errorMsg;
     auto isActivated = m_licenseUtils->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
@@ -134,12 +135,14 @@ void Activation::activate()
     }
 }
 
-void Activation::popupQrencode()
+void LicenseActivation::popupQrencode()
 {
+    RETURN_IF_TRUE(m_licenseInfo.machineCode.isEmpty());
+
     if (!m_qrcodeDialog)
     {
         m_qrcodeDialog = new QRCodeDialog(this);
-        m_qrcodeDialog->setQRCode(m_licenseInfo.machineCode);
+        m_qrcodeDialog->setText(m_licenseInfo.machineCode);
     }
 
     auto x = this->x() + this->width() / 4 + m_qrcodeDialog->width() / 4;
@@ -149,7 +152,7 @@ void Activation::popupQrencode()
     m_qrcodeDialog->show();
 }
 
-void Activation::getLicense(bool isChanged)
+void LicenseActivation::getLicense(bool isChanged)
 {
     if (isChanged)
     {
@@ -158,13 +161,13 @@ void Activation::getLicense(bool isChanged)
     }
 }
 
-void Activation::updateLicenseInfo()
+void LicenseActivation::updateLicenseInfo()
 {
     getLicenseInfo();
     setLicenseInfo();
 }
 
-void Activation::setLicenseInfo()
+void LicenseActivation::setLicenseInfo()
 {
     m_ui->m_machine_code->setText(m_licenseInfo.machineCode);
     m_ui->m_activation_code->setText(m_licenseInfo.activationCode);

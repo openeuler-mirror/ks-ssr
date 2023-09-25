@@ -26,7 +26,7 @@ namespace KS
 {
 class Navigation;
 
-class Activation;
+class LicenseActivation;
 class Window : public TitlebarWindow
 {
     Q_OBJECT
@@ -48,7 +48,7 @@ private slots:
 
 private:
     Ui::Window *m_ui;
-    Activation *m_activation;
+    LicenseActivation *m_activation;
     QLabel *m_activateStatus;
 };
 }  // namespace KS

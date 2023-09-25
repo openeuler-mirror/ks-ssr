@@ -34,10 +34,10 @@
 #include <QStackedWidget>
 #include "src/ui/box/box-page.h"
 #include "src/ui/device/device-page.h"
-#include "src/ui/file-protected/fp-page.h"
-#include "src/ui/license/activation.h"
+#include "src/ui/fp/fp-page.h"
+#include "src/ui/license/license-activation.h"
 #include "src/ui/navigation.h"
-#include "src/ui/trusted/tp-page.h"
+#include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
 
 namespace KS
@@ -63,7 +63,7 @@ Window::~Window()
 
 void Window::initActivation()
 {
-    m_activation = new Activation(this);
+    m_activation = new LicenseActivation(this);
     if (!m_activation->isActivate())
     {
         m_activateStatus->show();
@@ -73,14 +73,14 @@ void Window::initActivation()
         m_activation->raise();
         m_activation->show();
     }
-    connect(m_activation, &Activation::activated,
+    connect(m_activation, &LicenseActivation::activated,
             [this](bool isActived)
             {
                 //设置激活对话框和激活状态标签是否可见
                 m_activation->setVisible(!isActived);
                 m_activateStatus->setVisible(!isActived);
             });
-    connect(m_activation, &Activation::closed,
+    connect(m_activation, &LicenseActivation::closed,
             [this]
             {
                 //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
@@ -95,8 +95,7 @@ void Window::initWindow()
 {
     setTitle(tr("Security control"));
     setIcon(QIcon(":/images/logo"));
-    setFixedWidth(984);
-    setFixedHeight(648);
+    setFixedSize(984, 648);
 
     // 初始化样式表
     QFile file(KSC_STYLE_PATH);

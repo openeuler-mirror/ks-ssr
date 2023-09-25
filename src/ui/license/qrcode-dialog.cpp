@@ -14,6 +14,10 @@
 #include "qrcode-dialog.h"
 #include <QIcon>
 
+#include <QLabel>
+#include <QPaintEvent>
+#include <QPainter>
+#include "include/ksc-marcos.h"
 #include "ui_qrcode-dialog.h"
 
 namespace KS
@@ -32,17 +36,48 @@ void QRCodeDialog::iniUI()
     setIcon(QIcon(":/images/logo"));
     setButtonHints(TitlebarCloseButtonHint);
     setFixedSize(350, 300);
-    ui->m_layout->setMargin(10);
 }
 
-void QRCodeDialog::setQRCode(const QString &text)
+QPixmap QRCodeDialog::createQRcodePixmap(const QString &text)
 {
-    auto qrcode = new QRCode(this, text, 160, 160);
-    qrcode->setMinimumSize(160, 160);
-    qrcode->setMaximumSize(160, 160);
-    ui->m_layout->addWidget(qrcode, Qt::AlignHCenter);
-    ui->m_layout->setAlignment(qrcode, Qt::AlignHCenter);
-    ui->m_layout->setAlignment(qrcode, Qt::AlignVCenter);
+    QPixmap QRPixmap;
+    m_qrcode = QRcode_encodeString(text.toStdString().c_str(), 2, QR_ECLEVEL_Q, QR_MODE_8, 1);
+
+    int qrcodeWidth = m_qrcode->width > 0 ? m_qrcode->width : 1;
+    double scaledWidth = (double)ui->m_qrcodeImage->width() / (double)qrcodeWidth;
+    double scaledHeight = (double)ui->m_qrcodeImage->height() / (double)qrcodeWidth;
+    QImage image = QImage(ui->m_qrcodeImage->width(), ui->m_qrcodeImage->height(), QImage::Format_ARGB32);
+
+    QPainter painter(&image);
+    QColor background(Qt::white);
+    painter.setBrush(background);
+    painter.setPen(Qt::NoPen);
+    painter.drawRect(0, 0, ui->m_qrcodeImage->width(), ui->m_qrcodeImage->height());
+    QColor foreground(Qt::black);
+    painter.setBrush(foreground);
+
+    for (qint32 y = 0; y < qrcodeWidth; y++)
+    {
+        for (qint32 x = 0; x < qrcodeWidth; x++)
+        {
+            unsigned char b = m_qrcode->data[y * qrcodeWidth + x];
+            if (b & 0x01)
+            {
+                QRectF r(x * scaledWidth, y * scaledHeight, scaledWidth, scaledHeight);
+                painter.drawRects(&r, 1);
+            }
+        }
+    }
+
+    QRPixmap = QPixmap::fromImage(image);
+    return QRPixmap;
+}
+
+void QRCodeDialog::setText(const QString &text)
+{
+    RETURN_IF_TRUE(text.isEmpty());
+
+    ui->m_qrcodeImage->setPixmap(createQRcodePixmap(text));
 }
 
 QRCodeDialog::~QRCodeDialog()
