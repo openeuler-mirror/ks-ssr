@@ -27,11 +27,11 @@ namespace KS
 {
 Trusted::Trusted(QObject *parent) : QObject(parent)
 {
-    this->m_dbusAdaptor = new TrustedAdaptor(this);
+    m_dbusAdaptor = new TrustedAdaptor(this);
     m_kss = new KSS(this);
     connect(m_kss, &KSS::initFinished, this, &Trusted::InitFinished);
 
-    this->init();
+    init();
 }
 Trusted::~Trusted()
 {

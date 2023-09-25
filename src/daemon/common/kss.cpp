@@ -50,24 +50,24 @@ KSS::KSS(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
     m_process = new QProcess(parent);
     m_ini = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
 
-    this->initTrusted();
+    initTrusted();
 }
 
 void KSS::addTrustedFile(const QString &filePath)
 {
     auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_ADD_FILE_CMD, filePath);
-    this->execute(cmd);
+    execute(cmd);
 }
 
 void KSS::removeTrustedFile(const QString &filePath)
 {
     auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_REMOVE_FILE_CMD, filePath);
-    this->execute(cmd);
+    execute(cmd);
 }
 
 QString KSS::getModuleFiles()
 {
-    this->execute(KSS_DIGEST_INFO_GET_KERNEL_CMD);
+    execute(KSS_DIGEST_INFO_GET_KERNEL_CMD);
     return m_processOutput;
 }
 
@@ -77,39 +77,39 @@ void KSS::prohibitUnloading(bool prohibited, const QString &filePath)
 
 QString KSS::getExecuteFiles()
 {
-    this->execute(KSS_DIGEST_INFO_GET_EXECUTE_CMD);
+    execute(KSS_DIGEST_INFO_GET_EXECUTE_CMD);
     return m_processOutput;
 }
 
 void KSS::addFile(const QString &fileName, const QString &filePath, const QString &insertTime)
 {
     auto cmd = QString("%1 -n %2 -p %3 -t '%4'").arg(KSS_ADD_FILE_CMD, fileName, filePath, insertTime);
-    this->execute(cmd);
+    execute(cmd);
 }
 
 void KSS::removeFile(const QString &filePath)
 {
     auto cmd = QString("%1 -p %2").arg(KSS_REMOVE_FILE_CMD, filePath);
-    this->execute(cmd);
+    execute(cmd);
 }
 
 QString KSS::getFiles()
 {
-    this->execute(KSS_GET_FILES_CMD);
+    execute(KSS_GET_FILES_CMD);
     return m_processOutput;
 }
 
 void KSS::processExited(int exitCode, QProcess::ExitStatus exitStatus)
 {
     KLOG_DEBUG() << "Command execution completed. exitcode = " << exitCode << "exitStatus = " << exitStatus;
-    this->m_process->disconnect();
+    m_process->disconnect();
 
-    auto standardOutput = this->m_process->readAllStandardOutput();
+    auto standardOutput = m_process->readAllStandardOutput();
 
-    KLOG_DEBUG() << "Execute the command to successfully output: " << standardOutput;
+//    KLOG_DEBUG() << "Execute the command to successfully output: " << standardOutput;
     m_processOutput = standardOutput;
 
-    auto errordOutput = this->m_process->readAllStandardError();
+    auto errordOutput = m_process->readAllStandardError();
     if (!errordOutput.isEmpty())
     {
         KLOG_ERROR() << "Execution command error output: " << errordOutput;
@@ -121,7 +121,7 @@ void KSS::execute(const QString &cmd)
 {
     KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
     m_process->start("bash", QStringList() << "-c" << cmd);
-    connect(this->m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processExited(int, QProcess::ExitStatus)));
+    connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processExited(int, QProcess::ExitStatus)));
     m_process->waitForFinished();
 }
 
@@ -130,7 +130,7 @@ void KSS::initTrustedResults()
     KLOG_INFO() << "Kss data initialisation completed.";
 
     m_ini->setValue(KSC_INI_KEY, 1);
-    emit this->initFinished();
+    emit initFinished();
 }
 
 void KSS::initTrusted()
@@ -138,7 +138,7 @@ void KSS::initTrusted()
     RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() != 0)
 
     KLOG_INFO() << "Start kss initialisation.";
-    this->execute(KSS_INIT_CMD);
+    execute(KSS_INIT_CMD);
 
     m_kssInitThread = QThread::create([this]
                                       {

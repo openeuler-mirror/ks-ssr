@@ -26,37 +26,37 @@
     <name>CreateBox</name>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="14"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="132"/>
+        <location filename="../build/src/ui/ui_create-box.h" line="143"/>
         <source>Create security box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="29"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="133"/>
+        <location filename="../src/ui/box/create-box.ui" line="35"/>
+        <location filename="../build/src/ui/ui_create-box.h" line="144"/>
         <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="50"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="134"/>
+        <location filename="../src/ui/box/create-box.ui" line="56"/>
+        <location filename="../build/src/ui/ui_create-box.h" line="145"/>
         <source>Password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="71"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="135"/>
+        <location filename="../src/ui/box/create-box.ui" line="77"/>
+        <location filename="../build/src/ui/ui_create-box.h" line="146"/>
         <source>Confirm password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="104"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="136"/>
+        <location filename="../src/ui/box/create-box.ui" line="123"/>
+        <location filename="../build/src/ui/ui_create-box.h" line="147"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="123"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="137"/>
+        <location filename="../src/ui/box/create-box.ui" line="142"/>
+        <location filename="../build/src/ui/ui_create-box.h" line="148"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -161,43 +161,37 @@
     <name>FPPage</name>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="14"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="133"/>
+        <location filename="../build/src/ui/ui_fp-page.h" line="124"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="40"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="134"/>
+        <location filename="../build/src/ui/ui_fp-page.h" line="125"/>
         <source>Protect critical file paths from malicious tampering and deletion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="60"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="135"/>
+        <location filename="../build/src/ui/ui_fp-page.h" line="126"/>
         <source>0 records in total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="105"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="136"/>
+        <location filename="../build/src/ui/ui_fp-page.h" line="127"/>
         <source>Please enter keyword search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="137"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="137"/>
+        <location filename="../build/src/ui/ui_fp-page.h" line="128"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="156"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="138"/>
-        <source>Update</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/file-protected/fp-page.ui" line="175"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="139"/>
+        <location filename="../build/src/ui/ui_fp-page.h" line="129"/>
         <source>Unprotect</source>
         <translation type="unfinished"></translation>
     </message>
@@ -261,55 +255,59 @@
 <context>
     <name>KS::Box</name>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="124"/>
-        <location filename="../src/ui/box/box.cpp" line="137"/>
+        <location filename="../src/ui/box/box.cpp" line="125"/>
+        <location filename="../src/ui/box/box.cpp" line="138"/>
         <source>Lock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="124"/>
-        <location filename="../src/ui/box/box.cpp" line="137"/>
-        <location filename="../src/ui/box/box.cpp" line="187"/>
+        <location filename="../src/ui/box/box.cpp" line="125"/>
+        <location filename="../src/ui/box/box.cpp" line="138"/>
+        <location filename="../src/ui/box/box.cpp" line="188"/>
         <source>Unlock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="127"/>
-        <location filename="../src/ui/box/box.cpp" line="208"/>
-        <location filename="../src/ui/box/box.cpp" line="259"/>
+        <location filename="../src/ui/box/box.cpp" line="128"/>
+        <location filename="../src/ui/box/box.cpp" line="209"/>
         <source>Modify password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="128"/>
+        <location filename="../src/ui/box/box.cpp" line="129"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="129"/>
+        <location filename="../src/ui/box/box.cpp" line="130"/>
         <source>Retrieve the password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="214"/>
-        <location filename="../src/ui/box/box.cpp" line="265"/>
+        <location filename="../src/ui/box/box.cpp" line="215"/>
+        <location filename="../src/ui/box/box.cpp" line="266"/>
         <source>Please confirm whether the password is consistent.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="219"/>
-        <location filename="../src/ui/box/box.cpp" line="270"/>
+        <location filename="../src/ui/box/box.cpp" line="220"/>
+        <location filename="../src/ui/box/box.cpp" line="271"/>
         <source>The input cannot be empty, please improve the information.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="239"/>
+        <location filename="../src/ui/box/box.cpp" line="240"/>
         <source>Del box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/ui/box/box.cpp" line="260"/>
+        <source>Retrieve password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/ui/box/box.cpp" line="315"/>
-        <location filename="../src/ui/box/box.cpp" line="372"/>
+        <location filename="../src/ui/box/box.cpp" line="360"/>
         <source>Password error!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -319,27 +317,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="346"/>
+        <location filename="../src/ui/box/box.cpp" line="339"/>
         <source>Passphrase error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="351"/>
+        <location filename="../src/ui/box/box.cpp" line="344"/>
         <source>Retrieve success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="377"/>
+        <location filename="../src/ui/box/box.cpp" line="365"/>
         <source>Unlock success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="394"/>
+        <location filename="../src/ui/box/box.cpp" line="380"/>
         <source>The Password is wrong or has been mounted!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="399"/>
+        <location filename="../src/ui/box/box.cpp" line="385"/>
         <source>Delete success!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -364,6 +362,11 @@
     <message>
         <location filename="../src/ui/box/box-page.cpp" line="167"/>
         <source>The input cannot be empty, please improve the information.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box-page.cpp" line="199"/>
+        <source>Please check whether ecryptfs.ko is loaded!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -519,21 +522,13 @@
     <name>KS::FPPage</name>
     <message>
         <location filename="../src/ui/file-protected/fp-page.cpp" line="35"/>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="71"/>
+        <location filename="../src/ui/file-protected/fp-page.cpp" line="72"/>
         <source>A total of %1 records</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.cpp" line="59"/>
         <source>Open file</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>KS::RetrievePassword</name>
-    <message>
-        <location filename="../src/ui/box/retrieve-password.cpp" line="44"/>
-        <source>Retrieve password</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -545,7 +540,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/common/sub-window.cpp" line="50"/>
+        <location filename="../src/ui/common/sub-window.cpp" line="52"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
@@ -553,13 +548,13 @@
 <context>
     <name>KS::TPExecute</name>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.cpp" line="34"/>
+        <location filename="../src/ui/trusted/tp-execute.cpp" line="35"/>
         <location filename="../src/ui/trusted/tp-execute.cpp" line="56"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.cpp" line="68"/>
+        <location filename="../src/ui/trusted/tp-execute.cpp" line="67"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -567,27 +562,27 @@
 <context>
     <name>KS::TPExecuteModel</name>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="143"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="144"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="181"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="182"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="183"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="184"/>
         <source>File path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="185"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="186"/>
         <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="187"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="188"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -595,44 +590,55 @@
 <context>
     <name>KS::TPExecuteTable</name>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="366"/>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="369"/>
         <source>Certified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="388"/>
+        <source>Path:%1
+Md5:%2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::TPKernel</name>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="34"/>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="56"/>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="36"/>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="59"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="68"/>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="72"/>
         <source>Open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel.cpp" line="88"/>
+        <source>Please confirm whether to remove the protection.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KS::TPKernelModel</name>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="141"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="142"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="179"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="178"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="181"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="180"/>
         <source>File path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="183"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="182"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -640,8 +646,14 @@
 <context>
     <name>KS::TPKernelTable</name>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="361"/>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="359"/>
         <source>Certified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="378"/>
+        <source>Path:%1
+Md5:%2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -714,17 +726,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="84"/>
+        <location filename="../src/ui/window.cpp" line="82"/>
         <source>File protected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="85"/>
+        <location filename="../src/ui/window.cpp" line="83"/>
         <source>Private box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="86"/>
+        <location filename="../src/ui/window.cpp" line="84"/>
         <source>Peripheral management</source>
         <translation type="unfinished"></translation>
     </message>
@@ -733,43 +745,43 @@
     <name>ModifyPassword</name>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="14"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="162"/>
+        <location filename="../build/src/ui/ui_modify-password.h" line="167"/>
         <source>Modify password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="51"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="163"/>
+        <location filename="../build/src/ui/ui_modify-password.h" line="168"/>
         <source>Security box name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="75"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="164"/>
+        <location filename="../src/ui/box/modify-password.ui" line="81"/>
+        <location filename="../build/src/ui/ui_modify-password.h" line="169"/>
         <source>Current password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="96"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="165"/>
+        <location filename="../src/ui/box/modify-password.ui" line="102"/>
+        <location filename="../build/src/ui/ui_modify-password.h" line="170"/>
         <source>New password:       </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="117"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="166"/>
+        <location filename="../src/ui/box/modify-password.ui" line="123"/>
+        <location filename="../build/src/ui/ui_modify-password.h" line="171"/>
         <source>Confirm password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="163"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="167"/>
+        <location filename="../src/ui/box/modify-password.ui" line="169"/>
+        <location filename="../build/src/ui/ui_modify-password.h" line="172"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/modify-password.ui" line="182"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="168"/>
+        <location filename="../src/ui/box/modify-password.ui" line="188"/>
+        <location filename="../build/src/ui/ui_modify-password.h" line="173"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -805,37 +817,37 @@
     <name>RetrievePassword</name>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="14"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="131"/>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="137"/>
         <source>Create security box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="26"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="132"/>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="138"/>
         <source>passphrase:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="47"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="133"/>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="139"/>
         <source>new password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="68"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="134"/>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="140"/>
         <source>Confirm password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/retrieve-password.ui" line="101"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="135"/>
+        <location filename="../src/ui/box/retrieve-password.ui" line="114"/>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="141"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/retrieve-password.ui" line="120"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="136"/>
+        <location filename="../src/ui/box/retrieve-password.ui" line="133"/>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="142"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>

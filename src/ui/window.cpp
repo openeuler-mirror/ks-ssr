@@ -59,8 +59,7 @@ void Window::initWindow()
 {
     setTitle(tr("Security control"));
     setIcon(QIcon(":/images/logo"));
-    setFixedWidth(984);
-    setFixedHeight(648);
+    setFixedSize(984, 648);
 
     // 初始化样式表
     QFile file(KSC_STYLE_PATH);
