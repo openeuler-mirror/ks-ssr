@@ -18,9 +18,9 @@
 #include <QList>
 #include <QSortFilterProxyModel>
 #include <QStyledItemDelegate>
+#include <QTableView>
 #include <QWidget>
 
-class QTableView;
 class FileProtectedProxy;
 
 namespace KS
@@ -43,10 +43,13 @@ public:
     FPFilesDelegate(QObject *parent = 0);
     virtual ~FPFilesDelegate();
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
-    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
-    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    // QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
+
+    // void setEditorData(QWidget *editor, const QModelIndex &index) const override;
+    // void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
+    // void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
 
 class FPFilesFilterModel : public QSortFilterProxyModel
@@ -85,7 +88,7 @@ private:
     bool m_allSelected;
 };
 
-class FPFileTable : public QWidget
+class FPFileTable : public QTableView
 {
     Q_OBJECT
 
@@ -93,11 +96,9 @@ public:
     FPFileTable(QWidget *parent = nullptr);
     virtual ~FPFileTable(){};
 
-    QTableView *getView() { return this->m_view; };
     FPFilesFilterModel *getFilterProxy() { return this->m_filterProxy; };
 
 private:
-    QTableView *m_view;
     FPFilesFilterModel *m_filterProxy;
 };
 
