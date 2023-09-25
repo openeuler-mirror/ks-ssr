@@ -1,4 +1,9 @@
-/* common settings */
+/* common */
+
+* {
+    font-size: 12px;
+    color: white;
+}
 
 QPushButton
 {
@@ -16,6 +21,25 @@ QPushButton:checked
 QLabel
 {
     color: #FFFFFF;
+}
+
+QLineEdit
+{
+    background-color: #222222;
+    border: 1px solid #454545;
+    border-radius: 6px;
+}
+
+
+/* common scrollarea/scrollbar */
+
+QScrollArea
+{
+    background-color: transparent;
+}
+
+QScrollArea > QWidget > QWidget {
+    background-color: transparent;
 }
 
 QScrollBar:vertical {
@@ -51,7 +75,30 @@ QScrollBar::sub-line:vertical {
     background: none;
 }
 
-/* window settings */
+/* common table */
+
+QHeaderView,
+QTableView
+{
+    background-color: transparent;
+}
+
+QHeaderView::section
+{
+    background-color: #393939;
+    border: none;
+    margin-bottom: 2px;
+}
+
+QTableView::item
+{
+    border: 0px;
+    background-color: #393939;
+    margin: 2px 0px 2px 0px;
+}
+
+
+/* main window */
 QWidget#m_banner
 {
     background-image: url(":/images/banner");
@@ -70,20 +117,19 @@ QWidget#m_contents
     border-radius: 6px;
 }
 
-
-/* box settings */
-
-QScrollArea#m_boxsScroll
-{
-    background-color: transparent;
-}
-
-QScrollArea > QWidget > QWidget {
-    background-color: transparent;
-}
+/* security box */
 
 QPushButton#m_newBox
 {
     background-color: #2eb3ff;
 }
+
+/* file protected */
+
+QTableView#m_fpFileTableView > QWidget 
+{
+    margin: 0px 22px 0px 0px;
+}
+
+
 
