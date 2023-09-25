@@ -18,27 +18,30 @@
 
 namespace Ui
 {
-class DeviceLogPage;
+class DeviceList;
 }
 
 namespace KS
 {
-class DeviceLogPage : public QWidget
+class DevicePermission;
+class DeviceList : public QWidget
 {
     Q_OBJECT
 
 public:
-    DeviceLogPage(QWidget *parent = nullptr);
-    ~DeviceLogPage();
+    DeviceList(QWidget *parent = nullptr);
+    virtual ~DeviceList();
 
 protected:
     void paintEvent(QPaintEvent *event);
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
-    void update();
+    void editClicked(bool checked);
+    void updateDevice();
 
 private:
-    Ui::DeviceLogPage *m_ui;
+    Ui::DeviceList *m_ui;
+    DevicePermission *m_devicePermission;
 };
 }  //namespace KS

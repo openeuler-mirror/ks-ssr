@@ -27,25 +27,25 @@ namespace KS
 /**
  * @brief 设备状态
  */
-enum PMDeviceStatus
+enum DeviceStatus
 {
     //启用
-    PM_DEVICE_STATUS_ENABLE,
+    DEVICE_STATUS_ENABLE,
     //禁用
-    PM_DEVICE_STATUS_DISABLE,
+    DEVICE_STATUS_DISABLE,
     //未授权
-    PM_DEVICE_STATUS_UNACTIVE,
-    PM_DEVICE_STATUS_LAST
+    DEVICE_STATUS_UNACTIVE,
+    DEVICE_STATUS_LAST
 };
 
 /**
  * @brief 设备权限
  */
-enum PMPermissionsType
+enum DevicePermissionType
 {
-    PM_PERMISSIONS_TYPE_READ,
-    PM_PERMISSIONS_TYPE_WRITE,
-    PM_PERMISSIONS_TYPE_EXEC
+    DEVICE_PERMISSION_TYPE_READ = (1 << 0),
+    DEVICE_PERMISSION_TYPE_WRITE = (1 << 1),
+    DEVICE_PERMISSION_TYPE_EXEC = (1 << 2)
 };
 
 class DevicePermission : public QWidget
@@ -54,30 +54,30 @@ class DevicePermission : public QWidget
 
 public:
     DevicePermission(const QString &name, QWidget *parent = nullptr);
-    ~DevicePermission();
-    void setDeviceStatus(PMDeviceStatus status);
-    void setDevicePermission(QList<PMPermissionsType> permission);
-    PMDeviceStatus getDeviceStatus();
-    QList<PMPermissionsType> getDevicePermission();
+    virtual ~DevicePermission();
+    void setDeviceStatus(const DeviceStatus &status);
+    void setDevicePermission(int permission);
+    DeviceStatus getDeviceStatus();
+    int getDevicePermission();
 
 protected:
     void paintEvent(QPaintEvent *event);
 
 private:
-    int enmu2int(PMDeviceStatus status);
-    PMDeviceStatus int2enum(int status);
+    int enmu2int(const DeviceStatus &status);
+    DeviceStatus int2enum(int status);
 
 private slots:
     void onConfirm();
     void onStatusChanged(int index);
 
 signals:
-    void okCliecked();
+    void clickConfirm();
 
 private:
     Ui::DevicePermission *m_ui;
     QString m_name;
-    PMDeviceStatus m_status;
-    QList<PMPermissionsType> m_permissions;
+    DeviceStatus m_status;
+    int m_permissions;
 };
 }  //namespace KS
