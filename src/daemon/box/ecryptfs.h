@@ -30,11 +30,14 @@ public:
     explicit EcryptFS(QObject *parent = nullptr);
     virtual ~EcryptFS(){};
 
-    QString generate_passphrase(const QString key);                                                                    // 通过口令生成密钥 ，返回passphrase
-    void encrypt(const QString umountPath);                                                                            // 解密 umount
-    bool dcrypt(const QString mountObjectPath, const QString mountPath, const QString key, const QString passphrase);  // 解密：mount key:口令 passphrase：密钥
-    void mkdirBoxDir(const QString path);
-    void rmBoxDir(const QString path);
+    // 通过口令生成密钥 ，返回passphrase
+    QString generate_passphrase(const QString &key);
+    // 解密 umount
+    void encrypt(const QString &umountPath);
+    // 解密：mount key:口令 passphrase：密钥
+    bool dcrypt(const QString &mountObjectPath, const QString &mountPath, const QString &key, const QString &passphrase);
+    void mkdirBoxDir(const QString &path);
+    void rmBoxDir(const QString &path);
 
 public Q_SLOTS:
     void onProcessExit(int exitCode, QProcess::ExitStatus exitStatus);
