@@ -35,12 +35,19 @@ public:
     QString getName();
     QString getPassword();
 
+private:
+    void initStyle();
+
 private slots:
     void onOkClicked();
 
 signals:
     void accepted();
     void rejected();
+    // 两次密码不一致
+    void passwdInconsistent();
+    // 输入空字符
+    void inputEmpty();
 
 private:
     Ui::CreateBox *m_ui;

@@ -23,6 +23,7 @@ ModifyPassword::ModifyPassword(QWidget *parent) : QWidget(parent),
 {
     this->m_ui->setupUi(this);
     this->init();
+    this->initStyle();
 }
 
 QString ModifyPassword::getCurrentPassword()
@@ -43,45 +44,67 @@ void ModifyPassword::setBoxName(const QString &boxName)
 void ModifyPassword::init()
 {
     this->setWindowModality(Qt::ApplicationModal);
-
-    connect(this->m_ui->pushButton_2, &QPushButton::clicked, this, [this]
+    this->m_ui->m_currentPassword->setEchoMode(QLineEdit::Password);
+    this->m_ui->m_newPassword->setEchoMode(QLineEdit::Password);
+    this->m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
+    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
-                this->hide();
-                emit rejected();
+                this->close();
+                emit this->rejected();
             });
 
-    connect(this->m_ui->pushButton, &QPushButton::clicked, this, &ModifyPassword::onOkClicked);
+    connect(this->m_ui->m_ok, &QPushButton::clicked, this, &ModifyPassword::onOkClicked);
+}
+
+void ModifyPassword::initStyle()
+{
+    this->m_ui->m_ok->setFixedSize(80, 36);
+    this->m_ui->m_ok->setStyleSheet("QPushButton{"
+                                    "color:#FFFFFF;"
+                                    "font:NotoSansCJKsc-Regular;"
+                                    "font-size:12px;"
+                                    "border-radius:8px;"
+                                    "background:#43A3F2;}"
+                                    "QPushButton:hover{"
+                                    "background:#79C3FF;"
+                                    "border:4px;}");
+
+    this->m_ui->m_cancel->setFixedSize(80, 36);
+    this->m_ui->m_cancel->setStyleSheet("QPushButton{"
+                                        "color:#FFFFFF;"
+                                        "font:NotoSansCJKsc-Regular;"
+                                        "font-size:12px;"
+                                        "border-radius:8px;"
+                                        "background:#393939;}"
+                                        "QPushButton:hover{"
+                                        "background:#464646;"
+                                        "border:4px;}");
+
+    this->m_ui->m_newPassword->setFixedHeight(36);
+    this->m_ui->m_currentPassword->setFixedHeight(36);
+    this->m_ui->m_confirmPassword->setFixedHeight(36);
+    this->m_ui->m_boxName->setFixedHeight(36);
 }
 
 void ModifyPassword::onOkClicked()
 {
+    // 禁止输入空字符
+    if (this->m_ui->m_newPassword->text().isEmpty() || this->m_ui->m_confirmPassword->text().isEmpty() || this->m_ui->m_currentPassword->text().isEmpty())
+    {
+        emit this->inputEmpty();
+        return;
+    }
+    // 两次密码不一致
     if (this->m_ui->m_newPassword->text() != this->m_ui->m_confirmPassword->text())
     {
-        QWidget *widget = new QWidget();
-        widget->setWindowModality(Qt::ApplicationModal);
-        widget->setWindowTitle(tr("notice"));
-        widget->setWindowIcon(QIcon(":/images/logo"));
-        QVBoxLayout *vlay = new QVBoxLayout(widget);
-
-        QLabel *label = new QLabel(QString(tr("Please confirm whether the password is consistent.")));
-        QPushButton *ok = new QPushButton(tr("ok"));
-        connect(ok, &QPushButton::clicked, widget, &QWidget::close);
-
-        vlay->addWidget(label);
-        vlay->addWidget(ok);
-
-        int x = this->x() + this->width() / 4 + widget->width() / 4;
-        int y = this->y() + this->height() / 4 + widget->height() / 4;
-        widget->move(x, y);
-        widget->show();
+        emit this->passwdInconsistent();
+        return;
     }
-    else
-    {
-        emit accepted();
-        this->hide();
-        this->m_ui->m_currentPassword->setText("");
-        this->m_ui->m_newPassword->setText("");
-        this->m_ui->m_confirmPassword->setText("");
-    }
+
+    emit accepted();
+    this->close();
+    this->m_ui->m_currentPassword->setText("");
+    this->m_ui->m_newPassword->setText("");
+    this->m_ui->m_confirmPassword->setText("");
 }
 }  // namespace KS

@@ -13,6 +13,7 @@
  */
 
 #include "src/ui/box/create-box.h"
+#include <qt5-log-i.h>
 #include "src/ui/ui_create-box.h"
 
 namespace KS
@@ -22,13 +23,16 @@ CreateBox::CreateBox(QWidget *parent) : QWidget(parent),
 {
     this->m_ui->setupUi(this);
     this->setWindowModality(Qt::ApplicationModal);
-
+    this->initStyle();
+    this->m_ui->m_password->setEchoMode(QLineEdit::Password);
+    this->m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
     connect(this->m_ui->m_ok, &QPushButton::clicked, this, &CreateBox::onOkClicked);
 
-    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this](bool) {
-        Q_EMIT this->rejected();
-        this->close();
-    });
+    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this](bool)
+            {
+                Q_EMIT this->rejected();
+                this->close();
+            });
 }
 
 QString CreateBox::getName()
@@ -41,36 +45,57 @@ QString CreateBox::getPassword()
     return this->m_ui->m_password->text();
 }
 
+void CreateBox::initStyle()
+{
+    this->m_ui->m_ok->setFixedSize(80, 36);
+    this->m_ui->m_ok->setStyleSheet("QPushButton{"
+                                    "color:#FFFFFF;"
+                                    "font:NotoSansCJKsc-Regular;"
+                                    "font-size:12px;"
+                                    "border-radius:8px;"
+                                    "background:#43A3F2;}"
+                                    "QPushButton:hover{"
+                                    "background:#79C3FF;"
+                                    "border:4px;}");
+    this->m_ui->m_cancel->setFixedSize(80, 36);
+    this->m_ui->m_cancel->setStyleSheet("QPushButton{"
+                                        "color:#FFFFFF;"
+                                        "font:NotoSansCJKsc-Regular;"
+                                        "font-size:12px;"
+                                        "border-radius:8px;"
+                                        "background:#393939;}"
+                                        "QPushButton:hover{"
+                                        "background:#464646;"
+                                        "border:4px;}");
+
+    this->m_ui->m_name->setFixedHeight(36);
+    this->m_ui->m_password->setFixedHeight(36);
+    this->m_ui->m_confirmPassword->setFixedHeight(36);
+}
+
 void CreateBox::onOkClicked()
 {
+    // 禁止出现空密码、空保险箱名
+    if (this->m_ui->m_password->text().isEmpty() || this->m_ui->m_confirmPassword->text().isEmpty() || this->m_ui->m_name->text().isEmpty())
+    {
+        emit this->inputEmpty();
+        KLOG_WARNING() << "The input cannot be empty, please improve the information.";
+        return;
+    }
+
+    // 两次输入的密码不一致
     if (this->m_ui->m_password->text() != this->m_ui->m_confirmPassword->text())
     {
-        QWidget *widget = new QWidget();
-        widget->setWindowModality(Qt::ApplicationModal);
-        widget->setWindowTitle(tr("notice"));
-        widget->setWindowIcon(QIcon(":/images/logo"));
-        QVBoxLayout *vlay = new QVBoxLayout(widget);
-
-        QLabel *label = new QLabel(QString(tr("Please confirm whether the password is consistent.")));
-        QPushButton *ok = new QPushButton(tr("ok"));
-        connect(ok, &QPushButton::clicked, widget, &QWidget::close);
-
-        vlay->addWidget(label);
-        vlay->addWidget(ok);
-
-        int x = this->x() + this->width() / 4 + widget->width() / 4;
-        int y = this->y() + this->height() / 4 + widget->height() / 4;
-        widget->move(x, y);
-        widget->show();
+        emit this->passwdInconsistent();
+        return;
     }
-    else
-    {
-        emit accepted();
-        this->hide();
-        this->m_ui->m_name->setText("");
-        this->m_ui->m_password->setText("");
-        this->m_ui->m_confirmPassword->setText("");
-    }
+
+    emit this->accepted();
+    // 创建成功后清空输入框
+    this->hide();
+    this->m_ui->m_name->setText("");
+    this->m_ui->m_password->setText("");
+    this->m_ui->m_confirmPassword->setText("");
 };
 
 }  // namespace KS

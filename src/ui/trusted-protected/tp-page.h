@@ -9,10 +9,15 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
+#include <QListWidget>
+#include <QStackedWidget>
+#include <QStylePainter>
 #include <QWidget>
+#include "src/ui/trusted-protected/item-proxy.h"
+#include "src/ui/trusted-protected/trusted-view.h"
 
 namespace KS
 {
@@ -20,8 +25,29 @@ class TPPage : public QWidget
 {
     Q_OBJECT
 public:
-    TPPage();
+    TPPage(QWidget *parent = nullptr);
     virtual ~TPPage(){};
+
+private:
+    void initUI();
+    void createItem(const QString &text,
+                    TRUSTED_PROTECT_TYPE type,
+                    const QString &icon);
+
+private slots:
+    void onItemClicked(QListWidgetItem *currItem);
+
+signals:
+    void currentItemChanged(int index);
+
+private:
+    QListWidget *m_listWidget;
+    ItemProxy *m_itemKernelProxy;
+    ItemProxy *m_itemExecuteProxy;
+    QStackedWidget *m_stackWidget;
+
+    TrustedView *m_kernelView;
+    TrustedView *m_executeView;
 };
 
-}
+}  // namespace KS

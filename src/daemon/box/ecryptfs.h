@@ -15,7 +15,6 @@
 #ifndef ECRYPTFS_H
 #define ECRYPTFS_H
 
-#include <ecryptfs.h>
 #include <QProcess>
 
 namespace KS
