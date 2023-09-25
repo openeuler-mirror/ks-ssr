@@ -25,20 +25,18 @@
 
 namespace KS
 {
-//#define RSA_KEY_LENGTH 512
-#define UNMOUNTED_DIR_CREAT_PATH SC_INSTALL_DATADIR "/box"
 #define GET_BOX_UID_BIT 6         // 随机生成box的标识符位数
 #define GET_BOX_PASSPHRASE_BIT 8  // 随机生成口令的位数
 
 Box::Box(const QString &name,
          const QString &password,
-         uint senderUid,
+         uint userUID,
          const QString &boxId,
          QObject *parent) : QObject(parent),
                             m_name(name),
                             m_boxId(boxId),
                             m_password(password),
-                            m_senderUid(senderUid)
+                            m_userUID(userUID)
 {
     m_boxDao = new BoxDao;
     m_ecryptFS = new EcryptFS(this);
@@ -59,16 +57,16 @@ QString Box::getBoxName()
 // 获取调用者用户名
 QString Box::getUser()
 {
-    auto pwd = getpwuid(m_senderUid);
+    auto pwd = getpwuid(m_userUID);
     return pwd->pw_name;
 }
 
 uint Box::getUserUid()
 {
-    return m_senderUid;
+    return m_userUID;
 }
 
-BoxDaoInfo Box::getBoxDaoInfo()
+BoxRecord Box::getBoxInfo()
 {
     return m_boxDao->getBox(m_boxId);
 }
@@ -76,8 +74,8 @@ BoxDaoInfo Box::getBoxDaoInfo()
 bool Box::delBox(const QString &inputPassword)
 {
     // 密码认证
-    auto boxInfo = getBoxDaoInfo();
-    auto decryptPassword = CryptoHelper::aes_decrypt(boxInfo.encryptpassword);
+    auto boxInfo = getBoxInfo();
+    auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
 
     if (inputPassword != decryptPassword)
     {
@@ -87,15 +85,15 @@ bool Box::delBox(const QString &inputPassword)
 
     if (boxInfo.isMount)
     {
-        KLOG_DEBUG() << "Is mounted. uid = " << m_boxId;
+        KLOG_WARNING() << "The box has been mounted and cannot be deleted. uid = " << m_boxId;
         return false;
     }
 
     // 删除目录
-    QString dirPath = UNMOUNTED_DIR_CREAT_PATH "/" + boxInfo.boxName + boxInfo.boxId;
+    QString dirPath = QString("%1/%2%3").arg(SC_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxId);
     m_ecryptFS->rmBoxDir(dirPath);
 
-    QString mountPath = "/box/" + boxInfo.boxName;
+    QString mountPath = QString("%1/%2").arg(SC_BOX_MOUNT_DIR, boxInfo.boxName);
     m_ecryptFS->rmBoxDir(mountPath);
 
     // 删除数据库
@@ -106,7 +104,7 @@ bool Box::delBox(const QString &inputPassword)
 
 bool Box::isMount()
 {
-    auto boxInfo = getBoxDaoInfo();
+    auto boxInfo = getBoxInfo();
 
     return boxInfo.isMount;
 }
@@ -114,30 +112,30 @@ bool Box::isMount()
 bool Box::mount(const QString &inputPassword)
 {
     // 密码认证
-    auto boxInfo = getBoxDaoInfo();
-    auto decryptPassword = CryptoHelper::aes_decrypt(boxInfo.encryptpassword);
+    auto boxInfo = getBoxInfo();
+    auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
 
     if (inputPassword != decryptPassword)
     {
-        KLOG_DEBUG() << "Mount password error!";
+        KLOG_ERROR() << "Mount password error!";
         return false;
     }
 
     // 已挂载则返回
     if (boxInfo.isMount)
     {
-        KLOG_DEBUG() << "Is mounted. uid = " << m_boxId;
+        KLOG_WARNING() << "The box has been mounted and there is no need to repeat the operation. uid = " << m_boxId;
         return true;
     }
 
     //挂载
-    auto decryptPspr = CryptoHelper::aes_decrypt(boxInfo.encryptPspr);  //Pspr
-    auto decryptSig = CryptoHelper::aes_decrypt(boxInfo.encryptSig);
+    auto decryptPspr = CryptoHelper::aesDecrypt(boxInfo.encryptPspr);  //Pspr
+    auto decryptSig = CryptoHelper::aesDecrypt(boxInfo.encryptSig);
 
-    QString mountPath = "/box/" + boxInfo.boxName;
+    auto mountPath = QString("%1/%2").arg(SC_BOX_MOUNT_DIR, boxInfo.boxName);
     m_ecryptFS->mkdirBoxDir(mountPath, getUser());
 
-    auto mountObjectPath = UNMOUNTED_DIR_CREAT_PATH "/" + boxInfo.boxName + boxInfo.boxId;
+    auto mountObjectPath = QString("%1/%2%3").arg(SC_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxId);
 
     RETURN_VAL_IF_TRUE(!m_ecryptFS->decrypt(mountObjectPath, mountPath, decryptPspr, decryptSig), false)
 
@@ -148,8 +146,8 @@ bool Box::mount(const QString &inputPassword)
 
 void Box::umount()
 {
-    auto boxInfo = getBoxDaoInfo();
-    QString mountPath = "/box/" + boxInfo.boxName;
+    auto boxInfo = getBoxInfo();
+    QString mountPath = QString("%1/%2").arg(SC_BOX_MOUNT_DIR, boxInfo.boxName);
 
     m_ecryptFS->encrypt(mountPath);
     // 修改数据库中挂载状态
@@ -158,16 +156,16 @@ void Box::umount()
 
 bool Box::modifyBoxPassword(const QString &inputPassword, const QString &newPassword)
 {
-    auto boxInfo = getBoxDaoInfo();
-    auto decryptPassword = CryptoHelper::aes_decrypt(boxInfo.encryptpassword);
+    auto boxInfo = getBoxInfo();
+    auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
     //    auto decryptInputPassword = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, m_password);
     if (inputPassword != decryptPassword)
     {
-        KLOG_DEBUG() << "Password error!";
+        KLOG_ERROR() << "Password error!";
         return false;
     }
 
-    auto encryptPassword = CryptoHelper::aes_encrypt(newPassword);
+    auto encryptPassword = CryptoHelper::aesEncrypt(newPassword);
 
     m_boxDao->modifyPasswd(m_boxId, encryptPassword);
     return true;
@@ -178,51 +176,62 @@ void Box::init()
     if (m_boxId.isEmpty())
     {
         QString passphrase = getRandStr(GET_BOX_PASSPHRASE_BIT);
-        QString sig = m_ecryptFS->add_passphrase(passphrase);
+        QString sig = m_ecryptFS->addPassphrase(passphrase);
         if (passphrase.isEmpty())
         {
             KLOG_ERROR() << "generate passphrase fail. check ecryptfs.ko is load!";
         }
 
         // aes加密处理 存入数据库
-        auto encryptPassphrase = CryptoHelper::aes_encrypt(passphrase);
-        auto encryptSig = CryptoHelper::aes_encrypt(sig.trimmed());
-        // aes加密
-        //    auto decryptPasswd = CryptoHelper::rsa_decrypt(this->m_rsaPrivateKey, m_password);
-        auto encryptPasswd = CryptoHelper::aes_encrypt(m_password);
+        auto encryptPassphrase = CryptoHelper::aesEncrypt(passphrase);
+        auto encryptSig = CryptoHelper::aesEncrypt(sig.trimmed());
+        auto encryptPasswd = CryptoHelper::aesEncrypt(m_password);
 
         // 创建随机uid 暂定为六位字符, 作为唯一标识符
-
         m_boxId = getRandBoxUid();
 
         // 插入数据库
         m_boxDao->addBox(m_name, m_boxId, false, encryptPasswd, encryptPassphrase,
-                         encryptSig, m_senderUid);
+                         encryptSig, m_userUID);
     }
 
     // 创建对应文件夹 未挂载box
-    QDir dir(UNMOUNTED_DIR_CREAT_PATH);
+    QDir dir(SC_BOX_MOUNT_DATADIR);
     if (!dir.mkdir(m_name + m_boxId))  // name+uid 命名 可区分不同用户下创建的相同文件夹名称
     {
-        KLOG_DEBUG() << "mkdir fail. name = " << m_name << " uid = " << m_boxId;
+        KLOG_WARNING() << "Failed to create folder. name = " << m_name << " uid = " << m_boxId;
     }
 
     // 在对应调用的用户根目录创建文件夹
-    QString mountPath = "/box/" + m_name;
+    QString mountPath = QString("%1/%2").arg(SC_BOX_MOUNT_DIR, m_name);
     m_ecryptFS->mkdirBoxDir(mountPath, getUser());
 }
 
 // 生成6位不重复uid,作为box标识
 QString Box::getRandBoxUid()
 {
-    auto uid = getRandStr(GET_BOX_UID_BIT);
-
-    auto boxInfo = getBoxDaoInfo();
-    // 若存在则重新生成uid
-    if (!boxInfo.boxId.isEmpty())
+    QString uid;
+    for (int i = 0; i < 5; i++)
     {
-        KLOG_DEBUG() << "There is same uid. uid = " << uid;
-        uid = getRandBoxUid();
+        uid = getRandStr(GET_BOX_UID_BIT);
+
+        auto boxInfo = m_boxDao->getBox(uid);
+        // 若存在则重新生成uid
+        if (!boxInfo.boxId.isEmpty())
+        {
+            KLOG_WARNING() << "There is same uid. uid = " << uid;
+            uid = "";
+            continue;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    if (uid.isEmpty())
+    {
+        KLOG_ERROR() << "Random uid cannot be generated!";
     }
 
     return uid;
