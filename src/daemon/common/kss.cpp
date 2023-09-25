@@ -45,12 +45,15 @@ namespace KS
 #define KSS_REMOVE_FILE_CMD "kss file del"
 #define KSS_GET_FILES_CMD "kss file info"
 
+// 开启防卸载
+#define KSS_OPEN_PROHIBIT_UNLOADING_CMD "kss kmod add --path"
+// 关闭防卸载
+#define KSS_CLOSE_PROHIBIT_UNLOADING_CMD "kss kmod del --path"
+
 KSS::KSS(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
 {
     m_process = new QProcess(parent);
     m_ini = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
-
-    initTrusted();
 }
 
 void KSS::addTrustedFile(const QString &filePath)
@@ -76,6 +79,8 @@ QString KSS::getModuleFiles()
 
 void KSS::prohibitUnloading(bool prohibited, const QString &filePath)
 {
+    auto cmd = QString("%1 %2").arg(prohibited ? KSS_OPEN_PROHIBIT_UNLOADING_CMD : KSS_CLOSE_PROHIBIT_UNLOADING_CMD, filePath);
+    execute(cmd);
 }
 
 QString KSS::getExecuteFiles()

@@ -47,6 +47,7 @@ TPKernel::TPKernel(QWidget *parent) : QWidget(parent),
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
     connect(m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
     connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(unprotectClicked(bool)));
+    connect(m_ui->m_kernelTable, SIGNAL(prohibitUnloadingStatusChange(bool, const QString &)), this, SLOT(prohibitUnloadingStatusChanged(bool, const QString &)));
 }
 
 TPKernel::~TPKernel()
@@ -102,6 +103,12 @@ void TPKernel::unprotectAccepted()
         }
     }
     updateInfo();
+}
+
+void TPKernel::prohibitUnloadingStatusChanged(bool status, const QString &path)
+{
+    RETURN_IF_TRUE(path.isEmpty())
+    m_tpDBusProxy->ProhibitUnloading(status, path).waitForFinished();
 }
 
 }  // namespace KS
