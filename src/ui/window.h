@@ -37,8 +37,8 @@ public:
 private:
     // 窗口整体初始化
     void initWindow();
-    // 分类模块（窗口内容）初始化
-    void initCategories();
+    // 导航和导航项初始化
+    void initNavigation();
 
 private:
     Ui::Window *m_ui;
