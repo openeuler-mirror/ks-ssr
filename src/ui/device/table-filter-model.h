@@ -14,30 +14,21 @@
 
 #pragma once
 
-#include <QWidget>
-
-namespace Ui
-{
-class DeviceLog;
-}
+#include <QObject>
+#include <QSortFilterProxyModel>
 
 namespace KS
 {
-class DeviceLog : public QWidget
+class TableFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
 public:
-    DeviceLog(QWidget *parent = nullptr);
-    virtual ~DeviceLog();
+    TableFilterModel(QObject *parent = nullptr);
+    virtual ~TableFilterModel(){};
 
 protected:
-    void paintEvent(QPaintEvent *event);
-
-private Q_SLOTS:
-    void searchTextChanged(const QString &text);
-
-private:
-    Ui::DeviceLog *m_ui;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 };
-}  //namespace KS
+
+}  // namespace KS
