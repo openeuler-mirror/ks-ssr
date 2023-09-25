@@ -12,10 +12,11 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "src/ui/device/device-log.h"
+#include "src/ui/device/device-record.h"
 #include "src/ui/device/device-permission.h"
+#include "src/ui/device/device-record-delegate.h"
 #include "src/ui/device/table-filter-model.h"
-#include "src/ui/ui_device-log.h"
+#include "src/ui/ui_device-record.h"
 
 #include <kiran-log/qt5-log-i.h>
 #include <QPainter>
@@ -23,22 +24,40 @@
 
 namespace KS
 {
-DeviceLog::DeviceLog(QWidget *parent) : QWidget(parent),
-                                        m_ui(new Ui::DeviceLog)
+DeviceRecord::DeviceRecord(QWidget *parent) : QWidget(parent),
+                                              m_ui(new Ui::DeviceRecord)
 {
     m_ui->setupUi(this);
     m_ui->m_title->setText(tr("Connect Record"));
 
     m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
-    connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceLog::searchTextChanged);
+    connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceRecord::searchTextChanged);
+
+    m_ui->m_table->setHeaderSections(QStringList() << tr("Device Name")
+                                                   << tr("Device Type")
+                                                   << tr("Device Time")
+                                                   << tr("Device Status"));
+    m_ui->m_table->setItemDelegate(new DeviceRecordDelegate(this));
+
+    //just test add table data.
+    QList<RecordsInfo> infos;
+    for (int i = 0; i < 50; i++)
+    {
+        auto deviceInfo = RecordsInfo{.name = "1",
+                                      .type = i,
+                                      .time = "1",
+                                      .status = i};
+        infos << deviceInfo;
+    }
+    m_ui->m_table->setData(infos);
 }
 
-DeviceLog::~DeviceLog()
+DeviceRecord::~DeviceRecord()
 {
     delete m_ui;
 }
 
-void DeviceLog::paintEvent(QPaintEvent *event)
+void DeviceRecord::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QStyleOption opt;
@@ -47,7 +66,7 @@ void DeviceLog::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void DeviceLog::searchTextChanged(const QString &text)
+void DeviceRecord::searchTextChanged(const QString &text)
 {
     KLOG_DEBUG() << "The search text is change to " << text;
 
