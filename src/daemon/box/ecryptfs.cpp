@@ -14,6 +14,7 @@
 
 #include "ecryptfs.h"
 #include <qt5-log-i.h>
+#include "include/sc-marcos.h"
 
 namespace KS
 {
@@ -22,9 +23,9 @@ EcryptFS::EcryptFS(QObject *parent) : QObject(parent)
     m_process = new QProcess(parent);
 }
 
-QString EcryptFS::generate_passphrase(const QString &key)
+QString EcryptFS::add_passphrase(const QString &passphrase)
 {
-    QString cmd = QString("echo '%1' |").arg(key) + GENERATE_PASSPHRASE_CMD;
+    QString cmd = QString("echo '%1' |").arg(passphrase) + GENERATE_PASSPHRASE_CMD;
     if (m_process->state() != QProcess::Running)
     {
         KLOG_DEBUG() << "cmd = " << cmd;
@@ -47,11 +48,22 @@ void EcryptFS::encrypt(const QString &umountPath)
     }
 }
 
-bool EcryptFS::dcrypt(const QString &mountObjectPath, const QString &mountPath, const QString &key, const QString &passphrase)
+bool EcryptFS::decrypt(const QString &mountObjectPath,
+                       const QString &mountPath,
+                       const QString &passphrase,
+                       const QString &sig)
 {
     //    mkdir(mountPath);
-    QString cmd = MOUNT_ECRYPTFS_CMD + QString(" %1 %2  -o passphrase_passwd=%3,ecryptfs_sig=%4,ecryptfs_fnek_sig=%5,key=passphrase,ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough,ecryptfs_enable_filename_crypto=y,no_sig_cache")
-                                           .arg(mountObjectPath, mountPath, key, passphrase, passphrase);
+    QString cmd = QString("%1 %2 %3  -o passphrase_passwd=%4,"
+                          "ecryptfs_sig=%5,"
+                          "ecryptfs_fnek_sig=%6,"
+                          "key=passphrase,"
+                          "ecryptfs_cipher=aes,"
+                          "ecryptfs_key_bytes=16,"
+                          "ecryptfs_passthrough,"
+                          "ecryptfs_enable_filename_crypto=y,"
+                          "no_sig_cache")
+                      .arg(MOUNT_ECRYPTFS_CMD, mountObjectPath, mountPath, passphrase, sig, sig);
     if (m_process->state() != QProcess::Running)
     {
         KLOG_DEBUG() << "cmd = " << cmd;
@@ -59,15 +71,14 @@ bool EcryptFS::dcrypt(const QString &mountObjectPath, const QString &mountPath, 
         connect(this->m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onProcessExit(int, QProcess::ExitStatus)));
         m_process->waitForFinished(1000);
     }
-    if (m_errorOutput == "")
-        return true;
-    else
-        return false;
+    RETURN_VAL_IF_TRUE(m_errorOutput.isEmpty(), true)
+
+    return false;
 }
 
-void EcryptFS::mkdirBoxDir(const QString &path)
+void EcryptFS::mkdirBoxDir(const QString &path, const QString &userName)
 {
-    QString cmd = QString("mkdir -p %1").arg(path);
+    QString cmd = QString("mkdir -p %1 && chown %2:%3").arg(path, userName, userName);
     if (m_process->state() != QProcess::Running)
     {
         KLOG_DEBUG() << "cmd = " << cmd;
@@ -100,8 +111,10 @@ void EcryptFS::onProcessExit(int exitCode, QProcess::ExitStatus exitStatus)
     m_processOutput = standardOutput;
 
     QByteArray errordOutput = this->m_process->readAllStandardError();
-    if (errordOutput != "")
+    if (!errordOutput.isEmpty())
+    {
         KLOG_DEBUG() << "Error output: " << errordOutput;
+    }
     m_errorOutput = errordOutput;
 }
 }  // namespace KS
