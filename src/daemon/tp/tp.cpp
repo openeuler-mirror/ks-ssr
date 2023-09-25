@@ -21,6 +21,9 @@
 #include "config.h"
 #include "include/ksc-i.h"
 #include "include/ksc-marcos.h"
+#include "include/ksc-error-i.h"
+#include "lib/base/error.h"
+#include "src/daemon/common/kss.h"
 #include "src/daemon/tp_adaptor.h"
 
 namespace KS
@@ -28,9 +31,7 @@ namespace KS
 TP::TP(QObject *parent) : QObject(parent)
 {
     m_dbusAdaptor = new TPAdaptor(this);
-    m_kss = new KSS(this);
-    m_kss->initTrusted();
-    connect(m_kss, &KSS::initFinished, this, &TP::InitFinished);
+    connect(KSS::getDefault().get(), SIGNAL(initFinished()), this, SIGNAL(InitFinished()));
 
     init();
 }
@@ -40,7 +41,13 @@ TP::~TP()
 
 void TP::AddFile(const QString &filePath)
 {
-    auto output = m_kss->addTrustedFile(filePath);
+    if (filePath.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return ;
+    }
+
+    auto output = KSS::getDefault()->addTrustedFile(filePath);
     QJsonParseError jsonError;
 
     auto jsonDoc = QJsonDocument::fromJson(output.toUtf8(), &jsonError);
@@ -48,39 +55,56 @@ void TP::AddFile(const QString &filePath)
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-//        sendErrorReply(QDBusError::NotSupported, jsonError.errorString());
         return;
     }
 
-    if (jsonDoc.object().value(KSC_JK_COUNT).toInt() == 0)
+    if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
     {
-        sendErrorReply(QDBusError::NotSupported, tr("Added file types are not supported."));
+        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD));
         return;
     }
 }
 
 QString TP::GetExecuteFiles()
 {
-    return m_kss->getExecuteFiles();
+    return KSS::getDefault()->getExecuteFiles();
 }
 
 QString TP::GetModuleFiles()
 {
-    return m_kss->getModuleFiles();
+    return KSS::getDefault()->getModuleFiles();
 }
 
 void TP::ProhibitUnloading(bool prohibited, const QString &filePath)
 {
-    m_kss->prohibitUnloading(prohibited, filePath);
+    if (filePath.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return ;
+    }
+
+    KSS::getDefault()->prohibitUnloading(prohibited, filePath);
 }
 
 void TP::RemoveFile(const QString &filePath)
 {
-    m_kss->removeTrustedFile(filePath);
+    if (filePath.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return ;
+    }
+
+    KSS::getDefault()->removeTrustedFile(filePath);
 }
 
 QString TP::Search(const QString &pathKey, uint searchType)
 {
+    if (pathKey.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return QString();
+    }
+
     RETURN_VAL_IF_TRUE(TrustedProtectType(searchType) == TrustedProtectType::TRUSTED_PROTECT_TYPE_NONE, QString())
     QString fileList;
     QJsonDocument resultJsonDoc;
@@ -89,11 +113,11 @@ QString TP::Search(const QString &pathKey, uint searchType)
 
     if (TrustedProtectType(searchType) == TrustedProtectType::TRUSTED_PROTECT_TYPE_KERNEL)
     {
-        fileList = m_kss->getModuleFiles();
+        fileList = KSS::getDefault()->getModuleFiles();
     }
     else
     {
-        fileList = m_kss->getExecuteFiles();
+        fileList = KSS::getDefault()->getExecuteFiles();
     }
 
     auto jsonDoc = QJsonDocument::fromJson(fileList.toUtf8(), &jsonError);
@@ -103,13 +127,13 @@ QString TP::Search(const QString &pathKey, uint searchType)
         return QString();
     }
 
-    auto jsonModules = jsonDoc.object().value(KSC_JK_DATA).toArray();
+    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
     for (const auto &module : jsonModules)
     {
         auto jsonMod = module.toObject();
 
         // 通过输入的pathKey，判断list中path字段是否包含pathKey
-        if (jsonMod.value(KSC_JK_DATA_PATH).toString().contains(pathKey))
+        if (jsonMod.value(KSC_KSS_JK_DATA_PATH).toString().contains(pathKey))
         {
             jsonArr.push_back(jsonMod);
         }

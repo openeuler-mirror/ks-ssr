@@ -21,6 +21,9 @@
 #include "config.h"
 #include "include/ksc-i.h"
 #include "include/ksc-marcos.h"
+#include "src/daemon/common/kss.h"
+#include "include/ksc-error-i.h"
+#include "lib/base/error.h"
 #include "src/daemon/fp_adaptor.h"
 
 namespace KS
@@ -28,7 +31,6 @@ namespace KS
 FP::FP(QObject *parent) : QObject(parent)
 {
     m_dbusAdaptor = new FPAdaptor(this);
-    m_kss = new KSS(this);
 
     init();
 }
@@ -38,42 +40,60 @@ FP::~FP()
 
 void FP::AddFile(const QString &filePath)
 {
+    if (filePath.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return ;
+    }
+
     QFileInfo fileInfo(filePath);
     auto fileName = fileInfo.fileName();
     //    KLOG_DEBUG() << "Add file name is " << fileName;
-    m_kss->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+    KSS::getDefault()->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 }
 
 QString FP::GetFiles()
 {
-    return m_kss->getFiles();
+    return KSS::getDefault()->getFiles();
 }
 
 void FP::RemoveFile(const QString &filePath)
 {
-    m_kss->removeFile(filePath);
+    if (filePath.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return ;
+    }
+
+    KSS::getDefault()->removeFile(filePath);
 }
 
 QString FP::Search(const QString &pathKey)
 {
+    if (pathKey.isEmpty())
+    {
+        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return QString();
+    }
+
     QJsonDocument resultJsonDoc;
     QJsonArray jsonArr;
 
     QJsonParseError jsonError;
-    auto jsonDoc = QJsonDocument::fromJson(m_kss->getFiles().toUtf8(), &jsonError);
+    auto jsonDoc = QJsonDocument::fromJson(KSS::getDefault()->getFiles().toUtf8(), &jsonError);
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser kernel protected information failed: " << jsonError.errorString();
         return QString();
     }
 
-    auto jsonModules = jsonDoc.object().value(KSC_JK_DATA).toArray();
+    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
     for (const auto &module : jsonModules)
     {
         auto jsonMod = module.toObject();
 
         // 通过输入的pathKey，判断list中path字段是否包含pathKey
-        if (jsonMod.value(KSC_JK_DATA_PATH).toString().contains(pathKey))
+        if (jsonMod.value(KSC_KSS_JK_DATA_PATH).toString().contains(pathKey))
         {
             jsonArr.push_back(jsonMod);
         }

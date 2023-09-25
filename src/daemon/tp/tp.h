@@ -18,7 +18,6 @@
 #include <QDBusObjectPath>
 #include <QObject>
 #include <QStringList>
-#include "src/daemon/common/kss.h"
 
 class TPAdaptor;
 
@@ -62,6 +61,5 @@ private:
 
 private:
     TPAdaptor *m_dbusAdaptor;
-    KSS *m_kss;
 };
 }  // namespace KS
