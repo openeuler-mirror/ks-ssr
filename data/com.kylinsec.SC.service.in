@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=com.kylinsec.SC
+User=root
+Exec=@CMAKE_INSTALL_FULL_BINDIR@/ks-sc-daemon
+@SYSTEMD_SERVICE@
