@@ -26,9 +26,9 @@ namespace KS
 {
 enum TrustedProtectType
 {
-    TRUSTED_PROTECT_EXECUTE = 0,
-    TRUSTED_PROTECT_KERNEL,
-    TRUSTED_PROTECT_NONE
+    TRUSTED_PROTECT_TYPE_EXECUTE = 0,
+    TRUSTED_PROTECT_TYPE_KERNEL,
+    TRUSTED_PROTECT_TYPE_NONE
 };
 
 class Trusted : public QObject,

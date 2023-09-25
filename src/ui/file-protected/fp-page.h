@@ -29,8 +29,8 @@ class FPPage : public QWidget
 {
     Q_OBJECT
 public:
-    FPPage();
-    virtual ~FPPage(){};
+    FPPage(QWidget *parent = nullptr);
+    virtual ~FPPage();
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);

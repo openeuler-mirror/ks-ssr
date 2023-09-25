@@ -59,8 +59,8 @@ void ModifyPassword::onOkClicked()
 {
     // 禁止输入空字符
     if (this->m_ui->m_newPassword->text().isEmpty() ||
-            this->m_ui->m_confirmPassword->text().isEmpty() ||
-            this->m_ui->m_currentPassword->text().isEmpty())
+        this->m_ui->m_confirmPassword->text().isEmpty() ||
+        this->m_ui->m_currentPassword->text().isEmpty())
     {
         emit this->inputEmpty();
         return;

@@ -15,7 +15,7 @@
 #include "box-dao.h"
 #include <qt5-log-i.h>
 #include "config.h"
-#include "include/sc-marcos.h"
+#include "include/ksc-marcos.h"
 
 namespace KS
 {
@@ -29,49 +29,49 @@ BoxDao::~BoxDao()
 }
 
 void BoxDao::addBox(const QString &boxName,
-                    const QString &boxId,
+                    const QString &boxID,
                     bool isMount,
                     const QString &encryptpassword,
                     const QString &encryptPspr,
                     const QString &encryptSig,
                     int userUid)
 {
-    QString cmd = QString("insert into boxs (boxName,boxId,isMount,encryptpassword,encryptPspr,encryptSig,userUid) \
+    QString cmd = QString("insert into boxs (boxName,boxID,isMount,encryptpassword,encryptPspr,encryptSig,userUid) \
                       values('%1','%2','%3','%4','%5','%6',%7);")
-                      .arg(boxName, boxId, QString::number(isMount), encryptpassword, encryptPspr, encryptSig, QString::number(userUid));
+                      .arg(boxName, boxID, QString::number(isMount), encryptpassword, encryptPspr, encryptSig, QString::number(userUid));
 
     this->execute(cmd);
 }
 
-void BoxDao::modifyMountStatus(const QString &boxId, bool isMount)
+void BoxDao::modifyMountStatus(const QString &boxID, bool isMount)
 {
-    QString cmd = QString("update boxs set isMount ='%1' where boxId='%2';").arg(QString::number(isMount), boxId);
+    QString cmd = QString("update boxs set isMount ='%1' where boxID='%2';").arg(QString::number(isMount), boxID);
 
     this->execute(cmd);
 }
 
-void BoxDao::modifyPasswd(const QString &boxId, const QString &encryptpassword)
+void BoxDao::modifyPasswd(const QString &boxID, const QString &encryptpassword)
 {
-    QString cmd = QString("update boxs set encryptpassword='%1' where boxId='%2';").arg(encryptpassword, boxId);
+    QString cmd = QString("update boxs set encryptpassword='%1' where boxID='%2';").arg(encryptpassword, boxID);
 
     this->execute(cmd);
 }
 
-bool BoxDao::delBox(const QString &boxId)
+bool BoxDao::delBox(const QString &boxID)
 {
-    QString cmd = QString("delete from boxs where boxId='%1';").arg(boxId);
+    QString cmd = QString("delete from boxs where boxID='%1';").arg(boxID);
 
     RETURN_VAL_IF_TRUE(!this->execute(cmd), false)
 
     return true;
 }
 
-BoxRecord BoxDao::getBox(const QString &boxId)
+BoxRecord BoxDao::getBox(const QString &boxID)
 {
     auto boxs = getBoxs();
     for (auto box : boxs)
     {
-        RETURN_VAL_IF_TRUE(box.boxId == boxId, box)
+        RETURN_VAL_IF_TRUE(box.boxID == boxID, box)
     }
 
     return BoxRecord();
@@ -94,7 +94,7 @@ QList<BoxRecord> BoxDao::getBoxs()
         {
             BoxRecord boxRecord;
             boxRecord.boxName = query.value(0).toString();
-            boxRecord.boxId = query.value(1).toString();
+            boxRecord.boxID = query.value(1).toString();
             boxRecord.isMount = QVariant(query.value(2).toString()).toBool();
             boxRecord.encryptpassword = query.value(3).toString();
             boxRecord.encryptPspr = query.value(4).toString();
@@ -126,7 +126,7 @@ int BoxDao::getBoxCount()
 void BoxDao::init()
 {
     m_boxDb = QSqlDatabase::addDatabase("QSQLITE");
-    m_boxDb.setDatabaseName(SC_INSTALL_DATADIR "/sc.dat");  //设置数据库名称
+    m_boxDb.setDatabaseName(KSC_INSTALL_DATADIR "ksc.dat");  //设置数据库名称
     if (!m_boxDb.open())
     {
         KLOG_ERROR() << "BoxDao open error ：" << m_boxDb.lastError();
@@ -142,7 +142,7 @@ void BoxDao::init()
 
         QString cmd = "create table boxs(\
                                         boxName varchar(100),\
-                                        boxId varchar(50),\
+                                        boxID varchar(50),\
                                         isMount varchar(50),\
                                         encryptpassword varchar(1000),\
                                         encryptPspr varchar(1000),\

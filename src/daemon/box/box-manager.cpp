@@ -8,7 +8,7 @@
  * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
- * 
+ *  
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
@@ -17,8 +17,8 @@
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include "config.h"
-#include "include/sc-i.h"
-#include "include/sc-marcos.h"
+#include "include/ksc-i.h"
+#include "include/ksc-marcos.h"
 #include "lib/base/crypto-helper.h"
 #include "src/daemon/box/box-dao.h"
 #include "src/daemon/box_manager_adaptor.h"
@@ -53,10 +53,10 @@ QString BoxManager::CreateBox(const QString &name, const QString &password)
     return box->getBoxID();
 }
 
-bool BoxManager::DelBox(const QString &box_uid, const QString &boxId)
+bool BoxManager::DelBox(const QString &box_uid, const QString &boxID)
 {
     auto box = m_boxs.value(box_uid);
-    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, boxId);
+    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, boxID);
 
     RETURN_VAL_IF_TRUE(!box->delBox(decryptInputPassword), false)
     m_boxs.remove(box_uid);
@@ -65,15 +65,15 @@ bool BoxManager::DelBox(const QString &box_uid, const QString &boxId)
     return true;
 }
 
-QString BoxManager::GetBoxByUID(const QString &boxId)
+QString BoxManager::GetBoxByUID(const QString &boxID)
 {
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
-    auto box = m_boxs.value(boxId);
+    auto box = m_boxs.value(boxID);
 
     jsonObj = QJsonObject{
         {BOX_NAME_KEY, box->getBoxName()},
-        {BOX_UID_KEY, boxId},
+        {BOX_UID_KEY, boxID},
         {BOX_ISMOUNT_KEY, box->isMount()}};
     jsonDoc.setObject(jsonObj);
 
@@ -106,57 +106,57 @@ QString BoxManager::GetBoxs()
     return QString(jsonDoc.toJson());
 }
 
-bool BoxManager::IsMounted(const QString &boxId)
+bool BoxManager::IsMounted(const QString &boxID)
 {
-    auto box = m_boxs.value(boxId);
+    auto box = m_boxs.value(boxID);
 
     return box->isMount();
 }
 
-bool BoxManager::ModifyBoxPassword(const QString &boxId,
+bool BoxManager::ModifyBoxPassword(const QString &boxID,
                                    const QString &currentPassword,
                                    const QString &newPassword)
 {
     auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, currentPassword);
     auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
 
-    auto box = m_boxs.value(boxId);
+    auto box = m_boxs.value(boxID);
 
     return box->modifyBoxPassword(decryptInputPassword, decryptNewPassword);
 }
 
 // 解锁
-bool BoxManager::Mount(const QString &boxId, const QString &password)
+bool BoxManager::Mount(const QString &boxID, const QString &password)
 {
     auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
-    auto box = m_boxs.value(boxId);
+    auto box = m_boxs.value(boxID);
 
-    if (box->getBoxID() == boxId)
+    if (box->getBoxID() == boxID)
     {
-        emit BoxChanged(boxId);
+        emit BoxChanged(boxID);
         return box->mount(decryptInputPassword);
     }
 
     return false;
 }
 
-bool BoxManager::RetrievePassword(const QString &boxId, const QString &passphrase, const QString &newPassword)
+bool BoxManager::RetrievePassword(const QString &boxID, const QString &passphrase, const QString &newPassword)
 {
     auto decryptPassphrase = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, passphrase);
     auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
 
-    auto box = m_boxs.value(boxId);
+    auto box = m_boxs.value(boxID);
     return box->retrievePassword(decryptPassphrase, decryptNewPassword);
 }
 
 // 上锁
-void BoxManager::UnMount(const QString &boxId)
+void BoxManager::UnMount(const QString &boxID)
 {
-    auto box = m_boxs.value(boxId);
+    auto box = m_boxs.value(boxID);
 
-    if (box->getBoxID() == boxId)
+    if (box->getBoxID() == boxID)
     {
-        emit BoxChanged(boxId);
+        emit BoxChanged(boxID);
         return box->umount();
     }
 }
@@ -165,7 +165,7 @@ void BoxManager::init()
 {
     QDBusConnection connection = QDBusConnection::systemBus();
 
-    if (!connection.registerObject(SC_BOX_MANAGER_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(KSC_BOX_MANAGER_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }
@@ -178,8 +178,8 @@ void BoxManager::init()
     for (auto boxInfo : boxInfoList)
     {
         auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
-        Box *box = new Box(boxInfo.boxName, decryptPassword, boxInfo.userUid, boxInfo.boxId);
-        m_boxs.insert(boxInfo.boxId, box);
+        Box *box = new Box(boxInfo.boxName, decryptPassword, boxInfo.userUid, boxInfo.boxID);
+        m_boxs.insert(boxInfo.boxID, box);
     }
 }
 

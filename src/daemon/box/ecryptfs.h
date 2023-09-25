@@ -46,7 +46,7 @@ public:
     void rmBoxDir(const QString &path);
 
 public Q_SLOTS:
-    void onProcessExit(int exitCode, QProcess::ExitStatus exitStatus);
+    void processExited(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     void execute(const QString &cmd);

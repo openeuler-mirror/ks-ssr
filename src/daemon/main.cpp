@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     QTranslator translator;
 
-    if (!translator.load(QLocale(), qAppName(), ".", SC_INSTALL_TRANSLATIONDIR, ".qm"))
+    if (!translator.load(QLocale(), qAppName(), ".", KSC_INSTALL_TRANSLATIONDIR, ".qm"))
     {
         KLOG_WARNING() << "Load translator failed!";
     }

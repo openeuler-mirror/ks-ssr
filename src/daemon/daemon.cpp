@@ -15,7 +15,7 @@
 #include "src/daemon/daemon.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
-#include "include/sc-i.h"
+#include "include/ksc-i.h"
 
 namespace KS
 {
@@ -37,12 +37,12 @@ void Daemon::init()
 {
     QDBusConnection connection = QDBusConnection::systemBus();
 
-    if (!connection.registerService(SC_DBUS_NAME))
+    if (!connection.registerService(KSC_DBUS_NAME))
     {
-        KLOG_WARNING() << "Failed to register dbus name: " << SC_DBUS_NAME;
+        KLOG_WARNING() << "Failed to register dbus name: " << KSC_DBUS_NAME;
     }
 
-    if (!connection.registerObject(SC_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(KSC_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }
