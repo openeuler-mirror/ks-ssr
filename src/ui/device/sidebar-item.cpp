@@ -28,8 +28,8 @@ SidebarItem::SidebarItem(const QString &text,
 {
     m_ui->setupUi(this);
     m_ui->m_text->setText(text);
-    m_ui->m_icon->setPixmap(QIcon(icon).pixmap(16, 16));
-    m_ui->m_arrow->setPixmap(QIcon(":/images/right-arrow").pixmap(8, 10));
+    m_ui->m_icon->setPixmap(QPixmap(icon));
+    m_ui->m_arrow->setPixmap(QPixmap(":/images/arrow-right"));
     m_ui->m_arrow->hide();
 }
 
