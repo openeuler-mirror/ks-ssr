@@ -16,33 +16,29 @@
 
 #include <QWidget>
 
-namespace Ui {
-class PMPage;
+namespace Ui
+{
+class DeviceLogPage;
 }
 
 namespace KS
 {
-class SidebarItem;
-class PMConnectPage;
-class PMDevicePage;
-
-class PMPage : public QWidget
+class DeviceLogPage : public QWidget
 {
     Q_OBJECT
 
 public:
-    PMPage(QWidget *parent = nullptr);
-    ~PMPage();
+    DeviceLogPage(QWidget *parent = nullptr);
+    ~DeviceLogPage();
 
 protected:
     void paintEvent(QPaintEvent *event);
 
-private:
-    void initSidebar();
-    void initSubPage();
-    void createSideBarItem(const QString text,const QString icon);
+private Q_SLOTS:
+    void searchTextChanged(const QString &text);
+    void update();
 
 private:
-    Ui::PMPage *m_ui;
+    Ui::DeviceLogPage *m_ui;
 };
-}   // namespace KS
+}  //namespace KS

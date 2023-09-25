@@ -16,7 +16,8 @@
 
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class SidebarItem;
 }
 namespace KS
@@ -27,7 +28,9 @@ class SidebarItem : public QWidget
     Q_PROPERTY(bool selected READ isSelected WRITE setSelected NOTIFY selectChanged)
 
 public:
-    explicit SidebarItem(const QString text, const QString icon, QWidget *parent = nullptr);
+    explicit SidebarItem(const QString &text,
+                         const QString &icon,
+                         QWidget *parent = nullptr);
     ~SidebarItem();
 
 public:
@@ -44,5 +47,4 @@ private:
 signals:
     void selectChanged(bool isSelected);
 };
-}   //namespace ks
-
+}  // namespace KS
