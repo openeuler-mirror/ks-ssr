@@ -41,17 +41,15 @@ BoxManager::~BoxManager()
 {
 }
 
-QString BoxManager::CreateBox(const QString &name, const QString &password)
+QString BoxManager::CreateBox(const QString &name, const QString &password, QString &passphrase)
 {
     auto decryptPasswd = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
     auto box = new Box(name, decryptPasswd, getSenderUid());
-
     RETURN_VAL_IF_TRUE(box->getPassphrase().isEmpty(), QString())
 
     m_boxs.insert(box->getBoxID(), box);
+    passphrase = box->getPassphrase();
 
-    //    auto decryptPassphrase = CryptoHelper::rsaEncrypt(m_rsaPublicKey, box->getPassphrase());
-    emit BoxAdded(box->getBoxID(), box->getPassphrase());
     return box->getBoxID();
 }
 
