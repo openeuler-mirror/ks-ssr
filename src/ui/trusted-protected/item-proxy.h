@@ -29,7 +29,7 @@ public:
               QWidget *parent = nullptr);
     virtual ~ItemProxy(){};
 
-    void setRightShow(bool isShow);
+    void showArrow(bool isShow);
 
 private:
     void initUI(const QString &icon);

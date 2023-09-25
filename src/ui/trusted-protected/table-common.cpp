@@ -51,13 +51,9 @@ void TableCommon::setPrompt(const QString &prompt)
     m_ui->m_prompt->setText(prompt);
 }
 
-void TableCommon::setSumTest(const QString &test)
+void TableCommon::setSumText(const QString &test)
 {
     m_ui->m_tips->setText(test);
-    m_ui->m_tips->setStyleSheet("QLabel{"
-                                "color:#919191;"
-                                "font:NotoSansCJKsc-Regular;"
-                                "font-size:12px;}");
 }
 
 }  // namespace KS

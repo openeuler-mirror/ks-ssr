@@ -133,9 +133,7 @@ void Box::initMenu()
     auto mounted = this->m_boxManagerProxy->IsMounted(this->m_uid).value();
 
     this->m_popupMenu = new QMenu(this);
-    this->m_popupMenu->setStyleSheet("font:NotoSansCJKsc-Regular;"
-                                     "font-size:12px;"
-                                     "color:black;");
+    this->m_popupMenu->setObjectName("m_popupMenu");
 
     this->m_mountedStatusAction = this->m_popupMenu->addAction(mounted ? tr("Lock") : tr("Unlock"),
                                                                this,
@@ -197,7 +195,7 @@ void Box::switchMountedStatus()
     }
     else
     {
-        emit sigInputMountPasswd(this->m_uid);
+        emit unlockedClicked(this->m_uid);
     }
 }
 
@@ -205,7 +203,7 @@ void Box::modifyPassword()
 {
     if (this->m_modifyPassword)
     {
-        emit this->showModifyPassword(this->m_modifyPassword);
+        emit this->modifyPasswordClicked(this->m_modifyPassword);
         return;
     }
 
@@ -214,12 +212,12 @@ void Box::modifyPassword()
     connect(this->m_modifyPassword, SIGNAL(accepted()), this, SLOT(modifyPasswordAccepted()));
 
     this->m_modifyPassword->setBoxName(this->m_name);
-    emit this->showModifyPassword(this->m_modifyPassword);
+    emit this->modifyPasswordClicked(this->m_modifyPassword);
 }
 
 void Box::delBox()
 {
-    emit sigDelBox(this->m_uid);
+    emit delBoxClicked(this->m_uid);
 }
 
 void Box::retrievePassword()
@@ -227,13 +225,13 @@ void Box::retrievePassword()
     if (this->m_retrievePassword)
     {
         //        this->m_retrievePassword->show();
-        emit this->showRetrievePassword(m_retrievePassword);
+        emit this->retrievePasswordClicked(m_retrievePassword);
         return;
     }
 
     this->m_retrievePassword = new RetrievePassword();
     connect(this->m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
-    emit this->showRetrievePassword(m_retrievePassword);
+    emit this->retrievePasswordClicked(m_retrievePassword);
 }
 
 void Box::checkMountPasswd(const QString &passwd, const QString &boxUID)
@@ -247,11 +245,11 @@ void Box::checkMountPasswd(const QString &passwd, const QString &boxUID)
     auto ret = reply.value();
     if (!ret)
     {
-        emit this->sigMountPasswdResult(false);
+        emit this->checkMountPasswdResult(false);
     }
     else
     {
-        emit this->sigMountPasswdResult(true);
+        emit this->checkMountPasswdResult(true);
     }
 }
 
@@ -266,11 +264,11 @@ void Box::checkDelPasswd(const QString &passwd, const QString &boxUID)
     auto ret = reply.value();
     if (!ret)
     {
-        emit this->sigDelPasswdResult(false);
+        emit this->checkDelPasswdResult(false);
     }
     else
     {
-        emit this->sigDelPasswdResult(true);
+        emit this->checkDelPasswdResult(true);
     }
 }
 
@@ -288,11 +286,11 @@ void Box::modifyPasswordAccepted()
     auto ret = reply.value();
     if (!ret)
     {
-        emit this->sigModifyPasswdResult(false);
+        emit this->checkModifyPasswdResult(false);
     }
     else
     {
-        emit this->sigModifyPasswdResult(true);
+        emit this->checkModifyPasswdResult(true);
     }
 }
 
@@ -310,11 +308,11 @@ void Box::retrievePasswordAccepted()
     auto ret = reply.value();
     if (!ret)
     {
-        emit this->sigRetrievePasswordResult(false);
+        emit this->checkRetrievePasswordResult(false);
     }
     else
     {
-        emit this->sigRetrievePasswordResult(true);
+        emit this->checkRetrievePasswordResult(true);
     }
 }
 }  // namespace KS

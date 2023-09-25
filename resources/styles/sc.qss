@@ -13,7 +13,7 @@ QPushButton
     border-radius: 4px;
 }
 
-QPushButton:pressed
+QPushButton:checked
 {
     background-color: #00a2ff;
 }
@@ -188,6 +188,68 @@ QCheckBox::indicator:indeterminate:pressed {
     image: url(:/images/checkbox-indeterminate-active);
 }
 
+/* custom widget */
+QWidget#cusWidget
+{
+    background-color: #2d2d2d;
+    border-radius: 6px;
+}
+
+QPushButton#okBtn,
+QPushButton#passwdOkBtn,
+QPushButton#m_ok,
+QPushButton#m_add
+{
+    color:#FFFFFF;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+    border-radius:4px;
+    background:#43A3F2;
+}
+
+QPushButton#okBtn:hover,
+QPushButton#passwdOkBtn:hover,
+QPushButton#m_ok:hover,
+QPushButton#m_add:hover
+{
+    background:#79C3FF;
+    border:4px;
+}
+
+QPushButton#passwdCancelBtn,
+QPushButton#m_cancel,
+QPushButton#m_update
+{
+    color:#FFFFFF;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+    border-radius:4px;
+    background:#393939;
+}
+
+QPushButton#passwdCancelBtn:hover,
+QPushButton#m_cancel:hover,
+QPushButton#m_update:hover
+{
+    background:#464646;
+    border:4px;
+}
+
+QPushButton#m_unprotect
+{
+    color:red;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+    border-radius:4px;
+    background:#393939;
+}
+
+QPushButton#m_unprotect:hover
+{
+    background:#464646;
+    border:4px;
+}
+
 /* security box */
 QPushButton#m_newBox
 {
@@ -203,16 +265,33 @@ QPushButton#m_newBox:hover
     border:4px;
 }
 
+QMenu#m_popupMenu
+{
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+    color:black;
+}
+
 /* file protected */
 QTableView#m_fileTable > QWidget
 {
     margin: 0px 22px 0px 0px;
+}
+QLabel#m_tips
+{
+    color:#919191;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
 }
 
 /* trusted protected */
 KS--TPTable > QWidget
 {
     margin: 0px 12px 0px 0px;
+}
+QWidget#space
+{
+    background-color: #222222;
 }
 
 /* Device */

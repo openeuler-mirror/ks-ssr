@@ -69,8 +69,8 @@ private:
                            bool status);
 
 signals:
-    void sigInputMountPasswdAccepted(const QString &passwd, const QString &boxUID);
-    void sigInputDelPasswdAccepted(const QString &passwd, const QString &boxUID);
+    void inputMountPasswdClicked(const QString &passwd, const QString &boxUID);
+    void inputDelPasswdClicked(const QString &passwd, const QString &boxUID);
 
 private slots:
     void boxAdded(const QString &boxUID, const QString &passphrase);

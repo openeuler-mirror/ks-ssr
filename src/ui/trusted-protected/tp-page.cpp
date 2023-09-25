@@ -34,8 +34,8 @@ void TPPage::initUI()
 
     auto *list = new QWidget(this);
     m_listWidget = new QListWidget(list);
-    createItem(tr("Execute protecked"), TRUSTED_PROTECT_TYPE::EXECUTE_PROTECT, ":/images/execution-control");
-    createItem(tr("Kernel protecked"), TRUSTED_PROTECT_TYPE::KERNEL_PROTECT, ":/images/kernel-module-protected");
+    createItem(tr("Execute protecked"), TrustedProtectType::TRUSTED_PROTECT_EXECUTE, ":/images/execution-control");
+    createItem(tr("Kernel protecked"), TrustedProtectType::TRUSTED_PROTECT_KERNEL, ":/images/kernel-module-protected");
     m_listWidget->setCurrentRow(0);
     m_listWidget->setSpacing(8);
     m_listWidget->setFixedWidth(184);
@@ -48,8 +48,8 @@ void TPPage::initUI()
 
     connect(m_listWidget, &QListWidget::itemClicked, this, &TPPage::onItemClicked);
 
-    m_executeView = new TrustedView(this, TRUSTED_PROTECT_TYPE::EXECUTE_PROTECT);
-    m_kernelView = new TrustedView(this, TRUSTED_PROTECT_TYPE::KERNEL_PROTECT);
+    m_executeView = new TrustedView(this, TrustedProtectType::TRUSTED_PROTECT_EXECUTE);
+    m_kernelView = new TrustedView(this, TrustedProtectType::TRUSTED_PROTECT_KERNEL);
 
     m_stackWidget = new QStackedWidget(this);
     m_stackWidget->addWidget(m_executeView);
@@ -59,8 +59,9 @@ void TPPage::initUI()
     connect(this, SIGNAL(currentItemChanged(int)), m_stackWidget, SLOT(setCurrentIndex(int)));
 
     auto *space = new QWidget(this);
+    space->setObjectName("space");
     space->setFixedWidth(4);
-    space->setStyleSheet("background-color: #222222;");
+    //    space->setStyleSheet("background-color: #222222;");
 
     mainLayout->addWidget(list);
     mainLayout->addWidget(space);
@@ -68,15 +69,15 @@ void TPPage::initUI()
 }
 
 void TPPage::createItem(const QString &text,
-                        TRUSTED_PROTECT_TYPE type,
+                        TrustedProtectType type,
                         const QString &icon)
 {
     auto *item = new QListWidgetItem(m_listWidget);
 
-    if (type == TRUSTED_PROTECT_TYPE::EXECUTE_PROTECT)
+    if (type == TrustedProtectType::TRUSTED_PROTECT_EXECUTE)
     {
         m_itemExecuteProxy = new ItemProxy(text, icon, type, m_listWidget);
-        m_itemExecuteProxy->setRightShow(true);
+        m_itemExecuteProxy->showArrow(true);
 
         m_listWidget->addItem(item);
         m_listWidget->setItemWidget(item, m_itemExecuteProxy);
@@ -98,15 +99,15 @@ void TPPage::onItemClicked(QListWidgetItem *currItem)
 {
     auto currData = currItem->data(Qt::UserRole).toInt();
 
-    if (currData == TRUSTED_PROTECT_TYPE::EXECUTE_PROTECT)
+    if (currData == TrustedProtectType::TRUSTED_PROTECT_EXECUTE)
     {
-        m_itemExecuteProxy->setRightShow(true);
-        m_itemKernelProxy->setRightShow(false);
+        m_itemExecuteProxy->showArrow(true);
+        m_itemKernelProxy->showArrow(false);
     }
     else
     {
-        m_itemExecuteProxy->setRightShow(false);
-        m_itemKernelProxy->setRightShow(true);
+        m_itemExecuteProxy->showArrow(false);
+        m_itemKernelProxy->showArrow(true);
     }
 
     emit currentItemChanged(currData);
