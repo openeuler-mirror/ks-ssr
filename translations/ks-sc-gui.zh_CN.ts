@@ -495,14 +495,19 @@
 <context>
     <name>KS::FPPage</name>
     <message>
-        <location filename="../src/ui/fp/fp-page.cpp" line="36"/>
-        <location filename="../src/ui/fp/fp-page.cpp" line="73"/>
+        <location filename="../src/ui/fp/fp-page.cpp" line="44"/>
+        <location filename="../src/ui/fp/fp-page.cpp" line="82"/>
         <source>A total of %1 records</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/fp-page.cpp" line="60"/>
+        <location filename="../src/ui/fp/fp-page.cpp" line="69"/>
         <source>Open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/fp/fp-page.cpp" line="94"/>
+        <source>Trusted data needs to be initialised,please wait a few minutes before trying.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -520,15 +525,23 @@
     </message>
 </context>
 <context>
+    <name>KS::TP</name>
+    <message>
+        <location filename="../src/daemon/tp/tp.cpp" line="57"/>
+        <source>Added file types are not supported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>KS::TPExecute</name>
     <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="38"/>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="59"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="42"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="63"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="70"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="75"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -564,12 +577,12 @@
 <context>
     <name>KS::TPExecuteTable</name>
     <message>
-        <location filename="../src/ui/tp/tp-execute-table.cpp" line="363"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="366"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute-table.cpp" line="376"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="379"/>
         <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -577,13 +590,13 @@
 <context>
     <name>KS::TPKernel</name>
     <message>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="38"/>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="61"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="40"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="64"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="74"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="77"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -591,27 +604,27 @@
 <context>
     <name>KS::TPKernelModel</name>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="144"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="145"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="180"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="181"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="182"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="183"/>
         <source>File path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="184"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="185"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="186"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="187"/>
         <source>Prohibt unload</source>
         <translation type="unfinished"></translation>
     </message>
@@ -619,12 +632,13 @@
 <context>
     <name>KS::TPKernelTable</name>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="364"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="377"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="377"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="391"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="408"/>
         <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -632,17 +646,17 @@
 <context>
     <name>KS::TPPage</name>
     <message>
-        <location filename="../src/ui/tp/tp-page.cpp" line="63"/>
+        <location filename="../src/ui/tp/tp-page.cpp" line="73"/>
         <source>Execute protecked</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-page.cpp" line="64"/>
+        <location filename="../src/ui/tp/tp-page.cpp" line="74"/>
         <source>Kernel protecked</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-page.cpp" line="86"/>
+        <location filename="../src/ui/tp/tp-page.cpp" line="106"/>
         <source>Trusted data needs to be initialised,please wait a few minutes to refresh.</source>
         <translation type="unfinished"></translation>
     </message>

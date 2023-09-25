@@ -17,6 +17,7 @@
 #include <QFileDialog>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
+#include "src/ui/common/sub-window.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/tp_proxy.h"
 #include "src/ui/ui_tp-execute.h"
@@ -59,7 +60,8 @@ void TPExecute::updateInfo()
 {
     m_ui->m_executeTable->updateRecord();
     // 更新表格右上角提示信息
-    auto text = QString(tr("A total of %1 records, Being tampered with %2")).arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()), QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
+    auto text = QString(tr("A total of %1 records, Being tampered with %2")).arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()),
+                                                                                 QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
     m_ui->m_tips->setText(text);
 }
 
@@ -73,7 +75,21 @@ void TPExecute::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     RETURN_IF_TRUE(fileName.isEmpty())
 
-    m_dbusProxy->AddFile(fileName).waitForFinished();
+    auto reply = m_dbusProxy->AddFile(fileName);
+    reply.waitForFinished();
+
+    if (reply.isError())
+    {
+        KLOG_WARNING() << "Failed to add files: " << reply.error().message();
+        auto message = new SubWindow(this);
+        message->setFixedSize(240, 200);
+        message->buildNotify(reply.error().message());
+
+        int x = this->x() + this->width() / 4 + message->width() / 4;
+        int y = this->y() + this->height() / 4 + message->height() / 4;
+        message->move(x, y);
+        message->show();
+    }
     updateInfo();
 }
 

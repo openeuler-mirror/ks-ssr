@@ -40,7 +40,23 @@ TP::~TP()
 
 void TP::AddFile(const QString &filePath)
 {
-    m_kss->addTrustedFile(filePath);
+    auto output = m_kss->addTrustedFile(filePath);
+    QJsonParseError jsonError;
+
+    auto jsonDoc = QJsonDocument::fromJson(output.toUtf8(), &jsonError);
+
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+//        sendErrorReply(QDBusError::NotSupported, jsonError.errorString());
+        return;
+    }
+
+    if (jsonDoc.object().value(KSC_JK_COUNT).toInt() == 0)
+    {
+        sendErrorReply(QDBusError::NotSupported, tr("Added file types are not supported."));
+        return;
+    }
 }
 
 QString TP::GetExecuteFiles()
