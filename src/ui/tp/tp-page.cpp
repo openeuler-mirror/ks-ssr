@@ -15,6 +15,7 @@
 #include "src/ui/tp/tp-page.h"
 #include "config.h"
 #include "ksc-marcos.h"
+#include "src/ui/common/mask-widget.h"
 #include "src/ui/common/sub-window.h"
 #include "src/ui/device/sidebar-item.h"
 #include "src/ui/tp/tp-execute.h"
@@ -57,6 +58,15 @@ void TPPage::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
+void TPPage::resizeEvent(QResizeEvent *event)
+{
+    if (m_maskWidget)
+    {
+        m_maskWidget->setAutoFillBackground(true);
+        m_maskWidget->setFixedSize(m_ui->m_stacked->size());
+    }
+}
+
 void TPPage::initSidebar()
 {
     m_sidebarItems.clear();
@@ -70,6 +80,15 @@ void TPPage::initSidebar()
 void TPPage::initSubPage()
 {
     auto *execute = new TPExecute(m_ui->m_stacked);
+    connect(execute, &TPExecute::initFinished, this, [this] {
+        if (m_maskWidget->isVisible())
+        {
+            m_maskWidget->setMaskVisible(false);
+        }
+
+        m_ui->m_sidebar->setEnabled(true);
+    });
+
     auto *kernel = new TPKernel(m_ui->m_stacked);
 
     m_ui->m_stacked->addWidget(execute);
@@ -78,6 +97,7 @@ void TPPage::initSubPage()
 
 void TPPage::checkTrustedLoadFinied()
 {
+    m_maskWidget = new MaskWidget(m_ui->m_stacked);
     auto settings = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
     RETURN_IF_TRUE(settings->value(KSC_INI_KEY).toInt() != 0)
 
@@ -90,6 +110,13 @@ void TPPage::checkTrustedLoadFinied()
     int y = this->y() + height() / 4 + message->height() / 4;
     message->move(x, y);
     message->show();
+
+    if (!m_maskWidget->isVisible())
+    {
+        m_maskWidget->setMaskVisible(true);
+    }
+
+    m_ui->m_sidebar->setEnabled(false);
 }
 
 void TPPage::createSideBarItem(const QString &text, const QString &icon)

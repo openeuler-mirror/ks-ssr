@@ -52,7 +52,7 @@ void KiranSwitchButton::paintEvent(QPaintEvent *e)
 
     bool enable = option.state & QStyle::State_Enabled;
 
-//    StylePalette *kiranPalette = StylePalette::instance();
+    //    StylePalette *kiranPalette = StylePalette::instance();
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -60,7 +60,7 @@ void KiranSwitchButton::paintEvent(QPaintEvent *e)
     d_ptr->doLayout(indicatorRect, indicatorCircularRect, textRect);
 
     QColor indicatorBackgroundColor, indicatorCircularColor, textColor;
-    indicatorBackgroundColor = enable ? QColor(0, 162, 255) : QColor(70, 70, 70);//window()->palette().window().color();
+    indicatorBackgroundColor = enable ? QColor(0, 162, 255) : QColor(70, 70, 70);  //window()->palette().window().color();
     indicatorCircularColor = "white";
 
     QPainterPath indicatorPath;
@@ -81,10 +81,10 @@ QSize KiranSwitchButton::sizeHint() const
     QStyleOptionButton optionButton;
     initStyleOption(&optionButton);
 
-    QSize size(IndicatorWidth,IndicatorHeight);
+    QSize size(IndicatorWidth, IndicatorHeight);
 
     QString str = text();
-    if( !str.isEmpty() )
+    if (!str.isEmpty())
     {
         QFontMetrics metrics = fontMetrics();
         size.setHeight(qMax(metrics.size(Qt::TextHideMnemonic, str).height(), IndicatorHeight));
