@@ -18,7 +18,7 @@
 
 namespace KS
 {
-#define SHADOW_BORDER_WIDTH 4
+#define SHADOW_BORDER_WIDTH 15
 #define DEFAULT_THEME_PATH ":/styles/titlebar-window"
 
 Q_NAMESPACE
