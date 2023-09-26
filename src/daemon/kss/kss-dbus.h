@@ -57,6 +57,13 @@ public Q_SLOTS:  // METHODS
     void RemoveProtectedFile(const QString &filePath);
     // 移除可信保护文件
     void RemoveTrustedFile(const QString &filePath);
+    // 切换硬模式
+    void HardModeChecked(const QString &userPin);
+    // 切换软模式
+    void SoftModeChecked();
+    // 设置可信状态
+    void SetTrustedStatus(bool status);
+
     // 搜索 暂时保留接口 未使用
     QString Search(const QString &path_key, uint searchType);
 Q_SIGNALS:  // SIGNALS
@@ -71,6 +78,9 @@ private:
     void prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool prohibited, const QString &filePath);
     void addFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath);
     void removeFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath);
+    void hardModeCheckedAfterAuthorization(const QDBusMessage &message, const QString &userPin);
+    void softModeCheckedAfterAuthorization(const QDBusMessage &message);
+    void setTrustedStatusAfterAuthorization(const QDBusMessage &message, bool status);
 
 private:
     KSSDbusAdaptor *m_dbusAdaptor;
