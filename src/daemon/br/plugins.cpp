@@ -68,7 +68,7 @@ BRReinforcementVec Plugins::getReinforcementsByCategory(const QString& category_
 }
 
 QSharedPointer<BRReinforcementInterface> Plugins::getReinforcementInterface(const QString& plugin_name,
-                                                                             const QString& reinforcement_name)
+                                                                            const QString& reinforcement_name)
 {
     auto plugin = this->getPlugin(plugin_name);
     if (!plugin)
@@ -126,7 +126,6 @@ void Plugins::init()
     // 这里对锁进行释放，确保其他线程可以获取到锁，如果主线程还需要操作Python解析器，则需要重新获取锁
     Utils::pyGiUnlock();
 
-    // this->configuration_->signal_rs_changed().connect(sigc::mem_fun(this, &Plugins::onRsChangedCb));
     QObject::connect(this->configuration_, &Configuration::rs_changed_, this, &Plugins::onRsChangedCb);
 }
 
@@ -139,7 +138,6 @@ void Plugins::loadPlugins()
 
 void Plugins::loadPluginsFromDir(const QString& dirname)
 {
-    // Glib::Dir plugin_dir(dirname);
     QDir plugin_dir(dirname);
 
     for (auto iter : plugin_dir.entryList(QDir::NoDotAndDotDot |

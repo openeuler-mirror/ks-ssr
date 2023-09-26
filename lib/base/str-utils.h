@@ -15,11 +15,11 @@
 #pragma once
 
 #include <fmt/format.h>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QString>
 #include <QVector>
 #include <vector>
-#include <QJsonDocument>
-#include <QJsonObject>
 
 namespace KS
 {

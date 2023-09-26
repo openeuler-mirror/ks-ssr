@@ -29,8 +29,8 @@ public:
     virtual ~MiscUtils(){};
 
     static bool spawnSync(const QList<QString> &argv,
-                           QString *standard_output = NULL,
-                           QString *standard_error = NULL);
+                          QString *standard_output = NULL,
+                          QString *standard_error = NULL);
 };  // namespace KS
 
 }  // namespace KS

@@ -51,21 +51,14 @@ Job::~Job()
 }
 
 QSharedPointer<Operation> Job::addOperation(const QString &plugin_name,
-                                             const QString &reinforcement_name,
-                                             std::function<QString(void)> func)
+                                            const QString &reinforcement_name,
+                                            std::function<QString(void)> func)
 {
     auto operation = QSharedPointer<Operation>(new Operation({this->job_id_,
                                                               this->operations_.size() + 1,
                                                               plugin_name,
                                                               reinforcement_name,
                                                               std::move(func)}));
-
-    // operation->job_id = this->job_id_;
-    // operation->operation_id = this->operations_.size() + 1;
-    // operation->plugin_name = plugin_name;
-    // operation->reinforcement_name = reinforcement_name;
-    // operation->func = std::move(func);
-
     if (this->operations_.find(operation->operation_id) != this->operations_.end())
     {
         // 正常不应该执行到这里
@@ -96,10 +89,8 @@ bool Job::runSync()
 
         if (this->job_result_.finished_operation_num == this->job_result_.sum_operation_num)
             this->state_ = BRJobState::BR_JOB_STATE_DONE;
-        // this->process_changed_.emit(this->job_result_);
         Q_EMIT this->process_changed_(this->job_result_);
         if (this->job_result_.finished_operation_num == this->job_result_.sum_operation_num)
-            // this->process_finished_.emit();
             Q_EMIT this->process_finished_();
     }
     this->state_ = BRJobState::BR_JOB_STATE_IDLE;
@@ -120,16 +111,13 @@ bool Job::runAsync()
     timer->setInterval(100);
     connect(this->timer, &QTimer::timeout, this, &Job::idle_check_operation);
     this->timer->start();
-    // auto timeout = Glib::MainContext::get_default()->signal_timeout();
-    // this->timeout_handler_ = timeout.connect(sigc::mem_fun(this, &Job::idle_check_operation), 100);
-
     auto &thread_pool = Plugins::getInstance()->getThreadPool();
     {
         QMutexLocker guard(&(this->operations_mutex_));
         for (auto iter = this->operations_.begin(); iter != this->operations_.end(); ++iter)
         {
             thread_pool.enqueueByIdx(std::hash<std::string>()(iter.value()->reinforcement_name.toStdString()),
-                                       std::bind(&Job::run_operation, this, iter.value()));
+                                     std::bind(&Job::run_operation, this, iter.value()));
         }
     }
     return true;
@@ -213,11 +201,9 @@ bool Job::idle_check_operation()
         if (tmp_result.finished_operation_num == tmp_result.sum_operation_num)
             this->state_ = this->need_cancel_ ? BRJobState::BR_JOB_STATE_CANCEL_DONE : BRJobState::BR_JOB_STATE_DONE;
 
-        // this->process_changed_.emit(tmp_result);
         Q_EMIT this->process_changed_(tmp_result);
         if (tmp_result.finished_operation_num == tmp_result.sum_operation_num)
         {
-            // this->process_finished_.emit();
             Q_EMIT this->process_finished_();
         }
 

@@ -63,8 +63,8 @@ uint32_t Configuration::getMaxThreadNum()
 BRStandardType Configuration::getStandardType()
 {
     auto retval = this->getInteger(BR_GROUP_NAME,
-                                    BR_BASE_KEY_STANDARD_TYPE,
-                                    BRStandardType::BR_STANDARD_TYPE_SYSTEM);
+                                   BR_BASE_KEY_STANDARD_TYPE,
+                                   BRStandardType::BR_STANDARD_TYPE_SYSTEM);
 
     if (retval >= BRStandardType::BR_STANDARD_TYPE_LAST || retval < 0)
     {
@@ -93,8 +93,8 @@ bool Configuration::setStandardType(BRStandardType standard_type)
 BRStrategyType Configuration::getStrategyType()
 {
     auto retval = this->getInteger(BR_GROUP_NAME,
-                                    BR_BASE_KEY_STRATEGY_TYPE,
-                                    BRStrategyType::BR_STRATEGY_TYPE_SYSTEM);
+                                   BR_BASE_KEY_STRATEGY_TYPE,
+                                   BRStrategyType::BR_STRATEGY_TYPE_SYSTEM);
 
     if (retval >= BRStrategyType::BR_STRATEGY_TYPE_LAST || retval < 0)
     {
@@ -152,8 +152,8 @@ bool Configuration::setTimeScan(int time_scan)
 BRNotificationStatus Configuration::getNotificationStatus()
 {
     auto retval = this->getInteger(BR_GROUP_NAME,
-                                    BR_BASE_KEY_NOTIFICATION_STATUS,
-                                    BRNotificationStatus::BR_NOTIFICATION_OPEN);
+                                   BR_BASE_KEY_NOTIFICATION_STATUS,
+                                   BRNotificationStatus::BR_NOTIFICATION_OPEN);
 
     if (retval >= BRNotificationStatus::BR_NOTIFICATION_OTHER || retval < 0)
     {
@@ -313,8 +313,8 @@ void Configuration::delAllCustomRa()
 BRResourceMonitor Configuration::getResourceMonitorStatus()
 {
     auto retval = this->getInteger(BR_GROUP_NAME,
-                                    BR_BASE_KEY_RESOURCE_MONITOR,
-                                    BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN);
+                                   BR_BASE_KEY_RESOURCE_MONITOR,
+                                   BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN);
 
     if (retval >= BRResourceMonitor::BR_RESOURCE_MONITOR_OR || retval < 0)
     {

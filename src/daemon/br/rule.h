@@ -14,9 +14,9 @@
 
 #pragma once
 
+#include <QJsonValue>
 #include "br-protocol.hxx"
 #include "lib/base/base.h"
-#include <QJsonValue>
 
 namespace KS
 {

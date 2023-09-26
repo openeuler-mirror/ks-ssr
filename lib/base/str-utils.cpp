@@ -108,7 +108,6 @@ static bool is_space(char c)
 
 QString StrUtils::ltrim(const QString &s)
 {
-#pragma message("容易出问题,建议多测以下")
     auto tmp = s.toStdString();
     auto iter = std::find_if(tmp.begin(), tmp.end(), is_space);
     return QString::fromStdString(std::string(iter, tmp.end()));
