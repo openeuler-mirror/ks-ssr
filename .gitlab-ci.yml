@@ -1,12 +1,11 @@
 variables:
-  CMAKE_OPTIONS: '-DUSE_PYTHON3=ON'
-  EXTRA_DNF_REPOS: |
-                   [LICENSE]
-                   name=LICENSE
-                   gpgcheck=0
-                   baseurl=http://192.168.120.71/kojifiles/repos/KY3.5-1-ks-license-2.4-build/latest/x86_64/
-  RPM_BUILD_REQUIRES: 'cmake glibmm24-devel glib2-devel libgudev-devel openssl-devel gcc-c++ kiran-log-gtk3-devel ks-license-devel jsoncpp-devel gtest-devel fmt-devel cryptopp-devel xerces-c-devel python3-devel zlog-devel dbus-c++-devel setserial systemd  xsd intltool sed'
-
+  # CMAKE_OPTIONS: '-DUSE_PYTHON3=ON'
+  # EXTRA_DNF_REPOS: |
+  #                  [LICENSE]
+  #                  name=LICENSE
+  #                  gpgcheck=0
+  #                  baseurl=http://192.168.120.71/kojifiles/repos/KY3.5-1-ks-license-2.4-build/latest/x86_64/
+  RPM_BUILD_REQUIRES: 'cmake gcc gcc-c++ make qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel cryptopp-devel kiran-log-qt5-devel systemd-devel'
 include:
   - project: 'os/gitlab-ci'
     ref: main
