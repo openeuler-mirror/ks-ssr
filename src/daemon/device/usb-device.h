@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <QObject>
 #include "src/daemon/device/device-rule-manager.h"
 #include "src/daemon/device/device.h"
 
