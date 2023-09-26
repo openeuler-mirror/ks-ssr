@@ -54,10 +54,10 @@ void TPPage::paintEvent(QPaintEvent *event)
 
 void TPPage::resizeEvent(QResizeEvent *event)
 {
-    if (m_maskWidget)
+    if (m_loading)
     {
-        m_maskWidget->setAutoFillBackground(true);
-        m_maskWidget->setFixedSize(m_ui->m_stacked->size());
+        m_loading->setAutoFillBackground(true);
+        m_loading->setFixedSize(m_ui->m_stacked->size());
     }
 }
 
@@ -76,9 +76,9 @@ void TPPage::initSubPage()
     auto *execute = new TPExecute(m_ui->m_stacked);
     connect(execute, &TPExecute::initFinished, this, [this]
             {
-                if (m_maskWidget->isVisible())
+                if (m_loading->isVisible())
                 {
-                    m_maskWidget->setVisible(false);
+                    m_loading->setVisible(false);
                 }
 
                 m_ui->m_sidebar->setEnabled(true);
@@ -93,21 +93,22 @@ void TPPage::initSubPage()
 
 void TPPage::checkTrustedLoadFinied(int initialized)
 {
-    m_maskWidget = new Loading(m_ui->m_stacked);
+    m_loading = new Loading(m_ui->m_stacked);
     RETURN_IF_TRUE(initialized != 0)
 
-    auto messgeDialog = new MessageDialog(this);
-    messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
-                                "please wait a few minutes to refresh."));
+    // 暂屏蔽初始化弹窗，此弹窗与激活提示弹窗有逻辑冲突
+    // auto messgeDialog = new MessageDialog(this);
+    // messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
+    //                             "please wait a few minutes to refresh."));
 
-    int x = this->x() + width() / 4 + messgeDialog->width() / 4;
-    int y = this->y() + height() / 4 + messgeDialog->height() / 4;
-    messgeDialog->move(x, y);
-    messgeDialog->show();
+    // int x = this->x() + width() / 4 + messgeDialog->width() / 4;
+    // int y = this->y() + height() / 4 + messgeDialog->height() / 4;
+    // messgeDialog->move(x, y);
+    // messgeDialog->show();
 
-    if (!m_maskWidget->isVisible())
+    if (!m_loading->isVisible())
     {
-        m_maskWidget->setVisible(true);
+        m_loading->setVisible(true);
     }
 
     m_ui->m_sidebar->setEnabled(false);
