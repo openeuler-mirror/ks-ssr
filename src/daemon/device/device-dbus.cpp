@@ -209,14 +209,9 @@ bool DeviceDBus::Disable(const QString &id)
     return true;
 }
 
-bool DeviceDBus::EnableInterface(int type)
+void DeviceDBus::EnableInterface(int type, bool enabled)
 {
-    return DeviceRuleManager::instance()->setIFCEnable(type, true);
-}
-
-bool DeviceDBus::DisableInterface(int type)
-{
-    return DeviceRuleManager::instance()->setIFCEnable(type, false);
+    DeviceRuleManager::instance()->setIFCEnable(type, enabled);
 }
 
 QString DeviceDBus::GetRecords()

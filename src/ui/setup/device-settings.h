@@ -28,13 +28,13 @@ struct Interface
 
 namespace KS
 {
-class SettingsDevice : public QWidget
+class DeviceSettings : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SettingsDevice(QWidget *parent = nullptr);
-    ~SettingsDevice();
+    explicit DeviceSettings(QWidget *parent = nullptr);
+    ~DeviceSettings();
 
 private:
     void initUI();
