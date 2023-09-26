@@ -139,8 +139,8 @@ bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QStri
 
     if (msgReply.type() == QDBusMessage::ErrorMessage)
     {
-        errorMsg = tr("Failed to call dbus method ActivateByActivationCode:  %1").arg(msgReply.errorMessage());
-        KLOG_WARNING() << errorMsg;
+        errorMsg = msgReply.errorMessage();
+        KLOG_WARNING() << "Failed to call dbus method ActivateByActivationCode: " << errorMsg;
         return false;
     }
     return true;

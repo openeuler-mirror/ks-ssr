@@ -77,7 +77,7 @@ void DeviceList::paintEvent(QPaintEvent *event)
 
 void DeviceList::searchTextChanged(const QString &text)
 {
-    auto filterProxy = this->m_ui->m_table->getFilterProxy();
+    auto filterProxy = m_ui->m_table->getFilterProxy();
     filterProxy->setFilterFixedString(text);
 }
 
@@ -106,8 +106,8 @@ void DeviceList::popupEditDialog(const QModelIndex &index)
 
         int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
         int y = this->y() + this->height() / 4 + m_devicePermission->height() / 4;
-        this->m_devicePermission->move(x, y);
-        this->m_devicePermission->show();
+        m_devicePermission->move(x, y);
+        m_devicePermission->show();
     }
 }
 
