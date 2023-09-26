@@ -155,7 +155,7 @@ bool ReinforcementPython::check_call_result(PyObject *py_retval, const QString &
 
     if (!py_retval || !PyTuple_Check(py_retval))
     {
-        error = QString(_("The return value of %1 isn't tuple type")).arg(function_name);
+        error = QString(QObject::tr("The return value of %1 isn't tuple type")).arg(function_name);
         // error = fmt::format(_("The return value of {0} isn't tuple type"), function_name);
         return false;
     }
@@ -163,7 +163,7 @@ bool ReinforcementPython::check_call_result(PyObject *py_retval, const QString &
     auto retval_num = PyTuple_Size(py_retval);
     if (int32_t(retval_num) < 2)
     {
-        error = QString(_("The number of tuple returned by %1 is less than 2.")).arg(function_name);
+        error = QString(QObject::tr("The number of tuple returned by %1 is less than 2.")).arg(function_name);
         // error = fmt::format(_("The number of tuple returned by {0} is less than 2."), function_name);
         return false;
     }
@@ -180,7 +180,7 @@ bool ReinforcementPython::check_call_result(PyObject *py_retval, const QString &
 
     if (!PyBool_Check(py_arg1) || (!PyUnicode_Check(py_arg2) && !is_string))
     {
-        error = QString(_("The type of tuple item returned by {0} is invalid.")).arg(function_name);
+        error = QString(QObject::tr("The type of tuple item returned by %1 is invalid.")).arg(function_name);
         // error = fmt::format(_("The type of tuple item returned by {0} is invalid."), function_name);
         return false;
     }

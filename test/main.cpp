@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 #include <zlog_ex.h>
-#include "br-config.h"
+#include "config.h"
 #include "lib/base/base.h"
 
 int main(int argc, char **argv)
