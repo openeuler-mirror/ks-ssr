@@ -15,9 +15,7 @@
 #pragma once
 
 #include <QStandardItemModel>
-#include <QStyledItemDelegate>
 #include <QTableView>
-#include <QWidget>
 
 namespace KS
 {
