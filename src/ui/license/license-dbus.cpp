@@ -56,35 +56,27 @@ QString LicenseDBus::getObjectPath(const QString& objectName)
                                                                 LICENSE_MANAGER_DBUS_NAME,
                                                                 METHOD_GET_LICENSE_OBJECT);
     msgMethodCall << objectName;
-
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
+    KLOG_DEBUG() << "The reply of dbus method GetLicenseObject: " << msgReply;
 
-    KLOG_DEBUG() << "getObjectPath: " << msgReply;
-    QString errorMsg;
-    do
+    if (msgReply.type() != QDBusMessage::ReplyMessage)
     {
-        if (msgReply.type() == QDBusMessage::ReplyMessage)
-        {
-            QList<QVariant> args = msgReply.arguments();
-            if (args.size() < 1)
-            {
-                errorMsg = tr("arguments size < 1");
-                break;
-            }
-            auto objectPath = args.takeFirst();
-            QDBusObjectPath* path = (QDBusObjectPath*)objectPath.data();
-            return path->path();
-        }
+        KLOG_WARNING() << "Failed to call dbus method GetLicenseObject: " << msgReply.errorMessage();
+        return QString();
+    }
 
-    } while (0);
+    QList<QVariant> args = msgReply.arguments();
+    if (args.size() < 1)
+    {
+        KLOG_WARNING() << "The size of arguments returned by GetLicenseObject is less than 1";
+        return QString();
+    }
 
-    KLOG_WARNING() << "create object name failed!"
-                   << "dbus name: " << LICENSE_MANAGER_DBUS_NAME
-                   << "method: " << METHOD_GET_LICENSE_OBJECT
-                   << "error: " << msgReply.errorMessage() << errorMsg;
-    return "";
+    auto objectPath = args.takeFirst();
+    QDBusObjectPath* path = (QDBusObjectPath*)objectPath.data();
+    return path->path();
 }
 
 void LicenseDBus::updateLicense()
@@ -96,51 +88,41 @@ void LicenseDBus::updateLicense()
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
-    KLOG_DEBUG() << "updateLicense msgReply: " << msgReply;
+    KLOG_DEBUG() << "The reply of dbus method GetLicense: " << msgReply;
 
-    QString errorMsg;
-    do
+    if (msgReply.type() != QDBusMessage::ReplyMessage)
     {
-        if (msgReply.type() == QDBusMessage::ReplyMessage)
-        {
-            QList<QVariant> args = msgReply.arguments();
-            if (args.size() < 1)
-            {
-                errorMsg = tr("arguments size < 1");
-                break;
-            }
-            QVariant firstArg = args.takeFirst();
-            auto licenseInfoJson = firstArg.toString();
+        KLOG_WARNING() << "Failed to call dbus method GetLicense: " << msgReply.errorMessage();
+        return;
+    }
 
-            //解析授权信息Json字符串
-            QJsonParseError jsonError;
-            auto jsonDoc = QJsonDocument::fromJson(licenseInfoJson.toUtf8(), &jsonError);
-            if (jsonDoc.isNull())
-            {
-                errorMsg = jsonError.errorString();
-                break;
-            }
-            else
-            {
-                auto data = jsonDoc.object();
-                m_activationCode = data.value(LICENSE_JK_ACTIVATION_CODE).toString();
-                m_machineCode = data.value(LICENSE_JK_MACHINE_CODE).toString();
-                m_expiredTime = time_t(data.value(LICENSE_JK_EXPIRED_TIME).toVariant().toUInt());
+    QList<QVariant> args = msgReply.arguments();
+    if (args.size() < 1)
+    {
+        KLOG_WARNING() << "The size of arguments returned by GetLicense is less than 1";
+        return;
+    }
 
-                //获取激活状态
-                auto activationStatus = (LicenseActivationStatus)data.value(LICENSE_JK_ACTIVATION_STATUS).toInt();
-                auto currTime = QDateTime::currentDateTime().toSecsSinceEpoch();
-                m_isActivated = (activationStatus == LAS_ACTIVATED) && (currTime <= m_expiredTime);
-                return;
-            }
-        }
-    } while (0);
+    QVariant firstArg = args.takeFirst();
+    auto licenseInfoJson = firstArg.toString();
+    //解析授权信息Json字符串
+    QJsonParseError jsonError;
+    auto jsonDoc = QJsonDocument::fromJson(licenseInfoJson.toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser license information failed:" << jsonError.errorString();
+        return;
+    }
 
-    KLOG_WARNING() << "get license information failed!"
-                   << "dbus name: " << LICENSE_OBJECT_DBUS_NAME
-                   << "method: " << METHOD_GET_LICENSE
-                   << "error: " << msgReply.errorMessage() << errorMsg;
-    return;
+    auto data = jsonDoc.object();
+    m_activationCode = data.value(LICENSE_JK_ACTIVATION_CODE).toString();
+    m_machineCode = data.value(LICENSE_JK_MACHINE_CODE).toString();
+    m_expiredTime = time_t(data.value(LICENSE_JK_EXPIRED_TIME).toVariant().toUInt());
+
+    //获取激活状态
+    auto activationStatus = (LicenseActivationStatus)data.value(LICENSE_JK_ACTIVATION_STATUS).toInt();
+    auto currTime = QDateTime::currentDateTime().toSecsSinceEpoch();
+    m_isActivated = (activationStatus == LAS_ACTIVATED) && (currTime <= m_expiredTime);
 }
 
 bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QString& errorMsg)
@@ -150,20 +132,18 @@ bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QStri
                                                                 LICENSE_OBJECT_DBUS_NAME,
                                                                 METHOD_ACTIVATE_BY_ACTIVATION_CODE);
     msgMethodCall << activation_Code;
-
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
+    KLOG_DEBUG() << "The reply of dbus method ActivateByActivationCode: " << msgReply;
 
-    KLOG_DEBUG() << "activateByActivationCode msgReply: " << msgReply;
-
-    RETURN_VAL_IF_TRUE(msgReply.type() != QDBusMessage::ErrorMessage, true);
-
-    errorMsg = tr("activate by activation code failed:\n dbus name: %1\n error: %2:")
-                   .arg(LICENSE_OBJECT_DBUS_NAME)
-                   .arg(msgReply.errorMessage());
-    KLOG_WARNING() << errorMsg;
-    return false;
+    if (msgReply.type() == QDBusMessage::ErrorMessage)
+    {
+        errorMsg = tr("Failed to call dbus method ActivateByActivationCode:  %1").arg(msgReply.errorMessage());
+        KLOG_WARNING() << errorMsg;
+        return false;
+    }
+    return true;
 }
 
 bool LicenseDBus::isActivated()
