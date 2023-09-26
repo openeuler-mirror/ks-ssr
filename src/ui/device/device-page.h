@@ -24,7 +24,7 @@ class DevicePage;
 namespace KS
 {
 class SidebarItem;
-class DeviceRecord;
+class DeviceLog;
 class DeviceList;
 
 class DevicePage : public QWidget
