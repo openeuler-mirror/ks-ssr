@@ -226,7 +226,7 @@ void TPExecuteModel::updateRecord()
     // 刷新时checkbox状态清空
     emit stateChanged(Qt::Unchecked);
 
-    auto reply = m_tpDBusProxy->GetExecuteFiles();
+    auto reply = m_tpDBusProxy->GetTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE);
     auto files = reply.value();
 
     QJsonParseError jsonError;

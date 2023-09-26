@@ -49,6 +49,13 @@ extern "C"
 #define KSC_KSS_JK_DATA_ADD_TIME "time"
 #define KSC_KSS_JK_DATA_GUARD "guard"
 
+    enum KSCKSSTrustedFileType
+    {
+        KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE = 0,
+        KSC_KSS_TRUSTED_FILE_TYPE_KERNEL,
+        KSC_KSS_TRUSTED_FILE_TYPE_NONE
+    };
+
 // 外设管理相关定义
 #define KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/DeviceManager"
 

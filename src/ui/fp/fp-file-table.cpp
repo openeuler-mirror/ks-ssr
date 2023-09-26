@@ -291,7 +291,7 @@ void FPFilesModel::updateInfo()
     // 刷新时checkbox状态清空
     emit stateChanged(Qt::Unchecked);
 
-    auto reply = m_fileProtectedProxy->GetFPFiles();
+    auto reply = m_fileProtectedProxy->GetProtectedFiles();
     reply.waitForFinished();
     auto files = reply.value();
 

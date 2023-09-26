@@ -53,30 +53,27 @@ KSSDbus::KSSDbus(QObject *parent) : QObject(parent)
     connect(KSSWrapper::getDefault().get(), SIGNAL(initFinished()), this, SIGNAL(InitFinished()));
 }
 
-int KSSDbus::initialized() const
+bool KSSDbus::initialized() const
 {
-    return KSSWrapper::getDefault()->getInitialized();
+    RETURN_VAL_IF_TRUE(KSSWrapper::getDefault()->getInitialized() == 0, false)
+
+    return true;
 }
 
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTPFile, addTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTPFile, removeTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFile, addTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFile, removeTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
 CHECK_AUTH_WITH_2ARGS(KSSDbus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, AddFPFile, addFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveFPFile, removeFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &);
+CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFile, addFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFile, removeFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &);
 
-QString KSSDbus::GetExecuteFiles()
+QString KSSDbus::GetTrustedFiles(uint type)
 {
-    return KSSWrapper::getDefault()->getExecuteFiles();
+    return KSSWrapper::getDefault()->getTrustedFiles(KSCKSSTrustedFileType(type));
 }
 
-QString KSSDbus::GetFPFiles()
+QString KSSDbus::GetProtectedFiles()
 {
     return KSSWrapper::getDefault()->getFiles();
-}
-
-QString KSSDbus::GetModuleFiles()
-{
-    return KSSWrapper::getDefault()->getModuleFiles();
 }
 
 QString KSSDbus::Search(const QString &pathKey, uint searchType)
@@ -91,11 +88,11 @@ QString KSSDbus::Search(const QString &pathKey, uint searchType)
 
     if (KSSType(searchType) == KSSType::KSS_TYPE_TP_EXECUTE)
     {
-        fileList = KSSWrapper::getDefault()->getExecuteFiles();
+        fileList = KSSWrapper::getDefault()->getTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE);
     }
     else if (KSSType(searchType) == KSSType::KSS_TYPE_TP_KERNEL)
     {
-        fileList = KSSWrapper::getDefault()->getModuleFiles();
+        fileList = KSSWrapper::getDefault()->getTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_KERNEL);
     }
     else if (KSSType(searchType) == KSSType::KSS_TYPE_FP)
     {
