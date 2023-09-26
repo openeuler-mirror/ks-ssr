@@ -12,37 +12,44 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
-#include "src/ui/box/modify-password.h"
+#include "src/ui/box/box-password-modification.h"
 #include <QMessageBox>
-#include "src/ui/ui_modify-password.h"
+#include "src/ui/ui_box-password-modification.h"
 
 namespace KS
 {
-ModifyPassword::ModifyPassword(QWidget *parent) : QWidget(parent),
-                                                  m_ui(new Ui::ModifyPassword())
+BoxPasswordModification::BoxPasswordModification(QWidget *parent) : TitlebarWindow(parent),
+                                                                    m_ui(new Ui::BoxPasswordModification())
 {
-    m_ui->setupUi(this);
+    m_ui->setupUi(getWindowContentWidget());
     init();
 }
 
-QString ModifyPassword::getCurrentPassword()
+QString BoxPasswordModification::getCurrentPassword()
 {
     return m_ui->m_currentPassword->text();
 }
 
-QString ModifyPassword::getNewPassword()
+QString BoxPasswordModification::getNewPassword()
 {
     return m_ui->m_newPassword->text();
 }
 
-void ModifyPassword::setBoxName(const QString &boxName)
+void BoxPasswordModification::setBoxName(const QString &boxName)
 {
     m_ui->m_boxName->setText(boxName);
 }
 
-void ModifyPassword::init()
+void BoxPasswordModification::init()
 {
+    // 页面关闭时销毁
+    setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::ApplicationModal);
+    setIcon(QIcon(":/images/logo"));
+    setResizeable(false);
+    setTitleBarHeight(36);
+    setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
+
     m_ui->m_currentPassword->setEchoMode(QLineEdit::Password);
     m_ui->m_newPassword->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
@@ -52,10 +59,10 @@ void ModifyPassword::init()
                 emit rejected();
             });
 
-    connect(m_ui->m_ok, &QPushButton::clicked, this, &ModifyPassword::onOkClicked);
+    connect(m_ui->m_ok, &QPushButton::clicked, this, &BoxPasswordModification::onOkClicked);
 }
 
-void ModifyPassword::onOkClicked()
+void BoxPasswordModification::onOkClicked()
 {
     // 禁止输入空字符
     if (m_ui->m_newPassword->text().isEmpty() ||
