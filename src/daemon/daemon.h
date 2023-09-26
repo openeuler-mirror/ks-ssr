@@ -19,9 +19,7 @@
 
 namespace KS
 {
-class BoxManager;
 class KSSDbus;
-class DeviceManager;
 
 class Daemon : public QObject
 {
@@ -49,9 +47,7 @@ private:
 private:
     static Daemon *m_instance;
 
-    BoxManager *m_boxManager;
     KSSDbus *m_kssDBus;
-    DeviceManager *m_deviceManger;
 };
 }  // namespace KS
 
