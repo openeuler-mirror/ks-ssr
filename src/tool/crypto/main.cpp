@@ -26,18 +26,10 @@ int main(int argc, char* argv[])
     QCommandLineParser parser;
 
     klog_qt5_init(QString(), "kylinsec-session", PROJECT_NAME, a.applicationName().toLatin1());
-    // auto program_name = Glib::path_get_basename(argv[0]);
-    // klog_gtk3_init(std::string(), "kylinsec-session", PROJECT_NAME, a.applicationName().toLatin1());
-    // Gio::init();
-
-    // setlocale(LC_ALL, "");
-    // bindtextdomain(PROJECT_NAME, BR_LOCALEDIR);
-    // bind_textdomain_codeset(PROJECT_NAME, "UTF-8");
-    // textdomain(PROJECT_NAME);
 
     QTranslator translator;
 #pragma message("将 cmake 翻译部分完成后修改翻译文件路径")
-    if (!translator.load(QLocale(), qAppName(), ".", " ", ".qm"))
+    if (!translator.load(QLocale(), "ks-ssr-daemon", ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
     {
         KLOG_WARNING() << "Load translator failed!";
     }

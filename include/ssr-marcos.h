@@ -147,4 +147,4 @@ private:
 
 #define POINTER_TO_STRING(p) ((p) ? p : QString())
 
-#define _(text) QObject::tr(text)
+// #define _(text) QObject::tr(text)

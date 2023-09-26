@@ -113,37 +113,37 @@ QString BRError::getErrorDesc(BRErrorCode error_code)
     switch (error_code)
     {
     case BRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID:
-        error_desc = _("The standard type is invalid.");
+        error_desc = QObject::tr("The standard type is invalid.");
         break;
     case BRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID:
-        error_desc = _("The strategy type is invalid.");
+        error_desc = QObject::tr("The strategy type is invalid.");
         break;
     case BRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID:
-        error_desc = _("The notification status is invalid.");
+        error_desc = QObject::tr("The notification status is invalid.");
         break;
     case BRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID:
-        error_desc = _("The resource monitor is invalid.");
+        error_desc = QObject::tr("The resource monitor is invalid.");
         break;
     case BRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED:
     case BRErrorCode::ERROR_DAEMON_JSON2RS_FAILED:
     case BRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID:
-        error_desc = _("Error format for reinforcement standard.");
+        error_desc = QObject::tr("Error format for reinforcement standard.");
         break;
     case BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND:
-        error_desc = _("Reinforcement item '{0}' is not found.");
+        error_desc = QObject::tr("Reinforcement item '{0}' is not found.");
         break;
     case BRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING:
     case BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING:
-        error_desc = _("The job is running, please don't repeat the operation.");
+        error_desc = QObject::tr("The job is running, please don't repeat the operation.");
         break;
     case BRErrorCode::ERROR_DAEMON_GET_RS_FAILED:
-        error_desc = _("The standard reinforcement configuration is not found.");
+        error_desc = QObject::tr("The standard reinforcement configuration is not found.");
         break;
     case BRErrorCode::ERROR_DAEMON_MACHINE_CODE_TRANS_FAILED:
-        error_desc = _("Machine code error.");
+        error_desc = QObject::tr("Machine code error.");
         break;
     case BRErrorCode::ERROR_DAEMON_ACTIVATION_CODE_INVALID:
-        error_desc = _("Activation code error.");
+        error_desc = QObject::tr("Activation code error.");
         break;
     case BRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED:
     case BRErrorCode::ERROR_DAEMON_CONVERT_PLUGINS2JSON_FAILED:
@@ -168,17 +168,17 @@ QString BRError::getErrorDesc(BRErrorCode error_code)
     case BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED:
     case BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENTS_FAILED:
     case BRErrorCode::ERROR_DAEMON_PLUGIN_CALL_PYTHON_FUNC_FAILED:
-        error_desc = _("Internel error.");
+        error_desc = QObject::tr("Internel error.");
         break;
     case BRErrorCode::ERROR_DAEMON_SOFTWARE_UNACTIVATED:
-        error_desc = _("The software is not activated.");
+        error_desc = QObject::tr("The software is not activated.");
         break;
     default:
-        error_desc = _("Unknown error.");
+        error_desc = QObject::tr("Unknown error.");
         break;
     }
 
-    error_desc += QString(_(" (error code: 0x%1)")).arg(QString::number((int)error_code, 16));
+    error_desc += QString(QObject::tr(" (error code: 0x%1)")).arg(QString::number((int)error_code, 16));
     return error_desc;
 }
 

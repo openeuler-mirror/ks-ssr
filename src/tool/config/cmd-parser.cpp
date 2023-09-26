@@ -33,8 +33,6 @@ namespace Config
 #define CONFIG_TYPE_PAM "PAM"
 #define CONFIG_TYPE_TABLE "TABLE"
 
-// CmdParser::CmdParser() : option_context_(N_("FILE")),
-//                          option_group_("config", "config options")
 CmdParser::CmdParser()
 {
 }
@@ -45,49 +43,48 @@ void CmdParser::init()
     this->parser.addVersionOption();
     this->parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     this->parser.addOption({"type",
-                            _("The configuration file type"),
+                            QObject::tr("The configuration file type"),
                             CONFIG_TYPE_KV "|" CONFIG_TYPE_PAM "|" CONFIG_TYPE_TABLE});
     this->parser.addOption({"method",
-                            _("The Operation method"),
+                            QObject::tr("The Operation method"),
                             "GETVAL|SETVAL|SETVALALL|DELVAL|GETLINE|SETLINE|DELLINE"});
     this->parser.addOption({"key",
-                            _("Specify the key or rule to get value"),
+                            QObject::tr("Specify the key or rule to get value"),
                             "KEY"});
     this->parser.addOption({"value",
-                            _("Specify the set value"),
+                            QObject::tr("Specify the set value"),
                             "VALUE"});
     this->parser.addOption({"line-match-pattern",
-                            _("Specify regular expression to match the line. If many lines is matched, then the first matched line is used only"),
+                            QObject::tr("Specify regular expression to match the line. If many lines is matched, then the first matched line is used only"),
                             "PATTERN"});
     this->parser.addOption({"split-pattern",
-                            _("Specify regular expression to split line"),
+                            QObject::tr("Specify regular expression to split line"),
                             "PATTERN"});
     this->parser.addOption({"join-str",
-                            _("Specify string for joining fields to line"),
+                            QObject::tr("Specify string for joining fields to line"),
                             "STR"});
     this->parser.addOption({"comment",
-                            _("Specify comment string"),
+                            QObject::tr("Specify comment string"),
                             "COMMENT"});
     this->parser.addOption({"new-line",
-                            _("Add new line when the speficied line pattern is dismatch in PAM"),
+                            QObject::tr("Add new line when the speficied line pattern is dismatch in PAM"),
                             "NEW-LINE"});
     this->parser.addOption({"next-line-match-pattern",
-                            _("Specifies a regular expression to match the next row of the inserted row. If multiple rows are matched, the value is used by the first matched row"),
+                            QObject::tr("Specifies a regular expression to match the next row of the inserted row. If multiple rows are matched, the value is used by the first matched row"),
                             "PATTERN"});
-    this->parser.addPositionalArgument("File-Path", "the configuration's path");
+    this->parser.addPositionalArgument("File-Path", QObject::tr("the configuration's path"));
 }
 
 int CmdParser::run(int argc, char** argv, QCoreApplication& a)
 {
     this->parser.process(a);
-    auto file_path = this->parser.positionalArguments().first();
-    if (file_path.isEmpty())
+    if (this->parser.positionalArguments().isEmpty())
     {
 #pragma message("无法输出中文")
         std::cout << "The file path is not specified" << std::endl;
-        // fmt::print(stderr, _("The file path is not specified"));
         return EXIT_FAILURE;
     }
+    auto file_path = this->parser.positionalArguments().first();
     this->options_ = {
         this->parser.value("type"),
         file_path,
@@ -102,7 +99,7 @@ int CmdParser::run(int argc, char** argv, QCoreApplication& a)
 
     if (this->options_.type.isEmpty())
     {
-        cerr << _("No specify file type").toStdString() << endl;
+        cerr << QObject::tr("No specify file type").toStdString() << endl;
         return EXIT_FAILURE;
     }
 
@@ -120,7 +117,7 @@ int CmdParser::run(int argc, char** argv, QCoreApplication& a)
     }
     else
     {
-        qFatal(_("Unknown file type").toLatin1().data());
+        KLOG_FATAL(QObject::tr("Unknown file type").toLocal8Bit());
         return EXIT_FAILURE;
     }
 
@@ -156,7 +153,7 @@ int CmdParser::processKv()
 
     if (!retval)
     {
-        cout << _("Exec method {0} failed").arg(this->options_.method).toStdString();
+        cout << QObject::tr("Exec method %1 failed").arg(this->options_.method).toStdString();
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
@@ -205,7 +202,7 @@ int CmdParser::processPam()
 
     if (!retval)
     {
-        cout << _("Exec method {0} failed").arg(this->options_.method).toStdString() << endl;
+        cout << QObject::tr("Exec method %1 failed").arg(this->options_.method).toStdString() << endl;
         return EXIT_FAILURE;
     }
 
@@ -253,7 +250,7 @@ int CmdParser::processTable()
 
     if (!retval)
     {
-        cerr << _("Exec method {0} failed").arg(this->options_.method).toStdString() << endl;
+        cerr << QObject::tr("Exec method %1 failed").arg(this->options_.method).toStdString() << endl;
         return EXIT_FAILURE;
     }
 
