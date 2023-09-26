@@ -99,6 +99,7 @@ QString SDDevice::getSysattrValue(const QString& attr) const
 
 void SDDevice::trigger()
 {
+    // TODO: 需要修改代码，暂时使用启动子进程的方式处理3.4-5上的编译报错，此处不应该直接命令调用
     auto process = new QProcess(this);
     auto cmd = QString("udevadm trigger %1").arg(getSyspath());
     KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;

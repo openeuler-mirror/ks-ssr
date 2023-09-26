@@ -28,7 +28,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Trusted protected:</string>
+        <string>Trusted protected(Effective after reboot):</string>
        </property>
       </widget>
      </item>

@@ -20,6 +20,7 @@
 #include <QMutex>
 #include <QPushButton>
 #include <QStackedWidget>
+#include <QX11Info>
 #include "src/ui/box/box-page.h"
 #include "src/ui/device/device-page.h"
 #include "src/ui/fp/fp-page.h"
@@ -29,6 +30,7 @@
 #include "src/ui/settings/settings-page.h"
 #include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
+#include "src/ui/common/single-application/single-application.h"
 
 namespace KS
 {
@@ -45,6 +47,8 @@ Window::Window() : TitlebarWindow(nullptr),
     initWindow();
     initNavigation();
     initActivation();
+
+    connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject);
 }
 
 Window::~Window()
@@ -116,6 +120,7 @@ void Window::initWindow()
 
     auto settingMenu = new QMenu(this);
     btnForMenu->setMenu(settingMenu);
+    settingMenu->setObjectName("settingMenu");
 
     settingMenu->addAction(tr("Setup"), this, &Window::popupSettingsDialog);
     settingMenu->addAction(tr("Activate Info"), this, &Window::popupActiveDialog);
@@ -176,5 +181,25 @@ void Window::popupSettingsDialog()
     auto y = this->y() + this->height() / 4 + m_activation->height() / 16;
     settingsDialog->move(x, y);
     settingsDialog->show();
+}
+
+void Window::activateMetaObject()
+{
+    /*
+     *由于QXcbWindow::requestActivateWindow
+     *之中对root窗口发送_NET_ACTIVE_WINDOW的事件之中的时间戳未更新,
+     *导致窗口管理器接收时事件戳较为落后，未被正确处理
+     *暂时处理办法，手动更新下X11时间，避免事件戳落后
+     */
+
+    if (windowState() & Qt::WindowMinimized)
+    {
+        setWindowState(windowState() & ~Qt::WindowMinimized);
+    }
+
+    QX11Info::setAppTime(QX11Info::getTimestamp());
+    showNormal();
+    raise();
+    activateWindow();
 }
 }  // namespace KS
