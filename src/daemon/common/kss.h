@@ -50,8 +50,11 @@ public:
     // 获取文件保护列表
     QString getFiles();
 
+    int getInitialized();
+
 public Q_SLOTS:
-    void processExited(int exitCode, QProcess::ExitStatus exitStatus);
+    void
+    processExited(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     void init();

@@ -19,12 +19,17 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include "config.h"
+#include "include/ksc-error-i.h"
 #include "include/ksc-i.h"
 #include "include/ksc-marcos.h"
-#include "include/ksc-error-i.h"
 #include "lib/base/error.h"
 #include "src/daemon/common/kss.h"
+#include "src/daemon/common/polkit-proxy.h"
 #include "src/daemon/tp_adaptor.h"
+
+#define AUTH_TP_ADD_FILE "com.kylinsec.SC.TrustedProtected.AddFile"
+#define AUTH_TP_REMOVE_FILE "com.kylinsec.SC.TrustedProtected.RemoveFile"
+#define AUTH_TP_PROHIBIT_UNLOADING "com.kylinsec.SC.TrustedProtected.ProhibitUnloading"
 
 namespace KS
 {
@@ -39,31 +44,14 @@ TP::~TP()
 {
 }
 
-void TP::AddFile(const QString &filePath)
+int TP::getInitialized() const
 {
-    if (filePath.isEmpty())
-    {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
-        return ;
-    }
-
-    auto output = KSS::getDefault()->addTrustedFile(filePath);
-    QJsonParseError jsonError;
-
-    auto jsonDoc = QJsonDocument::fromJson(output.toUtf8(), &jsonError);
-
-    if (jsonDoc.isNull())
-    {
-        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-        return;
-    }
-
-    if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
-    {
-        sendErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD));
-        return;
-    }
+    return KSS::getDefault()->getInitialized();
 }
+
+CHECK_AUTH_WITH_1ARGS(TP, AddFile, onAddFile, AUTH_TP_ADD_FILE, const QString &)
+CHECK_AUTH_WITH_1ARGS(TP, RemoveFile, onRemoveFile, AUTH_TP_REMOVE_FILE, const QString &)
+CHECK_AUTH_WITH_2ARGS(TP, ProhibitUnloading, onProhibitUnloading, AUTH_TP_PROHIBIT_UNLOADING, bool, const QString &)
 
 QString TP::GetExecuteFiles()
 {
@@ -73,28 +61,6 @@ QString TP::GetExecuteFiles()
 QString TP::GetModuleFiles()
 {
     return KSS::getDefault()->getModuleFiles();
-}
-
-void TP::ProhibitUnloading(bool prohibited, const QString &filePath)
-{
-    if (filePath.isEmpty())
-    {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
-        return ;
-    }
-
-    KSS::getDefault()->prohibitUnloading(prohibited, filePath);
-}
-
-void TP::RemoveFile(const QString &filePath)
-{
-    if (filePath.isEmpty())
-    {
-        sendErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
-        return ;
-    }
-
-    KSS::getDefault()->removeTrustedFile(filePath);
 }
 
 QString TP::Search(const QString &pathKey, uint searchType)
@@ -150,6 +116,66 @@ void TP::init()
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }
+}
+
+void TP::onAddFile(const QDBusMessage &message, const QString &filePath)
+{
+    if (filePath.isEmpty())
+    {
+        auto replyMessage = message.createErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        QDBusConnection::systemBus().send(replyMessage);
+        return;
+    }
+
+    auto output = KSS::getDefault()->addTrustedFile(filePath);
+    QJsonParseError jsonError;
+
+    auto jsonDoc = QJsonDocument::fromJson(output.toUtf8(), &jsonError);
+
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        return;
+    }
+
+    if (jsonDoc.object().value(KSC_KSS_JK_COUNT).toInt() == 0)
+    {
+        auto replyMessage = message.createErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_TP_ADD_INVALID_FILE));
+        QDBusConnection::systemBus().send(replyMessage);
+        return;
+    }
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
+}
+
+void TP::onRemoveFile(const QDBusMessage &message, const QString &filePath)
+{
+    if (filePath.isEmpty())
+    {
+        auto replyMessage = message.createErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        QDBusConnection::systemBus().send(replyMessage);
+        return;
+    }
+
+    KSS::getDefault()->removeTrustedFile(filePath);
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
+}
+
+void TP::onProhibitUnloading(const QDBusMessage &message, bool prohibited, const QString &filePath)
+{
+    if (filePath.isEmpty())
+    {
+        auto replyMessage = message.createErrorReply(QDBusError::InvalidArgs, KSC_ERROR2STR(KSCErrorCode::ERROR_COMMON_INVALID_ARGS));
+        QDBusConnection::systemBus().send(replyMessage);
+        return;
+    }
+    KSS::getDefault()->prohibitUnloading(prohibited, filePath);
+
+    auto replyMessage = message.createReply();
+    QDBusConnection::systemBus().send(replyMessage);
 }
 
 }  // namespace KS
