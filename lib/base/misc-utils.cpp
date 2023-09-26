@@ -23,8 +23,8 @@ MiscUtils::MiscUtils()
 }
 
 bool MiscUtils::spawnSync(const QList<QString> &argv,
-                           QString *standard_output,
-                           QString *standard_error)
+                          QString *standard_output,
+                          QString *standard_error)
 {
     // KLOG_DEBUG("Exec command: %s.", StrUtils::join(argv.toVector(), " ").toLatin1().data());
     KLOG_DEBUG("Exec command: %s.", QStringList(argv).join(" ").toLatin1());

@@ -25,7 +25,8 @@ endif()
 file(GLOB SERVICE_IN_FILES ./services/*.service.in)
 foreach(SERVICE_IN_FILE IN LISTS SERVICE_IN_FILES)
   string(REGEX REPLACE ".+/(.+)\\..*" "\\1" SERVICE_FILE ${SERVICE_IN_FILE})
-  configure_file(${SERVICE_IN_FILE} ${PROJECT_BINARY_DIR}/data/services/${SERVICE_FILE})
+  configure_file(${SERVICE_IN_FILE}
+                 ${PROJECT_BINARY_DIR}/data/services/${SERVICE_FILE})
 endforeach()
 
 # xml files

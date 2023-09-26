@@ -90,8 +90,8 @@ public:
 
     // 添加一个操作，返回操作ID
     QSharedPointer<Operation> addOperation(const QString &plugin_name,
-                                            const QString &reinforcement_name,
-                                            std::function<QString(void)> func);
+                                           const QString &reinforcement_name,
+                                           std::function<QString(void)> func);
 
     // 同步运行任务
     bool runSync();
