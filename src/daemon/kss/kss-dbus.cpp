@@ -34,7 +34,7 @@ namespace KS
 #define KSS_PERMISSION_AUTHENTICATION "com.kylinsec.SC.PermissionAuthentication"
 
 // Box fount
-#define RETURN_DBUS_ERROR_BOX_NOFOUND_IF_TRUE(cond, errorCode)                                               \
+#define RETURN_KSS_DBUS_ERROR_IF_TRUE(cond, errorCode)                                               \
     {                                                                                                        \
         if (cond)                                                                                            \
         {                                                                                                    \
@@ -60,14 +60,35 @@ bool KSSDbus::initialized() const
     return true;
 }
 
+uint KSSDbus::storageMode() const
+{
+    return KSSWrapper::getDefault()->getCurrentStorageMode();
+}
+
+bool KSSDbus::trustedStatus() const
+{
+    QJsonParseError jsonError;
+    auto trustedStatus = KSSWrapper::getDefault()->getTrustedStatus();
+    auto jsonDoc = QJsonDocument::fromJson(trustedStatus.toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        return false;
+    }
+
+    auto status = jsonDoc.object().value("sm").toInt();
+    RETURN_VAL_IF_TRUE(status == 0 || status == 2, false)
+
+    return true;
+}
+
 CHECK_AUTH_WITH_1ARGS(KSSDbus, AddTrustedFile, addTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
 CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveTrustedFile, removeTPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
 CHECK_AUTH_WITH_2ARGS(KSSDbus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool, const QString &)
 CHECK_AUTH_WITH_1ARGS(KSSDbus, AddProtectedFile, addFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
 CHECK_AUTH_WITH_1ARGS(KSSDbus, RemoveProtectedFile, removeFPFileAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, HardModeChecked, hardModeCheckedAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH(KSSDbus, SoftModeChecked, softModeCheckedAfterAuthorization, KSS_PERMISSION_AUTHENTICATION)
-CHECK_AUTH_WITH_1ARGS(KSSDbus, SetTrustedStatus, setTrustedStatusAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool)
+CHECK_AUTH_WITH_2ARGS(KSSDbus, SetStorageMode, setStorageModeAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, uint, const QString &)
+CHECK_AUTH_WITH_1ARGS(KSSDbus, SetTrustedStatus, setTrustedStatusAfterAuthorization, KSS_PERMISSION_AUTHENTICATION, bool);
 
 QString KSSDbus::GetTrustedFiles(uint type)
 {
@@ -136,7 +157,7 @@ void KSSDbus::init()
 
 void KSSDbus::addTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    RETURN_DBUS_ERROR_BOX_NOFOUND_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
 
     auto output = KSSWrapper::getDefault()->addTrustedFile(filePath);
     QJsonParseError jsonError;
@@ -162,7 +183,7 @@ void KSSDbus::addTPFileAfterAuthorization(const QDBusMessage &message, const QSt
 
 void KSSDbus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    RETURN_DBUS_ERROR_BOX_NOFOUND_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
 
     KSSWrapper::getDefault()->removeTrustedFile(filePath);
 
@@ -172,7 +193,7 @@ void KSSDbus::removeTPFileAfterAuthorization(const QDBusMessage &message, const 
 
 void KSSDbus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool prohibited, const QString &filePath)
 {
-    RETURN_DBUS_ERROR_BOX_NOFOUND_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
 
     KSSWrapper::getDefault()->prohibitUnloading(prohibited, filePath);
 
@@ -182,7 +203,7 @@ void KSSDbus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, b
 
 void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    RETURN_DBUS_ERROR_BOX_NOFOUND_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
 
     QFileInfo fileInfo(filePath);
     auto fileName = fileInfo.fileName();
@@ -194,7 +215,7 @@ void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QSt
 
 void KSSDbus::removeFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    RETURN_DBUS_ERROR_BOX_NOFOUND_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_KSS_DBUS_ERROR_IF_TRUE(filePath.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
 
     KSSWrapper::getDefault()->removeFile(filePath);
 
@@ -202,19 +223,12 @@ void KSSDbus::removeFPFileAfterAuthorization(const QDBusMessage &message, const 
     QDBusConnection::systemBus().send(replyMessage);
 }
 
-void KSSDbus::hardModeCheckedAfterAuthorization(const QDBusMessage &message, const QString &userPin)
+void KSSDbus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint type, const QString &userPin)
 {
-    RETURN_DBUS_ERROR_BOX_NOFOUND_IF_TRUE(userPin.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    RETURN_KSS_DBUS_ERROR_IF_TRUE(userPin.isEmpty(), KSCErrorCode::ERROR_COMMON_INVALID_ARGS)
+    auto error = KSSWrapper::getDefault()->setStorageMode(KSCKSSTrustedStorageType(type), userPin);
 
-    KSSWrapper::getDefault()->hardModeChecked(userPin);
-
-    auto replyMessage = message.createReply();
-    QDBusConnection::systemBus().send(replyMessage);
-}
-
-void KSSDbus::softModeCheckedAfterAuthorization(const QDBusMessage &message)
-{
-    KSSWrapper::getDefault()->softModeChecked();
+    RETURN_KSS_DBUS_ERROR_IF_TRUE(!error.isEmpty(), KSCErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED)
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
