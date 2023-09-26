@@ -33,6 +33,10 @@ namespace KS
 {
 #define KSS_PERMISSION_AUTHENTICATION "com.kylinsec.SC.PermissionAuthentication"
 
+#define TRUSTED_STATUS_INITIALT_VALUE 0
+#define TRUSTED_STATUS_OPEN 1
+#define TRUSTED_STATUS_CLOSE 2
+
 // Box fount
 #define RETURN_KSS_DBUS_ERROR_IF_TRUE(cond, errorCode)                                                       \
     {                                                                                                        \
@@ -77,7 +81,7 @@ bool KSSDbus::trustedStatus() const
     }
 
     auto status = jsonDoc.object().value("sm").toInt();
-    RETURN_VAL_IF_TRUE(status == 0 || status == 2, false)
+    RETURN_VAL_IF_TRUE(status == TRUSTED_STATUS_INITIALT_VALUE || status == TRUSTED_STATUS_CLOSE, false)
 
     return true;
 }
