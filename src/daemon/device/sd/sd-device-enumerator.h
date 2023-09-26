@@ -20,7 +20,6 @@ typedef struct sd_device_enumerator sd_device_enumerator;
 
 namespace KS
 {
-
 class SDDeviceEnumerator : public QObject
 {
     Q_OBJECT
