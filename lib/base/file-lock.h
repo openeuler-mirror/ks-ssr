@@ -43,12 +43,12 @@ public:
     bool isValid() { return (this->file_descriptor_ > 0 && this->lock_type_ != FileLockType::FILE_LOCK_TYPE_LAST); };
 
     static QSharedPointer<FileLock> createShareLock(const QString &path,
-                                                      int flags,
-                                                      int mode);
+                                                    int flags,
+                                                    int mode);
 
     static QSharedPointer<FileLock> createExcusiveLock(const QString &path,
-                                                         int flags,
-                                                         int mode);
+                                                       int flags,
+                                                       int mode);
 
 private:
     int32_t file_descriptor_;

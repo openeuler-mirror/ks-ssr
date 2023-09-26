@@ -52,7 +52,7 @@ public:
     BRReinforcementVec getReinforcementsByCategory(const QString& category_name);
 
     QSharedPointer<BRReinforcementInterface> getReinforcementInterface(const QString& plugin_name,
-                                                                        const QString& reinforcement_name);
+                                                                       const QString& reinforcement_name);
 
 private:
     // 初始化
