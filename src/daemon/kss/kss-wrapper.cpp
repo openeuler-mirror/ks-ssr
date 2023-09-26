@@ -12,7 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#include "kss.h"
+#include "kss-wrapper.h"
 #include <qt5-log-i.h>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -25,8 +25,8 @@
 namespace KS
 {
 // ini文件
-#define KSC_INI_PATH KSC_INSTALL_DATADIR "/ksc.ini"
-#define KSC_INI_KEY "ksc/initialized"
+#define KSS_INI_PATH KSC_INSTALL_DATADIR "/ksc.ini"
+#define KSS_INI_KEY "ksc/initialized"
 // 线程初始化 等待时长（30分钟）
 #define KSS_INIT_THREAD_TIMEOUT 30 * 60 * 1000
 
@@ -50,86 +50,86 @@ namespace KS
 // 关闭防卸载
 #define KSS_CLOSE_PROHIBIT_UNLOADING_CMD "kss kmod del --path"
 
-KSS::KSS(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
+KSSWrapper::KSSWrapper(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
 {
     m_process = new QProcess(parent);
-    m_ini = new QSettings(KSC_INI_PATH, QSettings::IniFormat, this);
+    m_ini = new QSettings(KSS_INI_PATH, QSettings::IniFormat, this);
 }
 
-QSharedPointer<KSS> KSS::m_instance = nullptr;
-QSharedPointer<KSS> KSS::getDefault()
+QSharedPointer<KSSWrapper> KSSWrapper::m_instance = nullptr;
+QSharedPointer<KSSWrapper> KSSWrapper::getDefault()
 {
     if (!m_instance)
     {
-        m_instance = QSharedPointer<KSS>::create();
+        m_instance = QSharedPointer<KSSWrapper>::create();
         m_instance->init();
     }
     return m_instance;
 }
 
-QString KSS::addTrustedFile(const QString &filePath)
+QString KSSWrapper::addTrustedFile(const QString &filePath)
 {
-    RETURN_VAL_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0, QString())
+    RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
     auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_ADD_FILE_CMD, filePath);
     execute(cmd);
 
     return m_processOutput;
 }
 
-void KSS::removeTrustedFile(const QString &filePath)
+void KSSWrapper::removeTrustedFile(const QString &filePath)
 {
-    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0)
+    RETURN_IF_TRUE(getInitialized() == 0)
     auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_REMOVE_FILE_CMD, filePath);
     execute(cmd);
 }
 
-QString KSS::getModuleFiles()
+QString KSSWrapper::getModuleFiles()
 {
-    RETURN_VAL_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0, QString())
+    RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
     execute(KSS_DIGEST_INFO_GET_KERNEL_CMD);
     return m_processOutput;
 }
 
-void KSS::prohibitUnloading(bool prohibited, const QString &filePath)
+void KSSWrapper::prohibitUnloading(bool prohibited, const QString &filePath)
 {
     auto cmd = QString("%1 %2").arg(prohibited ? KSS_OPEN_PROHIBIT_UNLOADING_CMD : KSS_CLOSE_PROHIBIT_UNLOADING_CMD, filePath);
     execute(cmd);
 }
 
-QString KSS::getExecuteFiles()
+QString KSSWrapper::getExecuteFiles()
 {
-    RETURN_VAL_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0, QString())
+    RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
     execute(KSS_DIGEST_INFO_GET_EXECUTE_CMD);
     return m_processOutput;
 }
 
-void KSS::addFile(const QString &fileName, const QString &filePath, const QString &insertTime)
+void KSSWrapper::addFile(const QString &fileName, const QString &filePath, const QString &insertTime)
 {
-    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0)
+    RETURN_IF_TRUE(getInitialized() == 0)
     auto cmd = QString("%1 -n %2 -p %3 -t '%4'").arg(KSS_ADD_FILE_CMD, fileName, filePath, insertTime);
     execute(cmd);
 }
 
-void KSS::removeFile(const QString &filePath)
+void KSSWrapper::removeFile(const QString &filePath)
 {
-    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0)
+    RETURN_IF_TRUE(getInitialized() == 0)
     auto cmd = QString("%1 -p %2").arg(KSS_REMOVE_FILE_CMD, filePath);
     execute(cmd);
 }
 
-QString KSS::getFiles()
+QString KSSWrapper::getFiles()
 {
-    RETURN_VAL_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() == 0, QString())
+    RETURN_VAL_IF_TRUE(getInitialized() == 0, QString())
     execute(KSS_GET_FILES_CMD);
     return m_processOutput;
 }
 
-int KSS::getInitialized()
+int KSSWrapper::getInitialized()
 {
-    return m_ini->value(KSC_INI_KEY).toInt();
+    return m_ini->value(KSS_INI_KEY).toInt();
 }
 
-void KSS::processExited(int exitCode, QProcess::ExitStatus exitStatus)
+void KSSWrapper::processExited(int exitCode, QProcess::ExitStatus exitStatus)
 {
     KLOG_DEBUG() << "Command execution completed. exitcode = " << exitCode << "exitStatus = " << exitStatus;
     m_process->disconnect();
@@ -147,7 +147,7 @@ void KSS::processExited(int exitCode, QProcess::ExitStatus exitStatus)
     m_errorOutput = errordOutput;
 }
 
-void KSS::execute(const QString &cmd)
+void KSSWrapper::execute(const QString &cmd)
 {
     KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
     m_process->start("bash", QStringList() << "-c" << cmd);
@@ -156,17 +156,17 @@ void KSS::execute(const QString &cmd)
     m_process->waitForFinished(60 * 1000);
 }
 
-void KSS::initTrustedResults()
+void KSSWrapper::initTrustedResults()
 {
     KLOG_INFO() << "Kss data initialisation completed.";
 
-    m_ini->setValue(KSC_INI_KEY, 1);
+    m_ini->setValue(KSS_INI_KEY, 1);
     emit initFinished();
 }
 
-void KSS::init()
+void KSSWrapper::init()
 {
-    RETURN_IF_TRUE(m_ini->value(KSC_INI_KEY).toInt() != 0)
+    RETURN_IF_TRUE(m_ini->value(KSS_INI_KEY).toInt() != 0)
 
     KLOG_INFO() << "Start kss initialisation.";
     execute(KSS_INIT_CMD);
@@ -180,7 +180,7 @@ void KSS::init()
                                           process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
                                       });
 
-    connect(m_kssInitThread, &QThread::finished, this, &KSS::initTrustedResults);
+    connect(m_kssInitThread, &QThread::finished, this, &KSSWrapper::initTrustedResults);
     connect(m_kssInitThread, &QThread::finished, m_kssInitThread, &QThread::deleteLater);
 
     m_kssInitThread->start();

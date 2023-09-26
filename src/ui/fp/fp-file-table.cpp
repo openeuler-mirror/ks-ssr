@@ -29,7 +29,7 @@
 #include <QToolTip>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
-#include "src/ui/file_protected_proxy.h"
+#include "src/ui/kss_dbus_proxy.h"
 
 namespace KS
 {
@@ -155,10 +155,10 @@ bool FPFilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
 
 FPFilesModel::FPFilesModel(QObject *parent) : QAbstractTableModel(parent)
 {
-    m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
-                                                  KSC_FP_DBUS_OBJECT_PATH,
-                                                  QDBusConnection::systemBus(),
-                                                  this);
+    m_fileProtectedProxy = new KSSDbusProxy(KSC_DBUS_NAME,
+                                            KSC_KSS_INIT_DBUS_OBJECT_PATH,
+                                            QDBusConnection::systemBus(),
+                                            this);
 
     updateInfo();
 }
@@ -291,7 +291,7 @@ void FPFilesModel::updateInfo()
     // 刷新时checkbox状态清空
     emit stateChanged(Qt::Unchecked);
 
-    auto reply = m_fileProtectedProxy->GetFiles();
+    auto reply = m_fileProtectedProxy->GetFPFiles();
     reply.waitForFinished();
     auto files = reply.value();
 
