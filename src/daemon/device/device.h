@@ -48,10 +48,10 @@ public:
     virtual ~Device();
 
 public:
-    virtual int setEnable(bool enable);
+    virtual bool setEnable(bool enable);
 
 public:
-    QString getId() const;
+    QString getID() const;
     QString getName() const;
     int getType() const;
     int getInterfaceType() const;
@@ -60,7 +60,7 @@ public:
     QSharedPointer<Permission> getPermission() const;
     QSharedPointer<SDDevice> getSDDevcie();
 
-    void setId(QString &id);
+    void setID(QString &id);
     void setName(QString &name);
     void setType(int type);
     void setInterfaceType(int type);
