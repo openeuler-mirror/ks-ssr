@@ -20,8 +20,8 @@
 #include <QObject>
 #include "src/daemon/device/device-factory.h"
 #include "src/daemon/device/device.h"
-#include "src/daemon/device/sd-device-monitor.h"
-#include "src/daemon/device/sd-device.h"
+#include "src/daemon/device/record.h"
+#include "src/daemon/device/sd/sd-device-monitor.h"
 
 class DeviceManagerAdaptor;
 
@@ -43,25 +43,37 @@ public Q_SLOTS:  // METHODS
     QString GetDevice(const QString &id);
 
     // 修改权限
-    bool ChangePermission(const QString &permissions);
+    bool ChangePermission(const QString &id,
+                          const QString &permissions);
 
-    // 处理Udev事件
-    void handleUdevEvent(SdDevice *device);
+    // 启用设备
+    bool Enable(const QString &id);
+
+    // 禁用设备
+    bool Disable(const QString &id);
+
+    // 获取连接记录
+    QString GetRecords();
+
+private:
+    void handleUdevEvent(SDDevice *device,
+                         int action);
 
 private:
     void init();
     void initDevices();
-    void addDevice(SdDevice *device);
     QSharedPointer<Device> findDevice(const QString &id);
-    void handleUdevAddEvent(SdDevice *device);
-    void handleUdevRemoveEvent(SdDevice *device);
-    void handleUdevChangeEvent(SdDevice *device);
-    QJsonObject makeDevcieJsonInfo(QSharedPointer<Device> device);
+    void addDevice(SDDevice *sdDevice);
+    void handleUdevAddEvent(SDDevice *sdDevice);
+    void handleUdevRemoveEvent(SDDevice *sdDevice);
+    void handleUdevChangeEvent(SDDevice *sdDevice);
+    void recordDeviceConnected(QSharedPointer<Device> device);
 
 private:
     DeviceManagerAdaptor *m_dbusAdaptor;
-    QMap<QString, QSharedPointer<Device>> m_devMap;
+    QMap<QString, QSharedPointer<Device>> m_devices;
     DeviceFactory m_devFactory;
-    SdDeviceMonitor m_devMonitor;
+    SDDeviceMonitor m_devMonitor;
+    Record m_record;
 };
 }  // namespace KS

@@ -63,17 +63,18 @@ USBDevice::~USBDevice() {}
 
 void USBDevice::init()
 {
-    auto device = this->getSdDevcie();
+    auto device = this->getSDDevcie();
 
-    m_idVendor = device->get_sysattr_value("idVendor");
-    m_idProduct = device->get_sysattr_value("idProduct");
-    m_product = device->get_sysattr_value("product");
-    m_manufacturer = device->get_sysattr_value("manufacturer");
+    m_idVendor = device->getSysattrValue("idVendor");
+    m_idProduct = device->getSysattrValue("idProduct");
+    m_product = device->getSysattrValue("product");
+    m_manufacturer = device->getSysattrValue("manufacturer");
+    m_uid = "USB" + m_idVendor + m_idProduct;
 
-    auto id = device->get_sysattr_value("serial");
+    auto id = device->getSysattrValue("serial");
     if (id.isNull())
     {
-        id = device->get_sysattr_value("dev");
+        id = device->getSysattrValue("dev");
     }
 
     this->setId(id);
@@ -93,7 +94,7 @@ int USBDevice::parseDeviceType()
 
 int USBDevice::deviceClass2DeviceType()
 {
-    auto bDeviceClass = this->getSdDevcie()->get_sysattr_value("bDeviceClass").toInt(nullptr, 16);
+    auto bDeviceClass = this->getSDDevcie()->getSysattrValue("bDeviceClass").toInt(nullptr, 16);
 
     RETURN_VAL_IF_TRUE(bDeviceClass == USB_DEVICE_CLASS_HUB, DEVICE_TYPE_HUB)
 
@@ -104,9 +105,9 @@ int USBDevice::parseDeviceInterfaceClassType()
 {
     InterfaceClass interfaceClass;
     auto syspath = this->getSyspath();
-    auto sysname = this->getSdDevcie()->get_sysname();
+    auto sysname = this->getSDDevcie()->getSysname();
 
-    RETURN_VAL_IF_TRUE(this->getSyspath().isEmpty() || this->getSdDevcie().isNull(), DEVICE_TYPE_UNKNOWN)
+    RETURN_VAL_IF_TRUE(syspath.isNull() || sysname.isNull(), DEVICE_TYPE_UNKNOWN)
 
     auto childDeviceSyspath = QString::asprintf("%s/%s:1.0",
                                                 syspath.toStdString().c_str(),
@@ -114,11 +115,11 @@ int USBDevice::parseDeviceInterfaceClassType()
 
     RETURN_VAL_IF_FALSE(QFile::exists(childDeviceSyspath), DEVICE_TYPE_UNKNOWN)
 
-    SdDevice childDevice(childDeviceSyspath);
+    SDDevice childDevice(childDeviceSyspath);
 
-    interfaceClass.bInterfaceClass = childDevice.get_sysattr_value("bInterfaceClass").toInt(nullptr, 16);
-    interfaceClass.bInterfaceSubClass = childDevice.get_sysattr_value("bInterfaceSubClass").toInt(nullptr, 16);
-    interfaceClass.bInterfaceProtocol = childDevice.get_sysattr_value("bInterfaceProtocol").toInt(nullptr, 16);
+    interfaceClass.bInterfaceClass = childDevice.getSysattrValue("bInterfaceClass").toInt(nullptr, 16);
+    interfaceClass.bInterfaceSubClass = childDevice.getSysattrValue("bInterfaceSubClass").toInt(nullptr, 16);
+    interfaceClass.bInterfaceProtocol = childDevice.getSysattrValue("bInterfaceProtocol").toInt(nullptr, 16);
 
     return this->interfaceProtocol2DevcieType(interfaceClass);
 }
@@ -185,54 +186,44 @@ int USBDevice::hidProtocol2DevcieType(const InterfaceClass &interface)
 
 void USBDevice::initPermission()
 {
-    auto rule = this->getRule();
+    auto rule = m_DevRule->getRule(m_uid);
 
-    if (rule.isNull())
+    if (rule == nullptr)
     {
         this->setState(DEVICE_STATE_UNAUTHORIED);
         return;
     }
 
-    this->setPermission(rule);
+    this->setPermission(QSharedPointer<Permission>(new Permission{
+        .read = rule->read,
+        .write = rule->write,
+        .execute = rule->execute,
+    }));
 
-    auto authorized = this->getSdDevcie()->get_sysattr_value("authorized").toInt();
-    this->setState((authorized == 1) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
-}
-
-QString USBDevice::getRule()
-{
-    return m_DevRule->findRule(
-        QString::asprintf("SUBSYSTEMS==\"usb\", ATTRS{idVendor}==\"%s\", ATTRS{idProduct}==\"%s\"",
-                          m_idVendor.toStdString().c_str(),
-                          m_idProduct.toStdString().c_str()));
+    this->setState((rule->enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
 }
 
 int USBDevice::setEnable(bool enable)
 {
-    auto rule = this->getRule();
-    auto newRule =
-        QString::asprintf("ACTION==\"*\", SUBSYSTEMS==\"usb\", \
-ATTRS{idVendor}==\"%s\", ATTRS{idProduct}==\"%s\", \
-MODE=\"%s\", RUN=\"/bin/sh -c 'echo %d >/sys/$devpath/authorized'\"",
-                          m_idVendor.toStdString().c_str(),
-                          m_idProduct.toStdString().c_str(),
-                          this->getPermissionMode().toStdString().c_str(),
-                          enable ? 1 : 0);
+    Rule rule;
 
-    if (rule.isNull())
-    {
-        return m_DevRule->addRule(newRule);
-    }
-    else
-    {
-        return m_DevRule->updateRule(rule, newRule);
-    }
-}
+    rule.uid = m_uid;
+    rule.id = this->getId();
+    rule.name = this->getName();
+    rule.idVendor = m_idVendor;
+    rule.idProduct = m_idProduct;
+    rule.enable = enable;
+    rule.type = this->getType();
+    rule.interfaceType = this->getInterfaceType();
+    rule.read = this->getPermission()->read;
+    rule.write = this->getPermission()->write;
+    rule.execute = this->getPermission()->execute;
 
-void USBDevice::update()
-{
-    Device::update();
-    this->initPermission();
+    m_DevRule->addRule(rule);
+
+    this->setState((rule.enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
+    
+    return 0;
 }
 
 }  // namespace KS

@@ -15,9 +15,28 @@
 #pragma once
 
 #include <QObject>
+#include <QSettings>
+#include <QSharedPointer>
 
 namespace KS
 {
+struct Rule
+{
+public:
+    Rule() = default;
+    QString uid;
+    QString id;
+    QString name;
+    QString idVendor;
+    QString idProduct;
+    bool read;
+    bool write;
+    bool execute;
+    bool enable;
+    int type;
+    int interfaceType;
+};
+
 class DeviceRule : public QObject
 {
     Q_OBJECT
@@ -27,15 +46,18 @@ private:
 
 public:
     static DeviceRule *instance();
-    bool addRule(const QString &rule);
-    bool updateRule(const QString &rule, const QString &newRule);
-    QString findRule(const QString &str);
+    void addRule(const Rule &rule);
+    QSharedPointer<Rule> getRule(const QString &uid);
 
 private:
     void init();
-    bool updateRulesToFile();
+    QStringList toUdevRules();
+    QString rule2UdevRule(QSharedPointer<Rule> rule);
+    QString getUdevModeValue(QSharedPointer<Rule> rule);
+    void updateUdevFile();
+    bool groupExisted(const QString group);
 
 private:
-    QStringList m_ruleList;
+    QSettings *m_settings;
 };
 }  // namespace KS
