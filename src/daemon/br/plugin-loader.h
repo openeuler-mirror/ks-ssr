@@ -43,10 +43,10 @@ public:
     PluginCPPLoader(const QString &so_path);
     virtual ~PluginCPPLoader(){};
 
-    virtual bool load();
-    virtual bool activate();
-    virtual bool deactivate();
-    virtual QSharedPointer<BRPluginInterface> getInterface() { return this->interface_; };
+    virtual bool load() override;
+    virtual bool activate() override;
+    virtual bool deactivate() override;
+    virtual QSharedPointer<BRPluginInterface> getInterface() override { return this->interface_; };
 
 private:
     bool load_module();
@@ -69,10 +69,10 @@ public:
     virtual ~PluginPythonLoader(){};
 
 public:
-    virtual bool load();
-    virtual bool activate();
-    virtual bool deactivate();
-    virtual QSharedPointer<BRPluginInterface> getInterface() { return this->interface_; };
+    virtual bool load() override;
+    virtual bool activate() override;
+    virtual bool deactivate() override;
+    virtual QSharedPointer<BRPluginInterface> getInterface() override { return this->interface_; };
 
 private:
     // 包名

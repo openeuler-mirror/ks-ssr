@@ -87,9 +87,7 @@ DeviceList DeviceManager::getDevices()
     auto devices = this->m_devices.values();
 
     // 根据连接时间进行排序
-    qSort(devices.begin(),
-          devices.end(),
-          compareDeviceConnectedTime);
+    std::sort(devices.begin(), devices.end(), compareDeviceConnectedTime);
 
     return devices;
 };
@@ -106,9 +104,7 @@ DeviceList DeviceManager::getDevicesByInterface(int interfaceType)
     }
 
     // 根据连接时间进行排序
-    qSort(devices.begin(),
-          devices.end(),
-          compareDeviceConnectedTime);
+    std::sort(devices.begin(), devices.end(), compareDeviceConnectedTime);
 
     return devices;
 }
@@ -228,11 +224,10 @@ void DeviceManager::remountDevice(const QSharedPointer<Device> device,
     {
         args.append(",noexec");
     }
-    auto command = QString("mount %1 %2 %3").arg(args, mount->device, mount->path);
-    auto exitcode = QProcess::execute(command);
+    auto exitcode = QProcess::execute("mount", {args, mount->device, mount->path});
     if (exitcode != 0)
     {
-        KLOG_WARNING() << "Failed to execute command " << command << ", exitcode is " << exitcode;
+        KLOG_WARNING() << "Failed to execute command " << QString("mount %1 %2 %3").arg(args, mount->device, mount->path) << ", exitcode is " << exitcode;
     }
 }
 

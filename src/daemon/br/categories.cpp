@@ -68,7 +68,7 @@ bool Categories::addCategory(QSharedPointer<Category> category)
 
     if (this->categories_.find(category->name) != this->categories_.end())
     {
-        KLOG_WARNING("The category is already exist. name: %s.", category->name.toLatin1());
+        KLOG_WARNING() << "The category is already exist. name: " << category->name.toLatin1();
         return false;
     }
 

@@ -83,7 +83,7 @@ bool KV::get(const QString &key, QString &value)
         QVector<QString> fields = trim_line.split(split_field_regex).toVector();
         // 只考虑两列的行
         CONTINUE_IF_TRUE(fields.size() != 2);
-        KLOG_DEBUG("Read Line: key: %s, value: %s.", fields[0].toLatin1(), fields[1].toLatin1());
+        KLOG_DEBUG() << "Read Line: key: " << fields[0].toLatin1() << " value: " << fields[1].toLatin1();
 
         if (fields[0] == key)
         {
@@ -104,7 +104,7 @@ bool KV::set(const QString &key, const QString &value)
     auto file_lock = FileLock::createExcusiveLock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
     if (!file_lock)
     {
-        KLOG_WARNING("Failed to lock file %s.", this->conf_path_.toLatin1());
+        KLOG_WARNING() << "Failed to lock file " << this->conf_path_.toLatin1();
         return false;
     }
 
@@ -163,7 +163,7 @@ bool KV::set(const QString &key, const QString &value)
         file.close();
     }
 
-    KLOG_DEBUG("match line: %s is comment: %d.", match_line.toLatin1(), is_match_comment);
+    KLOG_DEBUG() << "match line: " << match_line.toLatin1() << " is comment: " << is_match_comment;
 
     if (match_line.size() > 0)
     {
@@ -173,7 +173,7 @@ bool KV::set(const QString &key, const QString &value)
             if (!is_match_comment)
             {
                 new_contents.replace(match_pos, match_line.size(), this->comment_ + match_line);
-                KLOG_DEBUG("Comment line: %s with %s.", match_line.toLatin1(), this->comment_.toLatin1());
+                KLOG_DEBUG() << "Comment line: " << match_line.toLatin1() << " with " << this->comment_.toLatin1();
             }
         }
         else
@@ -183,7 +183,7 @@ bool KV::set(const QString &key, const QString &value)
             auto replace_line = uncomment_line.replace(second_field_regex, "\\1" + value);
             // auto replace_line = second_field_regex.replace(uncomment_line, 0, "\\g<1>" + value, static_cast<Glib::RegexMatchFlags>(0));
             new_contents.replace(match_pos, match_line.size(), replace_line);
-            KLOG_DEBUG("Replace line: %s with %s.", match_line.toLatin1(), replace_line.toLatin1());
+            KLOG_DEBUG() << "Replace line: " << match_line.toLatin1() << " with " << replace_line.toLatin1();
         }
     }
     else
@@ -192,11 +192,11 @@ bool KV::set(const QString &key, const QString &value)
         if (!value.isEmpty())
         {
             auto new_line = key + this->kv_join_str_ + value + "\n";
-            KLOG_DEBUG("New line: %s.", new_line.toLatin1());
+            KLOG_DEBUG() << "New line: " << new_line.toLatin1();
             new_contents.append(new_line);
         }
     }
-    KLOG_DEBUG("New contents: %s.", new_contents.toLatin1());
+    KLOG_DEBUG() << "New contents: " << new_contents.toLatin1();
     return FileUtils::writeContents(this->conf_path_, new_contents);
 }
 
@@ -208,7 +208,7 @@ bool KV::setAll(const QString &key, const QString &value)
     auto file_lock = FileLock::createExcusiveLock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
     if (!file_lock)
     {
-        KLOG_WARNING("Failed to lock file %s.", this->conf_path_.toLatin1());
+        KLOG_WARNING() << "Failed to lock file " << this->conf_path_.toLatin1();
         return false;
     }
 
@@ -275,7 +275,7 @@ bool KV::setAll(const QString &key, const QString &value)
                 if (!is_match_comment)
                 {
                     new_contents.replace(match_pos, match_line.size(), this->comment_ + match_line);
-                    KLOG_DEBUG("Comment line: %s with %s.", match_line.toLatin1(), this->comment_.toLatin1());
+                    KLOG_DEBUG() << "Comment line: " << match_line.toLatin1() << " with " << this->comment_.toLatin1();
                 }
             }
             else
@@ -285,8 +285,7 @@ bool KV::setAll(const QString &key, const QString &value)
                 auto replace_line = uncomment_line.replace(second_field_regex, "\\1" + value);
                 // auto replace_line = second_field_regex->replace(uncomment_line, 0, "\\g<1>" + value, static_cast<Glib::RegexMatchFlags>(0));
                 new_contents.replace(match_pos, match_line.size(), replace_line);
-                KLOG_DEBUG("contents: %s.", new_contents.toLatin1());
-                KLOG_DEBUG("Replace line: %s with %s.", match_line.toLatin1(), replace_line.toLatin1());
+                KLOG_DEBUG() << "contents: " << new_contents.toLatin1() << ", Replace line: " << match_line.toLatin1() << ", with " << replace_line.toLatin1();
             }
         }
     }
@@ -297,19 +296,19 @@ bool KV::setAll(const QString &key, const QString &value)
         if (!value.isEmpty())
         {
             auto new_line = key + this->kv_join_str_ + value + "\n";
-            KLOG_DEBUG("New line: %s.", new_line.toLatin1());
+            KLOG_DEBUG() << "New line: " << new_line.toLatin1();
             new_contents.append(new_line);
         }
     }
     file.close();
-    KLOG_DEBUG("New contents: %s.", new_contents.toLatin1());
+    KLOG_DEBUG() << "New contents: " << new_contents.toLatin1();
     return FileUtils::writeContents(this->conf_path_, new_contents);
 }
 
 bool KV::del(const QString &key)
 {
     // 这里偷了一个懒，合理做法是需要单独实现删除逻辑，set函数不应该执行删除操作
-    KLOG_DEBUG("Key: %s.", key.toLatin1());
+    KLOG_DEBUG() << "Key: " << key.toLatin1();
     return this->set(key, QString());
 }
 

@@ -189,13 +189,6 @@
             <description>Emit when the reinforcement progress is changed.</description>
         </signal>
 
-        <!-- <signal name="LicenseChanged">
-            <arg name="placeholder" type="b">
-                <summary>The placeholder.</summary>
-            </arg>
-            <description>The license info is changed, you need call function GetLicense to get the newest license info.</description>
-        </signal> -->
-
         <signal name="HomeFreeSpaceRatioLower">
             <arg name="ratio" type="s">
                 <summary>The ratio.</summary>

@@ -138,7 +138,7 @@ void BRDBus::SetStandardType(const uint32_t& standard_type)
 
 void BRDBus::ImportCustomRS(const QString& encoded_standard)
 {
-    KLOG_INFO("Import custom reinforce standard. encoded standard: %s.", encoded_standard);
+    KLOG_INFO() << "Import custom reinforce standard. encoded standard: " << encoded_standard;
 
     BRErrorCode error_code = BRErrorCode::SUCCESS;
     if (!this->configuration_->setCustomRs(encoded_standard, error_code))
@@ -195,7 +195,7 @@ void BRDBus::SetNotificationStatus(const uint32_t& notification_status)
 
 void BRDBus::ImportCustomRA(const QString& encoded_strategy)
 {
-    KLOG_DEBUG("Import custom reinforce strategy. encoded strategy: %s.", encoded_strategy);
+    KLOG_DEBUG() << "Import custom reinforce strategy. encoded strategy: " << encoded_strategy;
     try
     {
         std::ofstream ofs(CUSTOM_RA_STRATEGY_FILEPATH, std::ios_base::out);
@@ -207,8 +207,6 @@ void BRDBus::ImportCustomRA(const QString& encoded_strategy)
         KLOG_WARNING("%s", e.what());
         return;
     }
-    // 这里的 error_code 永远是 SUCCESS ？
-    BRErrorCode error_code = BRErrorCode::SUCCESS;
     if (!configuration_->checkRaStrategy())
     {
         remove(CUSTOM_RA_STRATEGY_FILEPATH);
@@ -219,7 +217,7 @@ void BRDBus::ImportCustomRA(const QString& encoded_strategy)
 
 void BRDBus::SetCheckBox(const QString& reinforcement_name, const bool& checkbox_status)
 {
-    KLOG_DEBUG("reinforcement_name: %s, SetCheckBox", reinforcement_name);
+    KLOG_DEBUG() << "reinforcement_name: " << reinforcement_name << ", SetCheckBox";
     configuration_->setRaCheckbox(reinforcement_name, checkbox_status);
 }
 
@@ -265,9 +263,9 @@ QString BRDBus::GetCategories()
     auto categories = this->categories_->getCategories();
 
     jsonObject["item_count"] = int32_t(categories.size());
-    for (uint32_t i = 0; i < categories.size(); ++i)
+    for (uint32_t i = 0; i < static_cast<uint32_t>(categories.size()); ++i)
     {
-        auto category = categories[i];
+        auto category = categories[static_cast<int>(i)];
 
         QJsonObject jsonObjectTmp;
         jsonObjectTmp["name"] = category->name;
@@ -305,7 +303,7 @@ QString BRDBus::GetRS()
 
 QString BRDBus::GetReinforcements()
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG() << "GetReinforcements";
 
     std::ostringstream ostring_stream;
     Protocol::Reinforcements protocol_reinforcements;
@@ -338,7 +336,7 @@ void BRDBus::ResetReinforcements()
 
 QString BRDBus::GetReinforcement(const QString& name)
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG() << "GetReinforcement";
 
     std::ostringstream ostring_stream;
     auto reinforcement = this->plugins_->getReinforcement(name);
@@ -362,8 +360,7 @@ QString BRDBus::GetReinforcement(const QString& name)
 
 void BRDBus::SetReinforcement(const QString& reinforcement_xml)
 {
-    KLOG_INFO("Set reinforcement parameters.");
-    KLOG_DEBUG("reinforcement_xml : %s", reinforcement_xml);
+    KLOG_DEBUG() << "Set reinforcement parameters, reinforcement_xml : " << reinforcement_xml;
 
     try
     {
@@ -385,16 +382,13 @@ void BRDBus::SetReinforcement(const QString& reinforcement_xml)
 
 void BRDBus::ResetReinforcement(const QString& name)
 {
-    KLOG_INFO("Reset reinforcement parameters. name = %s", name);
-    KLOG_DEBUG("");
+    KLOG_DEBUG() << "Reset reinforcement parameters. name = " << name;
     this->configuration_->delCustomRa(name);
 }
 
 qlonglong BRDBus::Scan(const QStringList& names)
 {
-    KLOG_INFO("Scan. range : %s", names.join(" ").toLocal8Bit());
-    // KLOG_INFO("Scan. range : %s", StrUtils::join(names, " ").c_str());
-    //    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
+    KLOG_INFO() << "Scan. range : " << names.join(" ").toLocal8Bit();
 
     // 已经在扫描则返回错误
     if (this->scan_job_ && this->scan_job_->getState() == BRJobState::BR_JOB_STATE_RUNNING)
@@ -467,7 +461,7 @@ qlonglong BRDBus::Scan(const QStringList& names)
 
 qlonglong BRDBus::Reinforce(const QStringList& names)
 {
-    KLOG_INFO("Reinforce. range : %s", names.join(" ").toLocal8Bit());
+    KLOG_INFO() << "Reinforce. range : " << names.join(" ").toLocal8Bit();
     is_scan_flag_ = false;
     // 已经在加固则返回错误
     if (this->reinforce_job_ && this->reinforce_job_->getState() == BRJobState::BR_JOB_STATE_RUNNING)
@@ -545,8 +539,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                     }
                     param_str = StrUtils::json2str(param);
                 }
-                KLOG_DEBUG("frist fallback name : %s", name);
-                KLOG_DEBUG("frist fallback param_str : %s", param_str);
+                KLOG_DEBUG() << "frist fallback name : " << name << ", frist fallback param_str: " << param_str;
             }
             else if (snapshot_status_ == BRSnapshotStatus::BR_LAST_REINFORCEMENT_STATUS)
             {
@@ -628,7 +621,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
 
 void BRDBus::Cancel(const qlonglong& job_id)
 {
-    KLOG_INFO("Cancel. job id: %d.", job_id);
+    KLOG_INFO("Cancel. job id: %lld.", job_id);
 
     BRErrorCode error_code = BRErrorCode::SUCCESS;
 
@@ -740,7 +733,7 @@ void BRDBus::init()
 
 void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG() << "onScanProcessChangedCb";
 
     Protocol::JobResult scan_result(0, 0, 0);
 
@@ -801,8 +794,11 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
                 {
                     if (!result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toString().isEmpty())
                         iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toObject()).toStdString());
-                    KLOG_DEBUG("fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = %s ", StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toObject()).toLocal8Bit());
-                    KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
+                    KLOG_DEBUG() << "fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = "
+                                 << StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toObject()).toLocal8Bit()
+                                 << "iter_arg : name: " << iter_arg->name().c_str()
+                                 << " value: "
+                                 << iter_arg->value().c_str();
                 }
                 this->configuration_->setCustomRh(rh_reinforcement, RH_BR_OPERATE_DATA_LAST);
             }
@@ -860,7 +856,7 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
 
 void BRDBus::onReinfoceProcessChangedCb(const JobResult& job_result)
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG("onReinfoceProcessChangedCb");
 
     Protocol::JobResult reinforce_result(0, 0, 0);
 
@@ -942,11 +938,8 @@ void BRDBus::homeFreeSpaceRatio(const float space_ratio)
     float homeSpa = 0.1;
     if (space_ratio < homeSpa)
     {
-        KLOG_WARNING("home free space less than 10%.");
-        KLOG_WARNING("homeFreeSpaceRatio %f.", space_ratio);
-
+        KLOG_WARNING() << "home free space less than 10%. homeFreeSpaceRatio " << space_ratio;
         _audit_log(1101, -1, "home free space less than 10%.");
-
         emit HomeFreeSpaceRatioLower(QString(std::to_string(space_ratio).c_str()));
     }
 }
@@ -957,11 +950,8 @@ void BRDBus::rootFreeSpaceRatio(const float space_ratio)
     float rootSpa = 0.1;
     if (space_ratio < rootSpa)
     {
-        KLOG_WARNING("root free space less than 10%.");
-        KLOG_WARNING("rootFreeSpaceRatio %f.", space_ratio);
-
+        KLOG_WARNING() << "root free space less than 10%. rootFreeSpaceRatio " << space_ratio;
         _audit_log(1101, -1, "root free space less than 10%.");
-
         emit RootFreeSpaceRatioLower(QString(std::to_string(space_ratio).c_str()));
     }
 }
@@ -988,21 +978,15 @@ void BRDBus::vmstatSiSo(const QVector<QString> results)
     QString so(results.at(1));
     if (si != "0")
     {
-        KLOG_WARNING("The vmstat swap page si is not 0.");
-        KLOG_WARNING("vmstat si is %s.", results.at(0));
-
+        KLOG_WARNING() << "The vmstat swap page si is not 0. vmstat si is " << results.at(0);
         _audit_log(1101, -1, "The vmstat swap page si is not 0.");
-
         emit VmstatSiSoabnormal(si, so);
     }
 
     if (so != "0")
     {
-        KLOG_WARNING("The vmstat swap page so is not 0.");
-        KLOG_WARNING("vmstat so is %s.", results.at(1));
-
+        KLOG_WARNING() << "The vmstat swap page so is not 0. vmstat so is " << results.at(1);
         _audit_log(1101, -1, "The vmstat swap page so is not 0.");
-
         if (si == "0")
             emit VmstatSiSoabnormal(si, so);
     }

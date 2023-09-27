@@ -118,7 +118,6 @@ int FlowLayout::doLayout(const QRect &rect) const
     int top = 0;
     int right = 0;
     int bottom = 0;
-    int boxTotalHeight = 0;
 
     //    KLOG_DEBUG() << "FlowLayout rect: " << rect;
 
