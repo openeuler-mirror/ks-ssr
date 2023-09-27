@@ -81,11 +81,6 @@ bool Configuration::setStandardType(BRStandardType standard_type)
     RETURN_VAL_IF_TRUE(standard_type == this->getStandardType(), true);
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_STANDARD_TYPE, int32_t(standard_type));
-    // if (!this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_STANDARD_TYPE, int32_t(standard_type)))
-    // {
-    //     KLOG_WARNING("Failed to set standard type.");
-    //     return false;
-    // }
     this->reloadRs();
     return true;
 }
@@ -111,12 +106,6 @@ bool Configuration::setStrategyType(BRStrategyType strategy_type)
     RETURN_VAL_IF_TRUE(strategy_type == this->getStrategyType(), true);
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_STRATEGY_TYPE, int32_t(strategy_type));
-    // if (!this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_STRATEGY_TYPE, int32_t(strategy_type)))
-    // {
-    //     KLOG_WARNING("Failed to set strategy type.");
-    //     return false;
-    // }
-    // this->reloadStrategy();
     return true;
 }
 
@@ -140,13 +129,6 @@ bool Configuration::setTimeScan(int time_scan)
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_TIME_SCAN, int32_t(time_scan));
     return true;
-    // if (!this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_TIME_SCAN, int32_t(time_scan)))
-    // {
-    //     KLOG_WARNING("Failed to set time scan.");
-    //     return false;
-    // }
-    // // this->reloadStrategy();
-    // return true;
 }
 
 BRNotificationStatus Configuration::getNotificationStatus()
@@ -171,13 +153,6 @@ bool Configuration::setNotificationStatus(BRNotificationStatus notification_stat
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_NOTIFICATION_STATUS, int32_t(notification_status));
     return true;
-    // if (!this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_NOTIFICATION_STATUS, int32_t(notification_status)))
-    // {
-    //     KLOG_WARNING("Failed to set notification status.");
-    //     return false;
-    // }
-    // // this->reloadStrategy();
-    // return true;
 }
 
 bool Configuration::checkRaStrategy()
@@ -241,7 +216,6 @@ bool Configuration::setCustomRa(const Protocol::Reinforcement& rs_reinforcement)
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
         CONTINUE_IF_TRUE(iter->name() != rs_reinforcement.name());
-        // iter->checkbox().set("unchecked");
         match_reinforcement = true;
         auto& new_args = rs_reinforcement.arg();
         for (auto new_arg_iter = new_args.begin(); new_arg_iter != new_args.end(); ++new_arg_iter)
@@ -269,7 +243,6 @@ bool Configuration::setCustomRa(const Protocol::Reinforcement& rs_reinforcement)
             auto& arg = (*iter);
             Protocol::ReinforcementArg used_arg(arg.name(), arg.value());
             used_reinforcement.arg().push_back(used_arg);
-            // used_reinforcement.checkbox().set("unchecked");
         }
         ra->reinforcement().push_back(used_reinforcement);
     }
@@ -279,7 +252,7 @@ bool Configuration::setCustomRa(const Protocol::Reinforcement& rs_reinforcement)
 
 void Configuration::delCustomRa(const QString& name)
 {
-    KLOG_DEBUG("delCustomRa name = %s", name.toLatin1());
+    KLOG_DEBUG() << "delCustomRa name = " << name.toLatin1();
     auto ra = this->readRaFromFile();
     bool is_del = false;
 
@@ -332,17 +305,11 @@ bool Configuration::setResourceMonitorStatus(BRResourceMonitor resource_monitor)
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_RESOURCE_MONITOR, int32_t(resource_monitor));
     return true;
-    // if (!this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_RESOURCE_MONITOR, int32_t(resource_monitor)))
-    // {
-    //     KLOG_WARNING("Failed to set resource monitor.");
-    //     return false;
-    // }
-    // return true;
 }
 
 void Configuration::init()
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG("Configuration::init");
     this->configuration_ = new QSettings(this->config_path_, QSettings::NativeFormat);
     this->loadRs();
 }
@@ -372,29 +339,9 @@ void Configuration::loadRs()
     }
 }
 
-// void Configuration::reloadStrategy()
-// {
-//     this->rs_ = this->getFixedRs();
-//     RETURN_IF_FALSE(this->rs_);
-
-//     auto ra_strategy = this->readRaFromFile(CUSTOM_RA_STRATEGY_FILEPATH);
-//     // 将固定不变的加固标准部分和用户修改的自定义部分进行整合
-//     auto& custom_reinforcements = ra_strategy->reinforcement();
-//     for (auto custom_iter = custom_reinforcements.begin(); custom_iter != custom_reinforcements.end(); ++custom_iter)
-//     {
-//         auto& fixed_reinforcements = this->rs_->body().reinforcement();
-//         for (auto fixed_iter = fixed_reinforcements.begin(); fixed_iter != fixed_reinforcements.end(); ++fixed_iter)
-//         {
-//             CONTINUE_IF_TRUE(custom_iter->name() != fixed_iter->name());
-//             this->joinReinforcement((*fixed_iter), (*custom_iter));
-//         }
-//     }
-//     this->rs_changed_.emit();
-// }
-
 QSharedPointer<Protocol::RS> Configuration::getFixedRs()
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG("Configuration::getFixedRs");
 
     QString rs_file_path = (this->getStandardType() == BRStandardType::BR_STANDARD_TYPE_CUSTOM) ? CUSTOM_RS_FILEPATH : SYSTEM_RS_FILEPATH;
 
@@ -415,7 +362,7 @@ QSharedPointer<Protocol::RS> Configuration::getFixedRs()
 
 QSharedPointer<Protocol::RA> Configuration::readRaFromFile()
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG("Configuration::readRaFromFile");
 
     RETURN_VAL_IF_TRUE(!QFileInfo(CUSTOM_RA_FILEPATH).isFile(),
                        QSharedPointer<RA>(new RA()));
@@ -478,7 +425,6 @@ bool Configuration::writeRhToFile(std::shared_ptr<Protocol::ReinforcementHistory
         KLOG_WARNING("%s", e.what());
         return false;
     }
-    //    this->reloadRs();
     return true;
 }
 
@@ -520,9 +466,7 @@ bool Configuration::setCustomRh(const Reinforcement& rs_reinforcement, const QSt
             auto& arg = (*iter);
             Protocol::ReinforcementArg used_arg(arg.name(), arg.value());
             used_reinforcement.arg().push_back(used_arg);
-            // used_reinforcement.checkbox().set("unchecked");
         }
-        //        ra->reinforcement().
         rh->reinforcement().push_back(used_reinforcement);
     }
 
@@ -549,7 +493,7 @@ void Configuration::joinReinforcement(Reinforcement& to_r, const Reinforcement& 
 
 QString Configuration::decryptFile(const QString& filename)
 {
-    KLOG_DEBUG("filename: %s.", filename.toLocal8Bit());
+    KLOG_DEBUG() << "filename: " << filename.toLocal8Bit();
 
     RETURN_VAL_IF_TRUE(filename.isEmpty(), QString());
     RETURN_VAL_IF_TRUE(!QFileInfo(filename).isFile(), QString());
@@ -557,7 +501,7 @@ QString Configuration::decryptFile(const QString& filename)
     QFile file(filename);
     if (!file.open(QIODevice::OpenModeFlag::ReadOnly))
     {
-        KLOG_WARNING("failed to open file: %s fa.", filename);
+        KLOG_WARNING() << "failed to open file: " << filename << " fa.";
     }
     auto encrypted_contents = file.readAll();
     return CryptoHelper::brDecrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_contents);
@@ -565,40 +509,29 @@ QString Configuration::decryptFile(const QString& filename)
 
 int32_t Configuration::getInteger(const QString& group_name, const QString& key, int32_t default_value)
 {
-    int32_t retval = default_value;
-    // IGNORE_EXCEPTION(retval = this->configuration_.getInteger(group_name, key));
-    retval = this->configuration_->value(group_name + '/' + key).toInt();
-    return retval;
+    return this->configuration_->value(group_name + '/' + key, default_value).toInt();
 }
 
 QString Configuration::getString(const QString& group_name, const QString& key)
 {
-    QString retval;
-    // IGNORE_EXCEPTION(retval = this->configuration_.getString(group_name, key));
-    retval = this->configuration_->value(group_name + '/' + key).toInt();
-    return retval;
+    return this->configuration_->value(group_name + '/' + key).toString();
 }
 
 QString Configuration::getDatadirFilename(const QString& group_name, const QString& key)
 {
     auto basename = this->getString(group_name, key);
     RETURN_VAL_IF_TRUE(basename.isEmpty(), QString());
-    // return Glib::build_filename(SSR_BR_INSTALL_DATADIR, basename);
     return QDir::cleanPath(SSR_BR_INSTALL_DATADIR + basename);
 }
 
 void Configuration::setInteger(const QString& group_name, const QString& key, int32_t value)
 {
-    // this->configuration_.set_integer(group_name, key, value);
     this->configuration_->setValue(group_name + '/' + key, value);
-    // return this->saveToFile();
 }
 
 void Configuration::setString(const QString& group_name, const QString& key, const QString& value)
 {
-    // this->configuration_.setString(group_name, key, value);
     this->configuration_->setValue(group_name + '/' + key, value);
-    // return this->saveToFile();
 }
 
 }  // namespace BRDaemon
