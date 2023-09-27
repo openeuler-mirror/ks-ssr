@@ -71,7 +71,7 @@ QSharedPointer<Operation> Job::addOperation(const QString &plugin_name,
 
 bool Job::runSync()
 {
-    KLOG_DEBUG("job id: %d, operation num: %d.", this->job_id_, this->operations_.size());
+    KLOG_DEBUG("job id: %ld, operation num: %d.", this->job_id_, this->operations_.size());
 
     RETURN_VAL_IF_FALSE(this->state_ == BRJobState::BR_JOB_STATE_IDLE, false);
     this->state_ = BRJobState::BR_JOB_STATE_RUNNING;
@@ -99,7 +99,7 @@ bool Job::runSync()
 
 bool Job::runAsync()
 {
-    KLOG_DEBUG("job id: %d, operation num: %d.", this->job_id_, this->operations_.size());
+    KLOG_DEBUG("job id: %ld, operation num: %d.", this->job_id_, this->operations_.size());
 
     RETURN_VAL_IF_FALSE(this->state_ == BRJobState::BR_JOB_STATE_IDLE, false);
     this->state_ = BRJobState::BR_JOB_STATE_RUNNING;
@@ -148,7 +148,7 @@ void Job::run_operation(QSharedPointer<Operation> operation)
     OperationResult result;
     result.operation_id = operation->operation_id;
 
-    KLOG_DEBUG("running operation: %d, job id: %d.", operation->operation_id, operation->job_id);
+    KLOG_DEBUG("running operation: %d, job id: %lu.", operation->operation_id, operation->job_id);
 
     {
         QMutexLocker guard(&(this->operations_mutex_));
@@ -162,7 +162,7 @@ void Job::run_operation(QSharedPointer<Operation> operation)
         result.result = operation->func();
     }
 
-    KLOG_DEBUG("finished operation: %d, job id: %d.", operation->operation_id, operation->job_id);
+    KLOG_DEBUG("finished operation: %d, job id: %ld.", operation->operation_id, operation->job_id);
 
     {
         QMutexLocker guard(&(this->operations_mutex_));

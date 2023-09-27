@@ -80,8 +80,7 @@ int CmdParser::run(int argc, char** argv, QCoreApplication& a)
     this->parser.process(a);
     if (this->parser.positionalArguments().isEmpty())
     {
-#pragma message("无法输出中文")
-        std::cout << "The file path is not specified" << std::endl;
+        std::cout << QObject::tr("The file path is not specified").toStdString() << std::endl;
         return EXIT_FAILURE;
     }
     auto file_path = this->parser.positionalArguments().first();

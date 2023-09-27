@@ -78,7 +78,11 @@ bool PasswordExpired::set(const std::string &args, BRErrorCode &error_code)
     try
     {
         Json::Value values = StrUtils::str2json(args);
-        RETURN_ERROR_IF_FALSE((values[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS].isInt() || values[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS].isInt() || values[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN].isInt() || values[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE].isInt()), BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_FALSE((values[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS].isInt() ||
+                               values[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS].isInt() ||
+                               values[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN].isInt() ||
+                               values[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE].isInt()),
+                              BRErrorCode::ERROR_FAILED);
 
         auto max_days = fmt::format("{0}", values[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS].asInt());
         auto min_days = fmt::format("{0}", values[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS].asInt());
@@ -104,7 +108,7 @@ PasswordComplextiy::PasswordComplextiy()
     this->password_complextiy_config_ = ConfigPAM::create(PASSWORD_COMPLEXTIY_CONF_PATH);
 }
 
-//XXX：还存在问题，参数问题，接口返回的是一个参数的vector，无法转化为key-value形式处理。
+// XXX：还存在问题，参数问题，接口返回的是一个参数的vector，无法转化为key-value形式处理。
 bool PasswordComplextiy::get(std::string &args, BRErrorCode &error_code)
 {
     if (!this->password_complextiy_config_)
@@ -129,7 +133,7 @@ bool PasswordComplextiy::get(std::string &args, BRErrorCode &error_code)
     }
 }
 
-//TODO:有关操作数的问题， 大于 小于 等于 大于等于 小于等于 情况如何确定？是否可以添加操作数作为参数。
+// TODO:有关操作数的问题， 大于 小于 等于 大于等于 小于等于 情况如何确定？是否可以添加操作数作为参数。
 bool PasswordComplextiy::set(const std::string &args, BRErrorCode &error_code)
 {
     if (!this->password_complextiy_config_)

@@ -92,7 +92,7 @@ bool Table::set(const QString &newline, std::function<bool(QVector<QString>)> pr
     auto file_lock = FileLock::createExcusiveLock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
     if (!file_lock)
     {
-        KLOG_WARNING("Failed to lock file %s.", this->conf_path_.toLatin1());
+        KLOG_WARNING() << "Failed to lock file " << this->conf_path_.toLatin1();
         return false;
     }
 
@@ -134,7 +134,7 @@ bool Table::set(const QString &newline, std::function<bool(QVector<QString>)> pr
 
         if (!newline.isEmpty())
         {
-            KLOG_DEBUG("Replace line: %s with %s.", line.toLatin1(), newline.toLatin1());
+            KLOG_DEBUG() << "Replace line: " << line.toLatin1() << ", with " << newline.toLatin1();
             new_contents.append(newline);
             new_contents.push_back('\n');
             has_matched = true;
@@ -142,19 +142,19 @@ bool Table::set(const QString &newline, std::function<bool(QVector<QString>)> pr
         else
         {
             // 值为空则直接删除该行
-            KLOG_DEBUG("Delete line: %s.", line.toLatin1());
+            KLOG_DEBUG() << "Delete line: " << line.toLatin1();
         }
     }
 
     // 如果不存在该行且设置的值不为空，则在最后添加一行
     if (!has_matched && !newline.isEmpty())
     {
-        KLOG_DEBUG("New line: %s.", newline.toLatin1());
+        KLOG_DEBUG() << "New line: %s." << newline.toLatin1();
         new_contents.append(newline);
         new_contents.push_back('\n');
     }
 
-    KLOG_DEBUG("New contents: %s.", new_contents.toLatin1());
+    KLOG_DEBUG() << "New contents: " << new_contents.toLatin1();
     return FileUtils::writeContents(this->conf_path_, new_contents);
 }
 
