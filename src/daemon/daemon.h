@@ -42,6 +42,7 @@ public:
 
 private:
     void init();
+    void loadingDbus();
 
 private:
     static Daemon *m_instance;
