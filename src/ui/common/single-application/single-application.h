@@ -23,8 +23,8 @@
 #pragma once
 
 #include <QtCore/QtGlobal>
-#include "src/ui/common/single-application/application.h"
 #include <QtNetwork/QLocalSocket>
+#include "src/ui/common/single-application/application.h"
 
 namespace KS
 {
@@ -52,12 +52,13 @@ public:
      * block will be user wide.
      * @enum
      */
-    enum Mode {
-        User                    = 1 << 0,
-        System                  = 1 << 1,
-        SecondaryNotification   = 1 << 2,
-        ExcludeAppVersion       = 1 << 3,
-        ExcludeAppPath          = 1 << 4
+    enum Mode
+    {
+        User = 1 << 0,
+        System = 1 << 1,
+        SecondaryNotification = 1 << 2,
+        ExcludeAppVersion = 1 << 3,
+        ExcludeAppPath = 1 << 4
     };
     Q_DECLARE_FLAGS(Options, Mode)
 
@@ -81,7 +82,7 @@ public:
      * Usually 4*timeout would be the worst case (fail) scenario.
      * @see See the corresponding QAPPLICATION_CLASS constructor for reference
      */
-    explicit SingleApplication( int &argc, char *argv[], bool allowSecondary = false, Options options = Mode::User, int timeout = 1000 );
+    explicit SingleApplication(int &argc, char *argv[], bool allowSecondary = false, Options options = Mode::User, int timeout = 1000);
     ~SingleApplication() override;
 
     /**
@@ -127,7 +128,7 @@ public:
      * @note sendMessage() will return false if invoked from the primary
      * instance.
      */
-    bool sendMessage( const QByteArray &message, int timeout = 100 );
+    bool sendMessage(const QByteArray &message, int timeout = 100);
 
     /**
      * @brief Get the set user data.
@@ -139,11 +140,11 @@ public:
      * @brief 添加在构造函数中生成应用程序ID的用户数据
      * 应用程序ID是判断进程是否单例的关键,该方法需要在调用SingleApplication构造之前使用
      */
-    static void addApplicationIDUserData(const QString& userData);
+    static void addApplicationIDUserData(const QString &userData);
 
 Q_SIGNALS:
     void instanceStarted();
-    void receivedMessage( quint32 instanceId, QByteArray message );
+    void receivedMessage(quint32 instanceId, QByteArray message);
 
 private:
     SingleApplicationPrivate *d_ptr;

@@ -47,7 +47,7 @@ private Q_SLOTS:
     void updateExecuteList(bool checked);
     void recertification(bool checked);
     void popDeleteNotify(bool checked);
-    void removeExecuteFile();
+    void removeExecuteFiles();
     void updateRefreshIcon();
 
 private:

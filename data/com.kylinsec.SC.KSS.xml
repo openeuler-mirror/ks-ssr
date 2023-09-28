@@ -26,9 +26,23 @@
             <description>Add file to protected file list.</description>
         </method>
 
+        <method name="AddProtectedFiles">
+            <arg type="as" name="file_list" direction="in">
+                <summary>A file path list.</summary>
+            </arg>
+            <description>Add file list to protected file list.</description>
+        </method>
+
         <method name="AddTrustedFile">
             <arg type="s" name="file_path" direction="in">
                 <summary>A file path.</summary>
+            </arg>
+            <description>Add file to trusted whitelist.</description>
+        </method>
+
+        <method name="AddTrustedFiles">
+            <arg type="as" name="file_list" direction="in">
+                <summary>A file path list.</summary>
             </arg>
             <description>Add file to trusted whitelist.</description>
         </method>
@@ -49,12 +63,26 @@
             </arg>
             <description>Remove file from trusted whitelist.</description>
         </method>
+
+        <method name="RemoveTrustedFiles">
+            <arg type="as" name="file_list" direction="in">
+                <summary>A file path list.</summary>
+            </arg>
+            <description>Remove file list from trusted whitelist.</description>
+        </method>
         
         <method name="RemoveProtectedFile">
             <arg type="s" name="file_path" direction="in">
                 <summary>A file path.</summary>
             </arg>
             <description>Remove file from protected file list.</description>
+        </method>
+
+        <method name="RemoveProtectedFiles">
+            <arg type="as" name="file_list" direction="in">
+                <summary>A file path list.</summary>
+            </arg>
+            <description>Remove file list from protected file list.</description>
         </method>
 
         <method name="SetStorageMode">
