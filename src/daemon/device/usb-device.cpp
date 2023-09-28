@@ -191,9 +191,9 @@ int USBDevice::hidProtocol2DevcieType(const InterfaceClass &interface)
 
 void USBDevice::initPermission()
 {
-    auto config = m_devConfig->getDeviceConfig(m_uid);
+    auto setting = m_devConfig->getDeviceSetting(m_uid);
 
-    if (config == nullptr)
+    if (setting == nullptr)
     {
         this->setState(DEVICE_STATE_UNAUTHORIED);
         this->setDeviceAuthorized();
@@ -201,33 +201,33 @@ void USBDevice::initPermission()
     }
 
     this->setPermission(QSharedPointer<Permission>(new Permission{
-        .read = config->read,
-        .write = config->write,
-        .execute = config->execute,
+        .read = setting->read,
+        .write = setting->write,
+        .execute = setting->execute,
     }));
 
-    this->setState((config->enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
+    this->setState((setting->enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
     this->setDeviceAuthorized();
 }
 
 bool USBDevice::setEnable(bool enable)
 {
-    DeviceConfig config;
+    DeviceSetting setting;
 
-    config.uid = m_uid;
-    config.id = this->getID();
-    config.name = this->getName();
-    config.idVendor = m_idVendor;
-    config.idProduct = m_idProduct;
-    config.enable = enable;
-    config.type = this->getType();
-    config.interfaceType = this->getInterfaceType();
-    config.read = this->getPermission()->read;
-    config.write = this->getPermission()->write;
-    config.execute = this->getPermission()->execute;
+    setting.uid = m_uid;
+    setting.id = this->getID();
+    setting.name = this->getName();
+    setting.idVendor = m_idVendor;
+    setting.idProduct = m_idProduct;
+    setting.enable = enable;
+    setting.type = this->getType();
+    setting.interfaceType = this->getInterfaceType();
+    setting.read = this->getPermission()->read;
+    setting.write = this->getPermission()->write;
+    setting.execute = this->getPermission()->execute;
 
-    m_devConfig->addConfig(config);
-    this->setState((config.enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
+    m_devConfig->addSetting(setting);
+    this->setState((setting.enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
 
     this->setDeviceAuthorized();
 
