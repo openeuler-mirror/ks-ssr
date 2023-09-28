@@ -12,7 +12,7 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "src/daemon/license/license-proxy.h"
+#include "lib/license/license-proxy.h"
 
 #include <kiran-log/qt5-log-i.h>
 #include <QDBusArgument>
