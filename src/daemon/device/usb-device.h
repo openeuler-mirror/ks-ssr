@@ -37,6 +37,7 @@ public:
     USBDevice(const QString &syspath, QObject *parent = nullptr);
     virtual ~USBDevice();
     virtual bool setEnable(bool enable);
+    virtual void update();
 
 private:
     void init();
