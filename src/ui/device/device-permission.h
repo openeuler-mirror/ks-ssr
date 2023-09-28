@@ -39,7 +39,7 @@ public:
     void setDeviceStatus(const DeviceState &status);
     DeviceState getDeviceStatus();
 
-    void setDevicePermission(int permission);
+    void setDevicePermission(const QString type, int permission);
     int getDevicePermission();
 
 protected:
