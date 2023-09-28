@@ -136,7 +136,8 @@ void TPExecute::recertification(bool checked)
             fileList << trustedInfo.filePath;
         }
     }
-    m_dbusProxy->AddTrustedFiles(fileList).waitForFinished();
+    auto reply = m_dbusProxy->AddTrustedFiles(fileList);
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
 }
 
 void TPExecute::popDeleteNotify(bool checked)
@@ -169,7 +170,8 @@ void TPExecute::removeExecuteFiles()
             fileList << trustedInfo.filePath;
         }
     }
-    m_dbusProxy->RemoveTrustedFiles(fileList).waitForFinished();
+    auto reply = m_dbusProxy->RemoveTrustedFiles(fileList);
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
 }
 
 void TPExecute::updateRefreshIcon()

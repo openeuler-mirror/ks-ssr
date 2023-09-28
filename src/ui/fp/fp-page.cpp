@@ -133,7 +133,8 @@ void FPPage::removeProtectedFiles()
             fileList << trustedInfo.filePath;
         }
     }
-    m_fileProtectedProxy->RemoveProtectedFiles(fileList).waitForFinished();
+    auto reply = m_fileProtectedProxy->RemoveProtectedFiles(fileList);
+    CHECK_ERROR_FOR_DBUS_REPLY(reply)
 }
 
 void FPPage::updateTips(int total)

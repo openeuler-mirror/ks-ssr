@@ -86,8 +86,9 @@ BoxRecord Box::getBoxInfo()
     return m_boxDao->getBox(m_boxID);
 }
 
-bool Box::delBox(const QString &currentPassword)
+int Box::delBox(const QString &currentPassword)
 {
+    int errorEode = KSCErrorCode::SUCCESS;
     // 密码认证
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
@@ -95,7 +96,8 @@ bool Box::delBox(const QString &currentPassword)
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Password error!";
-        return false;
+        errorEode = KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
+        return errorEode;
     }
 
     if (boxInfo.mounted)
@@ -103,7 +105,11 @@ bool Box::delBox(const QString &currentPassword)
         // 如果已挂载则先unmount #5047
         KLOG_DEBUG() << "The box has been mounted and cannot be deleted. uid = " << m_boxID;
 
-        umount();
+        errorEode = umount();
+        if (errorEode != KSCErrorCode::SUCCESS)
+        {
+            return errorEode;
+        }
         // return false;
     }
 
@@ -117,7 +123,7 @@ bool Box::delBox(const QString &currentPassword)
     // 删除数据库
     m_boxDao->delBox(m_boxID);
 
-    return true;
+    return errorEode;
 }
 
 bool Box::mounted()
