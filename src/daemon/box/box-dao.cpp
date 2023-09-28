@@ -43,11 +43,11 @@ void BoxDao::addBox(const QString &boxName,
     execute(cmd);
 }
 
-void BoxDao::modifyMountStatus(const QString &boxID, bool mounted)
+bool BoxDao::modifyMountStatus(const QString &boxID, bool mounted)
 {
     QString cmd = QString("update boxs set mounted ='%1' where boxID='%2';").arg(QString::number(mounted), boxID);
 
-    execute(cmd);
+    return execute(cmd);
 }
 
 void BoxDao::modifyPasswd(const QString &boxID, const QString &encryptpassword)
