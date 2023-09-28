@@ -122,6 +122,14 @@ bool DeviceConfiguration::isIFCEnable(int type)
 
 void DeviceConfiguration::setIFCEnable(int type, bool enable)
 {
+    if (type == INTERFACE_TYPE_USB &&
+        enable)
+    {
+        //开启USB口时，一起开启键盘，鼠标
+        this->setIFCEnable(INTERFACE_TYPE_USB_KBD, true);
+        this->setIFCEnable(INTERFACE_TYPE_USB_MOUSE, true);
+    }
+
     QString group = QString::asprintf("interface%d", type);
 
     m_interfaceSettings->beginGroup(group);

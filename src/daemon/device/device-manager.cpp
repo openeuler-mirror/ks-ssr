@@ -289,4 +289,38 @@ void DeviceManager::handleUdevChangeEvent(SDDevice *sdDevice)
     }
 }
 
+void DeviceManager::triggerInterfaceDevices(int interfaceType)
+{
+    auto type = interfaceType;
+
+    if (interfaceType == INTERFACE_TYPE_USB_KBD ||
+        interfaceType == INTERFACE_TYPE_USB_MOUSE)
+    {
+        type = INTERFACE_TYPE_USB;
+    }
+
+    for (auto device : m_devices)
+    {
+        //重放此接口类型的设备的Udev事件
+        if (device->getInterfaceType() == type)
+        {
+            device->trigger();
+        }
+    }
+}
+
+bool DeviceManager::isSupportHDMIDisable()
+{
+    for (auto device : m_devices)
+    {
+        //重放此接口类型的设备的Udev事件
+        if (device->getInterfaceType() == INTERFACE_TYPE_HDMI)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 }  // namespace KS
