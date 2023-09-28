@@ -40,8 +40,6 @@ Box::Box(const QString &name,
 {
     m_boxDao = new BoxDao;
     m_ecryptFS = new EcryptFS(this);
-
-    init();
 }
 
 QString Box::getBoxID()
@@ -191,6 +189,38 @@ bool Box::modifyBoxPassword(const QString &currentPassword, const QString &newPa
     return true;
 }
 
+bool Box::createBox()
+{
+    // 保险箱已存在数据库中，返回true
+    RETURN_VAL_IF_TRUE(!m_boxDao->getBox(m_boxID).boxName.isEmpty(), true);
+
+    auto passphrase = getRandStr(GET_BOX_PASSPHRASE_BIT);
+    auto sig = m_ecryptFS->addPassphrase(passphrase);
+    if (sig.isEmpty())
+    {
+        KLOG_WARNING() << "generate passphrase fail. check ecryptfs.ko is load!";
+        return false;
+    }
+
+    // aes加密处理 存入数据库
+    auto encryptPassphrase = CryptoHelper::aesEncrypt(passphrase);
+    auto encryptSig = CryptoHelper::aesEncrypt(sig.trimmed());
+    auto encryptPasswd = CryptoHelper::aesEncrypt(m_password);
+
+    // 创建随机uid 暂定为六位字符, 作为唯一标识符
+    m_boxID = getRandBoxUid();
+
+    // 插入数据库
+    m_boxDao->addBox(m_name,
+                     m_boxID,
+                     false,
+                     encryptPasswd,
+                     encryptPassphrase,
+                     encryptSig,
+                     m_userUID);
+    return true;
+}
+
 void Box::initBoxMountStatus()
 {
     // 获取系统中保险箱实际挂载状态
@@ -209,40 +239,23 @@ void Box::initBoxMountStatus()
     process->deleteLater();
 }
 
-void Box::init()
+bool Box::mkdirDataDir()
 {
-    if (m_boxID.isEmpty())
-    {
-        auto passphrase = getRandStr(GET_BOX_PASSPHRASE_BIT);
-        auto sig = m_ecryptFS->addPassphrase(passphrase);
-        if (sig.isEmpty())
-        {
-            KLOG_WARNING() << "generate passphrase fail. check ecryptfs.ko is load!";
-            return;
-        }
-
-        // aes加密处理 存入数据库
-        auto encryptPassphrase = CryptoHelper::aesEncrypt(passphrase);
-        auto encryptSig = CryptoHelper::aesEncrypt(sig.trimmed());
-        auto encryptPasswd = CryptoHelper::aesEncrypt(m_password);
-
-        // 创建随机uid 暂定为六位字符, 作为唯一标识符
-        m_boxID = getRandBoxUid();
-
-        // 插入数据库
-        m_boxDao->addBox(m_name,
-                         m_boxID,
-                         false,
-                         encryptPasswd,
-                         encryptPassphrase,
-                         encryptSig,
-                         m_userUID);
-    }
-
     // 创建对应文件夹 未挂载box
     // name+uid 命名 可区分不同用户下创建的相同文件夹名称
     auto dataPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DATADIR, m_name + m_boxID);
-    m_ecryptFS->mkdirBoxDir(dataPath, getUser());
+    auto result = m_ecryptFS->mkdirBoxDir(dataPath, getUser());
+    // 创建时失败需清除目录与数据库
+    if (!result)
+    {
+        // 删除目录
+        QString dirPath = QString("%1/%2%3").arg(KSC_BOX_MOUNT_DATADIR, m_name, m_boxID);
+        m_ecryptFS->rmBoxDir(dirPath);
+        // 删除数据库
+        m_boxDao->delBox(m_boxID);
+    }
+
+    return result;
 }
 
 // 生成6位不重复uid,作为box标识

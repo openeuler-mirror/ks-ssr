@@ -49,6 +49,9 @@ QString Error::getErrorDesc(KSCErrorCode errorCode)
     case KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD:
         errorDesc = QObject::tr("Failed to create box.");
         break;
+    case KSCErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED:
+        errorDesc = QObject::tr("There is no free space, and the creation of the box failed.");
+        break;
     case KSCErrorCode::ERROR_BM_NOT_FOUND:
         errorDesc = QObject::tr("Box not found!");
         break;
