@@ -23,13 +23,12 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include "ksc-i.h"
-#include "ksc-marcos.h"
 #include "lib/base/crypto-helper.h"
 #include "src/ui/box/box-password-checked.h"
 #include "src/ui/box/box-password-modification.h"
 #include "src/ui/box/box-password-retrieve.h"
 #include "src/ui/box_manager_proxy.h"
-#include "src/ui/common/message-dialog.h"
+#include "src/ui/common/ksc-marcos-ui.h"
 
 namespace KS
 {
@@ -178,19 +177,9 @@ void Box::switchMountedStatus()
     if (mounted)
     {
         auto reply = m_boxManagerProxy->UnMount(m_uid);
-        reply.waitForFinished();
-
-        if (reply.isError())
-        {
-            auto messgeDialog = new MessageDialog(this);
-            messgeDialog->setMessage(reply.error().message());
-
-            int x = window()->x() + messgeDialog->width();
-            int y = window()->y() + messgeDialog->height();
-            messgeDialog->move(x, y);
-            messgeDialog->show();
-            return;
-        }
+        CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
+                                          QString(""),
+                                          window());
     }
     else
     {
@@ -213,15 +202,9 @@ void Box::modifyPassword()
 
     connect(m_modifyPassword, SIGNAL(accepted()), this, SLOT(modifyPasswordAccepted()));
     connect(m_modifyPassword, &BoxPasswordModification::passwdInconsistent, this, [this]
-            {
-                auto message = buildMessageDialog(QString(tr("Please confirm whether the password is consistent.")));
-                message->show();
-            });
+            { POPUP_MESSAGE_DIALOG(QString(tr("Please confirm whether the password is consistent.")), window()); });
     connect(m_modifyPassword, &BoxPasswordModification::inputEmpty, this, [this]
-            {
-                auto message = buildMessageDialog(tr("The input cannot be empty, please improve the information."));
-                message->show();
-            });
+            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."), window()); });
 
     m_modifyPassword->setBoxName(m_name);
 
@@ -250,10 +233,7 @@ void Box::retrievePassword()
     m_retrievePassword->setTitle(tr("Retrieve password"));
     connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
     connect(m_retrievePassword, &RetrieveBoxPassword::inputEmpty, this, [this]
-            {
-                auto message = buildMessageDialog(tr("The input cannot be empty, please improve the information."));
-                message->show();
-            });
+            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."), window()); });
 
     int x = window()->x() + window()->width() / 4 + m_retrievePassword->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_retrievePassword->height() / 8;
@@ -261,62 +241,42 @@ void Box::retrievePassword()
     m_retrievePassword->show();
 }
 
-QWidget *Box::buildMessageDialog(const QString &message)
-{
-    // 此处设置了WA_DeleteOnClose的属性，message页面close时将销毁
-    auto messageDialog = new MessageDialog(window());
-    messageDialog->setMessage(message);
-
-    int x = window()->x() + window()->width() / 4 + messageDialog->width() / 4;
-    int y = window()->y() + window()->height() / 4 + messageDialog->height() / 4;
-    messageDialog->move(x, y);
-
-    return messageDialog;
-}
-
 void Box::modifyPasswordAccepted()
 {
     auto encryptCurrentPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getCurrentPassword());
     auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getNewPassword());
-
     auto reply = m_boxManagerProxy->ModifyBoxPassword(m_uid,
                                                       encryptCurrentPassword,
                                                       encryptNewPassword);
-
-    reply.waitForFinished();
-
-    auto message = buildMessageDialog(QString(reply.isError() ? reply.error().message() : tr("Modify success!")));
-    message->show();
+    CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
+                                      tr("Modify success!"),
+                                      window());
 }
 
 void Box::retrievePasswordAccepted()
 {
     auto encryptPassphrase = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
-
     auto reply = m_boxManagerProxy->RetrieveBoxPassword(m_uid, encryptPassphrase);
-    reply.waitForFinished();
-
-    auto message = buildMessageDialog(reply.isError() ? reply.error().message() : QString(tr("Your box password is %1")).arg(reply.value()));
-    message->show();
+    CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
+                                      QString(tr("Your box password is %1")).arg(reply.value()),
+                                      window());
 }
 
 void Box::inputMountPasswordAccepted()
 {
     auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputMountPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->Mount(m_uid, encryptPasswd);
-    reply.waitForFinished();
-
-    auto message = buildMessageDialog(QString(reply.isError() ? reply.error().message() : tr("Unlock success!")));
-    message->show();
+    CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
+                                      QString(tr("Unlock success!")),
+                                      window());
 }
 
 void Box::inputDelBoxPasswordAccepted()
 {
     auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputDelBoxPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->DelBox(m_uid, encryptPasswd);
-    reply.waitForFinished();
-
-    auto message = buildMessageDialog(QString(reply.isError() ? reply.error().message() : tr("Delete success!")));
-    message->show();
+    CHECK_ERROR_FOR_DBUS_REPLY_RETURN(reply,
+                                      QString(tr("Delete success!")),
+                                      window());
 }
 }  // namespace KS

@@ -18,8 +18,7 @@
 #include <QListView>
 #include <QPainter>
 #include <QStyledItemDelegate>
-#include "include/ksc-marcos.h"
-#include "src/ui/common/message-dialog.h"
+#include "src/ui/common/ksc-marcos-ui.h"
 #include "ui_device-permission.h"
 
 namespace KS
@@ -131,13 +130,7 @@ void DevicePermission::confirm()
 
     if (0 == permissions && state == DeviceState::DEVICE_STATE_ENABLE)
     {
-        auto msgDialog = new MessageDialog(this);
-        msgDialog->setMessage(tr("Please select at least one permission."));
-        int x = window()->x() + window()->width() / 4 + msgDialog->width() / 4;
-        int y = window()->y() + window()->height() / 4 + msgDialog->height() / 4;
-        msgDialog->move(x, y);
-        msgDialog->show();
-        return;
+        POPUP_MESSAGE_DIALOG_RETURN(tr("Please select at least one permission."), this);
     }
 
     if (state != m_status)
