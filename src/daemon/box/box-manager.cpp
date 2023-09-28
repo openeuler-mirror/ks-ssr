@@ -205,6 +205,7 @@ void BoxManager::Mount(const QString &boxID, const QString &password)
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR, message())
     }
 
+    m_serviceWatcher->addWatchedService(message().service());
     emit BoxChanged(boxID);
 }
 
@@ -261,7 +262,7 @@ void BoxManager::UnMount(const QString &boxID)
 BoxManager::BoxManager(QObject *parent) : QObject(parent)
 {
     m_dbusAdaptor = new BoxManagerAdaptor(this);
-
+    m_serviceWatcher = new QDBusServiceWatcher(this);
     init();
 }
 BoxManager::~BoxManager()
@@ -278,6 +279,10 @@ void BoxManager::init()
     }
 
     KS::CryptoHelper::generateRsaKey(RSA_KEY_LENGTH, m_rsaPrivateKey, m_rsaPublicKey);
+
+    m_serviceWatcher->setConnection(connection);
+    m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
+    connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &BoxManager::unMountAllBoxs);
 
     m_boxs.clear();
     BoxDao *boxDao = new BoxDao;
@@ -296,5 +301,19 @@ uint BoxManager::getSenderUid()
     QDBusConnection conn = connection();
     QDBusMessage msg = message();
     return uint(conn.interface()->serviceUid(msg.service()).value());
+}
+
+void BoxManager::unMountAllBoxs(const QString &service)
+{
+    m_serviceWatcher->removeWatchedService(service);
+
+    // 注销用户或重启后，需将数据库中的状态更新为未挂载
+    for (auto box : m_boxs)
+    {
+        if (box->mounted())
+        {
+            box->umount();
+        }
+    }
 }
 }  // namespace KS

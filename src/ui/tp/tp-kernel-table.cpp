@@ -78,7 +78,7 @@ TPKernelModel::TPKernelModel(QObject *parent) : QAbstractTableModel(parent),
                                      KSC_KSS_INIT_DBUS_OBJECT_PATH,
                                      QDBusConnection::systemBus(),
                                      this);
-    connect(m_tpDBusProxy, &KSSDbusProxy::TrustedFilesUpdate, this, &TPKernelModel::updateRecord);
+    connect(m_tpDBusProxy, &KSSDbusProxy::TrustedFilesChange, this, &TPKernelModel::updateRecord);
 
     updateRecord();
 }
