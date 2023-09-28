@@ -4,6 +4,7 @@ project(ks-sc VERSION 1.0)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+# FIXME: 应该改成与版本无关，功能相关的名字，比如 ENABLE_HDMI
 if(_345_GC_)
   add_definitions(-D_345_GC_)
 endif()
