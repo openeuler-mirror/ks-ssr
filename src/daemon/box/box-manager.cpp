@@ -282,7 +282,6 @@ void BoxManager::init()
     m_serviceWatcher->setConnection(connection);
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
     connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &BoxManager::unMountAllBoxs);
-
     m_boxs.clear();
     auto boxDao = new BoxDao;
     auto boxInfoList = boxDao->getBoxs();

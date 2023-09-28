@@ -85,6 +85,10 @@ Q_SIGNALS:  // SIGNALS
 private:
     void init();
 
+    QJsonDocument fileProtectedListToJsonDocument(const QStringList &fileList);
+    bool checkFPDuplicateFiles(const QString &filePath, const QDBusMessage &message);
+    QJsonDocument trustedProtectedListToJsonDocument(const QStringList &fileList);
+
 private:
     void addTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath);
     void addTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList);
