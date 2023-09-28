@@ -20,6 +20,7 @@
 #include <QRandomGenerator>
 #include <QTime>
 #include "config.h"
+#include "include/ksc-error-i.h"
 #include "include/ksc-marcos.h"
 #include "lib/base/crypto-helper.h"
 
@@ -28,18 +29,20 @@ namespace KS
 #define GET_BOX_UID_BIT 6         // 随机生成box的标识符位数
 #define GET_BOX_PASSPHRASE_BIT 8  // 随机生成口令的位数
 
-Box::Box(const QString &name,
-         const QString &password,
-         uint userUID,
-         const QString &boxID,
-         QObject *parent) : QObject(parent),
-                            m_name(name),
-                            m_boxID(boxID),
-                            m_password(password),
-                            m_userUID(userUID)
+Box *Box::create(const QString &name,
+                 const QString &password,
+                 uint userUID,
+                 int &errorCode,
+                 const QString &boxID,
+                 QObject *parent)
 {
-    m_boxDao = new BoxDao;
-    m_ecryptFS = new EcryptFS(this);
+    auto box = new Box(name, password, userUID, boxID, parent);
+    if (!box->init(errorCode))
+    {
+        delete box;
+        box = nullptr;
+    }
+    return box;
 }
 
 QString Box::getBoxID()
@@ -159,12 +162,12 @@ bool Box::mount(const QString &currentPassword)
     return true;
 }
 
-bool Box::umount()
+bool Box::umount(bool isForce)
 {
     auto boxInfo = getBoxInfo();
     auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
 
-    RETURN_VAL_IF_TRUE(!m_ecryptFS->encrypt(mountPath).isEmpty(), false)
+    RETURN_VAL_IF_TRUE(!m_ecryptFS->encrypt(mountPath, isForce).isEmpty(), false)
     // 修改数据库中挂载状态
     m_boxDao->modifyMountStatus(m_boxID, false);
 
@@ -189,7 +192,37 @@ bool Box::modifyBoxPassword(const QString &currentPassword, const QString &newPa
     return true;
 }
 
-bool Box::createBox()
+Box::Box(const QString &name,
+         const QString &password,
+         uint userUID,
+         const QString &boxID,
+         QObject *parent) : QObject(parent),
+                            m_name(name),
+                            m_boxID(boxID),
+                            m_password(password),
+                            m_userUID(userUID)
+{
+    m_boxDao = new BoxDao;
+    m_ecryptFS = new EcryptFS(this);
+}
+
+bool Box::init(int &errorCode)
+{
+    if (!addToDao())
+    {
+        errorCode = KSCErrorCode::ERROR_BM_MOUDLE_UNLOAD;
+        return false;
+    }
+
+    if (!mkdirSourceDir())
+    {
+        errorCode = KSCErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED;
+        return false;
+    }
+    return true;
+}
+
+bool Box::addToDao()
 {
     // 保险箱已存在数据库中，返回true
     RETURN_VAL_IF_TRUE(!m_boxDao->getBox(m_boxID).boxName.isEmpty(), true);
@@ -221,7 +254,7 @@ bool Box::createBox()
     return true;
 }
 
-void Box::initBoxMountStatus()
+void Box::clearMountStatus()
 {
     // 获取系统中保险箱实际挂载状态
     auto process = new QProcess(this);
@@ -239,7 +272,7 @@ void Box::initBoxMountStatus()
     process->deleteLater();
 }
 
-bool Box::mkdirDataDir()
+bool Box::mkdirSourceDir()
 {
     // 创建对应文件夹 未挂载box
     // name+uid 命名 可区分不同用户下创建的相同文件夹名称
