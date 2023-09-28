@@ -12,8 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#ifndef KSSWRAPPER_H
-#define KSSWRAPPER_H
+#pragma once
 
 #include <QObject>
 #include <QProcess>
@@ -84,4 +83,3 @@ private:
     QThread *m_kssInitThread;
 };
 }  // namespace KS
-#endif  // KSSWrapper_H

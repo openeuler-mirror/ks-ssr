@@ -12,8 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#ifndef ECRYPTFS_H
-#define ECRYPTFS_H
+#pragma once
 
 #include <QProcess>
 
@@ -58,4 +57,3 @@ private:
     QString m_errorOutput;
 };
 }  // namespace KS
-#endif  // ECRYPTFS_H

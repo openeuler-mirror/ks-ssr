@@ -130,7 +130,8 @@ void DevicePermission::confirm()
 
     if (0 == permissions && state == DeviceState::DEVICE_STATE_ENABLE)
     {
-        POPUP_MESSAGE_DIALOG_RETURN(tr("Please select at least one permission."), this);
+        POPUP_MESSAGE_DIALOG(tr("Please select at least one permission."));
+        return;
     }
 
     if (state != m_status)
