@@ -345,19 +345,16 @@
         <translation>总共%1条记录</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="141"/>
         <source>Failed to change permission of device!</source>
-        <translation>修改设备权限失败！</translation>
+        <translation type="vanished">修改设备权限失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="159"/>
         <source>Failed to enable device!</source>
-        <translation>启用设备失败！</translation>
+        <translation type="vanished">启用设备失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list.cpp" line="166"/>
         <source>Failed to disable device!</source>
-        <translation>禁用设备失败！</translation>
+        <translation type="vanished">禁用设备失败！</translation>
     </message>
 </context>
 <context>
@@ -591,7 +588,7 @@
     <name>KS::FPPage</name>
     <message>
         <location filename="../src/ui/fp/fp-page.cpp" line="39"/>
-        <location filename="../src/ui/fp/fp-page.cpp" line="140"/>
+        <location filename="../src/ui/fp/fp-page.cpp" line="142"/>
         <source>A total of %1 records</source>
         <translation>总共%1条记录</translation>
     </message>
@@ -653,7 +650,7 @@
 <context>
     <name>KS::PolkitProxy</name>
     <message>
-        <location filename="../src/daemon/common/polkit-proxy.cpp" line="216"/>
+        <location filename="../src/daemon/common/polkit-proxy.cpp" line="217"/>
         <source>Authorization failed.</source>
         <translation>认证失败。</translation>
     </message>
@@ -704,17 +701,17 @@
     <name>KS::TPExecute</name>
     <message>
         <location filename="../src/ui/tp/tp-execute.cpp" line="47"/>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="90"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="91"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation>总共%1条记录，被篡改%2条</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="114"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="115"/>
         <source>Open file</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute.cpp" line="143"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="146"/>
         <source>Please select the content that needs to be removed.</source>
         <translation>请选择要删除的内容。</translation>
     </message>
@@ -750,12 +747,12 @@
 <context>
     <name>KS::TPExecuteTable</name>
     <message>
-        <location filename="../src/ui/tp/tp-execute-table.cpp" line="369"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="363"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute-table.cpp" line="382"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="376"/>
         <source>%1</source>
         <translation></translation>
     </message>
@@ -764,17 +761,17 @@
     <name>KS::TPKernel</name>
     <message>
         <location filename="../src/ui/tp/tp-kernel.cpp" line="43"/>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="82"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="83"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation>总共%1条记录，被篡改%2条</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="106"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="107"/>
         <source>Open file</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel.cpp" line="135"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="138"/>
         <source>Please select the content that needs to be removed.</source>
         <translation>请选择要删除的内容。</translation>
     </message>
@@ -810,13 +807,13 @@
 <context>
     <name>KS::TPKernelTable</name>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="381"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="374"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="395"/>
-        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="412"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="388"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="405"/>
         <source>%1</source>
         <translation></translation>
     </message>
@@ -1020,57 +1017,91 @@
         <translation>文件已在列表中，无需重复添加。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="41"/>
         <source>Failed to switch storage mode.</source>
-        <translation>切换存储模式失败。</translation>
+        <translation type="vanished">切换存储模式失败。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="41"/>
+        <source>There is no trusted card or the trusted card is not supported.</source>
+        <translation>可信卡未接入或不支持可信卡。</translation>
     </message>
     <message>
         <location filename="../lib/base/error.cpp" line="44"/>
+        <source>The pin code is wrong!</source>
+        <translation>pin码错误！</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="47"/>
         <source>Failed to delete box.</source>
         <translation>删除保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="47"/>
+        <location filename="../lib/base/error.cpp" line="50"/>
         <source>Failed to create box.</source>
         <translation>创建保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="50"/>
+        <location filename="../lib/base/error.cpp" line="53"/>
+        <source>Insufficient free space or unknown error, box creation failed.</source>
+        <translation>可用空间不足或未知错误，保险箱创建失败。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="56"/>
         <source>Box not found!</source>
         <translation>保险箱未找到！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="53"/>
+        <location filename="../lib/base/error.cpp" line="59"/>
         <source>The box is exist!</source>
         <translation>保险箱已存在！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="56"/>
+        <location filename="../lib/base/error.cpp" line="62"/>
         <source>The password set to the same as the current password is not supported.</source>
         <translation>新密码不能与当前密码相同。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="59"/>
+        <location filename="../lib/base/error.cpp" line="65"/>
         <source>Busy resources!</source>
         <translation>资源忙碌！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="62"/>
+        <location filename="../lib/base/error.cpp" line="68"/>
         <source>Failed to change the password, please check whether the password is correct.</source>
         <translation>修改密码失败，请检查密码是否正确。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="65"/>
+        <location filename="../lib/base/error.cpp" line="71"/>
         <source>Password error!</source>
         <translation>密码错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="68"/>
+        <location filename="../lib/base/error.cpp" line="74"/>
         <source>Passphrase error!</source>
         <translation>口令错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="72"/>
+        <location filename="../lib/base/error.cpp" line="77"/>
+        <source>Invalid device.</source>
+        <translation>无效的设备。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="80"/>
+        <source>Invalid device permissions.</source>
+        <translation>无效的设备权限。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="83"/>
+        <source>Invalid device interface type.</source>
+        <translation>无效的设备接口类型。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="86"/>
+        <source>The graphics card does not support HDMI interface shutdown.</source>
+        <translation>显卡不支持关闭HDMI接口。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="90"/>
         <source>Unknown error.</source>
         <translation>未知错误。</translation>
     </message>
