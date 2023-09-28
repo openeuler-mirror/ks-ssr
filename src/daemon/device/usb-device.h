@@ -45,6 +45,8 @@ private:
     int parseDeviceInterfaceClassType();
     int interfaceProtocol2DevcieType(const InterfaceClass &interface);
     int hidProtocol2DevcieType(const InterfaceClass &interface);
+    // wireless controller
+    int wcProtocol2DevcieType(const InterfaceClass &interface);
     void initPermission();
     bool isEnable();
     void setDeviceAuthorized();

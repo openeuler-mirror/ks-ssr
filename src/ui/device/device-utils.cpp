@@ -41,6 +41,8 @@ QString DeviceUtils::deviceTypeEnum2Str(DeviceType type)
         return tr("Hub");
     case DEVICE_TYPE_COMMUNICATIONS:
         return tr("Communications");
+    case DEVICE_TYPE_BLUETOOTH:
+        return tr("Bluetooth");
     case DEVICE_TYPE_UNKNOWN:
         return tr("Unknown");
     default:
