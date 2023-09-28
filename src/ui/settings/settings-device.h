@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <QCheckBox>
 #include <QGridLayout>
 #include <QWidget>
 #include "include/ksc-i.h"
@@ -38,12 +39,12 @@ public:
 
 private:
     void initUI();
-    void updateUI();
+    void insertInterfaceWidget();
+    void update();
     QList<Interface> getInterfaces();
-    bool setInterfaceState(bool isEnable, InterfaceType type);
 
 private slots:
-    void handleInterfaceState(bool checked);
+    void setInterfaceState(bool checked);
 
 private:
     DeviceManagerProxy *m_deviceManagerProxy;
@@ -52,5 +53,7 @@ private:
     QGridLayout *m_usbLayout;
     QGridLayout *m_kbdMouseLayout;
     QWidget *m_kbdMouseContent;
+    //绑定接口控制QCheckbox以及接口类型
+    QMap<InterfaceType, QCheckBox *> m_checkboxs;
 };
 }  // namespace KS
