@@ -272,7 +272,6 @@ void TPKernelModel::updateRecord()
                                         .guard = data.value(KSS_JSON_KEY_DATA_GUARD).toInt() == 0 ? false : true};
         m_kernelRecords.push_back(fileRecord);
     }
-
     emit filesUpdate(m_kernelRecords.size());
 }
 
