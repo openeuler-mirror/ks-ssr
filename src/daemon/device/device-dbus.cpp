@@ -110,6 +110,12 @@ QString DeviceDBus::GetInterfaces()
     auto deviceConfiguration = DeviceConfiguration::instance();
     for (int type = INTERFACE_TYPE_USB; type < INTERFACE_TYPE_LAST; ++type)
     {
+#ifndef _345_GC_
+        if (type == INTERFACE_TYPE_HDMI)
+        {
+            continue;
+        }
+#endif
         QJsonObject jsonObj{
             {KSC_DI_JK_TYPE, type},
             {KSC_DI_JK_ENABLE, deviceConfiguration->isIFCEnable(type)}};
