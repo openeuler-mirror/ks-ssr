@@ -144,6 +144,7 @@ void PolkitProxy::checkAuthorization(const QString &action,
 {
     auto checkAuthData = QSharedPointer<CheckAuthData>::create();
     checkAuthData->timer.setInterval(POLKIT_AUTH_CHECK_TIMEOUT * 1000);
+    checkAuthData->timer.start();
     checkAuthData->cancelString = QString("%1-%2").arg(PROJECT_NAME).arg(quint64(&checkAuthData->timer));
     checkAuthData->message = message;
     checkAuthData->handler = handler;
@@ -216,6 +217,7 @@ void PolkitProxy::onFinishCheckAuth(QDBusPendingCallWatcher *watcher, QSharedPoi
         auto replyMessage = checkAuthData->message.createErrorReply(QDBusError::AccessDenied, tr("Authorization failed."));
         QDBusConnection::systemBus().send(replyMessage);
     }
+    checkAuthData->timer.stop();
 }
 }  // namespace KS
 
