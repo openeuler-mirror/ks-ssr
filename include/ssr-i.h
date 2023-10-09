@@ -56,12 +56,6 @@ extern "C"
 #define SSR_KSS_JK_DATA_HASH "hash"
 #define SSR_KSS_JK_DATA_ADD_TIME "time"
 #define SSR_KSS_JK_DATA_GUARD "guard"
-#define BR_DBUS_NAME "com.kylinsec.SSR.BR"
-#define BR_DBUS_OBJECT_PATH "/com/kylinsec/SSR/BR"
-#define BR_DBUS_INTERFACE_NAME "com.kylinsec.SSR.BR"
-
-// 激活对象名称
-#define LICENSE_OBJECT_BR_NAME "KSBRManager"
 
     enum SSRKSSTrustedFileType
     {
@@ -160,108 +154,6 @@ extern "C"
         PERMISSION_TYPE_WRITE = (1 << 1),
         PERMISSION_TYPE_EXEC = (1 << 2)
     };
-
-    // 加固标准类型 加固标准对应着各个加固项，有的加固项用户不需要，就可以自定义导入
-    enum BRStandardType
-    {
-        // 系统默认标准 显示所有加固项，可对所有加固项进行操作
-        BR_STANDARD_TYPE_SYSTEM = 0,
-        // 用户导入的标准（自定义加固标准）显示部分加固项，可对自定义导入的加固项进行操作
-        BR_STANDARD_TYPE_CUSTOM,
-        BR_STANDARD_TYPE_LAST
-    };
-
-    // 加固策略类型 加固策略相当于一个动作类型，可以保留用户的操作（设置加固参数、勾选复选框）
-    enum BRStrategyType
-    {
-        // 系统默认加固策略 所有加固项默认选中并使用默认加固参数
-        BR_STRATEGY_TYPE_SYSTEM = 0,
-        // 用户导入的策略（自定义加固策略）用户可自定义加固参数，勾选状态，可导入导出
-        BR_STRATEGY_TYPE_CUSTOM,
-        BR_STRATEGY_TYPE_LAST
-    };
-
-    // 前台通知提示 开启/关闭
-    enum BRNotificationStatus
-    {
-        // 关闭通知
-        BR_NOTIFICATION_OPEN = 0,
-        // 开启通知
-        BR_NOTIFICATION_CLOSE,
-        BR_NOTIFICATION_OTHER
-    };
-
-    // 加固项状态
-    enum BRReinforcementState
-    {
-        // 未知
-        BR_REINFORCEMENT_STATE_UNKNOWN = 0,
-        // 符合标准
-        BR_REINFORCEMENT_STATE_SAFE = (1 << 0),
-        // 不符合标准
-        BR_REINFORCEMENT_STATE_UNSAFE = (1 << 1),
-        // 未扫描，加固项还未扫描任务就被取消则会变为该状态
-        BR_REINFORCEMENT_STATE_UNSCAN = (1 << 2),
-        // 扫描中
-        BR_REINFORCEMENT_STATE_SCANNING = (1 << 3),
-        // 扫描错误
-        BR_REINFORCEMENT_STATE_SCAN_ERROR = (1 << 4),
-        // 扫描完成
-        BR_REINFORCEMENT_STATE_SCAN_DONE = (1 << 5),
-        // 未加固，加固项还未加固任务就被取消则会变为该状态
-        BR_REINFORCEMENT_STATE_UNREINFORCE = (1 << 6),
-        // 加固错误
-        BR_REINFORCEMENT_STATE_REINFORCE_ERROR = (1 << 7),
-        // 加固中
-        BR_REINFORCEMENT_STATE_REINFORCING = (1 << 8),
-        // 加固完成
-        BR_REINFORCEMENT_STATE_REINFORCE_DONE = (1 << 9)
-    };
-
-    // 加固类型
-    enum BRReinforceType
-    {
-        // 	使用默认方式加固
-        SEE_REINFORCE_TYPE_DEFAULT = 0,
-        // 使用自定义参数加固
-        SEE_REINFORCE_TYPE_CUSTOM
-    };
-
-    // 任务状态
-    enum BRJobState
-    {
-        // 空闲
-        BR_JOB_STATE_IDLE,
-        // 执行中
-        BR_JOB_STATE_RUNNING,
-        // 执行完成
-        BR_JOB_STATE_DONE,
-        // 执行完成(中途被取消)
-        BR_JOB_STATE_CANCEL_DONE
-    };
-
-    // 资源监控
-    enum BRResourceMonitor
-    {
-        // 关闭
-        BR_RESOURCE_MONITOR_CLOSE = 0,
-        // 开启
-        BR_RESOURCE_MONITOR_OPEN,
-        // 其它
-        BR_RESOURCE_MONITOR_OR
-    };
-
-    // 回退状态
-    enum BRSnapshotStatus
-    {
-        // 回到初始状态
-        BR_INITIAL_STATUS = 0,
-        // 回到上一次加固
-        BR_LAST_REINFORCEMENT_STATUS,
-        // 其它
-        BR_OTHER_STATUS
-    };
-
 #ifdef __cplusplus
 }
 #endif

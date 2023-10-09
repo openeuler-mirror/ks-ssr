@@ -20,6 +20,8 @@
 
 namespace KS
 {
+namespace BOX
+{
 BoxCreation::BoxCreation(QWidget *parent) : TitlebarWindow(parent),
                                             m_ui(new Ui::BoxCreation())
 {
@@ -88,5 +90,5 @@ void BoxCreation::onOkClicked()
     m_ui->m_password->setText("");
     m_ui->m_confirmPassword->setText("");
 };
-
+}  // namespace BOX
 }  // namespace KS

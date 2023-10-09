@@ -27,6 +27,8 @@
 
 namespace KS
 {
+namespace DM
+{
 #define DEVICE_SK_ID "id"
 #define DEVICE_SK_NAME "name"
 #define DEVICE_SK_ID_PRODUCT "idProduct"
@@ -408,5 +410,5 @@ DeviceSettingList Configuration::getDeviceSettings()
 
     return settings;
 }
-
+}  // namespace DM
 }  // namespace KS

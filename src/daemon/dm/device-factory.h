@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace DM
+{
 class Device;
 
 class DeviceFactory : public QObject
@@ -29,4 +31,5 @@ public:
     DeviceFactory(QObject* parent = nullptr);
     QSharedPointer<Device> createDevice(SDDevice* device);
 };
+}  // namespace DM
 }  // namespace KS

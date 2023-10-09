@@ -16,6 +16,8 @@
 
 namespace KS
 {
+namespace Settings
+{
 TrustedUserPin::TrustedUserPin(QWidget *parent) : TitlebarWindow(parent),
                                                   m_ui(new Ui::TrustedUserPin)
 {
@@ -73,4 +75,5 @@ void TrustedUserPin::initUI()
                 m_ui->m_userPin->setText("");
             });
 }
+}  // namespace Settings
 }  // namespace KS

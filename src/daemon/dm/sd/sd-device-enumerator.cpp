@@ -18,6 +18,8 @@
 
 namespace KS
 {
+namespace DM
+{
 SDDeviceEnumerator::SDDeviceEnumerator(QObject* parent)
     : QObject(parent),
       m_enumerator(nullptr)
@@ -63,5 +65,5 @@ QList<SDDevice*> SDDeviceEnumerator::getDevices() const
 {
     return m_devices;
 }
-
+}  // namespace DM
 }  // namespace KS

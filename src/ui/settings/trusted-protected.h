@@ -26,6 +26,8 @@ class KSSDbusProxy;
 
 namespace KS
 {
+namespace Settings
+{
 class TrustedUserPin;
 
 class TrustedProtected : public QWidget
@@ -53,4 +55,5 @@ private:
     TrustedUserPin *m_userPin;
     KSSDbusProxy *m_kssDbusProxy;
 };
+}  // namespace Settings
 }  // namespace KS

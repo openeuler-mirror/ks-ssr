@@ -21,7 +21,7 @@
 // MessageDialog设置了关闭即销毁属性
 #define POPUP_MESSAGE_DIALOG(message)                                                 \
     {                                                                                 \
-        auto messageDialog = new MessageDialog(this->window());                       \
+        auto messageDialog = new KS::MessageDialog(this->window());                   \
         messageDialog->setMessage(message);                                           \
         int x = window()->x() + window()->width() / 2 - messageDialog->width() / 2;   \
         int y = window()->y() + window()->height() / 2 - messageDialog->height() / 2; \

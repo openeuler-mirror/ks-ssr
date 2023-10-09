@@ -21,6 +21,8 @@
 
 namespace KS
 {
+namespace DM
+{
 struct Permission
 {
 public:
@@ -88,4 +90,5 @@ private:
 };
 
 using DeviceList = QList<QSharedPointer<Device>>;
+}  // namespace DM
 }  // namespace KS

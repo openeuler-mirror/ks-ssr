@@ -18,14 +18,16 @@
 #include <QPainter>
 #include <QWidgetAction>
 #include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/common/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
-#include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_kernel-protected.h"
 #include "ssr-i.h"
 
 namespace KS
 {
-KernelProtected::KernelProtected(QWidget *parent) : QWidget(parent),
+namespace TP
+{
+KernelProtected::KernelProtected(QWidget *parent) : Page(parent),
                                                     m_ui(new Ui::KernelProtected),
                                                     m_dbusProxy(nullptr),
                                                     m_refreshTimer(nullptr)
@@ -75,6 +77,26 @@ KernelProtected::KernelProtected(QWidget *parent) : QWidget(parent),
 KernelProtected::~KernelProtected()
 {
     delete m_ui;
+}
+
+QString KernelProtected::getNavigationUID()
+{
+    return tr("Trusted protected");
+}
+
+QString KernelProtected::getSidebarUID()
+{
+    return tr("Kernel protecked");
+}
+
+QString KernelProtected::getSidebarIcon()
+{
+    return ":/images/kernel-module-protected";
+}
+
+int KernelProtected::getSelinuxType()
+{
+    return 0;
 }
 
 void KernelProtected::updateTips(int total)
@@ -204,4 +226,5 @@ void KernelProtected::updateRefreshIcon()
     }
 }
 
+}  // namespace TP
 }  // namespace KS

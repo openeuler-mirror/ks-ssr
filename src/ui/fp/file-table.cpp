@@ -33,6 +33,8 @@
 
 namespace KS
 {
+namespace FP
+{
 #define KSS_JSON_KEY_DATA SSR_KSS_JK_DATA
 #define KSS_JSON_KEY_DATA_PATH SSR_KSS_JK_DATA_PATH
 #define KSS_JSON_KEY_DATA_FILE_NAME SSR_KSS_JK_DATA_FILE_NAME
@@ -431,4 +433,5 @@ void FileTable::checkedAllItem(Qt::CheckState checkState)
     }
 }
 
+}  // namespace FP
 }  // namespace KS

@@ -35,6 +35,8 @@
 
 namespace KS
 {
+namespace TP
+{
 enum ExecuteField
 {
     EXECUTE_FIELD_CHECKBOX = 0,
@@ -249,18 +251,18 @@ void ExecuteProtectedModel::updateRecord()
     while (jsonData != jsonDataArray.begin())
     {
         jsonData--;
-        auto _data = jsonData->toObject();
-        auto type = TPUtils::fileTypeEnum2Str(_data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
-        auto status = TPUtils::fileStatusEnum2Str(_data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
+        auto data = jsonData->toObject();
+        auto type = Utils::fileTypeEnum2Str(data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
+        auto status = Utils::fileStatusEnum2Str(data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
 
         auto fileRecord = TrustedRecord{.selected = false,
-                                        .filePath = _data.value(KSS_JSON_KEY_DATA_PATH).toString(),
+                                        .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
                                         .type = type,
                                         .status = status,
-                                        .md5 = _data.value(KSS_JSON_KEY_DATA_HASH).toString()};
+                                        .md5 = data.value(KSS_JSON_KEY_DATA_HASH).toString()};
         m_executeRecords.push_back(fileRecord);
     }
-    emit filesUpdate(m_executeRecords.size());  // NOSONAR
+    emit filesUpdate(m_executeRecords.size());
 }
 
 QList<TrustedRecord> ExecuteProtectedModel::getExecuteRecords()
@@ -323,11 +325,9 @@ ExecuteProtectedTable::ExecuteProtectedTable(QWidget *parent) : QTableView(paren
     m_headerViewProxy->resizeSection(ExecuteField::EXECUTE_FIELD_STATUS, 100);
 
     m_headerViewProxy->setStretchLastSection(true);
-    //    m_headerViewProxy->set(false);
     m_headerViewProxy->setSectionsMovable(false);
-    m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft);
+    m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     m_headerViewProxy->setFixedHeight(24);
-    m_headerViewProxy->setDefaultAlignment(Qt::AlignVCenter);
 
     // 设置垂直列表头
     auto verticalHeader = this->verticalHeader();
@@ -387,4 +387,5 @@ void ExecuteProtectedTable::checkedAllItem(Qt::CheckState checkState)
     }
 }
 
+}  // namespace TP
 }  // namespace KS

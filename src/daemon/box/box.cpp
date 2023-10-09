@@ -27,6 +27,8 @@
 
 namespace KS
 {
+namespace BOX
+{
 #define GET_BOX_UID_BIT 6         // 随机生成box的标识符位数
 #define GET_BOX_PASSPHRASE_BIT 8  // 随机生成口令的位数
 
@@ -88,7 +90,7 @@ BoxRecord Box::getBoxInfo()
 
 int Box::delBox(const QString &currentPassword)
 {
-    int errorEode = (int)SSRErrorCode::SUCCESS;
+    int errorEode = SSRErrorCode::SUCCESS;
     // 密码认证
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
@@ -96,7 +98,7 @@ int Box::delBox(const QString &currentPassword)
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Password error!";
-        errorEode = (int)SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
+        errorEode = SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
         return errorEode;
     }
 
@@ -106,7 +108,7 @@ int Box::delBox(const QString &currentPassword)
         KLOG_DEBUG() << "The box has been mounted and cannot be deleted. uid = " << m_boxID;
 
         errorEode = umount();
-        if (errorEode != (int)SSRErrorCode::SUCCESS)
+        if (errorEode != SSRErrorCode::SUCCESS)
         {
             return errorEode;
         }
@@ -142,14 +144,14 @@ int Box::mount(const QString &currentPassword)
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Mount password error!";
-        return (int)SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
+        return SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
     }
 
     // 已挂载则返回
     if (boxInfo.mounted)
     {
         KLOG_WARNING() << "The box has been mounted and there is no need to repeat the operation. uid = " << m_boxID;
-        return (int)SSRErrorCode::SUCCESS;
+        return SSRErrorCode::SUCCESS;
     }
 
     // 挂载
@@ -160,21 +162,21 @@ int Box::mount(const QString &currentPassword)
     auto mountPath = QString("%1/%2").arg(SSR_BOX_MOUNT_DIR, boxInfo.boxName);
     if (!m_ecryptFS->mkdirBoxDir(mountPath, getUser()))
     {
-        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
 
     auto mountObjectPath = QString("%1/%2%3").arg(SSR_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
     if (!m_ecryptFS->decrypt(mountObjectPath, mountPath, decryptPspr, decryptSig))
     {
-        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
 
     // 修改数据库中挂载状态
     if (!m_boxDao->modifyMountStatus(m_boxID, true))
     {
-        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
-    return (int)SSRErrorCode::SUCCESS;
+    return SSRErrorCode::SUCCESS;
 }
 
 int Box::umount(bool isForce)
@@ -185,24 +187,25 @@ int Box::umount(bool isForce)
     // 修改数据库中挂载状态
     if (!m_boxDao->modifyMountStatus(m_boxID, false))
     {
-        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
 
     if (!m_ecryptFS->encrypt(mountPath, isForce).isEmpty())
     {
         // 挂载失败，将数据库中的数据改回去
         m_boxDao->modifyMountStatus(m_boxID, true);
-        return (int)SSRErrorCode::ERROR_BM_UMOUNT_FAIL;
+        return SSRErrorCode::ERROR_BM_UMOUNT_FAIL;
     }
 
     m_ecryptFS->rmBoxDir(mountPath);
-    return (int)SSRErrorCode::SUCCESS;
+    return SSRErrorCode::SUCCESS;
 }
 
 bool Box::modifyBoxPassword(const QString &currentPassword, const QString &newPassword)
 {
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
+    //    auto decryptBoxPasswordChecked = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, m_password);
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Password error!";
@@ -233,13 +236,13 @@ bool Box::init(int &errorCode)
 {
     if (!addToDao())
     {
-        errorCode = (int)SSRErrorCode::ERROR_BM_MOUDLE_UNLOAD;
+        errorCode = SSRErrorCode::ERROR_BM_MOUDLE_UNLOAD;
         return false;
     }
 
     if (!mkdirSourceDir())
     {
-        errorCode = (int)SSRErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED;
+        errorCode = SSRErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED;
         return false;
     }
     return true;
@@ -351,12 +354,14 @@ QString Box::getRandStr(uint length)
     QString md5 = hash.toHex();
     QString str;
 
+    int num = 0;
     for (uint i = 0; i < length; ++i)
     {
-        int num = QRandomGenerator::global()->bounded(md5.length());
+        num = QRandomGenerator::global()->bounded(md5.length());
         str.insert(i, md5.at(num));
     }
 
     return str;
 }
+}  // namespace BOX
 }  // namespace KS

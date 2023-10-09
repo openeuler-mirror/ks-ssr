@@ -15,6 +15,7 @@
 #pragma once
 
 #include <QWidget>
+#include "src/ui/common/page.h"
 #include "src/ui/device_manager_proxy.h"
 #include "src/ui/dm/device-list-table.h"
 
@@ -25,8 +26,10 @@ class DeviceList;
 
 namespace KS
 {
+namespace DM
+{
 class DevicePermission;
-class DeviceList : public QWidget
+class DeviceList : public Page
 {
     Q_OBJECT
 
@@ -34,6 +37,11 @@ public:
     DeviceList(QWidget *parent = nullptr);
     virtual ~DeviceList();
     void update();
+
+    QString getNavigationUID() override;
+    QString getSidebarUID() override;
+    QString getSidebarIcon() override;
+    int getSelinuxType() override;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -49,4 +57,5 @@ private:
     DevicePermission *m_devicePermission;
     DeviceManagerProxy *m_deviceManagerProxy;
 };
-}  //namespace KS
+}  // namespace DM
+}  // namespace KS

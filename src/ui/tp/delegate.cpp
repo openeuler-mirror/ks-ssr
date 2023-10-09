@@ -20,6 +20,8 @@
 
 namespace KS
 {
+namespace TP
+{
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
@@ -71,16 +73,8 @@ void Delegate::paint(QPainter *painter,
         QPixmap pixmap;
         auto value = index.model()->data(index, Qt::EditRole).toBool();
         pixmap.load(value ? ":/images/checkbox-checked-normal" : ":/images/checkbox-unchecked-normal");
-        //        checkboxStyle.state = value ? QStyle::State_On : QStyle::State_Off;
-        //        checkboxStyle.state |= QStyle::State_Enabled;
-        //        checkboxStyle.iconSize = QSize(20, 20);
-        //        checkboxStyle.rect = option.rect;
-        //        checkboxStyle.rect.setX(option.rect.x() + 2);
-
         auto widget = option.widget;
-
         auto style = widget ? widget->style() : QApplication::style();
-        //        style->drawControl(QStyle::CE_CheckBox, &checkboxStyle, painter);
         style->drawItemPixmap(painter, option.rect, Qt::AlignCenter, pixmap);
     }
     else
@@ -107,4 +101,5 @@ bool Delegate::editorEvent(QEvent *event,
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
+}  // namespace TP
 }  // namespace KS

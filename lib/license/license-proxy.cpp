@@ -77,7 +77,7 @@ QString LicenseProxy::getObjectPath(const QString& objectName)
     }
 
     auto objectPath = args.takeFirst();
-    QDBusObjectPath* path = reinterpret_cast<QDBusObjectPath*>(objectPath.data());
+    QDBusObjectPath* path = (QDBusObjectPath*)objectPath.data();
     return path->path();
 }
 

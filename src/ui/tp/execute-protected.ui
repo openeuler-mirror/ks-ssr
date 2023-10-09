@@ -202,13 +202,13 @@
     </widget>
    </item>
    <item>
-    <widget class="KS::ExecuteProtectedTable" name="m_executeTable" native="true"/>
+    <widget class="KS::TP::ExecuteProtectedTable" name="m_executeTable" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KS::ExecuteProtectedTable</class>
+   <class>KS::TP::ExecuteProtectedTable</class>
    <extends>QWidget</extends>
    <header>src/ui/tp/execute-protected-table.h</header>
    <container>1</container>
