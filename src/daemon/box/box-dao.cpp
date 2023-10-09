@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace BOX
+{
 BoxDao::BoxDao()
 {
     init();
@@ -168,4 +170,5 @@ bool BoxDao::execute(const QString &cmd)
 
     return true;
 }
+}  // namespace BOX
 }  // namespace KS

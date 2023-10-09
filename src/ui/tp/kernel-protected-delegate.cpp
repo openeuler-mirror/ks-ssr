@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace TP
+{
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
@@ -86,4 +88,5 @@ bool KernelProtectedDelegate::editorEvent(QEvent *event,
     return Delegate::editorEvent(event, model, option, index);
 }
 
+}  // namespace TP
 }  // namespace KS

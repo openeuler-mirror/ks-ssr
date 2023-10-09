@@ -23,6 +23,8 @@ class BoxPasswordModification;
 
 namespace KS
 {
+namespace BOX
+{
 class BoxPasswordModification : public TitlebarWindow
 {
     Q_OBJECT
@@ -52,4 +54,5 @@ signals:
 private:
     Ui::BoxPasswordModification *m_ui;
 };
+}  // namespace BOX
 }  // namespace KS

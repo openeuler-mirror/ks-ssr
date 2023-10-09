@@ -39,21 +39,19 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/license/activation.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/license/qrcode-dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/common/pagination.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/sidebar.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/table-delete-notify.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-creation.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-modification.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-retrieve.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-checked.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/fp/fp-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/dm/sidebar-item.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/fp/file-protection.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-list.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-log.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-permission.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/kernel-protected.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/execute-protected.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tp/tp-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tp/table-delete-notify.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-protected.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-user-pin.ui

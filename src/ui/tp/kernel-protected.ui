@@ -205,13 +205,13 @@
     </widget>
    </item>
    <item>
-    <widget class="KS::KernelProtectedTable" name="m_kernelTable" native="true"/>
+    <widget class="KS::TP::KernelProtectedTable" name="m_kernelTable" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KS::KernelProtectedTable</class>
+   <class>KS::TP::KernelProtectedTable</class>
    <extends>QWidget</extends>
    <header>src/ui/tp/kernel-protected-table.h</header>
    <container>1</container>

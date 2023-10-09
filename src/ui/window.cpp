@@ -24,14 +24,18 @@
 #include "lib/license/license-proxy.h"
 #include "src/ui/about.h"
 #include "src/ui/box/box-page.h"
+#include "src/ui/common/loading.h"
+#include "src/ui/common/sidebar.h"
 #include "src/ui/common/single-application/single-application.h"
-#include "src/ui/dm/device-page.h"
-#include "src/ui/fp/fp-page.h"
-#include "src/ui/license/activation.h"
+#include "src/ui/dm/device-list.h"
+#include "src/ui/dm/device-log.h"
+#include "src/ui/fp/file-protection.h"
 #include "src/ui/navigation.h"
 #include "src/ui/settings/dialog.h"
-#include "src/ui/tp/tp-page.h"
+#include "src/ui/tp/execute-protected.h"
+#include "src/ui/tp/kernel-protected.h"
 #include "src/ui/ui_window.h"
+#include "ssr-marcos.h"
 
 namespace KS
 {
@@ -41,6 +45,7 @@ Window::Window() : TitlebarWindow(nullptr),
                    m_ui(new Ui::Window),
                    m_activation(nullptr),
                    m_activateStatus(nullptr),
+                   m_loading(nullptr),
                    m_licenseProxy(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
@@ -57,9 +62,18 @@ Window::~Window()
     delete m_ui;
 }
 
+void Window::resizeEvent(QResizeEvent *event)
+{
+    if (m_loading)
+    {
+        m_loading->setAutoFillBackground(true);
+        m_loading->setFixedSize(720, 408);
+    }
+}
+
 void Window::initActivation()
 {
-    m_activation = new Activation(this);
+    m_activation = new Activation::Activation(this);
     m_licenseProxy = LicenseProxy::getDefault();
 
     if (!m_licenseProxy->isActivated())
@@ -71,7 +85,7 @@ void Window::initActivation()
         m_activation->raise();
         m_activation->show();
     }
-    connect(m_activation, &Activation::closed,
+    connect(m_activation, &Activation::Activation::closed,
             [this]
             {
                 //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
@@ -132,7 +146,7 @@ void Window::initWindow()
     layout->addWidget(btnForMenu);
     layout->setAlignment(Qt::AlignRight);
 
-    connect(m_ui->m_pages, &QStackedWidget::currentChanged, this, &Window::updatePage);
+    connect(m_ui->m_sidebar, &SideBar::itemChanged, this, &Window::updateSidebar);
 }
 
 void Window::initNavigation()
@@ -145,20 +159,78 @@ void Window::initNavigation()
     m_ui->m_navigation->setBtnChecked(0);
 
     // 移除qt designer默认创建的widget
-    while (m_ui->m_pages->currentWidget() != nullptr)
+    while (m_ui->m_stackedPages->currentWidget() != nullptr)
     {
-        auto currentWidget = m_ui->m_pages->currentWidget();
-        m_ui->m_pages->removeWidget(currentWidget);
+        auto currentWidget = m_ui->m_stackedPages->currentWidget();
+        m_ui->m_stackedPages->removeWidget(currentWidget);
         delete currentWidget;
     }
 
-    m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_TP, new TPPage(this));
-    m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_FP, new FPPage());
-    m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_BOX, new BoxPage());
-    m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_DEVICE, new DevicePage());
-    m_ui->m_pages->setCurrentIndex(0);
+    // 可信保护页面需判断是否加载成功
+    auto execute = new TP::ExecuteProtected(this);
+    addPage(execute);
+    addPage(new TP::KernelProtected(this));
+    addPage(new FP::FileProtection(this));
+    addPage(new BOX::BoxPage(this));
+    addPage(new DM::DeviceList(this));
+    addPage(new DM::DeviceLog(this));
+    // 页面加载动画
+    m_loading = new Loading(this);
+    m_loading->setFixedSize(execute->size());
+    m_ui->m_stackedPages->addWidget(m_loading);
 
-    connect(m_ui->m_navigation, SIGNAL(currentCategoryChanged), m_ui->m_pages, SLOT(setCurrentIndex));
+    m_ui->m_stackedPages->setCurrentIndex(0);
+    updatePage();
+    showLoading(execute->getInitialized());
+
+    connect(execute, &TP::ExecuteProtected::initFinished, this, [this]
+            {
+                m_loading->setVisible(false);
+                m_ui->m_sidebar->setEnabled(true);
+                updatePage();
+            });
+
+    connect(m_ui->m_navigation, SIGNAL(currentUIDChanged()), this, SLOT(updatePage()));
+}
+
+void Window::addPage(Page *page)
+{
+    if (!m_pages.contains(page->getNavigationUID()))
+    {
+        QList<Page *> pages;
+        pages.append(page);
+
+        m_pages.insert(page->getNavigationUID(), pages);
+    }
+    else
+    {
+        m_pages.find(page->getNavigationUID()).value().append(page);
+    }
+
+    m_ui->m_stackedPages->addWidget(page);
+}
+
+void Window::showLoading(bool isShow)
+{
+    RETURN_IF_TRUE(isShow)
+
+    if (!m_loading->isVisible())
+    {
+        m_loading->setVisible(true);
+    }
+
+    m_ui->m_stackedPages->setCurrentWidget(m_loading);
+    m_ui->m_sidebar->setEnabled(false);
+}
+
+void Window::clearSidebar()
+{
+    auto count = m_ui->m_sidebar->count();
+    for (auto i = 0; i < count; i++)
+    {
+        auto item = m_ui->m_sidebar->takeItem(0);
+        delete item;
+    }
 }
 
 void Window::popupActiveDialog()
@@ -180,7 +252,7 @@ void Window::updateActivation()
 
 void Window::popupSettingsDialog()
 {
-    auto settingsDialog = new Dialog(this);
+    auto settingsDialog = new Settings::Dialog(this);
 
     auto x = this->x() + this->width() / 4 + settingsDialog->width() / 16;
     auto y = this->y() + this->height() / 4 + settingsDialog->height() / 16;
@@ -218,12 +290,69 @@ void Window::activateMetaObject()
     activateWindow();
 }
 
-void Window::updatePage(int index)
+void Window::updatePage()
 {
-    if (index == CategoryPageType::CATEGORY_PAGE_TYPE_DEVICE)
+    // 清空侧边栏
+    clearSidebar();
+    // 插入侧边栏
+    auto pages = m_pages.find(m_ui->m_navigation->getSelectedUID()).value();
+    RETURN_IF_TRUE(pages.count() == 0)
+    for (auto page : pages)
     {
-        DevicePage *page = qobject_cast<DevicePage *>(m_ui->m_pages->widget(index));
+        auto sidebarUID = page->getSidebarUID();
+        if (sidebarUID != "")
+        {
+            SidebarItem::ItemInfo itemInfo;
+            itemInfo.name = page->getSidebarUID();
+            itemInfo.icon = page->getSidebarIcon();
+            m_ui->m_sidebar->addSideBarItem(new SidebarItem(itemInfo, m_ui->m_sidebar));
+        }
+    }
+    // 更新页面 切换到第一个侧边栏
+    m_ui->m_sidebar->setCurrentRow(0);
+    m_ui->m_stackedPages->setCurrentWidget(pages.first());
+
+    // 没有分侧边栏则隐藏
+    if (m_ui->m_sidebar->count() == 0)
+    {
+        m_ui->m_sidebar->hide();
+    }
+    else
+    {
+        m_ui->m_sidebar->show();
+    }
+
+    // 可信页面需要检测是否加载成功
+    if (tr("Trusted protected") == pages.first()->getNavigationUID())
+    {
+        auto page = qobject_cast<TP::ExecuteProtected *>(pages.first());
+        showLoading(page->getInitialized());
+    }
+
+    // 设备管理页面需要手动刷新设备列表
+    if (tr("Device management") == pages.first()->getNavigationUID())
+    {
+        auto page = qobject_cast<DM::DeviceList *>(pages.first());
         page->update();
+        m_ui->m_sidebar->setEnabled(true);
+    }
+}
+
+void Window::updateSidebar()
+{
+    RETURN_IF_TRUE(m_ui->m_sidebar->count() == 0)
+
+    auto pages = m_pages.find(m_ui->m_navigation->getSelectedUID()).value();
+    RETURN_IF_TRUE(pages.count() == 0)
+
+    for (auto page : pages)
+    {
+        if (page->getSidebarUID() == m_ui->m_sidebar->getSelectedUID())
+        {
+            // 更新页面
+            m_ui->m_stackedPages->setCurrentWidget(page);
+            break;
+        }
     }
 }
 }  // namespace KS

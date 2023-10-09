@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <QLabel>
+#include <QMap>
 #include <QPushButton>
 
 class QPushButton;
@@ -30,6 +32,7 @@ public:
     virtual ~NavigationItem(){};
 
     QAbstractButton *getButton() { return m_icon; };
+    QString getDescription() { return m_description->text(); };
 
 Q_SIGNALS:
     void clicked(bool checked);
@@ -49,14 +52,16 @@ public:
 
     // 导航栏添加分类项
     void addItem(NavigationItem *item);
+    QString getSelectedUID();
     void setBtnChecked(int id);
 
 Q_SIGNALS:
-    void currentCategoryChanged(int index);
+    void currentUIDChanged();
 
 private:
     // 导航图标按钮组
     QButtonGroup *m_items;
+    QMap<int, QString> m_itemUIDs;
 };
 
 }  // namespace KS

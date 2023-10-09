@@ -29,6 +29,8 @@ struct Interface
 
 namespace KS
 {
+namespace Settings
+{
 class RespondDialog;
 class DeviceControl : public QWidget
 {
@@ -62,4 +64,5 @@ private:
     QCheckBox *m_clickedCheckbox;
     RespondDialog *m_respondDlg;
 };
+}  // namespace Settings
 }  // namespace KS
