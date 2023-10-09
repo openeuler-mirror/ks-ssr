@@ -17,12 +17,14 @@
 #include <QLabel>
 #include <QObject>
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/dm/device-utils.h"
+#include "src/ui/dm/utils.h"
 #include "src/ui/settings/respond-dialog.h"
 
 #define INTERFACE_TYPE_PROPERTY "interface type"
 
 namespace KS
+{
+namespace Settings
 {
 DeviceControl::DeviceControl(QWidget *parent) : QWidget(parent),
                                                 m_deviceManagerProxy(nullptr),
@@ -93,7 +95,7 @@ void DeviceControl::insertInterfaceWidget()
             continue;
         }
 
-        auto interfaceName = DeviceUtils::interfaceTypeEnum2Str(interface.type);
+        auto interfaceName = DM::Utils::interfaceTypeEnum2Str(interface.type);
         // 在HDMI接口后面添加（重启后生效）
         if (interface.type == InterfaceType::INTERFACE_TYPE_HDMI)
         {
@@ -209,7 +211,7 @@ void DeviceControl::setInterfaceState(bool checked)
          type == InterfaceType::INTERFACE_TYPE_USB_MOUSE) &&
         state == false)
     {
-        popupMessageDialog(tr("Are you sure to close the %1 interface").arg(DeviceUtils::interfaceTypeEnum2Str(type)));
+        popupMessageDialog(tr("Are you sure to close the %1 interface").arg(DM::Utils::interfaceTypeEnum2Str(type)));
     }
     else
     {
@@ -237,4 +239,5 @@ void DeviceControl::reject()
 {
     m_clickedCheckbox->setChecked(!m_clickedCheckbox->isChecked());
 }
+}  // namespace Settings
 }  // namespace KS

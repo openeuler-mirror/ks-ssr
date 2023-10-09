@@ -19,6 +19,8 @@
 #include "ui_trusted-protected.h"
 namespace KS
 {
+namespace Settings
+{
 TrustedProtected::TrustedProtected(QWidget *parent) : QWidget(parent),
                                                       m_ui(new Ui::TrustedProtected)
 {
@@ -148,4 +150,5 @@ void TrustedProtected::setStorageMode()
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     updateStorageMode();
 }
+}  // namespace Settings
 }  // namespace KS

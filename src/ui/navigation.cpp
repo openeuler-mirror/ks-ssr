@@ -62,10 +62,10 @@ Navigation::Navigation(QWidget *parent) : QWidget(parent)
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
     connect(m_items, &QButtonGroup::idClicked, [this](int id)
-            { Q_EMIT currentCategoryChanged(id); });
+            { Q_EMIT currentUIDChanged(); });
 #else
     connect(m_items, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id)
-            { Q_EMIT currentCategoryChanged(id); });
+            { Q_EMIT currentUIDChanged(); });
 #endif
 }
 
@@ -73,12 +73,18 @@ void Navigation::addItem(NavigationItem *item)
 {
     m_items->addButton(item->getButton(), layout()->count());
     layout()->addWidget(item);
+    m_itemUIDs.insert(layout()->count() - 1, item->getDescription());
+}
 
-    // connect(item, &NavigationItem::clicked, this, [this, item](bool checked)
-    //         {
-    //             auto index = layout()->indexOf(item);
-    //             Q_EMIT currentCategoryChanged(index);
-    //         });
+QString Navigation::getSelectedUID()
+{
+    for (auto itemKey : m_itemUIDs.keys())
+    {
+        if (!m_items->button(itemKey)->isChecked())
+            continue;
+        return m_itemUIDs.value(itemKey);
+    }
+    return "";
 }
 
 void Navigation::setBtnChecked(int id)

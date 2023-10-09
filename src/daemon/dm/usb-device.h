@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace DM
+{
 struct InterfaceClass
 {
 public:
@@ -66,4 +68,5 @@ private:
     用于指定那些厂商没有正确设置硬件中类的硬件信息。*/
     static QMap<QString, int> m_fixedTypes;
 };
+}  // namespace DM
 }  // namespace KS

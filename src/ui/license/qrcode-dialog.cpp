@@ -22,6 +22,8 @@
 
 namespace KS
 {
+namespace Activation
+{
 QRCodeDialog::QRCodeDialog(QWidget *parent) : TitlebarWindow(parent),
                                               ui(new Ui::QRCodeDialog)
 {
@@ -89,4 +91,5 @@ QRCodeDialog::~QRCodeDialog()
 {
     delete ui;
 }
+}  // namespace Activation
 }  // namespace KS

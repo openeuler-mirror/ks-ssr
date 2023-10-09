@@ -20,6 +20,8 @@
 
 namespace KS
 {
+namespace DM
+{
 struct DeviceRecord
 {
 public:
@@ -50,4 +52,5 @@ private:
 private:
     QSettings *m_settings;
 };
+}  // namespace DM
 }  // namespace KS

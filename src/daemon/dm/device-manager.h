@@ -23,8 +23,10 @@
 
 namespace KS
 {
+namespace DM
+{
 class DeviceFactory;
-class DeviceDBus;
+class DBus;
 
 class DeviceManager : public QObject
 {
@@ -89,8 +91,9 @@ private:
     QMap<QString, QSharedPointer<Device>> m_devices;
     DeviceFactory *m_deviceFactory;
     SDDeviceMonitor m_sdDeviceMonitor;
-    DeviceDBus *m_deviceDBus;
+    DBus *m_deviceDBus;
     QSharedPointer<DeviceLog> m_deviceLog;
     DeviceMountMonitor m_mountMonitor;
 };
+}  // namespace DM
 }  // namespace KS

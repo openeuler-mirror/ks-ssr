@@ -23,6 +23,8 @@ class QThread;
 
 namespace KS
 {
+namespace DM
+{
 struct DeviceSetting
 {
 public:
@@ -100,4 +102,5 @@ private:
     // FIXME: 为了 HDMI 接口的特殊化处理
     bool m_isEnableHDMI;
 };
+}  // namespace DM
 }  // namespace KS

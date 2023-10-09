@@ -17,6 +17,8 @@
 
 namespace KS
 {
+namespace DM
+{
 TableFilterModel::TableFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
 }
@@ -33,4 +35,5 @@ bool TableFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &source
 
     return false;
 }
+}  // namespace DM
 }  // namespace KS

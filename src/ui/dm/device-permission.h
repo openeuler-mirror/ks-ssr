@@ -25,6 +25,8 @@ class DevicePermission;
 
 namespace KS
 {
+namespace DM
+{
 class DevicePermission : public TitlebarWindow
 {
     Q_OBJECT
@@ -61,4 +63,5 @@ private:
     DeviceState m_status;
     int m_permissions;
 };
-}  //namespace KS
+}  // namespace DM
+}  // namespace KS

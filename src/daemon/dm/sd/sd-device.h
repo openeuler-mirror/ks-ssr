@@ -19,6 +19,8 @@ typedef struct sd_device sd_device;
 
 namespace KS
 {
+namespace DM
+{
 class SDDevice : public QObject
 {
     Q_OBJECT
@@ -40,5 +42,5 @@ public:
 private:
     sd_device *m_device;
 };
-
+}  // namespace DM
 }  // namespace KS

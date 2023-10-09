@@ -29,6 +29,8 @@
 
 namespace KS
 {
+namespace Activation
+{
 Activation::Activation(QWidget *parent) : TitlebarWindow(parent),
                                           m_ui(new Ui::Activation),
                                           m_licenseProxy(nullptr),
@@ -37,13 +39,13 @@ Activation::Activation(QWidget *parent) : TitlebarWindow(parent),
     m_ui->setupUi(getWindowContentWidget());
     initUI();
 
-    m_licenseProxy = LicenseProxy::getDefault();
+    m_licenseProxy = KS::LicenseProxy::getDefault();
     update();
 
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &Activation::closed);
     connect(m_ui->m_activate, &QPushButton::clicked, this, &Activation::activate);
 
-    connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Activation::update, Qt::UniqueConnection);
+    connect(m_licenseProxy.data(), &KS::LicenseProxy::licenseChanged, this, &Activation::update, Qt::UniqueConnection);
 }
 
 Activation::~Activation()
@@ -148,4 +150,5 @@ void Activation::update()
     m_ui->m_timeWidget->setVisible(m_licenseProxy->isActivated());
 }
 
+}  // namespace Activation
 }  // namespace KS

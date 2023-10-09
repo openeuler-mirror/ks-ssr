@@ -23,6 +23,8 @@ class Dialog;
 }
 namespace KS
 {
+namespace Settings
+{
 class Dialog : public TitlebarWindow
 {
     Q_OBJECT
@@ -43,4 +45,5 @@ private:
     Ui::Dialog *m_ui;
 };
 
+}  // namespace Settings
 }  // namespace KS

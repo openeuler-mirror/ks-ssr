@@ -18,14 +18,16 @@
 #include <QPainter>
 #include <QWidgetAction>
 #include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/common/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
-#include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_execute-protected.h"
 #include "ssr-i.h"
 
 namespace KS
 {
-ExecuteProtected::ExecuteProtected(QWidget *parent) : QWidget(parent),
+namespace TP
+{
+ExecuteProtected::ExecuteProtected(QWidget *parent) : Page(parent),
                                                       m_ui(new Ui::ExecuteProtected),
                                                       m_dbusProxy(nullptr),
                                                       m_refreshTimer(nullptr)
@@ -83,6 +85,26 @@ ExecuteProtected::~ExecuteProtected()
 bool ExecuteProtected::getInitialized()
 {
     return m_dbusProxy->initialized();
+}
+
+QString ExecuteProtected::getNavigationUID()
+{
+    return tr("Trusted protected");
+}
+
+QString ExecuteProtected::getSidebarUID()
+{
+    return tr("Execute protecked");
+}
+
+QString ExecuteProtected::getSidebarIcon()
+{
+    return ":/images/execution-control";
+}
+
+int ExecuteProtected::getSelinuxType()
+{
+    return 0;
 }
 
 void ExecuteProtected::updateTips(int total)
@@ -202,4 +224,5 @@ void ExecuteProtected::updateRefreshIcon()
     }
 }
 
+}  // namespace TP
 }  // namespace KS

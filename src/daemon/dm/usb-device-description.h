@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace DM
+{
 class USBDeviceDescription : public QObject
 {
     Q_OBJECT
@@ -40,4 +42,5 @@ private:
     QMap<QString, QString> m_descs;
     QString m_prevVendorID;
 };
+}  // namespace DM
 }  // namespace KS

@@ -26,6 +26,8 @@
 
 namespace KS
 {
+namespace DM
+{
 UdevRuleManager *UdevRuleManager::instance()
 {
     static QScopedPointer<UdevRuleManager> pInst;
@@ -164,5 +166,5 @@ MODE=\"%3\", RUN=\"/bin/sh -c 'echo 0 >/sys/$devpath/authorized'\"")
 
     return QString();
 }
-
+}  // namespace DM
 }  // namespace KS

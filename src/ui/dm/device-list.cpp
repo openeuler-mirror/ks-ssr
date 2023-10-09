@@ -25,7 +25,9 @@
 
 namespace KS
 {
-DeviceList::DeviceList(QWidget *parent) : QWidget(parent),
+namespace DM
+{
+DeviceList::DeviceList(QWidget *parent) : Page(parent),
                                           m_ui(new Ui::DeviceList),
                                           m_devicePermission(nullptr),
                                           m_deviceManagerProxy(nullptr)
@@ -35,6 +37,7 @@ DeviceList::DeviceList(QWidget *parent) : QWidget(parent),
 
     //设置搜索框搜索图标
     auto searchButton = new QPushButton(m_ui->m_search);
+    searchButton->setObjectName("searchButton");
     searchButton->setIcon(QIcon(":/images/search"));
     searchButton->setIconSize(QSize(16, 16));
     auto action = new QWidgetAction(m_ui->m_search);
@@ -71,6 +74,26 @@ void DeviceList::update()
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records")).arg(m_ui->m_table->getRowCount());
     m_ui->m_records->setText(text);
+}
+
+QString DeviceList::getNavigationUID()
+{
+    return tr("Device management");
+}
+
+QString DeviceList::getSidebarUID()
+{
+    return tr("Device List");
+}
+
+QString DeviceList::getSidebarIcon()
+{
+    return ":/images/device-list";
+}
+
+int DeviceList::getSelinuxType()
+{
+    return 0;
 }
 
 void DeviceList::paintEvent(QPaintEvent *event)
@@ -152,7 +175,7 @@ void DeviceList::updateState()
     auto id = m_devicePermission->getDeviceID();
     //获取用户选择的状态
     auto state = m_devicePermission->getDeviceStatus();
-    RETURN_IF_TRUE(state != DeviceState::DEVICE_STATE_ENABLE && state != DeviceState::DEVICE_STATE_DISABLE);
+    RETURN_IF_TRUE(state != DEVICE_STATE_ENABLE && state != DEVICE_STATE_DISABLE);
 
     QDBusPendingReply<> reply;
 
@@ -172,4 +195,5 @@ void DeviceList::updateState()
         return;
     }
 }
-}  //namespace KS
+}  // namespace DM
+}  // namespace KS

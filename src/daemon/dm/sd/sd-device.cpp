@@ -20,6 +20,8 @@
 
 namespace KS
 {
+namespace DM
+{
 SDDevice::SDDevice(sd_device* device, QObject* parent)
     : QObject(parent),
       m_device(nullptr)
@@ -121,4 +123,5 @@ void SDDevice::trigger()
 
     file.close();
 }
+}  // namespace DM
 }  // namespace KS

@@ -15,6 +15,7 @@
 
 #include <QTimer>
 #include <QWidget>
+#include "src/ui/common/page.h"
 #include "src/ui/tp/execute-protected-table.h"
 
 namespace Ui
@@ -26,7 +27,9 @@ class TPProxy;
 
 namespace KS
 {
-class ExecuteProtected : public QWidget
+namespace TP
+{
+class ExecuteProtected : public Page
 {
     Q_OBJECT
 public:
@@ -34,6 +37,11 @@ public:
     ~ExecuteProtected();
 
     bool getInitialized();
+
+    QString getNavigationUID() override;
+    QString getSidebarUID() override;
+    QString getSidebarIcon() override;
+    int getSelinuxType() override;
 
 private:
     void updateTips(int total);
@@ -56,4 +64,5 @@ private:
     KSSDbusProxy *m_dbusProxy;
     QTimer *m_refreshTimer;
 };
+}  // namespace TP
 }  // namespace KS

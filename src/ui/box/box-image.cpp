@@ -14,6 +14,10 @@
 #include "box-image.h"
 #include <QPainter>
 
+namespace KS
+{
+namespace BOX
+{
 BoxImage::BoxImage(QWidget *parent, const QString &imagePath) : QWidget(parent)
 {
     setWindowFlag(Qt::FramelessWindowHint);
@@ -38,3 +42,5 @@ void BoxImage::paintEvent(QPaintEvent *event)
 
     QWidget::paintEvent(event);
 }
+}  // namespace BOX
+}  // namespace KS

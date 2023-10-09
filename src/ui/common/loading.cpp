@@ -31,6 +31,7 @@ Loading::Loading(QWidget *parent) : QWidget(parent), m_labLoading(nullptr)
     m_timer->setInterval(50);
     connect(m_timer, &QTimer::timeout, this, &Loading::updatePixmap);
     m_timer->start();
+    setAutoFillBackground(true);
 }
 
 Loading::~Loading()

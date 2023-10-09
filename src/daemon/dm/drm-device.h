@@ -18,6 +18,8 @@
 
 namespace KS
 {
+namespace DM
+{
 class DRMDevice : public Device
 {
     Q_OBJECT
@@ -29,5 +31,5 @@ public:
 private:
     void init();
 };
-
+}  // namespace DM
 }  // namespace KS

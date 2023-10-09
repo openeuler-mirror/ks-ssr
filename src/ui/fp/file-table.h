@@ -20,11 +20,13 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 #include <QWidget>
-#include "src/ui/tp/table-header-proxy.h"
+#include "src/ui/common/table-header-proxy.h"
 
 class KSSDbusProxy;
 
 namespace KS
+{
+namespace FP
 {
 struct FPFileInfo
 {
@@ -122,5 +124,5 @@ private:
     FilesModel *m_model;
     TableHeaderProxy *m_headerViewProxy;
 };
-
+}  // namespace FP
 }  // namespace KS

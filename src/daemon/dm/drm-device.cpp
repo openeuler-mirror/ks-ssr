@@ -18,6 +18,8 @@
 
 namespace KS
 {
+namespace DM
+{
 DRMDevice::DRMDevice(const QString &syspath, QObject *parent) : Device(syspath, parent)
 {
     this->init();
@@ -34,4 +36,5 @@ void DRMDevice::init()
         this->setInterfaceType(INTERFACE_TYPE_HDMI);
     }
 }
+}  // namespace DM
 }  // namespace KS

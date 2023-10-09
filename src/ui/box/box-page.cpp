@@ -28,9 +28,11 @@
 
 namespace KS
 {
-BoxPage::BoxPage() : QWidget(nullptr),
-                     m_ui(new Ui::BoxPage()),
-                     m_createBox(nullptr)
+namespace BOX
+{
+BoxPage::BoxPage(QWidget *parent) : Page(parent),
+                                    m_ui(new Ui::BoxPage()),
+                                    m_createBox(nullptr)
 {
     m_ui->setupUi(this);
 
@@ -47,6 +49,31 @@ BoxPage::BoxPage() : QWidget(nullptr),
     connect(m_boxManagerProxy, SIGNAL(BoxDeleted(const QString &)), this, SLOT(boxDeleted(const QString &)));
     connect(m_boxManagerProxy, SIGNAL(BoxChanged(const QString &)), this, SLOT(boxChanged(const QString &)));
     connect(m_ui->m_newBox, SIGNAL(clicked(bool)), this, SLOT(newBoxClicked(bool)));
+}
+
+BoxPage::~BoxPage()
+{
+    delete m_ui;
+}
+
+QString BoxPage::getNavigationUID()
+{
+    return tr("Private box");
+}
+
+QString BoxPage::getSidebarUID()
+{
+    return "";
+}
+
+QString BoxPage::getSidebarIcon()
+{
+    return "";
+}
+
+int BoxPage::getSelinuxType()
+{
+    return 0;
 }
 
 void BoxPage::initBoxs()
@@ -159,7 +186,7 @@ void BoxPage::createBoxAccepted()
     // 口令
     QString passphrase;
     // rsa加密
-    auto encryptPassword = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_createBox->getPassword());
+    auto encryptPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_createBox->getPassword());
     auto reply = m_boxManagerProxy->CreateBox(m_createBox->getName(),
                                               encryptPassword,
                                               passphrase);
@@ -176,4 +203,5 @@ void BoxPage::createBoxAccepted()
     // 显示消息
     POPUP_MESSAGE_DIALOG(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase));
 }
+}  // namespace BOX
 }  // namespace KS
