@@ -12,6 +12,7 @@
  * Author:     wangxiaoqing <wangxiaoqing@kylinos.com.cn>
  */
 
+#include "src/daemon/dm/dbus.h"
 #include <qt5-log-i.h>
 #include <ssr-error-i.h>
 #include <ssr-i.h>
@@ -20,7 +21,6 @@
 #include "src/daemon/common/polkit-proxy.h"
 #include "src/daemon/device_manager_adaptor.h"
 #include "src/daemon/dm/configuration.h"
-#include "src/daemon/dm/dbus.h"
 #include "src/daemon/dm/device-manager.h"
 
 namespace KS
