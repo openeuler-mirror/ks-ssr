@@ -20,6 +20,7 @@
 #include "src/daemon/box/box-manager.h"
 #include "src/daemon/dm/device-manager.h"
 #include "src/daemon/kss/dbus.h"
+#include "src/daemon/log/manager.h"
 
 namespace KS
 {
@@ -70,5 +71,6 @@ void Daemon::start()
     BRDaemon::Categories::globalInit();
     BRDaemon::Plugins::globalInit(BRDaemon::Configuration::getInstance());
     BRDaemon::BRDBus::globalInit(nullptr);
+    Log::Manager::globalInit();
 }
 }  // namespace KS
