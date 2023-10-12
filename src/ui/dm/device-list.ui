@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FPPage</class>
- <widget class="QWidget" name="FPPage">
+ <class>DeviceList</class>
+ <widget class="QWidget" name="DeviceList">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>925</width>
-    <height>408</height>
+    <width>766</width>
+    <height>402</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -24,26 +27,23 @@
     <number>16</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>24</number>
    </property>
    <property name="bottomMargin">
     <number>4</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>10</number>
+     </property>
      <property name="rightMargin">
-      <number>24</number>
+      <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="label">
-       <property name="minimumSize">
-        <size>
-         <width>420</width>
-         <height>0</height>
-        </size>
-       </property>
+      <widget class="QLabel" name="m_title">
        <property name="text">
-        <string>Protect critical file paths from malicious tampering and deletion</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -61,16 +61,16 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="m_tips">
+      <widget class="QLabel" name="m_records">
        <property name="text">
-        <string>0 records in total</string>
+        <string/>
        </property>
       </widget>
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QWidget" name="m_controlLine" native="true">
+    <widget class="QWidget" name="m_control_line" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="spacing">
        <number>10</number>
@@ -82,19 +82,13 @@
        <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>24</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
        <widget class="QLineEdit" name="m_search">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="minimumSize">
          <size>
           <width>440</width>
@@ -113,7 +107,7 @@
        </widget>
       </item>
       <item>
-       <spacer name="spacer">
+       <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -125,57 +119,19 @@
         </property>
        </spacer>
       </item>
-      <item>
-       <widget class="QPushButton" name="m_add">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>72</width>
-          <height>36</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Add</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="m_unprotect">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>72</width>
-          <height>36</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Unprotect</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
    <item>
-    <widget class="KS::FileTable" name="m_fileTable" native="true"/>
+    <widget class="KS::DeviceListTable" name="m_table" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KS::FileTable</class>
+   <class>KS::DeviceListTable</class>
    <extends>QWidget</extends>
-   <header>src/ui/fp/file-table.h</header>
+   <header>src/ui/dm/device-list-table.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

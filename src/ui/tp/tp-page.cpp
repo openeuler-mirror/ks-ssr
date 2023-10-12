@@ -16,9 +16,9 @@
 #include "config.h"
 #include "src/ui/common/loading.h"
 #include "src/ui/common/message-dialog.h"
-#include "src/ui/device/sidebar-item.h"
-#include "src/ui/tp/tp-execute.h"
-#include "src/ui/tp/tp-kernel.h"
+#include "src/ui/dm/sidebar-item.h"
+#include "src/ui/tp/execute-protected.h"
+#include "src/ui/tp/kernel-protected.h"
 #include "src/ui/ui_tp-page.h"
 #include "ssr-marcos.h"
 
@@ -73,13 +73,13 @@ void TPPage::initSidebar()
 
 void TPPage::initSubPage()
 {
-    auto execute = new TPExecute(m_ui->m_stacked);
-    connect(execute, &TPExecute::initFinished, this, [this]
+    auto execute = new ExecuteProtected(m_ui->m_stacked);
+    connect(execute, &ExecuteProtected::initFinished, this, [this]
             {
                 m_loading->setVisible(false);
                 m_ui->m_sidebar->setEnabled(true);
             });
-    auto kernel = new TPKernel(m_ui->m_stacked);
+    auto kernel = new KernelProtected(m_ui->m_stacked);
 
     m_ui->m_stacked->addWidget(execute);
     m_ui->m_stacked->addWidget(kernel);

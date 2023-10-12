@@ -18,7 +18,7 @@
 #include "include/ssr-i.h"
 #include "lib/license/license-proxy.h"
 #include "src/daemon/box/box-manager.h"
-#include "src/daemon/device/device-manager.h"
+#include "src/daemon/dm/device-manager.h"
 #include "src/daemon/kss/kss-dbus.h"
 
 namespace KS

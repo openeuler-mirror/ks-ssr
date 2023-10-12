@@ -45,7 +45,7 @@ install(
   FILES ${PROJECT_SOURCE_DIR}/data/device-config.ini
         ${PROJECT_SOURCE_DIR}/data/device-interface-config.ini
         ${PROJECT_SOURCE_DIR}/data/device-connect-record.ini
-  DESTINATION ${SSR_INSTALL_DATADIR}/device)
+  DESTINATION ${SSR_INSTALL_DATADIR}/dm)
 
 # udev cfg file
 install(FILES ${PROJECT_SOURCE_DIR}/data/99-ssr-device.rules
