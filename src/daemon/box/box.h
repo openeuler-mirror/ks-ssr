@@ -21,7 +21,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 class Box : public QObject
 {
@@ -78,5 +78,5 @@ private:
 
     EcryptFS *m_ecryptFS;
 };
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

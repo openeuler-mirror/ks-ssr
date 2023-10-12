@@ -121,7 +121,6 @@ void TitlebarLayout::setGeometry(const QRect &rect)
     QSize titleLabelSize = labelTitle->sizeHint();
 
     QSize customWidgetSize = m_customWidgetItem->sizeHint();
-    QSize customWidgetMinSize = m_customWidgetItem->minimumSize();
     QSize rightWidgetSize = m_rightWidgetItem->sizeHint();
 
     /*　居中左右两侧宽度需要同步，计算剩余宽度是否够　*/

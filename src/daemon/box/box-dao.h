@@ -20,7 +20,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 // 记录box信息
 struct BoxRecord
@@ -75,5 +75,5 @@ private:
 private:
     QSqlDatabase m_boxDb;
 };
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

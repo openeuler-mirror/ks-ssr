@@ -17,7 +17,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 Boxs::Boxs(QWidget *parent) : QWidget(parent)
 {
@@ -35,5 +35,5 @@ void Boxs::removeBox(Box *box)
     box->deleteLater();
     box = nullptr;
 }
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

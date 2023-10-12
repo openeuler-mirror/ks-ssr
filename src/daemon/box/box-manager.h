@@ -26,7 +26,7 @@ class BoxManagerAdaptor;
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 class BoxManager : public QObject,
                    protected QDBusContext
@@ -93,5 +93,5 @@ private:
     QString m_rsaPublicKey;  // property
     QString m_rsaPrivateKey;
 };
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

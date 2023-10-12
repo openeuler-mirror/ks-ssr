@@ -172,12 +172,19 @@
 <context>
     <name>DeviceList</name>
     <message>
-        <location filename="../src/ui/dm/device-list.ui" line="14"/>
+        <source>Please enter keyword search</source>
+        <translation type="vanished">请输入关键字搜索</translation>
+    </message>
+</context>
+<context>
+    <name>DeviceListPage</name>
+    <message>
+        <location filename="../src/ui/dm/device-list-page.ui" line="14"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/dm/device-list.ui" line="105"/>
+        <location filename="../src/ui/dm/device-list-page.ui" line="105"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
@@ -185,12 +192,19 @@
 <context>
     <name>DeviceLog</name>
     <message>
-        <location filename="../src/ui/dm/device-log.ui" line="14"/>
+        <source>Please enter keyword search</source>
+        <translation type="vanished">请输入关键字搜索</translation>
+    </message>
+</context>
+<context>
+    <name>DeviceLogPage</name>
+    <message>
+        <location filename="../src/ui/dm/device-log-page.ui" line="14"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/dm/device-log.ui" line="105"/>
+        <location filename="../src/ui/dm/device-log-page.ui" line="105"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
@@ -249,42 +263,65 @@
 <context>
     <name>ExecuteProtected</name>
     <message>
-        <location filename="../src/ui/tp/execute-protected.ui" line="14"/>
+        <source>System core component integrity protection,protection and implementation environment safety</source>
+        <translation type="vanished">系统核心组件的完整性保护，保护执行环境安全</translation>
+    </message>
+    <message>
+        <source>Please enter keyword search</source>
+        <translation type="vanished">请输入关键字搜索</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="vanished">添加</translation>
+    </message>
+    <message>
+        <source>Recertification</source>
+        <translation type="vanished">重新认证</translation>
+    </message>
+    <message>
+        <source>Unprotect</source>
+        <translation type="vanished">移除</translation>
+    </message>
+</context>
+<context>
+    <name>ExecuteProtectedPage</name>
+    <message>
+        <location filename="../src/ui/tp/execute-protected-page.ui" line="14"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.ui" line="46"/>
+        <location filename="../src/ui/tp/execute-protected-page.ui" line="46"/>
         <source>System core component integrity protection,protection and implementation environment safety</source>
         <translation>系统核心组件的完整性保护，保护执行环境安全</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.ui" line="66"/>
+        <location filename="../src/ui/tp/execute-protected-page.ui" line="66"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.ui" line="111"/>
+        <location filename="../src/ui/tp/execute-protected-page.ui" line="111"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.ui" line="143"/>
+        <location filename="../src/ui/tp/execute-protected-page.ui" line="143"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.ui" line="162"/>
+        <location filename="../src/ui/tp/execute-protected-page.ui" line="162"/>
         <source>Recertification</source>
         <translation>重新认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.ui" line="181"/>
+        <location filename="../src/ui/tp/execute-protected-page.ui" line="181"/>
         <source>Unprotect</source>
         <translation>移除</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.ui" line="197"/>
+        <location filename="../src/ui/tp/execute-protected-page.ui" line="197"/>
         <source>...</source>
         <translation></translation>
     </message>
@@ -311,32 +348,51 @@
 <context>
     <name>FileProtection</name>
     <message>
-        <location filename="../src/ui/fp/file-protection.ui" line="14"/>
+        <source>Protect critical file paths from malicious tampering and deletion</source>
+        <translation type="vanished">保护关键文件路径，防止恶意篡改、删除</translation>
+    </message>
+    <message>
+        <source>Please enter keyword search</source>
+        <translation type="vanished">请输入关键字搜索</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="vanished">添加</translation>
+    </message>
+    <message>
+        <source>Unprotect</source>
+        <translation type="vanished">移除</translation>
+    </message>
+</context>
+<context>
+    <name>FileProtectionPage</name>
+    <message>
+        <location filename="../src/ui/fp/file-protection-page.ui" line="14"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/file-protection.ui" line="46"/>
+        <location filename="../src/ui/fp/file-protection-page.ui" line="46"/>
         <source>Protect critical file paths from malicious tampering and deletion</source>
         <translation>保护关键文件路径，防止恶意篡改、删除</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/file-protection.ui" line="66"/>
+        <location filename="../src/ui/fp/file-protection-page.ui" line="66"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/file-protection.ui" line="111"/>
+        <location filename="../src/ui/fp/file-protection-page.ui" line="111"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/file-protection.ui" line="143"/>
+        <location filename="../src/ui/fp/file-protection-page.ui" line="143"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/file-protection.ui" line="162"/>
+        <location filename="../src/ui/fp/file-protection-page.ui" line="162"/>
         <source>Unprotect</source>
         <translation>移除</translation>
     </message>
@@ -355,7 +411,7 @@
     </message>
     <message>
         <source>Security reinforcement sofware V1.0</source>
-        <translation type="vanished">安全加固软件V1.2</translation>
+        <translation type="vanished">安全加固软件V1.0</translation>
     </message>
 </context>
 <context>
@@ -401,6 +457,139 @@
 </context>
 <context>
     <name>KS::BOX::Box</name>
+    <message>
+        <source>Lock</source>
+        <translation type="vanished">上锁</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation type="vanished">解锁</translation>
+    </message>
+    <message>
+        <source>Modify password</source>
+        <translation type="vanished">修改密码</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="vanished">删除</translation>
+    </message>
+    <message>
+        <source>Retrieve the password</source>
+        <translation type="vanished">找回密码</translation>
+    </message>
+    <message>
+        <source>Please confirm whether the password is consistent.</source>
+        <translation type="vanished">请确认两次密码是否一致。</translation>
+    </message>
+    <message>
+        <source>The input cannot be empty, please improve the information.</source>
+        <translation type="vanished">输入不能为空，请输入正确的信息。</translation>
+    </message>
+    <message>
+        <source>Del box</source>
+        <translation type="vanished">删除保险箱</translation>
+    </message>
+    <message>
+        <source>Retrieve password</source>
+        <translation type="vanished">找回密码</translation>
+    </message>
+    <message>
+        <source>Modify success!</source>
+        <translation type="vanished">修改成功！</translation>
+    </message>
+    <message>
+        <source>Your box password is %1</source>
+        <translation type="vanished">您的保险箱密码为：%1</translation>
+    </message>
+    <message>
+        <source>Unlock success!</source>
+        <translation type="vanished">解锁成功！</translation>
+    </message>
+    <message>
+        <source>Delete success!</source>
+        <translation type="vanished">删除成功！</translation>
+    </message>
+</context>
+<context>
+    <name>KS::BOX::BoxPage</name>
+    <message>
+        <source>Private box</source>
+        <translation type="vanished">私密保险箱</translation>
+    </message>
+    <message>
+        <source>Create box</source>
+        <translation type="vanished">创建保险箱</translation>
+    </message>
+    <message>
+        <source>Please confirm whether the password is consistent.</source>
+        <translation type="vanished">请确认两次密码是否一致。</translation>
+    </message>
+    <message>
+        <source>The input cannot be empty, please improve the information.</source>
+        <translation type="vanished">输入不能为空，请输入正确的信息。</translation>
+    </message>
+    <message>
+        <source>Please remember this box passphrase : %1, Can be used to retrieve passwords.</source>
+        <translation type="vanished">请记住您的保险箱口令：%1，可用于找回密码。</translation>
+    </message>
+</context>
+<context>
+    <name>KS::Box</name>
+    <message>
+        <source>Lock</source>
+        <translation type="vanished">上锁</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation type="vanished">解锁</translation>
+    </message>
+    <message>
+        <source>Modify password</source>
+        <translation type="vanished">修改密码</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="vanished">删除</translation>
+    </message>
+    <message>
+        <source>Retrieve the password</source>
+        <translation type="vanished">找回密码</translation>
+    </message>
+    <message>
+        <source>Please confirm whether the password is consistent.</source>
+        <translation type="vanished">请确认两次密码是否一致。</translation>
+    </message>
+    <message>
+        <source>The input cannot be empty, please improve the information.</source>
+        <translation type="vanished">输入不能为空，请输入正确的信息。</translation>
+    </message>
+    <message>
+        <source>Del box</source>
+        <translation type="vanished">删除保险箱</translation>
+    </message>
+    <message>
+        <source>Retrieve password</source>
+        <translation type="vanished">找回密码</translation>
+    </message>
+    <message>
+        <source>Modify success!</source>
+        <translation type="vanished">修改成功！</translation>
+    </message>
+    <message>
+        <source>Your box password is %1</source>
+        <translation type="vanished">您的保险箱密码为：%1</translation>
+    </message>
+    <message>
+        <source>Unlock success!</source>
+        <translation type="vanished">解锁成功！</translation>
+    </message>
+    <message>
+        <source>Delete success!</source>
+        <translation type="vanished">删除成功！</translation>
+    </message>
+</context>
+<context>
+    <name>KS::Box::Box</name>
     <message>
         <location filename="../src/ui/box/box.cpp" line="145"/>
         <location filename="../src/ui/box/box.cpp" line="158"/>
@@ -473,7 +662,7 @@
     </message>
 </context>
 <context>
-    <name>KS::BOX::BoxPage</name>
+    <name>KS::Box::BoxPage</name>
     <message>
         <location filename="../src/ui/box/box-page.cpp" line="61"/>
         <source>Private box</source>
@@ -501,61 +690,6 @@
     </message>
 </context>
 <context>
-    <name>KS::Box</name>
-    <message>
-        <source>Lock</source>
-        <translation type="vanished">上锁</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation type="vanished">解锁</translation>
-    </message>
-    <message>
-        <source>Modify password</source>
-        <translation type="vanished">修改密码</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="vanished">删除</translation>
-    </message>
-    <message>
-        <source>Retrieve the password</source>
-        <translation type="vanished">找回密码</translation>
-    </message>
-    <message>
-        <source>Please confirm whether the password is consistent.</source>
-        <translation type="vanished">请确认两次密码是否一致。</translation>
-    </message>
-    <message>
-        <source>The input cannot be empty, please improve the information.</source>
-        <translation type="vanished">输入不能为空，请输入正确的信息。</translation>
-    </message>
-    <message>
-        <source>Del box</source>
-        <translation type="vanished">删除保险箱</translation>
-    </message>
-    <message>
-        <source>Retrieve password</source>
-        <translation type="vanished">找回密码</translation>
-    </message>
-    <message>
-        <source>Modify success!</source>
-        <translation type="vanished">修改成功！</translation>
-    </message>
-    <message>
-        <source>Your box password is %1</source>
-        <translation type="vanished">您的保险箱密码为：%1</translation>
-    </message>
-    <message>
-        <source>Unlock success!</source>
-        <translation type="vanished">解锁成功！</translation>
-    </message>
-    <message>
-        <source>Delete success!</source>
-        <translation type="vanished">删除成功！</translation>
-    </message>
-</context>
-<context>
     <name>KS::BoxPage</name>
     <message>
         <source>Create box</source>
@@ -577,20 +711,16 @@
 <context>
     <name>KS::DM::DeviceList</name>
     <message>
-        <location filename="../src/ui/dm/device-list.cpp" line="36"/>
-        <location filename="../src/ui/dm/device-list.cpp" line="86"/>
         <source>Device List</source>
-        <translation>设备列表</translation>
+        <translation type="vanished">设备列表</translation>
     </message>
     <message>
-        <location filename="../src/ui/dm/device-list.cpp" line="75"/>
         <source>A total of %1 records</source>
-        <translation>总共%1条记录</translation>
+        <translation type="vanished">总共%1条记录</translation>
     </message>
     <message>
-        <location filename="../src/ui/dm/device-list.cpp" line="81"/>
         <source>Device management</source>
-        <translation>设备管理</translation>
+        <translation type="vanished">设备管理</translation>
     </message>
 </context>
 <context>
@@ -599,6 +729,25 @@
         <location filename="../src/ui/dm/device-list-table.cpp" line="89"/>
         <source>Edit</source>
         <translation>编辑</translation>
+    </message>
+</context>
+<context>
+    <name>KS::DM::DeviceListPage</name>
+    <message>
+        <location filename="../src/ui/dm/device-list-page.cpp" line="36"/>
+        <location filename="../src/ui/dm/device-list-page.cpp" line="86"/>
+        <source>Device List</source>
+        <translation>设备列表</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/dm/device-list-page.cpp" line="75"/>
+        <source>A total of %1 records</source>
+        <translation>总共%1条记录</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/dm/device-list-page.cpp" line="81"/>
+        <source>Device management</source>
+        <translation>设备管理</translation>
     </message>
 </context>
 <context>
@@ -642,18 +791,33 @@
 <context>
     <name>KS::DM::DeviceLog</name>
     <message>
-        <location filename="../src/ui/dm/device-log.cpp" line="34"/>
-        <location filename="../src/ui/dm/device-log.cpp" line="86"/>
+        <source>Device Log</source>
+        <translation type="vanished">设备日志</translation>
+    </message>
+    <message>
+        <source>A total of %1 records</source>
+        <translation type="vanished">总共%1条记录</translation>
+    </message>
+    <message>
+        <source>Device management</source>
+        <translation type="vanished">设备管理</translation>
+    </message>
+</context>
+<context>
+    <name>KS::DM::DeviceLogPage</name>
+    <message>
+        <location filename="../src/ui/dm/device-log-page.cpp" line="34"/>
+        <location filename="../src/ui/dm/device-log-page.cpp" line="86"/>
         <source>Device Log</source>
         <translation>设备日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/dm/device-log.cpp" line="75"/>
+        <location filename="../src/ui/dm/device-log-page.cpp" line="75"/>
         <source>A total of %1 records</source>
         <translation>总共%1条记录</translation>
     </message>
     <message>
-        <location filename="../src/ui/dm/device-log.cpp" line="81"/>
+        <location filename="../src/ui/dm/device-log-page.cpp" line="81"/>
         <source>Device management</source>
         <translation>设备管理</translation>
     </message>
@@ -1041,28 +1205,51 @@
 <context>
     <name>KS::FP::FileProtection</name>
     <message>
-        <location filename="../src/ui/fp/file-protection.cpp" line="41"/>
-        <location filename="../src/ui/fp/file-protection.cpp" line="165"/>
+        <source>A total of %1 records</source>
+        <translation type="vanished">总共%1条记录</translation>
+    </message>
+    <message>
+        <source>File protected</source>
+        <translation type="vanished">文件保护</translation>
+    </message>
+    <message>
+        <source>Open file</source>
+        <translation type="vanished">打开文件</translation>
+    </message>
+    <message>
+        <source>Trusted data needs to be initialised,please wait a few minutes before trying.</source>
+        <translation type="vanished">可信数据需要初始化，请等待几分钟后尝试。</translation>
+    </message>
+    <message>
+        <source>Please select the content that needs to be removed.</source>
+        <translation type="vanished">请选择要删除的内容。</translation>
+    </message>
+</context>
+<context>
+    <name>KS::FP::FileProtectionPage</name>
+    <message>
+        <location filename="../src/ui/fp/file-protection-page.cpp" line="41"/>
+        <location filename="../src/ui/fp/file-protection-page.cpp" line="165"/>
         <source>A total of %1 records</source>
         <translation>总共%1条记录</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/file-protection.cpp" line="67"/>
+        <location filename="../src/ui/fp/file-protection-page.cpp" line="67"/>
         <source>File protected</source>
         <translation>文件保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/file-protection.cpp" line="93"/>
+        <location filename="../src/ui/fp/file-protection-page.cpp" line="93"/>
         <source>Open file</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/file-protection.cpp" line="107"/>
+        <location filename="../src/ui/fp/file-protection-page.cpp" line="107"/>
         <source>Trusted data needs to be initialised,please wait a few minutes before trying.</source>
         <translation>可信数据需要初始化，请等待几分钟后尝试。</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/file-protection.cpp" line="132"/>
+        <location filename="../src/ui/fp/file-protection-page.cpp" line="132"/>
         <source>Please select the content that needs to be removed.</source>
         <translation>请选择要删除的内容。</translation>
     </message>
@@ -1292,30 +1479,24 @@
 <context>
     <name>KS::TP::ExecuteProtected</name>
     <message>
-        <location filename="../src/ui/tp/execute-protected.cpp" line="49"/>
-        <location filename="../src/ui/tp/execute-protected.cpp" line="113"/>
         <source>A total of %1 records, Being tampered with %2</source>
-        <translation>总共%1条记录，被篡改%2条</translation>
+        <translation type="vanished">总共%1条记录，被篡改%2条</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.cpp" line="92"/>
         <source>Trusted protected</source>
-        <translation>可信保护</translation>
+        <translation type="vanished">可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.cpp" line="97"/>
         <source>Execute protecked</source>
-        <translation>执行保护</translation>
+        <translation type="vanished">执行保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.cpp" line="137"/>
         <source>Open file</source>
-        <translation>打开文件</translation>
+        <translation type="vanished">打开文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected.cpp" line="169"/>
         <source>Please select the content that needs to be removed.</source>
-        <translation>请选择要删除的内容。</translation>
+        <translation type="vanished">请选择要删除的内容。</translation>
     </message>
 </context>
 <context>
@@ -1347,6 +1528,35 @@
     </message>
 </context>
 <context>
+    <name>KS::TP::ExecuteProtectedPage</name>
+    <message>
+        <location filename="../src/ui/tp/execute-protected-page.cpp" line="49"/>
+        <location filename="../src/ui/tp/execute-protected-page.cpp" line="113"/>
+        <source>A total of %1 records, Being tampered with %2</source>
+        <translation>总共%1条记录，被篡改%2条</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/execute-protected-page.cpp" line="92"/>
+        <source>Trusted protected</source>
+        <translation>可信保护</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/execute-protected-page.cpp" line="97"/>
+        <source>Execute protecked</source>
+        <translation>执行保护</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/execute-protected-page.cpp" line="137"/>
+        <source>Open file</source>
+        <translation>打开文件</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/execute-protected-page.cpp" line="169"/>
+        <source>Please select the content that needs to be removed.</source>
+        <translation>请选择要删除的内容。</translation>
+    </message>
+</context>
+<context>
     <name>KS::TP::ExecuteProtectedTable</name>
     <message>
         <location filename="../src/ui/tp/execute-protected-table.cpp" line="363"/>
@@ -1362,30 +1572,24 @@
 <context>
     <name>KS::TP::KernelProtected</name>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.cpp" line="45"/>
-        <location filename="../src/ui/tp/kernel-protected.cpp" line="105"/>
         <source>A total of %1 records, Being tampered with %2</source>
-        <translation>总共%1条记录，被篡改%2条</translation>
+        <translation type="vanished">总共%1条记录，被篡改%2条</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.cpp" line="84"/>
         <source>Trusted protected</source>
-        <translation>可信保护</translation>
+        <translation type="vanished">可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.cpp" line="89"/>
         <source>Kernel protecked</source>
-        <translation>内核保护</translation>
+        <translation type="vanished">内核保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.cpp" line="129"/>
         <source>Open file</source>
-        <translation>打开文件</translation>
+        <translation type="vanished">打开文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.cpp" line="161"/>
         <source>Please select the content that needs to be removed.</source>
-        <translation>请选择要删除的内容。</translation>
+        <translation type="vanished">请选择要删除的内容。</translation>
     </message>
 </context>
 <context>
@@ -1414,6 +1618,35 @@
         <location filename="../src/ui/tp/kernel-protected-table.cpp" line="191"/>
         <source>Prohibt unload</source>
         <translation>防卸载</translation>
+    </message>
+</context>
+<context>
+    <name>KS::TP::KernelProtectedPage</name>
+    <message>
+        <location filename="../src/ui/tp/kernel-protected-page.cpp" line="45"/>
+        <location filename="../src/ui/tp/kernel-protected-page.cpp" line="105"/>
+        <source>A total of %1 records, Being tampered with %2</source>
+        <translation>总共%1条记录，被篡改%2条</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/kernel-protected-page.cpp" line="84"/>
+        <source>Trusted protected</source>
+        <translation>可信保护</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/kernel-protected-page.cpp" line="89"/>
+        <source>Kernel protecked</source>
+        <translation>内核保护</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/kernel-protected-page.cpp" line="129"/>
+        <source>Open file</source>
+        <translation>打开文件</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/kernel-protected-page.cpp" line="161"/>
+        <source>Please select the content that needs to be removed.</source>
+        <translation>请选择要删除的内容。</translation>
     </message>
 </context>
 <context>
@@ -1590,42 +1823,65 @@
 <context>
     <name>KernelProtected</name>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.ui" line="14"/>
+        <source>Manage kernel driver modules to prevent illegal loading and uninstallation</source>
+        <translation type="vanished">管理内核驱动模块，阻止非法加载、卸载</translation>
+    </message>
+    <message>
+        <source>Please enter keyword search</source>
+        <translation type="vanished">请输入关键字搜索</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="vanished">添加</translation>
+    </message>
+    <message>
+        <source>Recertification</source>
+        <translation type="vanished">重新认证</translation>
+    </message>
+    <message>
+        <source>Unprotect</source>
+        <translation type="vanished">移除</translation>
+    </message>
+</context>
+<context>
+    <name>KernelProtectedPage</name>
+    <message>
+        <location filename="../src/ui/tp/kernel-protected-page.ui" line="14"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.ui" line="49"/>
+        <location filename="../src/ui/tp/kernel-protected-page.ui" line="49"/>
         <source>Manage kernel driver modules to prevent illegal loading and uninstallation</source>
         <translation>管理内核驱动模块，阻止非法加载、卸载</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.ui" line="69"/>
+        <location filename="../src/ui/tp/kernel-protected-page.ui" line="69"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.ui" line="114"/>
+        <location filename="../src/ui/tp/kernel-protected-page.ui" line="114"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.ui" line="146"/>
+        <location filename="../src/ui/tp/kernel-protected-page.ui" line="146"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.ui" line="165"/>
+        <location filename="../src/ui/tp/kernel-protected-page.ui" line="165"/>
         <source>Recertification</source>
         <translation>重新认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.ui" line="184"/>
+        <location filename="../src/ui/tp/kernel-protected-page.ui" line="184"/>
         <source>Unprotect</source>
         <translation>移除</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected.ui" line="200"/>
+        <location filename="../src/ui/tp/kernel-protected-page.ui" line="200"/>
         <source>...</source>
         <translation></translation>
     </message>
@@ -1656,114 +1912,180 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../lib/base/error.cpp" line="29"/>
+        <location filename="../lib/base/error.cpp" line="32"/>
         <source>Success.</source>
         <translation>成功。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="32"/>
+        <location filename="../lib/base/error.cpp" line="35"/>
         <source>Invalid args.</source>
         <translation>非法参数。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="35"/>
+        <location filename="../lib/base/error.cpp" line="38"/>
         <source>Added file types are not supported.</source>
         <translation>不允许添加不支持的文件类型。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="38"/>
+        <location filename="../lib/base/error.cpp" line="41"/>
         <source>The file is already in the list, and there is no need to add it repeatedly.</source>
         <translation>文件已在列表中，无需重复添加。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="41"/>
+        <location filename="../lib/base/error.cpp" line="44"/>
         <source>There is no trusted card or the trusted card is not supported.</source>
         <translation>可信卡未接入或不支持可信卡。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="44"/>
+        <location filename="../lib/base/error.cpp" line="47"/>
         <source>The pin code is wrong!</source>
         <translation>pin码错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="47"/>
+        <location filename="../lib/base/error.cpp" line="50"/>
         <source>Failed to delete box.</source>
         <translation>删除保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="50"/>
+        <location filename="../lib/base/error.cpp" line="53"/>
         <source>Failed to create box.</source>
         <translation>创建保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="53"/>
+        <location filename="../lib/base/error.cpp" line="56"/>
         <source>Insufficient free space or unknown error, box creation failed.</source>
         <translation>可用空间不足或未知错误，保险箱创建失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="56"/>
+        <location filename="../lib/base/error.cpp" line="59"/>
         <source>Box not found!</source>
         <translation>保险箱未找到！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="59"/>
+        <location filename="../lib/base/error.cpp" line="62"/>
         <source>The box is exist!</source>
         <translation>保险箱已存在！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="62"/>
+        <location filename="../lib/base/error.cpp" line="65"/>
         <source>The password set to the same as the current password is not supported.</source>
         <translation>新密码不能与当前密码相同。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="65"/>
+        <location filename="../lib/base/error.cpp" line="68"/>
         <source>Busy resources!</source>
         <translation>资源忙碌！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="68"/>
+        <location filename="../lib/base/error.cpp" line="71"/>
         <source>Failed to change the password, please check whether the password is correct.</source>
         <translation>修改密码失败，请检查密码是否正确。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="71"/>
+        <location filename="../lib/base/error.cpp" line="74"/>
         <source>Password error!</source>
         <translation>密码错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="74"/>
+        <location filename="../lib/base/error.cpp" line="77"/>
         <source>Passphrase error!</source>
         <translation>口令错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="77"/>
+        <location filename="../lib/base/error.cpp" line="80"/>
         <source>Internal error!</source>
         <translation>内部错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="80"/>
+        <location filename="../lib/base/error.cpp" line="83"/>
         <source>Invalid device.</source>
         <translation>无效的设备。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="83"/>
+        <location filename="../lib/base/error.cpp" line="86"/>
         <source>Invalid device permissions.</source>
         <translation>无效的设备权限。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="86"/>
+        <location filename="../lib/base/error.cpp" line="89"/>
         <source>Invalid device interface type.</source>
         <translation>无效的设备接口类型。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="89"/>
+        <location filename="../lib/base/error.cpp" line="92"/>
         <source>The graphics card does not support HDMI interface shutdown.</source>
         <translation>显卡不支持关闭HDMI接口。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="93"/>
+        <location filename="../lib/base/error.cpp" line="96"/>
+        <location filename="../lib/base/error.cpp" line="177"/>
         <source>Unknown error.</source>
         <translation>未知错误。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="116"/>
+        <source>The standard type is invalid.</source>
+        <translation>标准类型不合法。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="119"/>
+        <source>The strategy type is invalid.</source>
+        <translation>策略类型不合法。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="122"/>
+        <source>The notification status is invalid.</source>
+        <translation>通知状态不合法。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="125"/>
+        <source>The resource monitor is invalid.</source>
+        <translation>资源监控不合法。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="130"/>
+        <source>Error format for reinforcement standard.</source>
+        <translation>加固标准格式错误。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="133"/>
+        <source>Reinforcement item &apos;{0}&apos; is not found.</source>
+        <translation>加固项&apos;{0}&apos;未找到。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="137"/>
+        <source>The job is running, please don&apos;t repeat the operation.</source>
+        <translation>任务正在运行，请不要重复操作。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="140"/>
+        <source>The standard reinforcement configuration is not found.</source>
+        <translation>加固标准配置未找到。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="143"/>
+        <source>Machine code error.</source>
+        <translation>机器码错误。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="146"/>
+        <source>Activation code error.</source>
+        <translation>激活码错误。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="171"/>
+        <source>Internel error.</source>
+        <translation>内部错误。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="174"/>
+        <source>The software is not activated.</source>
+        <translation>软件未激活。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="181"/>
+        <source> (error code: 0x%1)</source>
+        <translation> （错误码：0x%1）</translation>
     </message>
     <message>
         <location filename="../src/ui/dm/utils.h" line="20"/>
@@ -1800,6 +2122,133 @@
         <source>activation code</source>
         <translation>激活码</translation>
     </message>
+    <message>
+        <location filename="../src/daemon/br/python/plugin-python.cpp" line="161"/>
+        <source>The return value of %1 isn&apos;t tuple type</source>
+        <translation>返回值 %1 不是个 tuple 类型</translation>
+    </message>
+    <message>
+        <location filename="../src/daemon/br/python/plugin-python.cpp" line="169"/>
+        <source>The number of tuple returned by %1 is less than 2.</source>
+        <translation>%1 返回的 tuple 编号小于2。</translation>
+    </message>
+    <message>
+        <location filename="../src/daemon/br/python/plugin-python.cpp" line="186"/>
+        <source>The type of tuple item returned by %1 is invalid.</source>
+        <translation>%1 所返回的 tuple 类型是非法的。</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="46"/>
+        <source>The configuration file type</source>
+        <translation>配置文件类型</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="49"/>
+        <source>The Operation method</source>
+        <translation>操作方法</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="52"/>
+        <source>Specify the key or rule to get value</source>
+        <translation>指定键或者规则用于获取对应的值</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="55"/>
+        <source>Specify the set value</source>
+        <translation>指定设置的值</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="58"/>
+        <source>Specify regular expression to match the line. If many lines is matched, then the first matched line is used only</source>
+        <translation>指定一个正则表达式用于匹配行。如果多行被匹配，则值由第一个被匹配的行被使用</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="61"/>
+        <source>Specify regular expression to split line</source>
+        <translation>指定查找时用于划分列的正则表达式</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="64"/>
+        <source>Specify string for joining fields to line</source>
+        <translation>指定用于拼接列的字符串</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="67"/>
+        <source>Specify comment string</source>
+        <translation>指定注释字符串</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="70"/>
+        <source>Add new line when the speficied line pattern is dismatch in PAM</source>
+        <translation>指定未匹配到模式行时添加的新行</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="73"/>
+        <source>Specifies a regular expression to match the next row of the inserted row. If multiple rows are matched, the value is used by the first matched row</source>
+        <translation>指定一个正则表达式用于匹配行。如果多行被匹配，则值由第一个被匹配的行被使用</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="75"/>
+        <source>the configuration&apos;s path</source>
+        <translation>配置文件的路径</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="83"/>
+        <source>The file path is not specified</source>
+        <translation>文件路径未指定</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="101"/>
+        <source>No specify file type</source>
+        <translation>文件类型未指定</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="119"/>
+        <source>Unknown file type</source>
+        <translation>未知文件类型</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="155"/>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="204"/>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="252"/>
+        <source>Exec method %1 failed</source>
+        <translation>执行方法 %1 失败</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/config/main.cpp" line="43"/>
+        <source>Command &apos;ks-br-config&apos; can only be run as root!</source>
+        <translation>命令 &apos;ks-br-config&apos; 只能在root用户下运行！</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/crypto/cmd-parser.cpp" line="40"/>
+        <source>Generate public and private keys for RSA.</source>
+        <translation>生成RSA公钥和私钥。</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/crypto/cmd-parser.cpp" line="42"/>
+        <source>Decrypt a file.</source>
+        <translation>解密文件。</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/crypto/cmd-parser.cpp" line="44"/>
+        <source>Encrypt a file.</source>
+        <translation>加密文件。</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/crypto/cmd-parser.cpp" line="46"/>
+        <source>RSA public file path.</source>
+        <translation>RSA公钥路径。</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/crypto/cmd-parser.cpp" line="48"/>
+        <source>RSA private file path.</source>
+        <translation>RSA私钥路径。</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/crypto/cmd-parser.cpp" line="50"/>
+        <source>Output file path.</source>
+        <translation>输出文件路径。</translation>
+    </message>
 </context>
 <context>
     <name>QRCodeDialog</name>
@@ -1831,12 +2280,12 @@
 <context>
     <name>SidebarItem</name>
     <message>
-        <location filename="../src/ui/common/sidebar.ui" line="26"/>
+        <location filename="../src/ui/sidebar.ui" line="26"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/common/sidebar.ui" line="66"/>
+        <location filename="../src/ui/sidebar.ui" line="66"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
@@ -1868,26 +2317,31 @@
     <name>TrustedProtected</name>
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="14"/>
+        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="143"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="31"/>
+        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="144"/>
         <source>Trusted protected(Effective after reboot):</source>
         <translation>可信保护 （重启后生效）：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="64"/>
+        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="146"/>
         <source>Root key storage method:</source>
         <translation>根密钥存储方式：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="103"/>
+        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="148"/>
         <source>Soft storage</source>
         <translation>软存储</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="145"/>
+        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="150"/>
         <source>Hard storage</source>
         <translation>硬存储</translation>
     </message>

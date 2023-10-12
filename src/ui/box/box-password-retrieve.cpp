@@ -18,7 +18,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 BoxPasswordRetrieve::BoxPasswordRetrieve(QWidget *parent) : TitlebarWindow(parent),
                                                             m_ui(new Ui::BoxPasswordRetrieve)
@@ -74,5 +74,5 @@ void BoxPasswordRetrieve::onOkClicked()
     close();
     m_ui->m_passphrase->setText("");
 }
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS
