@@ -152,7 +152,7 @@ void DeviceList::updateState()
     auto id = m_devicePermission->getDeviceID();
     //获取用户选择的状态
     auto state = m_devicePermission->getDeviceStatus();
-    RETURN_IF_TRUE(state != DEVICE_STATE_ENABLE && state != DEVICE_STATE_DISABLE);
+    RETURN_IF_TRUE(state != DeviceState::DEVICE_STATE_ENABLE && state != DeviceState::DEVICE_STATE_DISABLE);
 
     QDBusPendingReply<> reply;
 

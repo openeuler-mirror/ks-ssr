@@ -1107,112 +1107,112 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../lib/base/error.cpp" line="29"/>
+        <location filename="../lib/base/error.cpp" line="32"/>
         <source>Success.</source>
         <translation>成功。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="32"/>
+        <location filename="../lib/base/error.cpp" line="35"/>
         <source>Invalid args.</source>
         <translation>非法参数。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="35"/>
+        <location filename="../lib/base/error.cpp" line="38"/>
         <source>Added file types are not supported.</source>
         <translation>不允许添加不支持的文件类型。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="38"/>
+        <location filename="../lib/base/error.cpp" line="41"/>
         <source>The file is already in the list, and there is no need to add it repeatedly.</source>
         <translation>文件已在列表中，无需重复添加。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="41"/>
+        <location filename="../lib/base/error.cpp" line="44"/>
         <source>There is no trusted card or the trusted card is not supported.</source>
         <translation>可信卡未接入或不支持可信卡。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="44"/>
+        <location filename="../lib/base/error.cpp" line="47"/>
         <source>The pin code is wrong!</source>
         <translation>pin码错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="47"/>
+        <location filename="../lib/base/error.cpp" line="50"/>
         <source>Failed to delete box.</source>
         <translation>删除保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="50"/>
+        <location filename="../lib/base/error.cpp" line="53"/>
         <source>Failed to create box.</source>
         <translation>创建保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="53"/>
+        <location filename="../lib/base/error.cpp" line="56"/>
         <source>Insufficient free space or unknown error, box creation failed.</source>
         <translation>可用空间不足或未知错误，保险箱创建失败。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="56"/>
+        <location filename="../lib/base/error.cpp" line="59"/>
         <source>Box not found!</source>
         <translation>保险箱未找到！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="59"/>
+        <location filename="../lib/base/error.cpp" line="62"/>
         <source>The box is exist!</source>
         <translation>保险箱已存在！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="62"/>
+        <location filename="../lib/base/error.cpp" line="65"/>
         <source>The password set to the same as the current password is not supported.</source>
         <translation>新密码不能与当前密码相同。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="65"/>
+        <location filename="../lib/base/error.cpp" line="68"/>
         <source>Busy resources!</source>
         <translation>资源忙碌！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="68"/>
+        <location filename="../lib/base/error.cpp" line="71"/>
         <source>Failed to change the password, please check whether the password is correct.</source>
         <translation>修改密码失败，请检查密码是否正确。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="71"/>
+        <location filename="../lib/base/error.cpp" line="74"/>
         <source>Password error!</source>
         <translation>密码错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="74"/>
+        <location filename="../lib/base/error.cpp" line="77"/>
         <source>Passphrase error!</source>
         <translation>口令错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="77"/>
+        <location filename="../lib/base/error.cpp" line="80"/>
         <source>Internal error!</source>
         <translation>内部错误！</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="80"/>
+        <location filename="../lib/base/error.cpp" line="83"/>
         <source>Invalid device.</source>
         <translation>无效的设备。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="83"/>
+        <location filename="../lib/base/error.cpp" line="86"/>
         <source>Invalid device permissions.</source>
         <translation>无效的设备权限。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="86"/>
+        <location filename="../lib/base/error.cpp" line="89"/>
         <source>Invalid device interface type.</source>
         <translation>无效的设备接口类型。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="89"/>
+        <location filename="../lib/base/error.cpp" line="92"/>
         <source>The graphics card does not support HDMI interface shutdown.</source>
         <translation>显卡不支持关闭HDMI接口。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="93"/>
+        <location filename="../lib/base/error.cpp" line="96"/>
         <source>Unknown error.</source>
         <translation>未知错误。</translation>
     </message>
