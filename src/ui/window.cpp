@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -25,17 +25,17 @@
 #include "src/ui/about.h"
 #include "src/ui/box/box-page.h"
 #include "src/ui/common/single-application/single-application.h"
-#include "src/ui/device/device-page.h"
+#include "src/ui/dm/device-page.h"
 #include "src/ui/fp/fp-page.h"
-#include "src/ui/license/license-activation.h"
+#include "src/ui/license/activation.h"
 #include "src/ui/navigation.h"
-#include "src/ui/settings/settings-page.h"
+#include "src/ui/settings/dialog.h"
 #include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
 
 namespace KS
 {
-#define KSC_STYLE_PATH ":/styles/ksc"
+#define SSR_STYLE_PATH ":/styles/ssr"
 
 Window::Window() : TitlebarWindow(nullptr),
                    m_ui(new Ui::Window),
@@ -59,7 +59,7 @@ Window::~Window()
 
 void Window::initActivation()
 {
-    m_activation = new LicenseActivation(this);
+    m_activation = new Activation(this);
     m_licenseProxy = LicenseProxy::getDefault();
 
     if (!m_licenseProxy->isActivated())
@@ -71,7 +71,7 @@ void Window::initActivation()
         m_activation->raise();
         m_activation->show();
     }
-    connect(m_activation, &LicenseActivation::closed,
+    connect(m_activation, &Activation::closed,
             [this]
             {
                 //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
@@ -85,13 +85,13 @@ void Window::initActivation()
 
 void Window::initWindow()
 {
-    setTitle(tr("Security control"));
+    setTitle(tr("Security reinforcement"));
     setIcon(QIcon(":/images/logo"));
     setFixedSize(1003, 667);
     setResizeable(false);
 
     // 初始化样式表
-    QFile file(KSC_STYLE_PATH);
+    QFile file(SSR_STYLE_PATH);
     if (file.open(QIODevice::ReadOnly))
     {
         QString windowStyle = file.readAll();
@@ -99,7 +99,7 @@ void Window::initWindow()
     }
     else
     {
-        KLOG_WARNING() << "Failed to open file " << KSC_STYLE_PATH;
+        KLOG_WARNING() << "Failed to open file " << SSR_STYLE_PATH;
     }
 
     setTitlebarCustomLayoutAlignHCenter(false);
@@ -158,7 +158,7 @@ void Window::initNavigation()
     m_ui->m_pages->insertWidget(CategoryPageType::CATEGORY_PAGE_TYPE_DEVICE, new DevicePage());
     m_ui->m_pages->setCurrentIndex(0);
 
-    connect(m_ui->m_navigation, SIGNAL(currentCategoryChanged(int)), m_ui->m_pages, SLOT(setCurrentIndex(int)));
+    connect(m_ui->m_navigation, SIGNAL(currentCategoryChanged), m_ui->m_pages, SLOT(setCurrentIndex));
 }
 
 void Window::popupActiveDialog()
@@ -180,7 +180,7 @@ void Window::updateActivation()
 
 void Window::popupSettingsDialog()
 {
-    auto settingsDialog = new SettingsPage(this);
+    auto settingsDialog = new Dialog(this);
 
     auto x = this->x() + this->width() / 4 + settingsDialog->width() / 16;
     auto y = this->y() + this->height() / 4 + settingsDialog->height() / 16;

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -34,7 +34,7 @@ enum CategoryPageType
 
 class Navigation;
 
-class LicenseActivation;
+class Activation;
 class LicenseProxy;
 class Window : public TitlebarWindow
 {
@@ -63,7 +63,7 @@ private slots:
 
 private:
     Ui::Window *m_ui;
-    LicenseActivation *m_activation;
+    Activation *m_activation;
     QLabel *m_activateStatus;
     QSharedPointer<LicenseProxy> m_licenseProxy;
 };

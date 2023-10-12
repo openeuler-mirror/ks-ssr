@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+    <interface name="com.kylinsec.SSR.DeviceManager">
+        <method name="GetDevices">
+            <arg type="s" name="devices" direction="out">
+                <summary>The json string of device info list.</summary>
+            </arg>
+            <description>Get all devices information.</description>
+        </method>
+
+        <method name="GetDevicesByInterface">
+            <arg type="i" name="interface_type" direction="in">
+                <summary>The device interface type.</summary>
+            </arg>
+            <arg type="s" name="devices" direction="out">
+                <summary>The json string of device info list.</summary>
+            </arg>
+            <description>Get all devices information.</description>
+        </method>
+
+        <method name="GetDevice">
+            <arg type="s" name="id" direction="in">
+                <summary>The id of device.</summary>
+            </arg>
+            <arg type="s" name="device" direction="out">
+                <summary>The json string of device info.</summary>
+            </arg>
+            <description>Get device information.</description>
+        </method>
+
+        <method name="ChangePermission">
+            <arg type="s" name="id" direction="in">
+                <summary>The id of device.</summary>
+            </arg>
+            <arg type="s" name="permissions" direction="in">
+                <summary>The permissions json string of device.</summary>
+            </arg>
+        </method>
+
+        <method name="Enable">
+            <arg type="s" name="id" direction="in">
+                <summary>The id of device.</summary>
+            </arg>
+        </method>
+
+        <method name="Disable">
+            <arg type="s" name="id" direction="in">
+                <summary>The id of device.</summary>
+            </arg>
+        </method>
+
+        <method name="GetRecords">
+            <arg type="s" name="records" direction="out">
+                <summary>The json string of device connect record list.</summary>
+            </arg>
+            <description>Get all devices connect record information.</description>
+        </method>
+
+        <method name="GetInterfaces">
+            <arg type="s" name="interfaces" direction="out">
+                <summary>The json string of interface info list.</summary>
+            </arg>
+            <description>Get all device interfaces information.</description>
+        </method>
+
+        <method name="GetInterface">
+            <arg type="s" name="interface" direction="out">
+                <summary>The json string of interface info.</summary>
+            </arg>
+            <arg type="i" name="type" direction="in">
+                <summary>The type of device inteface.</summary>
+            </arg>
+            <description>Get device interface information.</description>
+        </method>
+
+        <method name="EnableInterface">
+            <arg type="i" name="type" direction="in">
+                <summary>The type of device interface.</summary>
+            </arg>
+            <arg type="b" name="enabled" direction="in">
+                <summary>Whether to enable the interface.</summary>
+            </arg>
+        </method>
+
+        <signal name="DeviceChanged">
+            <arg name="id" type="s">
+                <summary>The device id.</summary>
+            </arg>
+            <arg name="action" type="i">
+                <summary>The device change action.</summary>
+            </arg>
+            <description>Emit the signal when device is changed.</description>
+        </signal>
+    </interface>
+</node>

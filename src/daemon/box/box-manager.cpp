@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -17,9 +17,9 @@
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include "config.h"
-#include "include/ksc-error-i.h"
-#include "include/ksc-i.h"
-#include "include/ksc-marcos.h"
+#include "include/ssr-error-i.h"
+#include "include/ssr-i.h"
+#include "include/ssr-marcos.h"
 #include "lib/base/crypto-helper.h"
 #include "lib/base/error.h"
 #include "src/daemon/box/box-dao.h"
@@ -52,7 +52,7 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
     if (name.isEmpty() || password.isEmpty())
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                        KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                                        SSRErrorCode::ERROR_COMMON_INVALID_ARGS,
                                         message())
     }
 
@@ -62,18 +62,18 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
         if (box->getUserUid() == getSenderUid() && box->getBoxName() == name)
         {
             DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                            KSCErrorCode::ERROR_BM_REPEATED_NAME,
+                                            SSRErrorCode::ERROR_BM_REPEATED_NAME,
                                             message())
         }
     }
 
-    auto decryptPasswd = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto decryptPasswd = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, password);
     auto errorEode = 0;
     auto box = Box::create(name, decryptPasswd, getSenderUid(), errorEode, "", this);
-    if (errorEode != KSCErrorCode::SUCCESS)
+    if (errorEode != (int)SSRErrorCode::SUCCESS)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                        KSCErrorCode(errorEode),
+                                        SSRErrorCode(errorEode),
                                         message())
     }
 
@@ -88,14 +88,14 @@ void BoxManager::DelBox(const QString &boxID, const QString &password)
     auto box = m_boxs.value(boxID);
     if (!box)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_NOT_FOUND, message())
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
     }
 
-    auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto decryptedPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, password);
     auto errorEode = box->delBox(decryptedPassword);
-    if (errorEode != KSCErrorCode::SUCCESS)
+    if (errorEode != (int)SSRErrorCode::SUCCESS)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode(errorEode), message())
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode(errorEode), message())
     }
 
     m_boxs.remove(boxID);
@@ -110,7 +110,7 @@ QString BoxManager::GetBoxByUID(const QString &boxID)
     if (!box)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                        KSCErrorCode::ERROR_BM_NOT_FOUND,
+                                        SSRErrorCode::ERROR_BM_NOT_FOUND,
                                         message())
     }
 
@@ -155,7 +155,7 @@ bool BoxManager::IsMounted(const QString &boxID)
     if (!box)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false,
-                                        KSCErrorCode::ERROR_BM_NOT_FOUND,
+                                        SSRErrorCode::ERROR_BM_NOT_FOUND,
                                         message())
     }
 
@@ -168,42 +168,42 @@ void BoxManager::ModifyBoxPassword(const QString &boxID,
 {
     if (boxID.isEmpty() || currentPassword.isEmpty() || newPassword.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message())
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message())
     }
 
-    auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, currentPassword);
-    auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
+    auto decryptedPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, currentPassword);
+    auto decryptNewPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, newPassword);
     if (decryptedPassword == decryptNewPassword)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_SETTINGS_SAME_PASSWORD, message())
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_SETTINGS_SAME_PASSWORD, message())
     }
 
     auto box = m_boxs.value(boxID);
     if (!box)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_NOT_FOUND, message())
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
     }
     if (!box->modifyBoxPassword(decryptedPassword, decryptNewPassword))
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_MODIFY_PASSWORD_FAILED, message())
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_MODIFY_PASSWORD_FAILED, message())
     }
 }
 
 // 解锁
 void BoxManager::Mount(const QString &boxID, const QString &password)
 {
-    auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto decryptedPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, password);
     auto box = m_boxs.value(boxID);
     if (!box)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_NOT_FOUND, message())
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
     }
 
     RETURN_IF_TRUE(box->getBoxID() != boxID)
     auto errorEode = box->mount(decryptedPassword);
-    if (errorEode != KSCErrorCode::SUCCESS)
+    if (errorEode != (int)SSRErrorCode::SUCCESS)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode(errorEode), message())
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode(errorEode), message())
     }
     m_serviceWatcher->addWatchedService(message().service());
 
@@ -215,16 +215,16 @@ QString BoxManager::RetrieveBoxPassword(const QString &boxID, const QString &pas
     if (passphrase.isEmpty())
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                        KSCErrorCode::ERROR_COMMON_INVALID_ARGS,
+                                        SSRErrorCode::ERROR_COMMON_INVALID_ARGS,
                                         message())
     }
 
-    auto decryptPassphrase = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, passphrase);
+    auto decryptPassphrase = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, passphrase);
     auto box = m_boxs.value(boxID);
     if (!box)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                        KSCErrorCode::ERROR_BM_NOT_FOUND,
+                                        SSRErrorCode::ERROR_BM_NOT_FOUND,
                                         message())
     }
 
@@ -233,7 +233,7 @@ QString BoxManager::RetrieveBoxPassword(const QString &boxID, const QString &pas
     if (password.isEmpty())
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
-                                        KSCErrorCode::ERROR_BM_INPUT_PASSPHRASE_ERROR,
+                                        SSRErrorCode::ERROR_BM_INPUT_PASSPHRASE_ERROR,
                                         message())
     }
 
@@ -246,15 +246,15 @@ void BoxManager::UnMount(const QString &boxID)
     auto box = m_boxs.value(boxID);
     if (!box)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_NOT_FOUND, message())
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
     }
 
     RETURN_IF_TRUE(box->getBoxID() != boxID)
 
     auto errorEode = box->umount();
-    if (errorEode != KSCErrorCode::SUCCESS)
+    if (errorEode != (int)SSRErrorCode::SUCCESS)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode(errorEode), message());
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode(errorEode), message());
     }
 
     emit BoxChanged(boxID);
@@ -274,7 +274,7 @@ void BoxManager::init()
 {
     QDBusConnection connection = QDBusConnection::systemBus();
 
-    if (!connection.registerObject(KSC_BOX_MANAGER_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(SSR_BOX_MANAGER_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }

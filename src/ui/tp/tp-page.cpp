@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -14,13 +14,13 @@
 
 #include "src/ui/tp/tp-page.h"
 #include "config.h"
-#include "ksc-marcos.h"
 #include "src/ui/common/loading.h"
 #include "src/ui/common/message-dialog.h"
-#include "src/ui/device/sidebar-item.h"
-#include "src/ui/tp/tp-execute.h"
-#include "src/ui/tp/tp-kernel.h"
+#include "src/ui/dm/sidebar-item.h"
+#include "src/ui/tp/execute-protected.h"
+#include "src/ui/tp/kernel-protected.h"
 #include "src/ui/ui_tp-page.h"
+#include "ssr-marcos.h"
 
 #include <QListWidgetItem>
 #include <QPainter>
@@ -73,13 +73,13 @@ void TPPage::initSidebar()
 
 void TPPage::initSubPage()
 {
-    auto execute = new TPExecute(m_ui->m_stacked);
-    connect(execute, &TPExecute::initFinished, this, [this]
+    auto execute = new ExecuteProtected(m_ui->m_stacked);
+    connect(execute, &ExecuteProtected::initFinished, this, [this]
             {
                 m_loading->setVisible(false);
                 m_ui->m_sidebar->setEnabled(true);
             });
-    auto kernel = new TPKernel(m_ui->m_stacked);
+    auto kernel = new KernelProtected(m_ui->m_stacked);
 
     m_ui->m_stacked->addWidget(execute);
     m_ui->m_stacked->addWidget(kernel);

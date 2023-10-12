@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -18,11 +18,11 @@
 #include <QFileDialog>
 #include <QWidgetAction>
 #include "config.h"
-#include "ksc-i.h"
-#include "src/ui/common/ksc-marcos-ui.h"
+#include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_fp-page.h"
+#include "ssr-i.h"
 
 namespace KS
 {
@@ -31,8 +31,8 @@ FPPage::FPPage(QWidget *parent) : QWidget(parent),
 {
     m_ui->setupUi(this);
 
-    m_fileProtectedProxy = new KSSDbusProxy(KSC_DBUS_NAME,
-                                            KSC_KSS_INIT_DBUS_OBJECT_PATH,
+    m_fileProtectedProxy = new KSSDbusProxy(SSR_DBUS_NAME,
+                                            SSR_KSS_INIT_DBUS_OBJECT_PATH,
                                             QDBusConnection::systemBus(),
                                             this);
     // 更新表格右上角提示信息
@@ -52,7 +52,7 @@ FPPage::FPPage(QWidget *parent) : QWidget(parent),
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addProtectedFile(bool)));
     //    connect(m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
     connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(popDeleteNotify(bool)));
-    connect(m_ui->m_fileTable, &FPFileTable::filesUpdate, this, &FPPage::updateTips);
+    connect(m_ui->m_fileTable, &FileTable::filesUpdate, this, &FPPage::updateTips);
 }
 
 FPPage::~FPPage()

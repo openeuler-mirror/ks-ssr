@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -22,7 +22,7 @@
 #include <QDateTime>
 #include <QJsonObject>
 #include <QJsonParseError>
-#include "include/ksc-marcos.h"
+#include "include/ssr-marcos.h"
 
 namespace KS
 {
@@ -77,7 +77,7 @@ QString LicenseProxy::getObjectPath(const QString& objectName)
     }
 
     auto objectPath = args.takeFirst();
-    QDBusObjectPath* path = (QDBusObjectPath*)objectPath.data();
+    QDBusObjectPath* path = reinterpret_cast<QDBusObjectPath*>(objectPath.data());
     return path->path();
 }
 

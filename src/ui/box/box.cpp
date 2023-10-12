@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -23,13 +23,13 @@
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include "ksc-i.h"
 #include "lib/base/crypto-helper.h"
 #include "src/ui/box/box-password-checked.h"
 #include "src/ui/box/box-password-modification.h"
 #include "src/ui/box/box-password-retrieve.h"
 #include "src/ui/box_manager_proxy.h"
-#include "src/ui/common/ksc-marcos-ui.h"
+#include "src/ui/common/ssr-marcos-ui.h"
+#include "ssr-i.h"
 
 namespace KS
 {
@@ -40,8 +40,8 @@ Box::Box(const QString &uid) : m_uid(uid),
                                m_retrievePassword(nullptr),
                                m_popupMenu(nullptr)
 {
-    m_boxManagerProxy = new BoxManagerProxy(KSC_DBUS_NAME,
-                                            KSC_BOX_MANAGER_DBUS_OBJECT_PATH,
+    m_boxManagerProxy = new BoxManagerProxy(SSR_DBUS_NAME,
+                                            SSR_BOX_MANAGER_DBUS_OBJECT_PATH,
                                             QDBusConnection::systemBus(),
                                             this);
     m_process = new QProcess;
@@ -127,8 +127,8 @@ void Box::initBoxInfo()
     }
 
     auto jsonBox = jsonDoc.object();
-    m_name = jsonBox.value(KSC_BM_JK_BOX_NAME).toString();
-    m_mounted = jsonBox.value(KSC_BM_JK_BOX_MOUNTED).toBool();
+    m_name = jsonBox.value(SSR_BM_JK_BOX_NAME).toString();
+    m_mounted = jsonBox.value(SSR_BM_JK_BOX_MOUNTED).toBool();
 }
 
 void Box::initMenu()
@@ -261,8 +261,8 @@ void Box::retrievePassword()
 
 void Box::modifyPasswordAccepted()
 {
-    auto encryptCurrentPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getCurrentPassword());
-    auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getNewPassword());
+    auto encryptCurrentPassword = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getCurrentPassword());
+    auto encryptNewPassword = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getNewPassword());
     auto reply = m_boxManagerProxy->ModifyBoxPassword(m_uid,
                                                       encryptCurrentPassword,
                                                       encryptNewPassword);
@@ -275,7 +275,7 @@ void Box::modifyPasswordAccepted()
 
 void Box::retrievePasswordAccepted()
 {
-    auto encryptPassphrase = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
+    auto encryptPassphrase = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
     auto reply = m_boxManagerProxy->RetrieveBoxPassword(m_uid, encryptPassphrase);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     if (!reply.isError())
@@ -286,7 +286,7 @@ void Box::retrievePasswordAccepted()
 
 void Box::inputMountPasswordAccepted()
 {
-    auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputMountPassword->getBoxPasswordChecked());
+    auto encryptPasswd = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_inputMountPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->Mount(m_uid, encryptPasswd);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     if (!reply.isError())
@@ -297,7 +297,7 @@ void Box::inputMountPasswordAccepted()
 
 void Box::inputDelBoxPasswordAccepted()
 {
-    auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputDelBoxPassword->getBoxPasswordChecked());
+    auto encryptPasswd = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_inputDelBoxPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->DelBox(m_uid, encryptPasswd);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     if (!reply.isError())

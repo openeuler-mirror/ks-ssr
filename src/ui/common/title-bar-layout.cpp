@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -121,7 +121,6 @@ void TitlebarLayout::setGeometry(const QRect &rect)
     QSize titleLabelSize = labelTitle->sizeHint();
 
     QSize customWidgetSize = m_customWidgetItem->sizeHint();
-    QSize customWidgetMinSize = m_customWidgetItem->minimumSize();
     QSize rightWidgetSize = m_rightWidgetItem->sizeHint();
 
     /*　居中左右两侧宽度需要同步，计算剩余宽度是否够　*/

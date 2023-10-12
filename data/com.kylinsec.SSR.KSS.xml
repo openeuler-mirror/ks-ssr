@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+    <interface name="com.kylinsec.SSR.KSS">
+        <method name="GetTrustedFiles">
+            <arg type="s" name="files" direction="out">
+                <summary>The json string describes the trusted files which contain file path and authentication status, etc..</summary>
+            </arg>
+            <arg type="u" name="type" direction="in">
+                <summary>The trusted file types.</summary>
+            </arg>
+            <description>Get trusted files information.</description>
+        </method>
+
+        <method name="GetProtectedFiles">
+            <arg type="s" name="files" direction="out">
+                <summary>The json string describes the protected files.</summary>
+            </arg>
+            <description>Get protected files list.</description>
+        </method>
+
+        <method name="AddProtectedFile">
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Add file to protected file list.</description>
+        </method>
+
+        <method name="AddProtectedFiles">
+            <arg type="as" name="file_list" direction="in">
+                <summary>A file path list.</summary>
+            </arg>
+            <description>Add file list to protected file list.</description>
+        </method>
+
+        <method name="AddTrustedFile">
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Add file to trusted whitelist.</description>
+        </method>
+
+        <method name="AddTrustedFiles">
+            <arg type="as" name="file_list" direction="in">
+                <summary>A file path list.</summary>
+            </arg>
+            <description>Add file to trusted whitelist.</description>
+        </method>
+
+        <method name="ProhibitUnloading">
+            <arg type="b" name="prohibited" direction="in">
+                <summary>Whether prohibit module unloading.</summary>
+            </arg>
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Prohibit module unloading.</description>
+        </method>
+
+        <method name="RemoveTrustedFile">
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Remove file from trusted whitelist.</description>
+        </method>
+
+        <method name="RemoveTrustedFiles">
+            <arg type="as" name="file_list" direction="in">
+                <summary>A file path list.</summary>
+            </arg>
+            <description>Remove file list from trusted whitelist.</description>
+        </method>
+        
+        <method name="RemoveProtectedFile">
+            <arg type="s" name="file_path" direction="in">
+                <summary>A file path.</summary>
+            </arg>
+            <description>Remove file from protected file list.</description>
+        </method>
+
+        <method name="RemoveProtectedFiles">
+            <arg type="as" name="file_list" direction="in">
+                <summary>A file path list.</summary>
+            </arg>
+            <description>Remove file list from protected file list.</description>
+        </method>
+
+        <method name="SetStorageMode">
+            <arg type="u" name="type" direction="in">
+                <summary>A storage mode type.</summary>
+            </arg>
+            <arg type="s" name="user_pin" direction="in">
+                <summary>A user pin.</summary>
+            </arg>
+            <description>Set the storage mode.</description>
+        </method>
+
+        <method name="SetTrustedStatus">
+            <arg type="b" name="status" direction="in">
+                <summary>Set trusted on or off.</summary>
+            </arg>
+            <description>Set trusted status.</description>
+        </method>
+
+        <method name="Search">
+            <arg type="s" name="path_key" direction="in">
+                <summary>A search key.</summary>
+            </arg>
+            <arg type="u" name="search_type" direction="in">
+                <summary>A search type, which can be TP or FP program.</summary>
+            </arg>
+            <arg type="s" name="files" direction="out">
+                <summary>The json string describes the trusted files which contain file path and authentication status, etc..</summary>
+            </arg>
+            <description>Search for trusted protection list.</description>
+        </method>
+
+        <property name="StorageMode" type="u" access="read">
+            <description>The KSS storage mode.</description>
+        </property>
+
+        <property name="TrustedStatus" type="b" access="read">
+            <description>The KSS trusted status.</description>
+        </property>
+
+        <property name="Initialized" type="b" access="read">
+            <description>The KSS initialized.</description>
+        </property>
+
+        <signal name="InitFinished">
+            <description>KSS data initialisation completed.</description>
+        </signal>
+
+        <signal name="TrustedFilesChange">
+            <description>Update of trusted files.</description>
+        </signal>
+
+        <signal name="ProtectedFilesChange">
+            <description>Update of protected files.</description>
+        </signal>
+
+    </interface>
+</node>
