@@ -22,6 +22,8 @@ class BoxPasswordChecked;
 }
 namespace KS
 {
+namespace Box
+{
 class BoxPasswordChecked : public TitlebarWindow
 {
     Q_OBJECT
@@ -42,4 +44,5 @@ signals:
 private:
     Ui::BoxPasswordChecked *m_ui;
 };
+}  // namespace Box
 }  // namespace KS

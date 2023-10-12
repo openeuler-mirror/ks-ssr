@@ -16,6 +16,7 @@
 
 #include <QMap>
 #include <QWidget>
+#include "src/ui/common/page.h"
 
 class BoxManagerProxy;
 class QJsonObject;
@@ -27,15 +28,22 @@ class BoxPage;
 
 namespace KS
 {
+namespace Box
+{
 class BoxCreation;
 class Box;
 
-class BoxPage : public QWidget
+class BoxPage : public Page
 {
     Q_OBJECT
 public:
-    BoxPage();
-    virtual ~BoxPage(){};
+    BoxPage(QWidget *parent = nullptr);
+    virtual ~BoxPage();
+
+    QString getNavigationUID() override;
+    QString getSidebarUID() override;
+    QString getSidebarIcon() override;
+    int getSelinuxType() override;
 
 private:
     void initBoxs();
@@ -60,4 +68,5 @@ private:
     // 所有保密箱对象
     QMap<QString, Box *> m_boxs;
 };
+}  // namespace Box
 }  // namespace KS

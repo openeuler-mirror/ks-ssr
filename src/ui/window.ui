@@ -113,9 +113,9 @@
        <height>0</height>
       </size>
      </property>
-     <layout class="QHBoxLayout" name="m_contentsLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <property name="spacing">
-       <number>0</number>
+       <number>4</number>
       </property>
       <property name="leftMargin">
        <number>0</number>
@@ -130,7 +130,10 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QStackedWidget" name="m_pages">
+       <widget class="KS::SideBar" name="m_sidebar"/>
+      </item>
+      <item>
+       <widget class="QStackedWidget" name="m_stackedPages">
         <property name="currentIndex">
          <number>0</number>
         </property>
@@ -148,6 +151,12 @@
    <class>KS::Navigation</class>
    <extends>QWidget</extends>
    <header>src/ui/navigation.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KS::SideBar</class>
+   <extends>QListWidget</extends>
+   <header>src/ui/sidebar.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

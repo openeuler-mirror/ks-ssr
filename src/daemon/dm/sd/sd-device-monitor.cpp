@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace DM
+{
 #define UDEV_BUFFER_SIZE (128 * 1024 * 1024)
 
 SDDeviceMonitor::SDDeviceMonitor(QObject *parent)
@@ -164,5 +166,5 @@ void SDDeviceMonitor::initDevices()
         m_devices.insert(syspath, QSharedPointer<SDDevice>(new SDDevice(syspath)));
     }
 }
-
+}  // namespace DM
 }  // namespace KS

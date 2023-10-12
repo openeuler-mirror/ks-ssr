@@ -23,6 +23,8 @@ typedef struct sd_event sd_event;
 
 namespace KS
 {
+namespace DM
+{
 enum SDDeviceAction
 {
     SD_DEVICE_ACTION_INVALID = 0,
@@ -60,5 +62,5 @@ private:
     QSocketNotifier *m_socketNotify;
     QMap<QString, QSharedPointer<SDDevice>> m_devices;
 };
-
+}  // namespace DM
 }  // namespace KS

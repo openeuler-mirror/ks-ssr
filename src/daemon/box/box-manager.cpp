@@ -27,6 +27,8 @@
 
 namespace KS
 {
+namespace Box
+{
 #define RSA_KEY_LENGTH 512
 
 #define BOX_NAME_KEY "name"
@@ -320,4 +322,5 @@ void BoxManager::unMountAllBoxs(const QString &service)
         }
     }
 }
+}  // namespace Box
 }  // namespace KS

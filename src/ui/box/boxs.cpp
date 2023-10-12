@@ -17,6 +17,8 @@
 
 namespace KS
 {
+namespace Box
+{
 Boxs::Boxs(QWidget *parent) : QWidget(parent)
 {
     setLayout(new FlowLayout(this, 0, 16, 16));
@@ -33,4 +35,5 @@ void Boxs::removeBox(Box *box)
     box->deleteLater();
     box = nullptr;
 }
+}  // namespace Box
 }  // namespace KS

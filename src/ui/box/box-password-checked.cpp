@@ -17,6 +17,8 @@
 #include "ui_box-password-checked.h"
 namespace KS
 {
+namespace Box
+{
 BoxPasswordChecked::BoxPasswordChecked(QWidget *parent) : TitlebarWindow(parent),
                                                           m_ui(new Ui::BoxPasswordChecked)
 {
@@ -62,5 +64,5 @@ void BoxPasswordChecked::init()
                 m_ui->m_inputPasswd->setText("");
             });
 }
-
+}  // namespace Box
 }  // namespace KS

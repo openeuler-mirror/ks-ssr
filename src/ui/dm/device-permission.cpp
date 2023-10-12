@@ -19,10 +19,12 @@
 #include <QPainter>
 #include <QStyledItemDelegate>
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/dm/device-utils.h"
+#include "src/ui/dm/utils.h"
 #include "ui_device-permission.h"
 
 namespace KS
+{
+namespace DM
 {
 DevicePermission::DevicePermission(QWidget *parent) : TitlebarWindow(parent),
                                                       m_ui(new Ui::DevicePermission)
@@ -99,7 +101,7 @@ void DevicePermission::setDevicePermission(const QString type, int permission)
     m_permissions = permission;
 
     //针对挂载的存储设备，默认有可读权限，并且用户无法取消勾选
-    if (type == DeviceUtils::deviceTypeEnum2Str(DeviceType::DEVICE_TYPE_STORAGE))
+    if (type == Utils::deviceTypeEnum2Str(DeviceType::DEVICE_TYPE_STORAGE))
     {
         m_permissions |= PermissionType::PERMISSION_TYPE_READ;
         m_ui->m_read->setDisabled(true);
@@ -212,6 +214,5 @@ bool DevicePermission::eventFilter(QObject *watched, QEvent *event)
     return false;
 }
 
+}  // namespace DM
 }  // namespace KS
-
-//  namespace KS

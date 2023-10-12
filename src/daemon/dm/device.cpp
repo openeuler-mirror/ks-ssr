@@ -20,6 +20,8 @@
 
 namespace KS
 {
+namespace DM
+{
 Device::Device(const QString& syspath, QObject* parent) : QObject(parent),
                                                           m_type(DeviceType::DEVICE_TYPE_UNKNOWN),
                                                           m_interfaceType(InterfaceType::INTERFACE_TYPE_UNKNOWN),
@@ -144,5 +146,5 @@ qint64 Device::getConnectedTime()
 {
     return m_connectedTime;
 }
-
+}  // namespace DM
 }  // namespace KS

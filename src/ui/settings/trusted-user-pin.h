@@ -26,6 +26,8 @@ class TrustedUserPin;
 
 namespace KS
 {
+namespace Settings
+{
 class TrustedUserPin : public TitlebarWindow
 {
     Q_OBJECT
@@ -53,4 +55,5 @@ private:
 
     SSRKSSTrustedStorageType m_type;
 };
+}  // namespace Settings
 }  // namespace KS

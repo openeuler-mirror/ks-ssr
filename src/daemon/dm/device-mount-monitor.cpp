@@ -22,6 +22,8 @@
 
 namespace KS
 {
+namespace DM
+{
 DeviceMountMonitor::DeviceMountMonitor(QObject *parent)
     : QObject(parent),
       m_socketNotify(nullptr),
@@ -146,4 +148,5 @@ void DeviceMountMonitor::checkMount(const QSharedPointer<DeviceMount> mount)
         Q_EMIT this->mountChanged(mount.get());
     }
 }
+}  // namespace DM
 }  // namespace KS

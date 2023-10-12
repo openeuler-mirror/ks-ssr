@@ -17,7 +17,7 @@
 #include <QDBusConnection>
 #include <QDateTime>
 #include <QProcess>
-#include "src/daemon/dm/device-dbus.h"
+#include "src/daemon/dm/dbus.h"
 #include "src/daemon/dm/device-factory.h"
 #include "src/daemon/dm/sd/sd-device-enumerator.h"
 #include "src/daemon/dm/udev-rule-manager.h"
@@ -25,6 +25,8 @@
 #include "ssr-marcos.h"
 
 namespace KS
+{
+namespace DM
 {
 DeviceManager *DeviceManager::m_instance = nullptr;
 void DeviceManager::globalInit(QObject *parent)
@@ -45,7 +47,7 @@ DeviceManager::DeviceManager(QObject *parent)
     : QObject(parent)
 {
     m_deviceFactory = new DeviceFactory(this);
-    m_deviceDBus = new DeviceDBus(this, this);
+    m_deviceDBus = new DBus(this, this);
     m_deviceLog = QSharedPointer<DeviceLog>::create();
 }
 
@@ -342,5 +344,5 @@ bool DeviceManager::isSupportHDMIDisable()
 
     return false;
 }
-
+}  // namespace DM
 }  // namespace KS
