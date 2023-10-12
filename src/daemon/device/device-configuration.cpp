@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -20,10 +20,10 @@
 #include <QTextStream>
 #include <QThread>
 #include "config.h"
-#include "ksc-i.h"
-#include "ksc-marcos.h"
 #include "src/daemon/common/systemd-proxy.h"
 #include "src/daemon/device/device-manager.h"
+#include "ssr-i.h"
+#include "ssr-marcos.h"
 
 namespace KS
 {
@@ -44,9 +44,9 @@ namespace KS
 #define GRUB_MKCONFIG_PROGRAM "/usr/sbin/grub2-mkconfig"
 #define NMCLI_PROGRAM "/usr/bin/nmcli"
 // 临时文件路径
-#define TMP_PATH "/tmp/ks-sc"
+#define TMP_PATH "/tmp/ks-ssr"
 // 临时的 grub 配置文件， 用于分发至真正使用的 grub 配置文件。
-#define TMP_GRUB_CFG_FILE_PATH "/tmp/ks-sc/grub.cfg"
+#define TMP_GRUB_CFG_FILE_PATH "/tmp/ks-ssr/grub.cfg"
 // legacy 的 grub 配置路径
 #define GRUB_LEGACY_FILE_PATH "/boot/grub2/grub.cfg"
 // efi 模式下的 grub 配置路径
@@ -184,8 +184,8 @@ DeviceConfiguration::~DeviceConfiguration()
 
 void DeviceConfiguration::init()
 {
-    m_deviceSettings = new QSettings(KSC_DEVICE_CONFIG_FILE, QSettings::NativeFormat, this);
-    m_interfaceSettings = new QSettings(KSC_DI_CONFIG_FILE, QSettings::NativeFormat, this);
+    m_deviceSettings = new QSettings(SSR_DEVICE_CONFIG_FILE, QSettings::NativeFormat, this);
+    m_interfaceSettings = new QSettings(SSR_DI_CONFIG_FILE, QSettings::NativeFormat, this);
     // FIXME: 为了 HDMI 接口的特殊化处理
     auto group = QString("interface%1").arg(INTERFACE_TYPE_HDMI);
     auto isContainGroup = m_interfaceSettings->childGroups().contains(group);
@@ -236,10 +236,10 @@ void DeviceConfiguration::syncInterfaceToGrubFile()
     grubOption = QString("GRUB_CMDLINE_LINUX_DEFAULT=\"%1\"").arg(grubValue);
 
     // 读取grub配置并替换掉对应的grub选项
-    QFile grubFile(KSC_DI_GRUB_FILE);
+    QFile grubFile(SSR_DI_GRUB_FILE);
     if (!grubFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        KLOG_WARNING() << "Open file " << KSC_DI_GRUB_FILE << " failed.";
+        KLOG_WARNING() << "Open file " << SSR_DI_GRUB_FILE << " failed.";
         return;
     }
 
@@ -255,7 +255,7 @@ void DeviceConfiguration::syncInterfaceToGrubFile()
     }
     lines.append(grubOption);
     grubFile.close();
-    this->saveToFile(lines, KSC_DI_GRUB_FILE);
+    this->saveToFile(lines, SSR_DI_GRUB_FILE);
 
     m_waitingUpdateGrub = true;
     this->checkWaitingUpdateGrubs();

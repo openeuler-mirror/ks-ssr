@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -17,8 +17,8 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QWidgetAction>
-#include "include/ksc-i.h"
-#include "src/ui/common/ksc-marcos-ui.h"
+#include "include/ssr-i.h"
+#include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/device/device-permission.h"
 #include "src/ui/device/table-filter-model.h"
 #include "src/ui/ui_device-list.h"
@@ -44,8 +44,8 @@ DeviceList::DeviceList(QWidget *parent) : QWidget(parent),
     //获取设备列表数据插入表格
     update();
 
-    m_deviceManagerProxy = new DeviceManagerProxy(KSC_DBUS_NAME,
-                                                  KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH,
+    m_deviceManagerProxy = new DeviceManagerProxy(SSR_DBUS_NAME,
+                                                  SSR_DEVICE_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
 
@@ -133,9 +133,9 @@ void DeviceList::updatePermission()
     //数据传入后台
     QJsonDocument jsonDoc;
     QJsonObject jsonObj{
-        {KSC_DEVICE_JK_READ, (permissions & PermissionType::PERMISSION_TYPE_READ) > 0},
-        {KSC_DEVICE_JK_WRITE, (permissions & PermissionType::PERMISSION_TYPE_WRITE) > 0},
-        {KSC_DEVICE_JK_EXECUTE, (permissions & PermissionType::PERMISSION_TYPE_EXEC) > 0}};
+        {SSR_DEVICE_JK_READ, (permissions & PermissionType::PERMISSION_TYPE_READ) > 0},
+        {SSR_DEVICE_JK_WRITE, (permissions & PermissionType::PERMISSION_TYPE_WRITE) > 0},
+        {SSR_DEVICE_JK_EXECUTE, (permissions & PermissionType::PERMISSION_TYPE_EXEC) > 0}};
     jsonDoc.setObject(jsonObj);
 
     auto reply = m_deviceManagerProxy->ChangePermission(id, QString(jsonDoc.toJson(QJsonDocument::Compact)));

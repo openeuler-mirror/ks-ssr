@@ -149,17 +149,6 @@
     </message>
 </context>
 <context>
-    <name>DeviceListPage</name>
-    <message>
-        <source>Please enter keyword search</source>
-        <translation type="vanished">请输入关键字搜索</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation type="vanished">编辑</translation>
-    </message>
-</context>
-<context>
     <name>DeviceLog</name>
     <message>
         <location filename="../src/ui/device/device-log.ui" line="14"/>
@@ -172,13 +161,6 @@
         <location filename="../build/src/ui/ui_device-log.h" line="105"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
-    </message>
-</context>
-<context>
-    <name>DeviceLogPage</name>
-    <message>
-        <source>Please enter keyword search</source>
-        <translation type="vanished">请输入关键字搜索</translation>
     </message>
 </context>
 <context>
@@ -242,13 +224,6 @@
     </message>
 </context>
 <context>
-    <name>DeviceRecord</name>
-    <message>
-        <source>Please enter keyword search</source>
-        <translation type="vanished">请输入关键字搜索</translation>
-    </message>
-</context>
-<context>
     <name>FPPage</name>
     <message>
         <location filename="../src/ui/fp/fp-page.ui" line="14"/>
@@ -288,21 +263,6 @@
     </message>
 </context>
 <context>
-    <name>InputPassword</name>
-    <message>
-        <source>please input password:</source>
-        <translation type="vanished">请输入密码：</translation>
-    </message>
-    <message>
-        <source>ok</source>
-        <translation type="vanished">确认</translation>
-    </message>
-    <message>
-        <source>cancel</source>
-        <translation type="vanished">取消</translation>
-    </message>
-</context>
-<context>
     <name>KS::About</name>
     <message>
         <location filename="../src/ui/about.cpp" line="45"/>
@@ -311,7 +271,7 @@
     </message>
     <message>
         <location filename="../src/ui/about.cpp" line="51"/>
-        <source>Security control sofware V1.0</source>
+        <source>Security reinforcement sofware V1.0</source>
         <translation>安全管控软件 V1.0</translation>
     </message>
 </context>
@@ -404,10 +364,6 @@
         <location filename="../src/ui/box/box-page.cpp" line="149"/>
         <source>The input cannot be empty, please improve the information.</source>
         <translation>输入不能为空，请输入正确的信息。</translation>
-    </message>
-    <message>
-        <source>Please check whether ecryptfs.ko is loaded!</source>
-        <translation type="vanished">请确认模块是否加载！</translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-page.cpp" line="177"/>
@@ -517,10 +473,6 @@
         <translation>时间</translation>
     </message>
     <message>
-        <source>Device Time</source>
-        <translation type="vanished">连接时间</translation>
-    </message>
-    <message>
         <location filename="../src/ui/device/device-log-table.cpp" line="143"/>
         <source>Device Status</source>
         <translation>状态</translation>
@@ -566,12 +518,12 @@
     <name>KS::DeviceUtils</name>
     <message>
         <source>Disk</source>
-        <translation type="vanished">存储设备</translation>
+        <translation type="vanished">磁盘</translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-utils.cpp" line="23"/>
         <source>Storage</source>
-        <translation>存储设备</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-utils.cpp" line="25"/>
@@ -650,14 +602,6 @@
         <location filename="../src/ui/device/device-utils.cpp" line="63"/>
         <source>HDMI</source>
         <translation>HDMI</translation>
-    </message>
-    <message>
-        <source>Successful</source>
-        <translation type="vanished">成功</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="vanished">失败</translation>
     </message>
 </context>
 <context>
@@ -764,10 +708,6 @@
 </context>
 <context>
     <name>KS::SettingsDevice</name>
-    <message>
-        <source>(Effective after restart)</source>
-        <translation type="vanished">(重启后生效)</translation>
-    </message>
     <message>
         <location filename="../src/ui/settings/settings-device.cpp" line="100"/>
         <source> (Effective after restart)</source>
@@ -956,10 +896,6 @@
         <source>Kernel protecked</source>
         <translation>内核保护</translation>
     </message>
-    <message>
-        <source>Trusted data needs to be initialised,please wait a few minutes to refresh.</source>
-        <translation type="vanished">可信数据需要初始化，请等待几分钟后尝试。</translation>
-    </message>
 </context>
 <context>
     <name>KS::TPUtils</name>
@@ -1024,16 +960,8 @@
     <name>KS::Window</name>
     <message>
         <location filename="../src/ui/window.cpp" line="88"/>
-        <source>Security control</source>
+        <source>Security reinforcement</source>
         <translation>安全管控</translation>
-    </message>
-    <message>
-        <source>Setup</source>
-        <translation type="vanished">设置</translation>
-    </message>
-    <message>
-        <source>Activate Info</source>
-        <translation type="vanished">授权信息</translation>
     </message>
     <message>
         <location filename="../src/ui/window.cpp" line="115"/>
@@ -1113,33 +1041,6 @@
         <location filename="../build/src/ui/ui_license-activation.h" line="170"/>
         <source>Cancel</source>
         <translation>取消</translation>
-    </message>
-</context>
-<context>
-    <name>ModifyPassword</name>
-    <message>
-        <source>Modify password</source>
-        <translation type="vanished">修改密码</translation>
-    </message>
-    <message>
-        <source>Current password:</source>
-        <translation type="vanished">当前密码：</translation>
-    </message>
-    <message>
-        <source>New password:       </source>
-        <translation type="vanished">新密码：</translation>
-    </message>
-    <message>
-        <source>Confirm password:</source>
-        <translation type="vanished">确认密码：</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">确认</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">取消</translation>
     </message>
 </context>
 <context>
@@ -1329,10 +1230,6 @@
         <source>Form</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Scan QR code to get machine code</source>
-        <translation type="vanished">扫描获取机器码</translation>
-    </message>
 </context>
 <context>
     <name>RetrieveBoxPassword</name>
@@ -1362,25 +1259,6 @@
     </message>
 </context>
 <context>
-    <name>RetrievePassword</name>
-    <message>
-        <source>Create security box</source>
-        <translation type="vanished">创建保险箱</translation>
-    </message>
-    <message>
-        <source>Please input passphrase:</source>
-        <translation type="vanished">请输入口令：</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">确认</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">取消</translation>
-    </message>
-</context>
-<context>
     <name>SettingsPage</name>
     <message>
         <location filename="../src/ui/settings/settings-page.ui" line="26"/>
@@ -1396,10 +1274,6 @@
         <location filename="../build/src/ui/ui_settings-trusted.h" line="143"/>
         <source>Form</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Trusted protected:</source>
-        <translation type="vanished">可信保护:</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/settings-trusted.ui" line="31"/>
@@ -1462,22 +1336,10 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-execute.ui" line="162"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="148"/>
-        <source>Recertification</source>
-        <translation>重新认证</translation>
-    </message>
-    <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="111"/>
         <location filename="../build/src/ui/ui_tp-execute.h" line="146"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/tp/tp-execute.ui" line="197"/>
-        <location filename="../build/src/ui/ui_tp-execute.h" line="150"/>
-        <source>...</source>
-        <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="143"/>
@@ -1486,8 +1348,16 @@
         <translation>添加</translation>
     </message>
     <message>
-        <source>Update</source>
-        <translation type="vanished">更新</translation>
+        <location filename="../src/ui/tp/tp-execute.ui" line="162"/>
+        <location filename="../build/src/ui/ui_tp-execute.h" line="148"/>
+        <source>Recertification</source>
+        <translation>重新认证</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/tp-execute.ui" line="197"/>
+        <location filename="../build/src/ui/ui_tp-execute.h" line="150"/>
+        <source>...</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-execute.ui" line="181"/>
@@ -1517,22 +1387,10 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/tp-kernel.ui" line="165"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="149"/>
-        <source>Recertification</source>
-        <translation>重新认证</translation>
-    </message>
-    <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="114"/>
         <location filename="../build/src/ui/ui_tp-kernel.h" line="147"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/tp/tp-kernel.ui" line="200"/>
-        <location filename="../build/src/ui/ui_tp-kernel.h" line="151"/>
-        <source>...</source>
-        <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="146"/>
@@ -1541,8 +1399,16 @@
         <translation>添加</translation>
     </message>
     <message>
-        <source>Update</source>
-        <translation type="vanished">更新</translation>
+        <location filename="../src/ui/tp/tp-kernel.ui" line="165"/>
+        <location filename="../build/src/ui/ui_tp-kernel.h" line="149"/>
+        <source>Recertification</source>
+        <translation>重新认证</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tp/tp-kernel.ui" line="200"/>
+        <location filename="../build/src/ui/ui_tp-kernel.h" line="151"/>
+        <source>...</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/tp-kernel.ui" line="184"/>
@@ -1619,7 +1485,7 @@
     <message>
         <location filename="../src/ui/window.ui" line="20"/>
         <location filename="../build/src/ui/ui_window.h" line="112"/>
-        <source>Security control</source>
+        <source>Security reinforcement</source>
         <translation>安全管控</translation>
     </message>
 </context>

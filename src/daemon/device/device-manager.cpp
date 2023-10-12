@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -17,12 +17,12 @@
 #include <QDBusConnection>
 #include <QDateTime>
 #include <QProcess>
-#include "ksc-i.h"
-#include "ksc-marcos.h"
 #include "src/daemon/device/device-dbus.h"
 #include "src/daemon/device/device-factory.h"
 #include "src/daemon/device/sd/sd-device-enumerator.h"
 #include "src/daemon/device/udev-rule-manager.h"
+#include "ssr-i.h"
+#include "ssr-marcos.h"
 
 namespace KS
 {
