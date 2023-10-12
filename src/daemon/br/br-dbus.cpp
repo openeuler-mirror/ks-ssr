@@ -154,14 +154,12 @@ void BRDBus::SetStrategyType(const uint32_t& strategy_type)
     if (strategy_type >= BRStrategyType::BR_STRATEGY_TYPE_LAST)
     {
         sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID));
-        // THROW_DBUSCXX_ERROR(BRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID);
     }
     RETURN_IF_TRUE(strategy_type == this->configuration_->getStrategyType())
 
     if (!this->configuration_->setStrategyType(BRStrategyType(strategy_type)))
     {
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_STRATEGY_TYPE_FAILED));
-        // THROW_DBUSCXX_ERROR(BRErrorCode::ERROR_DAEMON_SET_STRATEGY_TYPE_FAILED);
     }
 }
 
@@ -174,7 +172,6 @@ void BRDBus::SetTimeScan(const uint32_t& time_scan)
     if (!this->configuration_->setTimeScan(int(time_scan)))
     {
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_TIME_SCAN_FAILED));
-        // THROW_DBUSCXX_ERROR(BRErrorCode::ERROR_DAEMON_SET_TIME_SCAN_FAILED);
     }
 }
 
@@ -186,7 +183,6 @@ void BRDBus::SetNotificationStatus(const uint32_t& notification_status)
     {
         sendErrorReply(QDBusError::InvalidArgs,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID));
-        // THROW_DBUSCXX_ERROR(BRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID);
     }
     RETURN_IF_TRUE(notification_status == this->configuration_->getNotificationStatus())
 
@@ -194,7 +190,6 @@ void BRDBus::SetNotificationStatus(const uint32_t& notification_status)
     {
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_NOTIFICATION_STATUS_FAILED));
-        // THROW_DBUSCXX_ERROR(BRErrorCode::ERROR_DAEMON_SET_NOTIFICATION_STATUS_FAILED);
     }
 }
 
@@ -204,7 +199,6 @@ void BRDBus::ImportCustomRA(const QString& encoded_strategy)
     try
     {
         std::ofstream ofs(CUSTOM_RA_STRATEGY_FILEPATH, std::ios_base::out);
-        //        br_ra(ofs, *ra.get());
         ofs << encoded_strategy.toStdString();
         ofs.close();
     }
@@ -426,7 +420,7 @@ qlonglong BRDBus::Scan(const QStringList& names)
             }
 
             auto reinforcement_interface = this->plugins_->getReinforcementInterface(reinforcement->getPluginName(),
-                                                                                      reinforcement->getName());
+                                                                                     reinforcement->getName());
             if (!reinforcement_interface)
             {
                 sendErrorReply(QDBusError::InternalError,
@@ -434,23 +428,23 @@ qlonglong BRDBus::Scan(const QStringList& names)
             }
 
             this->scan_job_->addOperation(reinforcement->getPluginName(),
-                                           reinforcement->getName(),
-                                           [reinforcement_interface]() -> QString
-                                           {
-                                               //    QJsonValue retval;
-                                               QJsonObject retval;
-                                               QString args;
-                                               QString error;
-                                               if (reinforcement_interface->get(args, error))
-                                               {
-                                                   retval[JOB_RETURN_VALUE] = StrUtils::str2json(args);
-                                               }
-                                               else
-                                               {
-                                                   retval[JOB_ERROR_STR] = error;
-                                               }
-                                               return StrUtils::json2str(retval);
-                                           });
+                                          reinforcement->getName(),
+                                          [reinforcement_interface]() -> QString
+                                          {
+                                              //    QJsonValue retval;
+                                              QJsonObject retval;
+                                              QString args;
+                                              QString error;
+                                              if (reinforcement_interface->get(args, error))
+                                              {
+                                                  retval[JOB_RETURN_VALUE] = StrUtils::str2json(args);
+                                              }
+                                              else
+                                              {
+                                                  retval[JOB_ERROR_STR] = error;
+                                              }
+                                              return StrUtils::json2str(retval);
+                                          });
         }
     }
     catch (const std::exception& e)
@@ -527,7 +521,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
             }
 
             auto reinforcement_interface = this->plugins_->getReinforcementInterface(reinforcement->getPluginName(),
-                                                                                      reinforcement->getName());
+                                                                                     reinforcement->getName());
             if (!reinforcement_interface)
             {
                 sendErrorReply(QDBusError::InternalError,
@@ -595,22 +589,22 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
             }
 
             this->reinforce_job_->addOperation(reinforcement->getPluginName(),
-                                                reinforcement->getName(),
-                                                [reinforcement_interface, param_str]() -> QString
-                                                {
-                                                    QString error;
-                                                    QJsonObject retval;
-                                                    if (!reinforcement_interface->set(param_str, error))
-                                                    {
-                                                        retval[JOB_ERROR_STR] = error;
-                                                    }
-                                                    else
-                                                    {
-                                                        // 设置为空字符串，这里主要是为了区分加固成功和取消加固两种状态，后续可能会调整改逻辑
-                                                        retval[JOB_RETURN_VALUE] = QString();
-                                                    }
-                                                    return StrUtils::json2str(retval);
-                                                });
+                                               reinforcement->getName(),
+                                               [reinforcement_interface, param_str]() -> QString
+                                               {
+                                                   QString error;
+                                                   QJsonObject retval;
+                                                   if (!reinforcement_interface->set(param_str, error))
+                                                   {
+                                                       retval[JOB_ERROR_STR] = error;
+                                                   }
+                                                   else
+                                                   {
+                                                       // 设置为空字符串，这里主要是为了区分加固成功和取消加固两种状态，后续可能会调整改逻辑
+                                                       retval[JOB_RETURN_VALUE] = QString();
+                                                   }
+                                                   return StrUtils::json2str(retval);
+                                               });
         }
     }
     catch (const std::exception& e)
@@ -618,7 +612,6 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
         KLOG_WARNING("%s", e.what());
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID));
-        // THROW_DBUSCXX_ERROR(BRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID);
     }
 
     QObject::connect(this->reinforce_job_.get(), &Job::process_changed_, this, &BRDBus::onReinfoceProcessChangedCb);
@@ -834,13 +827,13 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
                     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
                     {
                         CONTINUE_IF_TRUE(iter->name() != reinforcement_result.name());
-                        //                        KLOG_DEBUG("iter->name() = %s reinforcement_result.name = %s suscess", iter->name().c_str(), reinforcement_result.name().c_str());
+                        KLOG_DEBUG() << "iter->name() = " << iter->name().c_str() << ", reinforcement_result.name =" << reinforcement_result.name().c_str() << "suscess";
                         auto& iter_args = iter->arg();
                         for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                         {
                             if (!result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toString().isEmpty())
                                 iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toObject()).toStdString());
-                            //                            KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
+                            // KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
                         }
                     }
                     this->configuration_->writeRhToFile(rh_frist, RH_BR_OPERATE_DATA_FIRST);
@@ -912,7 +905,6 @@ void BRDBus::onReinfoceProcessChangedCb(const JobResult& job_result)
             else
             {
                 state = BRReinforcementState::BR_REINFORCEMENT_STATE_REINFORCE_DONE;
-                // reinforcement_result.args(StrUtils::json2str(result_values));
             }
             reinforcement_result.state(int32_t(state));
             reinforce_result.reinforcement().push_back(std::move(reinforcement_result));
@@ -985,7 +977,6 @@ void BRDBus::cpuAverageLoadRatio(const float load_ratio)
 
         _audit_log(1101, -1, "The average load of a single core CPU exceeds 1.");
 
-        // this->CpuAverageLoadRatioHigher(std::to_string(load_ratio));
         emit CpuAverageLoadRatioHigher(QString(std::to_string(load_ratio).c_str()));
     }
 }

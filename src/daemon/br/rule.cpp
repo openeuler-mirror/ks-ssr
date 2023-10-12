@@ -112,8 +112,8 @@ Rule::JsonCmpResult Rule::jsonValueCmp(const QJsonValue &v1, const QJsonValue &v
 
 RuleRange::RuleRange(const QJsonValue &min_value,
                      const QJsonValue &max_value) : min_value_(min_value),
-                                                     max_value_(max_value),
-                                                     value_type_(QJsonValue::Type::Undefined)
+                                                    max_value_(max_value),
+                                                    value_type_(QJsonValue::Type::Undefined)
 {
     if (!min_value.isNull())
     {

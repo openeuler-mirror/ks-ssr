@@ -25,21 +25,12 @@ using namespace KS;
 
 int main(int argc, char* argv[])
 {
-    // auto program_name = Glib::path_get_basename(argv[0]);
     QCoreApplication a(argc, argv);
     QCoreApplication::setApplicationVersion(PROJECT_VERSION);
-    // klog_gtk3_init(std::string(), "kylinsec-system", PROJECT_NAME, a.applicationName());
     klog_qt5_init(QString(), "kylinsec-system", PROJECT_NAME, a.applicationName());
-    // Gio::init();
-
-    // setlocale(LC_ALL, "");
-    // bindtextdomain(PROJECT_NAME, BR_LOCALEDIR);
-    // bind_textdomain_codeset(PROJECT_NAME, "UTF-8");
-    // textdomain(PROJECT_NAME);
-
     QTranslator translator;
 #pragma message("将 cmake 翻译部分完成后修改翻译文件路径")
-    if (!translator.load(QLocale(), qAppName(), ".", " ", ".qm"))
+    if (!translator.load(QLocale(), "ks-ssr-daemon", ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
     {
         KLOG_WARNING() << "Load translator failed!";
     }
@@ -51,8 +42,7 @@ int main(int argc, char* argv[])
     if (getuid() != 0)
     {
 #pragma message("无法输出中文")
-        std::cout << "Command 'ks-br-config' can only be run as root!" << std::endl;
-        // fmt::print(stderr, _("Command 'ks-br-config' can only be run as root!"));
+        std::cout << QObject::tr("Command 'ks-br-config' can only be run as root!").toStdString() << std::endl;
         return EXIT_FAILURE;
     }
 

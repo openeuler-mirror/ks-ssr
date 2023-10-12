@@ -83,9 +83,9 @@ bool PAM::getValue(const QString &key, const QString &kv_split_pattern, QString 
 }
 
 bool PAM::setValue(const QString &key,
-                    const QString &kv_split_pattern,
-                    const QString &value,
-                    const QString &kv_join_str)
+                   const QString &kv_split_pattern,
+                   const QString &value,
+                   const QString &kv_join_str)
 {
     // 在读写期间都不应该让其他进程改动该文件，否则可能会导致结果不一致。
     auto file_lock = FileLock::createExcusiveLock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
@@ -110,7 +110,6 @@ bool PAM::setValue(const QString &key,
             if (!kv_split_pattern.isEmpty() && !value.isEmpty())
             {
                 replace_line = match_info.match_line.replace(kv_regex, "\\1");
-                // replace_line = kv_regex->replace(match_info.match_line, 0, "\\g<1>" + value, static_cast<Glib::RegexMatchFlags>(0));
             }
         }
         else
@@ -148,16 +147,12 @@ bool PAM::delValue(const QString &key, const QString &kv_split_pattern)
     }
     auto match_info = this->getMatchLine();
     QRegExp kv_pattern(kv_split_pattern.isEmpty() ? QString("(%1)").arg(key) : QString("(%1[\\s]*%2[\\s]*)(\\S+)").arg(key, kv_split_pattern));
-    // auto kv_pattern = kv_split_pattern.isEmpty() ? fmt::format("({0})", key) : fmt::format("({0}[\\s]*{1}[\\s]*)(\\S+)", key, kv_split_pattern);
     QRegExp kv_regex(kv_pattern);
-    // auto kv_regex = Glib::Regex::create(kv_pattern);
-
     if (match_info.match_line.size() > 0 &&
         !match_info.is_match_comment &&
         kv_regex.indexIn(match_info.match_line) != -1)
     {
         auto replace_line = match_info.match_line.replace(kv_regex, "");
-        // auto replace_line = kv_regex->replace(match_info.match_line, 0, Glib::ustring(), static_cast<Glib::RegexMatchFlags>(0));
         match_info.content.replace(match_info.match_pos, match_info.match_line.size(), replace_line);
         KLOG_DEBUG("Replace line: %s with %s.", match_info.match_line.toLatin1(), replace_line.toLatin1());
         return this->writeToFile(match_info.content);
@@ -188,9 +183,7 @@ bool PAM::addLine(const QString &fallback_line, const QString &next_line_match_r
     // 如果未匹配到行，则添加新行
     else if (match_info.match_line.size() == 0 && fallback_line.size() > 0)
     {
-        // KLOG_DEBUG("New line: %s.", fallback_line.c_str());
-        // match_info.content.append(fallback_line);
-        // this->writeToFile(match_info.content);
+        KLOG_DEBUG() << "New line: " << fallback_line;
         auto new_match_info = this->addBehind(fallback_line, next_line_match_regex);
         this->writeToFile(new_match_info.content);
     }
@@ -243,10 +236,8 @@ PAM::MatchLineInfo PAM::getMatchLine()
     QFile file(this->conf_path_);
     file.open(QIODevice::OpenModeFlag::ReadOnly);
     auto contents = file.readAll();
-    // auto contents = Glib::file_get_contents(this->conf_path_);
     auto lines = StrUtils::splitLines(contents);
     QRegExp line_match_regex(this->line_match_pattern_);
-    // auto line_match_regex = Glib::Regex::create(this->line_match_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     // 寻找匹配行，如果没有匹配的非注释行可用，则使用匹配的注释行（注释将被去掉）
     for (const auto &line : lines)
@@ -280,10 +271,8 @@ PAM::MatchLineInfo PAM::addBehind(const QString &fallback_line, const QString &n
     QFile file(this->conf_path_);
     file.open(QIODevice::OpenModeFlag::NewOnly);
     auto contents = file.readAll();
-    // auto contents = Glib::file_get_contents(this->conf_path_);
     auto lines = StrUtils::splitLines(contents);
     QRegExp line_match_regex(next_line_match_regex);
-    // auto line_match_regex = Glib::Regex::create(next_line_match_regex, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     // 寻找匹配行，如果没有匹配的非注释行可用，则使用匹配的注释行（注释将被去掉）
     for (const auto &line : lines)

@@ -18,7 +18,6 @@
 
 namespace KS
 {
-
 class FileUtils
 {
 public:
