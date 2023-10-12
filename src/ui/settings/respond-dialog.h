@@ -18,6 +18,8 @@
 #include "src/ui/common/titlebar-window.h"
 namespace KS
 {
+namespace Settings
+{
 class RespondDialog : public TitlebarWindow
 {
     Q_OBJECT
@@ -40,4 +42,5 @@ private:
     QLabel* m_message;
     bool m_isAccepted;
 };
+}  // namespace Settings
 }  // namespace KS

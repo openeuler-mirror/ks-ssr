@@ -18,20 +18,20 @@ qt5_add_dbus_adaptor(
   SECURITY_BOX_MANAGER_SRCS
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BoxManager.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/box/box-manager.h
-  KS::BoxManager
+  KS::Box::BoxManager
   box_manager_adaptor
   BoxManagerAdaptor)
 
 qt5_add_dbus_adaptor(
   KSS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.KSS.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/kss/kss-dbus.h KS::KSSDbus kss_dbus_adaptor
+  ${CMAKE_SOURCE_DIR}/src/daemon/kss/dbus.h KS::KSS::DBus kss_dbus_adaptor
   KSSDbusAdaptor)
 
 qt5_add_dbus_adaptor(
   SECURITY_DEVICE_MANAGER_SRCS
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.DeviceManager.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/dm/device-dbus.h
-  KS::DeviceDBus
+  ${CMAKE_SOURCE_DIR}/src/daemon/dm/dbus.h
+  KS::DM::DBus
   device_manager_adaptor
   DeviceManagerAdaptor)
 

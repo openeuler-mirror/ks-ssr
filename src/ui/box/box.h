@@ -28,6 +28,8 @@ class QLabel;
 
 namespace KS
 {
+namespace Box
+{
 struct BoxInfo
 {
     // uid
@@ -39,7 +41,7 @@ struct BoxInfo
 };
 
 class BoxPasswordModification;
-class RetrieveBoxPassword;
+class BoxPasswordRetrieve;
 class BoxPasswordChecked;
 class MessageDialog;
 
@@ -94,7 +96,7 @@ private:
 
     BoxManagerProxy *m_boxManagerProxy;
     BoxPasswordModification *m_modifyPassword;
-    RetrieveBoxPassword *m_retrievePassword;
+    BoxPasswordRetrieve *m_retrievePassword;
     BoxPasswordChecked *m_inputMountPassword;
     BoxPasswordChecked *m_inputDelBoxPassword;
     QMenu *m_popupMenu;
@@ -102,5 +104,5 @@ private:
 
     QProcess *m_process;
 };
-
+}  //namespace Box
 }  // namespace KS

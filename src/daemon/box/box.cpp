@@ -27,6 +27,8 @@
 
 namespace KS
 {
+namespace Box
+{
 #define GET_BOX_UID_BIT 6         // 随机生成box的标识符位数
 #define GET_BOX_PASSPHRASE_BIT 8  // 随机生成口令的位数
 
@@ -359,4 +361,5 @@ QString Box::getRandStr(uint length)
 
     return str;
 }
+}  // namespace Box
 }  // namespace KS

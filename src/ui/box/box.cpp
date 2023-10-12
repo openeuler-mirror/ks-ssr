@@ -33,6 +33,8 @@
 
 namespace KS
 {
+namespace Box
+{
 Box::Box(const QString &uid) : m_uid(uid),
                                m_name("Unknown"),
                                m_mounted(false),
@@ -246,11 +248,11 @@ void Box::delBox()
 
 void Box::retrievePassword()
 {
-    m_retrievePassword = new RetrieveBoxPassword(window());
+    m_retrievePassword = new BoxPasswordRetrieve(window());
     m_retrievePassword->setFixedSize(319, 239);
     m_retrievePassword->setTitle(tr("Retrieve password"));
     connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
-    connect(m_retrievePassword, &RetrieveBoxPassword::inputEmpty, this, [this]
+    connect(m_retrievePassword, &BoxPasswordRetrieve::inputEmpty, this, [this]
             { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
 
     int x = window()->x() + window()->width() / 4 + m_retrievePassword->width() / 4;
@@ -305,4 +307,5 @@ void Box::inputDelBoxPasswordAccepted()
         POPUP_MESSAGE_DIALOG(QString(tr("Delete success!")));
     }
 }
+}  // namespace Box
 }  // namespace KS

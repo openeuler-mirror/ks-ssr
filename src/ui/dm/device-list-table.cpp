@@ -22,10 +22,12 @@
 #include <QStyle>
 #include <QToolTip>
 #include "include/ssr-marcos.h"
-#include "src/ui/dm/device-utils.h"
 #include "src/ui/dm/table-filter-model.h"
+#include "src/ui/dm/utils.h"
 
 namespace KS
+{
+namespace DM
 {
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
@@ -149,9 +151,9 @@ void DeviceListTable::setData(const QList<DeviceInfo> &infos)
     {
         auto deviceInfo = infos.at(i);
 
-        auto type = DeviceUtils::deviceTypeEnum2Str(deviceInfo.type);
-        auto interface = DeviceUtils::interfaceTypeEnum2Str(deviceInfo.interface);
-        auto state = DeviceUtils::deviceStateEnum2Str(deviceInfo.state);
+        auto type = Utils::deviceTypeEnum2Str(deviceInfo.type);
+        auto interface = Utils::interfaceTypeEnum2Str(deviceInfo.interface);
+        auto state = Utils::deviceStateEnum2Str(deviceInfo.state);
 
         m_model->setData(m_model->index(row, ListTableField::LIST_TABLE_FIELD_NUMBER), deviceInfo.number);
         m_model->setData(m_model->index(row, ListTableField::LIST_TABLE_FIELD_NAME), deviceInfo.name);
@@ -173,7 +175,7 @@ DeviceState DeviceListTable::getState(int row)
     }
 
     auto index = m_filterProxy->index(row, ListTableField::LIST_TABLE_FIELD_STATUS);
-    return DeviceUtils::deviceStateStr2Enum(m_filterProxy->data(index).toString());
+    return Utils::deviceStateStr2Enum(m_filterProxy->data(index).toString());
 }
 
 QString DeviceListTable::getType(int row)
@@ -407,4 +409,5 @@ void DeviceListTable::update()
     setData(m_devicesInfo);
 }
 
+}  // namespace DM
 }  // namespace KS

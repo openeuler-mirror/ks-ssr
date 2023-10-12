@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace DM
+{
 #define DCR_KYE_NAME "name"
 #define DCR_KYE_TYPE "type"
 #define DCR_KYE_STATE "state"
@@ -97,5 +99,5 @@ void DeviceLog::removeLastDeviceLog()
 
     m_settings->remove(group);
 }
-
+}  // namespace DM
 }  // namespace KS

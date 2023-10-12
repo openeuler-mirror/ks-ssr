@@ -23,7 +23,6 @@
 
 namespace KS
 {
-class KSSDbus;
 class LicenseProxy;
 
 class Daemon : public QObject
@@ -60,7 +59,6 @@ private:
 private:
     static Daemon *m_instance;
 
-    KSSDbus *m_kssDBus;
     QSharedPointer<LicenseProxy> m_licenseProxy;
 };
 }  // namespace KS

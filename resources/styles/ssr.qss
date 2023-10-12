@@ -4,6 +4,7 @@ KS--Window
 {
     font-size: 12px;
     border-radius: 4px;
+    background-color:#2d2d2d;
     color: white;
     font:NotoSansCJKsc-Regular;
 }
@@ -137,14 +138,15 @@ QHeaderView::section
     padding-left:10px;
 }
 
-KS--DevicePage QHeaderView::section:first
+KS--DM--DeviceLogPage QHeaderView::section:first,
+KS--DM--DeviceListPage QHeaderView::section:first
 {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
 
-KS--TPPage QHeaderView::section:first,
-KS--FPPage QHeaderView::section:first
+KS--TP--KernelProtectedPage QHeaderView::section:first,
+KS--TP--ExecuteProtectedPage QHeaderView::section:first
 {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
@@ -265,7 +267,12 @@ KS--NavigationItem QPushButton#m_icon
     border-radius: 6px;
 }
 
-KS--Window QWidget#m_contents,
+KS--Window QWidget#m_contents
+{
+    background-color: #222222;
+    border-radius: 6px;
+}
+
 QWidget#m_deleteNotify,
 QFrame#m_frame,
 KS--Loading#maskWidget
@@ -274,9 +281,11 @@ KS--Loading#maskWidget
     border-radius: 6px;
 }
 
-KS--Window QPushButton#btnForMenu
+KS--Window QPushButton#btnForMenu,
+KS--Window QStackedWidget#m_stackedPages
 {
     background:#2d2d2d;
+    border-radius: 6px;
 }
 KS--Window QPushButton#btnForMenu::menu-indicator
 {
@@ -325,8 +334,8 @@ QPushButton#m_ok,
 QPushButton#m_add,
 QPushButton#m_newBox,
 KS--Activation QPushButton#m_activate,
-KS--DevicePermission QPushButton#m_confirm,
-KS--DeviceControl #MessageWindow QPushButton#confirm
+KS--DM--DevicePermission QPushButton#m_confirm,
+KS--DM--DeviceControl #MessageWindow QPushButton#confirm
 {
     color:#FFFFFF;
     font:NotoSansCJKsc-Regular;
@@ -341,8 +350,8 @@ QPushButton#m_ok:hover,
 QPushButton#m_add:hover,
 QPushButton#m_newBox:hover,
 KS--Activation QPushButton#m_activate:hover,
-KS--DevicePermission QPushButton#m_confirm:hover,
-KS--DeviceControl #MessageWindow QPushButton#confirm:hover
+KS--DM--DevicePermission QPushButton#m_confirm:hover,
+KS--DM--DeviceControl #MessageWindow QPushButton#confirm:hover
 {
     background:#79C3FF;
     border:4px;
@@ -353,7 +362,7 @@ QPushButton#passwdCancelBtn,
 QPushButton#m_cancel,
 QPushButton#m_recertification,
 QPushButton#m_unprotect,
-KS--DeviceControl #MessageWindow QPushButton#cancel
+KS--DM--DeviceControl #MessageWindow QPushButton#cancel
 {
     color:#FFFFFF;
     font:NotoSansCJKsc-Regular;
@@ -366,7 +375,7 @@ QPushButton#passwdCancelBtn:hover,
 QPushButton#m_cancel:hover,
 QPushButton#m_recertification:hover,
 QPushButton#m_unprotect:hover,
-KS--DeviceControl #MessageWindow QPushButton#cancel:hover
+KS--DM--DeviceControl #MessageWindow QPushButton#cancel:hover
 {
     background:#464646;
     border:4px;
@@ -413,11 +422,6 @@ QTableView#m_kernelTable > QWidget
     margin: 0px 18px 0px 0px;
 }
 
-KS--TPPage
-{
-    background-color:#222222;
-}
-
 QPushButton#searchButton
 {
     background-color: transparent;
@@ -462,31 +466,19 @@ QStackedWidget#m_stacked
 
 
 /* Device */
-
-KS--DevicePage
-{
-   background-color:#222222;
-}
-
-KS--DeviceList,
-KS--DeviceLog
-{
-    background-color:#2d2d2d;
-}
-
-KS--DeviceList QLineEdit QPushButton,
-KS--DeviceLog QLineEdit QPushButton
+KS--DM--DeviceListPage QLineEdit QPushButton,
+KS--DM--DeviceLogPage QLineEdit QPushButton
 {
     background-color:transparent;
 }
 
-KS--DeviceList QLabel#m_records,
-KS--DeviceLog QLabel#m_records
+KS--DM--DeviceListPage QLabel#m_records,
+KS--DM--DeviceLogPage QLabel#m_records
 {
     color:#919191;
 }
 
-KS--DevicePermission  QComboBox
+KS--DM--DevicePermission  QComboBox
 {
     background-color: #222222;
     border: 1px solid #454545;
@@ -497,7 +489,7 @@ KS--DevicePermission  QComboBox
     color:#ffffff;
 }
 
-KS--DevicePermission QComboBox QAbstractItemView {
+KS--DM--DevicePermission QComboBox QAbstractItemView {
     background-color:#222222;
     border-radius: 6px;
     border-bottom: 1px solid #454545;
@@ -507,7 +499,7 @@ KS--DevicePermission QComboBox QAbstractItemView {
     selection-background-color: #222222;
 }
 
-KS--DevicePermission QComboBox QAbstractItemView::item
+KS--DM--DevicePermission QComboBox QAbstractItemView::item
 {
     color:#ffffff;
     min-height: 36px;
@@ -515,27 +507,27 @@ KS--DevicePermission QComboBox QAbstractItemView::item
     padding-left:12px;
 }
 
-KS--DevicePermission QComboBox QAbstractItemView::item:selected
+KS--DM--DevicePermission QComboBox QAbstractItemView::item:selected
 {
     background-color:#00a2ff;
 }
 
-KS--DevicePermission QComboBox::drop-down
+KS--DM--DevicePermission QComboBox::drop-down
 {
     border:none;
     padding-right:12px;
 }
 
-KS--DevicePermission QComboBox::down-arrow {
+KS--DM--DevicePermission QComboBox::down-arrow {
       image: url(:/images/arrow-down);
 }
 
-KS--DevicePermission #m_groupBox
+KS--DM--DevicePermission #m_groupBox
 {
     border:none;
 }
 
-KS--DevicePermission #m_groupBox QCheckBox
+KS--DM--DevicePermission #m_groupBox QCheckBox
 {
    color:#ffffff;
    background-color:#393939;
@@ -544,54 +536,54 @@ KS--DevicePermission #m_groupBox QCheckBox
    padding-left:12px;
 }
 
-KS--DevicePermission #m_groupBox QCheckBox:disabled
+KS--DM--DevicePermission #m_groupBox QCheckBox:disabled
 {
    color:#919191;
 }
 
-KS--DevicePermission QPushButton#m_confirm:disabled
+KS--DM--DevicePermission QPushButton#m_confirm:disabled
 {
     color:#919191;
     background-color:#393939;
 }
 
-KS--DevicePermission QComboBox QLineEdit#lineEdit
+KS--DM--DevicePermission QComboBox QLineEdit#lineEdit
 {
     background-color:#222222;
 }
 
-KS--DeviceControl QCheckBox::indicator:unchecked {
+KS--DM--DeviceControl QCheckBox::indicator:unchecked {
     image: url(:/images/switch-close);
 }
 
-KS--DeviceControl QCheckBox::indicator:unchecked:hover {
+KS--DM--DeviceControl QCheckBox::indicator:unchecked:hover {
     image: url(:/images/switch-close);
 }
 
-KS--DeviceControl QCheckBox::indicator:unchecked:pressed {
+KS--DM--DeviceControl QCheckBox::indicator:unchecked:pressed {
     image: url(:/images/switch-close);
 }
 
-KS--DeviceControl QCheckBox::indicator:checked {
+KS--DM--DeviceControl QCheckBox::indicator:checked {
     image: url(:/images/switch-open);
 }
 
-KS--DeviceControl QCheckBox::indicator:checked:hover {
+KS--DM--DeviceControl QCheckBox::indicator:checked:hover {
     image: url(:/images/switch-open);
 }
 
-KS--DeviceControl QCheckBox::indicator:checked:pressed {
+KS--DM--DeviceControl QCheckBox::indicator:checked:pressed {
     image: url(:/images/switch-open);
 }
 
-KS--DeviceControl #customWidget
+KS--DM--DeviceControl #customWidget
 {
     border-radius: 6px;
     background-color:#2d2d2d;
 }
 
 /*********License*****************/
-KS--Activation QWidget#m_content
+QWidget#m_content
 {
     border-radius: 6px;
     background-color:#2d2d2d;

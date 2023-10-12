@@ -23,6 +23,8 @@ class BoxCreation;
 
 namespace KS
 {
+namespace Box
+{
 // 创建保险箱页面
 class BoxCreation : public TitlebarWindow
 {
@@ -49,5 +51,5 @@ signals:
 private:
     Ui::BoxCreation *m_ui;
 };
-
+}  // namespace Box
 }  // namespace KS

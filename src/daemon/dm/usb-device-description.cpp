@@ -20,6 +20,8 @@
 
 namespace KS
 {
+namespace DM
+{
 #define USB_ID_LENGTH 4
 
 USBDeviceDescription *USBDeviceDescription::instance()
@@ -94,4 +96,5 @@ QString USBDeviceDescription::getProductDesc(const QString idVendor, const QStri
 {
     return m_descs.value(QString("%1:%2").arg(idVendor, idProduct));
 }
+}  // namespace DM
 }  // namespace KS

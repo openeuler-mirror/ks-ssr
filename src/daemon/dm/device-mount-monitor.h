@@ -21,6 +21,8 @@
 
 namespace KS
 {
+namespace DM
+{
 struct DeviceMount
 {
 public:
@@ -62,4 +64,5 @@ private:
     QSocketNotifier *m_socketNotify;
     int m_file;
 };
+}  // namespace DM
 }  // namespace KS

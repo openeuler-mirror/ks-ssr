@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace TP
+{
 class Delegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -34,4 +36,5 @@ public:
                      const QStyleOptionViewItem &option,
                      const QModelIndex &index) override;
 };
+}  // namespace TP
 }  // namespace KS

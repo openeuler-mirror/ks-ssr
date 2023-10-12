@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace Settings
+{
 Dialog::Dialog(QWidget *parent) : TitlebarWindow(parent),
                                   m_ui(new Ui::Dialog)
 {
@@ -74,4 +76,5 @@ void Dialog::initSubPage()
     m_ui->m_stacked->addWidget(deviceSettings);
     m_ui->m_stacked->setCurrentIndex(0);
 }
+}  // namespace Settings
 }  // namespace KS

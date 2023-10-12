@@ -18,6 +18,8 @@
 
 namespace KS
 {
+namespace Box
+{
 class Boxs : public QWidget
 {
     Q_OBJECT
@@ -30,4 +32,5 @@ public:
     void removeBox(Box *box);
 };
 
+}  // namespace Box
 }  // namespace KS

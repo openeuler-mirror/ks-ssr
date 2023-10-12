@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace Settings
+{
 RespondDialog::RespondDialog(QWidget *parent) : TitlebarWindow(parent),
                                                 m_message(nullptr),
                                                 m_isAccepted(false)
@@ -104,4 +106,5 @@ void RespondDialog::initUI()
             });
     vlay->addWidget(cusWidget);
 }
+}  // namespace Settings
 }  // namespace KS

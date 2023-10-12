@@ -20,12 +20,14 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 #include <QWidget>
-#include "src/ui/tp/table-header-proxy.h"
-#include "src/ui/tp/tp-utils.h"
+#include "src/ui/common/table-header-proxy.h"
+#include "src/ui/tp/utils.h"
 
 class KSSDbusProxy;
 
 namespace KS
+{
+namespace TP
 {
 class ExecuteProtectedFilterModel : public QSortFilterProxyModel
 {
@@ -107,4 +109,5 @@ private:
     TableHeaderProxy *m_headerViewProxy;
 };
 
+}  // namespace TP
 }  // namespace KS

@@ -19,13 +19,13 @@
 #include "lib/license/license-proxy.h"
 #include "src/daemon/box/box-manager.h"
 #include "src/daemon/dm/device-manager.h"
-#include "src/daemon/kss/kss-dbus.h"
+#include "src/daemon/kss/dbus.h"
 
 namespace KS
 {
 Daemon *Daemon::m_instance = nullptr;
 
-Daemon::Daemon() : QObject(nullptr), m_kssDBus(nullptr)
+Daemon::Daemon() : QObject(nullptr)
 {
     m_licenseProxy = LicenseProxy::getDefault();
     if (m_licenseProxy->isActivated())
@@ -40,13 +40,9 @@ Daemon::Daemon() : QObject(nullptr), m_kssDBus(nullptr)
 
 Daemon::~Daemon()
 {
-    if (m_kssDBus)
-    {
-        delete m_kssDBus;
-    }
-
-    DeviceManager::globalDeinit();
-    BoxManager::globalDeinit();
+    KSS::DBus::globalDeinit();
+    DM::DeviceManager::globalDeinit();
+    Box::BoxManager::globalDeinit();
 }
 
 void Daemon::init()
@@ -67,13 +63,12 @@ void Daemon::init()
 void Daemon::start()
 {
     m_licenseProxy->disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
-    BoxManager::globalInit(this);
-    DeviceManager::globalInit(this);
+    Box::BoxManager::globalInit(this);
+    DM::DeviceManager::globalInit(this);
+    KSS::DBus::globalInit(this);
     BRDaemon::Configuration::globalInit(SSR_BR_INSTALL_DATADIR "/ssr.ini");
     BRDaemon::Categories::globalInit();
     BRDaemon::Plugins::globalInit(BRDaemon::Configuration::getInstance());
     BRDaemon::BRDBus::globalInit(nullptr);
-    // FIXME: 最好需要提供一个模块入口类，可以时KSSContext或者KSSManager，来管理dbus和wrapper
-    m_kssDBus = new KSSDbus(this);
 }
 }  // namespace KS
