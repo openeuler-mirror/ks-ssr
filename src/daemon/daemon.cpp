@@ -42,7 +42,7 @@ Daemon::~Daemon()
 {
     KSS::DBus::globalDeinit();
     DM::DeviceManager::globalDeinit();
-    BOX::BoxManager::globalDeinit();
+    Box::BoxManager::globalDeinit();
 }
 
 void Daemon::init()
@@ -63,8 +63,12 @@ void Daemon::init()
 void Daemon::start()
 {
     m_licenseProxy->disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
-    BOX::BoxManager::globalInit(this);
+    Box::BoxManager::globalInit(this);
     DM::DeviceManager::globalInit(this);
     KSS::DBus::globalInit(this);
+    BRDaemon::Configuration::globalInit(SSR_BR_INSTALL_DATADIR "/ssr.ini");
+    BRDaemon::Categories::globalInit();
+    BRDaemon::Plugins::globalInit(BRDaemon::Configuration::getInstance());
+    BRDaemon::BRDBus::globalInit(nullptr);
 }
 }  // namespace KS

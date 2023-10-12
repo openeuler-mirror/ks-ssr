@@ -25,6 +25,7 @@ namespace KSS
 {
 #define KSS_DEFAULT_USER_PIN "123123"
 
+// 对kss命令进行封装
 class Wrapper : public QObject
 {
     Q_OBJECT

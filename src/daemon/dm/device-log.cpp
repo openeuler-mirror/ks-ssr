@@ -41,7 +41,7 @@ void DeviceLog::addDeviceRecord(const DeviceRecord &record)
 {
     removeLastDeviceLog();
 
-    m_settings->beginGroup(QString::asprintf("%ld", record.time));
+    m_settings->beginGroup(QString::asprintf("%lld", record.time));
     m_settings->setValue(DCR_KYE_NAME, record.name);
     m_settings->setValue(DCR_KYE_TYPE, record.type);
     m_settings->setValue(DCR_KYE_STATE, record.state);

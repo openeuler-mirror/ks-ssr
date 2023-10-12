@@ -25,15 +25,15 @@
 #include "src/ui/about.h"
 #include "src/ui/box/box-page.h"
 #include "src/ui/common/loading.h"
-#include "src/ui/common/sidebar.h"
 #include "src/ui/common/single-application/single-application.h"
-#include "src/ui/dm/device-list.h"
-#include "src/ui/dm/device-log.h"
-#include "src/ui/fp/file-protection.h"
+#include "src/ui/dm/device-list-page.h"
+#include "src/ui/dm/device-log-page.h"
+#include "src/ui/fp/file-protection-page.h"
 #include "src/ui/navigation.h"
 #include "src/ui/settings/dialog.h"
-#include "src/ui/tp/execute-protected.h"
-#include "src/ui/tp/kernel-protected.h"
+#include "src/ui/sidebar.h"
+#include "src/ui/tp/execute-protected-page.h"
+#include "src/ui/tp/kernel-protected-page.h"
 #include "src/ui/ui_window.h"
 #include "ssr-marcos.h"
 
@@ -167,13 +167,13 @@ void Window::initNavigation()
     }
 
     // 可信保护页面需判断是否加载成功
-    auto execute = new TP::ExecuteProtected(this);
+    auto execute = new TP::ExecuteProtectedPage(this);
     addPage(execute);
-    addPage(new TP::KernelProtected(this));
-    addPage(new FP::FileProtection(this));
-    addPage(new BOX::BoxPage(this));
-    addPage(new DM::DeviceList(this));
-    addPage(new DM::DeviceLog(this));
+    addPage(new TP::KernelProtectedPage(this));
+    addPage(new FP::FileProtectionPage(this));
+    addPage(new Box::BoxPage(this));
+    addPage(new DM::DeviceListPage(this));
+    addPage(new DM::DeviceLogPage(this));
     // 页面加载动画
     m_loading = new Loading(this);
     m_loading->setFixedSize(execute->size());
@@ -183,7 +183,7 @@ void Window::initNavigation()
     updatePage();
     showLoading(execute->getInitialized());
 
-    connect(execute, &TP::ExecuteProtected::initFinished, this, [this]
+    connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this]
             {
                 m_loading->setVisible(false);
                 m_ui->m_sidebar->setEnabled(true);
@@ -325,14 +325,14 @@ void Window::updatePage()
     // 可信页面需要检测是否加载成功
     if (tr("Trusted protected") == pages.first()->getNavigationUID())
     {
-        auto page = qobject_cast<TP::ExecuteProtected *>(pages.first());
+        auto page = qobject_cast<TP::ExecuteProtectedPage *>(pages.first());
         showLoading(page->getInitialized());
     }
 
     // 设备管理页面需要手动刷新设备列表
     if (tr("Device management") == pages.first()->getNavigationUID())
     {
-        auto page = qobject_cast<DM::DeviceList *>(pages.first());
+        auto page = qobject_cast<DM::DeviceListPage *>(pages.first());
         page->update();
         m_ui->m_sidebar->setEnabled(true);
     }

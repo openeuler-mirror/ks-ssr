@@ -16,7 +16,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 BoxImage::BoxImage(QWidget *parent, const QString &imagePath) : QWidget(parent)
 {
@@ -42,5 +42,5 @@ void BoxImage::paintEvent(QPaintEvent *event)
 
     QWidget::paintEvent(event);
 }
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

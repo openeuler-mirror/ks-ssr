@@ -78,7 +78,7 @@ int SDDeviceMonitor::deviceMonitorHandler(sd_device_monitor *sdMonitor,
                                           sd_device *device,
                                           void *userdata)
 {
-    SDDeviceMonitor *monitor = (SDDeviceMonitor *)userdata;
+    SDDeviceMonitor *monitor = reinterpret_cast<SDDeviceMonitor *>(userdata);
 
     monitor->handleDeviceChange(device);
 

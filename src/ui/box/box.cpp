@@ -33,7 +33,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 Box::Box(const QString &uid) : m_uid(uid),
                                m_name("Unknown"),
@@ -263,8 +263,8 @@ void Box::retrievePassword()
 
 void Box::modifyPasswordAccepted()
 {
-    auto encryptCurrentPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getCurrentPassword());
-    auto encryptNewPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getNewPassword());
+    auto encryptCurrentPassword = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getCurrentPassword());
+    auto encryptNewPassword = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getNewPassword());
     auto reply = m_boxManagerProxy->ModifyBoxPassword(m_uid,
                                                       encryptCurrentPassword,
                                                       encryptNewPassword);
@@ -277,7 +277,7 @@ void Box::modifyPasswordAccepted()
 
 void Box::retrievePasswordAccepted()
 {
-    auto encryptPassphrase = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
+    auto encryptPassphrase = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
     auto reply = m_boxManagerProxy->RetrieveBoxPassword(m_uid, encryptPassphrase);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     if (!reply.isError())
@@ -288,7 +288,7 @@ void Box::retrievePasswordAccepted()
 
 void Box::inputMountPasswordAccepted()
 {
-    auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputMountPassword->getBoxPasswordChecked());
+    auto encryptPasswd = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_inputMountPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->Mount(m_uid, encryptPasswd);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     if (!reply.isError())
@@ -299,7 +299,7 @@ void Box::inputMountPasswordAccepted()
 
 void Box::inputDelBoxPasswordAccepted()
 {
-    auto encryptPasswd = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_inputDelBoxPassword->getBoxPasswordChecked());
+    auto encryptPasswd = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_inputDelBoxPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->DelBox(m_uid, encryptPasswd);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     if (!reply.isError())
@@ -307,5 +307,5 @@ void Box::inputDelBoxPasswordAccepted()
         POPUP_MESSAGE_DIALOG(QString(tr("Delete success!")));
     }
 }
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

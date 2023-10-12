@@ -19,7 +19,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 EcryptFS::EcryptFS(QObject *parent) : QObject(parent)
 {
@@ -114,5 +114,5 @@ bool EcryptFS::isExistEcryptFSMod()
     execute(cmd);
     return !m_processOutput.isEmpty();
 }
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS
