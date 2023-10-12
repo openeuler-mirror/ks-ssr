@@ -28,7 +28,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 BoxPage::BoxPage(QWidget *parent) : Page(parent),
                                     m_ui(new Ui::BoxPage()),
@@ -186,7 +186,7 @@ void BoxPage::createBoxAccepted()
     // 口令
     QString passphrase;
     // rsa加密
-    auto encryptPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_createBox->getPassword());
+    auto encryptPassword = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_createBox->getPassword());
     auto reply = m_boxManagerProxy->CreateBox(m_createBox->getName(),
                                               encryptPassword,
                                               passphrase);
@@ -203,5 +203,5 @@ void BoxPage::createBoxAccepted()
     // 显示消息
     POPUP_MESSAGE_DIALOG(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase));
 }
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

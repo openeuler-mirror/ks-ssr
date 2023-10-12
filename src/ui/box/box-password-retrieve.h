@@ -23,7 +23,7 @@ class BoxPasswordRetrieve;
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 class BoxPasswordRetrieve : public TitlebarWindow
 {
@@ -49,5 +49,5 @@ signals:
 private:
     Ui::BoxPasswordRetrieve *m_ui;
 };
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS
