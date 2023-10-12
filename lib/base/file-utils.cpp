@@ -53,31 +53,30 @@ bool FileUtils::writeContentsWithLock(const QString &path, const QString &conten
         return false;
     }
 
-    KLOG_DEBUG("Write contents: %s.", contents.toLocal8Bit());
+    KLOG_DEBUG() << "Write contents: " << contents.toLocal8Bit();
     return FileUtils::writeContents(path, contents);
 }
 
 bool FileUtils::writeContents(const QString &path, const QString &contents)
 {
     QFile file(path);
-    KLOG_DEBUG("path: %s", path.toLocal8Bit());
+    KLOG_DEBUG() << "path: " << path.toLocal8Bit();
 
     bool retval = true;
-    int fp = -1;
 
     /// @todo 循环出口必须要输出一条告警日志？ 这是否意味着这是个死循环，没有正常退出方式？
     do
     {
         if (!file.open(QIODevice::OpenModeFlag::WriteOnly | QIODevice::OpenModeFlag::Truncate))
         {
-            KLOG_WARNING("Failed to open file %s: %s.", path.toLocal8Bit(), strerror(errno));
+            KLOG_WARNING() << "Failed to open file " << path.toLocal8Bit() << " : " << strerror(errno);
             retval = false;
             break;
         }
 
         if (file.write(contents.toLocal8Bit(), contents.length()) == -1)
         {
-            KLOG_WARNING("Failed to write file %s: %s.", path.toLocal8Bit(), strerror(errno));
+            KLOG_WARNING() << "Failed to write file " << path.toLocal8Bit() << " : " << strerror(errno);
             retval = false;
             break;
         }

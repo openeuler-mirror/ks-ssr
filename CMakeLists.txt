@@ -4,6 +4,8 @@ project(ks-ssr VERSION 1.2)
 
 add_compile_options(-fpic)
 
+add_compile_options(-Wall)
+
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # FIXME: 应该改成与版本无关，功能相关的名字，比如 ENABLE_HDMI

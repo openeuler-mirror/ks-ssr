@@ -249,18 +249,18 @@ void ExecuteProtectedModel::updateRecord()
     while (jsonData != jsonDataArray.begin())
     {
         jsonData--;
-        auto data = jsonData->toObject();
-        auto type = TPUtils::fileTypeEnum2Str(data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
-        auto status = TPUtils::fileStatusEnum2Str(data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
+        auto _data = jsonData->toObject();
+        auto type = TPUtils::fileTypeEnum2Str(_data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
+        auto status = TPUtils::fileStatusEnum2Str(_data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
 
         auto fileRecord = TrustedRecord{.selected = false,
-                                        .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
+                                        .filePath = _data.value(KSS_JSON_KEY_DATA_PATH).toString(),
                                         .type = type,
                                         .status = status,
-                                        .md5 = data.value(KSS_JSON_KEY_DATA_HASH).toString()};
+                                        .md5 = _data.value(KSS_JSON_KEY_DATA_HASH).toString()};
         m_executeRecords.push_back(fileRecord);
     }
-    emit filesUpdate(m_executeRecords.size());
+    emit filesUpdate(m_executeRecords.size());  // NOSONAR
 }
 
 QList<TrustedRecord> ExecuteProtectedModel::getExecuteRecords()

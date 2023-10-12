@@ -38,11 +38,14 @@ ReinforcementPython::ReinforcementPython(PyObject *module,
 
     if (!this->class_ || !PyCallable_Check(this->class_))
     {
-        KLOG_WARNING("Failed to get class %s.%s, class: %p, error: %s.",
-                     this->module_fullname_.toLocal8Bit(),
-                     this->class_name_.toLocal8Bit(),
-                     this->class_,
-                     Utils::pyCatchException().toLocal8Bit());
+        KLOG_WARNING() << "Failed to get class "
+                       << this->module_fullname_.toLocal8Bit()
+                       << "."
+                       << this->class_name_.toLocal8Bit()
+                       << ", class: "
+                       << this->class_
+                       << ", error: "
+                       << Utils::pyCatchException().toLocal8Bit();
         return;
     }
 
@@ -195,7 +198,8 @@ PluginPython::PluginPython(PyObject *module) : module_(module)
 
 PluginPython::~PluginPython()
 {
-    this->deactivate();
+    // 在运行时多态的场景下，this->deactivate 会调用到基类的 deactivate ，而不是子类的重载后的 deactivate ，导致出现问题。
+    this->clean();
     Py_XDECREF(this->module_);
 }
 
@@ -215,7 +219,7 @@ void PluginPython::activate()
         auto package_name = PyModule_GetName(this->module_);
         auto reinforcement_num = PyTuple_Size(py_reinforcements);
 
-        KLOG_DEBUG("Package name: %s, reinforcement number: %d.", package_name, reinforcement_num);
+        KLOG_DEBUG() << "Package name: " << package_name << ", reinforcement number: " << reinforcement_num;
 
         for (int32_t i = 0; i < int32_t(reinforcement_num); ++i)
         {
@@ -254,7 +258,7 @@ void PluginPython::activate()
                 }
                 else
                 {
-                    KLOG_WARNING("Unknown key: %s.", key.toLatin1());
+                    KLOG_WARNING() << "Unknown key: " << key.toLatin1();
                 }
             }
 
@@ -280,6 +284,11 @@ void PluginPython::activate()
 
 void PluginPython::deactivate()
 {
+    clean();
+}
+
+void PluginPython::clean()
+{
     for (auto iter = this->reinforcements_modules_.begin(); iter != this->reinforcements_modules_.end(); ++iter)
     {
         Py_XDECREF(iter.value());
@@ -302,7 +311,7 @@ void PluginPython::add_reinforcement(const QString &package_name,
         py_module = PyImport_ImportModule(module_fullname.toLatin1());
         if (!py_module)
         {
-            KLOG_WARNING("Failed to load module: %s, error: %s.", module_fullname.toLatin1(), Utils::pyCatchException().toLatin1());
+            KLOG_WARNING() << "Failed to load module: " << module_fullname.toLatin1() << ", error: " << Utils::pyCatchException().toLatin1() << ".";
             return;
         }
         this->reinforcements_modules_[module_fullname] = py_module;
@@ -313,7 +322,7 @@ void PluginPython::add_reinforcement(const QString &package_name,
 
     if (this->reinforcements_.find(reinforcement_name) != this->reinforcements_.end())
     {
-        KLOG_WARNING("The reinforcement %s is repeated.", reinforcement_name.toLatin1());
+        KLOG_WARNING() << "The reinforcement " << reinforcement_name.toLatin1() << " is repeated.";
         return;
     }
     else

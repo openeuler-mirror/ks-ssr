@@ -29,7 +29,6 @@ int main(int argc, char* argv[])
     QCoreApplication::setApplicationVersion(PROJECT_VERSION);
     klog_qt5_init(QString(), "kylinsec-system", PROJECT_NAME, a.applicationName());
     QTranslator translator;
-#pragma message("将 cmake 翻译部分完成后修改翻译文件路径")
     if (!translator.load(QLocale(), "ks-ssr-daemon", ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
     {
         KLOG_WARNING() << "Load translator failed!";
@@ -41,7 +40,6 @@ int main(int argc, char* argv[])
 
     if (getuid() != 0)
     {
-#pragma message("无法输出中文")
         std::cout << QObject::tr("Command 'ks-br-config' can only be run as root!").toStdString() << std::endl;
         return EXIT_FAILURE;
     }

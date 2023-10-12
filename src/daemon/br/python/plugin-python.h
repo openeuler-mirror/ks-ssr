@@ -59,10 +59,11 @@ public:
     PluginPython(PyObject *module);
     virtual ~PluginPython();
 
-    virtual void activate();
-    virtual void deactivate();
+    virtual void activate() override;
+    virtual void deactivate() override;
+    void clean();
 
-    virtual QSharedPointer<BRReinforcementInterface> getReinforcement(const QString &name) { return MapHelper::getValue(this->reinforcements_, name); };
+    virtual QSharedPointer<BRReinforcementInterface> getReinforcement(const QString &name) override { return MapHelper::getValue(this->reinforcements_, name); };
 
 private:
     void add_reinforcement(const QString &package_name,
