@@ -140,12 +140,14 @@ QStringList Manager::GetLog(const uint per_page, const uint page)
     QStringList logList{};
     // 需要忽略的日志数量
     auto offset = (page - 1) * per_page;
-    std::for_each(logFilesList.cbegin(), logFilesList.cend(), [=, &logList](const QString& logFileName) mutable {
+    while (!logFilesList.isEmpty())
+    {
+        auto logFileName = logFilesList.takeFirst();
         QFile logFile(LOGFILEDIR + logFileName);
         if (!logFile.open(QIODevice::OpenModeFlag::ReadOnly))
         {
             KLOG_ERROR() << "Failed to Open log file " << logFileName
-                        << ", error str: " << logFile.errorString();
+                         << ", error str: " << logFile.errorString();
             return QStringList();
         }
         while (!logFile.atEnd())
@@ -163,7 +165,8 @@ QStringList Manager::GetLog(const uint per_page, const uint page)
                 continue;
             }
             logList << logFile.readLine();
-    } });
+        }
+    }
     std::reverse(logList.begin(), logList.end());
     return logList;
 }
@@ -199,13 +202,14 @@ inline QStringList Manager::getLogFileList(bool isReverse)
 
 void Manager::writeLog(const QString& log)
 {
-    if (!m_logManager->m_file->isWritable())
+    // 先将消息加入消息队列，如果日志可写则唤醒工作线程
+    QMutexLocker locker(&m_logManager->m_queueMutex);
+    m_logManager->m_messageQueue->enqueue(log);
+    if (m_logManager->m_file == nullptr || !m_logManager->m_file->isWritable())
     {
         KLOG_WARNING() << "Cannot write log!";
         return;
     }
-    QMutexLocker locker(&m_logManager->m_queueMutex);
-    m_logManager->m_messageQueue->enqueue(log);
     m_logManager->m_waitCondition->notify_one();
 }
 
@@ -241,14 +245,12 @@ void Manager::logFileChanged(const QString&)
     while (logDiffNum >= 0)
     {
         isNeedBackUpLog = true;
-        const auto logFile = logLists.constFirst();
-        backUpLog();
+        const auto logFile = logLists.takeFirst();
         if (!QFile::rename(logFile,
                            LOGFILENAME "-" + QDateTime::currentDateTime().toString() + "." + QString(logDiffNum)))
         {
             KLOG_WARNING() << "Failed to rename log file: " << logFile;
         }
-        logLists.removeFirst();
         logDiffNum--;
     }
 
