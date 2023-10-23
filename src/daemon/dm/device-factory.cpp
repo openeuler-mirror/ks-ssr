@@ -33,8 +33,6 @@ QSharedPointer<Device> DeviceFactory::createDevice(SDDevice* device)
     auto devtype = device->getDevtype();
     auto syspath = device->getSyspath();
 
-    KLOG_DEBUG() << "create device for subsystem " << subsystem << ", syspath: " << syspath;
-
     if (subsystem == "usb" && devtype == "usb_device")
     {
         return QSharedPointer<USBDevice>(new USBDevice(syspath));
