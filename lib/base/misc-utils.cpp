@@ -22,9 +22,9 @@ MiscUtils::MiscUtils()
 {
 }
 
-bool MiscUtils::spawnSync(const QList<QString> &argv,
-                          QString *standard_output,
-                          QString *standard_error)
+bool MiscUtils::spawnSync(const QList<QString>& argv,
+                          QString& standardOutput,
+                          QString& standardError)
 {
     // KLOG_DEBUG("Exec command: %s.", StrUtils::join(argv.toVector(), " ").toLatin1().data());
     KLOG_DEBUG() << "Exec command: " << QStringList(argv).join(" ").toLocal8Bit();
@@ -40,10 +40,10 @@ bool MiscUtils::spawnSync(const QList<QString> &argv,
         KLOG_WARNING() << "Failed to exec command " << QStringList(argv).join(" ").toLatin1() << " exit status: " << process.exitCode();
         return false;
     }
-    // 由于是传入的指针，所以资源应该由调用者管理
-    standard_output = new QString(process.readAllStandardOutput());  // NOSONAR
-    // 由于是传入的指针，所以资源应该由调用者管理
-    standard_error = new QString(process.readAllStandardError());  // NOSONAR
+    standardOutput.clear();
+    standardOutput.append(process.readAllStandardOutput());
+    standardError.clear();
+    standardOutput.append(process.readAllStandardError());
     return true;
 }
 }  // namespace KS

@@ -6,8 +6,8 @@ import br.systemd
 import br.log
 
 SSHD_CONF_PATH = "/etc/ssh/sshd_config"
-SELINUX_MODULES_PORT_PATH = "/usr/share/ks-br-manager/br-sshd-port.pp"
-SELINUX_MODULES_SFTP_PATH = "/usr/share/ks-br-manager/br-sshd-sftp.pp"
+SELINUX_MODULES_PORT_PATH = "/usr/share/ks-ssr/br-sshd-port.pp"
+SELINUX_MODULES_SFTP_PATH = "/usr/share/ks-ssr/br-sshd-sftp.pp"
 
 # 允许root进行ssh远程登陆
 ROOT_LOGIN_ARG_ENABLED = "enabled"

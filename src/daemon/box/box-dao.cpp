@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "box-dao.h"
@@ -81,66 +81,56 @@ BoxRecord BoxDao::getBox(const QString &boxID)
 
 QList<BoxRecord> BoxDao::getBoxs()
 {
-    QSqlQuery query(m_boxDb);
     QList<BoxRecord> boxRecordList;
+    SqlDataType result{};
 
     QString cmd = "select * from boxs;";
 
-    if (!query.exec(cmd))
+    if (!m_boxDb->exec(cmd, &result))
     {
         KLOG_WARNING() << "Table boxs is empty search error!";
     }
     else
     {
-        while (query.next())
-        {
+        std::for_each(result.cbegin(), result.cend(), [&boxRecordList](const SqlRowDataType& row) {
             BoxRecord boxRecord;
-            boxRecord.boxName = query.value(0).toString();
-            boxRecord.boxID = query.value(1).toString();
-            boxRecord.mounted = QVariant(query.value(2).toString()).toBool();
-            boxRecord.encryptpassword = query.value(3).toString();
-            boxRecord.encryptPassphrase = query.value(4).toString();
-            boxRecord.encryptSig = query.value(5).toString();
-            boxRecord.userUID = query.value(6).toInt();
+            boxRecord.boxName = row[0].toString();
+            boxRecord.boxID = row[1].toString();
+            boxRecord.mounted = row[2].toBool();
+            boxRecord.encryptpassword = row[3].toString();
+            boxRecord.encryptPassphrase = row[4].toString();
+            boxRecord.encryptSig = row[5].toString();
+            boxRecord.userUID = row[6].toInt();
             boxRecordList << boxRecord;
-        }
+        });
     }
     return boxRecordList;
 }
 
 int BoxDao::getBoxCount()
 {
-    QSqlQuery query(m_boxDb);
     QString cmd = "select count() from boxs;";
-    if (!query.exec(cmd))
+    SqlDataType result{};
+    if (!m_boxDb->exec(cmd, &result))
     {
         KLOG_ERROR() << "Get boxs sum error!";
         return -1;
     }
     else
     {
-        query.seek(0);
-        KLOG_DEBUG() << "The total number of boxes obtained is " << query.value(0).toInt();
-        return query.value(0).toInt();
+        KLOG_DEBUG() << "The total number of boxes obtained is " << result[0][0].toInt();
+        return result[0][0].toInt();
     }
 }
 
 void BoxDao::init()
 {
-    m_boxDb = QSqlDatabase::addDatabase("QSQLITE");
-    m_boxDb.setDatabaseName(SSR_INSTALL_DATADIR "/ssr.dat");  //设置数据库名称
-    if (!m_boxDb.open())
-    {
-        KLOG_ERROR() << "BoxDao open error ：" << m_boxDb.lastError();
-    }
-
-    // 创建表
-    QSqlQuery query(m_boxDb);
+    m_boxDb = new Database();
 
     // 表格不存在则创建
     if (getBoxCount() < 1)
     {
-        query.exec("drop table boxs");
+        m_boxDb->exec("drop table boxs");
 
         QString cmd = "create table boxs(\
                                         boxName varchar(100),\
@@ -151,7 +141,7 @@ void BoxDao::init()
                                         encryptSig varchar(1000),\
                                         userUID integer)";
 
-        if (!query.exec(cmd))
+        if (!m_boxDb->exec(cmd))
         {
             KLOG_ERROR() << "BoxDao query create error!";
         }
@@ -160,9 +150,7 @@ void BoxDao::init()
 
 bool BoxDao::execute(const QString &cmd)
 {
-    QSqlQuery query(m_boxDb);
-
-    if (!query.exec(cmd))
+    if (!m_boxDb->exec(cmd))
     {
         KLOG_ERROR() << "Execute sql query cmd error! cmd = " << cmd;
         return false;

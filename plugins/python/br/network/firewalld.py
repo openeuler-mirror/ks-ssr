@@ -5,7 +5,7 @@ import br.systemd
 import br.log
 
 FIREWALL_CMD_PATH = '/usr/bin/firewall-cmd'
-IPTABLES_RULES_SAVE_PATH = '/usr/share/ks-br-manager/br-iptables.rules'
+IPTABLES_RULES_SAVE_PATH = '/usr/share/ks-ssr/br-iptables.rules'
 
 #iptables -w参数防止进程抢占
 
