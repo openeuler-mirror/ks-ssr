@@ -136,7 +136,6 @@ QJsonValue StrUtils::str2json(const QString &str)
 {
     // str.toLatin1().data() 这种做法是错误的，中间对象 QByteArray 会被析构。
     auto ByteArray = str.toLatin1();
-    KLOG_DEBUG() << "json str: " << str;
     QVariant variant(str);
 
     return QJsonValue::fromVariant(variant);

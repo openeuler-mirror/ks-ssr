@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+    <interface name="com.kylinsec.SSR.Account">
+        <method name="SetUidReusable">
+            <arg type="b" name="enalbe" direction="in">
+                <summary>the state of switch that reuseable</summary>
+            </arg>
+            <description>enable the reuseale uid.</description>
+        </method>
+
+        <method name="ChangePassphrase">
+            <arg type="s" name="userName" direction="in">
+                <summary>new passphrase.</summary>
+            </arg>
+            <arg type="s" name="oldPassphrase" direction="in">
+                <summary>new passphrase.</summary>
+            </arg>
+            <arg type="s" name="newPassphrase" direction="in">
+                <summary>new passphrase.</summary>
+            </arg>
+            <description>change current passphrase.</description>
+        </method>
+
+        <method name="Login">
+            <arg type="s" name="userName" direction="in">
+                <summary>user name.</summary>
+            </arg>
+            <arg type="s" name="passWord" direction="in">
+                <summary>passphrase.</summary>
+            </arg>
+            <description>legacy login.</description>
+        </method>
+
+        <method name="Logout">
+            <description>logout.</description>
+        </method>
+
+        <signal name="PasswordChange">
+            <arg name="userName" type="s">
+                <summary>UserName that password changed</summary>
+            </arg>
+            <description>Password has been change, change your login status.</description>
+        </signal>
+    </interface>
+</node>

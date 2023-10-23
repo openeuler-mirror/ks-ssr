@@ -150,6 +150,7 @@ QStringList Manager::GetLog(const uint per_page, const uint page)
                          << ", error str: " << logFile.errorString();
             return QStringList();
         }
+#warning "以文件行数为轮转标准，避免遍历文件来获取文件行数"
         while (!logFile.atEnd())
         {
             if (static_cast<uint>(logList.count()) == (per_page))
