@@ -47,8 +47,16 @@ qt5_add_dbus_adaptor(
 
 qt5_add_dbus_adaptor(
   ACCOUNT_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.Account.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/account/manager.h KS::Account::Manager account_adaptor
-  AccountAdaptor)
+  ${CMAKE_SOURCE_DIR}/src/daemon/account/manager.h KS::Account::Manager
+  account_adaptor AccountAdaptor)
+
+qt5_add_dbus_adaptor(
+  SECURITY_BOX_DBUS_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.SecurityBox.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/security-box/manager.h
+  KS::SecurityBox::Manager
+  security_box_adaptor
+  SecurityBoxAdaptor)
 
 set(TARGET_NAME ks-ssr-daemon)
 
@@ -69,6 +77,7 @@ add_executable(
   ${LOG_DBUS_SRCS}
   ${ACCOUNT_DBUS_SRCS}
   ${BR_PROTOCOL_OUTPUT}
+  ${SECURITY_BOX_DBUS_SRCS}
   ${QM_FILES})
 
 target_include_directories(
@@ -99,7 +108,8 @@ target_link_libraries(
           ${PYTHON_LIBRARIES}
           ${LIBCRYPTO_LIBRARIES}
           ${LIBAUDIT_LIBRARIES}
-          ${LIBSYSTEMD_LIBRARIES})
+          ${LIBSYSTEMD_LIBRARIES}
+          ${LIBSELINUX_LIBRARIES})
 
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${SSR_BR_INSTALL_LIBEXECDIR})

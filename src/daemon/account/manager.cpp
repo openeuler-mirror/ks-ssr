@@ -12,36 +12,77 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "manager.h"
+#include "src/daemon/account/manager.h"
+#include <qt5-log-i.h>
 #include <src/daemon/account_adaptor.h>
+#include <src/daemon/common/dbus-helper.h>
+#include <ssr-i.h>
+#include <ssr-marcos.h>
+#include <QDBusServiceWatcher>
+#include <QSettings>
+#include <QtDBus>
+#include <iostream>
+#include "lib/base/crypto-helper.h"
+
+#define SSR_ACCOUNT_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Account"
+#define PASSWD_PATH "/etc/passwd"
+#define REGISTER_USER_CMD "useradd"
+#define UID_REUSE_CONTROL_PATH "/etc/uid_reuse_control.conf"
+#define UID_REUSE_CONTROL_KEY "UID_REUSE_CONTROL"
+#define USER_INFO_DB_TABLE_NAME "userInfo"
+#define USER_INFO_DB_COLUMN1 "name"
+#define USER_INFO_DB_COLUMN2 "passwd"
+#define USER_INFO_INITIAL_PASSWD "123123"
+#define USER_FREEZE_DB_TABLE_NAME "userFreeze"
+#define USER_FREEZE_DB_COLUMN1 "name"
+#define USER_FREEZE_DB_COLUMN2 "tryTimes"
+#define USER_FREEZE_DB_COLUMN3 "lastTryTime"
+#define RSA_KEY_LENGTH 512
 
 namespace KS
 {
 namespace Account
 {
 
-Manager* Manager::m_accountManager = nullptr;
+const Manager* Manager::m_accountManager = nullptr;
 
 Manager::Manager()
     : m_uidReuseConfig(new QSettings(UID_REUSE_CONTROL_PATH, QSettings::IniFormat, this)),
       m_isUidReusable(!!(m_uidReuseConfig->value(UID_REUSE_CONTROL_KEY, 0).toInt())),
       m_metaAccountEnum(QMetaEnum::fromType<Manager::Role>()),
-      m_db(new Database())
+      m_db(new Database()),
+      m_dbusServerWatcher(new QDBusServiceWatcher(this))
+
 {
-    initDb();
+    initDatabase();
     QFile file(UID_REUSE_CONTROL_PATH);
     if (!file.exists())
     {
         KLOG_ERROR() << "uid reuse control file does not exist.";
     }
 
+    KS::CryptoHelper::generateRsaKey(RSA_KEY_LENGTH, m_rsaPrivateKey, m_rsaPublicKey);
+
     new AccountAdaptor(this);
     QDBusConnection dbusConnection = QDBusConnection::systemBus();
     if (!dbusConnection.registerObject(SSR_ACCOUNT_DBUS_OBJECT_PATH, this))
     {
         KLOG_ERROR() << "Register Account DBus object error:" << dbusConnection.lastError().message();
-        abort();
     }
+
+    m_dbusServerWatcher->setConnection(dbusConnection);
+    m_dbusServerWatcher->setWatchMode(QDBusServiceWatcher::WatchForOwnerChange);
+    connect(m_dbusServerWatcher, &QDBusServiceWatcher::serviceUnregistered, [this](const QString& service) {
+        this->m_dbusServerWatcher->removeWatchedService(service);
+        KLOG_INFO() << "The front program has exit, clean data. Unique Name: " << service;
+        auto it = this->m_clients.find(service);
+        if (it == this->m_clients.end())
+        {
+            return;
+        }
+        QMutexLocker locker(&(this->m_clientMutex));
+        this->m_clients.erase(it);
+    });
 }
 
 Manager::~Manager()
@@ -62,17 +103,17 @@ void Manager::globDeinit()
     delete m_accountManager;
 }
 
-void Manager::SetUidReusable(bool enable)
+void Manager::SetUidReusable(bool enabled)
 {
-    m_isUidReusable = enable;
-    m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enable));
+    m_isUidReusable = enabled;
+    m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enabled));
     m_uidReuseConfig->sync();
 }
 
 bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassphrase, const QString& newPassphrase)
 {
-    auto callerPid = getCallerPid();
-    RETURN_VAL_IF_TRUE(callerPid == -1, false);
+    auto callerUnique = DBusHelper::getCallerUniqueName(this);
+    RETURN_VAL_IF_TRUE(callerUnique.isNull(), false);
 
     if (!verifyPassword(userName, oldPassphrase))
     {
@@ -80,31 +121,32 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
         return false;
     }
     auto isSuccess = changePassword(userName, newPassphrase);
-    emit PasswordChange(userName);
+    emit PasswordChanged(userName);
     return isSuccess;
 }
 
 bool Manager::Login(const QString& userName, const QString& passWord)
 {
-    auto callerPid = getCallerPid();
-    RETURN_VAL_IF_TRUE(callerPid == -1, false);
+    auto callerUnique = DBusHelper::getCallerUniqueName(this);
+    RETURN_VAL_IF_TRUE(callerUnique.isNull(), false);
+    m_dbusServerWatcher->addWatchedService(this->message().service());
 
     bool isSuccess = false;
     auto role_index = m_metaAccountEnum.keyToValue(userName.toLocal8Bit(), &isSuccess);
     auto role = static_cast<Role>(role_index);
     if (!isSuccess)
     {
-        KLOG_ERROR() << "Unknown userName: " << userName << ", pid: " << callerPid;
+        KLOG_ERROR() << "Unknown userName: " << userName << ", Unique name: " << callerUnique;
         return false;
     }
 
-    QMutexLocker locker(&m_pidToAccountMutex);
-    auto it = m_pidToAccount.find(callerPid);
+    QMutexLocker locker(&m_clientMutex);
+    auto it = m_clients.find(callerUnique);
     if (isLogin(it))
     {
         KLOG_WARNING() << "Forward program has login, Current role: "
                        << m_metaAccountEnum.valueToKeys(static_cast<int>(it.value().m_role))
-                       << ", pid: " << callerPid;
+                       << ", Unique name: " << callerUnique;
         return false;
     }
 
@@ -121,27 +163,27 @@ bool Manager::Login(const QString& userName, const QString& passWord)
         return false;
     }
     resetFreezeInfo(userName);
-    m_pidToAccount.insert(callerPid, {true, role, callerPid});
+    m_clients.insert(callerUnique, {true, role, DBusHelper::getCallerPid(this)});
     return true;
 }
 
 bool Manager::Logout()
 {
-    auto callerPid = getCallerPid();
-    RETURN_VAL_IF_TRUE(callerPid == -1, false);
+    auto callerUnique = DBusHelper::getCallerUniqueName(this);
+    RETURN_VAL_IF_TRUE(callerUnique.isNull(), false);
 
-    QMutexLocker locker(&m_pidToAccountMutex);
-    auto it = m_pidToAccount.find(callerPid);
+    QMutexLocker locker(&m_clientMutex);
+    auto it = m_clients.find(callerUnique);
     if (!isLogin(it))
     {
-        KLOG_ERROR() << "Maybe its internal error, Please login before logout, pid: " << callerPid;
+        KLOG_ERROR() << "Maybe its internal error, Please login before logout, Unique name: " << callerUnique;
         return false;
     }
-    it.value().m_isLogin = false;
+    it.value().isLogin = false;
     return true;
 }
 
-void Manager::initDb()
+void Manager::initDatabase()
 {
     constexpr const char* getUserInfoTables = "SELECT * "
                                               "FROM sqlite_master "
@@ -155,7 +197,7 @@ void Manager::initDb()
     if (!m_db->exec(getUserInfoTables, &res))
     {
         KLOG_ERROR() << "Failed to get table: " USER_INFO_DB_TABLE_NAME;
-        abort();
+        return;
     }
     if (res.isEmpty())
     {
@@ -166,7 +208,7 @@ void Manager::initDb()
     if (!m_db->exec(getUserFreezeTables, &res))
     {
         KLOG_ERROR() << "Failed to get table: " USER_FREEZE_DB_TABLE_NAME;
-        abort();
+        return;
     }
     if (res.isEmpty())
     {
@@ -182,16 +224,17 @@ void Manager::initUserInfoTable()
     if (!m_db->exec(createUserInfoTables))
     {
         KLOG_ERROR() << "Failed to create table: " USER_INFO_DB_TABLE_NAME;
-        abort();
+        return;
     }
     for (auto i = 0; i < m_metaAccountEnum.keyCount(); i++)
     {
         const QString insertUserInfo("insert into " USER_INFO_DB_TABLE_NAME " values ('%1', '%2');");
         auto userName = m_metaAccountEnum.key(i);
-        if (!m_db->exec(insertUserInfo.arg(userName).arg(USER_INFO_INITIAL_PASSWD)))
+        auto encrypterdPassword = CryptoHelper::aesEncrypt(USER_INFO_INITIAL_PASSWD);
+        if (!m_db->exec(insertUserInfo.arg(userName).arg(encrypterdPassword)))
         {
             KLOG_ERROR() << "Failed insert user info: " << userName;
-            abort();
+            return;
         }
     }
 }
@@ -203,7 +246,7 @@ void Manager::initUserFreezeTable()
     if (!m_db->exec(createUserFreezeInfoTables))
     {
         KLOG_ERROR() << "Failed to create table: " USER_INFO_DB_TABLE_NAME;
-        abort();
+        return;
     }
     for (auto i = 0; i < m_metaAccountEnum.keyCount(); i++)
     {
@@ -212,7 +255,7 @@ void Manager::initUserFreezeTable()
         if (!m_db->exec(insertUserFreeze.arg(userName).arg(0).arg(0)))
         {
             KLOG_ERROR() << "Failed insert user Freeze: " << userName;
-            abort();
+            return;
         }
     }
 }
@@ -231,7 +274,15 @@ bool Manager::verifyPassword(const QString& userName, const QString& passwd) con
         KLOG_ERROR() << "Failed to access db";
         return false;
     }
-    return (!res.isEmpty() && res[0][0].toString() == passwd);
+    if (res.isEmpty())
+    {
+        KLOG_WARNING() << "This account dont have password, username: " << userName;
+        return false;
+    }
+
+    auto decryptedPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, passwd);
+    auto currentPassword = CryptoHelper::aesDecrypt(res[0][0].toString());
+    return decryptedPassword == currentPassword;
 }
 
 bool Manager::isFreeze(const QString& userName) const
@@ -275,7 +326,6 @@ void Manager::updateFreezeInfo(const QString& userName) const
     if (!m_db->exec(QString(updateFreeze).arg(QDateTime::currentDateTime().toSecsSinceEpoch()).arg(userName)))
     {
         KLOG_ERROR() << "Failed to Update " USER_FREEZE_DB_TABLE_NAME;
-        abort();
     }
 }
 
@@ -297,9 +347,12 @@ bool Manager::changePassword(const QString& userName, const QString& newPasswd) 
                                    " SET " USER_INFO_DB_COLUMN2 " = '%1'"
                                    " WHERE " USER_INFO_DB_COLUMN1 " = '%2'";
     QString sqlCmd{rawCmd};
-    KLOG_DEBUG() << "sql cmd: " << sqlCmd.arg(newPasswd).arg(userName);
     QWriteLocker locker(&m_dbMutex);
-    return m_db->exec(sqlCmd.arg(newPasswd).arg(userName));
+    // rsa -> raw text
+    auto rsaDecryptedPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, newPasswd);
+    // raw text -> aes
+    auto aesEncryptedPassword = CryptoHelper::aesEncrypt(rsaDecryptedPassword);
+    return m_db->exec(sqlCmd.arg(aesEncryptedPassword).arg(userName));
 }
 };  // namespace Account
 };  // namespace KS
