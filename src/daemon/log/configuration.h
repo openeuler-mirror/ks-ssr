@@ -1,7 +1,9 @@
 #include <QHostAddress>
-#include <QSettings>
 #include <QString>
 #include "config.h"
+
+class QSettings;
+class QString;
 
 namespace KS
 {

@@ -12,7 +12,8 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "message.h"
+#include "src/daemon/log/message.h"
+#include <qt5-log-i.h>
 
 namespace KS
 {
