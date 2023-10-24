@@ -399,8 +399,6 @@ QString CryptoHelper::desDecrypt(const QString &message, const QString &key)
 
 QString CryptoHelper::brEncrypt(const QString &public_filename, const QString &message)
 {
-    KLOG_DEBUG("key filename: %s. message: %s.", public_filename.toLatin1().data(), message.toLatin1().data());
-
     QString result = CryptoHelper::base64Encrypt(message);
     RETURN_VAL_IF_FALSE(!result.isEmpty(), QString());
 
