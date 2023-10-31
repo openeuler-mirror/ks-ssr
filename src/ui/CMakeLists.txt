@@ -10,11 +10,11 @@ file(GLOB_RECURSE UI_CPP_FILES ./*.cpp)
 configure_file(config-ui.h.in ${PROJECT_BINARY_DIR}/config-ui.h)
 
 set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BoxManager.xml
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.PrivateBox.xml
   PROPERTIES CLASSNAME BoxManagerProxy NO_NAMESPACE true)
 
 qt5_add_dbus_interface(
-  BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BoxManager.xml
+  BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.PrivateBox.xml
   box_manager_proxy)
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.KSS.xml

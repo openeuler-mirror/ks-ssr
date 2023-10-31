@@ -32,7 +32,7 @@ extern "C"
         ERROR_CHANGE_STORAGE_MODE_FAILED,
         ERROR_USER_PIN_ERROR,
 
-        // BM Box manager
+        // BM PrivateBox manager
         ERROR_BM_DELETE_FAILED,
         ERROR_BM_MOUDLE_UNLOAD,
         ERROR_BM_MKDIR_DATA_DIR_FAILED,
