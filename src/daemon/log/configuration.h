@@ -42,6 +42,7 @@ public:
     QString m_account;
     QString m_passwd;
     QHostAddress m_ip;
+#pragma message("TODO: SCP 还需要对应服务端的路径")
 };
 };  // namespace Log
 };  // namespace KS

@@ -36,7 +36,7 @@ public:
         AUDIT,
         DEVICE,
         LOG,
-        SECURITY_BOX
+        TOOL_BOX
     };
     Q_ENUM(LogType)
 
