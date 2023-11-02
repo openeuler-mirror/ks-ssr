@@ -104,7 +104,9 @@ void Wrapper::removeTrustedFile(const QString &filePath)
 
     // 需要判断内核模块是否开启防卸载
     QJsonParseError jsonError;
-    auto jsonDoc = QJsonDocument::fromJson(getTrustedFiles(SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_KERNEL).toUtf8(), &jsonError);
+    auto trustedFilesJson = getTrustedFiles(SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_KERNEL).toUtf8();
+    auto jsonDoc = QJsonDocument::fromJson(trustedFilesJson, &jsonError);
+    
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
