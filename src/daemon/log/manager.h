@@ -14,35 +14,14 @@
 
 #pragma once
 
-#include <qt5-log-i.h>
 #include <QDBusContext>
-#include <QDateTime>
-#include <QDir>
-#include <QFile>
-#include <QFileSystemWatcher>
-#include <QHostAddress>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QList>
-#include <QMutexLocker>
-#include <QProcess>
-#include <QQueue>
-#include <QSharedPointer>
-#include <QString>
-#include <QThread>
-#include <QWaitCondition>
-#include "config.h"
-#include "message.h"
-#include "write-worker.h"
-#include "configuration.h"
+#include <QMutex>
+#include "src/daemon/log/configuration.h"
 
-#define AUDITD_CONF "/etc/audit/auditd.conf"
-
-#define SSR_LOG_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Log"
-
-#define LOGFILEDIR SSR_INSTALL_DATADIR "/log/"
-#define LOGFILENAME "ks-ssr.log"
-#define ABSOLUTELOGFILEPATH LOGFILEDIR LOGFILENAME
+class QFileSystemWatcher;
+class QProcess;
+class QWaitCondition;
+class QFile;
 
 // Qt 自身的文件读写就有一个大小为 16384 大小的缓冲区，所以在此类中不再做缓冲
 namespace KS

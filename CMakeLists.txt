@@ -3,8 +3,11 @@ cmake_minimum_required(VERSION 3.2)
 project(ks-ssr VERSION 1.2)
 
 add_compile_options(-fpic)
-
 add_compile_options(-Wall)
+
+if(EXTRA_COMPILE_CHECK)
+  add_compile_options(-Wextra -Wconversion -Wuninitialized)
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -38,7 +41,9 @@ pkg_search_module(LIBSYSTEMD REQUIRED libsystemd)
 pkg_search_module(KS_LICENSE REQUIRED ks-license)
 pkg_search_module(LIBCRYPTO REQUIRED libcrypto)
 pkg_search_module(LIBAUDIT REQUIRED audit)
+pkg_search_module(SQLCIPHER REQUIRED sqlcipher)
 pkg_search_module(KYLIN_LICENSE REQUIRED kylin-license)
+pkg_search_module(LIBSELINUX REQUIRED libselinux)
 
 if(ENABLE_GTEST)
   pkg_search_module(GTEST REQUIRED gtest)

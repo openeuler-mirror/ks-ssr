@@ -12,9 +12,22 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "manager.h"
+#include "src/daemon/log/manager.h"
+#include "src/daemon/log/write-worker.h"
+#include <src/daemon/common/dbus-helper.h>
 #include <src/daemon/log_adaptor.h>
+#include <ssr-marcos.h>
+#include <QDir>
+#include <QHostAddress>
 #include <QStringBuilder>
+#include "config.h"
+#include <src/daemon/log/message.h>
+
+#define AUDITD_CONF "/etc/audit/auditd.conf"
+#define SSR_LOG_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Log"
+#define LOGFILEDIR SSR_INSTALL_DATADIR "/log/"
+#define LOGFILENAME "ks-ssr.log"
+#define ABSOLUTELOGFILEPATH LOGFILEDIR LOGFILENAME
 
 namespace KS
 {
@@ -110,12 +123,8 @@ void Manager::globalDeinit()
 
 QStringList Manager::GetLog(const uint per_page, const uint page)
 {
-    if (m_logManager->calledFromDBus())
-    {
-        auto conn = m_logManager->connection();
-        auto dbusMsg = m_logManager->message();
-        auto callerPid = conn.interface()->servicePid(dbusMsg.service()).value();
-    }
+    auto callerPid = DBusHelper::getCallerUniqueName(m_logManager);
+    RETURN_VAL_IF_TRUE(callerPid == -1, QStringList());
 
     Manager::writeLog(Message{Message::LogType::LOG, "get logs"}.serialize());
     QMutexLocker locker(&Manager::m_logManager->m_fileMutex);
@@ -150,6 +159,7 @@ QStringList Manager::GetLog(const uint per_page, const uint page)
                          << ", error str: " << logFile.errorString();
             return QStringList();
         }
+#warning "以文件行数为轮转标准，避免遍历文件来获取文件行数"
         while (!logFile.atEnd())
         {
             if (static_cast<uint>(logList.count()) == (per_page))
@@ -261,7 +271,7 @@ void Manager::logFileChanged(const QString&)
         {
             KLOG_ERROR() << "Internal error: Current log nums shoule be config's numLogs - 1 !"
                          << "log nums = " << logLists.count() << ", config's numLogs = " << m_configurations.m_numLogs;
-            abort();
+            return;
         }
         backUpLog();
     }

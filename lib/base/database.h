@@ -14,23 +14,29 @@
 
 #pragma once
 
-// #include <giomm.h>
-#include <vector>
-// #include <string>
-#include <QList>
-#include <QString>
+#include <qt5-log-i.h>
+#include <sqlcipher/sqlite3.h>
+
+class QVariant;
+template <typename T> class QVector;
 
 namespace KS
 {
-class MiscUtils
+using SqlRowDataType = QVector<QVariant>;
+using SqlDataType = QVector<SqlRowDataType>;
+
+class Database
 {
 public:
-    MiscUtils();
-    virtual ~MiscUtils(){};
+    Database();
+    virtual ~Database();
+    bool exec(const QString& cmd, SqlDataType* const result = nullptr);
 
-    static bool spawnSync(const QList<QString>& argv,
-                          QString& standardOutput,
-                          QString& standardError);
+private:
+    bool checkExec(const int rc, const QString& action) const;
+
+private:
+    sqlite3* m_db;
+};
+
 };  // namespace KS
-
-}  // namespace KS
