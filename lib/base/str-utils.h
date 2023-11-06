@@ -19,7 +19,6 @@
 #include <QJsonObject>
 #include <QString>
 #include <QVector>
-#include <vector>
 
 namespace KS
 {
@@ -44,7 +43,11 @@ public:
     static QString trim(const QString &s);
 
     static QString json2str(const QJsonObject &json);
-    static QJsonValue str2json(const QString &str);
+
+    static QJsonObject str2jsonObject(const std::string &str);
+    static QJsonObject str2jsonObject(const QString &str);
+    static QJsonValue str2jsonValue(const std::string &str);
+    static QJsonValue str2jsonValue(const QString &str);
 
     // 判断str是否以prefix字符串开头
     static bool startswith(const QString &str, const QString &prefix);

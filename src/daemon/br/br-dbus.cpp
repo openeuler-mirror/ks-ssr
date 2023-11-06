@@ -431,7 +431,7 @@ qlonglong BRDBus::Scan(const QStringList& names)
                                               QString error;
                                               if (reinforcement_interface->get(args, error))
                                               {
-                                                  retval[JOB_RETURN_VALUE] = StrUtils::str2json(args);
+                                                  retval[JOB_RETURN_VALUE] = StrUtils::str2jsonObject(args);
                                               }
                                               else
                                               {
@@ -535,7 +535,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                     auto& iter_args = iter->arg();
                     for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                     {
-                        param.insert(iter_arg->name().c_str(), StrUtils::str2json(iter_arg->value().c_str()));
+                        param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
                     }
                     param_str = StrUtils::json2str(param);
                 }
@@ -552,7 +552,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                     auto& iter_args = iter->arg();
                     for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                     {
-                        param.insert(iter_arg->name().c_str(), StrUtils::str2json(iter_arg->value().c_str()));
+                        param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
                     }
                     param_str = StrUtils::json2str(param);
                 }
@@ -565,7 +565,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                     auto& iter_args = iter->arg();
                     for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                     {
-                        param.insert(iter_arg->name().c_str(), StrUtils::str2json(iter_arg->value().c_str()));
+                        param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
                     }
                 }
 
@@ -576,7 +576,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                 auto& args = reinforcement->getRs().arg();
                 for (auto arg_iter = args.begin(); arg_iter != args.end(); ++arg_iter)
                 {
-                    param.insert(arg_iter->name().c_str(), StrUtils::str2json(arg_iter->value().c_str()));
+                    param.insert(arg_iter->name().c_str(), StrUtils::str2jsonValue(arg_iter->value()));
                 }
                 param_str = StrUtils::json2str(param);
             }
@@ -765,9 +765,9 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
             reinforcement_result.name(operation->reinforcement_name.toStdString());
 
             BRReinforcementState state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNKNOWN;
-            auto result_values = StrUtils::str2json(operation_result.result);
+            const auto result_values = StrUtils::str2jsonObject(operation_result.result);
             // 如果结果为空应该时任务被取消了，如果在收到客户端的任务取消命令时操作已经在执行，结果也可能不为空，所以这里不能通过任务是否被取消的状态来判断
-            if (result_values.isNull())
+            if (result_values.isEmpty())
             {
                 state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNSCAN;
                 reinforcement_result.args("");
@@ -781,7 +781,7 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
             else
             {
                 state = BRReinforcementState::BR_REINFORCEMENT_STATE_SCAN_DONE;
-                reinforcement_result.args(StrUtils::json2str(result_values.toObject()).toStdString());
+                reinforcement_result.args(StrUtils::json2str(result_values).toStdString());
             }
             auto reinforcement = this->plugins_->getReinforcement(operation->reinforcement_name);
 
@@ -887,7 +887,7 @@ void BRDBus::onReinfoceProcessChangedCb(const JobResult& job_result)
             reinforcement_result.name(operation->reinforcement_name.toStdString());
 
             BRReinforcementState state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNKNOWN;
-            auto result_values = StrUtils::str2json(operation_result.result);
+            auto result_values = StrUtils::str2jsonValue(operation_result.result);
 
             if (result_values.isNull())
             {
