@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(ks-ssr VERSION 1.2)
 
-add_compile_options(-fpic)
-add_compile_options(-Wall)
+add_compile_options(-fpic -Wall)
 
 if(EXTRA_COMPILE_CHECK)
   add_compile_options(-Wextra -Wconversion -Wuninitialized)

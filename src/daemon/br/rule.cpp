@@ -26,7 +26,7 @@ QSharedPointer<Rule> Rule::create(const Protocol::Rule &rule)
     {
         RETURN_VAL_IF_FALSE(rule.value_fixed().present(), QSharedPointer<Rule>());
         // 如果 xsd 的定义时能使用 QString 的话应该可以少很多临时变量
-        auto value = StrUtils::str2json(QString::fromStdString(rule.value_fixed().get()));
+        auto value = StrUtils::str2jsonValue(rule.value_fixed().get());
         return QSharedPointer<RuleFixed>::create(value);
     }
     case Protocol::RuleType::Value::RANGE:
@@ -37,11 +37,11 @@ QSharedPointer<Rule> Rule::create(const Protocol::Rule &rule)
         QJsonValue max_value;
         if (value_range.min_value().present())
         {
-            min_value = StrUtils::str2json(QString::fromStdString(value_range.min_value().get()));
+            min_value = StrUtils::str2jsonValue(value_range.min_value().get());
         }
         if (value_range.max_value().present())
         {
-            max_value = StrUtils::str2json(QString::fromStdString(value_range.max_value().get()));
+            max_value = StrUtils::str2jsonValue(value_range.max_value().get());
         }
         return QSharedPointer<RuleRange>::create(min_value, max_value);
     }
@@ -52,7 +52,7 @@ QSharedPointer<Rule> Rule::create(const Protocol::Rule &rule)
         QVector<QJsonValue> values;
         for (const auto &enum_value : value_enum.values())
         {
-            auto value = StrUtils::str2json(QString::fromStdString(enum_value));
+            auto value = StrUtils::str2jsonValue(enum_value);
             values.push_back(value);
         }
         return QSharedPointer<RuleEnum>::create(values);
@@ -111,9 +111,10 @@ Rule::JsonCmpResult Rule::jsonValueCmp(const QJsonValue &v1, const QJsonValue &v
 }
 
 RuleRange::RuleRange(const QJsonValue &min_value,
-                     const QJsonValue &max_value) : min_value_(min_value),
-                                                    max_value_(max_value),
-                                                    value_type_(QJsonValue::Type::Undefined)
+                     const QJsonValue &max_value)
+    : min_value_(min_value),
+      max_value_(max_value),
+      value_type_(QJsonValue::Type::Undefined)
 {
     if (!min_value.isNull())
     {
@@ -146,11 +147,13 @@ bool RuleRange::match(const QJsonValue &value)
     return true;
 }
 
-RuleFixed::RuleFixed(const QJsonValue &value) : RuleRange(value, value)
+RuleFixed::RuleFixed(const QJsonValue &value)
+    : RuleRange(value, value)
 {
 }
 
-RuleEnum::RuleEnum(const QVector<QJsonValue> &values) : enum_values_(values)
+RuleEnum::RuleEnum(const QVector<QJsonValue> &values)
+    : enum_values_(values)
 {
 }
 
