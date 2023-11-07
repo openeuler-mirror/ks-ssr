@@ -28,10 +28,10 @@ extern "C"
 #define SSR_LICENSE_DBUS_INTERFACE_NAME "com.kylinsec.SSR.License"
 
 // 保密箱相关定义
-#define SSR_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SSR/BoxManager"
-#define SSR_BOX_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SSR.BoxManager"
+#define SSR_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SSR/PrivateBox"
+#define SSR_BOX_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SSR.PrivateBox"
 
-// BM: Box Manager
+// BM: PrivateBox Manager
 #define SSR_BM_JK_BOX_UID "uid"
 #define SSR_BM_JK_BOX_NAME "name"
 #define SSR_BM_JK_BOX_MOUNTED "mounted"

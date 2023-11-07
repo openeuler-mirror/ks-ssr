@@ -23,7 +23,7 @@
 #include <QX11Info>
 #include "lib/license/license-proxy.h"
 #include "src/ui/about.h"
-#include "src/ui/box/box-page.h"
+#include "src/ui/private-box/box-page.h"
 #include "src/ui/common/loading.h"
 #include "src/ui/common/single-application/single-application.h"
 #include "src/ui/dm/device-list-page.h"
@@ -171,7 +171,7 @@ void Window::initNavigation()
     addPage(execute);
     addPage(new TP::KernelProtectedPage(this));
     addPage(new FP::FileProtectionPage(this));
-    addPage(new Box::BoxPage(this));
+    addPage(new PrivateBox::BoxPage(this));
     addPage(new DM::DeviceListPage(this));
     addPage(new DM::DeviceLogPage(this));
     // 页面加载动画
