@@ -414,10 +414,7 @@ QList<FPFileInfo> FileTable::getFPFileInfos()
 
 void FileTable::mouseEnter(const QModelIndex &index)
 {
-    if (index.column() != FileTableField::FILE_TABLE_FIELD_FILE_PATH)
-    {
-        return;
-    }
+    RETURN_IF_TRUE(index.column() != FileTableField::FILE_TABLE_FIELD_FILE_PATH)
     auto mod = selectionModel()->model()->data(index);
     QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
 }

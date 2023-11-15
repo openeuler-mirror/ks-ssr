@@ -17,6 +17,7 @@ target_include_directories(
          ${PROJECT_SOURCE_DIR}/include
          ${PROJECT_BINARY_DIR}
          ${KLOG_QT5_INCLUDE_DIRS}
+         ${LIBNOTIFY_INCLUDE_DIRS}
          ${CRYPTOPP_INCLUDE_DIRS}
          ${SQLCIPHER_INCLUDE_DIRS}
          ${Qt5Core_INCLUDE_DIRS})
@@ -24,7 +25,7 @@ target_include_directories(
 target_include_directories(${TARGET_NAME} PRIVATE ${CRYPTOPP_INCLUDE_DIRS})
 
 target_link_libraries(
-  ${TARGET_NAME} PUBLIC Qt5::Core ${SQLCIPHER_LIBRARIES}
+  ${TARGET_NAME} PUBLIC Qt5::Core ${SQLCIPHER_LIBRARIES} ${LIBNOTIFY_LIBRARIES}
                         ${KLOG_QT5_LIBRARIES})
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${CRYPTOPP_LIBRARIES})
