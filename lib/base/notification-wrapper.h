@@ -1,0 +1,76 @@
+/**
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
+ * ks-ssr is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2 
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
+ * See the Mulan PSL v2 for more details.  
+ * 
+ * Author:     tangjie02 <tangjie02@kylinos.com.cn> 
+ */
+#pragma once
+
+#include <iostream>
+#define INIT_LIBNOTIFY_ERROR -1
+
+struct _NotifyNotification;
+typedef struct _NotifyNotification NotifyNotification;
+
+namespace Notify
+{
+#define NOTIFY_INFO(message) NotificationWrapper::getInstance()->info(message);
+
+#define NOTIFY_WARN(message) NotificationWrapper::getInstance()->warn(message);
+
+#define NOTIFY_ERROR(message) NotificationWrapper::getInstance()->error(message);
+
+class NotifyException : public std::exception
+{
+public:
+    NotifyException(std::string error)
+    {
+        this->m_error = error;
+    }
+    ~NotifyException() throw() {}
+    virtual const char *what() const throw()
+    {
+        return m_error.c_str();
+    }
+
+private:
+    std::string m_error;
+};
+
+class NotificationWrapper
+{
+public:
+    NotificationWrapper(std::string m_appName);
+    virtual ~NotificationWrapper();
+
+    static NotificationWrapper *getInstance();
+
+    static void globalInit(std::string m_appName);
+
+    static void globalDeinit();
+    // 普通消息
+    void info(const char *message);
+
+    // 告警消息
+    void warn(const char *message);
+
+    // 错误消息
+    void error(const char *message);
+
+private:
+    void notifySend(const char *msg, const char *icon);
+    std::string m_appName;
+
+private:
+    static NotificationWrapper *m_instance;
+
+    NotifyNotification *m_notify;
+};
+}  // namespace Notify

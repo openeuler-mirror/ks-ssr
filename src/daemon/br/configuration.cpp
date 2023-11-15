@@ -125,7 +125,7 @@ int Configuration::getTimeScan()
 bool Configuration::setTimeScan(int time_scan)
 {
     // RETURN_VAL_IF_FALSE(time_scan < 99, false);
-    RETURN_VAL_IF_TRUE(time_scan == this->getNotificationStatus(), true);
+    RETURN_VAL_IF_TRUE(time_scan == this->getTimeScan(), true);
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_TIME_SCAN, int32_t(time_scan));
     return true;
@@ -135,12 +135,12 @@ BRNotificationStatus Configuration::getNotificationStatus()
 {
     auto retval = this->getInteger(BR_GROUP_NAME,
                                    BR_BASE_KEY_NOTIFICATION_STATUS,
-                                   BRNotificationStatus::BR_NOTIFICATION_OPEN);
+                                   BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN);
 
-    if (retval >= BRNotificationStatus::BR_NOTIFICATION_OTHER || retval < 0)
+    if (retval >= BRNotificationStatus::BR_NOTIFICATION_STATUS_OTHER || retval < 0)
     {
         KLOG_WARNING("The strategy type is invalid. notification status: %d.", retval);
-        return BRNotificationStatus::BR_NOTIFICATION_OPEN;
+        return BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN;
     }
 
     return BRNotificationStatus(retval);
@@ -148,7 +148,7 @@ BRNotificationStatus Configuration::getNotificationStatus()
 
 bool Configuration::setNotificationStatus(BRNotificationStatus notification_status)
 {
-    RETURN_VAL_IF_FALSE(notification_status < BRNotificationStatus::BR_NOTIFICATION_OTHER, false);
+    RETURN_VAL_IF_FALSE(notification_status < BRNotificationStatus::BR_NOTIFICATION_STATUS_OTHER, false);
     RETURN_VAL_IF_TRUE(notification_status == this->getNotificationStatus(), true);
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_NOTIFICATION_STATUS, int32_t(notification_status));
@@ -289,7 +289,7 @@ BRResourceMonitor Configuration::getResourceMonitorStatus()
                                    BR_BASE_KEY_RESOURCE_MONITOR,
                                    BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN);
 
-    if (retval >= BRResourceMonitor::BR_RESOURCE_MONITOR_OR || retval < 0)
+    if (retval >= BRResourceMonitor::BR_RESOURCE_MONITOR_OTHER || retval < 0)
     {
         KLOG_WARNING("The resource monitor is invalid. resource monitor: %d.", retval);
         return BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN;
@@ -300,7 +300,7 @@ BRResourceMonitor Configuration::getResourceMonitorStatus()
 
 bool Configuration::setResourceMonitorStatus(BRResourceMonitor resource_monitor)
 {
-    RETURN_VAL_IF_FALSE(resource_monitor < BRResourceMonitor::BR_RESOURCE_MONITOR_OR, false);
+    RETURN_VAL_IF_FALSE(resource_monitor < BRResourceMonitor::BR_RESOURCE_MONITOR_OTHER, false);
     RETURN_VAL_IF_TRUE(resource_monitor == this->getResourceMonitorStatus(), true);
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_RESOURCE_MONITOR, int32_t(resource_monitor));

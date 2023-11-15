@@ -39,7 +39,8 @@ private:
     void initSubPage();
 
 signals:
-    void trustedStatusChange(bool status);
+    void exportStrategyClicked();
+    void resetAllArgsClicked();
 
 private:
     Ui::Dialog *m_ui;

@@ -1,9 +1,10 @@
-#--coding:utf8 --
+# -*- coding: utf-8 -*-
 
 import json
 import br.configuration
 import br.systemd
 import br.log
+from br.translation import _
 
 SSHD_CONF_PATH = "/etc/ssh/sshd_config"
 SELINUX_MODULES_PORT_PATH = "/usr/share/ks-ssr/br-sshd-port.pp"
@@ -21,11 +22,12 @@ BANNER_INFO_KEY = "Banner"
 PROFILE_CLIENT_TMOUT = "ClientAliveInterval"
 PROFILE_CLIENT_COUNT = "ClientAliveCountMax"
 
-#用于匹配TMOUT进行修改
+# 用于匹配TMOUT进行修改
 PROFILE_TMOUT = "TMOUT"
 PROFILE_TMOUT_RXPORT = "export TMOUT"
 
-DEFAULT_CIPHERS = ("aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-cbc", "3des-cbc")
+DEFAULT_CIPHERS = ("aes128-ctr", "aes192-ctr",
+                   "aes256-ctr", "aes128-cbc", "3des-cbc")
 WEAK_CIPHERS = ("arcfour", "arcfour128", "arcfour256")
 
 # sshd服务限制
@@ -41,18 +43,21 @@ SSHD_CONF_PERMIT_EMPTY = "PermitEmptyPasswords"
 SSHD_CONF_PORT = "Port"
 SSHD_CONF_PAM = "UsePAM"
 
-SET_SFTP_USER_CMD = "useradd  -d /home/sftpuser -s /sbin/nologin sftpuser;chown root. /home/sftpuser;chmod 755 /home/sftpuser;mkdir /home/sftpuser/test;chown sftpuser. /home/sftpuser/test"
+SET_SFTP_USER_CMD = "useradd  -d /home/sftpuser -s /sbin/nologin sftpuser;chown root:sftpuser /home/sftpuser;chmod 755 /home/sftpuser;mkdir /home/sftpuser/test;chown sftpuser:sftpuser /home/sftpuser/test"
 SET_SFTP_USER_CONFIG = "Match User sftpuser\n\tChrootDirectory /home/sftpuser\n\tX11Forwarding no\n\tAllowTcpForwarding no\n\tForceCommand internal-sftp"
+
 
 class SSHD:
     def __init__(self):
         self.conf = br.configuration.KV(SSHD_CONF_PATH, join_string=" ")
-        self.conf_ciphers = br.configuration.PAM(SSHD_CONF_PATH, "Ciphers\\s+")
-        self.conf_protocol = br.configuration.PAM(SSHD_CONF_PATH, "Protocol\\s+2")
+        self.conf_ciphers = br.configuration.PAM(
+            SSHD_CONF_PATH, "Ciphers\\s+")
+        self.conf_protocol = br.configuration.PAM(
+            SSHD_CONF_PATH, "Protocol\\s+2")
         self.service = br.systemd.Proxy("sshd")
         # 首次加固sftp
         # self.sftp_first_flag = True
-    
+
     def get_selinux_status(self):
         output = br.utils.subprocess_has_output("getenforce")
         br.log.debug(output)
@@ -61,17 +66,20 @@ class SSHD:
         else:
             return False
 
+
 class RootLogin(SSHD):
     def get(self):
         retdata = dict()
-        retdata[ROOT_LOGIN_ARG_ENABLED] = (self.conf.get_value("PermitRootLogin") == "yes")
+        retdata[ROOT_LOGIN_ARG_ENABLED] = (
+            self.conf.get_value("PermitRootLogin") == "no")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False,'sshd.services is not running! \t\t')
+            return (False, _('sshd.services is not running!\t'))
         args = json.loads(args_json)
-        self.conf.set_all_value("PermitRootLogin", "yes" if args[ROOT_LOGIN_ARG_ENABLED] else "no")
+        self.conf.set_all_value(
+            "PermitRootLogin", "no" if args[ROOT_LOGIN_ARG_ENABLED] else "yes")
         # 重启服务生效
         self.service.reload()
         return (True, '')
@@ -80,17 +88,20 @@ class RootLogin(SSHD):
 class PubkeyAuth(SSHD):
     def get(self):
         retdata = dict()
-        retdata[PUBKEY_AUTH_ARG_ENABLED] = (not (self.conf.get_value("PubkeyAuthentication") == "no"))
+        retdata[PUBKEY_AUTH_ARG_ENABLED] = (
+            not (self.conf.get_value("PubkeyAuthentication") == "no"))
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False,'sshd.services is not running! \t\t')
+            return (False, _('sshd.services is not running!\t'))
         args = json.loads(args_json)
-        self.conf.set_all_value("PubkeyAuthentication", "yes" if args[PUBKEY_AUTH_ARG_ENABLED] else "no")
+        self.conf.set_all_value(
+            "PubkeyAuthentication", "yes" if args[PUBKEY_AUTH_ARG_ENABLED] else "no")
         # 重启服务生效
         self.service.reload()
         return (True, '')
+
 
 class WeakEncryption(SSHD):
     def get(self):
@@ -105,7 +116,7 @@ class WeakEncryption(SSHD):
 
     def set(self, args_json):
         # if not self.service.is_active():
-        #     return (False,'sshd.services is not running! \t\t')
+        #     return (False,'sshd.services is not running!\t')
         args = json.loads(args_json)
         ciphers = self.conf.get_value("Ciphers").split(",")
         # 过滤空元素
@@ -115,7 +126,8 @@ class WeakEncryption(SSHD):
         if not args[WEAK_ENCRYPT_ARG_ENABLED]:
             # 如果未空说明是默认配置，新版本中默认配置是不支持若加密算法，因此只考虑非默认配置的情况
             if (len(ciphers) > 0):
-                ciphers = [cipher for cipher in ciphers if cipher.find("arcfour") == -1]
+                ciphers = [
+                    cipher for cipher in ciphers if cipher.find("arcfour") == -1]
             # 如果列表为空，则改为默认值
             if len(ciphers) == 0:
                 self.conf.del_record("Ciphers")
@@ -128,6 +140,7 @@ class WeakEncryption(SSHD):
             self.service.reload()
         return (True, '')
 
+
 class BannerInfo(SSHD):
     def get(self):
         retdata = dict()
@@ -136,15 +149,16 @@ class BannerInfo(SSHD):
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False,'sshd.services is not running! \t\t')
+            return (False, _('sshd.services is not running!\t'))
         args = json.loads(args_json)
-        #self.conf.set_value("Banner", "/etc/issue.net" if args[ROOT_LOGIN_ARG_ENABLED] else "none")
-        #只对开启后关闭做处理
+        # self.conf.set_value("Banner", "/etc/issue.net" if args[ROOT_LOGIN_ARG_ENABLED] else "none")
+        # 只对开启后关闭做处理
         # if args[ROOT_LOGIN_ARG_ENABLED]:
         self.conf.set_all_value("Banner", args[BANNER_INFO_KEY])
         # 重启服务生效
         self.service.reload()
         return (True, '')
+
 
 class SessionTimeout(SSHD):
     def get(self):
@@ -157,33 +171,38 @@ class SessionTimeout(SSHD):
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False,'sshd.services is not running! \t\t')
+            return (False, _('sshd.services is not running!\t'))
         args = json.loads(args_json)
         self.conf_profile = br.configuration.KV("/etc/profile", "=", "=")
-        self.conf_bashrc = br.configuration.KV("/etc/bashrc","=", "=")
+        self.conf_bashrc = br.configuration.KV("/etc/bashrc", "=", "=")
 
         if (args[PROFILE_CLIENT_TMOUT] <= 0):
             self.conf.del_record(PROFILE_CLIENT_TMOUT)
             self.conf.del_record(PROFILE_CLIENT_COUNT)
             # 如果/etc/profile /etc/bashrc 中有TMOUT的值，则进行修改
-            self.conf_profile.set_all_value(PROFILE_TMOUT,"")
-            self.conf_profile.set_all_value(PROFILE_TMOUT_RXPORT,"")
-            self.conf_bashrc.set_all_value(PROFILE_TMOUT,"")
-            self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
+            self.conf_profile.set_all_value(PROFILE_TMOUT, "")
+            self.conf_profile.set_all_value(PROFILE_TMOUT_RXPORT, "")
+            self.conf_bashrc.set_all_value(PROFILE_TMOUT, "")
+            self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT, "")
         else:
             # 如果/etc/profile /etc/bashrc 中有TMOUT的值，则进行修改
             if self.conf_profile.get_value(PROFILE_TMOUT) or len(br.utils.subprocess_has_output("cat /etc/profile |grep '#{0}'".format(PROFILE_TMOUT))):
-                self.conf_profile.set_all_value(PROFILE_TMOUT,args[PROFILE_CLIENT_TMOUT])
+                self.conf_profile.set_all_value(
+                    PROFILE_TMOUT, args[PROFILE_CLIENT_TMOUT])
             if self.conf_profile.get_value(PROFILE_TMOUT_RXPORT) or len(br.utils.subprocess_has_output("cat /etc/profile |grep '#{0}'".format(PROFILE_TMOUT_RXPORT))):
-                self.conf_profile.set_all_value(PROFILE_TMOUT_RXPORT,args[PROFILE_CLIENT_TMOUT])
+                self.conf_profile.set_all_value(
+                    PROFILE_TMOUT_RXPORT, args[PROFILE_CLIENT_TMOUT])
             if self.conf_bashrc.get_value(PROFILE_TMOUT) or len(br.utils.subprocess_has_output("cat /etc/bashrc |grep '#{0}'".format(PROFILE_TMOUT))):
-                self.conf_bashrc.set_all_value(PROFILE_TMOUT,args[PROFILE_CLIENT_TMOUT])
+                self.conf_bashrc.set_all_value(
+                    PROFILE_TMOUT, args[PROFILE_CLIENT_TMOUT])
             if self.conf_bashrc.get_value(PROFILE_TMOUT_RXPORT) or len(br.utils.subprocess_has_output("cat /etc/bashrc |grep '#{0}'".format(PROFILE_TMOUT_RXPORT))):
-                self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,args[PROFILE_CLIENT_TMOUT])
-            #self.conf_bashrc.set_all_value(PROFILE_TMOUT,"")
-            #self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
+                self.conf_bashrc.set_all_value(
+                    PROFILE_TMOUT_RXPORT, args[PROFILE_CLIENT_TMOUT])
+            # self.conf_bashrc.set_all_value(PROFILE_TMOUT,"")
+            # self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
             if self.conf.get_value(PROFILE_CLIENT_TMOUT) != str(args[PROFILE_CLIENT_TMOUT]):
-                self.conf.set_all_value(PROFILE_CLIENT_TMOUT, args[PROFILE_CLIENT_TMOUT])
+                self.conf.set_all_value(
+                    PROFILE_CLIENT_TMOUT, args[PROFILE_CLIENT_TMOUT])
             if self.conf.get_value(PROFILE_CLIENT_COUNT) != 0:
                 self.conf.set_all_value(PROFILE_CLIENT_COUNT, 0)
 
@@ -191,50 +210,72 @@ class SessionTimeout(SSHD):
         self.service.reload()
         return (True, '')
 
+
 class SshdService(SSHD):
+    def clear_port(self):
+        output = br.utils.subprocess_has_output("semanage port -l |grep ssh")
+        port_list = output.replace(' ', '').split("tcp")[1].split(",")
+        for port in port_list:
+            if port == "22" or port == "":
+                continue
+            br.utils.subprocess_has_output_ignore_error_handling(
+                "semanage port -d -t ssh_port_t -p tcp {0}".format(port))
+
     def get(self):
         retdata = dict()
-        retdata[SSHD_CONF_PROTOCOL_KEY] = (self.conf.get_value(SSHD_CONF_PROTOCOL) == "2")
-        retdata[SSHD_CONF_PERMIT_EMPTY_KEY] = self.conf.get_value(SSHD_CONF_PERMIT_EMPTY) == "no"
-        retdata[SSHD_CONF_PORT_KEY] = (self.conf.get_value(SSHD_CONF_PORT) == "1022")
-        retdata[SSHD_CONF_PAM_KEY] = (not (self.conf.get_value(SSHD_CONF_PAM) == "no"))
+        retdata[SSHD_CONF_PROTOCOL_KEY] = (
+            self.conf.get_value(SSHD_CONF_PROTOCOL) == "2")
+        retdata[SSHD_CONF_PERMIT_EMPTY_KEY] = self.conf.get_value(
+            SSHD_CONF_PERMIT_EMPTY) == "no"
+        retdata[SSHD_CONF_PAM_KEY] = (
+            not (self.conf.get_value(SSHD_CONF_PAM) == "no"))
+        retdata[SSHD_CONF_PORT_KEY] = self.conf.get_value(SSHD_CONF_PORT)
         # br.log.debug("arg['pam'] : ",args[SSHD_CONF_PAM_KEY] )
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
         if not self.service.is_active():
-            return (False,'sshd.services is not running! \t\t')
+            return (False, _('sshd.services is not running!\t'))
 
-        if args[SSHD_CONF_PAM_KEY] :
+        if args[SSHD_CONF_PAM_KEY]:
             self.conf.set_all_value(SSHD_CONF_PAM, "yes")
         else:
-            return (False,'UsePAM is not recommended to be closed, \t\nwhich will cause many problems! \t')
-        
+            return (False, _('UsePAM is not recommended to be closed,\nwhich will cause many problems!\t'))
+
         # self.conf.set_value(SSHD_CONF_PROTOCOL, "2" if args[SSHD_CONF_PROTOCOL_KEY] else "")
-        if args[SSHD_CONF_PROTOCOL_KEY] :
-            self.conf_protocol.set_line("{0} 2".format(SSHD_CONF_PROTOCOL), "#\\s+no\\s+default\\s+banner")
+        if args[SSHD_CONF_PROTOCOL_KEY]:
+            self.conf_protocol.set_line("{0} 2".format(
+                SSHD_CONF_PROTOCOL), "#\\s+no\\s+default\\s+banner")
         else:
             self.conf_protocol.del_line()
 
-        self.conf.set_all_value(SSHD_CONF_PERMIT_EMPTY, "no" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "yes")
+        self.conf.set_all_value(
+            SSHD_CONF_PERMIT_EMPTY, "no" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "yes")
 
-        if  args[SSHD_CONF_PORT_KEY] :
-            self.conf.set_all_value(SSHD_CONF_PORT, "1022")
+        self.clear_port()
+        if args[SSHD_CONF_PORT_KEY] != "":
+            self.conf.set_all_value(SSHD_CONF_PORT, args[SSHD_CONF_PORT_KEY])
             if self.get_selinux_status():
-                br.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_PORT_PATH))
+                br.utils.subprocess_not_output(
+                    "semodule -i {0}".format(SELINUX_MODULES_PORT_PATH))
+                br.utils.subprocess_not_output(
+                    "semanage port -a -t ssh_port_t -p tcp {0}".format(args[SSHD_CONF_PORT_KEY]))
         else:
             self.conf.set_all_value(SSHD_CONF_PORT, "")
             if self.get_selinux_status():
-                br.utils.subprocess_not_output("semodule -r br-sshd-port &> /dev/null")
+                br.utils.subprocess_not_output(
+                    "semodule -r br-sshd-port &> /dev/null")
 
         # 重启服务生效
         self.service.reload()
         return (True, '')
 
+
 class SftpUser(SSHD):
-    def user_exist(self,username):
-        cmd = 'if id -u {0} >/dev/null 2>&1 ; then echo exist; fi'.format(username)
+    def user_exist(self, username):
+        cmd = 'if id -u {0} >/dev/null 2>&1 ; then echo exist; fi'.format(
+            username)
         if len(br.utils.subprocess_has_output(cmd)) == 0:
             return False
         else:
@@ -247,37 +288,57 @@ class SftpUser(SSHD):
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False,'sshd.services is not running! \t\t')
-        # self.conf_notes = br.configuration.PAM(SSHD_CONF_PATH,"#BR\\s+SFTP\\s+configuration")
-        self.conf_match = br.configuration.PAM(SSHD_CONF_PATH, "Match\\s+User\\s+sftpuser")
-        self.conf_chroot = br.configuration.PAM(SSHD_CONF_PATH, "\\s+ChrootDirectory\\s+/home")
-        self.conf_x11 = br.configuration.PAM(SSHD_CONF_PATH, "\\s+X11Forwarding\\s+no\\s+#")
-        self.conf_allowtcp = br.configuration.PAM(SSHD_CONF_PATH, "\\s+AllowTcpForwarding\\s+no\\s+#")
-        self.conf_force = br.configuration.PAM(SSHD_CONF_PATH, "\\s+ForceCommand\\s+internal-sftp")
+            return (False, _('sshd.services is not running!\t'))
+        # self.conf_notes = br.configuration.PAM(SSHD_CONF_PATH,"#SSR\\s+SFTP\\s+configuration")
+        self.conf_sub = br.configuration.PAM(
+            SSHD_CONF_PATH, "Subsystem\\s+sftp\\s+/usr/libexec/openssh/sftp-server")
+        self.conf_sub_tinternal = br.configuration.PAM(
+            SSHD_CONF_PATH, "Subsystem\\s+sftp\\s+internal-sftp")
+        self.conf_match = br.configuration.PAM(
+            SSHD_CONF_PATH, "Match\\s+User\\s+sftpuser")
+        self.conf_chroot = br.configuration.PAM(
+            SSHD_CONF_PATH, "\\s+ChrootDirectory\\s+/home")
+        self.conf_x11 = br.configuration.PAM(
+            SSHD_CONF_PATH, "\\s+X11Forwarding\\s+no\\s+#")
+        self.conf_allowtcp = br.configuration.PAM(
+            SSHD_CONF_PATH, "\\s+AllowTcpForwarding\\s+no\\s+#")
+        self.conf_force = br.configuration.PAM(
+            SSHD_CONF_PATH, "\\s+ForceCommand\\s+internal-sftp")
         args = json.loads(args_json)
 
         if args["enabled"]:
             if not self.user_exist("sftpuser"):
                 br.utils.subprocess_not_output(SET_SFTP_USER_CMD)
 
+            self.conf_sub_tinternal.set_line(
+                "Subsystem\tsftp\tinternal-sftp", "Subsystem\\s+sftp\\s+/usr/libexec/openssh/sftp-server")
+            self.conf_sub.del_line()
             # self.conf_force.set_line("\tForceCommand internal-sftp","#\\s+PermitTTY\\s+no")
             if len(br.utils.subprocess_has_output("cat {0} |grep 'ForceCommand internal-sftp' ".format(SSHD_CONF_PATH))) != 0:
-                self.conf_force.set_line("\tForceCommand internal-sftp","")
+                self.conf_force.set_line("\tForceCommand internal-sftp", "")
             else:
-                self.conf.set_value("\tForceCommand","internal-sftp")
-            self.conf_allowtcp.set_line("\tAllowTcpForwarding no #BR configuration, TCP forwarding forbidden","\tForceCommand internal-sftp")
-            self.conf_x11.set_line("\tX11Forwarding no #BR configuration, X11 forwarding forbidden","\tAllowTcpForwarding\\s+no\\s+#")
-            self.conf_chroot.set_line("\tChrootDirectory /home/sftpuser","\tX11Forwarding\\s+no\\s+#")
-            self.conf_match.set_line("Match User sftpuser","\tChrootDirectory\\s+/home/sftpuser")
-            # self.conf_notes.set_line("#BR SFTP configuration should be placed at the end of the file.","Match\\s+User\\s+sftpuser")
+                self.conf.set_value("\tForceCommand", "internal-sftp")
+            self.conf_allowtcp.set_line(
+                "\tAllowTcpForwarding no #SSR configuration, TCP forwarding forbidden", "\tForceCommand internal-sftp")
+            self.conf_x11.set_line(
+                "\tX11Forwarding no #SSR configuration, X11 forwarding forbidden", "\tAllowTcpForwarding\\s+no\\s+#")
+            self.conf_chroot.set_line(
+                "\tChrootDirectory /home/sftpuser", "\tX11Forwarding\\s+no\\s+#")
+            self.conf_match.set_line(
+                "Match User sftpuser", "\tChrootDirectory\\s+/home/sftpuser")
 
             if self.get_selinux_status():
-                br.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_SFTP_PATH))
+                br.utils.subprocess_not_output(
+                    "semodule -i {0}".format(SELINUX_MODULES_SFTP_PATH))
 
         else:
             if self.user_exist("sftpuser"):
                 rm_cmd = "userdel -r sftpuser &> /dev/null;rm -rf /home/sftpuser"
                 br.utils.subprocess_not_output(rm_cmd)
+
+            self.conf_sub.set_line(
+                "Subsystem\tsftp\t/usr/libexec/openssh/sftp-server", "Subsystem\\s+sftp\\s+internal-sftp")
+            self.conf_sub_tinternal.del_line()
             self.conf_match.del_line()
             self.conf_chroot.del_line()
             self.conf_x11.del_line()
@@ -285,7 +346,8 @@ class SftpUser(SSHD):
             self.conf_force.del_line()
 
             if self.get_selinux_status():
-                br.utils.subprocess_not_output("semodule -r br-sshd-sftp &> /dev/null")
+                br.utils.subprocess_not_output(
+                    "semodule -r br-sshd-sftp &> /dev/null")
         # 重启服务生效
         self.service.reload()
         return (True, '')

@@ -1,0 +1,14 @@
+[type: gettext/ini] ../data/br-categories.ini.in
+../data/br-system-rs.xml.in
+../plugins/python/br-plugin-audit.xml.in
+../plugins/python/br-plugin-config.xml.in
+../plugins/python/br-plugin-external.xml.in
+../plugins/python/br-plugin-network.xml.in
+../plugins/python/br/systemd.py
+../plugins/python/br/audit/auditd.py
+../plugins/python/br/config/sendmail.py
+../plugins/python/br/external/pam.py
+../plugins/python/br/external/sshd.py
+../plugins/python/br/external/udev.py
+../plugins/python/br/network/firewalld.py
+../plugins/python/br/network/vulnerability.py

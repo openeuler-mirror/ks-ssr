@@ -1,4 +1,4 @@
-#--coding:utf8 --
+# -*- coding: utf-8 -*-
 
 import json
 import br.utils
@@ -29,7 +29,8 @@ class NMClient:
 class Switch(NMClient):
     def get(self):
         retdata = dict()
-        retdata['enabled'] = not (self.wifi_is_enabled() or self.wwan_is_enabled())
+        retdata['enabled'] = not (
+            self.wifi_is_enabled() or self.wwan_is_enabled())
         return (True, json.dumps(retdata))
 
     def set(self, args_json):

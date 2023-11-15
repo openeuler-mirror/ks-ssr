@@ -60,7 +60,6 @@ private slots:
     void activateMetaObject();
     void updatePage();
     void updateSidebar();
-    //    void updatePage(int index);
 
 private:
     Ui::Window *m_ui;

@@ -9,6 +9,8 @@ file(GLOB_RECURSE UI_CPP_FILES ./*.cpp)
 
 configure_file(config-ui.h.in ${PROJECT_BINARY_DIR}/config-ui.h)
 
+gen_protocol()
+
 set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.PrivateBox.xml
   PROPERTIES CLASSNAME BoxManagerProxy NO_NAMESPACE true)
@@ -33,6 +35,12 @@ qt5_add_dbus_interface(
   ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.DeviceManager.xml
   device_manager_proxy)
 
+set_source_files_properties(${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BR.xml
+                            PROPERTIES CLASSNAME BRDbusProxy NO_NAMESPACE true)
+
+qt5_add_dbus_interface(
+  BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BR.xml br_dbus_proxy)
+
 qt5_wrap_ui(
   UI_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
@@ -41,6 +49,12 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/license/qrcode-dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/common/pagination.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/common/table-delete-notify.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/br/home.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/br/scan.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/br/progress.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/br/plugins/custom-args.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/br/reports/pdf.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/br/reports/table.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-creation.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-modification.ui
@@ -54,6 +68,7 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/execute-protected-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-user-pin.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/settings/baseline-reinforcement.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/about.ui)
 
 set(TARGET_NAME ks-ssr-gui)
@@ -69,6 +84,8 @@ add_executable(
   ${BOX_MANAGER_SRCS}
   ${DEVICE_MANAGER_SRCS}
   ${KSS_DBUS_SRCS}
+  ${BR_DBUS_SRCS}
+  ${BR_PROTOCOL_OUTPUT}
   ${QM_FILES}
   ${UI_FILES}
   "${PROJECT_SOURCE_DIR}/resources/resources.qrc")
@@ -87,9 +104,11 @@ target_link_libraries(
           Qt5::Widgets
           Qt5::X11Extras
           Qt5::Network
+          Qt5::PrintSupport
           lib-base
           lib-license
-          qrencode)
+          qrencode
+          ${XERCES_LIBRARIES})
 
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
