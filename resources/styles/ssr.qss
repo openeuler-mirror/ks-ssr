@@ -864,8 +864,7 @@ KS--BR--Plugins--CustomArgs QListWidget
 }
 
 KS--BR--Plugins--ArgHandle QComboBox,
-KS--BR--Plugins--ArgHandle QLineEdit,
-KS--BR--Plugins--ArgHandle QSpinBox
+KS--BR--Plugins--ArgHandle QLineEdit
 {
     height: 36px;
     background-color: #222222;
@@ -916,6 +915,32 @@ KS--BR--Plugins--ArgHandle QComboBox::down-arrow
       image: url(:/images/arrow-down);
 }
 
+KS--BR--Plugins--ArgHandle QSpinBox,
+KS--Settings--BaselineReinforcement QSpinBox
+{
+    height: 36px;
+    background-color: #222222;
+    border: 1px solid #454545;
+    border-radius: 6px;
+    padding-left:12px;
+    padding-right:12px;
+    combobox-popup:0;
+    font-size: 12px;
+    color: white;
+    font:NotoSansCJKsc-Regular;
+}
+/* 屏蔽QSpinBox加减 */
+KS--BR--Plugins--ArgHandle QSpinBox::up-button,
+KS--BR--Plugins--ArgHandle QSpinBox::down-button,
+KS--Settings--BaselineReinforcement QSpinBox::up-button,
+KS--Settings--BaselineReinforcement QSpinBox::down-button
+{
+    width : 0px;
+    height : 0px;
+    border : 0px;
+}
+
+/* 暂时不设置QSpinBox箭头
 KS--BR--Plugins--ArgHandle QSpinBox::up-button
 {
     subcontrol-origin: border;
@@ -946,6 +971,8 @@ KS--BR--Plugins--ArgHandle QSpinBox::down-button:selected
 {
     background-color:#79C3FF;
 }
+*/
+
 KS--BR--Plugins--ArgHandle QPushButton#noteIcon,
 KS--BR--Reports--Table QWidget#spacerWidget,
 KS--BR--Reports--RoundProgressBar,
