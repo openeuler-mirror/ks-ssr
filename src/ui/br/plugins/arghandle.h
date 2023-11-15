@@ -14,18 +14,19 @@
 
 #pragma once
 
-#include <QComboBox>
 #include <QHBoxLayout>
 #include <QJsonValue>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QSpinBox>
 #include <QWidget>
 
 #include "br-protocol.hxx"
 namespace KS
 {
+class SpinBox;
+class ComboBox;
+
 namespace BR
 {
 namespace Plugins
@@ -84,9 +85,9 @@ private:
     // 文本输入框
     QLineEdit *m_lineEdit;
     // 整形输入框
-    QSpinBox *m_spinBox;
+    SpinBox *m_spinBox;
     // 下拉框
-    QComboBox *m_comboBox;
+    ComboBox *m_comboBox;
 };
 
 }  // namespace Plugins
