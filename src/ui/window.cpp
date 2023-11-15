@@ -23,13 +23,14 @@
 #include <QX11Info>
 #include "lib/license/license-proxy.h"
 #include "src/ui/about.h"
-#include "src/ui/private-box/box-page.h"
+#include "src/ui/br/br-page.h"
 #include "src/ui/common/loading.h"
 #include "src/ui/common/single-application/single-application.h"
 #include "src/ui/dm/device-list-page.h"
 #include "src/ui/dm/device-log-page.h"
 #include "src/ui/fp/file-protection-page.h"
 #include "src/ui/navigation.h"
+#include "src/ui/private-box/box-page.h"
 #include "src/ui/settings/dialog.h"
 #include "src/ui/sidebar.h"
 #include "src/ui/tp/execute-protected-page.h"
@@ -64,6 +65,7 @@ Window::~Window()
 
 void Window::resizeEvent(QResizeEvent *event)
 {
+    Q_ASSERT(event);
     if (m_loading)
     {
         m_loading->setAutoFillBackground(true);
@@ -152,6 +154,7 @@ void Window::initWindow()
 void Window::initNavigation()
 {
     // 初始化分类选项
+    m_ui->m_navigation->addItem(new NavigationItem(":/images/baseline-reinforcement", tr("Baseline reinforcement")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected", tr("Trusted protected")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected", tr("File protected")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Private box")));
@@ -166,6 +169,7 @@ void Window::initNavigation()
         delete currentWidget;
     }
 
+    addPage(new BR::BRPage(this));
     // 可信保护页面需判断是否加载成功
     auto execute = new TP::ExecuteProtectedPage(this);
     addPage(execute);
@@ -253,6 +257,29 @@ void Window::updateActivation()
 void Window::popupSettingsDialog()
 {
     auto settingsDialog = new Settings::Dialog(this);
+    // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
+    connect(settingsDialog, &Settings::Dialog::exportStrategyClicked, this, [this]
+            {
+                for (auto page : m_pages.value(tr("Baseline reinforcement")))
+                {
+                    if (page->isVisible())
+                    {
+                        auto brPage = static_cast<BR::BRPage *>(page);
+                        brPage->exportStrategy();
+                    }
+                }
+            });
+    connect(settingsDialog, &Settings::Dialog::resetAllArgsClicked, this, [this]
+            {
+                for (auto page : m_pages.value(tr("Baseline reinforcement")))
+                {
+                    if (page->isVisible())
+                    {
+                        auto brPage = static_cast<BR::BRPage *>(page);
+                        brPage->resetAllReinforcementArgs();
+                    }
+                }
+            });
 
     auto x = this->x() + this->width() / 4 + settingsDialog->width() / 16;
     auto y = this->y() + this->height() / 4 + settingsDialog->height() / 16;

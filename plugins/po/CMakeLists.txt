@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 2.8.12)
+
+find_program(MSGFMT NAMES "msgfmt" REQUIRED)
+
+add_custom_target(ZH_MO ALL ${MSGFMT} zh_CN.po -D ${CMAKE_CURRENT_SOURCE_DIR}/
+                            -o ${PROJECT_BINARY_DIR}/zh_CN.mo)
+
+install(
+  FILES ${PROJECT_BINARY_DIR}/zh_CN.mo
+  DESTINATION
+    "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/locale/zh_CN/LC_MESSAGES/"
+  RENAME ${PROJECT_NAME}-daemon.zh_CN.mo)
