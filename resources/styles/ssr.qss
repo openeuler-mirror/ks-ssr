@@ -821,12 +821,16 @@ KS--BR--Scan QTreeView::branch:has-siblings:adjoins-item
 }
 */
 
-KS--BR--Scan QTreeView::item:hover,
-KS--BR--Scan QTreeView::branch:hover,
-KS--BR--Scan QTreeView::item:selected,
-KS--BR--Scan QTreeView::branch:selected
+KS--BR--Scan QTreeView::item:has-children:hover,
+KS--BR--Scan QTreeView::item:!has-children:hover,
+KS--BR--Scan QTreeView::item:has-children:selected,
+KS--BR--Scan QTreeView::item:!has-children:selected,
+KS--BR--Scan QTreeView::branch:has-children:hover,
+KS--BR--Scan QTreeView::branch:!has-children:hover,
+KS--BR--Scan QTreeView::branch:has-children:selected,
+KS--BR--Scan QTreeView::branch:!has-children:selected
 {
-    background: #43A3F2;
+    background-color: #43A3F2;
 }
 
 KS--BR--Scan QTreeView::indicator:enabled:unchecked

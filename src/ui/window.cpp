@@ -185,7 +185,6 @@ void Window::initNavigation()
 
     m_ui->m_stackedPages->setCurrentIndex(0);
     updatePage();
-    showLoading(execute->getInitialized());
 
     connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this]
             {

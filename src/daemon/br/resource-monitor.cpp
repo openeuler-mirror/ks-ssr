@@ -112,7 +112,7 @@ QVector<QString> stringSplit(const QString &s, const QString &delim = " ")
 
 float ResourceMonitor::getMemoryRemainingRatio()
 {
-    char memTotal[20], memFree[20], memAvailable[20], cached[20], buffers[20];
+    char memTotal[20] = "", memFree[20] = "", memAvailable[20] = "", cached[20] = "", buffers[20] = "";
 
     FILE *file = fopen("/proc/meminfo", "r");
     if (file == nullptr)

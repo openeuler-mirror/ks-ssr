@@ -51,7 +51,7 @@ NotificationWrapper::~NotificationWrapper()
     notify_uninit();
 }
 
-NotificationWrapper *NotificationWrapper::m_instance = NULL;
+NotificationWrapper *NotificationWrapper::m_instance = nullptr;
 
 NotificationWrapper *NotificationWrapper::getInstance()
 {
