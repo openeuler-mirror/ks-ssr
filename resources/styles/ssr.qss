@@ -407,7 +407,7 @@ QPushButton#m_add,
 QPushButton#m_newBox,
 QPushButton#m_scanButton,
 QPushButton#m_scan,
-KS--Activation QPushButton#m_activate,
+QPushButton#m_activate,
 KS--DM--DevicePermission QPushButton#m_confirm,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm
 {
@@ -425,7 +425,7 @@ QPushButton#m_add:hover,
 QPushButton#m_newBox:hover,
 QPushButton#m_scanButton:hover,
 QPushButton#m_scan:hover,
-KS--Activation QPushButton#m_activate:hover,
+QPushButton#m_activate:hover,
 KS--DM--DevicePermission QPushButton#m_confirm:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
 {

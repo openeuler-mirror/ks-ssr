@@ -52,8 +52,8 @@ Window::Window() : TitlebarWindow(nullptr),
     m_ui->setupUi(getWindowContentWidget());
 
     initWindow();
-    initNavigation();
     initActivation();
+    initNavigation();
 
     connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject);
 }
