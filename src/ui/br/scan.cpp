@@ -170,6 +170,7 @@ void Scan::init()
     // else if (m_dbusProxy->standard_type() == STANDARD_TYPE_CUSTOM)
     auto reply = m_dbusProxy->GetCategories();
     reply.waitForFinished();
+    RETURN_IF_TRUE(reply.isError())
     XMLUtils::getDefault()->jsonParsing(reply.value().toUtf8(), m_categoriesList);
     XMLUtils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_categoriesList);
 }
