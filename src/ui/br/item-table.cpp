@@ -360,8 +360,7 @@ void ItemTable::updateStatus(const QList<Plugins::Categories *> &list)
 {
     for (int i = 0; i < list.length(); ++i)
     {
-        if (list.at(i)->getCategory().length() == 0)
-            continue;
+        CONTINUE_IF_TRUE(list.at(i)->getCategory().length() == 0)
 
         auto category = list.at(i)->getCategory();
         for (int j = 0; j < category.length(); ++j)
@@ -525,7 +524,6 @@ void ItemTable::showTail(const QModelIndex &model)
                            this->rect(),
                            2000);
     }
-
     emit modelEntered(model);
 }
 
