@@ -564,37 +564,37 @@
     <name>Home</name>
     <message>
         <location filename="../src/ui/br/home.ui" line="14"/>
-        <location filename="../build/src/ui/ui_home.h" line="160"/>
+        <location filename="../build/src/ui/ui_home.h" line="161"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="69"/>
-        <location filename="../build/src/ui/ui_home.h" line="162"/>
+        <location filename="../build/src/ui/ui_home.h" line="163"/>
         <source>Security reinforcement is protecting your computer</source>
         <translation>安全加固正在保护您的电脑</translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="76"/>
-        <location filename="../build/src/ui/ui_home.h" line="163"/>
+        <location filename="../build/src/ui/ui_home.h" line="164"/>
         <source>KylinSec Host Security Reinforcement Software Detects Risks in Advance to Ensure Asset Security</source>
         <translation>麒麟信安主机安全加固软件提起发现风险，保障资产安全</translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="85"/>
-        <location filename="../build/src/ui/ui_home.h" line="164"/>
+        <location filename="../build/src/ui/ui_home.h" line="165"/>
         <source>Latest reinforcement time:</source>
         <translation>上次加固时间：</translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="92"/>
-        <location filename="../build/src/ui/ui_home.h" line="165"/>
+        <location filename="../build/src/ui/ui_home.h" line="166"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="164"/>
-        <location filename="../build/src/ui/ui_home.h" line="167"/>
+        <location filename="../build/src/ui/ui_home.h" line="168"/>
         <source>Quick Scan</source>
         <translation>快速扫描</translation>
     </message>
@@ -3133,65 +3133,65 @@
         <translation>输出文件路径。</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="53"/>
-        <location filename="../src/ui/br/xmlutils.cpp" line="93"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="60"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="100"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="56"/>
-        <location filename="../src/ui/br/xmlutils.cpp" line="87"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="63"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="94"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="59"/>
-        <location filename="../src/ui/br/xmlutils.cpp" line="89"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="66"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="96"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="62"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="69"/>
         <source>Not Scanned</source>
         <translation>未扫描</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="65"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="72"/>
         <source>Scannig</source>
         <translation>正在扫描...</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="68"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="75"/>
         <source>Scan Failed</source>
         <translation>扫描失败</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="71"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="78"/>
         <source>Scan Complete</source>
         <translation>扫描完成</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="74"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="81"/>
         <source>Unreinforcement</source>
         <translation>未加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="77"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="84"/>
         <source>Reinforcing</source>
         <translation>正在加固...</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="80"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="87"/>
         <source>Reinforcement Failure</source>
         <translation>加固失败</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="83"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="90"/>
         <source>Reinforced</source>
         <translation>加固完成</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="91"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="98"/>
         <source>Unscan</source>
         <translation>未扫描</translation>
     </message>
@@ -3375,24 +3375,103 @@
 <context>
     <name>ini</name>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="31"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="33"/>
         <source>configuration class</source>
         <translation>配置类</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="32"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="34"/>
         <source>network class</source>
         <translation>网络类</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="33"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="35"/>
         <source>audit class</source>
         <translation>审计类</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="34"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="36"/>
         <source>external class</source>
         <translation>接入类</translation>
+    </message>
+</context>
+<context>
+    <name>python</name>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="44"/>
+        <source>Device busy, please pop up!</source>
+        <translation>设备忙碌，请弹出设备！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="45"/>
+        <source>Please contact the admin.</source>
+        <translation>请联系管理员。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="46"/>
+        <source>Unable to stop service!</source>
+        <translation>服务无法停止！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="47"/>
+        <source>Abnormal service!</source>
+        <translation>服务异常！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="48"/>
+        <source>Please close SELinux and use it!</source>
+        <translation>请关闭selinux使用！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="49"/>
+        <source>No such file or directory.</source>
+        <translation>文件或目录未找到。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="50"/>
+        <source>Failed to execute command. Please check the log information for details.</source>
+        <translation>执行命令失败，详情请查看日志信息。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="51"/>
+        <source>UsePAM is not recommended to be closed,
+which will cause many problems!</source>
+        <translation>不建议关闭UsePAM，这将导致许多问题！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="52"/>
+        <source>Unable to stop firewalld service!</source>
+        <translation>firewalld服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="53"/>
+        <source>Unable to stop bluetooth service!</source>
+        <translation>蓝牙服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="54"/>
+        <source>Unable to stop cups service!</source>
+        <translation>cups服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="55"/>
+        <source>Unable to stop avahi service!</source>
+        <translation>avahi服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="56"/>
+        <source>Unable to stop rpcbind service!</source>
+        <translation>rpcbind服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="57"/>
+        <source>Unable to stop smb service!</source>
+        <translation>smb服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/plugins/plugins-translation.h" line="58"/>
+        <source>Abnormal service! Please check the log information for details.</source>
+        <translation>服务异常！详情请查看日志信息。</translation>
     </message>
 </context>
 <context>
@@ -3872,7 +3951,7 @@
     </message>
     <message>
         <location filename="../data/br-system-rs.xml.in" line="22"/>
-        <location filename="../src/ui/br/xmlutils.cpp" line="237"/>
+        <location filename="../src/ui/br/xmlutils.cpp" line="244"/>
         <source>Turn on ICMP redirection</source>
         <translation>开启ICMP重定向</translation>
     </message>
