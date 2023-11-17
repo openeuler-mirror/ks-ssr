@@ -28,6 +28,12 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>48</number>
+       </property>
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
        <item>
         <widget class="QPushButton" name="m_importStrategy">
          <property name="cursor">
@@ -60,6 +66,19 @@
           <string>Reset reinforce args</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
@@ -170,6 +189,12 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <property name="spacing">
+        <number>60</number>
+       </property>
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
        <item>
         <widget class="QPushButton" name="m_fallbackInit">
          <property name="cursor">
@@ -189,6 +214,19 @@
           <string>Fallback to previous time</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>

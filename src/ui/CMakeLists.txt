@@ -67,6 +67,7 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/kernel-protected-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/execute-protected-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/dialog.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-protected.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-user-pin.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/baseline-reinforcement.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/about.ui)
