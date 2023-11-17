@@ -2,7 +2,6 @@
 
 import json
 import br.systemd
-from br.translation import _
 
 
 class SendMailProxy:
@@ -107,4 +106,4 @@ class Switch(SendMailProxy):
             return (True, '')
         except Exception as e:
             br.log.error(str(e))
-            return (False, _("Failed to execute command. Please check the log information for details.\t"))
+            return (False, "Failed to execute command. Please check the log information for details.")

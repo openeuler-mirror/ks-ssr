@@ -3,8 +3,6 @@
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/br/vars.py.in
                ${CMAKE_BINARY_DIR}/br/vars.py)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/br/translation.py.in
-               ${CMAKE_BINARY_DIR}/br/translation.py)
 
 install(
   DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/br
@@ -13,9 +11,6 @@ install(
   REGEX ".*\\.(py|ini)$")
 
 install(FILES ${CMAKE_BINARY_DIR}/br/vars.py
-        DESTINATION ${SSR_BR_PLUGIN_PYTHON_ROOT_DIR}/br)
-
-install(FILES ${CMAKE_BINARY_DIR}/br/translation.py
         DESTINATION ${SSR_BR_PLUGIN_PYTHON_ROOT_DIR}/br)
 
 install(

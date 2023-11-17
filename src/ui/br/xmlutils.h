@@ -28,7 +28,7 @@ class XMLUtils
 {
 public:
     XMLUtils();
-    virtual ~XMLUtils(){};
+    virtual ~XMLUtils();
 
     static QSharedPointer<XMLUtils> getDefault();
 
@@ -50,6 +50,9 @@ public:
 
 private:
     static QSharedPointer<XMLUtils> m_instance;
+    // #define QT_TRANSLATE_NOOP(scope, x) QCoreApplication::translate(scope,x)
+    QString noop2Translate(const QString &souceTxt);
+    QString categoriesLabel2Translate(const QString &souceTxt);
 };
 
 }  // namespace BR

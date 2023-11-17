@@ -74,8 +74,19 @@ qt5_wrap_ui(
 set(TARGET_NAME ks-ssr-gui)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
-                       ${PROJECT_SOURCE_DIR})
+qt5_create_translation(
+  QM_FILES
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml.in
+  ${CMAKE_SOURCE_DIR}/data/br-categories.ini.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-audit.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-config.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-external.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-network.xml.in
+  ${TS_FILES}
+  OPTIONS
+  -I
+  ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}

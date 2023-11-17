@@ -17,9 +17,11 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QList>
+#include <QCoreApplication>
 #include <QObject>
 #include "include/ssr-marcos.h"
 #include "lib/base/str-utils.h"
+#include "src/ui/br/plugins/plugins-translation.h"
 
 namespace KS
 {
@@ -27,6 +29,16 @@ namespace BR
 {
 XMLUtils::XMLUtils()
 {
+    Plugins::PluginsTranslation::globalInit();
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "configuration class"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "network class"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "audit class"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "external class"));
+}
+
+XMLUtils::~XMLUtils()
+{
+    Plugins::PluginsTranslation::globalDeinit();
 }
 
 QSharedPointer<XMLUtils> XMLUtils::m_instance = nullptr;
@@ -153,7 +165,7 @@ void XMLUtils::jsonParsing(const QByteArray &json, QList<Plugins::Categories *> 
         auto name = arrayObj.at(i).toObject().value("name");
         auto categories = new Plugins::Categories;
         categories->setIconName(iconName.toString());
-        categories->setLabel(label.toString());
+        categories->setLabel(categoriesLabel2Translate(label.toString()));
         categories->setName(name.toString());
         categoriesList.append(categories);
     }
@@ -205,14 +217,13 @@ bool XMLUtils::ssrReinforcements(const QString &xmlString, QList<Plugins::Catego
                     defaultNote = QString(note.c_str());
                 }
             }
-
             category->setArg(arg.name().c_str(),
                              value,
                              arg.layout().get().widget_type(),
                              arg.value_limits().get().c_str(),
                              arg.input_example() != NULL ? arg.input_example().get().c_str() : "",
-                             defaultLabel,
-                             defaultNote);
+                             noop2Translate(defaultLabel),
+                             noop2Translate(defaultNote));
         }
 
         QString defaultLabel;
@@ -230,7 +241,8 @@ bool XMLUtils::ssrReinforcements(const QString &xmlString, QList<Plugins::Catego
                 defaultLabel = QString(label.c_str());
             }
         }
-        category->setLabel(defaultLabel);
+        auto test =  qApp->translate("xml", "Turn on ICMP redirection");
+        category->setLabel(noop2Translate(defaultLabel));
 
         QString defaultDescription;
         for (auto description : iter.description())
@@ -246,7 +258,7 @@ bool XMLUtils::ssrReinforcements(const QString &xmlString, QList<Plugins::Catego
                 defaultDescription = QString(description.c_str());
             }
         }
-        category->setDescription(defaultDescription);
+        category->setDescription(noop2Translate(defaultDescription));
         category->setCategoryName(iter.category().get().c_str());
 
         for (auto categories : categoriesList)
@@ -478,6 +490,29 @@ KS::Protocol::RA::ReinforcementSequence XMLUtils::raAnalysis(const QString &file
 
     auto ra = KS::Protocol::br_ra(filePath.toStdString(), xml_schema::Flags::dont_validate);
     return ra->reinforcement();
+}
+
+QString XMLUtils::categoriesLabel2Translate(const QString &souceTxt)
+{
+    return qApp->translate("ini", souceTxt.toUtf8());
+}
+
+QString XMLUtils::noop2Translate(const QString &souceTxt)
+{
+    auto tmpSouce = souceTxt;
+    auto tmpList = tmpSouce.split("\"");
+    QStringList translateList;
+    for (auto key : tmpList)
+    {
+        CONTINUE_IF_TRUE(key.isEmpty() || key == "," || key == ", " || key == "QT_TRANSLATE_NOOP(" || key == "QT_TRANSLATE_NOOP_UTF8("  ||  key == ")")
+        key.remove(QRegExp("^ +\\s*"));
+        translateList << key;
+    }
+
+    RETURN_VAL_IF_TRUE(translateList.size() != 2, souceTxt)
+    KLOG_DEBUG() << "key = " << translateList[0] << "souce = " << translateList[1];
+
+    return qApp->translate(translateList[0].toUtf8(),translateList[1].toUtf8());
 }
 }  // namespace BR
 }  // namespace KS

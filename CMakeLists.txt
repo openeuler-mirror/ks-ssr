@@ -107,7 +107,6 @@ add_subdirectory(lib)
 add_subdirectory(resources)
 add_subdirectory(src)
 add_subdirectory(plugins/python)
-add_subdirectory(plugins/po)
 add_subdirectory(data)
 
 if(ENABLE_GTEST)

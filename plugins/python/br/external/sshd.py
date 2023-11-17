@@ -4,7 +4,6 @@ import json
 import br.configuration
 import br.systemd
 import br.log
-from br.translation import _
 
 SSHD_CONF_PATH = "/etc/ssh/sshd_config"
 SELINUX_MODULES_PORT_PATH = "/usr/share/ks-ssr/br-sshd-port.pp"
@@ -76,7 +75,7 @@ class RootLogin(SSHD):
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False, _('sshd.services is not running!\t'))
+            return (False, "sshd.services is not running!")
         args = json.loads(args_json)
         self.conf.set_all_value(
             "PermitRootLogin", "no" if args[ROOT_LOGIN_ARG_ENABLED] else "yes")
@@ -94,7 +93,7 @@ class PubkeyAuth(SSHD):
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False, _('sshd.services is not running!\t'))
+            return (False, "sshd.services is not running!")
         args = json.loads(args_json)
         self.conf.set_all_value(
             "PubkeyAuthentication", "yes" if args[PUBKEY_AUTH_ARG_ENABLED] else "no")
@@ -149,7 +148,7 @@ class BannerInfo(SSHD):
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False, _('sshd.services is not running!\t'))
+            return (False, "sshd.services is not running!")
         args = json.loads(args_json)
         # self.conf.set_value("Banner", "/etc/issue.net" if args[ROOT_LOGIN_ARG_ENABLED] else "none")
         # 只对开启后关闭做处理
@@ -171,7 +170,7 @@ class SessionTimeout(SSHD):
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False, _('sshd.services is not running!\t'))
+            return (False, "sshd.services is not running!")
         args = json.loads(args_json)
         self.conf_profile = br.configuration.KV("/etc/profile", "=", "=")
         self.conf_bashrc = br.configuration.KV("/etc/bashrc", "=", "=")
@@ -236,12 +235,12 @@ class SshdService(SSHD):
     def set(self, args_json):
         args = json.loads(args_json)
         if not self.service.is_active():
-            return (False, _('sshd.services is not running!\t'))
+            return (False, "sshd.services is not running!")
 
         if args[SSHD_CONF_PAM_KEY]:
             self.conf.set_all_value(SSHD_CONF_PAM, "yes")
         else:
-            return (False, _('UsePAM is not recommended to be closed,\nwhich will cause many problems!\t'))
+            return (False, "UsePAM is not recommended to be closed,\nwhich will cause many problems!")
 
         # self.conf.set_value(SSHD_CONF_PROTOCOL, "2" if args[SSHD_CONF_PROTOCOL_KEY] else "")
         if args[SSHD_CONF_PROTOCOL_KEY]:
@@ -288,7 +287,7 @@ class SftpUser(SSHD):
 
     def set(self, args_json):
         if not self.service.is_active():
-            return (False, _('sshd.services is not running!\t'))
+            return (False, "sshd.services is not running!")
         # self.conf_notes = br.configuration.PAM(SSHD_CONF_PATH,"#SSR\\s+SFTP\\s+configuration")
         self.conf_sub = br.configuration.PAM(
             SSHD_CONF_PATH, "Subsystem\\s+sftp\\s+/usr/libexec/openssh/sftp-server")

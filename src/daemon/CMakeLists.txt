@@ -51,18 +51,26 @@ qt5_add_dbus_adaptor(
   account_adaptor AccountAdaptor)
 
 qt5_add_dbus_adaptor(
-  TOOL_BOX_DBUS_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.ToolBox.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/tool-box/manager.h
-  KS::ToolBox::Manager
-  tool_box_adaptor
-  ToolBoxAdaptor)
+  TOOL_BOX_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.ToolBox.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/tool-box/manager.h KS::ToolBox::Manager
+  tool_box_adaptor ToolBoxAdaptor)
 
 set(TARGET_NAME ks-ssr-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
-                       ${PROJECT_SOURCE_DIR})
+qt5_create_translation(
+  QM_FILES
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml.in
+  ${CMAKE_SOURCE_DIR}/data/br-categories.ini.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-audit.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-config.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-external.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-network.xml.in
+  ${TS_FILES}
+  OPTIONS
+  -I
+  ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}

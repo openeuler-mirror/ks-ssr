@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import br.utils
-from br.translation import _
 
 
 class Proxy:
@@ -134,10 +133,10 @@ class SwitchBase(object):
                 if self.systemd_proxy.exist():
                     if self.systemd_proxy.stop():
                         # if not self.systemd_proxy.service_stop():
-                        return (False, _('Unable to stop service!\t'))
+                        return (False, "Unable to stop service!")
                     # self.systemd_proxy.kill()
                     self.systemd_proxy.disable()
             return (True, '')
         except Exception as e:
             br.log.error(str(e))
-            return (False, _("Abnormal service!\t"))
+            return (False, "Abnormal service!")

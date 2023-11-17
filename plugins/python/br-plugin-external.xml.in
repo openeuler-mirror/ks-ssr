@@ -2,92 +2,92 @@
 <br_plugin>
     <name>external</name>
     <category>external</category>
-    <_label>external settings</_label>
+    <label>QT_TRANSLATE_NOOP("xml", "external settings")</label>
     <language_type>python</language_type>
     <available>true</available>
     <reinforcement>
         <name>external-udev-cdrom</name>
-        <_label>CD-ROM device restrictions</_label>
-        <_description>Restrict read and write operations of CD-ROM devices</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "CD-ROM device restrictions")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict read and write operations of CD-ROM devices")</description>
     </reinforcement>
     <reinforcement>
         <name>external-udev-usb</name>
-        <_label>USB storage device restrictions</_label>
-        <_description>Restrict read and write operations of USB storage devices</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "USB storage device restrictions")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict read and write operations of USB storage devices")</description>
     </reinforcement>
     <reinforcement>
         <name>external-udev-ttys</name>
-        <_label>Serial port device restrictions</_label>
-        <_description>Restrict read and write operations of Serial port devices</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Serial port device restrictions")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict read and write operations of Serial port devices")</description>
     </reinforcement>
     <reinforcement>
         <name>external-accounts-login-limit</name>
-        <_label>User login limit</_label>
-        <_description>Restrict system independent user login</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "User login limit")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict system independent user login")</description>
     </reinforcement>
     <reinforcement>
         <name>external-accounts-null-password</name>
-        <_label>Null password detection</_label>
-        <_description>Avoid null password user in the system</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Null password detection")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Avoid null password user in the system")</description>
     </reinforcement>
     <reinforcement>
         <name>external-accounts-surplus-user</name>
-        <_label>Delete redundant users</_label>
-        <_description>Delete lp, games, operator, adm by default and add and delete by user</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Delete redundant users")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Delete lp, games, operator, adm by default and add and delete by user")</description>
     </reinforcement>
     <reinforcement>
         <name>external-sshd-root-login</name>
-        <_label>Remote login restrictions for root user</_label>
-        <_description>Restrict remote login of root user through SSH connection</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Remote login restrictions for root user")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict remote login of root user through SSH connection")</description>
     </reinforcement>
     <reinforcement>
         <name>external-sshd-pubkey-auth</name>
-        <_label>SSH password free login</_label>
-        <_description>Password free login by storing public key</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "SSH password free login")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Password free login by storing public key")</description>
     </reinforcement>
     <reinforcement>
         <name>external-sshd-weak-encryption</name>
-        <_label>SSH weak encryption algorithm</_label>
-        <_description>Enhance the security of SSH data transmission and prevent data from being cracked</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "SSH weak encryption algorithm")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Enhance the security of SSH data transmission and prevent data from being cracked")</description>
     </reinforcement>
     <reinforcement>
         <name>external-sshd-banner-info</name>
-        <_label>SSH login banner information</_label>
-        <_description>Avoid the leakage of operating system version information through SSH</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "SSH login banner information")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Avoid the leakage of operating system version information through SSH")</description>
     </reinforcement>
     <reinforcement>
         <name>external-sshd-service</name>
-        <_label>Sshd service reinforcement</_label>
-        <_description>Restricted security protocol, empty password user login, SSH port, PAM</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Sshd service reinforcement")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restricted security protocol, empty password user login, SSH port, PAM")</description>
     </reinforcement>
     <reinforcement>
         <name>external-pam-su-wheel</name>
-        <_label>su command limit</_label>
-        <_description>Users outside the wheel group are prohibited from using the 'su root' command</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "su command limit")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Users outside the wheel group are prohibited from using the 'su root' command")</description>
     </reinforcement>
     <reinforcement>
         <name>external-pam-sudo-limits</name>
-        <_label>Sudo command permissions</_label>
-        <_description>Restrict sudo command permissions</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Sudo command permissions")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict sudo command permissions")</description>
     </reinforcement>
     <reinforcement>
         <name>external-hosts-login-limit</name>
-        <_label>Remote IP access restrictions</_label>
-        <_description>Set the remote IP that can and cannot access this machine</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Remote IP access restrictions")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Set the remote IP that can and cannot access this machine")</description>
     </reinforcement>
     <reinforcement>
         <name>external-profile-tmout</name>
-        <_label>Session login timeout limit</_label>
-        <_description>If the session does not operate within the specified time after login, it will exit automatically</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Session login timeout limit")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "If the session does not operate within the specified time after login, it will exit automatically")</description>
     </reinforcement>
     <reinforcement>
         <name>external-sftp-user</name>
-        <_label>Limit SFTP</_label>
-        <_description>Restrict SFTP users' upward cross directory access</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Limit SFTP")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict SFTP users' upward cross directory access")</description>
     </reinforcement>
     <reinforcement>
         <name>external-radio-switch</name>
-        <_label>Disable radio network</_label>
-        <_description>Restrict wireless network connections</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Disable radio network")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict wireless network connections")</description>
     </reinforcement>
 </br_plugin>

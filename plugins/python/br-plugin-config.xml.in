@@ -2,87 +2,87 @@
 <br_plugin>
     <name>config</name>
     <category>config</category>
-    <_label>config settings</_label>
+    <label>QT_TRANSLATE_NOOP("xml", "config settings")</label>
     <language_type>python</language_type>
     <available>true</available>
     <reinforcement>
         <name>config-sendmail-switch</name>
-        <_label>Turn on sendmail service</_label>
-        <_description>Avoid receiving malware via email and illegal attacks</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Turn on sendmail service")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Avoid receiving malware via email and illegal attacks")</description>
     </reinforcement>
     <reinforcement>
         <name>config-history-size</name>
-        <_label>Number of historical commands</_label>
-        <_description>Restrict bash history commands</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Number of historical commands")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict bash history commands")</description>
     </reinforcement>
     <reinforcement>
         <name>config-file-permissions</name>
-        <_label>Important profile permissions</_label>
-        <_description>Permission restrictions on important configuration files in the system</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Important profile permissions")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Permission restrictions on important configuration files in the system")</description>
     </reinforcement>
     <reinforcement>
         <name>config-directory-permissions</name>
-        <_label>Important directory permissions</_label>
-        <_description>Restrict system key directory permissions</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Important directory permissions")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict system key directory permissions")</description>
     </reinforcement>
     <reinforcement>
         <name>config-key-reboot</name>
-        <_label>Turn on composite key reboot</_label>
-        <_description>Set whether the system can be restarted through key combination</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Turn on composite key reboot")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Set whether the system can be restarted through key combination")</description>
     </reinforcement>
     <reinforcement>
         <name>config-login-lock</name>
-        <_label>Login failure lock</_label>
-        <_description>Restrict the number of login failures and increase the cost of password cracking</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Login failure lock")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict the number of login failures and increase the cost of password cracking")</description>
     </reinforcement>
     <reinforcement>
         <name>config-password-expired</name>
-        <_label>Account password validity period</_label>
-        <_description>Restrict the maximum validity of passwords and add expiration reminders</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Account password validity period")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict the maximum validity of passwords and add expiration reminders")</description>
     </reinforcement>
     <reinforcement>
         <name>config-password-complexity</name>
-        <_label>Password complexity</_label>
-        <_description>Enhance password security and prevent passwords from being cracked(Suitable for new users and existing users changing passwords)</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Password complexity")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Enhance password security and prevent passwords from being cracked(Suitable for new users and existing users changing passwords)")</description>
     </reinforcement>
     <reinforcement>
         <name>config-resource-limits</name>
-        <_label>System critical resource constraints</_label>
-        <_description>Restrict the size of system critical resources</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "System critical resource constraints")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict the size of system critical resources")</description>
     </reinforcement>
     <reinforcement>
         <name>config-sak-key</name>
-        <_label>Turn on SAK key</_label>
-        <_description>When the Linux system cannot normally respond to user requests, you can use SAK key to control Linux</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Turn on SAK key")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "When the Linux system cannot normally respond to user requests, you can use SAK key to control Linux")</description>
     </reinforcement>
     <reinforcement>
         <name>config-dmesg</name>
-        <_label>Dmesg information</_label>
-        <_description>Reinforce dmesg information</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Dmesg information")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Reinforce dmesg information")</description>
     </reinforcement>
     <reinforcement>
         <name>config-umask-limit</name>
-        <_label>File directory default permission</_label>
-        <_description>Restrict file directory default permissions</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "File directory default permission")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Restrict file directory default permissions")</description>
     </reinforcement>
     <reinforcement>
         <name>config-nouser-files</name>
-        <_label>Scan for non owned master files</_label>
-        <_description>Check whether there are files in the important directory that the user does not belong to</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Scan for non owned master files")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Check whether there are files in the important directory that the user does not belong to")</description>
     </reinforcement>
     <reinforcement>
         <name>config-authority-files</name>
-        <_label>Scan 777 permission file</_label>
-        <_description>Check whether there is a file with permission 777 under the important directory</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Scan 777 permission file")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Check whether there is a file with permission 777 under the important directory")</description>
     </reinforcement>
     <reinforcement>
         <name>config-suid-sgid-files</name>
-        <_label>Scan suid-sgid permission file</_label>
-        <_description>Check whether there is a file with suid-sgid permission under the important directory</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Scan suid-sgid permission file")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Check whether there is a file with suid-sgid permission under the important directory")</description>
     </reinforcement>
     <reinforcement>
         <name>config-vulnerability-scanning</name>
-        <_label>Vulnerability scanning</_label>
-        <_description>Scanning system CVE vulnerability</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Vulnerability scanning")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Scanning system CVE vulnerability")</description>
     </reinforcement>
 </br_plugin>

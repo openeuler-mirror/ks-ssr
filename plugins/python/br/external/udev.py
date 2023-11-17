@@ -3,7 +3,6 @@ import json
 import br.configuration
 import br.utils
 import br.log
-from br.translation import _
 
 UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-br-external.rules"
 DRIVER_BLACKLIST_PATH = "/etc/modprobe.d/br-blacklist.conf"
@@ -178,13 +177,13 @@ class CDROM(DRIVERS):
             self.conf.set_value("1=blacklist sr_mod", "blacklist sr_mod")
             output = self.close()
             if output:
-                return (False, _("Device busy, please pop up!\t"))
+                return (False, "Device busy, please pop up!")
         else:
             self.conf.del_record("1=blacklist cdrom")
             self.conf.del_record("1=blacklist sr_mod")
             output = self.open()
             if output:
-                return (False, _("Please contact the admin.\t"))
+                return (False, "Please contact the admin.")
 
         return (True, '')
 
