@@ -61,6 +61,7 @@ Window::Window() : TitlebarWindow(nullptr),
 Window::~Window()
 {
     delete m_ui;
+    Settings::Dialog::globalDeinit();
 }
 
 void Window::resizeEvent(QResizeEvent *event)
@@ -122,6 +123,7 @@ void Window::initWindow()
     auto layout = getTitlebarCustomLayout();
     layout->setContentsMargins(0, 0, 10, 0);
     layout->setSpacing(10);
+    Settings::Dialog::globalInit(this);
 
     //未激活文本
     m_activateStatus = new QLabel(this);
@@ -255,9 +257,8 @@ void Window::updateActivation()
 
 void Window::popupSettingsDialog()
 {
-    auto settingsDialog = new Settings::Dialog(this);
     // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
-    connect(settingsDialog, &Settings::Dialog::exportStrategyClicked, this, [this]
+    connect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this]
             {
                 for (auto page : m_pages.value(tr("Baseline reinforcement")))
                 {
@@ -268,7 +269,7 @@ void Window::popupSettingsDialog()
                     }
                 }
             });
-    connect(settingsDialog, &Settings::Dialog::resetAllArgsClicked, this, [this]
+    connect(Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this]
             {
                 for (auto page : m_pages.value(tr("Baseline reinforcement")))
                 {
@@ -280,10 +281,10 @@ void Window::popupSettingsDialog()
                 }
             });
 
-    auto x = this->x() + this->width() / 4 + settingsDialog->width() / 16;
-    auto y = this->y() + this->height() / 4 + settingsDialog->height() / 16;
-    settingsDialog->move(x, y);
-    settingsDialog->show();
+    auto x = this->x() / 4 + this->width() / 4 + Settings::Dialog::instance()->width() / 16;
+    auto y = this->y() / 4 + this->height() / 4 + Settings::Dialog::instance()->height() / 16;
+    Settings::Dialog::instance()->move(x, y);
+    Settings::Dialog::instance()->show();
 }
 
 void Window::popupAboutDialog()

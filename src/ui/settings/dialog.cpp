@@ -22,6 +22,21 @@ namespace KS
 {
 namespace Settings
 {
+Dialog *Dialog::m_instance = nullptr;
+
+void Dialog::globalInit(QWidget *parent)
+{
+    m_instance = new Dialog(parent);
+};
+void Dialog::globalDeinit()
+{
+    if (m_instance)
+    {
+        delete m_instance;
+        m_instance = nullptr;
+    }
+};
+
 Dialog::Dialog(QWidget *parent) : TitlebarWindow(parent),
                                   m_ui(new Ui::Dialog)
 {
@@ -29,6 +44,7 @@ Dialog::Dialog(QWidget *parent) : TitlebarWindow(parent),
     initUI();
     initSidebar();
     initSubPage();
+    hide();
 
     connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, m_ui->m_stacked, &QStackedWidget::setCurrentIndex);
 }
@@ -38,10 +54,15 @@ Dialog::~Dialog()
     delete m_ui;
 }
 
+void Dialog::closeEvent(QCloseEvent *event)
+{
+    hide();
+    Q_ASSERT(event);
+    return;
+}
+
 void Dialog::initUI()
 {
-    // 页面关闭时销毁
-    setAttribute(Qt::WA_DeleteOnClose);
     setTitle(tr("Settings"));
     setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
