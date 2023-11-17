@@ -3,7 +3,6 @@
 import json
 import br.systemd
 import br.log
-from br.translation import _
 
 FIREWALL_CMD_PATH = '/usr/bin/firewall-cmd'
 IPTABLES_RULES_SAVE_PATH = '/usr/share/ks-ssr/br-iptables.rules'
@@ -83,7 +82,7 @@ class Firewall:
     def open_iptables(self):
         if self.firewalld_systemd.exist():
             if self.firewalld_systemd.stop():
-                return (False, _('Unable to stop firewalld service!\t'))
+                return (False, "Unable to stop firewalld service!")
             self.firewalld_systemd.disable()
             self.firewalld_systemd.mask()
 
@@ -174,7 +173,7 @@ class FirewallManager(Firewall):
 
         if self.firewalld_systemd.is_active():
             if self.firewalld_systemd.stop():
-                return (False, _('Unable to stop firewalld service!\t'))
+                return (False, "Unable to stop firewalld service!")
             self.firewalld_systemd.disable()
 
         if self.flag_first:
@@ -315,7 +314,7 @@ class IcmpTimestamp(Firewall):
 
         if self.firewalld_systemd.is_active():
             if self.firewalld_systemd.stop():
-                return (False, _('Unable to stop firewalld service!\t'))
+                return (False, "Unable to stop firewalld service!")
             self.firewalld_systemd.disable()
 
         if args['timestamp_request']:
@@ -354,7 +353,7 @@ class Traceroute(Firewall):
 
         if self.firewalld_systemd.is_active():
             if self.firewalld_systemd.stop():
-                return (False, _('Unable to stop firewalld service!\t'))
+                return (False, "Unable to stop firewalld service!")
             self.firewalld_systemd.disable()
 
         if args['enabled']:

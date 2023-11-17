@@ -2,7 +2,6 @@
 
 import json
 import br.configuration
-from br.translation import _
 
 SU_PAM_CONF_PATH = "/etc/pam.d/su"
 
@@ -82,7 +81,7 @@ class SudoLimits:
         else:
             if self.get_selinux_status():
                 # self.conf.set_line(SUDO_LIMIT_FALLBACK_LINE,"## Same thing without a password")
-                return (False, _("Please close SELinux and use it!\t"))
+                return (False, "Please close SELinux and use it!")
             # else:
                 # self.conf_aud.set_line(SUDO_LIMIT_AUD_LINE,"")
                 # self.conf_sec.set_line(SUDO_LIMIT_SEC_LINE,"audadm\\s+ALL")

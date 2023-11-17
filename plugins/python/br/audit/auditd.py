@@ -6,7 +6,6 @@ import os
 import br.configuration
 import br.log
 import br.utils
-from br.translation import _
 
 AUDIT_RULES_PATH = "/etc/audit/rules.d/br-audit.rules"
 
@@ -61,11 +60,11 @@ class Rules():
         # Need to close selinux for use.
         if ((args[AUDIT_ADD_PATH_KEY] != "" and self.get_selinux_status()) or
                 (args[AUDIT_DEL_PATH_KEY] != "" and self.get_selinux_status())):
-            return (False, _("Please close SELinux and use it!\t"))
+            return (False, "Please close SELinux and use it!")
         # No such file or directory.
         if ((args[AUDIT_ADD_PATH_KEY] != "" and not os.path.exists(args[AUDIT_ADD_PATH_KEY])) or
                 (args[AUDIT_DEL_PATH_KEY] != "" and not os.path.exists(args[AUDIT_DEL_PATH_KEY]))):
-            return (False, _("No such file or directory\t"))
+            return (False, "No such file or directory.")
 
         if args[AUDIT_ADD_PATH_KEY] != "" and not self.is_rule_exist(args[AUDIT_ADD_PATH_KEY]):
             self.conf.set_value(

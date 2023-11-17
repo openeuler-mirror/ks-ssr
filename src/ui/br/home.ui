@@ -126,7 +126,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="m_scanComboBox"/>
+        <widget class="QComboBox" name="m_scanComboBox">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_3">
