@@ -13,11 +13,11 @@
  */
 #include "xmlutils.h"
 #include <qt5-log-i.h>
+#include <QCoreApplication>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QList>
-#include <QCoreApplication>
 #include <QObject>
 #include "include/ssr-marcos.h"
 #include "lib/base/str-utils.h"
@@ -241,7 +241,7 @@ bool XMLUtils::ssrReinforcements(const QString &xmlString, QList<Plugins::Catego
                 defaultLabel = QString(label.c_str());
             }
         }
-        auto test =  qApp->translate("xml", "Turn on ICMP redirection");
+        auto test = qApp->translate("xml", "Turn on ICMP redirection");
         category->setLabel(noop2Translate(defaultLabel));
 
         QString defaultDescription;
@@ -400,7 +400,7 @@ bool XMLUtils::ssrJobResult(const QString &xmlString,
             CONTINUE_IF_TRUE(category == NULL)
             if (reinforcement.error() != NULL)
             {
-                category->setErrorMessage(reinforcement.error().get().c_str());
+                category->setErrorMessage(python2Translate(reinforcement.error().get().c_str()));
             }
 
             category->setState(reinforcement.state());
@@ -497,6 +497,11 @@ QString XMLUtils::categoriesLabel2Translate(const QString &souceTxt)
     return qApp->translate("ini", souceTxt.toUtf8());
 }
 
+QString XMLUtils::python2Translate(const QString &souceTxt)
+{
+    return qApp->translate("python", souceTxt.toUtf8());
+}
+
 QString XMLUtils::noop2Translate(const QString &souceTxt)
 {
     auto tmpSouce = souceTxt;
@@ -504,7 +509,7 @@ QString XMLUtils::noop2Translate(const QString &souceTxt)
     QStringList translateList;
     for (auto key : tmpList)
     {
-        CONTINUE_IF_TRUE(key.isEmpty() || key == "," || key == ", " || key == "QT_TRANSLATE_NOOP(" || key == "QT_TRANSLATE_NOOP_UTF8("  ||  key == ")")
+        CONTINUE_IF_TRUE(key.isEmpty() || key == "," || key == ", " || key == "QT_TRANSLATE_NOOP(" || key == "QT_TRANSLATE_NOOP_UTF8(" || key == ")")
         key.remove(QRegExp("^ +\\s*"));
         translateList << key;
     }
@@ -512,7 +517,7 @@ QString XMLUtils::noop2Translate(const QString &souceTxt)
     RETURN_VAL_IF_TRUE(translateList.size() != 2, souceTxt)
     KLOG_DEBUG() << "key = " << translateList[0] << "souce = " << translateList[1];
 
-    return qApp->translate(translateList[0].toUtf8(),translateList[1].toUtf8());
+    return qApp->translate(translateList[0].toUtf8(), translateList[1].toUtf8());
 }
 }  // namespace BR
 }  // namespace KS

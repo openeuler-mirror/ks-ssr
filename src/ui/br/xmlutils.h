@@ -53,6 +53,7 @@ private:
     // #define QT_TRANSLATE_NOOP(scope, x) QCoreApplication::translate(scope,x)
     QString noop2Translate(const QString &souceTxt);
     QString categoriesLabel2Translate(const QString &souceTxt);
+    QString python2Translate(const QString &souceTxt);
 };
 
 }  // namespace BR
