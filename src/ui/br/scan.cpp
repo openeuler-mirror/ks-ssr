@@ -55,7 +55,7 @@ void Scan::usingSystemStrategy()
 {
     KLOG_DEBUG() << "use system strategy.";
     resetAllReinforcementItem();
-    m_ui->m_itemTable->setAllCheckBoxEditStatus();
+    m_ui->m_itemTable->setAllCheckBoxEditStatus(false);
     m_ui->m_itemTable->hideCheckBox(true);
     disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
 }
@@ -66,15 +66,16 @@ void Scan::usingCustomStrategy()
     disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     // 修改UI界面参数以及复选框状态
+    m_ui->m_itemTable->setAllCheckBoxEditStatus(true);
     m_ui->m_itemTable->setAllChecked(Qt::Unchecked);
     m_ui->m_itemTable->hideCheckBox(false);
     // 所有状态重置后再修改
-    //    resetAllReinforcementItem();
+    resetAllReinforcementItem();
 
     auto raReinforcements = XMLUtils::getDefault()->raAnalysis(SSR_BR_CUSTOM_RA_STRATEGY_FILEPATH);
     if (raReinforcements.empty())
     {
-        m_ui->m_itemTable->setAllChecked();
+        m_ui->m_itemTable->setAllChecked(Qt::Checked);
     }
     else
     {
@@ -217,9 +218,6 @@ void Scan::initConnection()
 
     //    connect(m_dbusProxy, SIGNAL(standardChanged(uint)), this, SLOT(standardTypeChanged(uint)));
     connect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
-
-    // TODO 回退功能
-    connect(m_dbusProxy, SIGNAL(ProgressFinished()), this, SLOT(fallbackFinished()));
 }
 
 void Scan::resetAllReinforcementItem()
@@ -423,7 +421,7 @@ void Scan::generateReport()
     {
         auto reply = m_dbusProxy->GetCategories();
         reply.waitForFinished();
-        XMLUtils::getDefault()->jsonParsing(reply.value().toUtf8(), m_categoriesList);
+        XMLUtils::getDefault()->jsonParsing(reply.value().toUtf8(), m_afterReinForcementCategoriesList);
         XMLUtils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_afterReinForcementCategoriesList);
     }
     // 断开scan进程连接
@@ -436,6 +434,7 @@ void Scan::generateReport()
                 XMLUtils::getDefault()->ssrJobResult(jobResult, progressInfo, m_afterReinForcementCategoriesList, m_invalidData);
             });
     // 监听进程完成后 导出报表
+    disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
             {
                 disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
@@ -447,8 +446,6 @@ void Scan::generateReport()
             });
     // 生成报表前扫描
     m_progressInfo.method = PROCESS_METHOD_SCAN;
-    clearState();
-    clearInvalidData();
     auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categoriesList) : m_ui->m_itemTable->getAllString(m_categoriesList);
     m_dbusProxy->Scan(scanItems);
 }
@@ -513,7 +510,7 @@ void Scan::runProgress(const QString &jobResult)
 {
     m_progressInfo.total = m_ui->m_itemTable->getCount();
     XMLUtils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categoriesList, m_invalidData);
-    m_ui->m_itemTable->setAllCheckBoxEditStatus();
+    m_ui->m_itemTable->setAllCheckBoxEditStatus(false);
 
     if (double(100) == m_progressInfo.progress)
     {

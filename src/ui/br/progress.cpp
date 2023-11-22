@@ -80,7 +80,7 @@ void Progress::updateProgressUI(ProcessMethod method)
     m_ui->m_icon->finishedProgress(false);
     m_ui->m_definition->setText(QString(tr("In %1, please wait..."))
                                     .arg(method == PROCESS_METHOD_SCAN
-                                             ? QString("Scan")
+                                             ? QString(tr("Scan"))
                                              : QString(tr("Reinforcement"))));
     m_ui->m_note->setText(tr("Start time: %1 elapsed time: 00:00:00 progress: 0%")
                               .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd")));

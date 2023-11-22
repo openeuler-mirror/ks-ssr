@@ -155,11 +155,7 @@ bool ResourceMonitor::monitorResource()
     float rootRatio = float(m_rootFreeSpace) / float(m_rootTotalSpace);
     // this->rootFreeSpaceRatio_.emit(rootRatio);
     Q_EMIT this->rootFreeSpaceRatio_(rootRatio);
-
-    // this->cpuAverageLoadRatio_.emit(getCpuAverageLoad());
     Q_EMIT this->cpuAverageLoadRatio_(getCpuAverageLoad());
-
-    // this->vmstatSiso_.emit(getVmStatS());
     Q_EMIT this->memoryRemainingRatio_(getMemoryRemainingRatio());
     return true;
 }

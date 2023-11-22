@@ -93,6 +93,7 @@ int CmdParser::run(int argc, char** argv, QCoreApplication& a)
         this->parser.value("line-match-pattern"),
         this->parser.value("split-pattern"),
         this->parser.value("join-str"),
+        this->parser.value("comment"),
         this->parser.value("new-line"),
         this->parser.value("next-line-match-pattern")};
 

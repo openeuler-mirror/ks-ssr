@@ -44,83 +44,83 @@
     <name>BaselineReinforcement</name>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="14"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="212"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="226"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="25"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="213"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="227"/>
         <source>Reinforcement strategy:</source>
         <translation>加固策略：</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="37"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="214"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="43"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="228"/>
         <source>Import strategy</source>
         <translation>导入策略</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="50"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="215"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="56"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="229"/>
         <source>Export strategy</source>
         <translation>导出策略</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="60"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="216"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="66"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="230"/>
         <source>Reset reinforce args</source>
         <translation>重置加固配置</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="73"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="217"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="92"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="231"/>
         <source>Scheduled scan time (hours/time, 0 indicates off):</source>
         <translation>定时扫描时间（小时/次， 0表示关闭）：</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="87"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="218"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="106"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="232"/>
         <source>Resource monitor:</source>
         <translation>资源监控：</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="103"/>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="143"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="220"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="224"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="122"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="162"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="234"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="238"/>
         <source>open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="113"/>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="153"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="221"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="225"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="132"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="172"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="235"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="239"/>
         <source>close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="127"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="222"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="146"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="236"/>
         <source>Bubble notification</source>
         <translation>气泡通知：</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="167"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="226"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="186"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="240"/>
         <source>Reinforcement fallback:</source>
         <translation>加固回退：</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="179"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="227"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="204"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="241"/>
         <source>Fallback to initial state</source>
         <translation>回退到初始状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="189"/>
-        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="228"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.ui" line="214"/>
+        <location filename="../build/src/ui/ui_baseline-reinforcement.h" line="242"/>
         <source>Fallback to previous time</source>
         <translation>回退到上一次</translation>
     </message>
@@ -766,22 +766,22 @@
 <context>
     <name>KS::BR::ItemTable</name>
     <message>
-        <location filename="../src/ui/br/item-table.cpp" line="82"/>
+        <location filename="../src/ui/br/item-table.cpp" line="88"/>
         <source>Reinforcement Item</source>
         <translation>加固项</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/item-table.cpp" line="83"/>
+        <location filename="../src/ui/br/item-table.cpp" line="89"/>
         <source>Info</source>
         <translation>说明</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/item-table.cpp" line="84"/>
+        <location filename="../src/ui/br/item-table.cpp" line="90"/>
         <source>State</source>
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/item-table.cpp" line="522"/>
+        <location filename="../src/ui/br/item-table.cpp" line="527"/>
         <source>Double click this column to modify the reinforcement parameters</source>
         <translation>双击此列修改加固参数</translation>
     </message>
@@ -1073,52 +1073,52 @@
 <context>
     <name>KS::BR::Scan</name>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="133"/>
+        <location filename="../src/ui/br/scan.cpp" line="134"/>
         <source>Files</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="133"/>
+        <location filename="../src/ui/br/scan.cpp" line="134"/>
         <source>strategy(*.xml)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="142"/>
+        <location filename="../src/ui/br/scan.cpp" line="143"/>
         <source>Please check the file name and whether you have write permission!</source>
         <translation>请检查文件名以及您是否具有写入权限！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="151"/>
+        <location filename="../src/ui/br/scan.cpp" line="152"/>
         <source>Open RA file failed!</source>
         <translation>打开ra文件失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="156"/>
+        <location filename="../src/ui/br/scan.cpp" line="157"/>
         <source>Export successed!</source>
         <translation>导出成功！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="156"/>
+        <location filename="../src/ui/br/scan.cpp" line="157"/>
         <source>Export failed!</source>
         <translation>导出失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="325"/>
+        <location filename="../src/ui/br/scan.cpp" line="323"/>
         <source>Please select the item to export!</source>
         <translation>请选择要导出的加固项！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="386"/>
+        <location filename="../src/ui/br/scan.cpp" line="384"/>
         <source>Please check the reinforcement items to be scanned or reinforcement classification for scanning.</source>
         <translation>请勾选需要扫描的加固项。</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="406"/>
+        <location filename="../src/ui/br/scan.cpp" line="404"/>
         <source>Please check the content to be reinforced.</source>
         <translation>请勾选要加固的项。</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="445"/>
+        <location filename="../src/ui/br/scan.cpp" line="444"/>
         <source>Export succeeded!</source>
         <translation>导出成功！</translation>
     </message>
@@ -2082,102 +2082,106 @@
 <context>
     <name>KS::Settings::BaselineReinforcement</name>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="27"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="39"/>
         <source>Safety reinforcement</source>
         <translation>安全加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="49"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="62"/>
         <source>Resource monitor open!</source>
         <translation>资源监控已开启！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="57"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="71"/>
         <source>Resource monitor close!</source>
         <translation>资源监控已关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="64"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="79"/>
         <source>Notify open!</source>
         <translation>气泡通知已开启！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="69"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="85"/>
         <source>Notify close!</source>
         <translation>气泡通知已关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="85"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="100"/>
         <source>home free space less than 10%</source>
         <translation>家目录空间不足10%</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="93"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="109"/>
         <source>root free space less than 10%</source>
         <translation>根目录空间不足10%</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="101"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="118"/>
         <source>The average load of a single core CPU exceeds 1</source>
         <translation>单核CPU负载超过1</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="110"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="128"/>
         <source>Memory space remaining</source>
         <translation>内存空间不足</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="161"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="179"/>
         <source>Files</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="161"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="179"/>
         <source>strategy(*.xml)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="168"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="186"/>
         <source>Open files failed!</source>
         <translation>打开文件失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="172"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="190"/>
         <source>Failed to import strategy file. Please whether the file is valid!</source>
         <translation>导入策略失败，请检查策略文件的合法性！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="172"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="190"/>
         <source>Import succeeded!</source>
         <translation>导入成功！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="184"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="202"/>
         <source>Scheduled scanning task has been closed!</source>
         <translation>定时扫描已关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="192"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="210"/>
         <source>Scheduled scanning task has been started, every interval %1 scan once every hour.</source>
         <translation>定时扫描任务开启，每间隔%1小时扫描一次。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="220"/>
-        <source>Timed scan finied, Scaned %1, %2 conform, %3 inconform!</source>
-        <translation>定时扫描任务完成，共扫描%1项，%2项符合，%3项不符合！</translation>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="243"/>
+        <source>Timed scan finished, Scaned %1, %2 conform, %3 inconform!</source>
+        <translation>定时扫描任务完成，已扫描 %1项， %2项符合, %3项不符合！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="249"/>
+        <source>Timed scan finied, Scaned %1, %2 conform, %3 inconform!</source>
+        <translation type="vanished">定时扫描任务完成，共扫描%1项，%2项符合，%3项不符合！</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="271"/>
         <source>Open resource monitoring</source>
         <translation>资源监控已打开。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="249"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="271"/>
         <source>Close resource monitoring</source>
         <translation>资源监控已关闭。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="259"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="280"/>
         <source>Fallback finished!</source>
         <translation>回退完成！</translation>
     </message>
@@ -2198,22 +2202,22 @@
 <context>
     <name>KS::Settings::Dialog</name>
     <message>
-        <location filename="../src/ui/settings/dialog.cpp" line="45"/>
+        <location filename="../src/ui/settings/dialog.cpp" line="66"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/dialog.cpp" line="56"/>
+        <location filename="../src/ui/settings/dialog.cpp" line="77"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/dialog.cpp" line="61"/>
+        <location filename="../src/ui/settings/dialog.cpp" line="82"/>
         <source>Trusted protect</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/dialog.cpp" line="66"/>
+        <location filename="../src/ui/settings/dialog.cpp" line="87"/>
         <source>Interface Control</source>
         <translation>接口控制</translation>
     </message>
@@ -2549,56 +2553,56 @@
 <context>
     <name>KS::Window</name>
     <message>
-        <location filename="../src/ui/window.cpp" line="104"/>
+        <location filename="../src/ui/window.cpp" line="105"/>
         <source>Security reinforcement</source>
         <translation>安全加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="131"/>
+        <location filename="../src/ui/window.cpp" line="133"/>
         <source>Unactivated</source>
         <translation>未激活</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="143"/>
+        <location filename="../src/ui/window.cpp" line="145"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="144"/>
+        <location filename="../src/ui/window.cpp" line="146"/>
         <source>Activation</source>
         <translation>软件激活</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="145"/>
+        <location filename="../src/ui/window.cpp" line="147"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="157"/>
-        <location filename="../src/ui/window.cpp" line="262"/>
-        <location filename="../src/ui/window.cpp" line="273"/>
+        <location filename="../src/ui/window.cpp" line="159"/>
+        <location filename="../src/ui/window.cpp" line="263"/>
+        <location filename="../src/ui/window.cpp" line="274"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="158"/>
-        <location filename="../src/ui/window.cpp" line="352"/>
+        <location filename="../src/ui/window.cpp" line="160"/>
+        <location filename="../src/ui/window.cpp" line="353"/>
         <source>Trusted protected</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="159"/>
+        <location filename="../src/ui/window.cpp" line="161"/>
         <source>File protected</source>
         <translation>文件保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="160"/>
+        <location filename="../src/ui/window.cpp" line="162"/>
         <source>Private box</source>
         <translation>私密保险箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="161"/>
-        <location filename="../src/ui/window.cpp" line="359"/>
+        <location filename="../src/ui/window.cpp" line="163"/>
+        <location filename="../src/ui/window.cpp" line="360"/>
         <source>Device management</source>
         <translation>设备管理</translation>
     </message>
@@ -3081,19 +3085,19 @@
         <translation>文件路径未指定</translation>
     </message>
     <message>
-        <location filename="../src/tool/config/cmd-parser.cpp" line="101"/>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="102"/>
         <source>No specify file type</source>
         <translation>文件类型未指定</translation>
     </message>
     <message>
-        <location filename="../src/tool/config/cmd-parser.cpp" line="119"/>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="120"/>
         <source>Unknown file type</source>
         <translation>未知文件类型</translation>
     </message>
     <message>
-        <location filename="../src/tool/config/cmd-parser.cpp" line="155"/>
-        <location filename="../src/tool/config/cmd-parser.cpp" line="204"/>
-        <location filename="../src/tool/config/cmd-parser.cpp" line="252"/>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="156"/>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="205"/>
+        <location filename="../src/tool/config/cmd-parser.cpp" line="253"/>
         <source>Exec method %1 failed</source>
         <translation>执行方法 %1 失败</translation>
     </message>
@@ -3287,32 +3291,32 @@
 <context>
     <name>TrustedProtected</name>
     <message>
-        <location filename="../src/ui/settings/trusted-protected.ui" line="14"/>
-        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="143"/>
+        <location filename="../src/ui/settings/trusted-protected.ui" line="20"/>
+        <location filename="../build/src/ui/ui_trusted-protected.h" line="148"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/trusted-protected.ui" line="31"/>
-        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="144"/>
+        <location filename="../src/ui/settings/trusted-protected.ui" line="37"/>
+        <location filename="../build/src/ui/ui_trusted-protected.h" line="149"/>
         <source>Trusted protected(Effective after reboot):</source>
         <translation>可信保护 （重启后生效）：</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/trusted-protected.ui" line="64"/>
-        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="146"/>
+        <location filename="../src/ui/settings/trusted-protected.ui" line="70"/>
+        <location filename="../build/src/ui/ui_trusted-protected.h" line="151"/>
         <source>Root key storage method:</source>
         <translation>根密钥存储方式：</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/trusted-protected.ui" line="103"/>
-        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="148"/>
+        <location filename="../src/ui/settings/trusted-protected.ui" line="109"/>
+        <location filename="../build/src/ui/ui_trusted-protected.h" line="153"/>
         <source>Soft storage</source>
         <translation>软存储</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/trusted-protected.ui" line="145"/>
-        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="150"/>
+        <location filename="../src/ui/settings/trusted-protected.ui" line="151"/>
+        <location filename="../build/src/ui/ui_trusted-protected.h" line="155"/>
         <source>Hard storage</source>
         <translation>硬存储</translation>
     </message>

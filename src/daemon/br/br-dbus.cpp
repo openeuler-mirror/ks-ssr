@@ -17,6 +17,7 @@
 #include <libaudit.h>
 #include <qt5-log-i.h>
 #include <unistd.h>
+#include <QTimer>
 #include <fstream>
 #include <iostream>
 #include "br-protocol.hxx"
@@ -236,16 +237,12 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resource_monitor)
 
     if (this->configuration_->setResourceMonitorStatus(BRResourceMonitor(resource_monitor)))
     {
-        if (this->timer)
-        {
-            timer->stop();
-            QObject::disconnect(this->timer, SIGNAL(timeout()), this, SLOT(BRDBus::onResourceMonitor()));
-            delete this->timer;
-        }
-        if (BRResourceMonitor(resource_monitor) != BRResourceMonitor::BR_RESOURCE_MONITOR_CLOSE)
+        timer->stop();
+        QObject::disconnect(this->timer, SIGNAL(timeout()), this, SLOT(BRDBus::onResourceMonitor()));
+        if (BRResourceMonitor(resource_monitor) == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
         {
             this->timer = new QTimer();
-            QObject::connect(this->timer, SIGNAL(QTimer::timeout()), this, SLOT(BRDBus::onResourceMonitor()));
+            QObject::connect(this->timer, &QTimer::timeout, this, &BRDBus::onResourceMonitor);
             this->timer->start(RESOURCEMONITORMS);
         }
     }

@@ -684,6 +684,9 @@ QComboBox#m_scanComboBox
 }
 QComboBox#m_scanComboBox::down-arrow
 {
+    background-color: transparent;
+    border: 0px;
+    combobox-popup:0;
     image:url(:/images/combobox-arrow);
 }
 QComboBox#m_scanComboBox QAbstractItemView

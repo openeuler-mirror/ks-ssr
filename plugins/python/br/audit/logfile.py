@@ -89,9 +89,9 @@ class Permissions:
 
         output = br.utils.subprocess_has_output(
             'grep -r "{0}" {1}'.format('/var/log/messages', LOGFILE_CONF_FILEPATH))
-        output_kssrmanager = br.utils.subprocess_has_output(
-            'grep -r "{0}" {1}'.format('### KSSRManager ###', LOGFILE_CONF_FILEPATH))
-        if len(output) != 0 and len(output_kssrmanager) != 0:
+        output_ksbrmanager = br.utils.subprocess_has_output(
+            'grep -r "{0}" {1}'.format('### KSBRManager ###', LOGFILE_CONF_FILEPATH))
+        if len(output) != 0 and len(output_ksbrmanager) != 0:
             retdata[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT] = True
         else:
             retdata[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT] = False

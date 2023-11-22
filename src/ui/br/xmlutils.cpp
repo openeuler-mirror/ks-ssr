@@ -515,8 +515,6 @@ QString XMLUtils::noop2Translate(const QString &souceTxt)
     }
 
     RETURN_VAL_IF_TRUE(translateList.size() != 2, souceTxt)
-    KLOG_DEBUG() << "key = " << translateList[0] << "souce = " << translateList[1];
-
     return qApp->translate(translateList[0].toUtf8(), translateList[1].toUtf8());
 }
 }  // namespace BR

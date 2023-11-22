@@ -88,7 +88,7 @@ void BaselineReinforcement::initConnection()
 
     connect(m_ui->m_fallbackInit, &QPushButton::clicked, this, [this]
             { fallback(BRSnapshotStatus::BR_SNAPSHOT_STATUS_INITIAL); });
-    connect(m_ui->m_fallbackInit, &QPushButton::clicked, this, [this]
+    connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this]
             { fallback(BRSnapshotStatus::BR_SNAPSHOT_STATUS_LAST); });
 
     connect(m_dbusProxy, &BRDbusProxy::HomeFreeSpaceRatioLower, this, [this](const QString &spaceRatio)
@@ -209,12 +209,15 @@ void BaselineReinforcement::timedScanSettings(int hours)
     {
         Notify::NOTIFY_INFO(QString(tr("Scheduled scanning task has been started, every interval %1 scan once every hour.")).arg(hours).toUtf8());
     }
-    m_timedScan->start(hours * 1000 * 3600);
-    QTimer::singleShot(hours * 1000 * 3600, this, &BaselineReinforcement::scan);
+//    m_timedScan->start(hours * 1000 * 3600);
+//    QTimer::singleShot(hours * 1000 * 3600, this, &BaselineReinforcement::scan);
+     m_timedScan->start(hours * 1000 * 10);
 }
 
 void BaselineReinforcement::scan()
 {
+    m_categoriesList.clear();
+    m_progressInfo = {};
     // 获取加固项信息
     auto reply = m_dbusProxy->GetCategories();
     reply.waitForFinished();
@@ -230,14 +233,14 @@ void BaselineReinforcement::scan()
                 KS::BR::XMLUtils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categoriesList, invalidData);
             });
     // 监听进程完成后
+    disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
             {
-                disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
                 disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
                 updateProgressInfo(m_progressInfo);
                 if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
                 {
-                    Notify::NOTIFY_INFO(QString(tr("Timed scan finied, Scaned %1, %2 conform, %3 inconform!")).arg(m_progressInfo.failureCount + m_progressInfo.successCount).arg(m_progressInfo.successCount).arg(m_progressInfo.failureCount).toUtf8());
+                    Notify::NOTIFY_INFO(QString(tr("Timed scan finished, Scaned %1, %2 conform, %3 inconform!")).arg(m_progressInfo.failureCount + m_progressInfo.successCount).arg(m_progressInfo.successCount).arg(m_progressInfo.failureCount).toUtf8());
                 }
                 KLOG_INFO() << "Timed scan finied, Scaned "
                             << m_progressInfo.failureCount + m_progressInfo.successCount
@@ -256,7 +259,8 @@ void BaselineReinforcement::scan()
             scanStr << category->getName();
         }
     }
-    m_dbusProxy->Scan(scanStr);
+    auto replyScan = m_dbusProxy->Scan(scanStr);
+    CHECK_ERROR_FOR_DBUS_REPLY(replyScan);
 }
 
 void BaselineReinforcement::setMonitorStatus(bool isOpen)
@@ -270,11 +274,14 @@ void BaselineReinforcement::setMonitorStatus(bool isOpen)
 
 void BaselineReinforcement::fallback(int status)
 {
-    auto reply = m_dbusProxy->SetFallback(BRSnapshotStatus(status));
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
-            { POPUP_MESSAGE_DIALOG(tr("Fallback finished!")); });
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback finished!"));
+        disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
+    });
+    auto reply = m_dbusProxy->SetFallback(BRSnapshotStatus(status));
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
 }
 }  // namespace Settings
 }  // namespace KS
