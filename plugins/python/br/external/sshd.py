@@ -114,12 +114,11 @@ class WeakEncryption(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
-        # if not self.service.is_active():
-        #     return (False,'sshd.services is not running!\t')
         args = json.loads(args_json)
         ciphers = self.conf.get_value("Ciphers").split(",")
         # 过滤空元素
-        ciphers = filter(lambda x: x, ciphers)
+        if all(ciphers) and len(ciphers) > 1:
+            ciphers = filter(lambda x: x, ciphers)
 
         # 这里只处理不允许弱加密算法的情况。如果是允许弱加密算法，这里也不会把弱加密算法添加进去，因为这会导致新版本sshd无法启动
         if not args[WEAK_ENCRYPT_ARG_ENABLED]:
@@ -253,7 +252,7 @@ class SshdService(SSHD):
             SSHD_CONF_PERMIT_EMPTY, "no" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "yes")
 
         self.clear_port()
-        if args[SSHD_CONF_PORT_KEY] != "":
+        if args[SSHD_CONF_PORT_KEY] != "" and args[SSHD_CONF_PORT_KEY] != "\"\"":
             self.conf.set_all_value(SSHD_CONF_PORT, args[SSHD_CONF_PORT_KEY])
             if self.get_selinux_status():
                 br.utils.subprocess_not_output(

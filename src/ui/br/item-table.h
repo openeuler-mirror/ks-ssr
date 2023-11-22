@@ -57,7 +57,7 @@ public:
     void updateStatus(const QList<Plugins::Categories *> &list);
     void clearCheckedStatus(const QList<Plugins::Categories *> &list, BRReinforcementState state);
     void hideCheckBox(bool isHide);
-    void setAllCheckBoxEditStatus();
+    void setAllCheckBoxEditStatus(bool isCheckBoxEdit);
     QStringList getString(const QList<Plugins::Categories *> &list);
     QStringList getAllString(const QList<Plugins::Categories *> &list);
     void getProgressCount(const QList<Plugins::Categories *> &list, ProgressInfo &progressInfo);
@@ -74,6 +74,7 @@ private:
     void initHeader();
     void appendRow(const QList<Plugins::Category *> &list);
     void setIcon(const QList<Plugins::Categories *> &list, int i);
+    void setItemArrow(const QModelIndex &model);
 
 protected:
     void checkChanged(QStandardItem *item);
@@ -92,6 +93,7 @@ private slots:
     void selectAllItem(Qt::CheckState state);
     void setHeaderState(QStandardItem *x);
     void showTail(const QModelIndex &model);
+    void setExpandItem(const QModelIndex &model);
     void doubleClickItem(const QModelIndex &model);
 
 private:

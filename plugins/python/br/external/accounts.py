@@ -115,7 +115,10 @@ class LoginLimit(Accounts):
 
         self.conf.set(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS,
                       args[LOGIN_LIMIT_ARG_PERMISSION_USERS])
-        self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
+        try:
+            self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
+        except:
+            self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'w'))
         permission_users = args[LOGIN_LIMIT_ARG_PERMISSION_USERS].split(";")
 
         if args[LOGIN_LIMIT_ARG_ENABLED]:
@@ -129,7 +132,7 @@ class LoginLimit(Accounts):
                         "usermod -s /sbin/nologin {0}".format(pwdent.pw_name))
         # 过检需求，这个名单直接设置为可登录
         for permission_user in permission_users:
-            if permission_user != "":
+            if permission_user != "" and permission_user != "\"\"":
                 br.utils.subprocess_not_output(
                     "usermod -s /bin/bash {0}".format(permission_user))
 
@@ -196,7 +199,10 @@ class SurplusUser():
 
         self.conf.set(ACCOUNTS_GROUP_SURPLUS,
                       ALK_MODE_DELETE_USERS, args[SURPLUS_DELETE_USERS])
-        self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
+        try:
+            self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
+        except:
+            self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'w'))
         delete_users = args[SURPLUS_DELETE_USERS].split(";")
 
         if args[SURPLUS_DELETE_ENABLED]:

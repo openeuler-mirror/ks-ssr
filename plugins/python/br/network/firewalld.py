@@ -193,7 +193,7 @@ class FirewallManager(Firewall):
         # Disable FTP, SMTP and other ports that may threaten the system
         if args['threat-port']:
             for port in IPTABLES_LIMITS_PORTS.split(","):
-                if args['tcp-udp'] == "tcp":
+                if args['tcp-udp'].replace('"','') == "tcp":
                     self.set_iptables(
                         ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, "--dport " + port, "-j REJECT")
                     self.set_iptables(
@@ -205,7 +205,7 @@ class FirewallManager(Firewall):
                         ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, "--dport " + port, "-j REJECT")
         else:
             for port in IPTABLES_LIMITS_PORTS.split(","):
-                if args['tcp-udp'] == "tcp":
+                if args['tcp-udp'].replace('"','') == "tcp":
                     self.del_iptables(
                         DELETE_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, "--dport " + port, "-j REJECT")
                     self.del_iptables(
@@ -217,7 +217,7 @@ class FirewallManager(Firewall):
                         DELETE_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, "--dport " + port, "-j REJECT")
 
         # 禁用网段
-        if len(args['disable-network-segment']) != 0:
+        if len(args['disable-network-segment'].replace('"', '')) != 0:
             self.del_iptables_history(
                 "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999")
             for network_segment in args['disable-network-segment'].split(","):
@@ -232,7 +232,7 @@ class FirewallManager(Firewall):
                 "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999")
 
         # 禁用端口
-        if len(args['disable-ports']) != 0:
+        if len(args['disable-ports'].replace('"', '')) != 0:
             self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format(
                 "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", "|dpt:")))
             for port in args['disable-ports'].split(";"):
@@ -247,7 +247,7 @@ class FirewallManager(Firewall):
                 "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", "|dpt:")))
 
         # 禁用网段 output
-        if len(args['disable-network-segment-output']) != 0:
+        if len(args['disable-network-segment-output'].replace('"', '')) != 0:
             self.del_iptables_history(
                 "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
             for network_segment in args['disable-network-segment-output'].split(","):
@@ -262,7 +262,7 @@ class FirewallManager(Firewall):
                 "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
 
         # 禁用端口 output
-        if len(args['disable-ports-output']) != 0:
+        if len(args['disable-ports-output'].replace('"', '')) != 0:
             self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format(
                 "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", "|dpt:")), "OUTPUT")
             for port in args['disable-ports-output'].split(";"):

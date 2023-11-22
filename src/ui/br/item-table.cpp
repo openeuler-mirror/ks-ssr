@@ -45,14 +45,13 @@ ItemTable::ItemTable(QWidget *parent) : QTreeView(parent),
     setModel(m_model);
     setItemDelegate(new ItemTableDelegate(this));
 
-    connect(this, &ItemTable::clicked, this, [this](const QModelIndex &model)
-            {
-                RETURN_IF_TRUE(model.column() != 2)
-                emit modelClicked(model);
-            });
+    connect(this, &ItemTable::clicked, this, &ItemTable::setExpandItem);
     connect(this, &ItemTable::doubleClicked, this, &ItemTable::doubleClickItem);
     connect(this, SIGNAL(entered(QModelIndex)), this, SLOT(showTail(QModelIndex)));
     connect(m_model, SIGNAL(itemChanged(QStandardItem *)), this, SLOT(setHeaderState(QStandardItem *)));
+    // 监听item展开和关闭事件，设置相对应的箭头图片
+    connect(this, &ItemTable::expanded, this, &ItemTable::setItemArrow);
+    connect(this, &ItemTable::collapsed, this, &ItemTable::setItemArrow);
 }
 
 ItemTable::~ItemTable()
@@ -70,6 +69,13 @@ void ItemTable::setIcon(const QList<Plugins::Categories *> &list, int i)
     // 需要根据图标名字来确认使用的图标
     auto iconName = QString(":/images/%1.png").arg(list.at(i)->getIconName());
     m_model->item(i)->setIcon(QIcon(":/images/ksg-category.png"));
+}
+
+void ItemTable::setItemArrow(const QModelIndex &model)
+{
+    QPixmap pixmap(isExpanded(model) ? ":/images/arrow-up" : ":/images/arrow-down");
+    pixmap.scaled(10, 8);
+    m_model->setItem(model.row(), 3, new QStandardItem(QIcon(pixmap), ""));
 }
 
 void ItemTable::initHeader()
@@ -495,20 +501,19 @@ void ItemTable::hideCheckBox(bool isHide)
     }
 }
 
-void ItemTable::setAllCheckBoxEditStatus()
+void ItemTable::setAllCheckBoxEditStatus(bool isCheckBoxEdit)
 {
     // 禁用复选框时将鼠标悬浮提示一并隐藏
-    //    disconnect(this, SIGNAL(entered(QModelIndex)), this, SLOT(showTail(QModelIndex)));
-    m_headerProxy->hideCheckBox(true);
+    m_headerProxy->hideCheckBox(!isCheckBoxEdit);
     for (int i = 0; i < m_model->rowCount(); i++)
     {
         //        m_model->item(i)->setFlags(m_model->item(i)->flags() & ~Qt::ItemFlag::ItemIsUserCheckable);
-        m_model->item(i)->setCheckable(false);
+        m_model->item(i)->setCheckable(isCheckBoxEdit);
         for (int j = 0; j < m_model->item(i)->rowCount(); ++j)
         {
             auto item = m_model->item(i)->child(j);
             //            item->setFlags(item->flags() &~ Qt::ItemFlag::ItemIsUserCheckable);
-            item->setCheckable(false);
+            item->setCheckable(isCheckBoxEdit);
         }
     }
 }
@@ -527,6 +532,16 @@ void ItemTable::showTail(const QModelIndex &model)
     emit modelEntered(model);
 }
 
+void ItemTable::setExpandItem(const QModelIndex &model)
+{
+    RETURN_IF_TRUE(model.column() == 0);
+    // 屏蔽子项的单击事件， 后续有其它单击处理考虑，需要处理这段代码
+    RETURN_IF_TRUE(m_model->parent(model).isValid())
+    // 返回兄弟index，这里要设置第一列的展开状态才能被isExpanded检测到已展开
+    auto index = model.siblingAtColumn(0);
+    setExpanded(index, !isExpanded(index));
+}
+
 void ItemTable::doubleClickItem(const QModelIndex &model)
 {
     switch (model.column())
@@ -541,10 +556,6 @@ void ItemTable::doubleClickItem(const QModelIndex &model)
         // 返回兄弟index，这里要设置第一列的展开状态才能被isExpanded检测到已展开
         auto index = model.siblingAtColumn(0);
         setExpanded(index, !isExpanded(index));
-        // TODO 切换箭头图片
-        QPixmap pixmap(isExpanded(index) ? ":/images/arrow-up" : ":/images/arrow-down");
-        pixmap.scaled(10, 8);
-        m_model->setItem(model.row(), 3, new QStandardItem(QIcon(pixmap), ""));
         break;
     }
     default:

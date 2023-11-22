@@ -57,19 +57,22 @@ class Rules():
                                         AUDIT_RULE_TAIL)
         del_rules = "-w {0} {1}".format(args[AUDIT_DEL_PATH_KEY],
                                         AUDIT_RULE_TAIL)
+
+        is_arg_empty_add = args[AUDIT_ADD_PATH_KEY] != "" and args[AUDIT_ADD_PATH_KEY] != "\"\""
+        is_arg_empty_del = args[AUDIT_DEL_PATH_KEY] != "" and args[AUDIT_DEL_PATH_KEY] != "\"\""
         # Need to close selinux for use.
-        if ((args[AUDIT_ADD_PATH_KEY] != "" and self.get_selinux_status()) or
-                (args[AUDIT_DEL_PATH_KEY] != "" and self.get_selinux_status())):
+        if ((is_arg_empty_add and self.get_selinux_status()) or
+                (is_arg_empty_del and self.get_selinux_status())):
             return (False, "Please close SELinux and use it!")
         # No such file or directory.
-        if ((args[AUDIT_ADD_PATH_KEY] != "" and not os.path.exists(args[AUDIT_ADD_PATH_KEY])) or
-                (args[AUDIT_DEL_PATH_KEY] != "" and not os.path.exists(args[AUDIT_DEL_PATH_KEY]))):
+        if ((is_arg_empty_add and not os.path.exists(args[AUDIT_ADD_PATH_KEY])) or
+                (is_arg_empty_del and not os.path.exists(args[AUDIT_DEL_PATH_KEY]))):
             return (False, "No such file or directory.")
 
-        if args[AUDIT_ADD_PATH_KEY] != "" and not self.is_rule_exist(args[AUDIT_ADD_PATH_KEY]):
+        if is_arg_empty_add and not self.is_rule_exist(args[AUDIT_ADD_PATH_KEY]):
             self.conf.set_value(
                 "1=-w {0};2={1}".format(args[AUDIT_ADD_PATH_KEY], AUDIT_RULE_TAIL), add_rules)
-        if args[AUDIT_DEL_PATH_KEY] != "":
+        if is_arg_empty_del:
             self.conf.del_record(del_rules)
         if args[AUDIT_DEL_ALL_RULE_KEY]:
             br.utils.subprocess_not_output(
