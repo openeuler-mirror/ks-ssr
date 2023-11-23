@@ -13,7 +13,6 @@
  */
 #pragma once
 
-#include <json/json.h>
 #include <QJsonObject>
 #include <QStandardItem>
 #include "br-protocol.hxx"
