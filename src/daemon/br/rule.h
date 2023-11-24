@@ -54,8 +54,8 @@ class RuleRange : public Rule
 {
 public:
     // 如果min_value为空，则表示无限小，如果max_value为空，则表示无限大
-    RuleRange(const QJsonValue &min_value,
-              const QJsonValue &max_value);
+    RuleRange(const QJsonValue &minValue,
+              const QJsonValue &maxValue);
     virtual ~RuleRange(){};
 
     // 规则类型
@@ -64,9 +64,9 @@ public:
     virtual bool match(const QJsonValue &value) override;
 
 private:
-    QJsonValue min_value_;
-    QJsonValue max_value_;
-    QJsonValue::Type value_type_;
+    QJsonValue m_minValue;
+    QJsonValue m_maxValue;
+    QJsonValue::Type m_valueType;
 };
 
 class RuleFixed : public RuleRange
@@ -92,7 +92,7 @@ public:
     virtual bool match(const QJsonValue &value) override;
 
 private:
-    QVector<QJsonValue> enum_values_;
+    QVector<QJsonValue> m_enumValues;
 };
 
 }  // namespace BRDaemon
