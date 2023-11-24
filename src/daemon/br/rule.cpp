@@ -111,37 +111,37 @@ Rule::JsonCmpResult Rule::jsonValueCmp(const QJsonValue &v1, const QJsonValue &v
     return JsonCmpResult::JSON_CMP_RESULT_UNKNOWN;
 }
 
-RuleRange::RuleRange(const QJsonValue &min_value,
-                     const QJsonValue &max_value)
-    : min_value_(min_value),
-      max_value_(max_value),
-      value_type_(QJsonValue::Type::Undefined)
+RuleRange::RuleRange(const QJsonValue &minValue,
+                     const QJsonValue &maxValue)
+    : m_minValue(minValue),
+      m_maxValue(maxValue),
+      m_valueType(QJsonValue::Type::Undefined)
 {
-    if (!min_value.isNull())
+    if (!minValue.isNull())
     {
-        this->value_type_ = min_value.type();
+        this->m_valueType = minValue.type();
     }
-    else if (!max_value.isNull())
+    else if (!maxValue.isNull())
     {
-        this->value_type_ = max_value.type();
+        this->m_valueType = maxValue.type();
     }
 }
 
 bool RuleRange::match(const QJsonValue &value)
 {
     // 如果最大值和最小值都为空，则表示不限制
-    RETURN_VAL_IF_TRUE(this->min_value_.isNull() && this->max_value_.isNull(), true);
-    RETURN_VAL_IF_TRUE(value.type() != this->value_type_, false);
+    RETURN_VAL_IF_TRUE(this->m_minValue.isNull() && this->m_maxValue.isNull(), true);
+    RETURN_VAL_IF_TRUE(value.type() != this->m_valueType, false);
 
-    if (!this->min_value_.isNull())
+    if (!this->m_minValue.isNull())
     {
-        auto result = this->jsonValueCmp(this->min_value_, value);
+        auto result = this->jsonValueCmp(this->m_minValue, value);
         RETURN_VAL_IF_TRUE(result == JsonCmpResult::JSON_CMP_RESULT_UNKNOWN || result == JsonCmpResult::JSON_CMP_RESULT_GREATER, false);
     }
 
-    if (!this->max_value_.isNull())
+    if (!this->m_maxValue.isNull())
     {
-        auto result = this->jsonValueCmp(this->max_value_, value);
+        auto result = this->jsonValueCmp(this->m_maxValue, value);
         RETURN_VAL_IF_TRUE(result == JsonCmpResult::JSON_CMP_RESULT_UNKNOWN || result == JsonCmpResult::JSON_CMP_RESULT_LESS, false);
     }
 
@@ -154,15 +154,15 @@ RuleFixed::RuleFixed(const QJsonValue &value)
 }
 
 RuleEnum::RuleEnum(const QVector<QJsonValue> &values)
-    : enum_values_(values)
+    : m_enumValues(values)
 {
 }
 
 bool RuleEnum::match(const QJsonValue &value)
 {
-    for (const auto &enum_value : this->enum_values_)
+    for (const auto &enumValue : this->m_enumValues)
     {
-        RETURN_VAL_IF_TRUE(this->jsonValueCmp(enum_value, value) == JsonCmpResult::JSON_CMP_RESULT_EQUAL, true);
+        RETURN_VAL_IF_TRUE(this->jsonValueCmp(enumValue, value) == JsonCmpResult::JSON_CMP_RESULT_EQUAL, true);
     }
     return false;
 }

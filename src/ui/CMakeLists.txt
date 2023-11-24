@@ -12,34 +12,34 @@ configure_file(config-ui.h.in ${PROJECT_BINARY_DIR}/config-ui.h)
 gen_protocol()
 
 set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.PrivateBox.xml
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.PrivateBox.xml
   PROPERTIES CLASSNAME BoxManagerProxy NO_NAMESPACE true)
 
 qt5_add_dbus_interface(
-  BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.PrivateBox.xml
+  BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.PrivateBox.xml
   box_manager_proxy)
 
-set_source_files_properties(${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.KSS.xml
+set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.KSS.xml
                             PROPERTIES CLASSNAME KSSDbusProxy NO_NAMESPACE true)
 
 qt5_add_dbus_interface(
-  KSS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.KSS.xml
+  KSS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.KSS.xml
   kss_dbus_proxy)
 
 set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.DeviceManager.xml
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.DeviceManager.xml
   PROPERTIES CLASSNAME DeviceManagerProxy NO_NAMESPACE true)
 
 qt5_add_dbus_interface(
   DEVICE_MANAGER_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.DeviceManager.xml
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.DeviceManager.xml
   device_manager_proxy)
 
-set_source_files_properties(${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BR.xml
+set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml
                             PROPERTIES CLASSNAME BRDbusProxy NO_NAMESPACE true)
 
 qt5_add_dbus_interface(
-  BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BR.xml br_dbus_proxy)
+  BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml br_dbus_proxy)
 
 qt5_wrap_ui(
   UI_FILES

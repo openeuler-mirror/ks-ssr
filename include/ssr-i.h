@@ -266,6 +266,12 @@ extern "C"
         BR_SNAPSHOT_STATUS_OTHER
     };
 
+    enum LOGAlertType
+    {
+        HAZARD_BEHAVIOR,
+        ATTACK_DETECT
+    };
+
 #ifdef __cplusplus
 }
 #endif
