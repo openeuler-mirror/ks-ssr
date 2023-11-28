@@ -31,8 +31,8 @@ class Home : public QWidget
     Q_OBJECT
 
 public:
-    explicit Home(QWidget *parent = nullptr);
-    ~Home();
+    Home(QWidget *parent = nullptr);
+    virtual ~Home();
 
 private:
     void init();

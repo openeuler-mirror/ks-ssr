@@ -13,13 +13,13 @@
  */
 #pragma once
 
-#include <QLabel>
 #include <QWidget>
+
+class QLabel;
+
 namespace KS
 {
 namespace BR
-{
-namespace Reports
 {
 class RoundProgressBar : public QWidget
 {
@@ -30,10 +30,11 @@ public:
                               int conform,
                               int inconform,
                               QWidget *parent = nullptr);
+    virtual ~RoundProgressBar(){};
     virtual QSize sizeHint() const override;
 
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 
 private:
     void initUI();
@@ -52,6 +53,5 @@ private:
     int m_conform;
     int m_inconform;
 };
-}  // namespace Reports
 }  // namespace BR
 }  // namespace KS

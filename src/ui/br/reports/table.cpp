@@ -23,12 +23,10 @@ namespace KS
 {
 namespace BR
 {
-namespace Reports
-{
-Table::Table(bool isOpenFilesScan,
-             bool isScanVulnerability,
-             QWidget *parent) : QWidget(parent),
-                                m_ui(new Ui::Table)
+Table::Table(QWidget *parent,
+             bool isOpenFilesScan,
+             bool isScanVulnerability) : QWidget(parent),
+                                         m_ui(new Ui::Table)
 {
     m_ui->setupUi(this);
 
@@ -73,13 +71,13 @@ Table::~Table()
     delete m_ui;
 }
 
-void Table::addOneLine(const QString &name,
-                       const QString &scanResult,
-                       const QString &reinforceResult,
-                       const QString &remarks,
-                       const QColor &scanColor,
-                       const QColor &reinforceColor,
-                       const QString &backgroundColor)
+void Table::addLine(const QString &name,
+                    const QString &scanResult,
+                    const QString &reinforceResult,
+                    const QString &remarks,
+                    const QColor &scanColor,
+                    const QColor &reinforceColor,
+                    const QString &backgroundColor)
 {
     m_rowHeight += 40;
     m_ui->m_line->setFixedHeight(m_rowHeight);
@@ -140,10 +138,10 @@ void Table::addOneLine(const QString &name,
     m_ui->m_line->layout()->addWidget(line);
 }
 
-void Table::addOneScanLine(const QString &filesName,
-                           const QString &scanType,
-                           const QString &remarks,
-                           const QString &backgroundColor)
+void Table::addScanLine(const QString &filesName,
+                        const QString &scanType,
+                        const QString &remarks,
+                        const QString &backgroundColor)
 {
     m_rowHeight += 40;
     m_ui->m_line->setFixedHeight(m_rowHeight);
@@ -208,6 +206,5 @@ void Table::showTailBar()
     m_ui->m_tailBar->show();
     m_ui->m_tailPic->show();
 }
-}  // namespace Reports
 }  // namespace BR
 }  // namespace KS

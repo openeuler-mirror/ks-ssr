@@ -932,7 +932,7 @@ bool BRDBus::onResourceMonitor()
     return true;
 }
 
-void BRDBus::homeFreeSpaceRatio(const float spaceRatio)
+void BRDBus::homeFreeSpaceRatio(float spaceRatio)
 {
     // 家目录可用空间小于10%告警
     float homeSpa = 0.1;
@@ -943,7 +943,7 @@ void BRDBus::homeFreeSpaceRatio(const float spaceRatio)
     emit HomeFreeSpaceRatioLower(QString(std::to_string(spaceRatio).c_str()));
 }
 
-void BRDBus::rootFreeSpaceRatio(const float spaceRatio)
+void BRDBus::rootFreeSpaceRatio(float spaceRatio)
 {
     // 根目录可用空间小于10%告警
     float rootSpa = 0.1;
@@ -954,7 +954,7 @@ void BRDBus::rootFreeSpaceRatio(const float spaceRatio)
     emit RootFreeSpaceRatioLower(QString(std::to_string(spaceRatio).c_str()));
 }
 
-void BRDBus::cpuAverageLoadRatio(const float loadRatio)
+void BRDBus::cpuAverageLoadRatio(float loadRatio)
 {
     // cpu单核五分钟平均负载大于1告警
     float cpuLoad = 1;
@@ -965,7 +965,7 @@ void BRDBus::cpuAverageLoadRatio(const float loadRatio)
     emit CpuAverageLoadRatioHigher(QString(std::to_string(loadRatio).c_str()));
 }
 
-void BRDBus::memoryRemainingRatio(const float memoryRatio)
+void BRDBus::memoryRemainingRatio(float memoryRatio)
 {
     // memory ratio 小于10% 告警
     RETURN_IF_TRUE(memoryRatio >= 0.1)

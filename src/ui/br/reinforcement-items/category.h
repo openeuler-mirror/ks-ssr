@@ -14,18 +14,16 @@
 
 #pragma once
 
-#include <QString>
-#include "category.h"
+#include "reinforcement-item.h"
 namespace KS
 {
 namespace BR
 {
-namespace Plugins
-{
-class Categories
+class Category
 {
 public:
-    Categories();
+    Category();
+    virtual ~Category(){};
 
 public:
     void setRow(int row);
@@ -33,15 +31,15 @@ public:
     void setLabel(const QString &label);
     void setIconName(const QString &iconName);
     void setDescription(const QString &iconName);
-    void setCategory(Category *category);
+    void setReinforcementItem(ReinforcementItem *reinforcementItem);
 
     int getRow();
     QString getName();
     QString getLabel();
     QString getIconName();
-    QList<Category *> getCategory();
+    QList<ReinforcementItem *> getReinforcementItem();
 
-    Category *find(const QString &name);
+    ReinforcementItem *find(const QString &name);
     void clearState(int state);
 
 private:
@@ -50,9 +48,8 @@ private:
     QString m_label;
     QString m_name;
     QString m_description;
-    QList<Category *> m_category;
+    QList<ReinforcementItem *> m_reinforcementItems;
 };
 
-}  // namespace Plugins
 }  // namespace BR
 }  // namespace KS

@@ -14,9 +14,8 @@
 
 #include <QWidget>
 #include "br-i.h"
-#include "include/ssr-i.h"
-#include "src/ui/br/plugins/custom-args.h"
 #include "src/ui/br/progress.h"
+#include "src/ui/br/reinforcement-items/category.h"
 
 class BRDbusProxy;
 
@@ -28,6 +27,8 @@ namespace KS
 {
 namespace BR
 {
+class ReinforcementArgsDialog;
+
 struct ArgTransfer
 {
     QString categoryName;
@@ -53,7 +54,7 @@ class Scan : public QWidget
 
 public:
     explicit Scan(QWidget *parent = nullptr);
-    ~Scan();
+    virtual ~Scan();
 
     void emitScanSignal();
     void usingSystemStrategy();
@@ -104,11 +105,11 @@ private:
 
     BRDbusProxy *m_dbusProxy;
     InvalidData m_invalidData = {};
-    QList<Plugins::Categories *> m_categoriesList = {};
-    QList<Plugins::Categories *> m_afterReinForcementCategoriesList = {};
+    QList<Category *> m_categories = {};
+    QList<Category *> m_afterReinForcementCategories = {};
     ProgressInfo m_progressInfo = {};
     BRStrategyType m_strategyType;
-    Plugins::CustomArgs *m_customArgsDialog;
+    ReinforcementArgsDialog *m_customArgsDialog;
     QList<ArgTransfer *> m_argTransfers = {};
 };
 

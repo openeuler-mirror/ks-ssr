@@ -30,25 +30,30 @@ public:
     void closeMonitor();
 
 private:
-    void getSystemSpace(QString path);  // 获取系统剩余空间
-    float getMemoryRemainingRatio();    // 获取 vmstat si so
-    float getCpuAverageLoad();          // 获取cpu负载
+    // 获取系统剩余空间
+    void getSystemSpace(const QString &path);
+    // 获取 vmstat si so
+    float getMemoryRemainingRatio();
+    // 获取cpu负载
+    float getCpuAverageLoad();
 
     bool monitorResource();
 
 private:
-    //    sigc::connection timeout_handler_;
-
-    unsigned long long m_homeFreeSpace = 0;   //home 可用空间 MB
-    unsigned long long m_homeTotalSpace = 0;  //home 总空间 MB
-    unsigned long long m_rootFreeSpace = 0;   //根目录 可用空间 MB
-    unsigned long long m_rootTotalSpace = 0;  //根目录 总空间 MB
+    //home 可用空间 MB
+    unsigned long long m_homeFreeSpace = 0;
+    //home 总空间 MB
+    unsigned long long m_homeTotalSpace = 0;
+    //根目录 可用空间 MB
+    unsigned long long m_rootFreeSpace = 0;
+    //根目录 总空间 MB
+    unsigned long long m_rootTotalSpace = 0;
 
 signals:
-    void homeFreeSpaceRatio_(const float &);
-    void rootFreeSpaceRatio_(const float &);
-    void cpuAverageLoadRatio_(const float &);
-    void memoryRemainingRatio_(const float &);
+    void homeFreeSpaceRatio_(float);
+    void rootFreeSpaceRatio_(float);
+    void cpuAverageLoadRatio_(float);
+    void memoryRemainingRatio_(float);
 };
 
 }  // namespace BRDaemon

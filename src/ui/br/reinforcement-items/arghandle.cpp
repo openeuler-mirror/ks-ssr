@@ -18,6 +18,8 @@
 #include <QEvent>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QRegExp>
 #include <QStyledItemDelegate>
@@ -31,8 +33,6 @@
 namespace KS
 {
 namespace BR
-{
-namespace Plugins
 {
 ArgHandle::ArgHandle(QWidget *parent,
                      const QString &itemKey,
@@ -53,10 +53,6 @@ ArgHandle::ArgHandle(QWidget *parent,
 
 {
     init(jsonValue, widgetType);
-}
-
-ArgHandle::~ArgHandle()
-{
 }
 
 void ArgHandle::init(const QJsonValue &jsonValue, KS::Protocol::WidgetType::Value widgetType)
@@ -164,7 +160,7 @@ void ArgHandle::initSwitch(const QJsonValue &jsonValue)
     }
     m_comboBox->setCurrentIndex(jsonValue.toBool() ? 0 : 1);
 
-    connect(m_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(argChanged(int)));
+    connect(m_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changedIntArgs(int)));
 
     hlayout->addWidget(m_comboBox);
 
@@ -195,7 +191,7 @@ void ArgHandle::initText(const QJsonValue &jsonValue)
         m_lineEdit->setText(value);
     m_lineEdit->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    connect(m_lineEdit, SIGNAL(textChanged(QString)), this, SLOT(argChanged(QString)));
+    connect(m_lineEdit, SIGNAL(textChanged(QString)), this, SLOT(changedStringArgs(QString)));
 
     hlayout->addWidget(m_lineEdit);
 
@@ -235,7 +231,7 @@ void ArgHandle::initInteger(const QJsonValue &jsonValue)
             m_comboBox->setCurrentIndex(2);
         }
 
-        connect(m_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
+        connect(m_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changedIntArgs(int)));
 
         hlayout->addWidget(m_comboBox);
     }
@@ -247,7 +243,7 @@ void ArgHandle::initInteger(const QJsonValue &jsonValue)
         m_spinBox->setGroupSeparatorShown(false);
         m_spinBox->setValue(jsonValue.toInt());
 
-        connect(m_spinBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+        connect(m_spinBox, SIGNAL(valueChanged(int)), this, SLOT(changedIntArgs(int)));
 
         hlayout->addWidget(m_spinBox);
     }
@@ -257,7 +253,7 @@ void ArgHandle::initInteger(const QJsonValue &jsonValue)
     this->show();
 }
 
-void ArgHandle::valueChanged(int value)
+void ArgHandle::changedIntArgs(int value)
 {
     KLOG_DEBUG() << "test" << value;
     m_widgetType = KS::Protocol::WidgetType::Value::DATETIME;
@@ -271,7 +267,7 @@ void ArgHandle::valueChanged(int value)
     }
 }
 
-void ArgHandle::argChanged(int index)
+void ArgHandle::changedBoolArgs(int index)
 {
     QString boolText;
     QString yes = tr("Yes");
@@ -288,7 +284,7 @@ void ArgHandle::argChanged(int index)
     emit valueChanged(m_itemKey, m_argName, boolText, m_widgetType);
 }
 
-void ArgHandle::argChanged(const QString &str)
+void ArgHandle::changedStringArgs(const QString &str)
 {
     if (str.isEmpty())
     {
@@ -432,6 +428,5 @@ KS::Protocol::WidgetType::Value ArgHandle::getWidgetType()
 {
     return m_widgetType;
 }
-}  // namespace Plugins
 }  // namespace BR
 }  // namespace KS

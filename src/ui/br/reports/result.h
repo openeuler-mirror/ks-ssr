@@ -13,7 +13,6 @@
  */
 #pragma once
 
-#include <QList>
 #include <QWidget>
 #include <QtPrintSupport/QPrinter>
 #include "src/ui/br/br-i.h"
@@ -22,13 +21,7 @@ namespace KS
 {
 namespace BR
 {
-namespace Plugins
-{
-class Categories;
-}
-
-namespace Reports
-{
+class Category;
 class Table;
 class PDF;
 
@@ -38,18 +31,18 @@ class Result : public QWidget
 
 public:
     explicit Result(QWidget *parent = 0);
-    ~Result();
+    virtual ~Result(){};
 
     static QSharedPointer<Result> getDefault();
 
-    bool generateReports(const QList<Plugins::Categories *> &beforeReinforcementList,
-                         const QList<Plugins::Categories *> &afterReinforcementList,
+    bool generateReports(const QList<Category *> &beforeReinforcementList,
+                         const QList<Category *> &afterReinforcementList,
                          int status,
                          const InvalidData &invalidData);
     int getHeight();
 
 private slots:
-    bool exportReport(const QList<Plugins::Categories *> &afterReinforcementList, int status, const InvalidData &invalidData);
+    bool exportReport(const QList<Category *> &afterReinforcementList, int status, const InvalidData &invalidData);
 
 private:
     void init();
@@ -59,7 +52,7 @@ private:
     QString getMacPath();
     void createPainter(QPrinter &printer);
     void createReportHomePage(int status, const QRect &rect);
-    void createReportcontent(QPrinter &printer, const QList<Plugins::Categories *> &afterReinforcementList, const InvalidData &invalidData);
+    void createReportcontent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData);
     bool createFilesScanResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag);
     bool createVulnerabilityResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag);
     void calculateRatio();
@@ -67,7 +60,7 @@ private:
     bool scanVulnerability(QStringList &rpmlist, const InvalidData &invalidData);
 
 private:
-    QList<Plugins::Categories *> m_categories;
+    QList<Category *> m_categories;
 
     PDF *m_pdf;
     Table *m_table;
@@ -80,6 +73,5 @@ private:
     int m_allcategories = 0;
     static QSharedPointer<Result> m_instance;
 };
-}  // namespace Reports
 }  // namespace BR
 }  // namespace KS

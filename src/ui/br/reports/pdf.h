@@ -15,8 +15,6 @@
 #pragma once
 #include <QWidget>
 
-#include "round-progressbar.h"
-
 namespace Ui
 {
 class PDF;
@@ -25,8 +23,8 @@ namespace KS
 {
 namespace BR
 {
-namespace Reports
-{
+class RoundProgressBar;
+
 class PDF : public QWidget
 {
     Q_OBJECT
@@ -38,7 +36,7 @@ public:
                  const QString &kernel,
                  const QString &activeStatus,
                  QWidget *parent = 0);
-    ~PDF();
+    virtual ~PDF();
 
     void setPieChartText(const QString name[],
                          int total[],
@@ -54,6 +52,5 @@ private:
     RoundProgressBar *m_pieChart4;
 };
 
-}  // namespace Reports
 }  // namespace BR
 }  // namespace KS

@@ -47,7 +47,7 @@ class Progress : public QWidget
 
 public:
     explicit Progress(QWidget *parent = nullptr);
-    ~Progress();
+    virtual ~Progress();
 
     void updateProgressUI(ProcessMethod method);
     void updateProgress(ProgressInfo info);

@@ -865,7 +865,7 @@ KS--BR--Scan QTreeView::indicator::disabled:indeterminate{
 }
 */
 
-KS--BR--Plugins--CustomArgs QListWidget
+KS--BR--Plugins--ReinforcementArgsDialog QListWidget
 {
     background-color: transparent;
 }

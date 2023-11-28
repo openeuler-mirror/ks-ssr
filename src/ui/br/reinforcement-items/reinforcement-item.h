@@ -21,8 +21,6 @@ namespace KS
 {
 namespace BR
 {
-namespace Plugins
-{
 struct CategoryArgs
 {
     QString name;
@@ -52,10 +50,11 @@ struct CategoryArgs
     }
 };
 
-class Category
+class ReinforcementItem
 {
 public:
-    Category();
+    ReinforcementItem();
+    virtual ~ReinforcementItem(){};
 
     void setName(const QString &name);
     void setLabel(const QString &label);
@@ -105,6 +104,5 @@ private:
     QString m_errorMessage = "";
 };
 
-}  // namespace Plugins
 }  // namespace BR
 }  // namespace KS

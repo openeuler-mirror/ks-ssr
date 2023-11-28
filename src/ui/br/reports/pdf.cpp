@@ -13,13 +13,12 @@
  */
 
 #include "pdf.h"
+#include "round-progressbar.h"
 #include "ui_pdf.h"
 
 namespace KS
 {
 namespace BR
-{
-namespace Reports
 {
 PDF::PDF(const QString &systemName,
          const QString &IP,
@@ -59,6 +58,5 @@ void PDF::setPieChartText(const QString name[],
     m_ui->m_pieChartLayout2->addWidget(m_pieChart3);
     m_ui->m_pieChartLayout2->addWidget(m_pieChart4);
 }
-}  // namespace Reports
 }  // namespace BR
 }  // namespace KS

@@ -13,23 +13,19 @@
  */
 
 #pragma once
-
-#include <QHBoxLayout>
 #include <QJsonValue>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
 #include <QWidget>
-
 #include "br-protocol.hxx"
+
+class QHBoxLayout;
+class QLineEdit;
+
 namespace KS
 {
 class SpinBox;
 class ComboBox;
 
 namespace BR
-{
-namespace Plugins
 {
 class ArgHandle : public QWidget
 {
@@ -45,7 +41,7 @@ public:
                        const QJsonValue &jsonValue = "",
                        KS::Protocol::WidgetType::Value widgetType = KS::Protocol::WidgetType::Value::DEFAULT,
                        const QString &note = "");
-    ~ArgHandle();
+    virtual ~ArgHandle(){};
 
     void setValue(const QJsonValue &jsonValue);
     QString getCategoryName();
@@ -69,9 +65,12 @@ signals:
     void reset(const QString &categoryName, const QString &argName);
 
 private slots:
-    void argChanged(int index);
-    void argChanged(const QString &str);
-    void valueChanged(int value);
+    // 下拉框参数改变处理
+    void changedBoolArgs(int index);
+    // 文本框类型参数改变处理
+    void changedStringArgs(const QString &str);
+    // 数字输入框参数改变处理
+    void changedIntArgs(int value);
     void argReset();
 
 private:
@@ -90,6 +89,5 @@ private:
     ComboBox *m_comboBox;
 };
 
-}  // namespace Plugins
 }  // namespace BR
 }  // namespace KS

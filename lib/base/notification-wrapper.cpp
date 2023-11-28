@@ -9,11 +9,14 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn> 
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 #include "notification-wrapper.h"
 #include <libnotify/notify.h>
 #include "config.h"
+
+using std::cerr;
+using std::endl;
 
 namespace Notify
 {
@@ -32,7 +35,7 @@ NotificationWrapper::NotificationWrapper(std::string app_name)
     // TODO:notify 目前为gtk实现，改为QT实现后此处逻辑需要修改为KLOG_WARRING
     if (!notify_init(app_name.c_str()))
     {
-        throw NotifyException("Failed to init libnotify");
+        cerr << "Failed to init libnotify" << endl;
     }
 
 #if LIBNOTIFY_CHECK_VERSION(0, 7)

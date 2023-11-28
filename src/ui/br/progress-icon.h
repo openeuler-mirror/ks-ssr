@@ -13,8 +13,9 @@
  */
 #pragma once
 
-#include <QLabel>
 #include <QWidget>
+
+class QLabel;
 
 namespace KS
 {
@@ -26,7 +27,7 @@ class ProgressIcon : public QWidget
 
 public:
     explicit ProgressIcon(QWidget *parent = nullptr);
-    ~ProgressIcon();
+    virtual ~ProgressIcon(){};
 
     void finishedProgress(bool isFinish);
 

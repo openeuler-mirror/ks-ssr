@@ -12,31 +12,29 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#include "custom-args.h"
+#include "reinforcement-args-dialog.h"
 #include <qt5-log-i.h>
 #include <QApplication>
 #include <QCloseEvent>
 #include <QDesktopWidget>
 #include <QHeaderView>
 #include "include/ssr-marcos.h"
-#include "ui_custom-args.h"
+#include "ui_reinforcement-args-dialog.h"
 
 namespace KS
 {
 namespace BR
 {
-namespace Plugins
-{
-CustomArgs::CustomArgs(QWidget *parent) : TitlebarWindow(parent),
-                                          m_currentArgHandle(nullptr),
-                                          m_ui(new Ui::CustomArgs)
+ReinforcementArgsDialog::ReinforcementArgsDialog(QWidget *parent) : TitlebarWindow(parent),
+                                                                    m_currentArgHandle(nullptr),
+                                                                    m_ui(new Ui::ReinforcementArgsDialog)
 {
     m_ui->setupUi(getWindowContentWidget());
     m_height = MIN_HEIGHT;
     init();
 }
 
-CustomArgs::~CustomArgs()
+ReinforcementArgsDialog::~ReinforcementArgsDialog()
 {
     delete m_ui;
     if (m_currentArgHandle)
@@ -46,7 +44,7 @@ CustomArgs::~CustomArgs()
     }
 }
 
-QSize CustomArgs::sizeHint() const
+QSize ReinforcementArgsDialog::sizeHint() const
 {
     /*根据系统分辨率设置窗口大小*/
     QDesktopWidget *desktop = QApplication::desktop();
@@ -64,7 +62,7 @@ QSize CustomArgs::sizeHint() const
     return windowSize;
 }
 
-void CustomArgs::init()
+void ReinforcementArgsDialog::init()
 {
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
     setIcon(QIcon(":/images/logo"));
@@ -78,14 +76,14 @@ void CustomArgs::init()
     connect(m_ui->m_ok, SIGNAL(clicked(bool)), this, SLOT(setArgs()));
 }
 
-void CustomArgs::addOneLine(const QString &name,
-                            const QString &argName,
-                            const QString &label,
-                            const QString &valueLimits,
-                            const QString &inputExample,
-                            const QJsonValue &jsonValue,
-                            KS::Protocol::WidgetType::Value widgetType,
-                            const QString &note)
+void ReinforcementArgsDialog::addLine(const QString &name,
+                                      const QString &argName,
+                                      const QString &label,
+                                      const QString &valueLimits,
+                                      const QString &inputExample,
+                                      const QJsonValue &jsonValue,
+                                      KS::Protocol::WidgetType::Value widgetType,
+                                      const QString &note)
 {
     m_height += LINE_HEIGHT;
 
@@ -109,20 +107,18 @@ void CustomArgs::addOneLine(const QString &name,
                                          widgetType,
                                          note);
     m_argHandle.append(argHandle);
-    //connect(argHandle, SIGNAL(reset(QString,QString)), this, SLOT(argReset(QString,QString)));
-    connect(argHandle, SIGNAL(valueChanged(QString, QString, QString, KS::Protocol::WidgetType::Value)), this, SLOT(argChanged(QString, QString, QString, KS::Protocol::WidgetType::Value)));
+    connect(argHandle, SIGNAL(valueChanged(QString, QString, QString, KS::Protocol::WidgetType::Value)), this, SLOT(valueChanged(QString, QString, QString, KS::Protocol::WidgetType::Value)));
 
     m_ui->m_listWidget->setItemWidget(item, argHandle);
-    //    m_ui->m_listWidget->show();
 }
 
-void CustomArgs::clear()
+void ReinforcementArgsDialog::clear()
 {
     m_height = MIN_HEIGHT;
     m_ui->m_listWidget->clear();
 }
 
-void CustomArgs::closeEvent(QCloseEvent *e)
+void ReinforcementArgsDialog::closeEvent(QCloseEvent *e)
 {
     m_argHandle.clear();
     e->accept();
@@ -130,15 +126,7 @@ void CustomArgs::closeEvent(QCloseEvent *e)
     QWidget::closeEvent(e);
 }
 
-void CustomArgs::argChanged(const QString &name,
-                            const QString &argName,
-                            const QString &value,
-                            KS::Protocol::WidgetType::Value widgetType)
-{
-    emit valueChanged(name, argName, value, widgetType);
-}
-
-void CustomArgs::setArgs()
+void ReinforcementArgsDialog::setArgs()
 {
     // 参数检测
     for (auto argHandle : m_argHandle)
@@ -161,12 +149,12 @@ void CustomArgs::setArgs()
     close();
 }
 
-int CustomArgs::getHeight()
+int ReinforcementArgsDialog::getHeight()
 {
     return m_height;
 }
 
-void CustomArgs::argReset()
+void ReinforcementArgsDialog::argReset()
 {
     for (auto argHandle : m_argHandle)
     {
@@ -178,10 +166,9 @@ void CustomArgs::argReset()
     }
 }
 
-void CustomArgs::setValue(const QJsonValue &jsonValue)
+void ReinforcementArgsDialog::setValue(const QJsonValue &jsonValue)
 {
     m_currentArgHandle->setValue(jsonValue);
 }
-}  // namespace Plugins
 }  // namespace BR
 }  // namespace KS

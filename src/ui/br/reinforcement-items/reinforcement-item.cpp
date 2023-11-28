@@ -12,39 +12,37 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#include "category.h"
+#include "reinforcement-item.h"
 namespace KS
 {
 namespace BR
 {
-namespace Plugins
-{
-Category::Category()
+ReinforcementItem::ReinforcementItem()
 {
 }
 
-void Category::setName(const QString &name)
+void ReinforcementItem::setName(const QString &name)
 {
     m_name = name;
 }
 
-void Category::setLabel(const QString &label)
+void ReinforcementItem::setLabel(const QString &label)
 {
     m_label = label;
 }
 
-void Category::setDescription(const QString &description)
+void ReinforcementItem::setDescription(const QString &description)
 {
     m_description = description;
 }
 
-void Category::setArg(const QString &argName,
-                      const QJsonValue &jsonValue,
-                      KS::Protocol::WidgetType::Value widgetType,
-                      const QString &valueLimits,
-                      const QString &inputExample,
-                      const QString &label,
-                      const QString &note)
+void ReinforcementItem::setArg(const QString &argName,
+                               const QJsonValue &jsonValue,
+                               KS::Protocol::WidgetType::Value widgetType,
+                               const QString &valueLimits,
+                               const QString &inputExample,
+                               const QString &label,
+                               const QString &note)
 {
     auto arg = new CategoryArgs();
     arg->name = argName;
@@ -57,98 +55,98 @@ void Category::setArg(const QString &argName,
     m_args.push_back(arg);
 }
 
-void Category::setCategoryName(const QString &categoryName)
+void ReinforcementItem::setCategoryName(const QString &categoryName)
 {
     m_categoryName = categoryName;
 }
 
-void Category::setLayout(const QJsonObject &layout)
+void ReinforcementItem::setLayout(const QJsonObject &layout)
 {
     m_layout = layout;
 }
 
-void Category::setState(int state)
+void ReinforcementItem::setState(int state)
 {
     m_state = state;
 }
 
-void Category::setScanState(int state)
+void ReinforcementItem::setScanState(int state)
 {
     m_scanState = state;
 }
 
-void Category::setFastenState(int state)
+void ReinforcementItem::setFastenState(int state)
 {
     m_fastenState = state;
 }
 
-void Category::setCheckStatus(bool checkStatus)
+void ReinforcementItem::setCheckStatus(bool checkStatus)
 {
     m_checkStatus = checkStatus;
 }
 
-void Category::setErrorMessage(const QString &error)
+void ReinforcementItem::setErrorMessage(const QString &error)
 {
     m_errorMessage = error;
 }
 
-QString Category::getName()
+QString ReinforcementItem::getName()
 {
     return m_name;
 }
 
-QString Category::getLabel()
+QString ReinforcementItem::getLabel()
 {
     return m_label;
 }
 
-QString Category::getCategoryName()
+QString ReinforcementItem::getCategoryName()
 {
     return m_categoryName;
 }
 
-QString Category::getErrorMessage()
+QString ReinforcementItem::getErrorMessage()
 {
     return m_errorMessage;
 }
 
-QJsonObject Category::getLayout()
+QJsonObject ReinforcementItem::getLayout()
 {
     return m_layout;
 }
 
-int Category::getState()
+int ReinforcementItem::getState()
 {
     int state = m_state;
     return state;
 }
 
-int Category::getScanState()
+int ReinforcementItem::getScanState()
 {
     return m_scanState;
 }
 
-int Category::getFastenState()
+int ReinforcementItem::getFastenState()
 {
     return m_fastenState;
 }
 
-bool Category::getCheckStatus()
+bool ReinforcementItem::getCheckStatus()
 {
     return m_checkStatus;
 }
 
-QString Category::getDescription()
+QString ReinforcementItem::getDescription()
 {
     return m_description;
 }
 
-std::vector<CategoryArgs *> Category::getArgs()
+std::vector<CategoryArgs *> ReinforcementItem::getArgs()
 {
     return m_args;
 }
 
-CategoryArgs *Category::find(const QString &argName)
+CategoryArgs *ReinforcementItem::find(const QString &argName)
 {
     for (auto arg : m_args)
     {
@@ -157,6 +155,5 @@ CategoryArgs *Category::find(const QString &argName)
     }
     return NULL;
 }
-}  // namespace Plugins
 }  // namespace BR
 }  // namespace KS

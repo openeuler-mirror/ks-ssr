@@ -22,7 +22,8 @@
 #include <QToolTip>
 #include "include/ssr-marcos.h"
 #include "src/ui/br/progress.h"
-#include "src/ui/br/xmlutils.h"
+#include "src/ui/br/utils.h"
+#include "src/ui/common/table-header-proxy.h"
 
 namespace KS
 {
@@ -54,16 +55,12 @@ ItemTable::ItemTable(QWidget *parent) : QTreeView(parent),
     connect(this, &ItemTable::collapsed, this, &ItemTable::setItemArrow);
 }
 
-ItemTable::~ItemTable()
-{
-}
-
 QSize ItemTable::sizeHint() const
 {
     return QSize(800, 350);
 }
 
-void ItemTable::setIcon(const QList<Plugins::Categories *> &list, int i)
+void ItemTable::setIcon(const QList<Category *> &list, int i)
 {
     // TODO 这里有点问题 所有model的图片都是一样的，后续可能更换图标
     // 需要根据图标名字来确认使用的图标
@@ -104,7 +101,7 @@ void ItemTable::initHeader()
 }
 
 //根据获取的数据，设置分类列表
-void ItemTable::setItem(const QList<Plugins::Categories *> &list)
+void ItemTable::setItem(const QList<Category *> &list)
 {
     initHeader();
     for (int i = 0; i < list.length(); ++i)
@@ -122,14 +119,14 @@ void ItemTable::setItem(const QList<Plugins::Categories *> &list)
         m_model->item(i)->setAutoTristate(true);
         m_model->item(i, 2)->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-        CONTINUE_IF_TRUE(list.at(i)->getCategory().length() == 0)
+        CONTINUE_IF_TRUE(list.at(i)->getReinforcementItem().length() == 0)
 
-        auto category = list.at(i)->getCategory();
-        for (int j = 0; j < list.at(i)->getCategory().length(); ++j)
+        auto reinforcementItem = list.at(i)->getReinforcementItem();
+        for (int j = 0; j < list.at(i)->getReinforcementItem().length(); ++j)
         {
-            CONTINUE_IF_TRUE(category.at(j)->getName() == "external-hosts-login-limit" && !QFile::exists("/etc/hosts.allow"))
-            auto labelItem = new QStandardItem(category.at(j)->getLabel());
-            auto descriptionItem = new QStandardItem(category.at(j)->getDescription());
+            CONTINUE_IF_TRUE(reinforcementItem.at(j)->getName() == "external-hosts-login-limit" && !QFile::exists("/etc/hosts.allow"))
+            auto labelItem = new QStandardItem(reinforcementItem.at(j)->getLabel());
+            auto descriptionItem = new QStandardItem(reinforcementItem.at(j)->getDescription());
             auto stateItem = new QStandardItem("-");
             labelItem->setCheckable(true);
 
@@ -316,7 +313,7 @@ Qt::CheckState ItemTable::checkSibling(QStandardItem *item)
 }
 
 //根据勾选项合成json字串
-QStringList ItemTable::getString(const QList<Plugins::Categories *> &list)
+QStringList ItemTable::getString(const QList<Category *> &list)
 {
     int count = 0;
     QStringList scanStr;
@@ -326,9 +323,9 @@ QStringList ItemTable::getString(const QList<Plugins::Categories *> &list)
         {
             QStandardItem *item = m_model->item(i)->child(j);
             bool checkStatus = Qt::Checked == item->checkState();
-            list.at(i)->getCategory().at(j)->setCheckStatus(checkStatus);
+            list.at(i)->getReinforcementItem().at(j)->setCheckStatus(checkStatus);
             CONTINUE_IF_TRUE(!checkStatus)
-            auto name = list.at(i)->getCategory().at(j)->getName();
+            auto name = list.at(i)->getReinforcementItem().at(j)->getName();
             scanStr.append(name);
             //KLOG_DEBUG("scanStr = %s", name.toStdString().c_str());
             count++;
@@ -338,7 +335,7 @@ QStringList ItemTable::getString(const QList<Plugins::Categories *> &list)
     return scanStr;
 }
 
-QStringList ItemTable::getAllString(const QList<Plugins::Categories *> &categories)
+QStringList ItemTable::getAllString(const QList<Category *> &categories)
 {
     int count = 0;
     QStringList scanStr;
@@ -346,8 +343,8 @@ QStringList ItemTable::getAllString(const QList<Plugins::Categories *> &categori
     {
         for (int j = 0; j < m_model->item(i)->rowCount(); ++j)
         {
-            auto name = categories.at(i)->getCategory().at(j)->getName();
-            categories.at(i)->getCategory().at(j)->setCheckStatus(true);
+            auto name = categories.at(i)->getReinforcementItem().at(j)->getName();
+            categories.at(i)->getReinforcementItem().at(j)->setCheckStatus(true);
             scanStr.append(name);
             count++;
         }
@@ -362,17 +359,17 @@ int ItemTable::getCount()
 }
 
 //更新每项的状态
-void ItemTable::updateStatus(const QList<Plugins::Categories *> &list)
+void ItemTable::updateStatus(const QList<Category *> &list)
 {
     for (int i = 0; i < list.length(); ++i)
     {
-        CONTINUE_IF_TRUE(list.at(i)->getCategory().length() == 0)
+        CONTINUE_IF_TRUE(list.at(i)->getReinforcementItem().length() == 0)
 
-        auto category = list.at(i)->getCategory();
-        for (int j = 0; j < category.length(); ++j)
+        auto reinforcementItem = list.at(i)->getReinforcementItem();
+        for (int j = 0; j < reinforcementItem.length(); ++j)
         {
-            auto stateStr = XMLUtils::getDefault()->state2Str(category.at(j)->getState());
-            auto stateColor = XMLUtils::getDefault()->state2Color(category.at(j)->getState());
+            auto stateStr = Utils::getDefault()->state2Str(reinforcementItem.at(j)->getState());
+            auto stateColor = Utils::getDefault()->state2Color(reinforcementItem.at(j)->getState());
             auto item = m_model->item(i)->child(j, 2);
             item->setText(stateStr);
 
@@ -383,7 +380,7 @@ void ItemTable::updateStatus(const QList<Plugins::Categories *> &list)
     }
 }
 
-void ItemTable::clearCheckedStatus(const QList<Plugins::Categories *> &list, BRReinforcementState state)
+void ItemTable::clearCheckedStatus(const QList<Category *> &list, BRReinforcementState state)
 {
     for (int i = 0; i < m_model->rowCount(); ++i)
     {
@@ -391,18 +388,18 @@ void ItemTable::clearCheckedStatus(const QList<Plugins::Categories *> &list, BRR
         {
             auto item = m_model->item(i)->child(j);
             CONTINUE_IF_TRUE(Qt::Checked != item->checkState())
-            list.at(i)->getCategory().at(j)->setState(state);
+            list.at(i)->getReinforcementItem().at(j)->setState(state);
         }
     }
 }
 
-void ItemTable::getProgressCount(const QList<Plugins::Categories *> &list, ProgressInfo &progressInfo)
+void ItemTable::getProgressCount(const QList<Category *> &list, ProgressInfo &progressInfo)
 {
     for (int i = 0; i < m_model->rowCount(); ++i)
     {
         for (int j = 0; j < m_model->item(i)->rowCount(); ++j)
         {
-            auto state = list.at(i)->getCategory().at(j)->getState();
+            auto state = list.at(i)->getReinforcementItem().at(j)->getState();
             if (state == BR_REINFORCEMENT_STATE_SCAN_DONE ||
                 state == BR_REINFORCEMENT_STATE_REINFORCE_DONE ||
                 (state & BR_REINFORCEMENT_STATE_SAFE) == BR_REINFORCEMENT_STATE_SAFE)
@@ -584,10 +581,6 @@ void ItemTable::selectAllItem(Qt::CheckState state)
 }
 
 ItemTableDelegate::ItemTableDelegate(QObject *parent) : QStyledItemDelegate(parent)
-{
-}
-
-ItemTableDelegate::~ItemTableDelegate()
 {
 }
 

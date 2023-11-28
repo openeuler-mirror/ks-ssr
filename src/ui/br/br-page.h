@@ -13,11 +13,11 @@
  */
 #pragma once
 
-#include <QStackedWidget>
-#include <QWidget>
 #include "include/ssr-i.h"
-#include "src/ui/br/br-i.h"
 #include "src/ui/common/page.h"
+
+class QStackedWidget;
+
 namespace KS
 {
 namespace BR

@@ -23,8 +23,6 @@ namespace KS
 {
 namespace BR
 {
-namespace Reports
-{
 RoundProgressBar::RoundProgressBar(const QString &name,
                                    int total,
                                    int conform,
@@ -119,6 +117,5 @@ void RoundProgressBar::initUI()
     m_noteLabel->move(0, 220);
     m_noteLabel->setText(QString(tr("Total: %1 conform: %2 inconform: %3")).arg(m_total).arg(m_conform).arg(m_inconform));
 }
-}  // namespace Reports
 }  // namespace BR
 }  // namespace KS
