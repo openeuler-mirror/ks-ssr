@@ -27,10 +27,7 @@ namespace KS
 {
 namespace BR
 {
-namespace Plugins
-{
-class Categories;
-}
+class Category;
 }  // namespace BR
 
 namespace Settings
@@ -66,7 +63,7 @@ private:
     Ui::BaselineReinforcement *m_ui;
 
     QTimer *m_timedScan;
-    QList<KS::BR::Plugins::Categories *> m_categoriesList = {};
+    QList<KS::BR::Category *> m_categories = {};
     KS::BR::ProgressInfo m_progressInfo = {};
 
     BRDbusProxy *m_dbusProxy;

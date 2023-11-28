@@ -21,8 +21,9 @@
 #include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
 #include "lib/base/str-utils.h"
+#include "src/ui/br/reinforcement-items/reinforcement-args-dialog.h"
 #include "src/ui/br/reports/result.h"
-#include "src/ui/br/xmlutils.h"
+#include "src/ui/br/utils.h"
 #include "src/ui/br_dbus_proxy.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "ui_scan.h"
@@ -72,19 +73,19 @@ void Scan::usingCustomStrategy()
     // 所有状态重置后再修改
     resetAllReinforcementItem();
 
-    auto raReinforcements = XMLUtils::getDefault()->raAnalysis(SSR_BR_CUSTOM_RA_STRATEGY_FILEPATH);
+    auto raReinforcements = Utils::getDefault()->raAnalysis(SSR_BR_CUSTOM_RA_STRATEGY_FILEPATH);
     if (raReinforcements.empty())
     {
         m_ui->m_itemTable->setAllChecked(Qt::Checked);
     }
     else
     {
-        for (auto iter : m_categoriesList)
+        for (auto iter : m_categories)
         {
             for (auto raReinforcement = raReinforcements.begin(); raReinforcement != raReinforcements.end(); ++raReinforcement)
             {
-                auto category = iter->find(raReinforcement->name().c_str());
-                CONTINUE_IF_TRUE(category == NULL)
+                auto reinforcementItem = iter->find(raReinforcement->name().c_str());
+                CONTINUE_IF_TRUE(reinforcementItem == NULL)
                 bool raCheckbox = false;
                 // TODO 尝试不用try 这里的checkbox（）可能不存在
                 try
@@ -96,21 +97,21 @@ void Scan::usingCustomStrategy()
                     KLOG_WARNING("%s", e.what());
                 }
 
-                m_ui->m_itemTable->setArgChecked(category->getLabel(), raCheckbox);
+                m_ui->m_itemTable->setArgChecked(reinforcementItem->getLabel(), raCheckbox);
 
-                category->changeFlag = true;
+                reinforcementItem->changeFlag = true;
                 // 未勾选不修改值 #14216
                 CONTINUE_IF_TRUE(!raCheckbox)
                 for (auto raArg = raReinforcement->arg().begin(); raArg != raReinforcement->arg().end(); ++raArg)
                 {
-                    auto arg = category->find(raArg->name().c_str());
+                    auto arg = reinforcementItem->find(raArg->name().c_str());
                     CONTINUE_IF_TRUE(arg == NULL)
                     arg->jsonValue = StrUtils::str2jsonValue(raArg->value());
                 }
             }
         }
 
-        auto reinforcementXML = XMLUtils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categoriesList);
+        auto reinforcementXML = Utils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categories);
         for (auto xml : reinforcementXML)
         {
             CONTINUE_IF_TRUE(xml == NULL)
@@ -172,13 +173,13 @@ void Scan::init()
     auto reply = m_dbusProxy->GetCategories();
     reply.waitForFinished();
     RETURN_IF_TRUE(reply.isError())
-    XMLUtils::getDefault()->jsonParsing(reply.value().toUtf8(), m_categoriesList);
-    XMLUtils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_categoriesList);
+    Utils::getDefault()->jsonParsing(reply.value().toUtf8(), m_categories);
+    Utils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_categories);
 }
 
 void Scan::initUI()
 {
-    m_ui->m_itemTable->setItem(m_categoriesList);
+    m_ui->m_itemTable->setItem(m_categories);
     if (BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_SYSTEM)
     {
         m_strategyType = BR_STRATEGY_TYPE_SYSTEM;
@@ -193,17 +194,17 @@ void Scan::initUI()
         connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     }
 
-    m_customArgsDialog = new Plugins::CustomArgs(this);
+    m_customArgsDialog = new ReinforcementArgsDialog(this);
     m_customArgsDialog->hide();
 
-    connect(m_customArgsDialog, &Plugins::CustomArgs::okClicked, this, &Scan::setReinforcement);
-    connect(m_customArgsDialog, &Plugins::CustomArgs::argError, this, [this](const QString &error)
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::okClicked, this, &Scan::setReinforcement);
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::argError, this, [this](const QString &error)
             { POPUP_MESSAGE_DIALOG(error) });
-    connect(m_customArgsDialog, &Plugins::CustomArgs::valueChanged, this, [this](const QString &category, const QString &argLabel, const QString &argValue, KS::Protocol::WidgetType::Value type)
-            { m_argTransfers.append(new ArgTransfer(category, argLabel, argValue, type)); });
-    connect(m_customArgsDialog, &Plugins::CustomArgs::closed, this, [this]
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::valueChanged, this, [this](const QString &reinforcementItem, const QString &argLabel, const QString &argValue, KS::Protocol::WidgetType::Value type)
+            { m_argTransfers.append(new ArgTransfer(reinforcementItem, argLabel, argValue, type)); });
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::closed, this, [this]
             { m_argTransfers.clear(); });
-    connect(m_customArgsDialog, &Plugins::CustomArgs::reseted, this, &Scan::argReset);
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::reseted, this, &Scan::argReset);
 }
 
 void Scan::initConnection()
@@ -225,8 +226,9 @@ void Scan::resetAllReinforcementItem()
     auto reply = m_dbusProxy->ResetReinforcements();
     reply.waitForFinished();
     CHECK_ERROR_FOR_DBUS_REPLY(reply)
+    RETURN_IF_TRUE(reply.isError())
     auto allResetStr = m_dbusProxy->GetReinforcements();
-    XMLUtils::getDefault()->ssrResetReinforcements(allResetStr, m_categoriesList);
+    Utils::getDefault()->ssrResetReinforcements(allResetStr, m_categories);
 }
 
 void Scan::clearInvalidData()
@@ -251,17 +253,17 @@ void Scan::clearInvalidData()
 
 void Scan::clearState()
 {
-    for (int i = 0; i < m_categoriesList.length(); ++i)
+    for (int i = 0; i < m_categories.length(); ++i)
     {
-        CONTINUE_IF_TRUE(m_categoriesList.at(i)->getCategory().length() == 0)
+        CONTINUE_IF_TRUE(m_categories.at(i)->getReinforcementItem().length() == 0)
 
         switch (m_progressInfo.method)
         {
         case PROCESS_METHOD_FASTEN:
-            m_categoriesList.at(i)->clearState(BR_REINFORCEMENT_STATE_UNREINFORCE);
+            m_categories.at(i)->clearState(BR_REINFORCEMENT_STATE_UNREINFORCE);
             break;
         case PROCESS_METHOD_SCAN:
-            m_categoriesList.at(i)->clearState(BR_REINFORCEMENT_STATE_UNSCAN);
+            m_categories.at(i)->clearState(BR_REINFORCEMENT_STATE_UNSCAN);
             break;
         default:
             break;
@@ -282,7 +284,7 @@ void Scan::argReset(const QString &categoryName, const QString &argName)
 {
     m_dbusProxy->ResetReinforcement(categoryName);
     auto resetStr = m_dbusProxy->GetReinforcements();
-    auto value = XMLUtils::getDefault()->ssrResetReinforcement(resetStr, categoryName, argName);
+    auto value = Utils::getDefault()->ssrResetReinforcement(resetStr, categoryName, argName);
     m_customArgsDialog->setValue(StrUtils::str2jsonValue(value));
 }
 
@@ -290,21 +292,21 @@ void Scan::setReinforcement()
 {
     for (auto argTransfer : m_argTransfers)
     {
-        for (auto iter : m_categoriesList)
+        for (auto iter : m_categories)
         {
             auto label = iter->getLabel();
-            auto category = iter->find(argTransfer->categoryName);
-            CONTINUE_IF_TRUE(category == NULL)
-            auto arg = category->find(argTransfer->argName);
+            auto reinforcementItem = iter->find(argTransfer->categoryName);
+            CONTINUE_IF_TRUE(reinforcementItem == NULL)
+            auto arg = reinforcementItem->find(argTransfer->argName);
             CONTINUE_IF_TRUE(arg == NULL)
 
-            category->changeFlag = true;
+            reinforcementItem->changeFlag = true;
             arg->jsonValue = StrUtils::str2jsonValue(argTransfer->value);
             arg->widgetType = argTransfer->widgetType;
         }
     }
 
-    auto reinforcementXML = XMLUtils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categoriesList);
+    auto reinforcementXML = Utils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categories);
     KLOG_DEBUG() << "reinforcement item xml is :" << reinforcementXML;
 
     for (auto xml : reinforcementXML)
@@ -328,21 +330,21 @@ bool Scan::checkAndSetCheckbox()
     auto rsReinforcements = KS::Protocol::br_reinforcements(istringStream, xml_schema::Flags::dont_validate);
     auto rsReinforcement = rsReinforcements.get()->reinforcement();
 
-    for (auto iter : m_categoriesList)
+    for (auto iter : m_categories)
     {
         // 勾选item等同于修改值，向后台发送修改请求，实际上不修改加固项的值，将勾选的项添加到RA文件
         for (auto checkedItem : checkedList)
         {
-            for (auto category : iter->getCategory())
+            for (auto reinforcementItem : iter->getReinforcementItem())
             {
-                CONTINUE_IF_TRUE(category->getLabel() != checkedItem)
+                CONTINUE_IF_TRUE(reinforcementItem->getLabel() != checkedItem)
                 for (auto rsIter : rsReinforcement)
                 {
-                    CONTINUE_IF_TRUE(category->getName() != rsIter.name().c_str())
-                    category->changeFlag = true;
+                    CONTINUE_IF_TRUE(reinforcementItem->getName() != rsIter.name().c_str())
+                    reinforcementItem->changeFlag = true;
                 }
 
-                auto reinforcementXML = XMLUtils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categoriesList);
+                auto reinforcementXML = Utils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categories);
                 for (auto xml : reinforcementXML)
                 {
                     CONTINUE_IF_TRUE(xml.isEmpty())
@@ -353,14 +355,14 @@ bool Scan::checkAndSetCheckbox()
     }
 
     // 读ra文件，设置复选框
-    auto raReinforcements = XMLUtils::getDefault()->raAnalysis(SSR_BR_CUSTOM_RA_FILEPATH);
-    for (auto iter : m_categoriesList)
+    auto raReinforcements = Utils::getDefault()->raAnalysis(SSR_BR_CUSTOM_RA_FILEPATH);
+    for (auto iter : m_categories)
     {
         for (auto raReinforcement = raReinforcements.begin(); raReinforcement != raReinforcements.end(); ++raReinforcement)
         {
-            auto category = iter->find(raReinforcement->name().c_str());
-            CONTINUE_IF_TRUE(category == NULL)
-            m_dbusProxy->SetCheckBox(raReinforcement->name().c_str(), m_ui->m_itemTable->checkedArgStatus(category->getLabel()));
+            auto reinforcementItem = iter->find(raReinforcement->name().c_str());
+            CONTINUE_IF_TRUE(reinforcementItem == NULL)
+            m_dbusProxy->SetCheckBox(raReinforcement->name().c_str(), m_ui->m_itemTable->checkedArgStatus(reinforcementItem->getLabel()));
         }
     }
     return true;
@@ -378,7 +380,7 @@ void Scan::startScan()
     // TODO 托盘功能是否有必要
     //    if (is_minTray)
     //        showNormal();
-    auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categoriesList) : m_ui->m_itemTable->getAllString(m_categoriesList);
+    auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
     if (scanItems.empty())
     {
         POPUP_MESSAGE_DIALOG(tr("Please check the reinforcement items to be scanned or reinforcement classification for scanning."))
@@ -396,9 +398,9 @@ void Scan::startReinforcement()
 {
     m_progressInfo.method = PROCESS_METHOD_FASTEN;
     clearState();
-    m_ui->m_itemTable->clearCheckedStatus(m_categoriesList, BR_REINFORCEMENT_STATE_UNREINFORCE);
+    m_ui->m_itemTable->clearCheckedStatus(m_categories, BR_REINFORCEMENT_STATE_UNREINFORCE);
 
-    auto reinforcementItem = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categoriesList) : m_ui->m_itemTable->getAllString(m_categoriesList);
+    auto reinforcementItem = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
     if (reinforcementItem.empty())
     {
         POPUP_MESSAGE_DIALOG(tr("Please check the content to be reinforced."))
@@ -421,8 +423,8 @@ void Scan::generateReport()
     {
         auto reply = m_dbusProxy->GetCategories();
         reply.waitForFinished();
-        XMLUtils::getDefault()->jsonParsing(reply.value().toUtf8(), m_afterReinForcementCategoriesList);
-        XMLUtils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_afterReinForcementCategoriesList);
+        Utils::getDefault()->jsonParsing(reply.value().toUtf8(), m_afterReinForcementCategories);
+        Utils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_afterReinForcementCategories);
     }
     // 断开scan进程连接
     disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
@@ -431,7 +433,7 @@ void Scan::generateReport()
             {
                 ProgressInfo progressInfo;
                 // 获取加固后扫描结果
-                XMLUtils::getDefault()->ssrJobResult(jobResult, progressInfo, m_afterReinForcementCategoriesList, m_invalidData);
+                Utils::getDefault()->ssrJobResult(jobResult, progressInfo, m_afterReinForcementCategories, m_invalidData);
             });
     // 监听进程完成后 导出报表
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
@@ -440,13 +442,13 @@ void Scan::generateReport()
                 disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
                 connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
                 disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-                RETURN_IF_TRUE(!Reports::Result::getDefault()->generateReports(m_categoriesList, m_afterReinForcementCategoriesList, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
+                RETURN_IF_TRUE(!Result::getDefault()->generateReports(m_categories, m_afterReinForcementCategories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
                 POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
-                m_afterReinForcementCategoriesList.clear();
+                m_afterReinForcementCategories.clear();
             });
     // 生成报表前扫描
     m_progressInfo.method = PROCESS_METHOD_SCAN;
-    auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categoriesList) : m_ui->m_itemTable->getAllString(m_categoriesList);
+    auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
     m_dbusProxy->Scan(scanItems);
 }
 
@@ -465,10 +467,10 @@ void Scan::showErrorMessage(const QModelIndex &model)
 
     auto indexCategories = model.parent().row();
     auto indexCategory = model.row();
-    auto category = m_categoriesList.at(indexCategories)->getCategory().at(indexCategory);
-    if (category->getState() == BR_REINFORCEMENT_STATE_REINFORCE_ERROR || category->getState() == BR_REINFORCEMENT_STATE_SCAN_ERROR)
+    auto reinforcementItem = m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory);
+    if (reinforcementItem->getState() == BR_REINFORCEMENT_STATE_REINFORCE_ERROR || reinforcementItem->getState() == BR_REINFORCEMENT_STATE_SCAN_ERROR)
     {
-        QToolTip::showText(QCursor::pos(), category->getErrorMessage(), this, rect(), 2000);
+        QToolTip::showText(QCursor::pos(), reinforcementItem->getErrorMessage(), this, rect(), 2000);
     }
 }
 
@@ -479,13 +481,13 @@ void Scan::popReinforcecmentDialog(const QModelIndex &model)
     if (model.parent().row() < 0)
     {
         auto indexCategories = model.row();
-        auto categories = m_categoriesList.at(indexCategories)->getCategory();
-        for (auto category : categories)
+        auto categories = m_categories.at(indexCategories)->getReinforcementItem();
+        for (auto reinforcementItem : categories)
         {
-            auto args = category->getArgs();
+            auto args = reinforcementItem->getArgs();
             for (auto arg : args)
             {
-                m_customArgsDialog->addOneLine(category->getName(), arg->name, arg->label, arg->valueLimits, arg->inputExample, arg->jsonValue, arg->widgetType, arg->note);
+                m_customArgsDialog->addLine(reinforcementItem->getName(), arg->name, arg->label, arg->valueLimits, arg->inputExample, arg->jsonValue, arg->widgetType, arg->note);
             }
         }
     }
@@ -493,10 +495,10 @@ void Scan::popReinforcecmentDialog(const QModelIndex &model)
     {
         auto indexCategories = model.parent().row();
         auto indexCategory = model.row();
-        auto args = m_categoriesList.at(indexCategories)->getCategory().at(indexCategory)->getArgs();
+        auto args = m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory)->getArgs();
         for (auto arg : args)
         {
-            m_customArgsDialog->addOneLine(m_categoriesList.at(indexCategories)->getCategory().at(indexCategory)->getName(), arg->name, arg->label, arg->valueLimits, arg->inputExample, arg->jsonValue, arg->widgetType, arg->note);
+            m_customArgsDialog->addLine(m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory)->getName(), arg->name, arg->label, arg->valueLimits, arg->inputExample, arg->jsonValue, arg->widgetType, arg->note);
         }
     }
 
@@ -509,12 +511,12 @@ void Scan::popReinforcecmentDialog(const QModelIndex &model)
 void Scan::runProgress(const QString &jobResult)
 {
     m_progressInfo.total = m_ui->m_itemTable->getCount();
-    XMLUtils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categoriesList, m_invalidData);
+    Utils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categories, m_invalidData);
     m_ui->m_itemTable->setAllCheckBoxEditStatus(false);
 
     if (double(100) == m_progressInfo.progress)
     {
-        m_ui->m_itemTable->getProgressCount(m_categoriesList, m_progressInfo);
+        m_ui->m_itemTable->getProgressCount(m_categories, m_progressInfo);
         m_ui->m_progress->updateProgress(m_progressInfo);
         flushProgressInfo();
         if (m_progressInfo.method == PROCESS_METHOD_FASTEN)
@@ -526,7 +528,7 @@ void Scan::runProgress(const QString &jobResult)
     {
         m_ui->m_progress->updateProgress(m_progressInfo);
     }
-    m_ui->m_itemTable->updateStatus(m_categoriesList);
+    m_ui->m_itemTable->updateStatus(m_categories);
 }
 }  // namespace BR
 }  // namespace KS

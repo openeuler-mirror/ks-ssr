@@ -12,6 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 #include "br-page.h"
+#include <QStackedWidget>
 #include <QVBoxLayout>
 #include "src/ui/br/home.h"
 #include "src/ui/br/scan.h"

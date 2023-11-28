@@ -169,10 +169,10 @@ private:
         emit ProgressFinished();
     };
 
-    void homeFreeSpaceRatio(const float spaceRatio);
-    void rootFreeSpaceRatio(const float spaceRatio);
-    void cpuAverageLoadRatio(const float loadRatio);
-    void memoryRemainingRatio(const float memoryRatio);
+    void homeFreeSpaceRatio(float spaceRatio);
+    void rootFreeSpaceRatio(float spaceRatio);
+    void cpuAverageLoadRatio(float loadRatio);
+    void memoryRemainingRatio(float memoryRatio);
 
 private:
     static BRDBus *instance_;

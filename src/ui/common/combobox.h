@@ -19,6 +19,7 @@
 
 namespace KS
 {
+// TODO：使用eventfilter实现，无需再封装一个类
 // 无实际意义 用于屏蔽鼠标滚动
 class ComboBox : public QComboBox
 {

@@ -13,19 +13,15 @@
  */
 
 #pragma once
-#include <QCheckBox>
-#include <QStandardItem>
-#include <QStandardItemModel>
 #include <QStyledItemDelegate>
 #include <QTreeView>
-#include <QWidget>
 #include "br-i.h"
-#include "include/ssr-i.h"
-#include "src/ui/br/plugins/categories.h"
-#include "src/ui/common/table-header-proxy.h"
+#include "src/ui/br/reinforcement-items/category.h"
 
 namespace KS
 {
+class TableHeaderProxy;
+
 namespace BR
 {
 struct ProgressInfo;
@@ -36,7 +32,7 @@ class ItemTableDelegate : public QStyledItemDelegate
 
 public:
     explicit ItemTableDelegate(QObject *parent = nullptr);
-    ~ItemTableDelegate();
+    virtual ~ItemTableDelegate(){};
 
     QSize sizeHint(const QStyleOptionViewItem &option,
                    const QModelIndex &index) const override;
@@ -48,19 +44,19 @@ class ItemTable : public QTreeView
 
 public:
     explicit ItemTable(QWidget *parent = 0);
-    ~ItemTable();
+    virtual ~ItemTable(){};
 
     virtual QSize sizeHint() const override;
 
     int getCount();
-    void setItem(const QList<Plugins::Categories *> &list);
-    void updateStatus(const QList<Plugins::Categories *> &list);
-    void clearCheckedStatus(const QList<Plugins::Categories *> &list, BRReinforcementState state);
+    void setItem(const QList<Category *> &list);
+    void updateStatus(const QList<Category *> &list);
+    void clearCheckedStatus(const QList<Category *> &list, BRReinforcementState state);
     void hideCheckBox(bool isHide);
     void setAllCheckBoxEditStatus(bool isCheckBoxEdit);
-    QStringList getString(const QList<Plugins::Categories *> &list);
-    QStringList getAllString(const QList<Plugins::Categories *> &list);
-    void getProgressCount(const QList<Plugins::Categories *> &list, ProgressInfo &progressInfo);
+    QStringList getString(const QList<Category *> &list);
+    QStringList getAllString(const QList<Category *> &list);
+    void getProgressCount(const QList<Category *> &list, ProgressInfo &progressInfo);
     // 设置单个项选中
     void setArgChecked(const QString &matchLabel, bool checkStatus);
     // 检测单个项是否选中
@@ -72,8 +68,8 @@ public:
 
 private:
     void initHeader();
-    void appendRow(const QList<Plugins::Category *> &list);
-    void setIcon(const QList<Plugins::Categories *> &list, int i);
+    void appendRow(const QList<ReinforcementItem *> &list);
+    void setIcon(const QList<Category *> &list, int i);
     void setItemArrow(const QModelIndex &model);
 
 protected:

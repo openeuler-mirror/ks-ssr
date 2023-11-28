@@ -23,9 +23,8 @@
 #include <QSysInfo>
 #include <QVBoxLayout>
 #include <QtMath>
-#include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
-#include "src/ui/br/plugins/categories.h"
+#include "src/ui/br/reinforcement-items/category.h"
 #include "src/ui/br/reports/pdf.h"
 #include "src/ui/br/reports/table.h"
 
@@ -36,15 +35,9 @@ namespace KS
 {
 namespace BR
 {
-namespace Reports
-{
 Result::Result(QWidget *parent) : QWidget(parent)
 {
     init();
-}
-
-Result::~Result()
-{
 }
 
 QSharedPointer<Result> Result::m_instance = nullptr;
@@ -162,7 +155,7 @@ QColor Result::state2Color(int state)
     return retColor;
 }
 
-bool Result::generateReports(const QList<Plugins::Categories *> &beforeReinforcementList, const QList<Plugins::Categories *> &afterReinforcementList,
+bool Result::generateReports(const QList<Category *> &beforeReinforcementList, const QList<Category *> &afterReinforcementList,
                              int status,
                              const InvalidData &invalidData)
 {
@@ -292,18 +285,18 @@ void Result::createReportHomePage(int status, const QRect &rect)
     m_painter->drawPixmap(0, 0, pixmap);
 }
 
-void Result::createReportcontent(QPrinter &printer, const QList<Plugins::Categories *> &afterReinforcementList, const InvalidData &invalidData)
+void Result::createReportcontent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData)
 {
     bool flag = false;
     int count = 0;
     int i = 0;
 
-    m_table = new Table();
+    m_table = new Table(this);
     // 扫描结果
     for (auto categories : m_categories)
     {
         i++;
-        for (auto category : categories->getCategory())
+        for (auto reinforcementItem : categories->getReinforcementItem())
         {
             ++count;
             if (count >= TABLE_MAX_LINE)
@@ -315,18 +308,18 @@ void Result::createReportcontent(QPrinter &printer, const QList<Plugins::Categor
                 printer.newPage();
 
                 delete m_table;
-                m_table = new Table();
+                m_table = new Table(this);
             }
 
             flag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
 
-            if (!category->getCheckStatus())
+            if (!reinforcementItem->getCheckStatus())
             {
                 count--;
                 continue;
             }
-            auto afterReinforcementScanState = afterReinforcementList.isEmpty() ? BR_REINFORCEMENT_STATE_UNREINFORCE : afterReinforcementList.value(i - 1)->find(category->getName())->getScanState();
-            m_table->addOneLine(category->getLabel(), state2Str(category->getScanState()), state2Str(afterReinforcementScanState), "-", state2Color(category->getScanState()), state2Color(afterReinforcementScanState), count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+            auto afterReinforcementScanState = afterReinforcementList.isEmpty() ? BR_REINFORCEMENT_STATE_UNREINFORCE : afterReinforcementList.value(i - 1)->find(reinforcementItem->getName())->getScanState();
+            m_table->addLine(reinforcementItem->getLabel(), state2Str(reinforcementItem->getScanState()), state2Str(afterReinforcementScanState), "-", state2Color(reinforcementItem->getScanState()), state2Color(afterReinforcementScanState), count % 2 == 1 ? "#f2f2f2" : "#ffffff");
         }
     }
     // 扫描文件结果
@@ -342,7 +335,7 @@ void Result::createReportcontent(QPrinter &printer, const QList<Plugins::Categor
         m_painter->drawPixmap(0, 0, page);
         printer.newPage();
         delete m_table;
-        m_table = new Table(isScan, isVulnerability);
+        m_table = new Table(this, isScan, isVulnerability);
     }
 
     m_table->addSpacer();
@@ -365,7 +358,7 @@ bool Result::createFilesScanResults(QPrinter &printer, const InvalidData &invali
     m_painter->drawPixmap(0, 0, page);
     printer.newPage();
     delete m_table;
-    m_table = new Table(true);
+    m_table = new Table(this, true);
     // 解析文件名与扫描类型
     QStringList scanFilesList;
     QStringList scanTypeList;
@@ -389,13 +382,13 @@ bool Result::createFilesScanResults(QPrinter &printer, const InvalidData &invali
             printer.newPage();
 
             delete m_table;
-            m_table = new Table(is_scan);
+            m_table = new Table(this, is_scan);
         }
         showTailFlag = (i >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
         if (i % 2 == 1)
-            m_table->addOneScanLine(scanFilesList.at(count), scanTypeList.at(count), "-", "#f2f2f2");
+            m_table->addScanLine(scanFilesList.at(count), scanTypeList.at(count), "-", "#f2f2f2");
         else
-            m_table->addOneScanLine(scanFilesList.at(count), scanTypeList.at(count), "-", "#ffffff");
+            m_table->addScanLine(scanFilesList.at(count), scanTypeList.at(count), "-", "#ffffff");
     }
     return true;
 }
@@ -411,7 +404,7 @@ bool Result::createVulnerabilityResults(QPrinter &printer, const InvalidData &in
     m_painter->drawPixmap(0, 0, page);
     printer.newPage();
     delete m_table;
-    m_table = new Table(false, is_vulnerability);
+    m_table = new Table(this, false, is_vulnerability);
     // 解析文件名与扫描类型
     QStringList rpmNameList;
     QStringList rpmResultList;
@@ -442,10 +435,10 @@ bool Result::createVulnerabilityResults(QPrinter &printer, const InvalidData &in
             printer.newPage();
 
             delete m_table;
-            m_table = new Table(false, is_vulnerability);
+            m_table = new Table(this, false, is_vulnerability);
         }
         showTailFlag = (i >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
-        m_table->addOneScanLine(rpmNameList.at(count), rpmResultList.at(count), "-", i % 2 == 1 ? "#f2f2f2" : "#ffffff");
+        m_table->addScanLine(rpmNameList.at(count), rpmResultList.at(count), "-", i % 2 == 1 ? "#f2f2f2" : "#ffffff");
     }
     return true;
 }
@@ -459,15 +452,15 @@ void Result::calculateRatio()
     for (auto categories : m_categories)
     {
         m_categoryName[i++] = categories->getLabel();
-        for (auto category : categories->getCategory())
+        for (auto reinforcementItem : categories->getReinforcementItem())
         {
-            CONTINUE_IF_TRUE(!category->getCheckStatus())
-            if (((category->getScanState() & BR_REINFORCEMENT_STATE_SAFE) == 1))
+            CONTINUE_IF_TRUE(!reinforcementItem->getCheckStatus())
+            if (((reinforcementItem->getScanState() & BR_REINFORCEMENT_STATE_SAFE) == 1))
             {
                 m_conform[j]++;
                 m_total[j]++;
             }
-            else if ((category->getScanState() & BR_REINFORCEMENT_STATE_UNSAFE) == 2)
+            else if ((reinforcementItem->getScanState() & BR_REINFORCEMENT_STATE_UNSAFE) == 2)
             {
                 m_inconform[j]++;
                 m_total[j]++;
@@ -479,7 +472,7 @@ void Result::calculateRatio()
 }
 
 //picture
-bool Result::exportReport(const QList<Plugins::Categories *> &afterReinforcementList, int status, const InvalidData &invalidData)
+bool Result::exportReport(const QList<Category *> &afterReinforcementList, int status, const InvalidData &invalidData)
 {
     calculateRatio();
 
@@ -507,6 +500,5 @@ bool Result::exportReport(const QList<Plugins::Categories *> &afterReinforcement
 
     return true;
 }
-}  // namespace Reports
 }  // namespace BR
 }  // namespace KS

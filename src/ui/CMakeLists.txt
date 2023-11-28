@@ -52,7 +52,7 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/br/home.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/scan.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/progress.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/br/plugins/custom-args.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/br/reinforcement-items/reinforcement-args-dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/reports/pdf.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/reports/table.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-page.ui
@@ -88,6 +88,28 @@ qt5_create_translation(
   OPTIONS
   -I
   ${PROJECT_SOURCE_DIR})
+
+set(RESOURCE_LOGO_PNG_PATH
+    "${PROJECT_SOURCE_DIR}/resources/images/kylinsec-logo.png")
+set(RESOURCE_REPORTS_END_PNG_PATH
+    "${PROJECT_SOURCE_DIR}/resources/images/PDF/end.png")
+
+# 判断private目录是否拉取，替换logo图片
+if(EXISTS "${PROJECT_SOURCE_DIR}/private/check-project-exist")
+  execute_process(
+    COMMAND
+      ln -s ${PROJECT_SOURCE_DIR}/private/resources/images/kylinsec-logo.png
+      ${RESOURCE_LOGO_PNG_PATH}
+    COMMAND ln -s ${PROJECT_SOURCE_DIR}/private/resources/images/PDF/end.png
+            ${RESOURCE_REPORTS_END_PNG_PATH})
+else()
+  execute_process(
+    COMMAND
+      ln -s ${PROJECT_SOURCE_DIR}/resources/images/kylinsec-logo-fallbak.png
+      ${RESOURCE_LOGO_PNG_PATH}
+    COMMAND ln -s ${PROJECT_SOURCE_DIR}/resources/images/PDF/end-fallbak.png
+            ${RESOURCE_REPORTS_END_PNG_PATH})
+endif()
 
 add_executable(
   ${TARGET_NAME}

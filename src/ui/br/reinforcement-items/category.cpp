@@ -12,90 +12,87 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#include "categories.h"
+#include "category.h"
 
 namespace KS
 {
 namespace BR
 {
-namespace Plugins
-{
-Categories::Categories()
+Category::Category()
 {
 }
 
-void Categories::setRow(int row)
+void Category::setRow(int row)
 {
     m_row = row;
 }
 
-void Categories::setName(const QString &name)
+void Category::setName(const QString &name)
 {
     m_name = name;
 }
 
-void Categories::setLabel(const QString &label)
+void Category::setLabel(const QString &label)
 {
     m_label = label;
 }
 
-void Categories::setIconName(const QString &iconName)
+void Category::setIconName(const QString &iconName)
 {
     m_iconName = iconName;
 }
 
-void Categories::setDescription(const QString &description)
+void Category::setDescription(const QString &description)
 {
     m_description = description;
 }
 
-void Categories::setCategory(Category *category)
+void Category::setReinforcementItem(ReinforcementItem *reinforcementItem)
 {
-    m_category.append(category);
+    m_reinforcementItems.append(reinforcementItem);
 }
 
-int Categories::getRow()
+int Category::getRow()
 {
     return m_row;
 }
 
-QString Categories::getName()
+QString Category::getName()
 {
     return m_name;
 }
 
-QString Categories::getLabel()
+QString Category::getLabel()
 {
     return m_label;
 }
 
-QString Categories::getIconName()
+QString Category::getIconName()
 {
     return m_iconName;
 }
 
-QList<Category *> Categories::getCategory()
+QList<ReinforcementItem *> Category::getReinforcementItem()
 {
-    return m_category;
+    return m_reinforcementItems;
 }
 
-Category *Categories::find(const QString &name)
+ReinforcementItem *Category::find(const QString &name)
 {
-    for (auto category : m_category)
+    for (auto reinforcementItem : m_reinforcementItems)
     {
-        if (category->getName() == name)
-            return category;
+        if (reinforcementItem->getName() == name)
+            return reinforcementItem;
     }
-    return NULL;
+    return nullptr;
 }
 
-void Categories::clearState(int state)
+void Category::clearState(int state)
 {
-    for (auto category : m_category)
+    for (auto reinforcementItem : m_reinforcementItems)
     {
-        category->setState(state);
+        reinforcementItem->setState(state);
     }
 }
-}  // namespace Plugins
 }  // namespace BR
 }  // namespace KS

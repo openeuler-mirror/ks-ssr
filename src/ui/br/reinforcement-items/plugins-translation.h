@@ -19,8 +19,6 @@ namespace KS
 {
 namespace BR
 {
-namespace Plugins
-{
 class PluginsTranslation
 {
 public:
@@ -64,6 +62,5 @@ private:
 };
 
 PluginsTranslation *PluginsTranslation::m_instance = nullptr;
-}  // namespace Plugins
 }  // namespace BR
 }  // namespace KS

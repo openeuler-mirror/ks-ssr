@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn> 
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 #pragma once
 
@@ -26,23 +26,6 @@ namespace Notify
 #define NOTIFY_WARN(message) NotificationWrapper::getInstance()->warn(message);
 
 #define NOTIFY_ERROR(message) NotificationWrapper::getInstance()->error(message);
-
-class NotifyException : public std::exception
-{
-public:
-    NotifyException(std::string error)
-    {
-        this->m_error = error;
-    }
-    ~NotifyException() throw() {}
-    virtual const char *what() const throw()
-    {
-        return m_error.c_str();
-    }
-
-private:
-    std::string m_error;
-};
 
 class NotificationWrapper
 {

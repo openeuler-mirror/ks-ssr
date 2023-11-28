@@ -64,15 +64,17 @@ QString run_cmd(QString cmd)
     return result;
 }
 
-void ResourceMonitor::getSystemSpace(QString path)
+void ResourceMonitor::getSystemSpace(const QString &path)
 {
     // 用于获取磁盘剩余空间
     struct statfs diskInfo;
     statfs(path.toLatin1(), &diskInfo);
-    unsigned long long blocksize = diskInfo.f_bsize;               // 每个block里包含的字节数
-    unsigned long long totalsize = blocksize * diskInfo.f_blocks;  // 总的字节数，f_blocks为block的数目
-
-    unsigned long long freeDisk = diskInfo.f_bfree * blocksize;  // 剩余空间的大小
+    // 每个block里包含的字节数
+    unsigned long long blocksize = diskInfo.f_bsize;
+    // 总的字节数，f_blocks为block的数目
+    unsigned long long totalsize = blocksize * diskInfo.f_blocks;
+    // 剩余空间的大小
+    unsigned long long freeDisk = diskInfo.f_bfree * blocksize;
 
     if (path == "/home")
     {
@@ -84,9 +86,6 @@ void ResourceMonitor::getSystemSpace(QString path)
         m_rootTotalSpace = totalsize >> 20;
         m_rootFreeSpace = freeDisk >> 20;
     }
-    //    unsigned long long availableDisk            = diskInfo.f_bavail * blocksize; 	//可用空间大小
-    //	printf("Disk_free = %llu MB                 = %llu GB\nDisk_available = %llu MB = %llu GB\n",
-    //
 }
 
 QVector<QString> stringSplit(const QString &s, const QString &delim = " ")

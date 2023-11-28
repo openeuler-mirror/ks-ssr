@@ -13,6 +13,7 @@
  */
 
 #pragma once
+#include "config.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -63,8 +64,8 @@ extern "C"
 #define BR_DBUS_OBJECT_PATH "/com/kylinsec/SSR/BR"
 #define BR_DBUS_INTERFACE_NAME "com.kylinsec.SSR.BR"
 
-#define SSR_BR_CUSTOM_RA_STRATEGY_FILEPATH "/usr/share/ks-ssr/br-custom-ra-strategy.xml"
-#define SSR_BR_CUSTOM_RA_FILEPATH "/usr/share/ks-ssr/br-custom-ra.xml"
+#define SSR_BR_CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
+#define SSR_BR_CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra.xml"
 
     enum SSRKSSTrustedFileType
     {

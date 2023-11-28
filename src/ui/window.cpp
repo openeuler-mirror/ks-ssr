@@ -89,7 +89,8 @@ void Window::initActivation()
         m_activation->show();
     }
     connect(m_activation, &Activation::Activation::closed,
-            [this] {
+            [this]
+            {
                 //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
                 if (!m_licenseProxy->isActivated())
                     qApp->quit();
@@ -162,8 +163,6 @@ void Window::initNavigation()
     m_ui->m_navigation->addItem(new NavigationItem(":/images/device", tr("Device management")));
     m_ui->m_navigation->setBtnChecked(0);
 
-    // 未激活不初始化页面
-    RETURN_IF_FALSE(m_licenseProxy->isActivated());
     // 移除qt designer默认创建的widget
     while (m_ui->m_stackedPages->currentWidget() != nullptr)
     {
@@ -189,11 +188,12 @@ void Window::initNavigation()
     m_ui->m_stackedPages->setCurrentIndex(0);
     updatePage();
 
-    connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this] {
-        m_loading->setVisible(false);
-        m_ui->m_sidebar->setEnabled(true);
-        updatePage();
-    });
+    connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this]
+            {
+                m_loading->setVisible(false);
+                m_ui->m_sidebar->setEnabled(true);
+                updatePage();
+            });
 
     connect(m_ui->m_navigation, SIGNAL(currentUIDChanged()), this, SLOT(updatePage()));
 }
@@ -258,26 +258,28 @@ void Window::updateActivation()
 void Window::popupSettingsDialog()
 {
     // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
-    connect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this] {
-        for (auto page : m_pages.value(tr("Baseline reinforcement")))
-        {
-            if (page->isVisible())
+    connect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this]
             {
-                auto brPage = static_cast<BR::BRPage *>(page);
-                brPage->exportStrategy();
-            }
-        }
-    });
-    connect(Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this] {
-        for (auto page : m_pages.value(tr("Baseline reinforcement")))
-        {
-            if (page->isVisible())
+                for (auto page : m_pages.value(tr("Baseline reinforcement")))
+                {
+                    if (page->isVisible())
+                    {
+                        auto brPage = static_cast<BR::BRPage *>(page);
+                        brPage->exportStrategy();
+                    }
+                }
+            });
+    connect(Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this]
             {
-                auto brPage = static_cast<BR::BRPage *>(page);
-                brPage->resetAllReinforcementArgs();
-            }
-        }
-    });
+                for (auto page : m_pages.value(tr("Baseline reinforcement")))
+                {
+                    if (page->isVisible())
+                    {
+                        auto brPage = static_cast<BR::BRPage *>(page);
+                        brPage->resetAllReinforcementArgs();
+                    }
+                }
+            });
 
     auto x = this->x() / 4 + this->width() / 4 + Settings::Dialog::instance()->width() / 16;
     auto y = this->y() / 4 + this->height() / 4 + Settings::Dialog::instance()->height() / 16;

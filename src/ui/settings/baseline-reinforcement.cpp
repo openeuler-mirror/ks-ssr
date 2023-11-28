@@ -18,8 +18,8 @@
 #include "include/ssr-i.h"
 #include "lib/base/notification-wrapper.h"
 #include "src/ui/br/br-i.h"
-#include "src/ui/br/plugins/categories.h"
-#include "src/ui/br/xmlutils.h"
+#include "src/ui/br/reinforcement-items/category.h"
+#include "src/ui/br/utils.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "ui_baseline-reinforcement.h"
 
@@ -157,11 +157,11 @@ void BaselineReinforcement::initUI()
 
 void BaselineReinforcement::updateProgressInfo(KS::BR::ProgressInfo &progressInfo)
 {
-    for (auto categories : m_categoriesList)
+    for (auto categories : m_categories)
     {
-        for (auto category : categories->getCategory())
+        for (auto reinforcementItem : categories->getReinforcementItem())
         {
-            auto state = category->getState();
+            auto state = reinforcementItem->getState();
             if (state == BR_REINFORCEMENT_STATE_SCAN_DONE || state == BR_REINFORCEMENT_STATE_REINFORCE_DONE || (state & BR_REINFORCEMENT_STATE_SAFE) == BR_REINFORCEMENT_STATE_SAFE)
             {
                 progressInfo.successCount += 1;
@@ -209,20 +209,18 @@ void BaselineReinforcement::timedScanSettings(int hours)
     {
         Notify::NOTIFY_INFO(QString(tr("Scheduled scanning task has been started, every interval %1 scan once every hour.")).arg(hours).toUtf8());
     }
-//    m_timedScan->start(hours * 1000 * 3600);
-//    QTimer::singleShot(hours * 1000 * 3600, this, &BaselineReinforcement::scan);
-     m_timedScan->start(hours * 1000 * 10);
+    m_timedScan->start(hours * 1000 * 3600);
 }
 
 void BaselineReinforcement::scan()
 {
-    m_categoriesList.clear();
+    m_categories.clear();
     m_progressInfo = {};
     // 获取加固项信息
     auto reply = m_dbusProxy->GetCategories();
     reply.waitForFinished();
-    KS::BR::XMLUtils::getDefault()->jsonParsing(reply.value().toUtf8(), m_categoriesList);
-    KS::BR::XMLUtils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_categoriesList);
+    KS::BR::Utils::getDefault()->jsonParsing(reply.value().toUtf8(), m_categories);
+    KS::BR::Utils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_categories);
 
     // 断开scan进程连接
     disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
@@ -230,7 +228,7 @@ void BaselineReinforcement::scan()
     connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult)
             {
                 InvalidData invalidData = {};
-                KS::BR::XMLUtils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categoriesList, invalidData);
+                KS::BR::Utils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categories, invalidData);
             });
     // 监听进程完成后
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
@@ -252,11 +250,11 @@ void BaselineReinforcement::scan()
             });
 
     QStringList scanStr;
-    for (auto categories : m_categoriesList)
+    for (auto categories : m_categories)
     {
-        for (auto category : categories->getCategory())
+        for (auto reinforcementItem : categories->getReinforcementItem())
         {
-            scanStr << category->getName();
+            scanStr << reinforcementItem->getName();
         }
     }
     auto replyScan = m_dbusProxy->Scan(scanStr);
@@ -276,10 +274,10 @@ void BaselineReinforcement::fallback(int status)
 {
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
-    {
-        POPUP_MESSAGE_DIALOG(tr("Fallback finished!"));
-        disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-    });
+            {
+                POPUP_MESSAGE_DIALOG(tr("Fallback finished!"));
+                disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
+            });
     auto reply = m_dbusProxy->SetFallback(BRSnapshotStatus(status));
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
 }

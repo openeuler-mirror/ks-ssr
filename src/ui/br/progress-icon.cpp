@@ -12,6 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 #include "progress-icon.h"
+#include <QLabel>
 #include <QPainter>
 #include <QTimer>
 
@@ -26,10 +27,6 @@ ProgressIcon::ProgressIcon(QWidget *parent) : QWidget(parent)
     angle = 0;
     m_isFinishedProgress = false;
     initUI();
-}
-
-ProgressIcon::~ProgressIcon()
-{
 }
 
 void ProgressIcon::finishedProgress(bool isFinish)
