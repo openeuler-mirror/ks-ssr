@@ -28,10 +28,18 @@ namespace Settings
 class Dialog : public TitlebarWindow
 {
     Q_OBJECT
-
 public:
+    static void globalInit(QWidget *parent);
+    static void globalDeinit();
+
+    static Dialog *instance() { return m_instance; };
+
+private:
     Dialog(QWidget *parent = nullptr);
     ~Dialog();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     void initUI();
@@ -39,10 +47,12 @@ private:
     void initSubPage();
 
 signals:
-    void trustedStatusChange(bool status);
+    void exportStrategyClicked();
+    void resetAllArgsClicked();
 
 private:
     Ui::Dialog *m_ui;
+    static Dialog *m_instance;
 };
 
 }  // namespace Settings

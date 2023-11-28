@@ -1,4 +1,4 @@
-#--coding:utf8 --
+# -*- coding: utf-8 -*-
 import json
 import br.utils
 
@@ -9,7 +9,8 @@ class Proxy:
 
     # 判断服务是否存在
     def exist(self):
-        command = 'systemctl list-unit-files {0}.service | grep {1} | wc -l'.format(self.service, self.service)
+        command = 'systemctl list-unit-files {0}.service | grep {1} | wc -l'.format(
+            self.service, self.service)
         num = br.utils.subprocess_has_output(command)
         return (num == '1')
 
@@ -28,20 +29,20 @@ class Proxy:
             br.log.debug(output)
         except Exception as e:
             br.log.debug(e)
-            return (False,str(e))
-    
+            return (False, str(e))
+
     def kill(self):
         if not self.is_active():
             return
         self.__call_noresult('kill')
-    
+
     def mask(self):
         try:
             output = self.__call_result('mask')
             br.log.debug(output)
         except Exception as e:
             br.log.debug(e)
-            return (False,str(e))
+            return (False, str(e))
 
     def unmask(self):
         try:
@@ -49,7 +50,7 @@ class Proxy:
             br.log.debug(output)
         except Exception as e:
             br.log.debug(e)
-            return (False,str(e))
+            return (False, str(e))
 
     def service_save(self):
         try:
@@ -57,7 +58,7 @@ class Proxy:
             br.log.debug(output)
         except Exception as e:
             br.log.debug(e)
-            return (False,str(e))
+            return (False, str(e))
 
     def service_stop(self):
         output = self.__call_service_result('stop')
@@ -68,13 +69,13 @@ class Proxy:
 
     def service_restart(self):
         self.__call_service_noresult('restart')
-    
+
     def service_reload(self):
         self.__call_service_noresult('reload')
 
     def restart(self):
         self.__call_noresult('restart')
-    
+
     def reload(self):
         self.__call_noresult('reload')
 
@@ -93,12 +94,12 @@ class Proxy:
         self.__call_noresult('disable')
 
     def __call_service_noresult(self, action):
-        command = 'service {0} {1}'.format(self.service,action)
+        command = 'service {0} {1}'.format(self.service, action)
         br.utils.subprocess_not_output(command)
 
     def __call_service_result(self, action):
-        command = 'service {0} {1}'.format(self.service,action)
-        br.utils.subprocess_has_output(command)
+        command = 'service {0} {1}'.format(self.service, action)
+        return br.utils.subprocess_has_output(command)
 
     def __call_noresult(self, action):
         command = 'systemctl {0} {1}.service'.format(action, self.service)
@@ -132,9 +133,10 @@ class SwitchBase(object):
                 if self.systemd_proxy.exist():
                     if self.systemd_proxy.stop():
                         # if not self.systemd_proxy.service_stop():
-                        return (False, 'Unable to stop service! \t\t')
-                    #self.systemd_proxy.kill()
+                        return (False, "Unable to stop service!")
+                    # self.systemd_proxy.kill()
                     self.systemd_proxy.disable()
             return (True, '')
         except Exception as e:
-            return (False, str(e))
+            br.log.error(str(e))
+            return (False, "Abnormal service!")

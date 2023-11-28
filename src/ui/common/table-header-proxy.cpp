@@ -22,14 +22,21 @@ namespace KS
 {
 TableHeaderProxy::TableHeaderProxy(QWidget *parent) : QHeaderView(Qt::Horizontal, parent),
                                                       m_stateChanged(false),
+                                                      m_closeCheckBox(false),
                                                       m_checkState(Qt::Unchecked)
 {
     m_rect = new QRect(15, 2, 20, 20);
     // 做下拉筛选功能时可能会用到这个属性，暂设置为false
     setSectionsClickable(false);
     setMouseTracking(true);
+    setObjectName("tableHeaderProxy");
     // TODO: 使用setIndexWidget需要调整位置
     // setIndexWidget(indexAt(QPoint(0, 0)), new QCheckBox(this));
+}
+
+void TableHeaderProxy::hideCheckBox(bool isHide)
+{
+    m_closeCheckBox = isHide;
 }
 
 void TableHeaderProxy::paintSection(QPainter *painter,
@@ -39,7 +46,7 @@ void TableHeaderProxy::paintSection(QPainter *painter,
     painter->save();
     QHeaderView::paintSection(painter, rect, logicalIndex);
     painter->restore();
-    if (logicalIndex == 0)
+    if (logicalIndex == 0 && !m_closeCheckBox)
     {
         QPixmap pixmap;
         switch (m_checkState)
@@ -64,7 +71,7 @@ void TableHeaderProxy::paintSection(QPainter *painter,
 void TableHeaderProxy::mousePressEvent(QMouseEvent *e)
 {
     auto column = logicalIndexAt(e->pos());
-    if (column == 0)
+    if (column == 0 && !m_closeCheckBox)
     {
         if ((e->pos().x() > m_rect->x()) && (e->pos().y() > m_rect->y()) && (e->pos().x() < m_rect->x() + 20) && (e->pos().y() < m_rect->y() + 20))
         {

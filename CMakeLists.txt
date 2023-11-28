@@ -28,6 +28,7 @@ find_package(
              Widgets
              DBus
              LinguistTools
+             PrintSupport
              Network
              X11Extras
              Sql)
@@ -41,8 +42,12 @@ pkg_search_module(KS_LICENSE REQUIRED ks-license)
 pkg_search_module(LIBCRYPTO REQUIRED libcrypto)
 pkg_search_module(LIBAUDIT REQUIRED audit)
 pkg_search_module(SQLCIPHER REQUIRED sqlcipher)
-pkg_search_module(KYLIN_LICENSE REQUIRED kylin-license)
 pkg_search_module(LIBSELINUX REQUIRED libselinux)
+pkg_search_module(LIBNOTIFY REQUIRED libnotify)
+
+string(REGEX MATCHALL "[0-9]+" LIBNOTIFY_VERSION_LIST ${LIBNOTIFY_VERSION})
+list(GET LIBNOTIFY_VERSION_LIST 0 LIBNOTIFY_MAJOR)
+list(GET LIBNOTIFY_VERSION_LIST 1 LIBNOTIFY_MINOR)
 
 if(ENABLE_GTEST)
   pkg_search_module(GTEST REQUIRED gtest)

@@ -21,7 +21,6 @@
 #include "config-ui.h"
 #include "src/ui/common/single-application/single-application.h"
 #include "src/ui/window.h"
-
 using namespace KS;
 
 int main(int argc, char *argv[])

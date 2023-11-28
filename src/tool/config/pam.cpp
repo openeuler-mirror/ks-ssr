@@ -33,10 +33,8 @@ bool PAM::getValue(const QString &key, const QString &kv_split_pattern, QString 
 {
     QString contents;
     RETURN_VAL_IF_FALSE(FileUtils::readContentsWithLock(this->conf_path_, contents), false);
-
     auto lines = StrUtils::splitLines(contents);
     QRegExp line_match_regex(this->line_match_pattern_);
-    // auto line_match_regex = Glib::Regex::create(this->line_match_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     QString kv_pattern;
     if (kv_split_pattern.isEmpty())
@@ -47,13 +45,9 @@ bool PAM::getValue(const QString &key, const QString &kv_split_pattern, QString 
     else
     {
         kv_pattern = QString("(%1[\\s]*%2[\\s]*)(\\S+)").arg(key, kv_split_pattern);
-        // kv_pattern = fmt::format("({0}[\\s]*{1}[\\s]*)(\\S+)", key, kv_split_pattern);
     }
     QRegExp kv_regex(kv_pattern);
-    // auto kv_regex = Glib::Regex::create(kv_pattern);
-
     QRegExp split_field_regex(kv_split_pattern);
-    // auto split_field_regex = Glib::Regex::create(kv_split_pattern, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     for (auto iter = lines.begin(); iter != lines.end(); ++iter)
     {
@@ -62,22 +56,19 @@ bool PAM::getValue(const QString &key, const QString &kv_split_pattern, QString 
         // 忽略空行和注释行
         CONTINUE_IF_TRUE(trim_line.isEmpty() || trim_line[0] == '#');
         CONTINUE_IF_TRUE(!(line_match_regex.indexIn(*iter) != -1));
-
-        if (kv_regex.indexIn(*iter) != -1)
+        CONTINUE_IF_TRUE(kv_regex.indexIn(*iter) < 0);
+        if (!kv_split_pattern.isEmpty())
         {
-            if (!kv_split_pattern.isEmpty())
-            {
-                QVector<QString> fields = line_match_regex.cap(0).split(split_field_regex).toVector();
-                // QVector<QString> fields = split_field_regex->split(match_info.fetch(0));
-                value = fields[1].toLatin1();
-                KLOG_DEBUG("Read Line: key: %s, value: %s.", fields[0].toLocal8Bit().data(), fields[1].toLocal8Bit().data());
-            }
-            else
-            {
-                value = "true";
-            }
-            return true;
+            kv_regex.indexIn(*iter);
+            auto fields = kv_regex.cap(0).split(split_field_regex).toVector();
+            value = fields[1].toLatin1();
+            KLOG_DEBUG("Read Line: key: %s, value: %s.", fields[0].toLocal8Bit().toStdString().c_str(), fields[1].toLocal8Bit().toStdString().c_str());
         }
+        else
+        {
+            value = "true";
+        }
+        return true;
     }
     return true;
 }
@@ -103,30 +94,23 @@ bool PAM::setValue(const QString &key,
         QRegExp kv_regex(kv_pattern);
         // auto kv_regex = Glib::Regex::create(kv_pattern);
         QString replace_line = match_info.match_line;
-
         if (kv_regex.indexIn(match_info.match_line) != -1)
         {
             // 修改键值对
             if (!kv_split_pattern.isEmpty() && !value.isEmpty())
             {
-                replace_line = match_info.match_line.replace(kv_regex, "\\1");
+                replace_line.replace(kv_regex, "\\1" + value);
             }
         }
         else
         {
             // 添加键值对
-            if (kv_split_pattern.isEmpty())
-            {
-                replace_line += (this->isWhitespaceInTail(match_info.match_line) ? "" : " ") + key;
-            }
-            else if (!kv_split_pattern.isEmpty() && !value.isEmpty())
-            {
-                replace_line += (this->isWhitespaceInTail(match_info.match_line) ? "" : " ") + key + kv_join_str + value;
-            }
-            else
+            replace_line += (this->isWhitespaceInTail(match_info.match_line) ? "" : " ") + key;
+            if (kv_split_pattern.isEmpty() || value.isEmpty())
             {
                 KLOG_WARNING("Unknown situation.");
             }
+            replace_line += kv_join_str + value;
         }
 
         match_info.content.replace(match_info.match_pos, match_info.match_line.size(), replace_line);
@@ -234,7 +218,12 @@ PAM::MatchLineInfo PAM::getMatchLine()
     MatchLineInfo retval;
 
     QFile file(this->conf_path_);
-    file.open(QIODevice::OpenModeFlag::ReadOnly);
+
+    if (!file.open(QIODevice::OpenModeFlag::ReadOnly))
+    {
+        KLOG_WARNING() << "open file fail, error is " << file.errorString() << "path is " << conf_path_;
+        return retval;
+    }
     auto contents = file.readAll();
     auto lines = StrUtils::splitLines(contents);
     QRegExp line_match_regex(this->line_match_pattern_);
@@ -269,7 +258,12 @@ PAM::MatchLineInfo PAM::addBehind(const QString &fallback_line, const QString &n
     MatchLineInfo retval;
 
     QFile file(this->conf_path_);
-    file.open(QIODevice::OpenModeFlag::NewOnly);
+
+    if (!file.open(QIODevice::OpenModeFlag::ReadOnly))
+    {
+        KLOG_WARNING() << "open file fail, error is " << file.errorString() << "path is " << conf_path_;
+        return retval;
+    }
     auto contents = file.readAll();
     auto lines = StrUtils::splitLines(contents);
     QRegExp line_match_regex(next_line_match_regex);

@@ -157,12 +157,13 @@ QJsonValue StrUtils::str2jsonValue(const QString &str)
         return QJsonValue::fromVariant((str.compare("true", Qt::CaseSensitive) == 0));
     }
     bool isInt = true;
-    std::for_each(str.cbegin(), str.cend(), [&isInt](const QChar &it) {
-        if (!(it.isDigit()))
-        {
-            isInt = false;
-        }
-    });
+    std::for_each(str.cbegin(), str.cend(), [&isInt](const QChar &it)
+                  {
+                      if (!(it.isDigit()))
+                      {
+                          isInt = false;
+                      }
+                  });
     if (isInt)
     {
         return QJsonValue::fromVariant(str.toInt());

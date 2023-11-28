@@ -2,22 +2,27 @@
 <br_plugin>
     <name>audit</name>
     <category>audit</category>
-    <_label>audit settings</_label>
+    <label>QT_TRANSLATE_NOOP("xml", "audit settings")</label>
     <language_type>python</language_type>
     <available>true</available>
     <reinforcement>
         <name>audit-auditd-switch</name>
-        <_label>Auditd service</_label>
-        <_description>Write audit records to the log file. This includes recording system calls and file access. Administrator can check these logs to determine whether there are security vulnerabilities.</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Auditd service")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Write audit records to the log file. This includes recording system calls and file access. Administrator can check these logs to determine whether there are security vulnerabilities.")</description>
+    </reinforcement>
+    <reinforcement>
+        <name>audit-auditd-rules</name>
+        <label>QT_TRANSLATE_NOOP("xml", "Auditd rules")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Audit records for changes in reading, writing, execution, and attributes.")</description>
     </reinforcement>
     <reinforcement>
         <name>audit-logrotate-rotate</name>
-        <_label>Log save cycle</_label>
-        <_description>Log files are rotated before being removed</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Log save cycle")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Log files are rotated before being removed")</description>
     </reinforcement>
     <reinforcement>
         <name>audit-logfile-permissions</name>
-        <_label>Log file permissions</_label>
-        <_description>Avoid changes to log files at will</_description>
+        <label>QT_TRANSLATE_NOOP("xml", "Log file permissions")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Avoid changes to log files at will")</description>
     </reinforcement>
 </br_plugin>

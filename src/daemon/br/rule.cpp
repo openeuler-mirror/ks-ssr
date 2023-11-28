@@ -26,8 +26,9 @@ QSharedPointer<Rule> Rule::create(const Protocol::Rule &rule)
     {
         RETURN_VAL_IF_FALSE(rule.value_fixed().present(), QSharedPointer<Rule>());
         // 如果 xsd 的定义时能使用 QString 的话应该可以少很多临时变量
-        auto value = StrUtils::str2jsonValue(rule.value_fixed().get());
-        return QSharedPointer<RuleFixed>::create(value);
+        auto tmpValue = QString::fromStdString(rule.value_fixed().get());
+        tmpValue.replace("\"", "");
+        return QSharedPointer<RuleFixed>::create(StrUtils::str2jsonValue(tmpValue));
     }
     case Protocol::RuleType::Value::RANGE:
     {
