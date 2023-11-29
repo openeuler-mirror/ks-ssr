@@ -14,10 +14,9 @@
 
 #pragma once
 
+#include <QDateTime>
 #include <QMetaEnum>
 #include <QString>
-#include <QDateTime>
-#include <qt5-log-i.h>
 
 namespace KS
 {
@@ -36,7 +35,8 @@ public:
         ERROR = -1,
         AUDIT,
         DEVICE,
-        LOG
+        LOG,
+        TOOL_BOX
     };
     Q_ENUM(LogType)
 

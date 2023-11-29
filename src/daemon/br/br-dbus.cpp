@@ -17,11 +17,13 @@
 #include <libaudit.h>
 #include <qt5-log-i.h>
 #include <unistd.h>
+#include <QTimer>
 #include <fstream>
 #include <iostream>
 #include "br-protocol.hxx"
 #include "categories.h"
 #include "configuration.h"
+#include "include/ssr-marcos.h"
 #include "plugins.h"
 #include "src/daemon/br_adaptor.h"
 #include "utils.h"
@@ -68,7 +70,7 @@ static int _audit_log(int type, int rc, const char* op)
     return rc < 0 ? -1 : 0;
 }
 
-BRDBus::BRDBus(QObject* parent) : timer(nullptr)
+BRDBus::BRDBus(QObject* parent) : QObject(parent), timer(nullptr)
 {
     this->m_dbus = new BRAdaptor(this);
 }
@@ -77,6 +79,7 @@ BRDBus::~BRDBus()
 {
     if (this->timer)
     {
+        timer->stop();
         QObject::disconnect(this->timer, SIGNAL(QTimer::timeout()), this, SLOT(BRDBus::onResourceMonitor()));
         delete this->timer;
     }
@@ -179,7 +182,7 @@ void BRDBus::SetNotificationStatus(const uint32_t& notification_status)
 {
     KLOG_INFO("Set notification status: %d.", notification_status);
 
-    if (notification_status >= BRNotificationStatus::BR_NOTIFICATION_OTHER)
+    if (notification_status >= BRNotificationStatus::BR_NOTIFICATION_STATUS_OTHER)
     {
         sendErrorReply(QDBusError::InvalidArgs,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID));
@@ -225,7 +228,7 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resource_monitor)
 {
     KLOG_INFO("SetResourceMonitorSwitch. resource monitor: %d.", resource_monitor);
 
-    if (resource_monitor >= BRResourceMonitor::BR_RESOURCE_MONITOR_OR)
+    if (resource_monitor >= BRResourceMonitor::BR_RESOURCE_MONITOR_OTHER)
     {
         sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID));
     }
@@ -234,17 +237,13 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resource_monitor)
 
     if (this->configuration_->setResourceMonitorStatus(BRResourceMonitor(resource_monitor)))
     {
-        if (this->timer)
-        {
-            QObject::disconnect(this->timer, SIGNAL(timeout()), this, SLOT(BRDBus::onResourceMonitor()));
-            delete this->timer;
-        }
-        if (BRResourceMonitor(resource_monitor) != BRResourceMonitor::BR_RESOURCE_MONITOR_CLOSE)
+        timer->stop();
+        QObject::disconnect(this->timer, SIGNAL(timeout()), this, SLOT(BRDBus::onResourceMonitor()));
+        if (BRResourceMonitor(resource_monitor) == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
         {
             this->timer = new QTimer();
-            timer->setInterval(RESOURCEMONITORMS);
-            QObject::connect(this->timer, SIGNAL(QTimer::timeout()), this, SLOT(BRDBus::onResourceMonitor()));
-            this->timer->start();
+            QObject::connect(this->timer, &QTimer::timeout, this, &BRDBus::onResourceMonitor);
+            this->timer->start(RESOURCEMONITORMS);
         }
     }
     else
@@ -431,7 +430,7 @@ qlonglong BRDBus::Scan(const QStringList& names)
                                               QString error;
                                               if (reinforcement_interface->get(args, error))
                                               {
-                                                  retval[JOB_RETURN_VALUE] = StrUtils::str2json(args);
+                                                  retval[JOB_RETURN_VALUE] = StrUtils::str2jsonObject(args);
                                               }
                                               else
                                               {
@@ -447,8 +446,9 @@ qlonglong BRDBus::Scan(const QStringList& names)
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID));
     }
-
+    QObject::disconnect(this->scan_job_.get(), &Job::process_finished_, 0, 0);
     QObject::connect(this->scan_job_.get(), &Job::process_finished_, this, &BRDBus::scanProgressFinished);
+    QObject::disconnect(this->scan_job_.get(), &Job::process_changed_, 0, 0);
     QObject::connect(this->scan_job_.get(), &Job::process_changed_, this, &BRDBus::onScanProcessChangedCb);
 
     if (!this->scan_job_->runAsync())
@@ -525,7 +525,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
             QJsonObject param;
             QString param_str = "";
 
-            if (snapshot_status_ == BRSnapshotStatus::BR_INITIAL_STATUS)
+            if (snapshot_status_ == BRSnapshotStatus::BR_SNAPSHOT_STATUS_INITIAL)
             {
                 auto rh = this->configuration_->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
                 auto& rh_reinforcements = rh->reinforcement();
@@ -535,13 +535,13 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                     auto& iter_args = iter->arg();
                     for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                     {
-                        param.insert(iter_arg->name().c_str(), StrUtils::str2json(iter_arg->value().c_str()));
+                        param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
                     }
                     param_str = StrUtils::json2str(param);
                 }
                 KLOG_DEBUG() << "frist fallback name : " << name << ", frist fallback param_str: " << param_str;
             }
-            else if (snapshot_status_ == BRSnapshotStatus::BR_LAST_REINFORCEMENT_STATUS)
+            else if (snapshot_status_ == BRSnapshotStatus::BR_SNAPSHOT_STATUS_LAST)
             {
                 //
                 auto rh = this->configuration_->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
@@ -552,7 +552,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                     auto& iter_args = iter->arg();
                     for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                     {
-                        param.insert(iter_arg->name().c_str(), StrUtils::str2json(iter_arg->value().c_str()));
+                        param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
                     }
                     param_str = StrUtils::json2str(param);
                 }
@@ -565,7 +565,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                     auto& iter_args = iter->arg();
                     for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                     {
-                        param.insert(iter_arg->name().c_str(), StrUtils::str2json(iter_arg->value().c_str()));
+                        param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
                     }
                 }
 
@@ -576,7 +576,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                 auto& args = reinforcement->getRs().arg();
                 for (auto arg_iter = args.begin(); arg_iter != args.end(); ++arg_iter)
                 {
-                    param.insert(arg_iter->name().c_str(), StrUtils::str2json(arg_iter->value().c_str()));
+                    param.insert(arg_iter->name().c_str(), StrUtils::str2jsonValue(arg_iter->value()));
                 }
                 param_str = StrUtils::json2str(param);
             }
@@ -606,8 +606,9 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID));
     }
-
+    QObject::disconnect(this->reinforce_job_.get(), &Job::process_changed_, 0, 0);
     QObject::connect(this->reinforce_job_.get(), &Job::process_changed_, this, &BRDBus::onReinfoceProcessChangedCb);
+    QObject::disconnect(this->reinforce_job_.get(), &Job::process_finished_, 0, 0);
     QObject::connect(this->reinforce_job_.get(), &Job::process_finished_, this, &BRDBus::reinfoceProgressFinished);
 
     if (!this->reinforce_job_->runAsync())
@@ -666,9 +667,9 @@ void BRDBus::SetFallback(const uint32_t& snapshot_status)
         names_rh.push_back(QString::fromStdString(iter->name()));
     }
 
-    if (snapshot_status == BRSnapshotStatus::BR_INITIAL_STATUS)
+    if (snapshot_status == BRSnapshotStatus::BR_SNAPSHOT_STATUS_INITIAL)
     {
-        snapshot_status_ = BRSnapshotStatus::BR_INITIAL_STATUS;
+        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_INITIAL;
         if (names_rh.empty())
         {
             // 需回退的加固项为空 不需要进行加固了 Reinforce Finish
@@ -678,11 +679,11 @@ void BRDBus::SetFallback(const uint32_t& snapshot_status)
         }
         Reinforce(names_rh);
 
-        snapshot_status_ = BRSnapshotStatus::BR_OTHER_STATUS;
+        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_OTHER;
     }
-    else if (snapshot_status == BRSnapshotStatus::BR_LAST_REINFORCEMENT_STATUS)
+    else if (snapshot_status == BRSnapshotStatus::BR_SNAPSHOT_STATUS_LAST)
     {
-        snapshot_status_ = BRSnapshotStatus::BR_LAST_REINFORCEMENT_STATUS;
+        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_LAST;
         if (names_rh.empty())
         {
             // 需回退的加固项为空 不需要进行加固了 Reinforce Finish
@@ -692,11 +693,11 @@ void BRDBus::SetFallback(const uint32_t& snapshot_status)
         }
         Reinforce(names_rh);
 
-        snapshot_status_ = BRSnapshotStatus::BR_OTHER_STATUS;
+        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_OTHER;
     }
     else
     {
-        snapshot_status_ = BRSnapshotStatus::BR_OTHER_STATUS;
+        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_OTHER;
         is_reinfoce_flag_ = true;
     }
 }
@@ -721,13 +722,13 @@ void BRDBus::init()
                      this, &BRDBus::rootFreeSpaceRatio);
     QObject::connect(this->resource_monitor_, &ResourceMonitor::cpuAverageLoadRatio_,
                      this, &BRDBus::cpuAverageLoadRatio);
-    QObject::connect(this->resource_monitor_, &ResourceMonitor::vmstatSiso_, this, &BRDBus::vmstatSiSo);
+    QObject::connect(this->resource_monitor_, &ResourceMonitor::memoryRemainingRatio_, this, &BRDBus::memoryRemainingRatio);
 
     if (configuration_->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {
         timer = new QTimer();
-        timer->setInterval(RESOURCEMONITORMS);
         QObject::connect(this->timer, &QTimer::timeout, this, &BRDBus::onResourceMonitor);
+        timer->start(RESOURCEMONITORMS);
     }
 }
 
@@ -765,9 +766,9 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
             reinforcement_result.name(operation->reinforcement_name.toStdString());
 
             BRReinforcementState state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNKNOWN;
-            auto result_values = StrUtils::str2json(operation_result.result);
+            const auto result_values = StrUtils::str2jsonObject(operation_result.result);
             // 如果结果为空应该时任务被取消了，如果在收到客户端的任务取消命令时操作已经在执行，结果也可能不为空，所以这里不能通过任务是否被取消的状态来判断
-            if (result_values.isNull())
+            if (result_values.isEmpty())
             {
                 state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNSCAN;
                 reinforcement_result.args("");
@@ -781,7 +782,7 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
             else
             {
                 state = BRReinforcementState::BR_REINFORCEMENT_STATE_SCAN_DONE;
-                reinforcement_result.args(StrUtils::json2str(result_values.toObject()).toStdString());
+                reinforcement_result.args(StrUtils::json2str(result_values).toStdString());
             }
             auto reinforcement = this->plugins_->getReinforcement(operation->reinforcement_name);
 
@@ -792,13 +793,15 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
                 auto& iter_args = rh_reinforcement.arg();
                 for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                 {
-                    if (!result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toString().isEmpty())
-                        iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toObject()).toStdString());
-                    KLOG_DEBUG() << "fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = "
-                                 << StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toObject()).toLocal8Bit()
-                                 << "iter_arg : name: " << iter_arg->name().c_str()
-                                 << " value: "
-                                 << iter_arg->value().c_str();
+                    if (!result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toVariant().toString().isEmpty())
+                        iter_arg->value(result_values[JOB_RETURN_VALUE].toObject()[iter_arg->name().c_str()].toVariant().toString().toStdString());
+                    //                    KLOG_DEBUG() << "fix arg StrUtils::json2str(result_values[JOB_RETURN_VALUE][i]) = "
+                    //                                 << result_values[JOB_RETURN_VALUE].toObject()[iter_arg->name().c_str()].toVariant().toString()
+                    //                                 << "result_values[JOB_RETURN_VALUE].toObject() = "
+                    //                                 << result_values[JOB_RETURN_VALUE].toObject()
+                    //                                 << "iter_arg : name: " << iter_arg->name().c_str()
+                    //                                 << " value: "
+                    //                                 << iter_arg->value().c_str();
                 }
                 this->configuration_->setCustomRh(rh_reinforcement, RH_BR_OPERATE_DATA_LAST);
             }
@@ -817,7 +820,6 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
                 if (is_frist_reinfoce_finish_)
                 {
                     auto rh_frist = this->configuration_->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
-                    //                    KLOG_DEBUG("is_frist_reinfoce_finish_ : %s", RH_BR_OPERATE_DATA_FIRST);
 
                     auto& reinforcements = rh_frist->reinforcement();
                     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
@@ -827,9 +829,8 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
                         auto& iter_args = iter->arg();
                         for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
                         {
-                            if (!result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toString().isEmpty())
-                                iter_arg->value(StrUtils::json2str(result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toObject()).toStdString());
-                            // KLOG_DEBUG("iter_arg : name : %s value : %s", iter_arg->name().c_str(), iter_arg->value().c_str());
+                            if (!result_values[JOB_RETURN_VALUE][iter_arg->name().c_str()].toVariant().toString().isEmpty())
+                                iter_arg->value(result_values[JOB_RETURN_VALUE].toObject()[iter_arg->name().c_str()].toVariant().toString().toStdString());
                         }
                     }
                     this->configuration_->writeRhToFile(rh_frist, RH_BR_OPERATE_DATA_FIRST);
@@ -887,9 +888,8 @@ void BRDBus::onReinfoceProcessChangedCb(const JobResult& job_result)
             reinforcement_result.name(operation->reinforcement_name.toStdString());
 
             BRReinforcementState state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNKNOWN;
-            auto result_values = StrUtils::str2json(operation_result.result);
-
-            if (result_values.isNull())
+            auto result_values = StrUtils::str2jsonObject(operation_result.result);
+            if (result_values.isEmpty())
             {
                 state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNREINFORCE;
             }
@@ -932,64 +932,46 @@ bool BRDBus::onResourceMonitor()
     return true;
 }
 
-void BRDBus::homeFreeSpaceRatio(const float space_ratio)
+void BRDBus::homeFreeSpaceRatio(float spaceRatio)
 {
     // 家目录可用空间小于10%告警
     float homeSpa = 0.1;
-    if (space_ratio < homeSpa)
-    {
-        KLOG_WARNING() << "home free space less than 10%. homeFreeSpaceRatio " << space_ratio;
-        _audit_log(1101, -1, "home free space less than 10%.");
-        emit HomeFreeSpaceRatioLower(QString(std::to_string(space_ratio).c_str()));
-    }
+    RETURN_IF_TRUE(spaceRatio >= homeSpa)
+
+    KLOG_WARNING() << "home free space less than 10%. homeFreeSpaceRatio " << spaceRatio;
+    _audit_log(1101, -1, "home free space less than 10%.");
+    emit HomeFreeSpaceRatioLower(QString(std::to_string(spaceRatio).c_str()));
 }
 
-void BRDBus::rootFreeSpaceRatio(const float space_ratio)
+void BRDBus::rootFreeSpaceRatio(float spaceRatio)
 {
     // 根目录可用空间小于10%告警
     float rootSpa = 0.1;
-    if (space_ratio < rootSpa)
-    {
-        KLOG_WARNING() << "root free space less than 10%. rootFreeSpaceRatio " << space_ratio;
-        _audit_log(1101, -1, "root free space less than 10%.");
-        emit RootFreeSpaceRatioLower(QString(std::to_string(space_ratio).c_str()));
-    }
+    RETURN_IF_TRUE(spaceRatio >= rootSpa)
+
+    KLOG_WARNING() << "root free space less than 10%. rootFreeSpaceRatio " << spaceRatio;
+    _audit_log(1101, -1, "root free space less than 10%.");
+    emit RootFreeSpaceRatioLower(QString(std::to_string(spaceRatio).c_str()));
 }
 
-void BRDBus::cpuAverageLoadRatio(const float load_ratio)
+void BRDBus::cpuAverageLoadRatio(float loadRatio)
 {
     // cpu单核五分钟平均负载大于1告警
     float cpuLoad = 1;
-    if (load_ratio >= cpuLoad)
-    {
-        KLOG_WARNING("The average load of a single core CPU exceeds 1.");
-        KLOG_WARNING("cpuAverageLoadRatio %f.", load_ratio);
+    RETURN_IF_TRUE(loadRatio < cpuLoad)
 
-        _audit_log(1101, -1, "The average load of a single core CPU exceeds 1.");
-
-        emit CpuAverageLoadRatioHigher(QString(std::to_string(load_ratio).c_str()));
-    }
+    KLOG_WARNING() << "The average load of a single core CPU exceeds 1. The average load ratio is " << loadRatio;
+    _audit_log(1101, -1, "The average load of a single core CPU exceeds 1.");
+    emit CpuAverageLoadRatioHigher(QString(std::to_string(loadRatio).c_str()));
 }
 
-void BRDBus::vmstatSiSo(const QVector<QString> results)
+void BRDBus::memoryRemainingRatio(float memoryRatio)
 {
-    // vmstat swap 中si或者so不为0告警
-    QString si(results.at(0));
-    QString so(results.at(1));
-    if (si != "0")
-    {
-        KLOG_WARNING() << "The vmstat swap page si is not 0. vmstat si is " << results.at(0);
-        _audit_log(1101, -1, "The vmstat swap page si is not 0.");
-        emit VmstatSiSoabnormal(si, so);
-    }
-
-    if (so != "0")
-    {
-        KLOG_WARNING() << "The vmstat swap page so is not 0. vmstat so is " << results.at(1);
-        _audit_log(1101, -1, "The vmstat swap page so is not 0.");
-        if (si == "0")
-            emit VmstatSiSoabnormal(si, so);
-    }
+    // memory ratio 小于10% 告警
+    RETURN_IF_TRUE(memoryRatio >= 0.1)
+    KLOG_WARNING("Memory space remaining %f, below 10 percent", memoryRatio);
+    _audit_log(1101, -1, "Memory space less than 10%");
+    this->MemoryAbnormal(QString(std::to_string(memoryRatio).c_str()));
 }
 
 }  // namespace BRDaemon

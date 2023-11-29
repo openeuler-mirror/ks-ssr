@@ -127,19 +127,48 @@ QString StrUtils::trim(const QString &s)
 
 QString StrUtils::json2str(const QJsonObject &json)
 {
-    QJsonObject jsonObject;
-    jsonObject["indentation"] = json;
-    return QJsonDocument(jsonObject).toJson(QJsonDocument::Compact);
+    return QJsonDocument(json).toJson(QJsonDocument::Compact);
 }
 
-QJsonValue StrUtils::str2json(const QString &str)
+QJsonObject StrUtils::str2jsonObject(const std::string &str)
 {
-    // str.toLatin1().data() 这种做法是错误的，中间对象 QByteArray 会被析构。
-    auto ByteArray = str.toLatin1();
-    KLOG_DEBUG() << "json str: " << str;
-    QVariant variant(str);
+    return str2jsonObject(QString::fromStdString(str));
+}
 
-    return QJsonValue::fromVariant(variant);
+QJsonObject StrUtils::str2jsonObject(const QString &str)
+{
+    auto doc = QJsonDocument::fromJson(str.toLocal8Bit());
+    if (doc.isNull() && !doc.isObject())
+    {
+        KLOG_WARNING() << "Failed to deserialize str: " << str;
+    }
+    return doc.object();
+}
+
+QJsonValue StrUtils::str2jsonValue(const std::string &str)
+{
+    return str2jsonValue(QString::fromStdString(str));
+}
+
+QJsonValue StrUtils::str2jsonValue(const QString &str)
+{
+    if (str.compare("true", Qt::CaseSensitive) == 0 || str.compare("false", Qt::CaseSensitive) == 0)
+    {
+        return QJsonValue::fromVariant((str.compare("true", Qt::CaseSensitive) == 0));
+    }
+    bool isInt = true;
+    std::for_each(str.cbegin(), str.cend(), [&isInt](const QChar &it)
+                  {
+                      if (!(it.isDigit()))
+                      {
+                          isInt = false;
+                      }
+                  });
+    if (isInt)
+    {
+        return QJsonValue::fromVariant(str.toInt());
+    }
+    return QJsonValue::fromVariant(str.toLocal8Bit());
 }
 
 bool StrUtils::startswith(const QString &str, const QString &prefix)

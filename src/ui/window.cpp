@@ -23,13 +23,14 @@
 #include <QX11Info>
 #include "lib/license/license-proxy.h"
 #include "src/ui/about.h"
-#include "src/ui/box/box-page.h"
+#include "src/ui/br/br-page.h"
 #include "src/ui/common/loading.h"
 #include "src/ui/common/single-application/single-application.h"
 #include "src/ui/dm/device-list-page.h"
 #include "src/ui/dm/device-log-page.h"
 #include "src/ui/fp/file-protection-page.h"
 #include "src/ui/navigation.h"
+#include "src/ui/private-box/box-page.h"
 #include "src/ui/settings/dialog.h"
 #include "src/ui/sidebar.h"
 #include "src/ui/tp/execute-protected-page.h"
@@ -51,8 +52,8 @@ Window::Window() : TitlebarWindow(nullptr),
     m_ui->setupUi(getWindowContentWidget());
 
     initWindow();
-    initNavigation();
     initActivation();
+    initNavigation();
 
     connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject);
 }
@@ -60,10 +61,12 @@ Window::Window() : TitlebarWindow(nullptr),
 Window::~Window()
 {
     delete m_ui;
+    Settings::Dialog::globalDeinit();
 }
 
 void Window::resizeEvent(QResizeEvent *event)
 {
+    Q_ASSERT(event);
     if (m_loading)
     {
         m_loading->setAutoFillBackground(true);
@@ -120,6 +123,7 @@ void Window::initWindow()
     auto layout = getTitlebarCustomLayout();
     layout->setContentsMargins(0, 0, 10, 0);
     layout->setSpacing(10);
+    Settings::Dialog::globalInit(this);
 
     //未激活文本
     m_activateStatus = new QLabel(this);
@@ -152,6 +156,7 @@ void Window::initWindow()
 void Window::initNavigation()
 {
     // 初始化分类选项
+    m_ui->m_navigation->addItem(new NavigationItem(":/images/baseline-reinforcement", tr("Baseline reinforcement")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected", tr("Trusted protected")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected", tr("File protected")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Private box")));
@@ -166,12 +171,13 @@ void Window::initNavigation()
         delete currentWidget;
     }
 
+    addPage(new BR::BRPage(this));
     // 可信保护页面需判断是否加载成功
     auto execute = new TP::ExecuteProtectedPage(this);
     addPage(execute);
     addPage(new TP::KernelProtectedPage(this));
     addPage(new FP::FileProtectionPage(this));
-    addPage(new Box::BoxPage(this));
+    addPage(new PrivateBox::BoxPage(this));
     addPage(new DM::DeviceListPage(this));
     addPage(new DM::DeviceLogPage(this));
     // 页面加载动画
@@ -181,7 +187,6 @@ void Window::initNavigation()
 
     m_ui->m_stackedPages->setCurrentIndex(0);
     updatePage();
-    showLoading(execute->getInitialized());
 
     connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this]
             {
@@ -252,12 +257,34 @@ void Window::updateActivation()
 
 void Window::popupSettingsDialog()
 {
-    auto settingsDialog = new Settings::Dialog(this);
+    // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
+    connect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this]
+            {
+                for (auto page : m_pages.value(tr("Baseline reinforcement")))
+                {
+                    if (page->isVisible())
+                    {
+                        auto brPage = static_cast<BR::BRPage *>(page);
+                        brPage->exportStrategy();
+                    }
+                }
+            });
+    connect(Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this]
+            {
+                for (auto page : m_pages.value(tr("Baseline reinforcement")))
+                {
+                    if (page->isVisible())
+                    {
+                        auto brPage = static_cast<BR::BRPage *>(page);
+                        brPage->resetAllReinforcementArgs();
+                    }
+                }
+            });
 
-    auto x = this->x() + this->width() / 4 + settingsDialog->width() / 16;
-    auto y = this->y() + this->height() / 4 + settingsDialog->height() / 16;
-    settingsDialog->move(x, y);
-    settingsDialog->show();
+    auto x = this->x() / 4 + this->width() / 4 + Settings::Dialog::instance()->width() / 16;
+    auto y = this->y() / 4 + this->height() / 4 + Settings::Dialog::instance()->height() / 16;
+    Settings::Dialog::instance()->move(x, y);
+    Settings::Dialog::instance()->show();
 }
 
 void Window::popupAboutDialog()

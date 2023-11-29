@@ -13,6 +13,7 @@
  */
 
 #pragma once
+#include "config.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -28,10 +29,10 @@ extern "C"
 #define SSR_LICENSE_DBUS_INTERFACE_NAME "com.kylinsec.SSR.License"
 
 // 保密箱相关定义
-#define SSR_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SSR/BoxManager"
-#define SSR_BOX_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SSR.BoxManager"
+#define SSR_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SSR/PrivateBox"
+#define SSR_BOX_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SSR.PrivateBox"
 
-// BM: Box Manager
+// BM: PrivateBox Manager
 #define SSR_BM_JK_BOX_UID "uid"
 #define SSR_BM_JK_BOX_NAME "name"
 #define SSR_BM_JK_BOX_MOUNTED "mounted"
@@ -56,12 +57,15 @@ extern "C"
 #define SSR_KSS_JK_DATA_HASH "hash"
 #define SSR_KSS_JK_DATA_ADD_TIME "time"
 #define SSR_KSS_JK_DATA_GUARD "guard"
+
+// BR 相关定义
+// TODO : 改成SSR_BR
 #define BR_DBUS_NAME "com.kylinsec.SSR.BR"
 #define BR_DBUS_OBJECT_PATH "/com/kylinsec/SSR/BR"
 #define BR_DBUS_INTERFACE_NAME "com.kylinsec.SSR.BR"
 
-// 激活对象名称
-#define LICENSE_OBJECT_BR_NAME "KSBRManager"
+#define SSR_BR_CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
+#define SSR_BR_CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra.xml"
 
     enum SSRKSSTrustedFileType
     {
@@ -184,11 +188,11 @@ extern "C"
     // 前台通知提示 开启/关闭
     enum BRNotificationStatus
     {
-        // 关闭通知
-        BR_NOTIFICATION_OPEN = 0,
         // 开启通知
-        BR_NOTIFICATION_CLOSE,
-        BR_NOTIFICATION_OTHER
+        BR_NOTIFICATION_STATUS_OPEN = 0,
+        // 关闭通知
+        BR_NOTIFICATION_STATUS_CLOSE,
+        BR_NOTIFICATION_STATUS_OTHER
     };
 
     // 加固项状态
@@ -248,18 +252,18 @@ extern "C"
         // 开启
         BR_RESOURCE_MONITOR_OPEN,
         // 其它
-        BR_RESOURCE_MONITOR_OR
+        BR_RESOURCE_MONITOR_OTHER
     };
 
     // 回退状态
     enum BRSnapshotStatus
     {
         // 回到初始状态
-        BR_INITIAL_STATUS = 0,
+        BR_SNAPSHOT_STATUS_INITIAL = 0,
         // 回到上一次加固
-        BR_LAST_REINFORCEMENT_STATUS,
+        BR_SNAPSHOT_STATUS_LAST,
         // 其它
-        BR_OTHER_STATUS
+        BR_SNAPSHOT_STATUS_OTHER
     };
 
 #ifdef __cplusplus

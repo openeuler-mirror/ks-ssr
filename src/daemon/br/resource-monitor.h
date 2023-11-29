@@ -11,10 +11,6 @@
  *
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
-
-#ifndef RESOURCEMONITOR_H
-#define RESOURCEMONITOR_H
-
 #pragma once
 
 #include "lib/base/base.h"
@@ -33,39 +29,32 @@ public:
     void startMonitor();
     void closeMonitor();
 
-    // sigc::signal<void, const float &> &signal_home_free_space_ratio() { return this->homeFreeSpaceRatio_; };
-    // sigc::signal<void, const float &> &signal_root_free_space_ratio() { return this->rootFreeSpaceRatio_; };
-    // sigc::signal<void, const float &> &signal_cpu_average_load_ratio() { return this->cpuAverageLoadRatio_; };
-    // sigc::signal<void, const std::vector<std::string> &> &signal_vmstat_siso() { return this->vmstatSiso_; };
-
 private:
-    void getSystemSpace(QString path);  // 获取系统剩余空间
-    QVector<QString> getVmStatS();      // 获取 vmstat si so
-    float getCpuAverageLoad();          // 获取cpu负载
+    // 获取系统剩余空间
+    void getSystemSpace(const QString &path);
+    // 获取 vmstat si so
+    float getMemoryRemainingRatio();
+    // 获取cpu负载
+    float getCpuAverageLoad();
 
     bool monitorResource();
 
 private:
-    //    sigc::connection timeout_handler_;
-
-    unsigned long long m_homeFreeSpace = 0;   //home 可用空间 MB
-    unsigned long long m_homeTotalSpace = 0;  //home 总空间 MB
-    unsigned long long m_rootFreeSpace = 0;   //根目录 可用空间 MB
-    unsigned long long m_rootTotalSpace = 0;  //根目录 总空间 MB
-
-    // sigc::signal<void, const float &> homeFreeSpaceRatio_;
-    // sigc::signal<void, const float &> rootFreeSpaceRatio_;
-    // sigc::signal<void, const float &> cpuAverageLoadRatio_;
-    // sigc::signal<void, const std::vector<std::string> &> vmstatSiso_;
+    //home 可用空间 MB
+    unsigned long long m_homeFreeSpace = 0;
+    //home 总空间 MB
+    unsigned long long m_homeTotalSpace = 0;
+    //根目录 可用空间 MB
+    unsigned long long m_rootFreeSpace = 0;
+    //根目录 总空间 MB
+    unsigned long long m_rootTotalSpace = 0;
 
 signals:
-    void homeFreeSpaceRatio_(const float &);
-    void rootFreeSpaceRatio_(const float &);
-    void cpuAverageLoadRatio_(const float &);
-    void vmstatSiso_(const QVector<QString>);
+    void homeFreeSpaceRatio_(float);
+    void rootFreeSpaceRatio_(float);
+    void cpuAverageLoadRatio_(float);
+    void memoryRemainingRatio_(float);
 };
 
 }  // namespace BRDaemon
 }  // namespace KS
-
-#endif  // RESOURCEMONITOR_H

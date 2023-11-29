@@ -29,7 +29,7 @@ ResourceMonitor::~ResourceMonitor()
 
 void ResourceMonitor::startMonitor()
 {
-    KLOG_INFO("startMonitor.");
+    KLOG_DEBUG("startMonitor.");
 
     monitorResource();
 }
@@ -64,15 +64,17 @@ QString run_cmd(QString cmd)
     return result;
 }
 
-void ResourceMonitor::getSystemSpace(QString path)
+void ResourceMonitor::getSystemSpace(const QString &path)
 {
     // 用于获取磁盘剩余空间
     struct statfs diskInfo;
     statfs(path.toLatin1(), &diskInfo);
-    unsigned long long blocksize = diskInfo.f_bsize;               // 每个block里包含的字节数
-    unsigned long long totalsize = blocksize * diskInfo.f_blocks;  // 总的字节数，f_blocks为block的数目
-
-    unsigned long long freeDisk = diskInfo.f_bfree * blocksize;  // 剩余空间的大小
+    // 每个block里包含的字节数
+    unsigned long long blocksize = diskInfo.f_bsize;
+    // 总的字节数，f_blocks为block的数目
+    unsigned long long totalsize = blocksize * diskInfo.f_blocks;
+    // 剩余空间的大小
+    unsigned long long freeDisk = diskInfo.f_bfree * blocksize;
 
     if (path == "/home")
     {
@@ -84,9 +86,6 @@ void ResourceMonitor::getSystemSpace(QString path)
         m_rootTotalSpace = totalsize >> 20;
         m_rootFreeSpace = freeDisk >> 20;
     }
-    //    unsigned long long availableDisk            = diskInfo.f_bavail * blocksize; 	//可用空间大小
-    //	printf("Disk_free = %llu MB                 = %llu GB\nDisk_available = %llu MB = %llu GB\n",
-    //
 }
 
 QVector<QString> stringSplit(const QString &s, const QString &delim = " ")
@@ -110,28 +109,23 @@ QVector<QString> stringSplit(const QString &s, const QString &delim = " ")
     return elems;
 }
 
-QVector<QString> ResourceMonitor::getVmStatS()
+float ResourceMonitor::getMemoryRemainingRatio()
 {
-    QString results = run_cmd("vmstat");
+    char memTotal[20] = "", memFree[20] = "", memAvailable[20] = "", cached[20] = "", buffers[20] = "";
 
-    QVector<QString> line_list = stringSplit(results, "\n");  // std::string(results.c_str()).split("\n").at(2).split(" ");
-    QVector<QString> r_list = stringSplit(line_list.at(2));
-
-    QVector<QString> result_list = {};
-    int i = 0;
-    for (auto num : r_list)
+    FILE *file = fopen("/proc/meminfo", "r");
+    if (file == nullptr)
     {
-        if (num == "")
-            continue;
-        else
-            i++;
-        if (i == 7)  // si
-            result_list.push_back(num);
-        if (i == 8)  // so
-            result_list.push_back(num);
+        KLOG_ERROR("cannot open /proc/meminfo");
+        return -1;
     }
-    //    KLOG_DEBUG("result_list si : %s so: %s",result_list.at(0).c_str(),result_list.at(1).c_str());
-    return result_list;
+    fscanf(file, "MemTotal: %s kB\n", memTotal);
+    fscanf(file, "MemFree: %s kB\n", memFree);
+    fscanf(file, "MemAvailable: %s kB\n", memAvailable);
+    fscanf(file, "Buffers: %s kB\n", buffers);
+    fscanf(file, "Cached: %s kB\n", cached);
+    fclose(file);
+    return (atof(memFree) + atof(cached) + atof(buffers)) / atof(memTotal);
 }
 
 float ResourceMonitor::getCpuAverageLoad()
@@ -146,9 +140,8 @@ float ResourceMonitor::getCpuAverageLoad()
         sscanf(&buff[5], "%f", &avg);
         fclose(fd);
     }
-    QString cpu_nums = run_cmd("grep 'model name' /proc/cpuinfo | wc -l");
-    float simple_avg = avg / atoi(cpu_nums.toLatin1());
-    return simple_avg;
+    auto cpu_nums = run_cmd("grep 'model name' /proc/cpuinfo | wc -l");
+    return avg / atoi(cpu_nums.toLatin1());
 }
 
 bool ResourceMonitor::monitorResource()
@@ -161,12 +154,8 @@ bool ResourceMonitor::monitorResource()
     float rootRatio = float(m_rootFreeSpace) / float(m_rootTotalSpace);
     // this->rootFreeSpaceRatio_.emit(rootRatio);
     Q_EMIT this->rootFreeSpaceRatio_(rootRatio);
-
-    // this->cpuAverageLoadRatio_.emit(getCpuAverageLoad());
     Q_EMIT this->cpuAverageLoadRatio_(getCpuAverageLoad());
-
-    // this->vmstatSiso_.emit(getVmStatS());
-    Q_EMIT this->vmstatSiso_(getVmStatS());
+    Q_EMIT this->memoryRemainingRatio_(getMemoryRemainingRatio());
     return true;
 }
 

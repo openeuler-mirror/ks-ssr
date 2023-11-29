@@ -5,6 +5,7 @@
         <file alias="trusted-protected">images/trusted-protected.png</file>
         <file alias="file-protected">images/file-protected.png</file>
         <file alias="box-manager">images/box-manager.png</file>
+        <file alias="baseline-reinforcement">images/baseline-reinforcement.png</file>
         <file alias="box-big">images/box-big.png</file>
         <file alias="box-locked">images/box-locked.png</file>
         <file alias="search">images/search.svg</file>
@@ -17,6 +18,7 @@
         <file alias="checkbox-unchecked-hover">images/checkbox-unchecked-hover.svg</file>
         <file alias="checkbox-unchecked-normal">images/checkbox-unchecked-normal.svg</file>
         <file alias="arrow-down">images/arrow-down.svg</file>
+		<file alias="arrow-up">images/arrow-up.svg</file>
         <file alias="device-list">images/device-list.svg</file>
         <file alias="device-log">images/device-log.svg</file>
         <file alias="device">images/device.png</file>
@@ -51,6 +53,17 @@
         <file alias="loading-16">images/loading/loading-16.png</file>
         <file alias="loading-17">images/loading/loading-17.png</file>
         <file alias="loading-18">images/loading/loading-18.png</file>
+        <file alias="pdf-clip">images/PDF/clip.png</file>
+        <file alias="pdf-end">images/PDF/end.png</file>
+        <file alias="pdf-head">images/PDF/head.png</file>
+        <file alias="pdf-home">images/PDF/home.png</file>
+        <file alias="br-banner">images/br-banner.png</file>
+        <file alias="combobox-arrow">images/combobox-arrow.svg</file>
+        <file alias="circle">images/circle.png</file>
+        <file alias="lightning">images/lightning.png</file>
+        <file alias="br-strategy">images/br-strategy.svg</file>
+        <file alias="note">images/note.png</file>
+        <file alias="br-progress-finish">images/br-progress-finish.png</file>
     </qresource>
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>

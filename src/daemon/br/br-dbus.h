@@ -139,7 +139,7 @@ Q_SIGNALS:  // SIGNALS
     void ReinforceProgress(const QString &progress);
     void RootFreeSpaceRatioLower(const QString &ratio);
     void ScanProgress(const QString &progress);
-    void VmstatSiSoabnormal(const QString &si, const QString &so);
+    void MemoryAbnormal(const QString &ratio);
 
 private:
     void init();
@@ -156,7 +156,11 @@ private:
     // 资源监控开启/关闭
     bool onResourceMonitor();
     // 进程完成处理函数
-    void scanProgressFinished() { is_scan_flag_ = true; };
+    void scanProgressFinished()
+    {
+        is_scan_flag_ = true;
+        emit ProgressFinished();
+    };
     // 加固完成处理函数
     void reinfoceProgressFinished()
     {
@@ -165,10 +169,10 @@ private:
         emit ProgressFinished();
     };
 
-    void homeFreeSpaceRatio(const float space_ratio);
-    void rootFreeSpaceRatio(const float space_ratio);
-    void cpuAverageLoadRatio(const float load_ratio);
-    void vmstatSiSo(const QVector<QString> results);
+    void homeFreeSpaceRatio(float spaceRatio);
+    void rootFreeSpaceRatio(float spaceRatio);
+    void cpuAverageLoadRatio(float loadRatio);
+    void memoryRemainingRatio(float memoryRatio);
 
 private:
     static BRDBus *instance_;
@@ -198,7 +202,7 @@ private:
     bool is_scan_flag_ = true;
     bool is_reinfoce_flag_ = true;
 
-    BRSnapshotStatus snapshot_status_ = BRSnapshotStatus::BR_OTHER_STATUS;
+    BRSnapshotStatus snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_OTHER;
     BRAdaptor *m_dbus;
 };
 }  // namespace BRDaemon

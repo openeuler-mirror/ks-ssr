@@ -22,6 +22,7 @@ class TableHeaderProxy : public QHeaderView
     Q_OBJECT
 public:
     explicit TableHeaderProxy(QWidget *parent = nullptr);
+    void hideCheckBox(bool isHide);
 
 protected:
     void mousePressEvent(QMouseEvent *e) override;
@@ -37,6 +38,7 @@ public slots:
 
 private:
     bool m_stateChanged;
+    bool m_closeCheckBox;
     Qt::CheckState m_checkState;
 
     QRect *m_rect;

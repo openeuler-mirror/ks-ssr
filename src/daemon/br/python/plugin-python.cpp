@@ -72,7 +72,6 @@ ReinforcementPython::~ReinforcementPython()
 bool ReinforcementPython::get(QString &args, QString &error)
 {
     KLOG_DEBUG("Call get method in class %s.", this->class_name_.toLocal8Bit().data());
-
     auto gstate = PyGILState_Ensure();
 #if PY_MAJOR_VERSION >= 3
     auto py_retval = PyObject_CallMethod(this->class_instance_, "get", NULL);
@@ -101,6 +100,7 @@ bool ReinforcementPython::get(QString &args, QString &error)
         {
             error = Utils::pyobjectAsString(PyTuple_GetItem(py_retval, 1));
         }
+        KLOG_DEBUG() << "args = " << args << "error = " << error;
         retval = (successed == Py_True);
         break;
     } while (0);

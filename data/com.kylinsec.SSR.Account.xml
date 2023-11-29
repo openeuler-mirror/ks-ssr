@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+    <interface name="com.kylinsec.SSR.Account">
+        <method name="SetUidReusable">
+            <arg type="b" name="enabled" direction="in">
+                <summary>the state of switch that reuseable</summary>
+            </arg>
+            <description>enable the reuseale uid.</description>
+        </method>
+
+        <method name="ChangePassphrase">
+            <arg type="s" name="user_name" direction="in">
+                <summary>new passphrase.</summary>
+            </arg>
+            <arg type="s" name="old_passphrase" direction="in">
+                <summary>new passphrase.</summary>
+            </arg>
+            <arg type="s" name="new_passphrase" direction="in">
+                <summary>new passphrase.</summary>
+            </arg>
+            <description>change current passphrase, data will be encryted.</description>
+        </method>
+
+        <method name="Login">
+            <arg type="s" name="user_name" direction="in">
+                <summary>user name.</summary>
+            </arg>
+            <arg type="s" name="password" direction="in">
+                <summary>passphrase.</summary>
+            </arg>
+            <description>legacy login.</description>
+        </method>
+
+        <method name="Logout">
+            <description>logout.</description>
+        </method>
+
+        <property name="RSAPublicKey" type="s" access="read">
+            <description>The RSA public key.</description>
+        </property>
+        
+        <signal name="PasswordChanged">
+            <arg name="user_name" type="s">
+                <summary>UserName that password changed</summary>
+            </arg>
+            <description>Password has been change, change your login status.</description>
+        </signal>
+    </interface>
+</node>

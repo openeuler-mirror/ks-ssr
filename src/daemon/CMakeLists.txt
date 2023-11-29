@@ -15,11 +15,11 @@ file(GLOB_RECURSE SRC_H_FILES ./*.h)
 file(GLOB_RECURSE SRC_CPP_FILES ./*.cpp)
 
 qt5_add_dbus_adaptor(
-  SECURITY_BOX_MANAGER_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BoxManager.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/box/box-manager.h
-  KS::Box::BoxManager
-  box_manager_adaptor
+  PRIVATE_BOX_MANAGER_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.PrivateBox.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/private-box/box-manager.h
+  KS::PrivateBox::BoxManager
+  private_manager_adaptor
   BoxManagerAdaptor)
 
 qt5_add_dbus_adaptor(
@@ -41,28 +41,51 @@ qt5_add_dbus_adaptor(
   BRAdaptor)
 
 qt5_add_dbus_adaptor(
-  BR_LOG_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.Log.xml
+  LOG_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.Log.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/log/manager.h KS::Log::Manager log_adaptor
   LogAdaptor)
+
+qt5_add_dbus_adaptor(
+  ACCOUNT_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.Account.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/account/manager.h KS::Account::Manager
+  account_adaptor AccountAdaptor)
+
+qt5_add_dbus_adaptor(
+  TOOL_BOX_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.ToolBox.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/tool-box/manager.h KS::ToolBox::Manager
+  tool_box_adaptor ToolBoxAdaptor)
 
 set(TARGET_NAME ks-ssr-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
-                       ${PROJECT_SOURCE_DIR})
+qt5_create_translation(
+  QM_FILES
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml.in
+  ${CMAKE_SOURCE_DIR}/data/br-categories.ini.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-audit.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-config.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-external.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-network.xml.in
+  ${TS_FILES}
+  OPTIONS
+  -I
+  ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}
   ${SRC_H_FILES}
   ${SRC_CPP_FILES}
-  ${SECURITY_BOX_MANAGER_SRCS}
+  ${PRIVATE_BOX_MANAGER_SRCS}
   ${TRUSTED_MANAGER_SRCS}
   ${FILES_PROTECTED_MANAGER_SRCS}
   ${SECURITY_DEVICE_MANAGER_SRCS}
   ${KSS_DBUS_SRCS}
   ${BR_DBUS_SRCS}
-  ${BR_LOG_DBUS_SRCS}
+  ${LOG_DBUS_SRCS}
+  ${ACCOUNT_DBUS_SRCS}
   ${BR_PROTOCOL_OUTPUT}
+  ${TOOL_BOX_DBUS_SRCS}
   ${QM_FILES})
 
 target_include_directories(
@@ -93,7 +116,8 @@ target_link_libraries(
           ${PYTHON_LIBRARIES}
           ${LIBCRYPTO_LIBRARIES}
           ${LIBAUDIT_LIBRARIES}
-          ${LIBSYSTEMD_LIBRARIES})
+          ${LIBSYSTEMD_LIBRARIES}
+          ${LIBSELINUX_LIBRARIES})
 
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${SSR_BR_INSTALL_LIBEXECDIR})
