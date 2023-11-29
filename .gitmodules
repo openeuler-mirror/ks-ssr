@@ -1,3 +1,4 @@
 [submodule "private"]
 	path = private
-	url = http://192.168.120.13/os/ks-ssr-private.git
+	url = git@192.168.120.13:os/ks-ssr-private.git
+	branch = main
