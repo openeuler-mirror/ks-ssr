@@ -1,0 +1,3 @@
+-w /etc/shadow -p w -k (ks-ssr)account_passwd_change
+
+-w /etc/passwd -p w -k (ks-ssr)account_change

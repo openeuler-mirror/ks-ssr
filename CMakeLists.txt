@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(ks-ssr VERSION 1.2)
 
-add_compile_options(-fpic -Wall)
+add_compile_options(-Wall)
 
 if(EXTRA_COMPILE_CHECK)
   add_compile_options(-Wextra -Wconversion -Wuninitialized)
@@ -44,6 +44,7 @@ pkg_search_module(LIBAUDIT REQUIRED audit)
 pkg_search_module(SQLCIPHER REQUIRED sqlcipher)
 pkg_search_module(LIBSELINUX REQUIRED libselinux)
 pkg_search_module(LIBNOTIFY REQUIRED libnotify)
+pkg_search_module(LIBIPSET REQUIRED libipset)
 
 string(REGEX MATCHALL "[0-9]+" LIBNOTIFY_VERSION_LIST ${LIBNOTIFY_VERSION})
 list(GET LIBNOTIFY_VERSION_LIST 0 LIBNOTIFY_MAJOR)

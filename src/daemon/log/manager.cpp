@@ -13,15 +13,16 @@
  */
 
 #include "src/daemon/log/manager.h"
-#include "src/daemon/log/write-worker.h"
-#include <src/daemon/common/dbus-helper.h>
-#include <src/daemon/log_adaptor.h>
-#include <ssr-marcos.h>
 #include <QDir>
 #include <QHostAddress>
 #include <QStringBuilder>
 #include "config.h"
-#include <src/daemon/log/message.h>
+#include "src/daemon/common/dbus-helper.h"
+#include "src/daemon/log/message.h"
+#include "src/daemon/log/realtime-alert.h"
+#include "src/daemon/log/write-worker.h"
+#include "src/daemon/log_adaptor.h"
+#include "ssr-marcos.h"
 
 #define AUDITD_CONF "/etc/audit/auditd.conf"
 #define SSR_LOG_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Log"
@@ -44,7 +45,8 @@ Manager::Manager()
       m_configurations(),
       m_messageQueue(new QQueue<QString>()),
       m_waitCondition(new QWaitCondition()),
-      m_thread(new WriteWorker(m_messageQueue, m_file, m_waitCondition, &m_queueMutex, &m_fileMutex, this))
+      m_thread(new WriteWorker(m_messageQueue, m_file, m_waitCondition, &m_queueMutex, &m_fileMutex, this)),
+      m_realTimeAlert(new Log::RealTimeAlert())
 {
     // 初始化日志文件
     QDir logFilePath;
