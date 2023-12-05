@@ -14,7 +14,7 @@
             </arg>
             <description>Get logs, pagination.</description>
         </method>
-        <signal name="DetectHazard">
+        <signal name="HazardDetected">
             <arg name="type" type="u">
                 <summary>type of alert.</summary>
             </arg>

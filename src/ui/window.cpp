@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
@@ -21,6 +21,7 @@
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QX11Info>
+#include "include/ssr-i.h"
 #include "lib/license/license-proxy.h"
 #include "src/ui/about.h"
 #include "src/ui/br/br-page.h"
@@ -34,6 +35,10 @@
 #include "src/ui/private-box/box-page.h"
 #include "src/ui/settings/dialog.h"
 #include "src/ui/sidebar.h"
+#include "src/ui/tool-box/access-control-page.h"
+#include "src/ui/tool-box/file-shred-page.h"
+#include "src/ui/tool-box/file-sign-page.h"
+#include "src/ui/tool-box/privacy-cleanup-page.h"
 #include "src/ui/tp/execute-protected-page.h"
 #include "src/ui/tp/kernel-protected-page.h"
 #include "src/ui/ui_window.h"
@@ -43,12 +48,13 @@ namespace KS
 {
 #define SSR_STYLE_PATH ":/styles/ssr"
 
-Window::Window() : TitlebarWindow(nullptr),
-                   m_ui(new Ui::Window),
-                   m_activation(nullptr),
-                   m_activateStatus(nullptr),
-                   m_loading(nullptr),
-                   m_licenseProxy(nullptr)
+Window::Window()
+    : TitlebarWindow(nullptr),
+      m_ui(new Ui::Window),
+      m_activation(nullptr),
+      m_activateStatus(nullptr),
+      m_loading(nullptr),
+      m_licenseProxy(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
     m_dbusProxy = new DaemonProxy(SSR_DBUS_NAME,
@@ -111,14 +117,13 @@ void Window::initActivation()
         m_activation->raise();
         m_activation->show();
     }
-    connect(m_activation, &Activation::Activation::closed,
-            [this] {
-                //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
-                if (!m_licenseProxy->isActivated())
-                    qApp->quit();
-                else
-                    m_activation->hide();
-            });
+    connect(m_activation, &Activation::Activation::closed, [this] {
+        // 未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
+        if (!m_licenseProxy->isActivated())
+            qApp->quit();
+        else
+            m_activation->hide();
+    });
     connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Window::updateActivation, Qt::UniqueConnection);
 }
 
@@ -146,7 +151,7 @@ void Window::initWindow()
     layout->setContentsMargins(0, 0, 10, 0);
     layout->setSpacing(10);
 
-    //未激活文本
+    // 未激活文本
     m_activateStatus = new QLabel(this);
     m_activateStatus->setObjectName("activateStatus");
     m_activateStatus->setFixedHeight(18);
@@ -154,7 +159,7 @@ void Window::initWindow()
     m_activateStatus->setText(tr("Unactivated"));
     m_activateStatus->hide();
 
-    //创建标题栏右侧菜单按钮
+    // 创建标题栏右侧菜单按钮
     auto btnForMenu = new QPushButton(this);
     btnForMenu->setObjectName("btnForMenu");
     btnForMenu->setFixedSize(QSize(16, 16));
@@ -182,6 +187,7 @@ void Window::initNavigation()
     m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected", tr("File protected")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Private box")));
     m_ui->m_navigation->addItem(new NavigationItem(":/images/device", tr("Device management")));
+    m_ui->m_navigation->addItem(new NavigationItem(":/images/tool-box", tr("Tool Box")));
     m_ui->m_navigation->setBtnChecked(0);
 
     // 移除qt designer默认创建的widget
@@ -201,6 +207,10 @@ void Window::initNavigation()
     addPage(new PrivateBox::BoxPage(this));
     addPage(new DM::DeviceListPage(this));
     addPage(new DM::DeviceLogPage(this));
+    addPage(new ToolBox::FileSign(this));
+    addPage(new ToolBox::FileShred(this));
+    addPage(new ToolBox::PrivacyCleanup(this));
+    addPage(new ToolBox::AccessControl(this));
     // 页面加载动画
     m_loading = new Loading(this);
     m_loading->setFixedSize(execute->size());
@@ -298,7 +308,7 @@ void Window::popupActiveDialog()
 void Window::updateActivation()
 {
     bool isActivate = m_licenseProxy->isActivated();
-    //设置激活对话框和激活状态标签是否可见
+    // 设置激活对话框和激活状态标签是否可见
     m_activation->setVisible(!isActivate);
     m_activateStatus->setVisible(!isActivate);
 }

@@ -67,6 +67,9 @@ extern "C"
 #define SSR_BR_CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
 #define SSR_BR_CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra.xml"
 
+#define SSR_TOOL_BOX_DBUS_NAME "com.kylinsec.SSR.ToolBox"
+#define SSR_TOOL_BOX_DBUS_OBJECT_PATH "/com/kylinsec/SSR/ToolBox"
+
     enum SSRKSSTrustedFileType
     {
         SSR_KSS_TRUSTED_FILE_TYPE_EXECUTE = 0,

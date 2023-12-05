@@ -14,11 +14,11 @@
 
 #include <selinux/selinux.h>
 #include <src/daemon/account/manager.h>
-#include <src/daemon/tool_box_adaptor.h>
 #include <src/daemon/log/manager.h>
 #include <src/daemon/log/message.h>
+#include <src/daemon/tool_box_adaptor.h>
+#include "include/ssr-i.h"
 
-#define SSR_TOOL_BOX_DBUS_OBJECT_PATH "/com/kylinsec/SSR/ToolBox"
 #define SHRED_PATH "/usr/bin/shred -f -u"
 #define USERDEL_PATH "/usr/sbin/userdel -m"
 #define SED_PATH "/usr/bin/sed"
@@ -60,22 +60,22 @@ Manager::Manager()
 #pragma message("TODO: 不应该由接口来传入 role, 应该获取当前 callerPid 从 account 中取")
 void Manager::SetAccessControlStatus(bool enable)
 {
-    // if (static_cast<Account::Manager::Role>(role) != Account::Manager::Role::SECADMIN)
-    // {
-    //     KLOG_WARNING() << "Only secadmin can modify selinux";
-    //     return;
-    // }
-    QStringList arg{};
-    if (enable)
+    QProcess process{};
+    process.setProgram(SED_PATH);
+    QStringList arg{"-i"};
+    arg.append("-re");
+    arg.append(enable ? R"({s#SELINUX=(enforcing|permissive|disabled)#SELINUX=enforcing#})" : R"({s/SELINUX=(enforcing|permissive|disabled)/SELINUX=disabled/})");
+    arg.append("/etc/selinux/config");
+    process.setArguments(arg);
+    process.start();
+    process.waitForFinished();
+    if (process.exitCode() != 0)
     {
-        arg = QString(ENABLE_SELINUX).split(" ");
+        KLOG_ERROR() << "Failed to execute cmd: " << process.program()
+                     << " " << process.arguments().join(' ')
+                     << ", exitcode: " << process.exitCode()
+                     << ", output: " << process.readAllStandardOutput();
     }
-    else
-    {
-        arg = QString(DISABLE_SELINUX).split(" ");
-    }
-    auto cmd = getProcess(SED_PATH, arg);
-    cmd->startDetached();
 }
 
 QString Manager::GetSecurityContext(const QString& filePath)
@@ -103,7 +103,7 @@ void Manager::SetSecurityContext(const QString& filePath, const QString& Securit
     }
 }
 
-void Manager::SherdFile(const QStringList& filePath)
+void Manager::ShredFile(const QStringList& filePath)
 {
     auto cmd = getProcess(SHRED_PATH, filePath);
     cmd->startDetached();
@@ -111,10 +111,11 @@ void Manager::SherdFile(const QStringList& filePath)
 
 void Manager::RemoveUser(const QStringList& userNames)
 {
-    std::for_each(userNames.begin(), userNames.end(), [](const QString& userName) {
+    for (const auto userName : userNames)
+    {
         auto cmd = getProcess(USERDEL_PATH, QStringList(userName));
         cmd->start();
-    });
+    }
 }
 
 void Manager::processFinishedHandler(const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd)
