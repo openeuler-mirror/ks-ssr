@@ -66,7 +66,7 @@ install(
   DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/polkit-1/actions/)
 
 # conf files
-install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SSR.conf
+install(FILES ${PROJECT_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.conf
         DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d/)
 
 # box dir
@@ -87,6 +87,10 @@ install(
 # udev cfg file
 install(FILES ${PROJECT_SOURCE_DIR}/data/99-ssr-device.rules
         DESTINATION /etc/udev/rules.d/)
+
+# audit rules file
+install(FILES ${PROJECT_SOURCE_DIR}/data/ks-ssr-audit.rules
+        DESTINATION /etc/audit/rules.d/)
 
 # desktop
 configure_file(${PROJECT_SOURCE_DIR}/data/ks-ssr-gui.desktop.in

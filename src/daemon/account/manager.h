@@ -39,7 +39,7 @@ public:
     {
         SYSADMIN,
         SECADMIN,
-        SECAUDITOR
+        AUDITADMIN
     };
     Q_ENUM(Role)
 
