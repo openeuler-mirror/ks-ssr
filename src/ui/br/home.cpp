@@ -14,6 +14,7 @@
 #include "home.h"
 #include <QDBusConnection>
 #include <QDateTime>
+#include <QStyledItemDelegate>
 #include <QMenu>
 #include "include/ssr-i.h"
 #include "src/ui/br/br-i.h"
@@ -47,6 +48,7 @@ void Home::init()
 {
     m_ui->m_reinforceTime->setText("");
     m_ui->m_icon->setPixmap(QPixmap(":/images/br-banner"));
+    m_ui->m_scanComboBox->setItemDelegate(new QStyledItemDelegate(this));
     m_ui->m_scanComboBox->addItems(QStringList() << tr("System strategy") << tr("Custom strategy"));
     m_ui->m_scanComboBox->setCurrentIndex(BRStandardType(m_dbusProxy->strategy_type()));
     connect(m_ui->m_scanComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this](int type)

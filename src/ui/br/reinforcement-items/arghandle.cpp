@@ -121,11 +121,10 @@ QHBoxLayout *ArgHandle::buildLabelLayout()
         noteIcon->setIcon(QIcon(":/images/note"));
         noteIcon->setIconSize(QSize(16, 16));
 
-        connect(noteIcon, &QPushButton::clicked, this, [this]
-                {
-                    QToolTip::showText(QCursor::pos(), m_note, this, rect(), 5000);
-                    ;
-                });
+        connect(noteIcon, &QPushButton::clicked, this, [this] {
+            QToolTip::showText(QCursor::pos(), m_note, this, rect(), 5000);
+            ;
+        });
 
         layout->addWidget(widgetLabel, 0, Qt::AlignCenter);
         layout->addWidget(noteIcon, 0, Qt::AlignCenter);
@@ -160,7 +159,7 @@ void ArgHandle::initSwitch(const QJsonValue &jsonValue)
     }
     m_comboBox->setCurrentIndex(jsonValue.toBool() ? 0 : 1);
 
-    connect(m_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changedIntArgs(int)));
+    connect(m_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changedBoolArgs(int)));
 
     hlayout->addWidget(m_comboBox);
 
@@ -255,7 +254,6 @@ void ArgHandle::initInteger(const QJsonValue &jsonValue)
 
 void ArgHandle::changedIntArgs(int value)
 {
-    KLOG_DEBUG() << "test" << value;
     m_widgetType = KS::Protocol::WidgetType::Value::DATETIME;
     if (m_itemKey == "config-umask-limit")
     {

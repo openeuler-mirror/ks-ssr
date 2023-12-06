@@ -14,7 +14,9 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 #define INIT_LIBNOTIFY_ERROR -1
+#define MAX_NOTIFY_NUMBER 5
 
 struct _NotifyNotification;
 typedef struct _NotifyNotification NotifyNotification;
@@ -49,11 +51,14 @@ public:
 
 private:
     void notifySend(const char *msg, const char *icon);
-    std::string m_appName;
+    // 超过5条将开始的一条销毁
+    void checkNotifiesAndDelete();
 
 private:
     static NotificationWrapper *m_instance;
+    // 存储消息列表 至多5条
+    std::vector<NotifyNotification *> m_notifies;
 
-    NotifyNotification *m_notify;
+    std::string m_appName;
 };
 }  // namespace Notify

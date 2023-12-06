@@ -30,7 +30,7 @@ class Result : public QWidget
     Q_OBJECT
 
 public:
-    explicit Result(QWidget *parent = 0);
+    explicit Result(QWidget *parent = nullptr);
     virtual ~Result(){};
 
     static QSharedPointer<Result> getDefault();

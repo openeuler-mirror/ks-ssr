@@ -255,15 +255,26 @@ extern "C"
         BR_RESOURCE_MONITOR_OTHER
     };
 
-    // 回退状态
-    enum BRSnapshotStatus
+    // 回退方式
+    enum BRFallbackMethod
     {
         // 回到初始状态
-        BR_SNAPSHOT_STATUS_INITIAL = 0,
+        BR_FALLBACK_METHOD_INITIAL = 0,
         // 回到上一次加固
-        BR_SNAPSHOT_STATUS_LAST,
+        BR_FALLBACK_METHOD_LAST,
         // 其它
-        BR_SNAPSHOT_STATUS_OTHER
+        BR_FALLBACK_METHOD_OTHER
+    };
+
+    // 回退状态
+    enum BRFallbackStatus
+    {
+        // 回退未开始
+        BR_FALLBACK_STATUS_NOT_STARTED = 0,
+        // 回退进行中
+        BR_FALLBACK_STATUS_IN_PROGRESS,
+        // 回退完成
+        BR_FALLBACK_STATUS_IS_FINISHED
     };
 
     enum LOGAlertType

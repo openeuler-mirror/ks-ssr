@@ -13,9 +13,9 @@
  */
 #include "dialog.h"
 #include <QIcon>
+#include "src/ui/settings/baseline-reinforcement.h"
 #include "src/ui/settings/device-control.h"
 #include "src/ui/settings/trusted-protected.h"
-#include "src/ui/settings/baseline-reinforcement.h"
 #include "ui_dialog.h"
 
 namespace KS
@@ -52,13 +52,6 @@ Dialog::Dialog(QWidget *parent) : TitlebarWindow(parent),
 Dialog::~Dialog()
 {
     delete m_ui;
-}
-
-void Dialog::closeEvent(QCloseEvent *event)
-{
-    hide();
-    Q_ASSERT(event);
-    return;
 }
 
 void Dialog::initUI()

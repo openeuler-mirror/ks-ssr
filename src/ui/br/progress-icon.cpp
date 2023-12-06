@@ -29,10 +29,10 @@ ProgressIcon::ProgressIcon(QWidget *parent) : QWidget(parent)
     initUI();
 }
 
-void ProgressIcon::finishedProgress(bool isFinish)
+void ProgressIcon::finishedProgress(ProgressIconStatus isFinish)
 {
-    m_isFinishedProgress = isFinish;
-    if (!isFinish)
+    m_isFinishedProgress = isFinish == PROGRESS_ICON_STATUS_FINISHED;
+    if (isFinish == PROGRESS_ICON_STATUS_WORKING)
     {
         m_circlePixmapLabel->show();
         m_timer->start(CIRCLE_SPEED_MS);

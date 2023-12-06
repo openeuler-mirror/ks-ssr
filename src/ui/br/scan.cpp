@@ -68,8 +68,8 @@ void Scan::usingCustomStrategy()
     connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     // 修改UI界面参数以及复选框状态
     m_ui->m_itemTable->setAllCheckBoxEditStatus(true);
-    m_ui->m_itemTable->setAllChecked(Qt::Unchecked);
     m_ui->m_itemTable->hideCheckBox(false);
+    m_ui->m_itemTable->setAllChecked(Qt::Unchecked);
     // 所有状态重置后再修改
     resetAllReinforcementItem();
 
@@ -183,14 +183,10 @@ void Scan::initUI()
     if (BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_SYSTEM)
     {
         m_strategyType = BR_STRATEGY_TYPE_SYSTEM;
-        resetAllReinforcementItem();
-        m_ui->m_itemTable->hideCheckBox(true);
     }
     else
     {
         m_strategyType = BR_STRATEGY_TYPE_CUSTOM;
-        m_ui->m_itemTable->hideCheckBox(false);
-
         connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     }
 
@@ -198,12 +194,11 @@ void Scan::initUI()
     m_customArgsDialog->hide();
 
     connect(m_customArgsDialog, &ReinforcementArgsDialog::okClicked, this, &Scan::setReinforcement);
-    connect(m_customArgsDialog, &ReinforcementArgsDialog::argError, this, [this](const QString &error)
-            { POPUP_MESSAGE_DIALOG(error) });
-    connect(m_customArgsDialog, &ReinforcementArgsDialog::valueChanged, this, [this](const QString &reinforcementItem, const QString &argLabel, const QString &argValue, KS::Protocol::WidgetType::Value type)
-            { m_argTransfers.append(new ArgTransfer(reinforcementItem, argLabel, argValue, type)); });
-    connect(m_customArgsDialog, &ReinforcementArgsDialog::closed, this, [this]
-            { m_argTransfers.clear(); });
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::argError, this, [this](const QString &error) { POPUP_MESSAGE_DIALOG(error) });
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::valueChanged, this, [this](const QString &reinforcementItem, const QString &argLabel, const QString &argValue, KS::Protocol::WidgetType::Value type) {
+        m_argTransfers.append(new ArgTransfer(reinforcementItem, argLabel, argValue, type));
+    });
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::closed, this, [this] { m_argTransfers.clear(); });
     connect(m_customArgsDialog, &ReinforcementArgsDialog::reseted, this, &Scan::argReset);
 }
 
@@ -218,7 +213,6 @@ void Scan::initConnection()
     connect(m_ui->m_itemTable, SIGNAL(modelEntered(QModelIndex)), this, SLOT(showErrorMessage(QModelIndex)));
 
     //    connect(m_dbusProxy, SIGNAL(standardChanged(uint)), this, SLOT(standardTypeChanged(uint)));
-    connect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
 }
 
 void Scan::resetAllReinforcementItem()
@@ -303,6 +297,11 @@ void Scan::setReinforcement()
             reinforcementItem->changeFlag = true;
             arg->jsonValue = StrUtils::str2jsonValue(argTransfer->value);
             arg->widgetType = argTransfer->widgetType;
+            // str2jsonValue中的类型转换没法区分line输入纯数字和数字输入框spin输入的纯数字，都会被转为double类型，这里需要进行判断
+            if (arg->widgetType == KS::Protocol::WidgetType::TEXT)
+            {
+                arg->jsonValue = QJsonValue::fromVariant(argTransfer->value);
+            }
         }
     }
 
@@ -370,8 +369,13 @@ bool Scan::checkAndSetCheckbox()
 
 void Scan::startScan()
 {
+    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        return;
+    }
     // 设置页面定时扫描时会操作这个信号，为保证不起冲突，每次扫描时断开后重新连接
-    disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), 0, 0);
+    disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), nullptr, nullptr);
     connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
     m_progressInfo.method = PROCESS_METHOD_SCAN;
     clearState();
@@ -388,7 +392,6 @@ void Scan::startScan()
         return;
     }
     m_ui->m_progress->updateProgressUI(m_progressInfo.method);
-    disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
 
     m_dbusProxy->Scan(scanItems);
     update();
@@ -396,6 +399,14 @@ void Scan::startScan()
 
 void Scan::startReinforcement()
 {
+    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        return;
+    }
+    // 设置页面回退会进行加固，为保证不起冲突，每次加固时断开后重新连接
+    disconnect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), nullptr, nullptr);
+    connect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
     m_progressInfo.method = PROCESS_METHOD_FASTEN;
     clearState();
     m_ui->m_itemTable->clearCheckedStatus(m_categories, BR_REINFORCEMENT_STATE_UNREINFORCE);
@@ -418,6 +429,11 @@ void Scan::startReinforcement()
 
 void Scan::generateReport()
 {
+    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        return;
+    }
     KLOG_DEBUG() << "generate reports !";
     if (m_progressInfo.method == PROCESS_METHOD_FASTEN)
     {
@@ -429,23 +445,21 @@ void Scan::generateReport()
     // 断开scan进程连接
     disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
     // 进行一次扫描 仅获取扫描结果，不对UI进行调整
-    connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult)
-            {
-                ProgressInfo progressInfo;
-                // 获取加固后扫描结果
-                Utils::getDefault()->ssrJobResult(jobResult, progressInfo, m_afterReinForcementCategories, m_invalidData);
-            });
+    connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult) {
+        ProgressInfo progressInfo;
+        // 获取加固后扫描结果
+        Utils::getDefault()->ssrJobResult(jobResult, progressInfo, m_afterReinForcementCategories, m_invalidData);
+    });
     // 监听进程完成后 导出报表
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-    connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
-            {
-                disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
-                connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
-                disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-                RETURN_IF_TRUE(!Result::getDefault()->generateReports(m_categories, m_afterReinForcementCategories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
-                POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
-                m_afterReinForcementCategories.clear();
-            });
+    connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this] {
+        disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
+        connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
+        disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
+        RETURN_IF_TRUE(!Result::getDefault()->generateReports(m_categories, m_afterReinForcementCategories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
+        POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
+        m_afterReinForcementCategories.clear();
+    });
     // 生成报表前扫描
     m_progressInfo.method = PROCESS_METHOD_SCAN;
     auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
@@ -512,8 +526,8 @@ void Scan::runProgress(const QString &jobResult)
 {
     m_progressInfo.total = m_ui->m_itemTable->getCount();
     Utils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categories, m_invalidData);
+    // TODO 确认在扫描完成之后是否允许修改勾选的加固项 m_progressInfo.method == PROCESS_METHOD_FASTEN
     m_ui->m_itemTable->setAllCheckBoxEditStatus(false);
-
     if (double(100) == m_progressInfo.progress)
     {
         m_ui->m_itemTable->getProgressCount(m_categories, m_progressInfo);

@@ -57,7 +57,7 @@ ItemTable::ItemTable(QWidget *parent) : QTreeView(parent),
 
 QSize ItemTable::sizeHint() const
 {
-    return QSize(800, 350);
+    return QSize(750, 350);
 }
 
 void ItemTable::setIcon(const QList<Category *> &list, int i)
@@ -89,13 +89,13 @@ void ItemTable::initHeader()
 
     m_headerProxy->setFixedHeight(24);
     m_headerProxy->resizeSection(0, 250);
-    m_headerProxy->resizeSection(1, 550);
-    m_headerProxy->resizeSection(2, 100);
-    m_headerProxy->resizeSection(3, 16);
+    m_headerProxy->resizeSection(1, 500);
+    m_headerProxy->resizeSection(2, 90);
+    m_headerProxy->resizeSection(3, 10);
     m_headerProxy->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     // 不可拖拽表格线
-    //m_headerProxy->sectionResizeMode(QHeaderView::Stretch);
+    m_headerProxy->sectionResizeMode(QHeaderView::Stretch);
     m_headerProxy->setStretchLastSection(true);
     m_headerProxy->setSectionsMovable(false);
 }
@@ -114,10 +114,12 @@ void ItemTable::setItem(const QList<Category *> &list)
         QPixmap pixmap(":/images/arrow-down");
         pixmap.scaled(10, 8);
         m_model->setItem(i, 3, new QStandardItem(QIcon(pixmap), ""));
+
         setIcon(list, i);
         m_model->item(i)->setCheckable(true);
         m_model->item(i)->setAutoTristate(true);
         m_model->item(i, 2)->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        m_model->item(i, 3)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
         CONTINUE_IF_TRUE(list.at(i)->getReinforcementItem().length() == 0)
 
@@ -471,13 +473,6 @@ void ItemTable::setAllChecked(Qt::CheckState isChecked)
 
 void ItemTable::hideCheckBox(bool isHide)
 {
-    // 隐藏复选框时将鼠标悬浮提示一并隐藏
-    disconnect(this, SIGNAL(entered(QModelIndex)), this, SLOT(showTail(QModelIndex)));
-    if (!isHide)
-    {
-        connect(this, SIGNAL(entered(QModelIndex)), this, SLOT(showTail(QModelIndex)));
-    }
-
     m_headerProxy->hideCheckBox(isHide);
     for (int i = 0; i < m_model->rowCount(); i++)
     {
@@ -504,12 +499,12 @@ void ItemTable::setAllCheckBoxEditStatus(bool isCheckBoxEdit)
     m_headerProxy->hideCheckBox(!isCheckBoxEdit);
     for (int i = 0; i < m_model->rowCount(); i++)
     {
-        //        m_model->item(i)->setFlags(m_model->item(i)->flags() & ~Qt::ItemFlag::ItemIsUserCheckable);
+        // m_model->item(i)->setFlags(m_model->item(i)->flags() & ~Qt::ItemFlag::ItemIsEnabled);
         m_model->item(i)->setCheckable(isCheckBoxEdit);
         for (int j = 0; j < m_model->item(i)->rowCount(); ++j)
         {
             auto item = m_model->item(i)->child(j);
-            //            item->setFlags(item->flags() &~ Qt::ItemFlag::ItemIsUserCheckable);
+            // item->setFlags(item->flags() & ~Qt::ItemFlag::ItemIsEnabled);
             item->setCheckable(isCheckBoxEdit);
         }
     }

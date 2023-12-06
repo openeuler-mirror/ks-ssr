@@ -107,7 +107,7 @@ void ReinforcementArgsDialog::addLine(const QString &name,
                                          widgetType,
                                          note);
     m_argHandle.append(argHandle);
-    connect(argHandle, SIGNAL(valueChanged(QString, QString, QString, KS::Protocol::WidgetType::Value)), this, SLOT(valueChanged(QString, QString, QString, KS::Protocol::WidgetType::Value)));
+    connect(argHandle, SIGNAL(valueChanged(QString, QString, QString, KS::Protocol::WidgetType::Value)), this, SIGNAL(valueChanged(QString, QString, QString, KS::Protocol::WidgetType::Value)));
 
     m_ui->m_listWidget->setItemWidget(item, argHandle);
 }

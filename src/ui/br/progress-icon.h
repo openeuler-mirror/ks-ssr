@@ -21,6 +21,14 @@ namespace KS
 {
 namespace BR
 {
+
+enum ProgressIconStatus
+{
+    PROGRESS_ICON_STATUS_INITIAL,
+    PROGRESS_ICON_STATUS_WORKING,
+    PROGRESS_ICON_STATUS_FINISHED
+};
+
 class ProgressIcon : public QWidget
 {
     Q_OBJECT
@@ -29,7 +37,7 @@ public:
     explicit ProgressIcon(QWidget *parent = nullptr);
     virtual ~ProgressIcon(){};
 
-    void finishedProgress(bool isFinish);
+    void finishedProgress(ProgressIconStatus isFinish);
 
 protected:
     void paintEvent(QPaintEvent *event) override;

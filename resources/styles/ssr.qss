@@ -675,20 +675,24 @@ KS--BR--Home QLabel#m_heading
     font:NotoSansCJKsc-Regular;
 }
 
-QComboBox#m_scanComboBox
+KS--BR--Home QComboBox#m_scanComboBox
 {
     background-color: transparent;
     border: 0px;
-    combobox-popup:0;
     color:#00a2ff;
 }
-QComboBox#m_scanComboBox::down-arrow
+KS--BR--Home QComboBox#m_scanComboBox::down-arrow
 {
     background-color: transparent;
     border: 0px;
-    combobox-popup:0;
     image:url(:/images/combobox-arrow);
 }
+KS--BR--Home QComboBox#m_scanComboBox::drop-down
+{
+    background-color: transparent;
+    border: 0px;
+}
+
 QComboBox#m_scanComboBox QAbstractItemView
 {
     background-color: #393939;
@@ -779,6 +783,7 @@ KS--BR--Scan QTreeView::item:last:has-children
 {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
+    padding-left:70px;
 }
 /* 有子项的最后一列展开 */
 KS--BR--Scan QTreeView::item:open:last:has-children
@@ -865,13 +870,13 @@ KS--BR--Scan QTreeView::indicator::disabled:indeterminate{
 }
 */
 
-KS--BR--Plugins--ReinforcementArgsDialog QListWidget
+KS--BR--ReinforcementArgsDialog QListWidget
 {
     background-color: transparent;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox,
-KS--BR--Plugins--ArgHandle QLineEdit
+KS--BR--ArgHandle QComboBox,
+KS--BR--ArgHandle QLineEdit
 {
     height: 36px;
     background-color: #222222;
@@ -885,7 +890,7 @@ KS--BR--Plugins--ArgHandle QLineEdit
     font:NotoSansCJKsc-Regular;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView
+KS--BR--ArgHandle QComboBox QAbstractItemView
 {
     background-color:#222222;
     color: white;
@@ -897,32 +902,32 @@ KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView
     selection-background-color: #222222;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView::item
+KS--BR--ArgHandle QComboBox QAbstractItemView::item
 {
     height: 36px;
     border-top: 1px solid #454545;
     padding-left:10px;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView::item:hover,
-KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView::item:selected
+KS--BR--ArgHandle QComboBox QAbstractItemView::item:hover,
+KS--BR--ArgHandle QComboBox QAbstractItemView::item:selected
 {
     background-color:#00a2ff;
     color: white;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox::drop-down
+KS--BR--ArgHandle QComboBox::drop-down
 {
     border:none;
     padding-right:12px;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox::down-arrow
+KS--BR--ArgHandle QComboBox::down-arrow
 {
       image: url(:/images/arrow-down);
 }
 
-KS--BR--Plugins--ArgHandle QSpinBox,
+KS--BR--ArgHandle QSpinBox,
 KS--Settings--BaselineReinforcement QSpinBox
 {
     height: 36px;
@@ -937,8 +942,8 @@ KS--Settings--BaselineReinforcement QSpinBox
     font:NotoSansCJKsc-Regular;
 }
 /* 屏蔽QSpinBox加减 */
-KS--BR--Plugins--ArgHandle QSpinBox::up-button,
-KS--BR--Plugins--ArgHandle QSpinBox::down-button,
+KS--BR--ArgHandle QSpinBox::up-button,
+KS--BR--ArgHandle QSpinBox::down-button,
 KS--Settings--BaselineReinforcement QSpinBox::up-button,
 KS--Settings--BaselineReinforcement QSpinBox::down-button
 {
@@ -948,7 +953,7 @@ KS--Settings--BaselineReinforcement QSpinBox::down-button
 }
 
 /* 暂时不设置QSpinBox箭头
-KS--BR--Plugins--ArgHandle QSpinBox::up-button
+KS--BR--ArgHandle QSpinBox::up-button
 {
     subcontrol-origin: border;
     width: 24px;
@@ -960,7 +965,7 @@ KS--BR--Plugins--ArgHandle QSpinBox::up-button
     /* image: url(:/images/spinBox-up); */
 }
 
-KS--BR--Plugins--ArgHandle QSpinBox::down-button
+KS--BR--ArgHandle QSpinBox::down-button
 {
     subcontrol-origin: border;
     width: 24px;
@@ -971,51 +976,18 @@ KS--BR--Plugins--ArgHandle QSpinBox::down-button
     border-radius: 0px 0px 12px 0px;
     /* image: url(:/images/spinBox-down); */
 }
-KS--BR--Plugins--ArgHandle QSpinBox::up-button:hover,
-KS--BR--Plugins--ArgHandle QSpinBox::up-button:selected,
-KS--BR--Plugins--ArgHandle QSpinBox::down-button:hover,
-KS--BR--Plugins--ArgHandle QSpinBox::down-button:selected
+KS--BR--ArgHandle QSpinBox::up-button:hover,
+KS--BR--ArgHandle QSpinBox::up-button:selected,
+KS--BR--ArgHandle QSpinBox::down-button:hover,
+KS--BR--ArgHandle QSpinBox::down-button:selected
 {
     background-color:#79C3FF;
 }
 */
 
-KS--BR--Plugins--ArgHandle QPushButton#noteIcon,
-KS--BR--Reports--Table QWidget#spacerWidget,
-KS--BR--Reports--RoundProgressBar,
-KS--BR--Reports--RoundProgressBar QLabel
+KS--BR--ArgHandle QPushButton#noteIcon
 {
     background-color: transparent;
-}
-
-/* BR Reports */
-KS--BR--Reports--Table QLabel
-{
-    font: NotoSansCJKsc-Regular;
-    font-size: 14px;
-    border-radius:0px;
-    color: #000000;
-}
-
-KS--BR--Reports--RoundProgressBar QLabel#m_percentLabel
-{
-    color:black;
-    font:AdobeHeitiStd-Regular;
-    font-size:30px;
-}
-
-KS--BR--Reports--RoundProgressBar QLabel#m_nameLabel
-{
-    color:black;
-    font:AdobeHeitiStd-Regular;
-    font-size:25px;
-}
-
-KS--BR--Reports--RoundProgressBar QLabel#m_noteLabel
-{
-    color: #1b1f25;
-    font: NotoSansCJKsc-Regular;
-    font-size: 17px;
 }
 
 /*********License*****************/

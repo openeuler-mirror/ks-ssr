@@ -30,6 +30,7 @@
 
 #define TABLE_MAX_LINE 28
 #define TABLE_SHOW_TAIL_MAX_LINE 20
+#define SSR_REPORTS_STYLE_PATH ":/styles/br-reports"
 
 namespace KS
 {
@@ -53,6 +54,17 @@ QSharedPointer<Result> Result::getDefault()
 void Result::init()
 {
     setWindowModality(Qt::ApplicationModal);
+    // 初始化样式表
+    QFile file(SSR_REPORTS_STYLE_PATH);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QString windowStyle = file.readAll();
+        setStyleSheet(styleSheet() + windowStyle);
+    }
+    else
+    {
+        KLOG_WARNING() << "Failed to open file " << SSR_REPORTS_STYLE_PATH;
+    }
 }
 
 QString Result::state2Str(int state)

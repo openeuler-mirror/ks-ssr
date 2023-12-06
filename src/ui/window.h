@@ -42,11 +42,13 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
+    void start();
     void initActivation();
     // 窗口整体初始化
     void initWindow();
     // 导航和导航项初始化
     void initNavigation();
+    void initSettings();
     void addPage(Page *page);
     void showLoading(bool isShow);
     void clearSidebar();

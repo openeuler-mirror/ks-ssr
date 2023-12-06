@@ -193,7 +193,7 @@ class FirewallManager(Firewall):
         # Disable FTP, SMTP and other ports that may threaten the system
         if args['threat-port']:
             for port in IPTABLES_LIMITS_PORTS.split(","):
-                if args['tcp-udp'].replace('"','') == "tcp":
+                if "tcp" in args['tcp-udp']:
                     self.set_iptables(
                         ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, "--dport " + port, "-j REJECT")
                     self.set_iptables(
@@ -205,7 +205,7 @@ class FirewallManager(Firewall):
                         ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, "--dport " + port, "-j REJECT")
         else:
             for port in IPTABLES_LIMITS_PORTS.split(","):
-                if args['tcp-udp'].replace('"','') == "tcp":
+                if "tcp" in args['tcp-udp']:
                     self.del_iptables(
                         DELETE_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, "--dport " + port, "-j REJECT")
                     self.del_iptables(
@@ -221,7 +221,7 @@ class FirewallManager(Firewall):
             self.del_iptables_history(
                 "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999")
             for network_segment in args['disable-network-segment'].split(","):
-                if args['tcp-udp'] == "tcp":
+                if "tcp" in args['tcp-udp']:
                     self.set_iptables(ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP,
                                       "-s " + network_segment, "--dport 1:1023 -j REJECT")
                 else:
@@ -251,7 +251,7 @@ class FirewallManager(Firewall):
             self.del_iptables_history(
                 "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
             for network_segment in args['disable-network-segment-output'].split(","):
-                if args['tcp-udp'] == "tcp":
+                if "tcp" in args['tcp-udp']:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP,
                                       "-d " + network_segment, "--dport 1:1023 -j REJECT")
                 else:
@@ -266,7 +266,7 @@ class FirewallManager(Firewall):
             self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format(
                 "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", "|dpt:")), "OUTPUT")
             for port in args['disable-ports-output'].split(";"):
-                if args['tcp-udp'] == "tcp":
+                if "tcp" in args['tcp-udp']:
                     self.set_iptables(
                         ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, "--dport " + port, "-j REJECT")
                 else:
