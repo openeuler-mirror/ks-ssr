@@ -38,6 +38,13 @@ LicenseProxy::LicenseProxy(QObject* parent) : QObject(parent),
                                          QLatin1String(SIGNAL_LICENSE_CHANGED),
                                          this,
                                          SLOT(licenseChange(bool)));
+
+    QDBusConnection::systemBus().connect(LICENSE_MANAGER_DBUS_NAME,
+                                         getObjectPath(LICENSE_OLD_OBJECT_NAME),
+                                         LICENSE_OBJECT_DBUS_NAME,
+                                         QLatin1String(SIGNAL_LICENSE_CHANGED),
+                                         this,
+                                         SLOT(licenseChange(bool)));
 }
 
 QSharedPointer<LicenseProxy> LicenseProxy::getDefault()
@@ -147,8 +154,57 @@ bool LicenseProxy::activateByActivationCode(const QString& activation_Code, QStr
     return true;
 }
 
+bool LicenseProxy::getOldActivateStatus()
+{
+    QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_MANAGER_DBUS_NAME,
+                                                                getObjectPath(LICENSE_OLD_OBJECT_NAME),
+                                                                LICENSE_OBJECT_DBUS_NAME,
+                                                                METHOD_GET_LICENSE);
+    QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
+                                                              QDBus::Block,
+                                                              TIMEOUT_MS);
+    if (msgReply.type() != QDBusMessage::ReplyMessage)
+    {
+        KLOG_WARNING() << "Failed to call dbus method GetLicense: " << msgReply.errorMessage();
+        return false;
+    }
+
+    QList<QVariant> args = msgReply.arguments();
+    if (args.size() < 1)
+    {
+        KLOG_WARNING() << "The size of arguments returned by GetLicense is less than 1";
+        return false;
+    }
+
+    QVariant firstArg = args.takeFirst();
+    auto licenseInfoJson = firstArg.toString();
+    //解析授权信息Json字符串
+    QJsonParseError jsonError;
+    auto jsonDoc = QJsonDocument::fromJson(licenseInfoJson.toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser license information failed:" << jsonError.errorString();
+        return false;
+    }
+
+    auto data = jsonDoc.object();
+    //获取激活状态
+    auto activationStatus = (LicenseActivationStatus)data.value(LICENSE_JK_ACTIVATION_STATUS).toInt();
+    RETURN_VAL_IF_TRUE(activationStatus != LAS_ACTIVATED, false);
+
+    m_activationCode = data.value(LICENSE_JK_ACTIVATION_CODE).toString();
+    m_machineCode = data.value(LICENSE_JK_MACHINE_CODE).toString();
+    m_expiredTime = time_t(data.value(LICENSE_JK_EXPIRED_TIME).toVariant().toUInt());
+    return true;
+}
+
 bool LicenseProxy::isActivated()
 {
+    // 向下兼容，如果当前KSSSR未激活，则判断KSSSRManager是否激活，已激活则返回已激活状态
+    if (!m_isActivated)
+    {
+        m_isActivated = getOldActivateStatus();
+    }
     return m_isActivated;
 }
 
