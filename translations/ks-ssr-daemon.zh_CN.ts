@@ -287,19 +287,12 @@
 <context>
     <name>CustomArgs</name>
     <message>
-        <location filename="../build/src/ui/ui_custom-args.h" line="101"/>
-        <source>Form</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../build/src/ui/ui_custom-args.h" line="102"/>
         <source>reset</source>
-        <translation>重置</translation>
+        <translation type="vanished">重置</translation>
     </message>
     <message>
-        <location filename="../build/src/ui/ui_custom-args.h" line="103"/>
         <source>ok</source>
-        <translation>确认</translation>
+        <translation type="vanished">确认</translation>
     </message>
 </context>
 <context>
@@ -575,7 +568,7 @@
         <location filename="../src/ui/br/home.ui" line="76"/>
         <location filename="../build/src/ui/ui_home.h" line="164"/>
         <source>KylinSec Host Security Reinforcement Software Detects Risks in Advance to Ensure Asset Security</source>
-        <translation>麒麟信安主机安全加固软件提起发现风险，保障资产安全</translation>
+        <translation>麒麟信安主机安全加固软件提前发现风险，保障资产安全</translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="85"/>
@@ -606,7 +599,7 @@
     <message>
         <location filename="../src/ui/about.cpp" line="51"/>
         <source>Security reinforcement sofware V1.2</source>
-        <translation>安全加固软件V1.2</translation>
+        <translation>主机安全加固软件V1.2</translation>
     </message>
     <message>
         <source>Security reinforcement sofware V1.0</source>
@@ -735,14 +728,14 @@
 <context>
     <name>KS::BR::ArgHandle</name>
     <message>
-        <location filename="../src/ui/br/plugins/arghandle.cpp" line="158"/>
-        <location filename="../src/ui/br/plugins/arghandle.cpp" line="273"/>
+        <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="157"/>
+        <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="271"/>
         <source>Yes</source>
         <translation>是</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/arghandle.cpp" line="159"/>
-        <location filename="../src/ui/br/plugins/arghandle.cpp" line="274"/>
+        <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="158"/>
+        <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="272"/>
         <source>No</source>
         <translation>否</translation>
     </message>
@@ -763,14 +756,14 @@
 <context>
     <name>KS::BR::Home</name>
     <message>
-        <location filename="../src/ui/br/home.cpp" line="50"/>
-        <location filename="../src/ui/br/home.cpp" line="64"/>
+        <location filename="../src/ui/br/home.cpp" line="52"/>
+        <location filename="../src/ui/br/home.cpp" line="66"/>
         <source>System strategy</source>
         <translation>系统策略</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/home.cpp" line="50"/>
-        <location filename="../src/ui/br/home.cpp" line="60"/>
+        <location filename="../src/ui/br/home.cpp" line="52"/>
+        <location filename="../src/ui/br/home.cpp" line="62"/>
         <source>Custom strategy</source>
         <translation>自定义策略</translation>
     </message>
@@ -793,7 +786,7 @@
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/item-table.cpp" line="524"/>
+        <location filename="../src/ui/br/item-table.cpp" line="519"/>
         <source>Double click this column to modify the reinforcement parameters</source>
         <translation>双击此列修改加固参数</translation>
     </message>
@@ -834,7 +827,7 @@
     <message>
         <location filename="../src/ui/br/progress.cpp" line="45"/>
         <source>KylinSec Host Security Reinforcement Software Detects Risks in Advance to Ensure Asset Security</source>
-        <translation>麒麟信安主机安全加固软件提起发现风险，保障资产安全</translation>
+        <translation>麒麟信安主机安全加固软件提前发现风险，保障资产安全</translation>
     </message>
     <message>
         <location filename="../src/ui/br/progress.cpp" line="47"/>
@@ -842,9 +835,9 @@
         <translation>开始扫描</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/progress.cpp" line="57"/>
+        <location filename="../src/ui/br/progress.cpp" line="51"/>
         <location filename="../src/ui/br/progress.cpp" line="146"/>
-        <location filename="../src/ui/br/progress.cpp" line="165"/>
+        <location filename="../src/ui/br/progress.cpp" line="154"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
@@ -876,7 +869,7 @@
     </message>
     <message>
         <location filename="../src/ui/br/progress.cpp" line="102"/>
-        <location filename="../src/ui/br/progress.cpp" line="189"/>
+        <location filename="../src/ui/br/progress.cpp" line="178"/>
         <source>Start time: %1 elapsed time: %2 progress: %3%</source>
         <translation>开始扫描时间：%1 用时：%2 进度：%3%</translation>
     </message>
@@ -893,7 +886,7 @@
     <message>
         <location filename="../src/ui/br/progress.cpp" line="126"/>
         <source>Scanned %1, %2 conform, %3 inconform!</source>
-        <translation>扫描完成%1项，%2项符合，%3不符合！</translation>
+        <translation>扫描完成%1项，%2项符合，%3项不符合！</translation>
     </message>
     <message>
         <location filename="../src/ui/br/progress.cpp" line="130"/>
@@ -901,14 +894,32 @@
         <translation>加固完成%1项，加固成功%2项，失败%3项！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/progress.cpp" line="164"/>
+        <location filename="../src/ui/br/progress.cpp" line="153"/>
         <source>GenerateReport</source>
         <translation>生成报表</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/progress.cpp" line="173"/>
+        <location filename="../src/ui/br/progress.cpp" line="162"/>
         <source>Start time: %1 elapsed time: %2</source>
         <translation>开始时间：%1 用时：%2</translation>
+    </message>
+</context>
+<context>
+    <name>KS::BR::ReinforcementArgsDialog</name>
+    <message>
+        <location filename="../src/ui/br/reinforcement-items/reinforcement-args-dialog.cpp" line="69"/>
+        <source>Set reinforment args</source>
+        <translation>加固参数设置</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/reinforcement-items/reinforcement-args-dialog.cpp" line="138"/>
+        <source>%1 not less than %2</source>
+        <translation>%1不小于%2</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/reinforcement-items/reinforcement-args-dialog.cpp" line="142"/>
+        <source>%1 input format is incorrect, please input the correct content according to the prompt</source>
+        <translation>%1输入格式不正确，请根据提示输入正确的内容</translation>
     </message>
 </context>
 <context>
@@ -1043,110 +1054,110 @@
 <context>
     <name>KS::BR::Result</name>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="64"/>
-        <location filename="../src/ui/br/reports/result.cpp" line="102"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="76"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="114"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="67"/>
-        <location filename="../src/ui/br/reports/result.cpp" line="98"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="79"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="110"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="70"/>
-        <location filename="../src/ui/br/reports/result.cpp" line="100"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="82"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="112"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="73"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="85"/>
         <source>Not Scanned</source>
         <translation>未扫描</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="76"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="88"/>
         <source>Scannig</source>
         <translation>正在扫描...</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="79"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="91"/>
         <source>Scan Failed</source>
         <translation>扫描失败</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="82"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="94"/>
         <source>Scan Complete</source>
         <translation>扫描完成</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="85"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="97"/>
         <source>Unreinforcement</source>
         <translation>未加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="88"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="100"/>
         <source>Reinforcing</source>
         <translation>正在加固...</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="91"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="103"/>
         <source>Reinforcement Failure</source>
         <translation>加固失败</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="94"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="106"/>
         <source>Reinforced</source>
-        <translation>加固完成</translation>
+        <translation>加固成功</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="173"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="185"/>
         <source>No master file</source>
         <translation>无属主文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="179"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="191"/>
         <source>Files with 777 permissions</source>
         <translation>文件具有777权限</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="190"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="202"/>
         <source>Files with sgid permission</source>
         <translation>文件具有SGID权限</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="192"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="204"/>
         <source>Files with suid permission</source>
         <translation>文件具有SUID权限</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="274"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="286"/>
         <source>Unactivated</source>
         <translation>未激活</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="274"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="286"/>
         <source>Activated</source>
         <translation>已激活</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="415"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="427"/>
         <source>Vulnerability exists in version %1</source>
         <translation>版本号%1存在漏洞</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="480"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="492"/>
         <source>KylinSecHostReinforcementReport_%1_%2.pdf</source>
         <translation>麒麟信安主机安全加固报告_%1_%2.pdf</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="481"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="493"/>
         <source>Open File</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="481"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="493"/>
         <source>PDF(*.pdf)</source>
         <translation></translation>
     </message>
@@ -1162,32 +1173,32 @@
 <context>
     <name>KS::BR::Scan</name>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="134"/>
+        <location filename="../src/ui/br/scan.cpp" line="135"/>
         <source>Files</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="134"/>
+        <location filename="../src/ui/br/scan.cpp" line="135"/>
         <source>strategy(*.xml)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="143"/>
+        <location filename="../src/ui/br/scan.cpp" line="144"/>
         <source>Please check the file name and whether you have write permission!</source>
         <translation>请检查文件名以及您是否具有写入权限！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="152"/>
+        <location filename="../src/ui/br/scan.cpp" line="153"/>
         <source>Open RA file failed!</source>
         <translation>打开ra文件失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="157"/>
+        <location filename="../src/ui/br/scan.cpp" line="158"/>
         <source>Export successed!</source>
         <translation>导出成功！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="157"/>
+        <location filename="../src/ui/br/scan.cpp" line="158"/>
         <source>Export failed!</source>
         <translation>导出失败！</translation>
     </message>
@@ -1197,17 +1208,24 @@
         <translation>请选择要导出的加固项！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="385"/>
+        <location filename="../src/ui/br/scan.cpp" line="374"/>
+        <location filename="../src/ui/br/scan.cpp" line="404"/>
+        <location filename="../src/ui/br/scan.cpp" line="434"/>
+        <source>Fallback is in progress, please wait.</source>
+        <translation>回退正在进行中，请等待。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/br/scan.cpp" line="390"/>
         <source>Please check the reinforcement items to be scanned or reinforcement classification for scanning.</source>
         <translation>请勾选需要扫描的加固项。</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="405"/>
+        <location filename="../src/ui/br/scan.cpp" line="417"/>
         <source>Please check the content to be reinforced.</source>
         <translation>请勾选要加固的项。</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/scan.cpp" line="445"/>
+        <location filename="../src/ui/br/scan.cpp" line="460"/>
         <source>Export succeeded!</source>
         <translation>导出成功！</translation>
     </message>
@@ -2223,85 +2241,85 @@
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="39"/>
         <source>Safety reinforcement</source>
-        <translation>安全加固</translation>
+        <translation>主机安全加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="62"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="61"/>
         <source>Resource monitor open!</source>
         <translation>资源监控已开启！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="71"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="69"/>
         <source>Resource monitor close!</source>
         <translation>资源监控已关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="79"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="76"/>
         <source>Notify open!</source>
         <translation>气泡通知已开启！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="85"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="81"/>
         <source>Notify close!</source>
         <translation>气泡通知已关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="100"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="93"/>
         <source>home free space less than 10%</source>
         <translation>家目录空间不足10%</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="109"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="101"/>
         <source>root free space less than 10%</source>
         <translation>根目录空间不足10%</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="118"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="109"/>
         <source>The average load of a single core CPU exceeds 1</source>
         <translation>单核CPU负载超过1</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="128"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="118"/>
         <source>Memory space remaining</source>
         <translation>内存空间不足</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="179"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="169"/>
         <source>Files</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="179"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="169"/>
         <source>strategy(*.xml)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="186"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="176"/>
         <source>Open files failed!</source>
         <translation>打开文件失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="190"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="180"/>
         <source>Failed to import strategy file. Please whether the file is valid!</source>
         <translation>导入策略失败，请检查策略文件的合法性！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="190"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="180"/>
         <source>Import succeeded!</source>
         <translation>导入成功！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="202"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="192"/>
         <source>Scheduled scanning task has been closed!</source>
         <translation>定时扫描已关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="210"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="200"/>
         <source>Scheduled scanning task has been started, every interval %1 scan once every hour.</source>
         <translation>定时扫描任务开启，每间隔%1小时扫描一次。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="241"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="229"/>
         <source>Timed scan finished, Scaned %1, %2 conform, %3 inconform!</source>
         <translation>定时扫描任务完成，已扫描 %1项， %2项符合, %3项不符合！</translation>
     </message>
@@ -2310,17 +2328,22 @@
         <translation type="vanished">定时扫描任务完成，共扫描%1项，%2项符合，%3项不符合！</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="269"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="257"/>
         <source>Open resource monitoring</source>
         <translation>资源监控已打开。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="269"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="257"/>
         <source>Close resource monitoring</source>
         <translation>资源监控已关闭。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="278"/>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="265"/>
+        <source>Fallback is in progress, please wait.</source>
+        <translation>回退正在进行中，请等待。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/settings/baseline-reinforcement.cpp" line="271"/>
         <source>Fallback finished!</source>
         <translation>回退完成！</translation>
     </message>
@@ -2341,22 +2364,22 @@
 <context>
     <name>KS::Settings::Dialog</name>
     <message>
-        <location filename="../src/ui/settings/dialog.cpp" line="66"/>
+        <location filename="../src/ui/settings/dialog.cpp" line="59"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/dialog.cpp" line="77"/>
+        <location filename="../src/ui/settings/dialog.cpp" line="70"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/dialog.cpp" line="82"/>
+        <location filename="../src/ui/settings/dialog.cpp" line="75"/>
         <source>Trusted protect</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/settings/dialog.cpp" line="87"/>
+        <location filename="../src/ui/settings/dialog.cpp" line="80"/>
         <source>Interface Control</source>
         <translation>接口控制</translation>
     </message>
@@ -2692,56 +2715,55 @@
 <context>
     <name>KS::Window</name>
     <message>
-        <location filename="../src/ui/window.cpp" line="105"/>
+        <location filename="../src/ui/window.cpp" line="117"/>
         <source>Security reinforcement</source>
-        <translation>安全加固</translation>
+        <translation>主机安全加固软件</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="133"/>
+        <location filename="../src/ui/window.cpp" line="144"/>
         <source>Unactivated</source>
         <translation>未激活</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="145"/>
+        <location filename="../src/ui/window.cpp" line="156"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="146"/>
+        <location filename="../src/ui/window.cpp" line="157"/>
         <source>Activation</source>
         <translation>软件激活</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="147"/>
+        <location filename="../src/ui/window.cpp" line="158"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="159"/>
-        <location filename="../src/ui/window.cpp" line="263"/>
-        <location filename="../src/ui/window.cpp" line="274"/>
+        <location filename="../src/ui/window.cpp" line="170"/>
+        <location filename="../src/ui/window.cpp" line="217"/>
+        <location filename="../src/ui/window.cpp" line="228"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="160"/>
-        <location filename="../src/ui/window.cpp" line="353"/>
+        <location filename="../src/ui/window.cpp" line="171"/>
+        <location filename="../src/ui/window.cpp" line="367"/>
         <source>Trusted protected</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="161"/>
+        <location filename="../src/ui/window.cpp" line="172"/>
         <source>File protected</source>
         <translation>文件保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="162"/>
+        <location filename="../src/ui/window.cpp" line="173"/>
         <source>Private box</source>
         <translation>私密保险箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="163"/>
-        <location filename="../src/ui/window.cpp" line="360"/>
+        <location filename="../src/ui/window.cpp" line="174"/>
         <source>Device management</source>
         <translation>设备管理</translation>
     </message>
@@ -3044,7 +3066,7 @@
     </message>
     <message>
         <location filename="../lib/base/error.cpp" line="96"/>
-        <location filename="../lib/base/error.cpp" line="177"/>
+        <location filename="../lib/base/error.cpp" line="180"/>
         <source>Unknown error.</source>
         <translation>未知错误。</translation>
     </message>
@@ -3099,17 +3121,22 @@
         <translation>激活码错误。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="171"/>
+        <location filename="../lib/base/error.cpp" line="149"/>
+        <source>There is no historical state, please reinforce it and operation.</source>
+        <translation>历史状态不存在，请在加固后进行操作。</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="174"/>
         <source>Internel error.</source>
         <translation>内部错误。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="174"/>
+        <location filename="../lib/base/error.cpp" line="177"/>
         <source>The software is not activated.</source>
         <translation>软件未激活。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="181"/>
+        <location filename="../lib/base/error.cpp" line="184"/>
         <source> (error code: 0x%1)</source>
         <translation> （错误码：0x%1）</translation>
     </message>
@@ -3276,65 +3303,65 @@
         <translation>输出文件路径。</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="60"/>
-        <location filename="../src/ui/br/xmlutils.cpp" line="100"/>
+        <location filename="../src/ui/br/utils.cpp" line="60"/>
+        <location filename="../src/ui/br/utils.cpp" line="100"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="63"/>
-        <location filename="../src/ui/br/xmlutils.cpp" line="94"/>
+        <location filename="../src/ui/br/utils.cpp" line="63"/>
+        <location filename="../src/ui/br/utils.cpp" line="94"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="66"/>
-        <location filename="../src/ui/br/xmlutils.cpp" line="96"/>
+        <location filename="../src/ui/br/utils.cpp" line="66"/>
+        <location filename="../src/ui/br/utils.cpp" line="96"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="69"/>
+        <location filename="../src/ui/br/utils.cpp" line="69"/>
         <source>Not Scanned</source>
         <translation>未扫描</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="72"/>
+        <location filename="../src/ui/br/utils.cpp" line="72"/>
         <source>Scannig</source>
         <translation>正在扫描...</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="75"/>
+        <location filename="../src/ui/br/utils.cpp" line="75"/>
         <source>Scan Failed</source>
         <translation>扫描失败</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="78"/>
+        <location filename="../src/ui/br/utils.cpp" line="78"/>
         <source>Scan Complete</source>
         <translation>扫描完成</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="81"/>
+        <location filename="../src/ui/br/utils.cpp" line="81"/>
         <source>Unreinforcement</source>
         <translation>未加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="84"/>
+        <location filename="../src/ui/br/utils.cpp" line="84"/>
         <source>Reinforcing</source>
         <translation>正在加固...</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="87"/>
+        <location filename="../src/ui/br/utils.cpp" line="87"/>
         <source>Reinforcement Failure</source>
         <translation>加固失败</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="90"/>
+        <location filename="../src/ui/br/utils.cpp" line="90"/>
         <source>Reinforced</source>
-        <translation>加固完成</translation>
+        <translation>加固成功</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="98"/>
+        <location filename="../src/ui/br/utils.cpp" line="98"/>
         <source>Unscan</source>
         <translation>未扫描</translation>
     </message>
@@ -3351,34 +3378,45 @@
 <context>
     <name>ReinforcementArgs</name>
     <message>
-        <location filename="../src/ui/br/plugins/reinforcement-args.ui" line="14"/>
+        <source>reset</source>
+        <translation type="vanished">重置</translation>
+    </message>
+    <message>
+        <source>ok</source>
+        <translation type="vanished">确认</translation>
+    </message>
+    <message>
+        <source>Set reinforment args</source>
+        <translation type="vanished">加固参数设置</translation>
+    </message>
+    <message>
+        <source>%1 not less than %2</source>
+        <translation type="vanished">%1不小于%2</translation>
+    </message>
+    <message>
+        <source>%1 input format is incorrect, please input the correct content according to the prompt</source>
+        <translation type="vanished">%1输入格式不正确，请根据提示输入正确的内容</translation>
+    </message>
+</context>
+<context>
+    <name>ReinforcementArgsDialog</name>
+    <message>
+        <location filename="../src/ui/br/reinforcement-items/reinforcement-args-dialog.ui" line="14"/>
+        <location filename="../build/src/ui/ui_reinforcement-args-dialog.h" line="101"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/reinforcement-args.ui" line="94"/>
+        <location filename="../src/ui/br/reinforcement-items/reinforcement-args-dialog.ui" line="94"/>
+        <location filename="../build/src/ui/ui_reinforcement-args-dialog.h" line="102"/>
         <source>reset</source>
         <translation>重置</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/reinforcement-args.ui" line="113"/>
+        <location filename="../src/ui/br/reinforcement-items/reinforcement-args-dialog.ui" line="113"/>
+        <location filename="../build/src/ui/ui_reinforcement-args-dialog.h" line="103"/>
         <source>ok</source>
         <translation>确认</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/br/plugins/reinforcement-args.cpp" line="69"/>
-        <source>Set reinforment args</source>
-        <translation>加固参数设置</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/br/plugins/reinforcement-args.cpp" line="138"/>
-        <source>%1 not less than %2</source>
-        <translation>%1不小于%2</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/br/plugins/reinforcement-args.cpp" line="142"/>
-        <source>%1 input format is incorrect, please input the correct content according to the prompt</source>
-        <translation>%1输入格式不正确，请根据提示输入正确的内容</translation>
     </message>
 </context>
 <context>
@@ -3526,7 +3564,7 @@
         <location filename="../src/ui/window.ui" line="20"/>
         <location filename="../build/src/ui/ui_window.h" line="119"/>
         <source>Security reinforcement</source>
-        <translation>安全加固</translation>
+        <translation>主机安全加固软件</translation>
     </message>
 </context>
 <context>
@@ -3551,22 +3589,22 @@
 <context>
     <name>ini</name>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="33"/>
+        <location filename="../src/ui/br/utils.cpp" line="33"/>
         <source>configuration class</source>
         <translation>配置类</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="34"/>
+        <location filename="../src/ui/br/utils.cpp" line="34"/>
         <source>network class</source>
         <translation>网络类</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="35"/>
+        <location filename="../src/ui/br/utils.cpp" line="35"/>
         <source>audit class</source>
         <translation>审计类</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/xmlutils.cpp" line="36"/>
+        <location filename="../src/ui/br/utils.cpp" line="36"/>
         <source>external class</source>
         <translation>接入类</translation>
     </message>
@@ -3574,78 +3612,78 @@
 <context>
     <name>python</name>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="42"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="42"/>
         <source>Device busy, please pop up!</source>
         <translation>设备忙碌，请弹出设备！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="43"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="43"/>
         <source>Please contact the admin.</source>
         <translation>请联系管理员。</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="44"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="44"/>
         <source>Unable to stop service!</source>
         <translation>服务无法停止！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="45"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="45"/>
         <source>Abnormal service!</source>
         <translation>服务异常！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="46"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="46"/>
         <source>Please close SELinux and use it!</source>
         <translation>请关闭selinux使用！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="47"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="47"/>
         <source>No such file or directory.</source>
         <translation>文件或目录未找到。</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="48"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="48"/>
         <source>Failed to execute command. Please check the log information for details.</source>
         <translation>执行命令失败，详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="49"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="49"/>
         <source>UsePAM is not recommended to be closed,
 which will cause many problems!</source>
         <translation>不建议关闭UsePAM，这将导致许多问题！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="50"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="50"/>
         <source>Unable to stop firewalld service!</source>
         <translation>firewalld服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="51"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="51"/>
         <source>Unable to stop bluetooth service!</source>
         <translation>蓝牙服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="52"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="52"/>
         <source>Unable to stop cups service!</source>
         <translation>cups服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="53"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="53"/>
         <source>Unable to stop avahi service!</source>
         <translation>avahi服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="54"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="54"/>
         <source>Unable to stop rpcbind service!</source>
         <translation>rpcbind服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="55"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="55"/>
         <source>Unable to stop smb service!</source>
         <translation>smb服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/plugins/plugins-translation.h" line="56"/>
+        <location filename="../src/ui/br/reinforcement-items/plugins-translation.h" line="56"/>
         <source>Abnormal service! Please check the log information for details.</source>
         <translation>服务异常！详情请查看日志信息。</translation>
     </message>
@@ -4127,7 +4165,7 @@ which will cause many problems!</source>
     </message>
     <message>
         <location filename="../data/br-system-rs.xml.in" line="22"/>
-        <location filename="../src/ui/br/xmlutils.cpp" line="244"/>
+        <location filename="../src/ui/br/utils.cpp" line="244"/>
         <source>Turn on ICMP redirection</source>
         <translation>开启ICMP重定向</translation>
     </message>
@@ -4404,7 +4442,7 @@ which will cause many problems!</source>
     <message>
         <location filename="../data/br-system-rs.xml.in" line="808"/>
         <source>Scan files with SUID SGID permissions in the/bin,/usr/bin,/sbin, and/usr/sbin directories of the system</source>
-        <translation>扫描系统/bin,/usr/bin,/sbin, and/usr/sbin目录中SUID-GUID权限的文件</translation>
+        <translation>扫描系统/bin,/usr/bin,/sbin, /usr/sbin目录中具有SUID-GUID权限的文件</translation>
     </message>
     <message>
         <location filename="../data/br-system-rs.xml.in" line="823"/>

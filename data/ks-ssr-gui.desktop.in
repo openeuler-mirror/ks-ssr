@@ -2,9 +2,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Security Reinforcement
-Name[zh_CN]=安全加固
+Name[zh_CN]=主机安全加固软件
 Comment=Security Reinforcement
-Comment[zh_CN]=安全加固
+Comment[zh_CN]=主机安全加固软件
 Exec=ks-ssr-gui
 Icon=ks-ssr.png
 Terminal=false
