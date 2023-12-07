@@ -220,16 +220,15 @@ void DeviceManager::remountDevice(const QSharedPointer<Device> device,
                                   const DeviceMount *mount)
 {
     auto permission = device->getPermission();
-    QString args = QString("-o remount,");
-    args.append(permission->write ? "rw" : "ro");
-    if (!permission->execute)
-    {
-        args.append(",noexec");
-    }
-    auto exitcode = QProcess::execute("mount", {args, mount->device, mount->path});
+    QStringList args{"-o"};
+    QString options("remount");
+    options.append(permission->write ? ",rw" : ",ro");
+    options.append(permission->execute ? "" :",noexec");
+    args.append({options, mount->device, mount->path});
+    auto exitcode = QProcess::execute("mount", args);
     if (exitcode != 0)
     {
-        KLOG_WARNING() << "Failed to execute command " << QString("mount %1 %2 %3").arg(args, mount->device, mount->path) << ", exitcode is " << exitcode;
+        KLOG_WARNING() << "Failed to execute command: " << "mount " << args.join(' ') << ", exitcode is " << exitcode;
     }
 }
 
