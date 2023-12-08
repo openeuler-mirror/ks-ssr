@@ -93,8 +93,6 @@ signals:
 
 private slots:
     void licenseChange(bool);
-    // 支持旧版本激活对象在线激活，连接KSSSRManager licenseChanged信号
-    void oldLicenseChange(bool);
 
 private:
     bool m_isActivated;
