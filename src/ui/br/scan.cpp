@@ -172,6 +172,7 @@ void Scan::init()
     // else if (m_dbusProxy->standard_type() == STANDARD_TYPE_CUSTOM)
     auto reply = m_dbusProxy->GetCategories();
     reply.waitForFinished();
+    CHECK_ERROR_FOR_DBUS_REPLY(reply)
     RETURN_IF_TRUE(reply.isError())
     Utils::getDefault()->jsonParsing(reply.value().toUtf8(), m_categories);
     Utils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_categories);

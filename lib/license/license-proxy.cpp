@@ -30,21 +30,20 @@ LicenseProxy::LicenseProxy(QObject* parent) : QObject(parent),
                                               m_isActivated(false),
                                               m_expiredTime(0)
 {
-    m_objectPath = getObjectPath(LICENSE_OBJECT_NAME);
-
+    // 向下兼容，判断KSSSRManager是否激活，已激活则使用KSSSRManager
+    m_objectPath = getObjectPath(getActivateStatus(LICENSE_OLD_OBJECT_NAME) ? LICENSE_OLD_OBJECT_NAME : LICENSE_OBJECT_NAME);
     QDBusConnection::systemBus().connect(LICENSE_MANAGER_DBUS_NAME,
-                                         m_objectPath,
+                                         getObjectPath(LICENSE_OBJECT_NAME),
                                          LICENSE_OBJECT_DBUS_NAME,
                                          QLatin1String(SIGNAL_LICENSE_CHANGED),
                                          this,
                                          SLOT(licenseChange(bool)));
-
     QDBusConnection::systemBus().connect(LICENSE_MANAGER_DBUS_NAME,
                                          getObjectPath(LICENSE_OLD_OBJECT_NAME),
                                          LICENSE_OBJECT_DBUS_NAME,
                                          QLatin1String(SIGNAL_LICENSE_CHANGED),
                                          this,
-                                         SLOT(licenseChange(bool)));
+                                         SLOT(oldLicenseChange(bool)));
 }
 
 QSharedPointer<LicenseProxy> LicenseProxy::getDefault()
@@ -154,10 +153,10 @@ bool LicenseProxy::activateByActivationCode(const QString& activation_Code, QStr
     return true;
 }
 
-bool LicenseProxy::getOldActivateStatus()
+bool LicenseProxy::getActivateStatus(const QString& objectName)
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_MANAGER_DBUS_NAME,
-                                                                getObjectPath(LICENSE_OLD_OBJECT_NAME),
+                                                                getObjectPath(objectName),
                                                                 LICENSE_OBJECT_DBUS_NAME,
                                                                 METHOD_GET_LICENSE);
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
@@ -191,20 +190,11 @@ bool LicenseProxy::getOldActivateStatus()
     //获取激活状态
     auto activationStatus = (LicenseActivationStatus)data.value(LICENSE_JK_ACTIVATION_STATUS).toInt();
     RETURN_VAL_IF_TRUE(activationStatus != LAS_ACTIVATED, false);
-
-    m_activationCode = data.value(LICENSE_JK_ACTIVATION_CODE).toString();
-    m_machineCode = data.value(LICENSE_JK_MACHINE_CODE).toString();
-    m_expiredTime = time_t(data.value(LICENSE_JK_EXPIRED_TIME).toVariant().toUInt());
     return true;
 }
 
 bool LicenseProxy::isActivated()
 {
-    // 向下兼容，如果当前KSSSR未激活，则判断KSSSRManager是否激活，已激活则返回已激活状态
-    if (!m_isActivated)
-    {
-        m_isActivated = getOldActivateStatus();
-    }
     return m_isActivated;
 }
 
@@ -225,6 +215,13 @@ time_t LicenseProxy::getExpiredTime()
 
 void LicenseProxy::licenseChange(bool)
 {
+    updateLicense();
+    emit licenseChanged();
+}
+
+void LicenseProxy::oldLicenseChange(bool)
+{
+    m_objectPath = getObjectPath(LICENSE_OLD_OBJECT_NAME);
     updateLicense();
     emit licenseChanged();
 }

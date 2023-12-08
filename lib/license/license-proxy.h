@@ -57,11 +57,12 @@ public:
      */
     bool activateByActivationCode(const QString& activation_Code, QString& errorMsg);
     /**
-     * @brief getOldActivateStatus:获取旧版本激活状态
+     * @brief getActivateStatus:获取旧版本激活状态
+     * @param objectName:激活对象名称
      * @return true： 已授权
      *         false：未授权/授权已过期
      */
-    bool getOldActivateStatus();
+    bool getActivateStatus(const QString& objectName);
     /**
      * @brief isActivate:判断是否授权
      * @return true： 已授权
@@ -92,6 +93,8 @@ signals:
 
 private slots:
     void licenseChange(bool);
+    // 支持旧版本激活对象在线激活，连接KSSSRManager licenseChanged信号
+    void oldLicenseChange(bool);
 
 private:
     bool m_isActivated;

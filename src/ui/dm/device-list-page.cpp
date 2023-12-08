@@ -60,11 +60,6 @@ DeviceListPage::DeviceListPage(QWidget *parent) : Page(parent),
 DeviceListPage::~DeviceListPage()
 {
     delete m_ui;
-    if (m_devicePermission)
-    {
-        delete m_devicePermission;
-        m_devicePermission = nullptr;
-    }
 }
 
 void DeviceListPage::update()
@@ -113,38 +108,28 @@ void DeviceListPage::searchTextChanged(const QString &text)
 
 void DeviceListPage::popupEditDialog(const QModelIndex &index)
 {
-    if (index.column() == m_ui->m_table->getColCount() - 1)
-    {
-        if (!m_devicePermission)
-        {
-            m_devicePermission = new DevicePermission(this);
-            connect(m_devicePermission, &DevicePermission::permissionChanged, this, &DeviceListPage::updatePermission);
-            connect(m_devicePermission, &DevicePermission::stateChanged, this, &DeviceListPage::updateState);
-            connect(m_devicePermission, &DevicePermission::deviceChanged, this, &DeviceListPage::update);
-            connect(m_devicePermission, &DevicePermission::destroyed,
-                    [this]
-                    {
-                        m_devicePermission->deleteLater();
-                        m_devicePermission = nullptr;
-                    });
-        }
+    RETURN_IF_TRUE(index.column() != m_ui->m_table->getColCount() - 1)
 
-        auto deviceName = m_ui->m_table->getName(index.row());
-        auto deviceID = m_ui->m_table->getID(index.row());
-        auto state = m_ui->m_table->getState(index.row());
-        auto permissions = m_ui->m_table->getPermission(index.row());
-        auto type = m_ui->m_table->getType(index.row());
+    m_devicePermission = new DevicePermission(this);
+    connect(m_devicePermission, &DevicePermission::permissionChanged, this, &DeviceListPage::updatePermission);
+    connect(m_devicePermission, &DevicePermission::stateChanged, this, &DeviceListPage::updateState);
+    connect(m_devicePermission, &DevicePermission::deviceChanged, this, &DeviceListPage::update);
 
-        m_devicePermission->setTitle(deviceName);
-        m_devicePermission->setDeviceID(deviceID);
-        m_devicePermission->setDeviceStatus(state);
-        m_devicePermission->setDevicePermission(type, permissions);
+    auto deviceName = m_ui->m_table->getName(index.row());
+    auto deviceID = m_ui->m_table->getID(index.row());
+    auto state = m_ui->m_table->getState(index.row());
+    auto permissions = m_ui->m_table->getPermission(index.row());
+    auto type = m_ui->m_table->getType(index.row());
 
-        int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
-        int y = this->y() + this->height() / 4 + m_devicePermission->height() / 4;
-        m_devicePermission->move(x, y);
-        m_devicePermission->show();
-    }
+    m_devicePermission->setTitle(deviceName);
+    m_devicePermission->setDeviceID(deviceID);
+    m_devicePermission->setDeviceStatus(state);
+    m_devicePermission->setDevicePermission(type, permissions);
+
+    int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
+    int y = this->y() + this->height() / 4 + m_devicePermission->height() / 4;
+    m_devicePermission->move(x, y);
+    m_devicePermission->show();
 }
 
 void DeviceListPage::updatePermission()
@@ -192,6 +177,8 @@ void DeviceListPage::updateState()
     if (reply.isError())
     {
         POPUP_MESSAGE_DIALOG(reply.error().message());
+        // 更新状态已经失败了，不需要再继续往下执行updatePermission的操作
+        disconnect(m_devicePermission, &DevicePermission::permissionChanged, this, &DeviceListPage::updatePermission);
         return;
     }
 }
