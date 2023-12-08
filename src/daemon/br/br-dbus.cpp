@@ -73,6 +73,7 @@ static int _audit_log(int type, int rc, const char* op)
 BRDBus::BRDBus(QObject* parent) : QObject(parent), timer(nullptr)
 {
     this->m_dbus = new BRAdaptor(this);
+    init();
 }
 
 BRDBus::~BRDBus()
@@ -89,7 +90,6 @@ BRDBus* BRDBus::instance_ = NULL;
 void BRDBus::globalInit(QObject* parent)
 {
     instance_ = new BRDBus(parent);
-    instance_->init();
 }
 
 uint BRDBus::notification_status() const
@@ -709,15 +709,16 @@ void BRDBus::SetFallback(const uint32_t& snapshot_status)
 
 void BRDBus::init()
 {
-    this->configuration_ = Configuration::getInstance();
-    this->categories_ = Categories::getInstance();
-    this->plugins_ = Plugins::getInstance();
-
     QDBusConnection dbusConnection = QDBusConnection::systemBus();
     if (!dbusConnection.registerObject(BR_DBUS_OBJECT_PATH, this))
     {
         KLOG_ERROR() << "register Service error:" << dbusConnection.lastError().message();
+        return;
     }
+
+    this->configuration_ = Configuration::getInstance();
+    this->categories_ = Categories::getInstance();
+    this->plugins_ = Plugins::getInstance();
 
     this->resource_monitor_ = new ResourceMonitor();
     KLOG_DEBUG("init ResourceMonitor.");

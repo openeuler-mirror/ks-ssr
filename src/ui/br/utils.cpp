@@ -163,11 +163,11 @@ void Utils::jsonParsing(const QByteArray &categoriesJson, QList<Category *> &cat
         auto iconName = arrayObj.at(i).toObject().value("icon_name");
         auto label = arrayObj.at(i).toObject().value("label");
         auto name = arrayObj.at(i).toObject().value("name");
-        auto categories = new Category;
-        categories->setIconName(iconName.toString());
-        categories->setLabel(categoriesLabel2Translate(label.toString()));
-        categories->setName(name.toString());
-        categoriesList.append(categories);
+        auto category = new Category;
+        category->setIconName(iconName.toString());
+        category->setLabel(categoriesLabel2Translate(label.toString()));
+        category->setName(name.toString());
+        categoriesList.append(category);
     }
 }
 
@@ -190,7 +190,6 @@ bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categ
         for (auto arg : iter.arg())
         {
             auto value = StrUtils::str2jsonValue(arg.value());
-            KLOG_DEBUG() << "value = " << value;
             QString defaultLabel = "", defaultNote = "";
             for (auto label : arg.layout().get().label())
             {

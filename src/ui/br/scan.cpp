@@ -37,8 +37,8 @@ Scan::Scan(QWidget *parent) : QWidget(parent),
 {
     m_ui->setupUi(this);
 
-    init();
     initConnection();
+    parsingCategories();
     initUI();
 }
 
@@ -54,6 +54,7 @@ void Scan::emitScanSignal()
 
 void Scan::usingSystemStrategy()
 {
+    m_strategyType = BR_STRATEGY_TYPE_SYSTEM;
     KLOG_DEBUG() << "use system strategy.";
     resetAllReinforcementItem();
     m_ui->m_itemTable->setAllCheckBoxEditStatus(false);
@@ -64,6 +65,7 @@ void Scan::usingSystemStrategy()
 void Scan::usingCustomStrategy()
 {
     KLOG_DEBUG() << "use custom strategy.";
+    m_strategyType = BR_STRATEGY_TYPE_CUSTOM;
     disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     // 修改UI界面参数以及复选框状态
@@ -161,12 +163,15 @@ bool Scan::exportStrategy()
     return true;
 }
 
-void Scan::init()
+void Scan::parsingCategories()
 {
     m_dbusProxy = new BRDbusProxy(SSR_DBUS_NAME,
                                   BR_DBUS_OBJECT_PATH,
                                   QDBusConnection::systemBus(),
                                   this);
+    // TODO ： 这里逻辑有问题，激活时前台与后台同时进行初始化，存在后台的dbus路径还没有初始化成功，前台就已经调用了，
+    // 会抛出BR_DBUS_OBJECT_PATH不存在的错误，暂未找到合适的解决办法，后台添加个变量？初始化完成后发出信号，前台才进行初始化？
+    QThread::msleep(350);
     // TODO ： 加固标准功能，暂未使用
     // if (m_dbusProxy->standard_type() == STANDARD_TYPE_SYSTEM)
     // else if (m_dbusProxy->standard_type() == STANDARD_TYPE_CUSTOM)
@@ -385,7 +390,9 @@ void Scan::startScan()
     // TODO 托盘功能是否有必要
     //    if (is_minTray)
     //        showNormal();
-    auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
+    auto scanItems = m_strategyType == BR_STRATEGY_TYPE_CUSTOM
+                         ? m_ui->m_itemTable->getString(m_categories)
+                         : m_ui->m_itemTable->getAllString(m_categories);
     if (scanItems.empty())
     {
         POPUP_MESSAGE_DIALOG(tr("Please check the reinforcement items to be scanned or reinforcement classification for scanning."))
@@ -412,7 +419,7 @@ void Scan::startReinforcement()
     clearState();
     m_ui->m_itemTable->clearCheckedStatus(m_categories, BR_REINFORCEMENT_STATE_UNREINFORCE);
 
-    auto reinforcementItem = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
+    auto reinforcementItem = m_strategyType == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
     if (reinforcementItem.empty())
     {
         POPUP_MESSAGE_DIALOG(tr("Please check the content to be reinforced."))

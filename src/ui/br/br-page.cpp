@@ -72,8 +72,7 @@ void BRPage::initUI()
 
     connect(m_home, &Home::systemScanClicked, this, &BRPage::startSystemScan);
     connect(m_home, &Home::customScanClicked, this, &BRPage::startCustomScan);
-    connect(m_home, &Home::currentStrategyChanged, this, [this](int type)
-            { m_strategyType = BRStrategyType(type); });
+    connect(m_home, &Home::currentStrategyChanged, this, [this](int type) { m_strategyType = BRStrategyType(type); });
     connect(m_scan, &Scan::returnHomeClicked, this, &BRPage::returnHome);
     connect(m_scan, &Scan::reinforcementFinished, m_home, &Home::modfiyReinforcementTime);
 }
