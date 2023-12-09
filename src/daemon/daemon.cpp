@@ -17,11 +17,12 @@
 #include <QDBusConnection>
 #include "include/ssr-i.h"
 #include "lib/license/license-proxy.h"
-#include "src/daemon/private-box/box-manager.h"
+#include "src/daemon/account/manager.h"
+#include "src/daemon/daemon_adaptor.h"
 #include "src/daemon/dm/device-manager.h"
 #include "src/daemon/kss/dbus.h"
 #include "src/daemon/log/manager.h"
-#include "src/daemon/account/manager.h"
+#include "src/daemon/private-box/box-manager.h"
 #include "src/daemon/tool-box/manager.h"
 
 namespace KS
@@ -31,6 +32,7 @@ Daemon *Daemon::m_instance = nullptr;
 Daemon::Daemon() : QObject(nullptr)
 {
     m_licenseProxy = LicenseProxy::getDefault();
+    m_dbusAdaptor = new DaemonAdaptor(this);
     if (m_licenseProxy->isActivated())
     {
         start();
@@ -76,5 +78,6 @@ void Daemon::start()
     Log::Manager::globalInit();
     Account::Manager::globalInit();
     ToolBox::Manager::globalInit();
+    emit RegisterFinished();
 }
 }  // namespace KS

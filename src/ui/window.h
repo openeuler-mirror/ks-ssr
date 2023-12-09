@@ -25,6 +25,8 @@ namespace Ui
 class Window;
 }
 
+class DaemonProxy;
+
 namespace KS
 {
 class Navigation;
@@ -70,5 +72,6 @@ private:
     QLabel *m_activateStatus;
     Loading *m_loading;
     QSharedPointer<LicenseProxy> m_licenseProxy;
+    DaemonProxy *m_dbusProxy;
 };
 }  // namespace KS

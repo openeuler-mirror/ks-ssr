@@ -408,7 +408,7 @@ QPushButton#m_newBox,
 QPushButton#m_scanButton,
 QPushButton#m_scan,
 QPushButton#m_activate,
-KS--DM--DevicePermission QPushButton#m_confirm,
+QPushButton#m_confirm,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm
 {
     color:#FFFFFF;
@@ -426,7 +426,7 @@ QPushButton#m_newBox:hover,
 QPushButton#m_scanButton:hover,
 QPushButton#m_scan:hover,
 QPushButton#m_activate:hover,
-KS--DM--DevicePermission QPushButton#m_confirm:hover,
+QPushButton#m_confirm:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
 {
     background:#79C3FF;
@@ -437,7 +437,6 @@ KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
 QPushButton#passwdCancelBtn,
 QPushButton#m_cancel,
 QPushButton#m_recertification,
-QPushButton#m_unprotect,
 QPushButton#m_return,
 QPushButton#m_reset,
 KS--Settings--DeviceControl #MessageWindow QPushButton#cancel
@@ -452,7 +451,6 @@ KS--Settings--DeviceControl #MessageWindow QPushButton#cancel
 QPushButton#passwdCancelBtn:hover,
 QPushButton#m_cancel:hover,
 QPushButton#m_recertification:hover,
-QPushButton#m_unprotect:hover,
 QPushButton#m_return:hover,
 QPushButton#m_reset:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#cancel:hover
@@ -631,6 +629,13 @@ KS--DM--DevicePermission QComboBox QLineEdit#lineEdit
 {
     background-color:#222222;
 }
+
+KS--DM--DevicePermission QWidget#m_content
+{
+    border-radius: 6px;
+    background-color:#2d2d2d;
+}
+
 
 KS--Settings--DeviceControl QCheckBox::indicator:unchecked
 {

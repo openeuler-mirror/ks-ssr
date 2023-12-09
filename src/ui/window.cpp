@@ -26,6 +26,7 @@
 #include "src/ui/br/br-page.h"
 #include "src/ui/common/loading.h"
 #include "src/ui/common/single-application/single-application.h"
+#include "src/ui/daemon_proxy.h"
 #include "src/ui/dm/device-list-page.h"
 #include "src/ui/dm/device-log-page.h"
 #include "src/ui/fp/file-protection-page.h"
@@ -50,6 +51,11 @@ Window::Window() : TitlebarWindow(nullptr),
                    m_licenseProxy(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
+    m_dbusProxy = new DaemonProxy(SSR_DBUS_NAME,
+                                  SSR_DBUS_OBJECT_PATH,
+                                  QDBusConnection::systemBus(),
+                                  this);
+
     initWindow();
     initActivation();
     if (m_licenseProxy->isActivated())
@@ -58,7 +64,12 @@ Window::Window() : TitlebarWindow(nullptr),
     }
     else
     {
-        connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Window::start);
+        connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, [this] {
+            disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, nullptr);
+            connect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, [this] {
+                disconnect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, nullptr);
+                start(); });
+        });
     }
 
     connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject);
@@ -82,7 +93,6 @@ void Window::resizeEvent(QResizeEvent *event)
 
 void Window::start()
 {
-    disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Window::start);
     initSettings();
     initNavigation();
 }

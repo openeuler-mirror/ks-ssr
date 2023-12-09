@@ -36,7 +36,6 @@ Scan::Scan(QWidget *parent) : QWidget(parent),
                               m_ui(new Ui::Scan)
 {
     m_ui->setupUi(this);
-
     initConnection();
     parsingCategories();
     initUI();
@@ -169,9 +168,6 @@ void Scan::parsingCategories()
                                   BR_DBUS_OBJECT_PATH,
                                   QDBusConnection::systemBus(),
                                   this);
-    // TODO ： 这里逻辑有问题，激活时前台与后台同时进行初始化，存在后台的dbus路径还没有初始化成功，前台就已经调用了，
-    // 会抛出BR_DBUS_OBJECT_PATH不存在的错误，暂未找到合适的解决办法，后台添加个变量？初始化完成后发出信号，前台才进行初始化？
-    QThread::msleep(350);
     // TODO ： 加固标准功能，暂未使用
     // if (m_dbusProxy->standard_type() == STANDARD_TYPE_SYSTEM)
     // else if (m_dbusProxy->standard_type() == STANDARD_TYPE_CUSTOM)
