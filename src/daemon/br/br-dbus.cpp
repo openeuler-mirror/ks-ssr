@@ -73,6 +73,7 @@ static int _audit_log(int type, int rc, const char* op)
 BRDBus::BRDBus(QObject* parent) : QObject(parent), timer(nullptr)
 {
     this->m_dbus = new BRAdaptor(this);
+    init();
 }
 
 BRDBus::~BRDBus()
@@ -89,7 +90,6 @@ BRDBus* BRDBus::instance_ = NULL;
 void BRDBus::globalInit(QObject* parent)
 {
     instance_ = new BRDBus(parent);
-    instance_->init();
 }
 
 uint BRDBus::notification_status() const
@@ -120,6 +120,11 @@ uint BRDBus::time_scan() const
 QString BRDBus::version() const
 {
     return PROJECT_VERSION;
+}
+
+uint BRDBus::fallback_status() const
+{
+    return configuration_->getFallbackStatus();
 }
 
 void BRDBus::SetStandardType(const uint32_t& standard_type)
@@ -193,6 +198,24 @@ void BRDBus::SetNotificationStatus(const uint32_t& notification_status)
     {
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_NOTIFICATION_STATUS_FAILED));
+    }
+}
+
+void BRDBus::SetFallbackStatus(const uint32_t& fallback_status)
+{
+    KLOG_INFO("Set fallback status: %d.", fallback_status);
+
+    if (fallback_status > BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED)
+    {
+        sendErrorReply(QDBusError::InvalidArgs,
+                       BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_FALLBACK_STATUS_INVALID));
+    }
+    RETURN_IF_TRUE(fallback_status == this->configuration_->getFallbackStatus())
+
+    if (!this->configuration_->setFallbackStatus(BRFallbackStatus(fallback_status)))
+    {
+        sendErrorReply(QDBusError::InternalError,
+                       BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_FALLBACK_STATUS_FAILED));
     }
 }
 
@@ -422,8 +445,7 @@ qlonglong BRDBus::Scan(const QStringList& names)
 
             this->scan_job_->addOperation(reinforcement->getPluginName(),
                                           reinforcement->getName(),
-                                          [reinforcement_interface]() -> QString
-                                          {
+                                          [reinforcement_interface]() -> QString {
                                               //    QJsonValue retval;
                                               QJsonObject retval;
                                               QString args;
@@ -525,7 +547,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
             QJsonObject param;
             QString param_str = "";
 
-            if (snapshot_status_ == BRSnapshotStatus::BR_SNAPSHOT_STATUS_INITIAL)
+            if (fallback_method_ == BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL)
             {
                 auto rh = this->configuration_->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
                 auto& rh_reinforcements = rh->reinforcement();
@@ -541,7 +563,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
                 }
                 KLOG_DEBUG() << "frist fallback name : " << name << ", frist fallback param_str: " << param_str;
             }
-            else if (snapshot_status_ == BRSnapshotStatus::BR_SNAPSHOT_STATUS_LAST)
+            else if (fallback_method_ == BRFallbackMethod::BR_FALLBACK_METHOD_LAST)
             {
                 //
                 auto rh = this->configuration_->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
@@ -583,8 +605,7 @@ qlonglong BRDBus::Reinforce(const QStringList& names)
 
             this->reinforce_job_->addOperation(reinforcement->getPluginName(),
                                                reinforcement->getName(),
-                                               [reinforcement_interface, param_str]() -> QString
-                                               {
+                                               [reinforcement_interface, param_str]() -> QString {
                                                    QString error;
                                                    QJsonObject retval;
                                                    if (!reinforcement_interface->set(param_str, error))
@@ -658,61 +679,46 @@ void BRDBus::Cancel(const qlonglong& job_id)
 void BRDBus::SetFallback(const uint32_t& snapshot_status)
 {
     KLOG_INFO("Set fallback. snapshot_status: %d.", snapshot_status);
+    RETURN_IF_TRUE(snapshot_status == BRFallbackMethod::BR_FALLBACK_METHOD_OTHER);
     is_reinfoce_flag_ = false;
     QStringList names_rh;
     auto rh = this->configuration_->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
     auto& rh_reinforcements = rh->reinforcement();
+    if (rh_reinforcements.empty())
+    {
+        sendErrorReply(QDBusError::Failed, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_FALLBACK_RH_EMPTY));
+        is_reinfoce_flag_ = true;
+        return;
+    }
     for (auto iter = rh_reinforcements.begin(); iter != rh_reinforcements.end(); ++iter)
     {
+        // 获取所有加固项name
         names_rh.push_back(QString::fromStdString(iter->name()));
     }
-
-    if (snapshot_status == BRSnapshotStatus::BR_SNAPSHOT_STATUS_INITIAL)
+    if (names_rh.empty())
     {
-        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_INITIAL;
-        if (names_rh.empty())
-        {
-            // 需回退的加固项为空 不需要进行加固了 Reinforce Finish
-            emit ProgressFinished();
-            is_reinfoce_flag_ = true;
-            return;
-        }
-        Reinforce(names_rh);
-
-        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_OTHER;
-    }
-    else if (snapshot_status == BRSnapshotStatus::BR_SNAPSHOT_STATUS_LAST)
-    {
-        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_LAST;
-        if (names_rh.empty())
-        {
-            // 需回退的加固项为空 不需要进行加固了 Reinforce Finish
-            emit ProgressFinished();
-            is_reinfoce_flag_ = true;
-            return;
-        }
-        Reinforce(names_rh);
-
-        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_OTHER;
-    }
-    else
-    {
-        snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_OTHER;
+        // 需回退的加固项为空 不需要进行加固了 Reinforce Finish
+        emit ProgressFinished();
         is_reinfoce_flag_ = true;
+        return;
     }
+    fallback_method_ = BRFallbackMethod(snapshot_status);
+    Reinforce(names_rh);
+    fallback_method_ = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
 }
 
 void BRDBus::init()
 {
-    this->configuration_ = Configuration::getInstance();
-    this->categories_ = Categories::getInstance();
-    this->plugins_ = Plugins::getInstance();
-
     QDBusConnection dbusConnection = QDBusConnection::systemBus();
     if (!dbusConnection.registerObject(BR_DBUS_OBJECT_PATH, this))
     {
         KLOG_ERROR() << "register Service error:" << dbusConnection.lastError().message();
+        return;
     }
+
+    this->configuration_ = Configuration::getInstance();
+    this->categories_ = Categories::getInstance();
+    this->plugins_ = Plugins::getInstance();
 
     this->resource_monitor_ = new ResourceMonitor();
     KLOG_DEBUG("init ResourceMonitor.");
@@ -723,6 +729,15 @@ void BRDBus::init()
     QObject::connect(this->resource_monitor_, &ResourceMonitor::cpuAverageLoadRatio_,
                      this, &BRDBus::cpuAverageLoadRatio);
     QObject::connect(this->resource_monitor_, &ResourceMonitor::memoryRemainingRatio_, this, &BRDBus::memoryRemainingRatio);
+
+    // 进程完成后，回退状态置为未开始
+    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]() {
+        RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->configuration_->getFallbackStatus());
+        if (!this->configuration_->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
+        {
+            KLOG_ERROR() << "set fallback status failed.";
+        }
+    });
 
     if (configuration_->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {
@@ -814,9 +829,13 @@ void BRDBus::onScanProcessChangedCb(const JobResult& job_result)
             }
             else
             {
-                state = BRReinforcementState(state | BRReinforcementState::BR_REINFORCEMENT_STATE_UNSAFE);
+                // 保留未扫描状态，否则扫描结果仅为符合和不符合了
+                if (state != BRReinforcementState::BR_REINFORCEMENT_STATE_UNSCAN)
+                {
+                    state = BRReinforcementState(state | BRReinforcementState::BR_REINFORCEMENT_STATE_UNSAFE);
+                }
 
-                // 首次加固修改保存的历史操作文件，改为获取到的值
+                // 首次加固修改保存的历史操作文件，改为获取到的值,本身不符合才需要获取当前值，若为符合则直接使用默认值
                 if (is_frist_reinfoce_finish_)
                 {
                     auto rh_frist = this->configuration_->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);

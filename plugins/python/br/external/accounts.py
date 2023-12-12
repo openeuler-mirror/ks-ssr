@@ -51,6 +51,16 @@ GET_MAXIMUM_UID = "awk '/^UID_MAX/ {print $2}' /etc/login.defs"
 
 
 class Accounts:
+    def check_user_exists(self, username):
+        try:
+            # 使用os.getpwnam函数获取用户信息
+            user_info = os.getpwnam(username)
+            # 如果获取到用户信息，则用户存在
+            return True
+        except Exception as e:
+            br.log.debug(e)
+            return False
+
     def is_nologin_shell(self, shell):
         basename = os.path.basename(shell)
         if len(shell) == 0 or basename == "nologin" or basename == "false":
@@ -133,8 +143,12 @@ class LoginLimit(Accounts):
         # 过检需求，这个名单直接设置为可登录
         for permission_user in permission_users:
             if permission_user != "" and permission_user != "\"\"":
-                br.utils.subprocess_not_output(
-                    "usermod -s /bin/bash {0}".format(permission_user))
+                continue
+            if not self.check_user_exists(permission_user):
+                continue
+            
+            br.utils.subprocess_not_output(
+                "usermod -s /bin/bash {0}".format(permission_user))
 
         return (True, '')
 

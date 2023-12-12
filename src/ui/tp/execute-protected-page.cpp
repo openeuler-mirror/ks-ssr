@@ -40,11 +40,10 @@ ExecuteProtectedPage::ExecuteProtectedPage(QWidget *parent) : Page(parent),
                                    this);
 
     // 初始化完成自动刷新
-    connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this]
-            {
-                m_ui->m_executeTable->updateInfo();
-                emit initFinished();
-            });
+    connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this] {
+        m_ui->m_executeTable->updateInfo();
+        emit initFinished();
+    });
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2"))
                     .arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()),
@@ -136,6 +135,13 @@ void ExecuteProtectedPage::addExecuteFile(bool checked)
 {
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     RETURN_IF_TRUE(fileName.isEmpty())
+
+    QFileInfo fileInfo(fileName);
+    if (fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz")
+    {
+        POPUP_MESSAGE_DIALOG(tr("Added file types are not supported."));
+        return;
+    }
 
     auto reply = m_dbusProxy->AddTrustedFile(fileName);
     CHECK_ERROR_FOR_DBUS_REPLY(reply)

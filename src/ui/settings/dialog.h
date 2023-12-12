@@ -38,9 +38,6 @@ private:
     Dialog(QWidget *parent = nullptr);
     ~Dialog();
 
-protected:
-    void closeEvent(QCloseEvent *event) override;
-
 private:
     void initUI();
     void initSidebar();

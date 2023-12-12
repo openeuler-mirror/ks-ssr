@@ -66,6 +66,9 @@ public:  // PROPERTIES
     Q_PROPERTY(QString version READ version)
     QString version() const;
 
+    Q_PROPERTY(uint fallback_status READ fallback_status)
+    uint fallback_status() const;
+
 public Q_SLOTS:
     // 设置标准类型
     virtual void SetStandardType(const uint32_t &standard_type);
@@ -81,6 +84,9 @@ public Q_SLOTS:
 
     // 设置通知状态
     virtual void SetNotificationStatus(const uint32_t &notification_status);
+
+    // 设置回退状态
+    virtual void SetFallbackStatus(const uint32_t &fallback_status);
 
     // 设置自定义加固策略
     virtual void ImportCustomRA(const QString &encoded_strategy);
@@ -202,7 +208,7 @@ private:
     bool is_scan_flag_ = true;
     bool is_reinfoce_flag_ = true;
 
-    BRSnapshotStatus snapshot_status_ = BRSnapshotStatus::BR_SNAPSHOT_STATUS_OTHER;
+    BRFallbackMethod fallback_method_ = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
     BRAdaptor *m_dbus;
 };
 }  // namespace BRDaemon

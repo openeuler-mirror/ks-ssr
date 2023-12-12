@@ -101,9 +101,11 @@ void Table::addLine(const QString &name,
     layout->setContentsMargins(0, 0, 0, 0);
 
     auto nameLabel = new QLabel(line);
+    nameLabel->setObjectName("nameLabel");
     auto scanLabel = new QLabel(line);
     auto reinforceLabel = new QLabel(line);
     auto remarksLabel = new QLabel(line);
+    remarksLabel->setObjectName("remarksLabel");
 
     QPalette scanPe;
     scanPe.setColor(QPalette::WindowText, scanColor);
@@ -136,6 +138,7 @@ void Table::addLine(const QString &name,
     line->setLayout(layout);
 
     m_ui->m_line->layout()->addWidget(line);
+    update();
 }
 
 void Table::addScanLine(const QString &filesName,
@@ -164,8 +167,11 @@ void Table::addScanLine(const QString &filesName,
     layout->setContentsMargins(0, 0, 0, 0);
 
     auto nameLabel = new QLabel(line);
+    nameLabel->setObjectName("nameLabel");
     auto scanLabel = new QLabel(line);
+    scanLabel->setObjectName("scanLabel");
     auto remarksLabel = new QLabel(line);
+    remarksLabel->setObjectName("remarksLabel");
 
     nameLabel->setFixedSize(240, 35);
     scanLabel->setFixedHeight(35);
@@ -185,6 +191,7 @@ void Table::addScanLine(const QString &filesName,
     line->setLayout(layout);
 
     m_ui->m_line->layout()->addWidget(line);
+    update();
 }
 
 void Table::addSpacer()

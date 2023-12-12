@@ -145,6 +145,9 @@ QString BRError::getErrorDesc(BRErrorCode error_code)
     case BRErrorCode::ERROR_DAEMON_ACTIVATION_CODE_INVALID:
         error_desc = QObject::tr("Activation code error.");
         break;
+    case BRErrorCode::ERROR_DAEMON_SET_FALLBACK_RH_EMPTY:
+        error_desc = QObject::tr("There is no historical state, please reinforce it and operation.");
+        break;
     case BRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED:
     case BRErrorCode::ERROR_DAEMON_CONVERT_PLUGINS2JSON_FAILED:
     case BRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND:

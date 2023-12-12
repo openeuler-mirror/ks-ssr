@@ -13,9 +13,9 @@
  */
 
 #include "lib/base/str-utils.h"
-#include <ssr-marcos.h>
 #include <algorithm>
 #include "qt5-log-i.h"
+#include "ssr-marcos.h"
 
 namespace KS
 {
@@ -152,18 +152,20 @@ QJsonValue StrUtils::str2jsonValue(const std::string &str)
 
 QJsonValue StrUtils::str2jsonValue(const QString &str)
 {
+    RETURN_VAL_IF_TRUE(str.isEmpty(), QJsonValue::fromVariant(str));
     if (str.compare("true", Qt::CaseSensitive) == 0 || str.compare("false", Qt::CaseSensitive) == 0)
     {
         return QJsonValue::fromVariant((str.compare("true", Qt::CaseSensitive) == 0));
     }
     bool isInt = true;
-    std::for_each(str.cbegin(), str.cend(), [&isInt](const QChar &it)
-                  {
-                      if (!(it.isDigit()))
-                      {
-                          isInt = false;
-                      }
-                  });
+    for (const auto it : str)
+    {
+        if (!(it.isDigit()))
+        {
+            isInt = false;
+            break;
+        }
+    }
     if (isInt)
     {
         return QJsonValue::fromVariant(str.toInt());

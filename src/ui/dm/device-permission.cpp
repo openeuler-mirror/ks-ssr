@@ -32,6 +32,7 @@ DevicePermission::DevicePermission(QWidget *parent) : TitlebarWindow(parent),
     m_ui->setupUi(getWindowContentWidget());
     setIcon(QIcon(":/images/logo"));
     setWindowModality(Qt::ApplicationModal);
+    // 页面关闭时销毁
     setAttribute(Qt::WA_DeleteOnClose);
 
     //给QCombobox设置代理才能设置下拉列表项的高度
@@ -169,7 +170,7 @@ void DevicePermission::confirm()
         emit deviceChanged();
     }
 
-    hide();
+    close();
 }
 
 void DevicePermission::update(int index)

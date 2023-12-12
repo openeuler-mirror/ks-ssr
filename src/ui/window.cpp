@@ -26,6 +26,7 @@
 #include "src/ui/br/br-page.h"
 #include "src/ui/common/loading.h"
 #include "src/ui/common/single-application/single-application.h"
+#include "src/ui/daemon_proxy.h"
 #include "src/ui/dm/device-list-page.h"
 #include "src/ui/dm/device-log-page.h"
 #include "src/ui/fp/file-protection-page.h"
@@ -50,10 +51,26 @@ Window::Window() : TitlebarWindow(nullptr),
                    m_licenseProxy(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
+    m_dbusProxy = new DaemonProxy(SSR_DBUS_NAME,
+                                  SSR_DBUS_OBJECT_PATH,
+                                  QDBusConnection::systemBus(),
+                                  this);
 
     initWindow();
     initActivation();
-    initNavigation();
+    if (m_licenseProxy->isActivated())
+    {
+        start();
+    }
+    else
+    {
+        connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, [this] {
+            disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, nullptr);
+            connect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, [this] {
+                disconnect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, nullptr);
+                start(); });
+        });
+    }
 
     connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject);
 }
@@ -74,6 +91,12 @@ void Window::resizeEvent(QResizeEvent *event)
     }
 }
 
+void Window::start()
+{
+    initSettings();
+    initNavigation();
+}
+
 void Window::initActivation()
 {
     m_activation = new Activation::Activation(this);
@@ -89,8 +112,7 @@ void Window::initActivation()
         m_activation->show();
     }
     connect(m_activation, &Activation::Activation::closed,
-            [this]
-            {
+            [this] {
                 //未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
                 if (!m_licenseProxy->isActivated())
                     qApp->quit();
@@ -123,7 +145,6 @@ void Window::initWindow()
     auto layout = getTitlebarCustomLayout();
     layout->setContentsMargins(0, 0, 10, 0);
     layout->setSpacing(10);
-    Settings::Dialog::globalInit(this);
 
     //未激活文本
     m_activateStatus = new QLabel(this);
@@ -188,14 +209,41 @@ void Window::initNavigation()
     m_ui->m_stackedPages->setCurrentIndex(0);
     updatePage();
 
-    connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this]
-            {
-                m_loading->setVisible(false);
-                m_ui->m_sidebar->setEnabled(true);
-                updatePage();
-            });
+    connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this] {
+        m_loading->setVisible(false);
+        m_ui->m_sidebar->setEnabled(true);
+        updatePage();
+    });
 
     connect(m_ui->m_navigation, SIGNAL(currentUIDChanged()), this, SLOT(updatePage()));
+}
+
+void Window::initSettings()
+{
+    Settings::Dialog::globalInit(this);
+    // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
+    disconnect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, nullptr, nullptr);
+    connect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this] {
+        for (auto page : m_pages.value(tr("Baseline reinforcement")))
+        {
+            if (page->isVisible())
+            {
+                auto brPage = static_cast<BR::BRPage *>(page);
+                brPage->exportStrategy();
+            }
+        }
+    });
+    disconnect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, nullptr, nullptr);
+    connect(Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this] {
+        for (auto page : m_pages.value(tr("Baseline reinforcement")))
+        {
+            if (page->isVisible())
+            {
+                auto brPage = static_cast<BR::BRPage *>(page);
+                brPage->resetAllReinforcementArgs();
+            }
+        }
+    });
 }
 
 void Window::addPage(Page *page)
@@ -257,30 +305,6 @@ void Window::updateActivation()
 
 void Window::popupSettingsDialog()
 {
-    // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
-    connect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this]
-            {
-                for (auto page : m_pages.value(tr("Baseline reinforcement")))
-                {
-                    if (page->isVisible())
-                    {
-                        auto brPage = static_cast<BR::BRPage *>(page);
-                        brPage->exportStrategy();
-                    }
-                }
-            });
-    connect(Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this]
-            {
-                for (auto page : m_pages.value(tr("Baseline reinforcement")))
-                {
-                    if (page->isVisible())
-                    {
-                        auto brPage = static_cast<BR::BRPage *>(page);
-                        brPage->resetAllReinforcementArgs();
-                    }
-                }
-            });
-
     auto x = this->x() / 4 + this->width() / 4 + Settings::Dialog::instance()->width() / 16;
     auto y = this->y() / 4 + this->height() / 4 + Settings::Dialog::instance()->height() / 16;
     Settings::Dialog::instance()->move(x, y);
@@ -354,14 +378,6 @@ void Window::updatePage()
     {
         auto page = qobject_cast<TP::ExecuteProtectedPage *>(pages.first());
         showLoading(page->getInitialized());
-    }
-
-    // 设备管理页面需要手动刷新设备列表
-    if (tr("Device management") == pages.first()->getNavigationUID())
-    {
-        auto page = qobject_cast<DM::DeviceListPage *>(pages.first());
-        page->update();
-        m_ui->m_sidebar->setEnabled(true);
     }
 }
 

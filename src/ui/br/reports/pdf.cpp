@@ -57,6 +57,7 @@ void PDF::setPieChartText(const QString name[],
 
     m_ui->m_pieChartLayout2->addWidget(m_pieChart3);
     m_ui->m_pieChartLayout2->addWidget(m_pieChart4);
+    update();
 }
 }  // namespace BR
 }  // namespace KS

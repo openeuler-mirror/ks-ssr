@@ -12,9 +12,15 @@ configure_file(config-ui.h.in ${PROJECT_BINARY_DIR}/config-ui.h)
 gen_protocol()
 
 set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.PrivateBox.xml
-  PROPERTIES CLASSNAME BoxManagerProxy NO_NAMESPACE true)
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.xml
+  PROPERTIES CLASSNAME DaemonProxy NO_NAMESPACE true)
+qt5_add_dbus_interface(
+  DAEMON_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.xml
+  daemon_proxy)
 
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.PrivateBox.xml
+  PROPERTIES CLASSNAME BoxManagerProxy NO_NAMESPACE true)                    
 qt5_add_dbus_interface(
   BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.PrivateBox.xml
   box_manager_proxy)
@@ -115,6 +121,7 @@ add_executable(
   ${TARGET_NAME}
   ${UI_H_FILES}
   ${UI_CPP_FILES}
+  ${DAEMON_SRCS}
   ${BOX_MANAGER_SRCS}
   ${DEVICE_MANAGER_SRCS}
   ${KSS_DBUS_SRCS}

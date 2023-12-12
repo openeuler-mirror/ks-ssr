@@ -41,7 +41,8 @@ public:
     ~BaselineReinforcement();
 
 private:
-    void initConnection();
+    void
+    initConnection();
     void initUI();
 
     void updateProgressInfo(KS::BR::ProgressInfo &progressInfo);

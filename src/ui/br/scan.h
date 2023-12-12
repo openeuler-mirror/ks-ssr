@@ -72,7 +72,7 @@ signals:
     void reinforcementFinished();
 
 private:
-    void init();
+    void parsingCategories();
     void initUI();
     void initConnection();
 

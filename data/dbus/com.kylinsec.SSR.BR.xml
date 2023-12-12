@@ -38,6 +38,13 @@
             <description>Method of setting foreground notification prompt.</description>
         </method>
 
+        <method name="SetFallbackStatus">
+            <arg type="u" name="fallback_status" direction="in">
+                <summary>The security reinforcement fallback status.</summary>
+            </arg>
+            <description>Set the fallback status.</description>
+        </method>
+
         <method name="ImportCustomRA">
             <arg type="s" name="encoded_strategy" direction="in">
                 <summary>The encoded reinforcement strategy.</summary>
@@ -173,6 +180,10 @@
         <property name="resource_monitor" type="u" access="read">
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
             <description>The resource monitor switch.</description>
+        </property>
+
+        <property name="fallback_status" type="u" access="read">
+            <description>The fallback status.</description>
         </property>
 
         <signal name="ScanProgress">
