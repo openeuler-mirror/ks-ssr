@@ -47,6 +47,12 @@ set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xm
 qt5_add_dbus_interface(
   BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml br_dbus_proxy)
 
+set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.ToolBox.xml
+  PROPERTIES CLASSNAME ToolBoxDbusProxy NO_NAMESPACE true)
+
+qt5_add_dbus_interface(
+BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.ToolBox.xml toolbox_dbus_proxy)
+
 qt5_wrap_ui(
   UI_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
@@ -72,6 +78,7 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-permission.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/kernel-protected-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/execute-protected-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/file-sign-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-protected.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-user-pin.ui

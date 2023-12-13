@@ -30,7 +30,7 @@
             <description>set file's security context.</description>
         </method>
 
-        <method name="SherdFile">
+        <method name="ShredFile">
             <arg type="as" name="file_paths" direction="in">
                 <summary>the path of destination files.</summary>
             </arg>

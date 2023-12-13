@@ -42,12 +42,12 @@ private:
     bool initAuditReceiver();
     bool initIPSetMonitor();
     QList<AuditLogEvent> parserAudit(const char* audit_log);
-    static int ipsetGetDataCB(ipset_session* session, void* p, const char* fmt, ...) __attribute__((format(printf, 3, 4)));
+    static int ipsetGetDataCB(struct ipset_session* session, void* p, const char* fmt, ...) __attribute__((format(printf, 3, 4)));
     static int ipsetCustomErrorCB(struct ipset* ipset, void* p, int status, const char* fmt, ...) __attribute__((format(printf, 4, 5)));
     static int ipsetStandardErrorCB(ipset* ipset, void* p);
 
 private slots:
-    void processAuditData(QSocketDescriptor socket, QSocketNotifier::Type activationEvent);
+    void processAuditData(int socket);
     void processIPSetData();
 
 private:

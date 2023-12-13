@@ -208,6 +208,7 @@ int USBDevice::wcProtocol2DevcieType(const InterfaceClass &interface)
     return type;
 }
 
+#pragma message("将 USB 的默认权限设置为启用")
 void USBDevice::initPermission()
 {
     auto setting = m_devConfig->getDeviceSetting(m_uid);

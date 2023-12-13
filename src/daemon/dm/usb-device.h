@@ -62,10 +62,11 @@ private:
 
     Configuration *m_devConfig;
 
-    /* 维护一个映射表，
-    key: QString "${idVendor}:${idProduct}"
-    value: int 硬件种类
-    用于指定那些厂商没有正确设置硬件中类的硬件信息。*/
+    /**
+     * @note 维护一个映射表, 用于指定那些厂商没有正确设置硬件中类的硬件信息。
+     * @key: QString "${idVendor}:${idProduct}"
+     * @value: int 硬件种类
+     */
     static QMap<QString, int> m_fixedTypes;
 };
 }  // namespace DM
