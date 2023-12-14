@@ -60,7 +60,7 @@ private slots:
 
 /// @todo: 需要添加机制区分信号类型，目前两种类型，一种是 审计告警，一种是 nmap 攻击告警
 Q_SIGNALS: // SIGNALS
-    void DetectHazard(uint type, const QString &alert_msg);
+    void HazardDetected(uint type, const QString &alert_msg);
 
 public:
     static Manager* m_logManager;

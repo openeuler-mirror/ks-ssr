@@ -25,6 +25,11 @@
         <file alias="checkbox-indeterminate-normal">images/checkbox-indeterminate-normal.svg</file>
         <file alias="execution-control">images/execution-control.svg</file>
         <file alias="kernel-module-protected">images/kernel-module-protected.svg</file>
+        <file alias="tool-box">images/tool-box.png</file>
+        <file alias="file-sign">images/file-sign.svg</file>
+        <file alias="file-shred">images/file-shred.svg</file>
+        <file alias="privacy-cleanup">images/privacy-cleanup.svg</file>
+        <file alias="access-control">images/access-control.svg</file>
         <file alias="right-arrow">images/right-arrow.svg</file>
         <file alias="qrcode">images/qrcode.png</file>
         <file alias="more">images/more.svg</file>

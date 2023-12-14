@@ -54,7 +54,7 @@ public:
      * @brief 调用 shred 来彻底删除文件的函数
      * @param filePath 需要删除的文件的路径
      */
-    void SherdFile(const QStringList& filePath);
+    void ShredFile(const QStringList& filePath);
 
     /**
      * @brief 删除用户及其相关数据
