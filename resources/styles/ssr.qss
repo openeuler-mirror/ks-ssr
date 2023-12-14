@@ -111,6 +111,20 @@ QHeaderView#tableHeaderProxy
     color: #919191;
 }
 
+KS--HeaderButtonDelegate QLabel
+{
+    color: #919191;
+}
+
+KS--HeaderButtonDelegate
+{
+    background-color: transparent;
+}
+KS--HeaderButtonDelegate::menu-indicator
+{
+    image: none;
+}
+
 /* SideBar */
 KS--SideBar
 {
@@ -169,7 +183,7 @@ QHeaderView::section:last
 
 QTableView::item
 {
-    border: 0px;
+    border: none;
     /*background-color: #393939;*/
     background-color: transparent;
     margin: 2px 0px 2px 0px;
@@ -765,7 +779,7 @@ KS--BR--Scan QTreeView::item:has-children
 {
     margin: 4px 0px 0px 0px;
     background-color: #393939;
-    border: 0px;
+    border: none;
     padding-left:14px;
 }
 
@@ -802,7 +816,7 @@ KS--BR--Scan QTreeView::item:!has-children
 {
     margin: 0px 0px 0px 0px;
     background-color: #393939;
-    border: 0px;
+    border: none;
     padding-left:14px;
 }
 

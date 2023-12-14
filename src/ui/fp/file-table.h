@@ -20,7 +20,7 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 #include <QWidget>
-#include "src/ui/common/table-header-proxy.h"
+#include "src/ui/common/table/table-header-proxy.h"
 
 class KSSDbusProxy;
 

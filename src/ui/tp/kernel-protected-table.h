@@ -19,7 +19,7 @@
 #include <QSortFilterProxyModel>
 #include <QTableView>
 #include <QWidget>
-#include "src/ui/common/table-header-proxy.h"
+#include "src/ui/common/table/table-header-proxy.h"
 #include "src/ui/tp/utils.h"
 
 class KSSDbusProxy;
@@ -35,9 +35,13 @@ class KernelProtectedFilterModel : public QSortFilterProxyModel
 public:
     KernelProtectedFilterModel(QObject *parent = nullptr);
     virtual ~KernelProtectedFilterModel(){};
+    void setSearchText(const QString &text);
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+
+private:
+    QString m_searchText;
 };
 
 class KernelProtectedModel : public QAbstractTableModel
@@ -89,7 +93,7 @@ public:
     KernelProtectedTable(QWidget *parent = nullptr);
     virtual ~KernelProtectedTable(){};
 
-    void searchTextChanged(const QString &text);
+    void setSearchText(const QString &text);
     void updateInfo();
     QList<TrustedRecord> getKernelRecords();
     // 获取被篡改数
@@ -99,17 +103,23 @@ signals:
     void prohibitUnloadingStatusChange(bool status, const QString &path);
     void filesUpdate(int total);
 
+private:
+    void initTable();
+    void initTableHeaderButton();
+    void filterFixedString();
+
 private slots:
     void itemEntered(const QModelIndex &index);
     void itemClicked(const QModelIndex &index);
-
-private slots:
     void checkedAllItem(Qt::CheckState checkState);
 
 private:
     KernelProtectedFilterModel *m_filterProxy;
     KernelProtectedModel *m_model;
     TableHeaderProxy *m_headerViewProxy;
+    HeaderButtonDelegate *m_statusButton;
+    QStringList m_statusKeys;
+    QString m_searchText;
 };
 
 }  // namespace TP

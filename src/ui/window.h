@@ -17,7 +17,7 @@
 #include <QLabel>
 #include <QMap>
 #include "src/ui/common/page.h"
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 #include "src/ui/license/activation.h"
 
 namespace Ui

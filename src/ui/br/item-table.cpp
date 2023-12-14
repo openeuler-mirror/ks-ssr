@@ -23,7 +23,7 @@
 #include "include/ssr-marcos.h"
 #include "src/ui/br/progress.h"
 #include "src/ui/br/utils.h"
-#include "src/ui/common/table-header-proxy.h"
+#include "src/ui/common/table/table-header-proxy.h"
 
 namespace KS
 {
@@ -93,11 +93,7 @@ void ItemTable::initHeader()
     m_headerProxy->resizeSection(2, 90);
     m_headerProxy->resizeSection(3, 10);
     m_headerProxy->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
-    // 不可拖拽表格线
-    m_headerProxy->sectionResizeMode(QHeaderView::Stretch);
     m_headerProxy->setStretchLastSection(true);
-    m_headerProxy->setSectionsMovable(false);
 }
 
 //根据获取的数据，设置分类列表

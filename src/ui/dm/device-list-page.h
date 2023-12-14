@@ -47,7 +47,6 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private Q_SLOTS:
-    void searchTextChanged(const QString &text);
     void popupEditDialog(const QModelIndex &index);
     void updatePermission();
     void updateState();

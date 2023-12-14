@@ -18,7 +18,7 @@
 #include <QPainter>
 #include <QWidgetAction>
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table-delete-notify.h"
+#include "src/ui/common/table/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_execute-protected-page.h"
 #include "ssr-i.h"
@@ -128,7 +128,7 @@ bool ExecuteProtectedPage::isExistSelectedItem()
 
 void ExecuteProtectedPage::searchTextChanged(const QString &text)
 {
-    m_ui->m_executeTable->searchTextChanged(text);
+    m_ui->m_executeTable->setSearchText(text);
 }
 
 void ExecuteProtectedPage::addExecuteFile(bool checked)

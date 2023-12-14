@@ -18,7 +18,7 @@
 #include <QPainter>
 #include <QWidgetAction>
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table-delete-notify.h"
+#include "src/ui/common/table/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_kernel-protected-page.h"
 #include "ssr-i.h"
@@ -63,7 +63,7 @@ KernelProtectedPage::KernelProtectedPage(QWidget *parent) : Page(parent),
     m_refreshTimer = new QTimer(this);
     connect(m_refreshTimer, &QTimer::timeout, this, &KernelProtectedPage::updateRefreshIcon);
 
-    connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
+    connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(setSearchText(const QString &)));
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addKernelFile(bool)));
     connect(m_ui->m_recertification, SIGNAL(clicked(bool)), this, SLOT(recertification(bool)));
     connect(m_ui->m_refresh, SIGNAL(clicked(bool)), this, SLOT(updateKernelList(bool)));
@@ -118,9 +118,9 @@ bool KernelProtectedPage::isExistSelectedItem()
     return false;
 }
 
-void KernelProtectedPage::searchTextChanged(const QString &text)
+void KernelProtectedPage::setSearchText(const QString &text)
 {
-    m_ui->m_kernelTable->searchTextChanged(text);
+    m_ui->m_kernelTable->setSearchText(text);
 }
 
 void KernelProtectedPage::addKernelFile(bool checked)

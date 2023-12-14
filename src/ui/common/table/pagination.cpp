@@ -12,7 +12,7 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "src/ui/common/pagination.h"
+#include "src/ui/common/table/pagination.h"
 #include <QIntValidator>
 #include <QPushButton>
 #include "src/ui/ui_pagination.h"

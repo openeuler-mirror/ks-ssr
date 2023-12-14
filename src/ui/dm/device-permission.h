@@ -16,7 +16,7 @@
 
 #include <QWidget>
 #include "include/ssr-i.h"
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 
 namespace Ui
 {

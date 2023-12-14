@@ -43,9 +43,13 @@ qt5_add_dbus_interface(
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml
                             PROPERTIES CLASSNAME BRDbusProxy NO_NAMESPACE true)
-
 qt5_add_dbus_interface(
   BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml br_dbus_proxy)
+
+set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Log.xml
+                            PROPERTIES CLASSNAME LogProxy NO_NAMESPACE true)
+qt5_add_dbus_interface(
+  LOG_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Log.xml log_proxy)
 
 qt5_wrap_ui(
   UI_FILES
@@ -53,8 +57,8 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/sidebar.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/license/activation.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/license/qrcode-dialog.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/common/pagination.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/common/table-delete-notify.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/table/pagination.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/table/table-delete-notify.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/home.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/scan.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/progress.ui
@@ -72,6 +76,7 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-permission.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/kernel-protected-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/execute-protected-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/log/log-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-protected.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-user-pin.ui
@@ -126,6 +131,7 @@ add_executable(
   ${DEVICE_MANAGER_SRCS}
   ${KSS_DBUS_SRCS}
   ${BR_DBUS_SRCS}
+  ${LOG_SRCS}
   ${BR_PROTOCOL_OUTPUT}
   ${QM_FILES}
   ${UI_FILES}

@@ -45,7 +45,7 @@ private:
     bool isExistSelectedItem();
 
 private Q_SLOTS:
-    void searchTextChanged(const QString &text);
+    void setSearchText(const QString &text);
     void addKernelFile(bool checked);
     void updateKernelList(bool checked);
     void recertification(bool checked);

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 
 namespace Ui
 {
@@ -54,5 +54,5 @@ signals:
 private:
     Ui::BoxPasswordModification *m_ui;
 };
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

@@ -9,34 +9,28 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     yuanxing <yuanxing@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #pragma once
 
-#include <QObject>
-#include <QSortFilterProxyModel>
+#include <QLabel>
+#include <QPushButton>
 
 namespace KS
 {
-namespace DM
-{
-class TableFilterModel : public QSortFilterProxyModel
+class DatePickButton : public QPushButton
 {
     Q_OBJECT
-
 public:
-    TableFilterModel(QObject *parent = nullptr);
-    virtual ~TableFilterModel(){};
-
-    void setSearchText(const QString &text);
+    explicit DatePickButton(QWidget *parent = nullptr);
+    void setText(const QString &);
 
 protected:
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    void paintEvent(QPaintEvent *event) override;
 
 private:
-    QString m_searchText;
+    void initUI();
+    QLabel *m_dateLabel;
 };
-
-}  // namespace DM
 }  // namespace KS

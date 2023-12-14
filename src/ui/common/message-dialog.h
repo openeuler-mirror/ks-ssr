@@ -15,7 +15,7 @@
 #pragma once
 
 #include <QVBoxLayout>
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 
 namespace KS
 {

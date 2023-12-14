@@ -19,7 +19,7 @@
 #include <QWidgetAction>
 #include "config.h"
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table-delete-notify.h"
+#include "src/ui/common/table/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_file-protection-page.h"
 #include "ssr-i.h"

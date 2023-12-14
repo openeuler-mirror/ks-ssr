@@ -14,33 +14,34 @@
 
 #pragma once
 
-#include <QHeaderView>
+#include <QPushButton>
+
+class QLabel;
+class QHBoxLayout;
+class QAction;
 namespace KS
 {
-class TableHeaderProxy : public QHeaderView
+class HeaderButtonDelegate : public QPushButton
 {
     Q_OBJECT
 public:
-    explicit TableHeaderProxy(QWidget *parent = nullptr);
-    void hideCheckBox(bool isHide);
+    explicit HeaderButtonDelegate(QWidget *parent = nullptr);
+    virtual ~HeaderButtonDelegate(){};
 
-protected:
-    void mousePressEvent(QMouseEvent *e) override;
-    void paintSection(QPainter *painter,
-                      const QRect &rect,
-                      int logicalIndex) const override;
-
-signals:
-    void toggled(Qt::CheckState checkState);
-
-public slots:
-    void setCheckState(Qt::CheckState checkState);
+    void addMenuActions(QList<QAction *> actions);
+    void setButtonText(const QString &text);
+    QList<QAction *> getMenuActions() const;
 
 private:
-    bool m_stateChanged;
-    bool m_closeCheckBox;
-    Qt::CheckState m_checkState;
+    void initUI();
 
-    QRect *m_rect;
+signals:
+    void menuTriggered(QAction *);
+
+private:
+    QLabel *m_text;
+    QPushButton *m_icon;
+    QHBoxLayout *m_layout;
+    QMenu *m_menu;
 };
 }  // namespace KS
