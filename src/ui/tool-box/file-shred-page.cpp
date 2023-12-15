@@ -45,9 +45,9 @@ QString FileShred::getSidebarIcon()
     return ":" FILE_SHRED_ICON_NAME;
 }
 
-int FileShred::getSelinuxType()
+QString FileShred::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 
 }  // namespace ToolBox

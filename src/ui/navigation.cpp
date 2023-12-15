@@ -52,21 +52,12 @@ NavigationItem::NavigationItem(const QString &iconName,
 
     setLayout(layout);
 
-    connect(m_icon, &QPushButton::clicked, [this](bool checked)
-            { clicked(checked); });
+    connect(m_icon, &QPushButton::clicked, [this](bool checked) { clicked(checked); });
 }
 
 Navigation::Navigation(QWidget *parent) : QWidget(parent)
 {
-    m_items = new QButtonGroup(this);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-    connect(m_items, &QButtonGroup::idClicked, [this](int id)
-            { Q_EMIT currentUIDChanged(); });
-#else
-    connect(m_items, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id)
-            { Q_EMIT currentUIDChanged(); });
-#endif
+    buildItems();
 }
 
 void Navigation::addItem(NavigationItem *item)
@@ -90,6 +81,39 @@ QString Navigation::getSelectedUID()
 void Navigation::setBtnChecked(int id)
 {
     m_items->button(id)->setChecked(true);
+}
+
+void Navigation::clearItems()
+{
+    auto count = layout()->count();
+    for (auto i = 0; i < count; i++)
+    {
+        auto item = layout()->itemAt(0);
+        auto widget = item->widget();
+        if (widget)
+        {
+            delete widget;
+            widget = nullptr;
+        }
+    }
+    if (m_items)
+    {
+        delete m_items;
+        buildItems();
+    }
+
+    m_itemUIDs.clear();
+}
+
+void Navigation::buildItems()
+{
+    m_items = new QButtonGroup(this);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    connect(m_items, &QButtonGroup::idClicked, [this](int id) { Q_EMIT currentUIDChanged(); });
+#else
+    connect(m_items, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id) { Q_EMIT currentUIDChanged(); });
+#endif
 }
 
 }  // namespace KS

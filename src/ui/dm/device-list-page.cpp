@@ -86,9 +86,9 @@ QString DeviceListPage::getSidebarIcon()
     return ":/images/device-list";
 }
 
-int DeviceListPage::getSelinuxType()
+QString DeviceListPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SYSADM;
 }
 
 void DeviceListPage::paintEvent(QPaintEvent *event)

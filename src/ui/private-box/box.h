@@ -28,6 +28,8 @@ class QLabel;
 
 namespace KS
 {
+class PasswordModification;
+
 namespace PrivateBox
 {
 struct BoxInfo
@@ -40,7 +42,6 @@ struct BoxInfo
     bool mounted;
 };
 
-class BoxPasswordModification;
 class BoxPasswordRetrieve;
 class BoxPasswordChecked;
 class MessageDialog;
@@ -73,10 +74,10 @@ private:
     void retrievePassword();
 
 private slots:
-    void modifyPasswordAccepted();
-    void retrievePasswordAccepted();
-    void inputMountPasswordAccepted();
-    void inputDelBoxPasswordAccepted();
+    void acceptedModifyPassword();
+    void acceptedRetrievePassword();
+    void acceptedInputMountPassword();
+    void acceptedInputDelBoxPassword();
 
 private:
     // 保险箱唯一标识
@@ -95,7 +96,7 @@ private:
     BoxImage *m_imageUnlock;
 
     BoxManagerProxy *m_boxManagerProxy;
-    BoxPasswordModification *m_modifyPassword;
+    PasswordModification *m_modifyPassword;
     BoxPasswordRetrieve *m_retrievePassword;
     BoxPasswordChecked *m_inputMountPassword;
     BoxPasswordChecked *m_inputDelBoxPassword;
@@ -104,5 +105,5 @@ private:
 
     QProcess *m_process;
 };
-}  //namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

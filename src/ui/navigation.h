@@ -55,8 +55,13 @@ public:
     QString getSelectedUID();
     void setBtnChecked(int id);
 
+    void clearItems();
+
 Q_SIGNALS:
     void currentUIDChanged();
+
+private:
+    void buildItems();
 
 private:
     // 导航图标按钮组

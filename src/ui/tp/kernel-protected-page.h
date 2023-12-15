@@ -38,7 +38,7 @@ public:
     QString getNavigationUID() override;
     QString getSidebarUID() override;
     QString getSidebarIcon() override;
-    int getSelinuxType() override;
+    QString getAccountRoleName() override;
 
 private:
     void updateTips(int total);

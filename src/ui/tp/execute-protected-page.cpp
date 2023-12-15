@@ -101,9 +101,9 @@ QString ExecuteProtectedPage::getSidebarIcon()
     return ":/images/execution-control";
 }
 
-int ExecuteProtectedPage::getSelinuxType()
+QString ExecuteProtectedPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 
 void ExecuteProtectedPage::updateTips(int total)

@@ -38,7 +38,7 @@ private:
     void init();
 
 private slots:
-    void onOkClicked();
+    void acceptedPasswordRetrieve();
 
 signals:
     void accepted();

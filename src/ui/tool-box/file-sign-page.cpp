@@ -30,7 +30,6 @@ namespace KS
 {
 namespace ToolBox
 {
-
 FileSign::FileSign(QWidget* parent)
     : Page(parent),
       m_ui(new Ui::FileSignPage)
@@ -110,9 +109,9 @@ void FileSign::openFileDialog(bool)
     updateTableData(files);
 }
 
-int FileSign::getSelinuxType()
+QString FileSign::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 void FileSign::updateTableData(const QStringList& fileList)
 {

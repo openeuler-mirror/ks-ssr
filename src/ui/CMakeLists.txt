@@ -53,9 +53,13 @@ qt5_add_dbus_interface(
   
 set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.ToolBox.xml
   PROPERTIES CLASSNAME ToolBoxDbusProxy NO_NAMESPACE true)
-
 qt5_add_dbus_interface(
-BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.ToolBox.xml toolbox_dbus_proxy)
+TOOL_BOX_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.ToolBox.xml toolbox_dbus_proxy)
+
+set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Account.xml
+  PROPERTIES CLASSNAME AccountProxy NO_NAMESPACE true)
+qt5_add_dbus_interface(
+ACCOUNT_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Account.xml account_proxy)
 
 qt5_wrap_ui(
   UI_FILES
@@ -65,17 +69,17 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/license/qrcode-dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/common/table/pagination.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/common/table/table-delete-notify.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/password-modification.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/home.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/scan.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/progress.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/reinforcement-items/reinforcement-args-dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/reports/pdf.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/reports/table.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-creation.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-modification.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-retrieve.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-password-checked.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/private-box/box-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/private-box/box-creation.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/private-box/box-password-retrieve.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/private-box/box-password-checked.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/fp/file-protection-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-list-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-log-page.ui
@@ -88,6 +92,7 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-protected.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-user-pin.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/settings/baseline-reinforcement.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/account/login.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/about.ui)
 
 set(TARGET_NAME ks-ssr-gui)
@@ -139,6 +144,8 @@ add_executable(
   ${KSS_DBUS_SRCS}
   ${BR_DBUS_SRCS}
   ${LOG_SRCS}
+  ${TOOL_BOX_DBUS_SRCS}
+  ${ACCOUNT_SRCS}
   ${BR_PROTOCOL_OUTPUT}
   ${QM_FILES}
   ${UI_FILES}

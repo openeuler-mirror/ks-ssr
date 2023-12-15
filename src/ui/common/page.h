@@ -26,5 +26,5 @@ public:
     virtual QString getNavigationUID() = 0;
     virtual QString getSidebarUID() = 0;
     virtual QString getSidebarIcon() = 0;
-    virtual int getSelinuxType() = 0;
+    virtual QString getAccountRoleName() = 0;
 };

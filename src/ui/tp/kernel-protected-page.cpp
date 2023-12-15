@@ -93,9 +93,9 @@ QString KernelProtectedPage::getSidebarIcon()
     return ":/images/kernel-module-protected";
 }
 
-int KernelProtectedPage::getSelinuxType()
+QString KernelProtectedPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 
 void KernelProtectedPage::updateTips(int total)

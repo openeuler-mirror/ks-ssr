@@ -29,7 +29,7 @@ public:
     virtual QString getNavigationUID() override;
     virtual QString getSidebarUID() override;
     virtual QString getSidebarIcon() override;
-    virtual int getSelinuxType() override;
+    virtual QString getAccountRoleName() override;
 };
 }  // namespace ToolBox
 }  // namespace KS

@@ -91,9 +91,9 @@ QString DeviceLogPage::getSidebarIcon()
     return ":/images/device-log";
 }
 
-int DeviceLogPage::getSelinuxType()
+QString DeviceLogPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SYSADM;
 }
 
 void DeviceLogPage::searchTextChanged(const QString &text)

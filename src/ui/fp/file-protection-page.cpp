@@ -77,9 +77,9 @@ QString FileProtectionPage::getSidebarIcon()
     return "";
 }
 
-int FileProtectionPage::getSelinuxType()
+QString FileProtectionPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 
 void FileProtectionPage::searchTextChanged(const QString &text)

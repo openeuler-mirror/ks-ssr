@@ -71,9 +71,9 @@ QString LogPage::getSidebarIcon()
     return "";
 }
 
-int LogPage::getSelinuxType()
+QString LogPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_AUDADM;
 }
 
 void LogPage::searchTextChanged(const QString &text)
