@@ -17,8 +17,8 @@
 #include <QFileDialog>
 #include <QPainter>
 #include <QWidgetAction>
+#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_execute-protected-page.h"
 #include "ssr-i.h"
@@ -176,15 +176,16 @@ void ExecuteProtectedPage::popDeleteNotify(bool checked)
         return;
     }
 
-    auto deleteNotify = new TableDeleteNotify(this);
-
-    int x = window()->x() + width() / 4 + deleteNotify->width() / 4;
-    int y = window()->y() + height() / 4 + deleteNotify->height() / 4;
+    auto deleteNotify = new DeleteNotify(this);
+    deleteNotify->setNotifyMessage(tr("Remove protection"), tr("The removal operation is irreversible."
+                                                               "Do you confirm the removal of the selected record from the whitelist?"));
+    auto x = window()->x() + window()->width() / 2 - deleteNotify->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - deleteNotify->height() / 2;
 
     deleteNotify->move(x, y);
     deleteNotify->show();
 
-    connect(deleteNotify, &TableDeleteNotify::accepted, this, &ExecuteProtectedPage::removeExecuteFiles);
+    connect(deleteNotify, &DeleteNotify::accepted, this, &ExecuteProtectedPage::removeExecuteFiles);
 }
 
 void ExecuteProtectedPage::removeExecuteFiles()

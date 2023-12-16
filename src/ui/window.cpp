@@ -91,6 +91,7 @@ Window::~Window()
 {
     delete m_ui;
     Settings::Dialog::globalDeinit();
+    Account::Manager::globalDeinit();
 }
 
 void Window::resizeEvent(QResizeEvent *event)
@@ -498,6 +499,7 @@ void Window::updateSidebar()
 
 void Window::logout(const QString &userName)
 {
+    clearSidebar();
     while (m_ui->m_stackedPages->currentWidget() != nullptr)
     {
         auto currentWidget = m_ui->m_stackedPages->currentWidget();
@@ -506,7 +508,6 @@ void Window::logout(const QString &userName)
     }
     m_pages.clear();
     m_ui->m_navigation->clearItems();
-    m_ui->m_sidebar->clear();
 
     Account::Manager::instance()->setLoginUserName(userName);
     login();

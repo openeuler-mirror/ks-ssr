@@ -18,8 +18,8 @@
 #include <QFileDialog>
 #include <QWidgetAction>
 #include "config.h"
+#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_file-protection-page.h"
 #include "ssr-i.h"
@@ -133,15 +133,15 @@ void FileProtectionPage::popDeleteNotify(bool checked)
         return;
     }
 
-    auto unprotectNotify = new TableDeleteNotify(this);
-
-    int x = window()->x() + width() / 4 + unprotectNotify->width() / 4;
-    int y = window()->y() + height() / 4 + unprotectNotify->height() / 4;
-
+    auto unprotectNotify = new DeleteNotify(this);
+    unprotectNotify->setNotifyMessage(tr("Remove protection"), tr("The removal operation is irreversible."
+                                                                  "Do you confirm the removal of the selected record from the whitelist?"));
+    auto x = window()->x() + window()->width() / 2 - unprotectNotify->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - unprotectNotify->height() / 2;
     unprotectNotify->move(x, y);
     unprotectNotify->show();
 
-    connect(unprotectNotify, &TableDeleteNotify::accepted, this, &FileProtectionPage::removeProtectedFiles);
+    connect(unprotectNotify, &DeleteNotify::accepted, this, &FileProtectionPage::removeProtectedFiles);
 }
 
 void FileProtectionPage::removeProtectedFiles()

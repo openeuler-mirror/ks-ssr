@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include "lib/base/crypto-helper.h"
 #include "src/ui/box_manager_proxy.h"
+#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/password-modification.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/private-box/box-password-checked.h"
@@ -143,7 +144,7 @@ void Box::initMenu()
                                                    this,
                                                    &Box::switchMountedStatus);
     m_popupMenu->addAction(tr("Modify password"), this, &Box::modifyPassword);
-    m_popupMenu->addAction(tr("Delete"), this, &Box::delBox);
+    m_popupMenu->addAction(tr("Delete"), this, &Box::popDeleteNotify);
     m_popupMenu->addAction(tr("Retrieve the password"), this, &Box::retrievePassword);
 }
 
@@ -222,6 +223,20 @@ void Box::modifyPassword()
     int y = window()->y() + window()->height() / 4 + m_modifyPassword->height() / 8;
     m_modifyPassword->move(x, y);
     m_modifyPassword->show();
+}
+
+void Box::popDeleteNotify()
+{
+    auto deleteNotify = new DeleteNotify(this);
+    deleteNotify->setNotifyMessage(tr("Remove box"), tr("The operation will delete the content inside the box."
+                                                        "Are you sure you want to delete it?"));
+    auto x = window()->x() + window()->width() / 2 - deleteNotify->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - deleteNotify->height() / 2;
+
+    deleteNotify->move(x, y);
+    deleteNotify->show();
+
+    connect(deleteNotify, &DeleteNotify::accepted, this, &Box::delBox);
 }
 
 void Box::delBox()

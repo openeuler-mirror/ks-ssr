@@ -68,7 +68,7 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/license/activation.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/license/qrcode-dialog.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/common/table/pagination.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/common/table/table-delete-notify.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/delete-notify.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/common/password-modification.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/home.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/br/scan.ui

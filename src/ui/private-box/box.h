@@ -74,6 +74,7 @@ private:
     void retrievePassword();
 
 private slots:
+    void popDeleteNotify();
     void acceptedModifyPassword();
     void acceptedRetrievePassword();
     void acceptedInputMountPassword();

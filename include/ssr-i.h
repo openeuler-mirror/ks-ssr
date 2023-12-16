@@ -24,9 +24,20 @@ extern "C"
 #define SSR_DBUS_OBJECT_PATH "/com/kylinsec/SSR"
 #define SSR_DBUS_INTERFACE_NAME "com.kylinsec.SSR"
 
-// 授权相关定义
-#define SSR_LICENSE_DBUS_OBJECT_PATH "/com/kylinsec/SSR/License"
-#define SSR_LICENSE_DBUS_INTERFACE_NAME "com.kylinsec.SSR.License"
+// 用户名定义
+#define SSR_ACCOUNT_NAME_SYSADM "sysadm"
+#define SSR_ACCOUNT_NAME_SECADM "secadm"
+#define SSR_ACCOUNT_NAME_AUDADM "audadm"
+
+#define SSR_ACCOUNT_NAME_COMADM "comadm"
+
+// 用户名称长度以及保险箱密码长度
+#define SSR_USER_NAME_MAX_LENGTH 16
+#define SSR_PASSWORD_MAX_LENGTH 16
+
+// 用户管理相关定义
+#define SSR_ACCOUNT_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Account"
+#define SSR_ACCOUNT_BUS_INTERFACE_NAME "com.kylinsec.SSR.Account"
 
 // 保密箱相关定义
 #define SSR_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SSR/PrivateBox"
@@ -36,10 +47,6 @@ extern "C"
 #define SSR_BM_JK_BOX_UID "uid"
 #define SSR_BM_JK_BOX_NAME "name"
 #define SSR_BM_JK_BOX_MOUNTED "mounted"
-
-// 保险箱名称长度以及保险箱密码长度
-#define SSR_BOX_NAME_MAX_LENGTH 16
-#define SSR_BOX_PASSWORD_MAX_LENGTH 16
 
 // KSS相关定义, 包括TP FP的接口
 #define SSR_KSS_INIT_DBUS_OBJECT_PATH "/com/kylinsec/SSR/KSS"
