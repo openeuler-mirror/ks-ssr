@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "src/ui/window.h"
@@ -24,6 +24,7 @@
 #include "include/ssr-i.h"
 #include "lib/license/license-proxy.h"
 #include "src/ui/about.h"
+#include "src/ui/account/manager.h"
 #include "src/ui/br/br-page.h"
 #include "src/ui/common/loading.h"
 #include "src/ui/common/single-application/single-application.h"
@@ -47,6 +48,8 @@
 namespace KS
 {
 #define SSR_STYLE_PATH ":/styles/ssr"
+// 检测命令是否存在
+#define KSS_CMD_PATH SSR_INSTALL_BINDIR "/kss"
 
 Window::Window()
     : TitlebarWindow(nullptr),
@@ -62,29 +65,35 @@ Window::Window()
                                   QDBusConnection::systemBus(),
                                   this);
 
+    Account::Manager::globalInit(this);
+
     initWindow();
     initActivation();
     if (m_licenseProxy->isActivated())
     {
-        start();
+        login();
     }
     else
     {
-        connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, [this] {
-            disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, nullptr);
-            connect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, [this] {
+        connect(
+            m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, [this] {
+                disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, nullptr);
+                connect(
+                    m_dbusProxy, &DaemonProxy::RegisterFinished, this, [this] {
                 disconnect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, nullptr);
-                start(); });
-        });
+                login(); }, Qt::ConnectionType::UniqueConnection);
+            },
+            Qt::ConnectionType::UniqueConnection);
     }
 
-    connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject);
+    connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject, Qt::ConnectionType::UniqueConnection);
 }
 
 Window::~Window()
 {
     delete m_ui;
     Settings::Dialog::globalDeinit();
+    Account::Manager::globalDeinit();
 }
 
 void Window::resizeEvent(QResizeEvent *event)
@@ -97,10 +106,20 @@ void Window::resizeEvent(QResizeEvent *event)
     }
 }
 
+void Window::login()
+{
+    connect(Account::Manager::instance(), &Account::Manager::loginFinished, this, &Window::start, Qt::ConnectionType::UniqueConnection);
+    connect(
+        Account::Manager::instance(), &Account::Manager::softExited, this, [] { qApp->quit(); }, Qt::ConnectionType::UniqueConnection);
+    connect(Account::Manager::instance(), &Account::Manager::logouted, this, &Window::logout, Qt::ConnectionType::UniqueConnection);
+    connect(Account::Manager::instance(), &Account::Manager::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
+    Account::Manager::instance()->showLogin();
+}
+
 void Window::start()
 {
+    initPageAndNavigation();
     initSettings();
-    initNavigation();
 }
 
 void Window::initActivation()
@@ -159,6 +178,22 @@ void Window::initWindow()
     m_activateStatus->setText(tr("Unactivated"));
     m_activateStatus->hide();
 
+    // 创建账户管理按钮
+    auto accountButton = new QPushButton(this);
+    accountButton->setObjectName("accountButton");
+    accountButton->setFixedSize(QSize(16, 16));
+
+    auto accountMenu = new QMenu(this);
+    accountButton->setMenu(accountMenu);
+    accountMenu->setObjectName("accountMenu");
+
+    accountMenu->addAction(tr("Modify password"), this, [this] {
+        Account::Manager::instance()->showPasswordModification();
+    });
+    accountMenu->addAction(tr("Logout"), this, [this] {
+        logout(Account::Manager::instance()->getCurrentUserName());
+    });
+
     // 创建标题栏右侧菜单按钮
     auto btnForMenu = new QPushButton(this);
     btnForMenu->setObjectName("btnForMenu");
@@ -172,24 +207,14 @@ void Window::initWindow()
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
     settingMenu->addAction(tr("About"), this, &Window::popupAboutDialog);
 
+    layout->addWidget(accountButton);
     layout->addWidget(m_activateStatus);
     layout->addWidget(btnForMenu);
     layout->setAlignment(Qt::AlignRight);
-
-    connect(m_ui->m_sidebar, &SideBar::itemChanged, this, &Window::updateSidebar);
 }
 
-void Window::initNavigation()
+void Window::initPageAndNavigation()
 {
-    // 初始化分类选项
-    m_ui->m_navigation->addItem(new NavigationItem(":/images/baseline-reinforcement", tr("Baseline reinforcement")));
-    m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected", tr("Trusted protected")));
-    m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected", tr("File protected")));
-    m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Private box")));
-    m_ui->m_navigation->addItem(new NavigationItem(":/images/device", tr("Device management")));
-    m_ui->m_navigation->addItem(new NavigationItem(":/images/tool-box", tr("Tool Box")));
-    m_ui->m_navigation->setBtnChecked(0);
-
     // 移除qt designer默认创建的widget
     while (m_ui->m_stackedPages->currentWidget() != nullptr)
     {
@@ -197,13 +222,25 @@ void Window::initNavigation()
         m_ui->m_stackedPages->removeWidget(currentWidget);
         delete currentWidget;
     }
-
+    // 页面加载动画
+    m_loading = new Loading(this);
     addPage(new BR::BRPage(this));
-    // 可信保护页面需判断是否加载成功
-    auto execute = new TP::ExecuteProtectedPage(this);
-    addPage(execute);
-    addPage(new TP::KernelProtectedPage(this));
-    addPage(new FP::FileProtectionPage(this));
+    // TODO 暂时通过有无kss命令的方式判断是否支持可信，需考虑更好的方法
+    if (QFile::exists(KSS_CMD_PATH))
+    {
+        // 可信保护页面需判断是否加载成功
+        auto execute = new TP::ExecuteProtectedPage(this);
+        connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this] {
+                m_loading->setVisible(false);
+                m_ui->m_sidebar->setEnabled(true);
+                updatePage();
+            },
+            Qt::ConnectionType::UniqueConnection);
+        addPage(execute);
+        addPage(new TP::KernelProtectedPage(this));
+        addPage(new FP::FileProtectionPage(this));
+        m_loading->setFixedSize(execute->size());
+    }
     addPage(new PrivateBox::BoxPage(this));
     addPage(new DM::DeviceListPage(this));
     addPage(new DM::DeviceLogPage(this));
@@ -211,53 +248,107 @@ void Window::initNavigation()
     addPage(new ToolBox::FileShred(this));
     addPage(new ToolBox::PrivacyCleanup(this));
     addPage(new ToolBox::AccessControl(this));
-    // 页面加载动画
-    m_loading = new Loading(this);
-    m_loading->setFixedSize(execute->size());
     m_ui->m_stackedPages->addWidget(m_loading);
-
     m_ui->m_stackedPages->setCurrentIndex(0);
+
+    // 通过页面获取是否有对应的导航栏
+    for (auto pages : m_pages.values())
+    {
+        auto navigationUID = pages.first()->getNavigationUID();
+        CONTINUE_IF_TRUE(navigationUID.isEmpty());
+
+        if (navigationUID == tr("Baseline reinforcement"))
+        {
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/baseline-reinforcement", navigationUID));
+        }
+        else if (navigationUID == tr("Trusted protected"))
+        {
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected", tr("Trusted protected")));
+        }
+        else if (navigationUID == tr("File protected"))
+        {
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected", tr("File protected")));
+        }
+        else if (navigationUID == tr("Private box"))
+        {
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Private box")));
+        }
+        else if (navigationUID == tr("Device management"))
+        {
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/device", tr("Device management")));
+        }
+        else if (navigationUID == tr("Tool Box"))
+        {
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/tool-box", tr("Tool Box")));
+        }
+    }
+    m_ui->m_navigation->setBtnChecked(0);
+
+    connect(m_ui->m_navigation, SIGNAL(currentUIDChanged()), this, SLOT(updatePage()), Qt::ConnectionType::UniqueConnection);
+    connect(m_ui->m_sidebar, &SideBar::itemChanged, this, &Window::updateSidebar, Qt::UniqueConnection);
+
     updatePage();
-
-    connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this] {
-        m_loading->setVisible(false);
-        m_ui->m_sidebar->setEnabled(true);
-        updatePage();
-    });
-
-    connect(m_ui->m_navigation, SIGNAL(currentUIDChanged()), this, SLOT(updatePage()));
 }
 
 void Window::initSettings()
 {
     Settings::Dialog::globalInit(this);
+    QStringList settingsSidebars;
+    // 从page中获取需要添加设置页面的项
+    for (auto pages : m_pages.values())
+    {
+        auto navigationUID = pages.first()->getNavigationUID();
+        CONTINUE_IF_TRUE(navigationUID.isEmpty());
+
+        if (navigationUID == tr("Baseline reinforcement"))
+        {
+            settingsSidebars << tr("Baseline reinforcement");
+        }
+        else if (navigationUID == tr("Trusted protected"))
+        {
+            settingsSidebars << tr("Trusted protect");
+        }
+        else if (navigationUID == tr("Device management"))
+        {
+            settingsSidebars << tr("Interface Control");
+        }
+        else
+        {
+            continue;
+        }
+    }
+    Settings::Dialog::instance()->addSidebars(settingsSidebars);
     // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
-    disconnect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, nullptr, nullptr);
-    connect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this] {
-        for (auto page : m_pages.value(tr("Baseline reinforcement")))
-        {
-            if (page->isVisible())
+    connect(
+        Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this] {
+            for (auto page : m_pages.value(tr("Baseline reinforcement")))
             {
-                auto brPage = static_cast<BR::BRPage *>(page);
-                brPage->exportStrategy();
+                if (page->isVisible())
+                {
+                    auto brPage = static_cast<BR::BRPage *>(page);
+                    brPage->exportStrategy();
+                }
             }
-        }
-    });
-    disconnect(Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, nullptr, nullptr);
-    connect(Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this] {
-        for (auto page : m_pages.value(tr("Baseline reinforcement")))
-        {
-            if (page->isVisible())
+        },
+        Qt::UniqueConnection);
+    connect(
+        Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this] {
+            for (auto page : m_pages.value(tr("Baseline reinforcement")))
             {
-                auto brPage = static_cast<BR::BRPage *>(page);
-                brPage->resetAllReinforcementArgs();
+                if (page->isVisible())
+                {
+                    auto brPage = static_cast<BR::BRPage *>(page);
+                    brPage->resetAllReinforcementArgs();
+                }
             }
-        }
-    });
+        },
+        Qt::UniqueConnection);
 }
 
 void Window::addPage(Page *page)
 {
+    // 通过用户权限添加页面
+    RETURN_IF_TRUE(page->getAccountRoleName() != Account::Manager::instance()->getCurrentUserName() && page->getAccountRoleName() != SSR_ACCOUNT_NAME_COMADM);
     if (!m_pages.contains(page->getNavigationUID()))
     {
         QList<Page *> pages;
@@ -406,6 +497,30 @@ void Window::updateSidebar()
             m_ui->m_stackedPages->setCurrentWidget(page);
             break;
         }
+    }
+}
+
+void Window::logout(const QString &userName)
+{
+    clearSidebar();
+    while (m_ui->m_stackedPages->currentWidget() != nullptr)
+    {
+        auto currentWidget = m_ui->m_stackedPages->currentWidget();
+        m_ui->m_stackedPages->removeWidget(currentWidget);
+        delete currentWidget;
+    }
+    m_pages.clear();
+    m_ui->m_navigation->clearItems();
+
+    Account::Manager::instance()->setLoginUserName(userName);
+    login();
+}
+
+void Window::relogin(const QString &userName)
+{
+    if (userName == Account::Manager::instance()->getCurrentUserName())
+    {
+        logout(userName);
     }
 }
 }  // namespace KS

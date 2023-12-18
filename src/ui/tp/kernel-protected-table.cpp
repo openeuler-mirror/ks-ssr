@@ -21,6 +21,7 @@
 #include <QHeaderView>
 #include <QItemDelegate>
 #include <QJsonDocument>
+#include <QAction>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
@@ -30,6 +31,7 @@
 #include <QToolTip>
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/kernel-protected-delegate.h"
+#include "src/ui/common/table/header-button-delegate.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
 
@@ -60,16 +62,30 @@ KernelProtectedFilterModel::KernelProtectedFilterModel(QObject *parent) : QSortF
 {
 }
 
+void KernelProtectedFilterModel::setSearchText(const QString &text)
+{
+    m_searchText = text;
+}
+
 bool KernelProtectedFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    QString textComb;
+    RETURN_VAL_IF_TRUE(filterRegExp().isEmpty(), false)
+    QString sourceString;
     for (auto i = 0; i < KERNEL_TABLE_COL; ++i)
     {
         auto index = sourceModel()->index(sourceRow, i, sourceParent);
         auto text = sourceModel()->data(index).toString();
-        RETURN_VAL_IF_TRUE(text.contains(filterRegExp()), true);
+        sourceString += text;
     }
 
+    if (!m_searchText.isEmpty())
+    {
+        RETURN_VAL_IF_TRUE(sourceString.contains(m_searchText) && sourceString.contains(filterRegExp()), true);
+    }
+    else
+    {
+        RETURN_VAL_IF_TRUE(sourceString.contains(filterRegExp()), true);
+    }
     return false;
 }
 
@@ -186,7 +202,7 @@ QVariant KernelProtectedModel::headerData(int section, Qt::Orientation orientati
         case KernelField::KERNEL_FIELD_FILE_PATH:
             return tr("File path");
         case KernelField::KERNEL_FIELD_STATUS:
-            return tr("Status");
+            return "";
         case KernelField::KERNEL_FIELD_PROHIBIT_UNLOAD:
             return tr("Prohibt unload");
         default:
@@ -309,6 +325,41 @@ void KernelProtectedModel::checkSelectStatus()
 KernelProtectedTable::KernelProtectedTable(QWidget *parent) : QTableView(parent),
                                                               m_filterProxy(nullptr)
 {
+    initTable();
+    initTableHeaderButton();
+}
+
+void KernelProtectedTable::setSearchText(const QString &text)
+{
+    m_searchText = text;
+    m_filterProxy->setSearchText(m_searchText);
+    filterFixedString();
+}
+
+void KernelProtectedTable::updateInfo()
+{
+    m_model->updateRecord();
+}
+
+QList<TrustedRecord> KernelProtectedTable::getKernelRecords()
+{
+    return m_model->getKernelRecords();
+}
+
+int KernelProtectedTable::getKerneltamperedNums()
+{
+    int kerneltamperedNums = 0;
+    for (auto kernelRecord : m_model->getKernelRecords())
+    {
+        if (kernelRecord.status != tr("Certified"))
+        {
+            kerneltamperedNums++;
+        }
+    }
+    return kerneltamperedNums;
+}
+void KernelProtectedTable::initTable()
+{
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // 设置Model
     m_model = new KernelProtectedModel(this);
@@ -351,36 +402,50 @@ KernelProtectedTable::KernelProtectedTable(QWidget *parent) : QTableView(parent)
     connect(this, &KernelProtectedTable::clicked, this, &KernelProtectedTable::itemClicked);
 }
 
-void KernelProtectedTable::searchTextChanged(const QString &text)
+void KernelProtectedTable::initTableHeaderButton()
 {
-    KLOG_DEBUG() << "The search text is change to " << text;
+    // 状态筛选
+    m_statusButton = new HeaderButtonDelegate(this);
+    m_statusButton->setButtonText(tr("Status"));
 
-    m_filterProxy->setFilterFixedString(text);
-}
-
-void KernelProtectedTable::updateInfo()
-{
-    m_model->updateRecord();
-}
-
-QList<TrustedRecord> KernelProtectedTable::getKernelRecords()
-{
-    return m_model->getKernelRecords();
-}
-
-int KernelProtectedTable::getKerneltamperedNums()
-{
-    int kerneltamperedNums = 0;
-    for (auto kernelRecord : m_model->getKernelRecords())
-    {
-        if (kernelRecord.status != tr("Certified"))
+    auto certified = new QAction(tr("Certified"), m_statusButton);
+    auto beingTamperedWith = new QAction(tr("Being tampered with"), m_statusButton);
+    m_statusKeys << tr("Certified") << tr("Being tampered with");
+    m_statusButton->addMenuActions(QList<QAction *>() << certified << beingTamperedWith);
+    connect(m_statusButton, &HeaderButtonDelegate::menuTriggered, this, [this](){
+        for (auto action : m_statusButton->getMenuActions())
         {
-            kerneltamperedNums++;
+            if (action->isChecked())
+            {
+                m_statusKeys << action->text();
+            }
+            else
+            {
+                m_statusKeys.removeAll(action->text());
+            }
+            // 去重
+            m_statusKeys = QSet<QString>::fromList(m_statusKeys).toList();
         }
-    }
-    return kerneltamperedNums;
+        filterFixedString();
+    });
+    QMap<int, HeaderButtonDelegate *> headerButtons;
+    headerButtons.insert(KERNEL_FIELD_STATUS, m_statusButton);
+    m_headerViewProxy->setHeaderButtons(headerButtons);
+    filterFixedString();
 }
 
+void KernelProtectedTable::filterFixedString()
+{
+    QStringList keys = {};
+    for(auto key : m_statusKeys)
+    {
+        CONTINUE_IF_TRUE(key.isEmpty())
+        keys << key;
+    }
+    QString pattern = keys.join("|");
+    KLOG_DEBUG() << "The search text is change to " << pattern;
+    m_filterProxy->setFilterRegExp(pattern);
+}
 void KernelProtectedTable::itemEntered(const QModelIndex &index)
 {
     //    RETURN_IF_TRUE(index.column() != KernelField::KERNEL_FIELD_FILE_PATH)

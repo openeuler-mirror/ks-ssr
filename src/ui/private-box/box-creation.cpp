@@ -41,9 +41,9 @@ BoxCreation::BoxCreation(QWidget *parent) : TitlebarWindow(parent),
     m_ui->m_confirmPassword->setValidator(validator);
 
     // 限制输入长度
-    m_ui->m_name->setMaxLength(SSR_BOX_NAME_MAX_LENGTH);
-    m_ui->m_password->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
-    m_ui->m_confirmPassword->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_name->setMaxLength(SSR_USER_NAME_MAX_LENGTH);
+    m_ui->m_password->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
+    m_ui->m_confirmPassword->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
 
     m_ui->m_password->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);

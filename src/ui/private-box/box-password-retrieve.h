@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 
 namespace Ui
 {
@@ -38,7 +38,7 @@ private:
     void init();
 
 private slots:
-    void onOkClicked();
+    void acceptedPasswordRetrieve();
 
 signals:
     void accepted();
@@ -49,5 +49,5 @@ signals:
 private:
     Ui::BoxPasswordRetrieve *m_ui;
 };
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

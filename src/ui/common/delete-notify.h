@@ -15,22 +15,24 @@
 #pragma once
 
 #include <QWidget>
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 
 namespace Ui
 {
-class TableDeleteNotify;
+class DeleteNotify;
 }
 
 namespace KS
 {
-class TableDeleteNotify : public TitlebarWindow
+class DeleteNotify : public TitlebarWindow
 {
     Q_OBJECT
 
 public:
-    explicit TableDeleteNotify(QWidget *parent = nullptr);
-    ~TableDeleteNotify();
+    explicit DeleteNotify(QWidget *parent = nullptr);
+    ~DeleteNotify();
+
+    void setNotifyMessage(const QString &title, const QString &message);
 
 private:
     void init();
@@ -39,6 +41,6 @@ signals:
     void accepted();
 
 private:
-    Ui::TableDeleteNotify *m_ui;
+    Ui::DeleteNotify *m_ui;
 };
 }  // namespace KS

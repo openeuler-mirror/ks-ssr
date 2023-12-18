@@ -18,6 +18,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QThread>
+#include <QFile>
 #include "config.h"
 #include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
@@ -298,7 +299,7 @@ void Wrapper::initTrustedResults()
 
 void Wrapper::init()
 {
-    RETURN_IF_TRUE(m_ini->value(KSS_INI_KEY).toInt() != 0)
+    RETURN_IF_TRUE(m_ini->value(KSS_INI_KEY).toInt() != 0);
 
     KLOG_INFO() << "Start kss initialisation.";
     execute(QString("%1 %2").arg(KSS_INIT_CMD, KSS_DEFAULT_USER_PIN));

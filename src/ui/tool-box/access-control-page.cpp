@@ -45,9 +45,9 @@ QString AccessControl::getSidebarIcon()
     return ":" ACCESS_CONTROL_ICON_NAME;
 }
 
-int AccessControl::getSelinuxType()
+QString AccessControl::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 }  // namespace ToolBox
 }  // namespace KS

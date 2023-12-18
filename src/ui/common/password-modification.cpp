@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
@@ -9,42 +9,41 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#include "src/ui/private-box/box-password-modification.h"
+#include "src/ui/common/password-modification.h"
 #include <QMessageBox>
 #include <QRegularExpressionValidator>
 #include "include/ssr-i.h"
-#include "src/ui/ui_box-password-modification.h"
+#include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/ui_password-modification.h"
 
 namespace KS
 {
-namespace PrivateBox
-{
-BoxPasswordModification::BoxPasswordModification(QWidget *parent) : TitlebarWindow(parent),
-                                                                    m_ui(new Ui::BoxPasswordModification())
+PasswordModification::PasswordModification(QWidget *parent) : TitlebarWindow(parent),
+                                                              m_ui(new Ui::PasswordModification())
 {
     m_ui->setupUi(getWindowContentWidget());
     init();
 }
 
-QString BoxPasswordModification::getCurrentPassword()
+QString PasswordModification::getCurrentPassword()
 {
     return m_ui->m_currentPassword->text();
 }
 
-QString BoxPasswordModification::getNewPassword()
+QString PasswordModification::getNewPassword()
 {
     return m_ui->m_newPassword->text();
 }
 
-void BoxPasswordModification::setBoxName(const QString &boxName)
+void PasswordModification::setTitleNameTail(const QString &tail)
 {
-    m_ui->m_boxName->setText(boxName);
+    setTitle(QString(tr("Modify Password - %1").arg(tail)));
 }
 
-void BoxPasswordModification::init()
+void PasswordModification::init()
 {
     // 页面关闭时销毁
     setAttribute(Qt::WA_DeleteOnClose);
@@ -53,6 +52,7 @@ void BoxPasswordModification::init()
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
+    setMinimumSize(419, 419);
 
     auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
     m_ui->m_currentPassword->setValidator(validator);
@@ -60,36 +60,35 @@ void BoxPasswordModification::init()
     m_ui->m_confirmPassword->setValidator(validator);
 
     // 限制字符
-    m_ui->m_currentPassword->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
-    m_ui->m_newPassword->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
-    m_ui->m_confirmPassword->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_currentPassword->setMaxLength(SSR_USER_NAME_MAX_LENGTH);
+    m_ui->m_newPassword->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
+    m_ui->m_confirmPassword->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
 
     m_ui->m_currentPassword->setEchoMode(QLineEdit::Password);
     m_ui->m_newPassword->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
-            {
-                close();
-                emit rejected();
-            });
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this] {
+        close();
+        emit rejected();
+    });
 
-    connect(m_ui->m_ok, &QPushButton::clicked, this, &BoxPasswordModification::onOkClicked);
+    connect(m_ui->m_ok, &QPushButton::clicked, this, &PasswordModification::acceptedPasswordModification);
 }
 
-void BoxPasswordModification::onOkClicked()
+void PasswordModification::acceptedPasswordModification()
 {
     // 禁止输入空字符
     if (m_ui->m_newPassword->text().isEmpty() ||
         m_ui->m_confirmPassword->text().isEmpty() ||
         m_ui->m_currentPassword->text().isEmpty())
     {
-        emit inputEmpty();
+        POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
         return;
     }
     // 两次密码不一致
     if (m_ui->m_newPassword->text() != m_ui->m_confirmPassword->text())
     {
-        emit passwdInconsistent();
+        POPUP_MESSAGE_DIALOG(QString(tr("Please confirm whether the password is consistent.")));
         return;
     }
 
@@ -99,5 +98,4 @@ void BoxPasswordModification::onOkClicked()
     m_ui->m_newPassword->setText("");
     m_ui->m_confirmPassword->setText("");
 }
-}  // namespace Box
 }  // namespace KS

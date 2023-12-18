@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #pragma once
@@ -17,7 +17,7 @@
 #include <QLabel>
 #include <QMap>
 #include "src/ui/common/page.h"
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 #include "src/ui/license/activation.h"
 
 namespace Ui
@@ -44,12 +44,13 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
+    void login();
     void start();
     void initActivation();
     // 窗口整体初始化
     void initWindow();
-    // 导航和导航项初始化
-    void initNavigation();
+    // 导航项以及子页面初始化
+    void initPageAndNavigation();
     void initSettings();
     void addPage(Page *page);
     void showLoading(bool isShow);
@@ -64,6 +65,10 @@ private slots:
     void activateMetaObject();
     void updatePage();
     void updateSidebar();
+
+    void logout(const QString &userName);
+    // 重新登录
+    void relogin(const QString &userName);
 
 private:
     Ui::Window *m_ui;

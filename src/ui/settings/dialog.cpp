@@ -17,6 +17,7 @@
 #include "src/ui/settings/device-control.h"
 #include "src/ui/settings/trusted-protected.h"
 #include "ui_dialog.h"
+#include "include/ssr-marcos.h"
 
 namespace KS
 {
@@ -35,6 +36,24 @@ void Dialog::globalDeinit()
         delete m_instance;
         m_instance = nullptr;
     }
+}
+
+void Dialog::addSidebars(const QStringList &sidebarNames)
+{
+    for (auto sidebarName : sidebarNames)
+    {
+        CONTINUE_IF_TRUE(sidebarName.isEmpty());
+
+        auto item = new QListWidgetItem(m_ui->m_sidebar);
+        item->setText(sidebarName);
+        item->setTextAlignment(Qt::AlignCenter);
+        item->setSizeHint(QSize(110, 42));
+        m_ui->m_sidebar->addItem(item);
+
+        addSubPage(sidebarName);
+    }
+    m_ui->m_sidebar->setCurrentRow(0);
+    m_ui->m_stacked->setCurrentIndex(0);
 };
 
 Dialog::Dialog(QWidget *parent) : TitlebarWindow(parent),
@@ -42,8 +61,6 @@ Dialog::Dialog(QWidget *parent) : TitlebarWindow(parent),
 {
     m_ui->setupUi(getWindowContentWidget());
     initUI();
-    initSidebar();
-    initSubPage();
     hide();
 
     connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, m_ui->m_stacked, &QStackedWidget::setCurrentIndex);
@@ -64,42 +81,26 @@ void Dialog::initUI()
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
 }
 
-void Dialog::initSidebar()
+void Dialog::addSubPage(const QString &sidebarName)
 {
-    auto reinforceItem = new QListWidgetItem(m_ui->m_sidebar);
-    reinforceItem->setText(tr("Baseline reinforcement"));
-    reinforceItem->setTextAlignment(Qt::AlignCenter);
-    reinforceItem->setSizeHint(QSize(110, 42));
+    if (sidebarName == tr("Baseline reinforcement"))
+    {
+        auto reinforceSettings = new BaselineReinforcement(this);
+        connect(reinforceSettings, &BaselineReinforcement::exportStrategyClicked, this, &Dialog::exportStrategyClicked);
+        connect(reinforceSettings, &BaselineReinforcement::resetAllArgsClicked, this, &Dialog::resetAllArgsClicked);
+        m_ui->m_stacked->addWidget(reinforceSettings);
+    }
+    else if (sidebarName == tr("Trusted protect"))
+    {
+        auto trustedSettings = new TrustedProtected(this);
+        m_ui->m_stacked->addWidget(trustedSettings);
+    }
+    else if (sidebarName == tr("Interface Control"))
+    {
+        auto deviceSettings = new DeviceControl(this);
+        m_ui->m_stacked->addWidget(deviceSettings);
+    }
 
-    auto trustedItem = new QListWidgetItem(m_ui->m_sidebar);
-    trustedItem->setText(tr("Trusted protect"));
-    trustedItem->setTextAlignment(Qt::AlignCenter);
-    trustedItem->setSizeHint(QSize(110, 42));
-
-    auto deviceItem = new QListWidgetItem(m_ui->m_sidebar);
-    deviceItem->setText(tr("Interface Control"));
-    deviceItem->setTextAlignment(Qt::AlignCenter);
-    deviceItem->setSizeHint(QSize(110, 42));
-
-    m_ui->m_sidebar->addItem(reinforceItem);
-    m_ui->m_sidebar->addItem(trustedItem);
-    m_ui->m_sidebar->addItem(deviceItem);
-    m_ui->m_sidebar->setCurrentRow(0);
-}
-
-void Dialog::initSubPage()
-{
-    auto reinforceSettings = new BaselineReinforcement(this);
-    auto trustedSettings = new TrustedProtected(this);
-    auto deviceSettings = new DeviceControl(this);
-
-    connect(reinforceSettings, &BaselineReinforcement::exportStrategyClicked, this, &Dialog::exportStrategyClicked);
-    connect(reinforceSettings, &BaselineReinforcement::resetAllArgsClicked, this, &Dialog::resetAllArgsClicked);
-
-    m_ui->m_stacked->addWidget(reinforceSettings);
-    m_ui->m_stacked->addWidget(trustedSettings);
-    m_ui->m_stacked->addWidget(deviceSettings);
-    m_ui->m_stacked->setCurrentIndex(0);
 }
 }  // namespace Settings
 }  // namespace KS

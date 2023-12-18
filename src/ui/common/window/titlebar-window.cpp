@@ -13,8 +13,8 @@
  */
 
 #include "titlebar-window.h"
-#include "global-define.h"
-#include "src/ui/common/xlib-helper.h"
+#include "src/ui/common/global-define.h"
+#include "src/ui/common/window/xlib-helper.h"
 #include "titlebar-window-private.h"
 
 #include <QApplication>

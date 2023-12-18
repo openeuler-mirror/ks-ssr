@@ -19,10 +19,10 @@
 #include <QJsonObject>
 #include <QLineEdit>
 #include "lib/base/crypto-helper.h"
-#include "src/ui/private-box/box-creation.h"
-#include "src/ui/private-box/box.h"
 #include "src/ui/box_manager_proxy.h"
 #include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/private-box/box-creation.h"
+#include "src/ui/private-box/box.h"
 #include "src/ui/ui_box-page.h"
 #include "ssr-i.h"
 
@@ -71,9 +71,9 @@ QString BoxPage::getSidebarIcon()
     return "";
 }
 
-int BoxPage::getSelinuxType()
+QString BoxPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_COMADM;
 }
 
 void BoxPage::initBoxs()
@@ -170,10 +170,8 @@ void BoxPage::newBoxClicked(bool checked)
     m_createBox->setTitle(tr("Create box"));
 
     connect(m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
-    connect(m_createBox, &BoxCreation::passwdInconsistent, this, [this]
-            { POPUP_MESSAGE_DIALOG(tr("Please confirm whether the password is consistent.")); });
-    connect(m_createBox, &BoxCreation::inputEmpty, this, [this]
-            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
+    connect(m_createBox, &BoxCreation::passwdInconsistent, this, [this] { POPUP_MESSAGE_DIALOG(tr("Please confirm whether the password is consistent.")); });
+    connect(m_createBox, &BoxCreation::inputEmpty, this, [this] { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
 
     int x = window()->x() + window()->width() / 4 + m_createBox->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_createBox->height() / 8;
@@ -203,5 +201,5 @@ void BoxPage::createBoxAccepted()
     // 显示消息
     POPUP_MESSAGE_DIALOG(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase));
 }
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

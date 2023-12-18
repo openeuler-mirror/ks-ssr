@@ -43,7 +43,7 @@ public:
     QString getNavigationUID() override;
     QString getSidebarUID() override;
     QString getSidebarIcon() override;
-    int getSelinuxType() override;
+    QString getAccountRoleName() override;
 
 private:
     void initBoxs();
@@ -68,5 +68,5 @@ private:
     // 所有保密箱对象
     QMap<QString, Box *> m_boxs;
 };
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

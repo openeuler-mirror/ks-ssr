@@ -27,6 +27,9 @@
 
 namespace KS
 {
+// kss命令是否存在
+#define KSS_CMD_PATH SSR_INSTALL_BINDIR "/kss"
+
 Daemon *Daemon::m_instance = nullptr;
 
 Daemon::Daemon() : QObject(nullptr)
@@ -70,7 +73,11 @@ void Daemon::start()
     m_licenseProxy->disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
     PrivateBox::BoxManager::globalInit(this);
     DM::DeviceManager::globalInit(this);
-    KSS::DBus::globalInit(this);
+    // TODO 暂时通过有无kss命令的方式判断是否支持可信，需考虑更好的方法
+    if (QFile::exists(KSS_CMD_PATH))
+    {
+        KSS::DBus::globalInit(this);
+    }
     BRDaemon::Configuration::globalInit(SSR_BR_INSTALL_DATADIR "/ssr.ini");
     BRDaemon::Categories::globalInit();
     BRDaemon::Plugins::globalInit(BRDaemon::Configuration::getInstance());

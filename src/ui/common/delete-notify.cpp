@@ -11,25 +11,31 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#include "table-delete-notify.h"
-#include "ui_table-delete-notify.h"
+#include "delete-notify.h"
+#include "ui_delete-notify.h"
 
 namespace KS
 {
-TableDeleteNotify::TableDeleteNotify(QWidget *parent) : TitlebarWindow(parent),
-                                                        m_ui(new Ui::TableDeleteNotify)
+DeleteNotify::DeleteNotify(QWidget *parent) : TitlebarWindow(parent),
+                                              m_ui(new Ui::DeleteNotify)
 {
     m_ui->setupUi(getWindowContentWidget());
 
     init();
 }
 
-TableDeleteNotify::~TableDeleteNotify()
+DeleteNotify::~DeleteNotify()
 {
     delete m_ui;
 }
 
-void TableDeleteNotify::init()
+void DeleteNotify::setNotifyMessage(const QString &title, const QString &message)
+{
+    setTitle(title);
+    m_ui->m_notify->setText(message);
+}
+
+void DeleteNotify::init()
 {
     // 页面关闭时销毁
     setAttribute(Qt::WA_DeleteOnClose);
@@ -39,16 +45,12 @@ void TableDeleteNotify::init()
     setFixedSize(299, 219);
     setIcon(QIcon(":/images/logo"));
     setResizeable(false);
-    setTitle(tr("Remove protection"));
-    m_ui->m_notify->setText(tr("The removal operation is irreversible."
-                               "Do you confirm the removal of the selected record from the whitelist?"));
     m_ui->m_notify->setWordWrap(true);
 
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, &TableDeleteNotify::close);
-    connect(m_ui->m_ok, &QPushButton::clicked, this, [this]
-            {
-                close();
-                emit accepted();
-            });
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, &DeleteNotify::close);
+    connect(m_ui->m_ok, &QPushButton::clicked, this, [this] {
+        close();
+        emit accepted();
+    });
 }
 }  // namespace KS

@@ -40,62 +40,56 @@ public:
     // BRDBus(QObject *parent);
     virtual ~BRDBus();
 
-    static BRDBus *getInstance() { return instance_; };
-
-    static void globalInit(QObject *parentt);
-    // static void globalInit(QObject* parent);
-
-    static void globalDeinit() { delete instance_; };
+    static BRDBus *getInstance() { return m_instance; };
+    static void globalInit(QObject *parent);
+    static void globalDeinit() { delete m_instance; };
 
 public:  // PROPERTIES
-    Q_PROPERTY(uint notification_status READ notification_status)
-    uint notification_status() const;
+    Q_PROPERTY(uint notification_status READ notificationStatus)
+    uint notificationStatus() const;
 
-    Q_PROPERTY(uint resource_monitor READ resource_monitor)
-    uint resource_monitor() const;
+    Q_PROPERTY(uint resource_monitor READ resourceMonitor)
+    uint resourceMonitor() const;
 
-    Q_PROPERTY(uint standard_type READ standard_type)
-    uint standard_type() const;
+    Q_PROPERTY(uint standard_type READ standardType)
+    uint standardType() const;
 
-    Q_PROPERTY(uint strategy_type READ strategy_type)
-    uint strategy_type() const;
+    Q_PROPERTY(uint strategy_type READ strategyType)
+    uint strategyType() const;
 
-    Q_PROPERTY(uint time_scan READ time_scan)
-    uint time_scan() const;
+    Q_PROPERTY(uint time_scan READ timeScan)
+    uint timeScan() const;
 
     Q_PROPERTY(QString version READ version)
     QString version() const;
 
-    Q_PROPERTY(uint fallback_status READ fallback_status)
-    uint fallback_status() const;
+    Q_PROPERTY(uint fallback_status READ fallbackStatus)
+    uint fallbackStatus() const;
 
 public Q_SLOTS:
     // 设置标准类型
-    virtual void SetStandardType(const uint32_t &standard_type);
+    virtual void SetStandardType(const uint32_t &standardType);
 
     // 设置自定义加固标准
-    virtual void ImportCustomRS(const QString &encoded_standard);
+    virtual void ImportCustomRS(const QString &encodedStandard);
 
     // 设置策略类型
-    virtual void SetStrategyType(const uint32_t &strategy_type);
+    virtual void SetStrategyType(const uint32_t &strategyType);
 
     // 设置定时扫描时间
-    virtual void SetTimeScan(const uint32_t &time_scan);
+    virtual void SetTimeScan(const uint32_t &timeScan);
 
     // 设置通知状态
-    virtual void SetNotificationStatus(const uint32_t &notification_status);
-
-    // 设置回退状态
-    virtual void SetFallbackStatus(const uint32_t &fallback_status);
+    virtual void SetNotificationStatus(const uint32_t &notificationStatus);
 
     // 设置自定义加固策略
-    virtual void ImportCustomRA(const QString &encoded_strategy);
+    virtual void ImportCustomRA(const QString &encodedStrategy);
 
     // 设置复选框状态
-    virtual void SetCheckBox(const QString &reinforcement_name, const bool &checkbox_status);
+    virtual void SetCheckBox(const QString &reinforcementName, const bool &checkboxStatus);
 
     // 设置资源监控开关
-    virtual void SetResourceMonitorSwitch(const uint32_t &resource_monitor);
+    virtual void SetResourceMonitorSwitch(const uint32_t &resourceMonitor);
 
     // 获取分类
     virtual QString GetCategories();
@@ -113,31 +107,26 @@ public Q_SLOTS:
     virtual QString GetReinforcement(const QString &name);
 
     // 设置自定义加固参数
-    virtual void SetReinforcement(const QString &reinforcement_xml);
+    virtual void SetReinforcement(const QString &reinforcementXML);
 
     // 重置指定的加固项
     virtual void ResetReinforcement(const QString &name);
 
     // 扫描指定加固项
-    virtual qlonglong Scan(const QStringList &names);
+    virtual void Scan(const QStringList &names);
 
     // 对加固项进行加固
-    virtual qlonglong Reinforce(const QStringList &names);
+    virtual void Reinforce(const QStringList &names);
 
     // 取消一个任务
-    virtual void Cancel(const qlonglong &job_id);
+    virtual void Cancel(const qlonglong &jobID);
 
-    // 获取授权信息
-    // virtual std::string GetLicense();
+    // 设置回退，回退到初始状态/回退到上一次的状态
+    virtual void SetFallback(const uint32_t &snapshot);
 
-    virtual void SetFallback(const uint32_t &snapshot_status);
+    // 设置回退状态 退回进行中/回退未开始/回退完成
+    virtual void SetFallbackStatus(const uint32_t &fallbackStatus);
 
-    // 通过激活码注册
-    // virtual std::string ActivateByActivationCode(const std::string &activation_code);
-
-    // 作用存疑，需要确认
-    // virtual void on_get_property(::BRDBus::InterfaceAdaptor &interface, const std::string &property, ::BRDBus::Variant &value);
-    // virtual void on_set_property(::BRDBus::InterfaceAdaptor &interface, const std::string &property, const ::BRDBus::Variant &value);
 Q_SIGNALS:  // SIGNALS
     void CpuAverageLoadRatioHigher(const QString &ratio);
     void HomeFreeSpaceRatioLower(const QString &ratio);
@@ -148,32 +137,21 @@ Q_SIGNALS:  // SIGNALS
     void MemoryAbnormal(const QString &ratio);
 
 private:
+    void reinforce(const QDBusMessage &message, const QStringList &names);
+    void setFallback(const QDBusMessage &message, const uint32_t &snapshot);
+
+private:
     void init();
-
-    // 更新激活信息
-    // void update_license_info();
-
     // 扫描进度信号处理
-    void onScanProcessChangedCb(const JobResult &job_result);
+    void onScanProcessChangedCb(const JobResult &jobResult);
     // 加固进度信号处理
-    void onReinfoceProcessChangedCb(const JobResult &job_result);
-    // 授权发生变化
-    // void on_license_info_changed_cb(bool placeholder);
+    void onReinforceProcessChangedCb(const JobResult &jobResult);
     // 资源监控开启/关闭
     bool onResourceMonitor();
     // 进程完成处理函数
-    void scanProgressFinished()
-    {
-        is_scan_flag_ = true;
-        emit ProgressFinished();
-    };
+    void scanProgressFinished();
     // 加固完成处理函数
-    void reinfoceProgressFinished()
-    {
-        is_reinfoce_flag_ = true;
-        is_scan_flag_ = true;
-        emit ProgressFinished();
-    };
+    void reinforceProgressFinished();
 
     void homeFreeSpaceRatio(float spaceRatio);
     void rootFreeSpaceRatio(float spaceRatio);
@@ -181,34 +159,35 @@ private:
     void memoryRemainingRatio(float memoryRatio);
 
 private:
-    static BRDBus *instance_;
+    static BRDBus *m_instance;
 
     // ::BRDBus::Connection dbus_connection_;
 
     QTimer *timer;
     // sigc::connection timeout_handler_;
 
-    Configuration *configuration_;
-    Categories *categories_;
-    Plugins *plugins_;
-    ResourceMonitor *resource_monitor_;
+    Configuration *m_configuration;
+    Categories *m_categories;
+    Plugins *m_plugins;
+    ResourceMonitor *m_resourceMonitor;
 
     // 扫描任务
-    QSharedPointer<Job> scan_job_;
+    QSharedPointer<Job> m_scanJob;
     // 加固任务
-    QSharedPointer<Job> reinforce_job_;
+    QSharedPointer<Job> m_reinforceJob;
 
     // 激活信息
-    QJsonValue license_values;
+    QJsonValue m_licenseValues;
 
     // 首次加固 全盘扫描
-    bool is_frist_reinfoce_ = true;          // 是否首次加固
-    bool is_frist_reinfoce_finish_ = false;  // 首次加固是否完成
+    // 是否首次加固
+    bool m_isFristReinfoce = true;
+    // 首次加固是否完成
+    bool m_isFristReinfoceFinish = false;
+    // 加固前需要进行一次扫描，用于判断是否这次扫描是否为正常调用dbus接口的扫描
+    bool m_isScanFlag = true;
 
-    bool is_scan_flag_ = true;
-    bool is_reinfoce_flag_ = true;
-
-    BRFallbackMethod fallback_method_ = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
+    BRFallbackMethod m_fallbackMethod = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
     BRAdaptor *m_dbus;
 };
 }  // namespace BRDaemon

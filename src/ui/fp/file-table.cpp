@@ -30,6 +30,7 @@
 #include "src/ui/kss_dbus_proxy.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
+#include "src/ui/common/table/header-button-delegate.h"
 
 namespace KS
 {
@@ -391,7 +392,6 @@ FileTable::FileTable(QWidget *parent) : QTableView(parent),
     m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft);
     m_headerViewProxy->setFixedHeight(24);
     m_headerViewProxy->setDefaultAlignment(Qt::AlignVCenter);
-
     // 设置垂直列表头
     auto verticalHeader = this->verticalHeader();
     verticalHeader->setSectionResizeMode(QHeaderView::Fixed);

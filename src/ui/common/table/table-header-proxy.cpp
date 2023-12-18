@@ -17,26 +17,31 @@
 #include <QCheckBox>
 #include <QMouseEvent>
 #include <QPainter>
+#include "src/ui/common/table/header-button-delegate.h"
+#include "include/ssr-marcos.h"
 
 namespace KS
 {
 TableHeaderProxy::TableHeaderProxy(QWidget *parent) : QHeaderView(Qt::Horizontal, parent),
                                                       m_stateChanged(false),
                                                       m_closeCheckBox(false),
-                                                      m_checkState(Qt::Unchecked)
+                                                      m_checkState(Qt::Unchecked),
+                                                      m_headerButtons({})
 {
     m_rect = new QRect(15, 2, 20, 20);
     // 做下拉筛选功能时可能会用到这个属性，暂设置为false
     setSectionsClickable(false);
-    setMouseTracking(true);
     setObjectName("tableHeaderProxy");
-    // TODO: 使用setIndexWidget需要调整位置
-    // setIndexWidget(indexAt(QPoint(0, 0)), new QCheckBox(this));
 }
 
 void TableHeaderProxy::hideCheckBox(bool isHide)
 {
     m_closeCheckBox = isHide;
+}
+
+void TableHeaderProxy::setHeaderButtons(QMap<int, HeaderButtonDelegate *> headerButtons)
+{
+    m_headerButtons = headerButtons;
 }
 
 void TableHeaderProxy::paintSection(QPainter *painter,
@@ -66,6 +71,14 @@ void TableHeaderProxy::paintSection(QPainter *painter,
 
         style()->drawItemPixmap(painter, *m_rect, Qt::AlignCenter, pixmap);
     }
+//    RETURN_IF_TRUE(m_arrowCols.isEmpty());
+    for (auto key : m_headerButtons.keys())
+    {
+        if (logicalIndex == key)
+        {
+            m_headerButtons.value(key)->setGeometry(rect);
+        }
+    }
 }
 
 void TableHeaderProxy::mousePressEvent(QMouseEvent *e)
@@ -81,6 +94,11 @@ void TableHeaderProxy::mousePressEvent(QMouseEvent *e)
         }
     }
     QHeaderView::mousePressEvent(e);
+}
+
+void TableHeaderProxy::mouseMoveEvent(QMouseEvent *e)
+{
+    e->ignore();
 }
 
 void TableHeaderProxy::setCheckState(Qt::CheckState checkState)

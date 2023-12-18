@@ -122,18 +122,12 @@
             <arg type="as" name="names" direction="in">
                 <summary>The scanned reinforcent names.</summary>
             </arg>
-            <arg type="x" name="job_id" direction="out">
-                <summary>The job id.</summary>
-            </arg>
             <description>Scan specified reinforcements.</description>
         </method>
 
         <method name="Reinforce">
             <arg type="as" name="names" direction="in">
                 <summary>The reinforced reinforcent names..</summary>
-            </arg>
-            <arg type="x" name="job_id" direction="out">
-                <summary>The job id.</summary>
             </arg>
             <description>Reinforce these items specified by reinforcements.</description>
         </method>

@@ -17,8 +17,8 @@
 #include <QFileDialog>
 #include <QPainter>
 #include <QWidgetAction>
+#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_kernel-protected-page.h"
 #include "ssr-i.h"
@@ -63,7 +63,7 @@ KernelProtectedPage::KernelProtectedPage(QWidget *parent) : Page(parent),
     m_refreshTimer = new QTimer(this);
     connect(m_refreshTimer, &QTimer::timeout, this, &KernelProtectedPage::updateRefreshIcon);
 
-    connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
+    connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(setSearchText(const QString &)));
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addKernelFile(bool)));
     connect(m_ui->m_recertification, SIGNAL(clicked(bool)), this, SLOT(recertification(bool)));
     connect(m_ui->m_refresh, SIGNAL(clicked(bool)), this, SLOT(updateKernelList(bool)));
@@ -93,9 +93,9 @@ QString KernelProtectedPage::getSidebarIcon()
     return ":/images/kernel-module-protected";
 }
 
-int KernelProtectedPage::getSelinuxType()
+QString KernelProtectedPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 
 void KernelProtectedPage::updateTips(int total)
@@ -118,9 +118,9 @@ bool KernelProtectedPage::isExistSelectedItem()
     return false;
 }
 
-void KernelProtectedPage::searchTextChanged(const QString &text)
+void KernelProtectedPage::setSearchText(const QString &text)
 {
-    m_ui->m_kernelTable->searchTextChanged(text);
+    m_ui->m_kernelTable->setSearchText(text);
 }
 
 void KernelProtectedPage::addKernelFile(bool checked)
@@ -166,14 +166,15 @@ void KernelProtectedPage::popDeleteNotify(bool checked)
         return;
     }
 
-    auto deleteNotify = new TableDeleteNotify(this);
-
-    int x = window()->x() + width() / 4 + deleteNotify->width() / 4;
-    int y = window()->y() + height() / 4 + deleteNotify->height() / 4;
+    auto deleteNotify = new DeleteNotify(this);
+    deleteNotify->setNotifyMessage(tr("Remove protection"), tr("The removal operation is irreversible."
+                                                               "Do you confirm the removal of the selected record from the whitelist?"));
+    auto x = window()->x() + window()->width() / 2 - deleteNotify->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - deleteNotify->height() / 2;
     deleteNotify->move(x, y);
     deleteNotify->show();
 
-    connect(deleteNotify, &TableDeleteNotify::accepted, this, &KernelProtectedPage::removeKernelFiles);
+    connect(deleteNotify, &DeleteNotify::accepted, this, &KernelProtectedPage::removeKernelFiles);
 }
 
 void KernelProtectedPage::removeKernelFiles()

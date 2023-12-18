@@ -19,7 +19,7 @@
 #include <QObject>
 #include <QPushButton>
 
-#include "global-define.h"
+#include "src/ui/common/global-define.h"
 #include "title-bar-layout.h"
 #include "titlebar-window.h"
 

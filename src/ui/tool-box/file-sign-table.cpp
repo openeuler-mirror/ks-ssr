@@ -31,7 +31,7 @@
 #include "file-sign-table.h"
 #include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
-#include "src/ui/common/table-header-proxy.h"
+#include "src/ui/common/table/table-header-proxy.h"
 #include "src/ui/tp/delegate.h"
 
 namespace KS

@@ -15,7 +15,7 @@
 #pragma once
 
 #include <QWidget>
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 
 namespace Ui
 {
@@ -34,6 +34,8 @@ public:
 
     static Dialog *instance() { return m_instance; };
 
+    void addSidebars(const QStringList &sidebarNames);
+
 private:
     Dialog(QWidget *parent = nullptr);
     ~Dialog();
@@ -42,6 +44,7 @@ private:
     void initUI();
     void initSidebar();
     void initSubPage();
+    void addSubPage(const QString &sidebarName);
 
 signals:
     void exportStrategyClicked();

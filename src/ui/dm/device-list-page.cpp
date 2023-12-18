@@ -53,7 +53,7 @@ DeviceListPage::DeviceListPage(QWidget *parent) : Page(parent),
                                                   this);
 
     connect(m_deviceManagerProxy, &DeviceManagerProxy::DeviceChanged, this, &DeviceListPage::update);
-    connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceListPage::searchTextChanged);
+    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString &text) { m_ui->m_table->setSearchText(text); });
     connect(m_ui->m_table, &DeviceListTable::clicked, this, &DeviceListPage::popupEditDialog);
 }
 
@@ -86,9 +86,9 @@ QString DeviceListPage::getSidebarIcon()
     return ":/images/device-list";
 }
 
-int DeviceListPage::getSelinuxType()
+QString DeviceListPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SYSADM;
 }
 
 void DeviceListPage::paintEvent(QPaintEvent *event)
@@ -98,12 +98,6 @@ void DeviceListPage::paintEvent(QPaintEvent *event)
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
-
-void DeviceListPage::searchTextChanged(const QString &text)
-{
-    auto filterProxy = m_ui->m_table->getFilterProxy();
-    filterProxy->setFilterFixedString(text);
 }
 
 void DeviceListPage::popupEditDialog(const QModelIndex &index)

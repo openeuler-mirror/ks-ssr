@@ -14,6 +14,7 @@
 #include "br-page.h"
 #include <QStackedWidget>
 #include <QVBoxLayout>
+#include "include/ssr-i.h"
 #include "src/ui/br/home.h"
 #include "src/ui/br/scan.h"
 #include "src/ui/common/ssr-marcos-ui.h"
@@ -43,9 +44,9 @@ QString BRPage::getSidebarIcon()
     return "";
 }
 
-int BRPage::getSelinuxType()
+QString BRPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SYSADM;
 }
 
 bool BRPage::exportStrategy()

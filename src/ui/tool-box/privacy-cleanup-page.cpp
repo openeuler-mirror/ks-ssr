@@ -40,9 +40,9 @@ QString PrivacyCleanup::getSidebarIcon()
 {
     return ":" PRIVACY_CLEANUP_ICON_NAME;
 }
-int PrivacyCleanup::getSelinuxType()
+QString PrivacyCleanup::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 }  // namespace ToolBox
 }  // namespace KS

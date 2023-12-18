@@ -136,6 +136,9 @@ QString BRError::getErrorDesc(BRErrorCode error_code)
     case BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING:
         error_desc = QObject::tr("The job is running, please don't repeat the operation.");
         break;
+    case BRErrorCode::ERROR_DAEMON_FALLBACK_CANNOT_RUNNING:
+        error_desc = QObject::tr("The fallback is can't running, please wait for the reinforcement to be completed.");
+        break;
     case BRErrorCode::ERROR_DAEMON_GET_RS_FAILED:
         error_desc = QObject::tr("The standard reinforcement configuration is not found.");
         break;

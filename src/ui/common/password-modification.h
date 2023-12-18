@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
@@ -9,50 +9,43 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
  * See the Mulan PSL v2 for more details.  
  * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
 #pragma once
 
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 
 namespace Ui
 {
-class BoxPasswordModification;
+class PasswordModification;
 };
 
 namespace KS
 {
-namespace PrivateBox
-{
-class BoxPasswordModification : public TitlebarWindow
+class PasswordModification : public TitlebarWindow
 {
     Q_OBJECT
 
 public:
-    BoxPasswordModification(QWidget *parent = nullptr);
-    virtual ~BoxPasswordModification(){};
+    PasswordModification(QWidget *parent = nullptr);
+    virtual ~PasswordModification(){};
 
     QString getCurrentPassword();
     QString getNewPassword();
-    void setBoxName(const QString &boxName);
+    void setTitleNameTail(const QString &tail);
 
 private:
     void init();
 
 private slots:
-    void onOkClicked();
+    void acceptedPasswordModification();
 
 signals:
     void accepted();
     void rejected();
-    // 两次密码不一致
-    void passwdInconsistent();
-    // 输入空字符
-    void inputEmpty();
 
 private:
-    Ui::BoxPasswordModification *m_ui;
+    Ui::PasswordModification *m_ui;
 };
-}  // namespace Box
 }  // namespace KS

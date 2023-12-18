@@ -69,6 +69,11 @@
         <file alias="br-strategy">images/br-strategy.svg</file>
         <file alias="note">images/note.png</file>
         <file alias="br-progress-finish">images/br-progress-finish.png</file>
+        <file alias="icon-calendar">images/icon-calendar.png</file>
+        <file alias="year-left">images/year-left.png</file>
+        <file alias="year-right">images/year-right.png</file>
+        <file alias="month-left">images/month-left.png</file>
+        <file alias="month-right">images/month-right.png</file>
     </qresource>
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>
