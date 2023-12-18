@@ -48,6 +48,8 @@
 namespace KS
 {
 #define SSR_STYLE_PATH ":/styles/ssr"
+// 检测命令是否存在
+#define KSS_CMD_PATH SSR_INSTALL_BINDIR "/kss"
 
 Window::Window()
     : TitlebarWindow(nullptr),
@@ -220,13 +222,25 @@ void Window::initPageAndNavigation()
         m_ui->m_stackedPages->removeWidget(currentWidget);
         delete currentWidget;
     }
-
+    // 页面加载动画
+    m_loading = new Loading(this);
     addPage(new BR::BRPage(this));
-    // 可信保护页面需判断是否加载成功
-    auto execute = new TP::ExecuteProtectedPage(this);
-    addPage(execute);
-    addPage(new TP::KernelProtectedPage(this));
-    addPage(new FP::FileProtectionPage(this));
+    // TODO 暂时通过有无kss命令的方式判断是否支持可信，需考虑更好的方法
+    if (QFile::exists(KSS_CMD_PATH))
+    {
+        // 可信保护页面需判断是否加载成功
+        auto execute = new TP::ExecuteProtectedPage(this);
+        connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this] {
+                m_loading->setVisible(false);
+                m_ui->m_sidebar->setEnabled(true);
+                updatePage();
+            },
+            Qt::ConnectionType::UniqueConnection);
+        addPage(execute);
+        addPage(new TP::KernelProtectedPage(this));
+        addPage(new FP::FileProtectionPage(this));
+        m_loading->setFixedSize(execute->size());
+    }
     addPage(new PrivateBox::BoxPage(this));
     addPage(new DM::DeviceListPage(this));
     addPage(new DM::DeviceLogPage(this));
@@ -234,19 +248,8 @@ void Window::initPageAndNavigation()
     addPage(new ToolBox::FileShred(this));
     addPage(new ToolBox::PrivacyCleanup(this));
     addPage(new ToolBox::AccessControl(this));
-    // 页面加载动画
-    m_loading = new Loading(this);
-    m_loading->setFixedSize(execute->size());
     m_ui->m_stackedPages->addWidget(m_loading);
     m_ui->m_stackedPages->setCurrentIndex(0);
-
-    connect(
-        execute, &TP::ExecuteProtectedPage::initFinished, this, [this] {
-            m_loading->setVisible(false);
-            m_ui->m_sidebar->setEnabled(true);
-            updatePage();
-        },
-        Qt::ConnectionType::UniqueConnection);
 
     // 通过页面获取是否有对应的导航栏
     for (auto pages : m_pages.values())

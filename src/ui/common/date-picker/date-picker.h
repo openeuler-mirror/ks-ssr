@@ -14,8 +14,10 @@
 
 #pragma once
 
-#include <QDateTime>
-#include <QStackedWidget>
+#include <QWidget>
+
+class QStackedWidget;
+class QDateTime;
 
 namespace KS
 {

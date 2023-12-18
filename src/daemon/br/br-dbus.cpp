@@ -87,7 +87,7 @@ BRDBus::~BRDBus()
     }
 }
 
-BRDBus* BRDBus::m_instance = NULL;
+BRDBus* BRDBus::m_instance = nullptr;
 void BRDBus::globalInit(QObject* parent)
 {
     m_instance = new BRDBus(parent);
@@ -682,7 +682,6 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
     });
     KLOG_INFO("Set fallback. snapshotStatus: %d.", snapshotStatus);
     RETURN_IF_TRUE(snapshotStatus == BRFallbackMethod::BR_FALLBACK_METHOD_OTHER);
-    m_isReinforceFlag = false;
     QStringList names_rh;
     auto rh = this->m_configuration->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
     auto& rh_reinforcements = rh->reinforcement();
@@ -690,7 +689,7 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
     {
         auto replyMessage = message.createErrorReply(QDBusError::Failed, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_FALLBACK_RH_EMPTY));
         QDBusConnection::systemBus().send(replyMessage);
-        m_isReinforceFlag = true;
+        this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
         return;
     }
     for (auto iter = rh_reinforcements.begin(); iter != rh_reinforcements.end(); ++iter)
@@ -702,7 +701,7 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
     {
         // 需回退的加固项为空 不需要进行加固了 reinforce Finish
         emit ProgressFinished();
-        m_isReinforceFlag = true;
+        this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
         auto replyMessage = message.createReply();
         QDBusConnection::systemBus().send(replyMessage);
         return;
@@ -713,7 +712,7 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
     {
         auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING));
         QDBusConnection::systemBus().send(replyMessage);
-        m_isReinforceFlag = true;
+        this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
         return;
     }
 
@@ -935,7 +934,8 @@ void BRDBus::onReinforceProcessChangedCb(const JobResult& jobResult)
             reinforceResult.reinforcement().push_back(std::move(reinforcementResult));
             ++itemCount;
         }
-        if (m_isReinforceFlag)
+        // 回退中，不关注进程信息
+        if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
         {
             std::ostringstream ostring_stream;
             Protocol::br_job_result(ostring_stream, reinforceResult);
@@ -959,6 +959,23 @@ bool BRDBus::onResourceMonitor()
     else
         m_resourceMonitor->startMonitor();
     return true;
+}
+
+void KS::BRDaemon::BRDBus::scanProgressFinished()
+{
+    m_isScanFlag = true;
+    // 回退中，不关注扫描完成
+    if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
+    {
+        emit ProgressFinished();
+    }
+}
+
+void KS::BRDaemon::BRDBus::reinforceProgressFinished()
+{
+    this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
+    m_isScanFlag = true;
+    emit ProgressFinished();
 }
 
 void BRDBus::homeFreeSpaceRatio(float spaceRatio)

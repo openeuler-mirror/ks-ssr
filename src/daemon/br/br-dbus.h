@@ -149,18 +149,9 @@ private:
     // 资源监控开启/关闭
     bool onResourceMonitor();
     // 进程完成处理函数
-    void scanProgressFinished()
-    {
-        m_isScanFlag = true;
-        emit ProgressFinished();
-    };
+    void scanProgressFinished();
     // 加固完成处理函数
-    void reinforceProgressFinished()
-    {
-        m_isReinforceFlag = true;
-        m_isScanFlag = true;
-        emit ProgressFinished();
-    };
+    void reinforceProgressFinished();
 
     void homeFreeSpaceRatio(float spaceRatio);
     void rootFreeSpaceRatio(float spaceRatio);
@@ -193,9 +184,8 @@ private:
     bool m_isFristReinfoce = true;
     // 首次加固是否完成
     bool m_isFristReinfoceFinish = false;
-
+    // 加固前需要进行一次扫描，用于判断是否这次扫描是否为正常调用dbus接口的扫描
     bool m_isScanFlag = true;
-    bool m_isReinforceFlag = true;
 
     BRFallbackMethod m_fallbackMethod = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
     BRAdaptor *m_dbus;

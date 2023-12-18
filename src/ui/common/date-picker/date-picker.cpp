@@ -14,6 +14,8 @@
 #include "date-picker.h"
 #include <QHBoxLayout>
 #include "calendar-widget.h"
+#include <QStackedWidget>
+#include <QDateTime>
 
 namespace KS
 {

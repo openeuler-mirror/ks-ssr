@@ -30,7 +30,10 @@ namespace Account
 Manager *Manager::m_instance = nullptr;
 void Manager::globalInit(QWidget *parent)
 {
-    m_instance = new Manager(parent);
+    if (!m_instance)
+    {
+        m_instance = new Manager(parent);
+    }
 }
 
 void Manager::globalDeinit()
@@ -38,13 +41,14 @@ void Manager::globalDeinit()
     if (m_instance)
     {
         delete m_instance;
+        m_instance = nullptr;
     }
 }
 
 void Manager::showPasswordModification()
 {
     // 修改密码界面
-    m_passwordModification = new PasswordModification(window());
+    m_passwordModification = new PasswordModification(this);
     connect(m_passwordModification, &PasswordModification::accepted, this, &Manager::acceptedPasswordModification);
 
     m_passwordModification->setTitleNameTail(m_currentUserName);

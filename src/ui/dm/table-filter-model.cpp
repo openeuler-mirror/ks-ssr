@@ -33,9 +33,11 @@ void TableFilterModel::setSearchText(const QString &text)
 
 bool TableFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
+    // 适用于有多个表头筛选列的情况下，正则由格式为 (表头1正则).*(表头n正则)，若没有).*(，则代表有一列是没有选中的筛选项的，表格不需要显示数据
     RETURN_VAL_IF_TRUE(filterRegExp().isEmpty() || !filterRegExp().pattern().contains(").*("), false)
     QString sourceString;
-    for (auto i = 0; i < 7; ++i)
+    // 拼接一行的数据
+    for (auto i = 0; i < LIST_TABLE_FIELD_LAST; ++i)
     {
         auto index = sourceModel()->index(sourceRow, i, sourceParent);
         auto text = sourceModel()->data(index).toString();

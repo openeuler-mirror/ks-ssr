@@ -27,9 +27,6 @@ namespace KS
 {
 namespace KSS
 {
-// 命令是否存在
-#define KSS_CMD_PATH SSR_INSTALL_BINDIR "/kss"
-
 // ini文件
 #define KSS_INI_PATH SSR_INSTALL_DATADIR "/ssr.ini"
 #define KSS_INI_KEY "ssr/initialized"
@@ -303,7 +300,6 @@ void Wrapper::initTrustedResults()
 void Wrapper::init()
 {
     RETURN_IF_TRUE(m_ini->value(KSS_INI_KEY).toInt() != 0);
-    RETURN_IF_TRUE(!QFile::exists(KSS_CMD_PATH));
 
     KLOG_INFO() << "Start kss initialisation.";
     execute(QString("%1 %2").arg(KSS_INIT_CMD, KSS_DEFAULT_USER_PIN));
