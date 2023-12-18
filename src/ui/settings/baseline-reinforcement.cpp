@@ -266,6 +266,14 @@ void BaselineReinforcement::fallback(int status)
         return;
     }
 
+    auto reply = m_dbusProxy->SetFallback(BRFallbackMethod(status));
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    if (reply.isError())
+    {
+        m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_NOT_STARTED);
+        return;
+    }
+
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this] {
         POPUP_MESSAGE_DIALOG(tr("Fallback finished!"));
@@ -273,13 +281,6 @@ void BaselineReinforcement::fallback(int status)
         m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED);
     });
     m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS);
-    auto reply = m_dbusProxy->SetFallback(BRFallbackMethod(status));
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
-    if (reply.isError())
-    {
-        m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_NOT_STARTED);
-        disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-    }
 }
 }  // namespace Settings
 }  // namespace KS

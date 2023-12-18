@@ -64,6 +64,17 @@ namespace KS
                                                       std::bind(&className::callback, this, std::placeholders::_1, value1, value2, value3)); \
     }
 
+#define CHECK_AUTH_WITH_1ARGS_AND_RETVAL(className, retType, funName, callback, action, arg1Type)                            \
+    retType className::funName(arg1Type value1)                                                                              \
+    {                                                                                                                        \
+        this->setDelayedReply(true);                                                                                         \
+        PolkitProxy::getDefault()->checkAuthorization(action,                                                                \
+                                                      true,                                                                  \
+                                                      this->message(),                                                       \
+                                                      std::bind(&className::callback, this, std::placeholders::_1, value1)); \
+        return retType();                                                                                                    \
+    }
+
 #define CHECK_AUTH_WITH_3ARGS_AND_RETVAL(className, retType, funName, callback, action, arg1Type, arg2Type, arg3Type)                        \
     retType className::funName(arg1Type value1, arg2Type value2, arg3Type value3)                                                            \
     {                                                                                                                                        \

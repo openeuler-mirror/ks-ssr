@@ -403,18 +403,6 @@ void Scan::startScan()
 
 void Scan::startReinforcement()
 {
-    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
-    {
-        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
-        return;
-    }
-    // 设置页面回退会进行加固，为保证不起冲突，每次加固时断开后重新连接
-    disconnect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), nullptr, nullptr);
-    connect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
-    m_progressInfo.method = PROCESS_METHOD_FASTEN;
-    clearState();
-    m_ui->m_itemTable->clearCheckedStatus(m_categories, BR_REINFORCEMENT_STATE_UNREINFORCE);
-
     auto reinforcementItem = m_strategyType == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
     if (reinforcementItem.empty())
     {
@@ -422,12 +410,22 @@ void Scan::startReinforcement()
         return;
     }
 
-    m_ui->m_progress->updateProgressUI(m_progressInfo.method);
-
-    disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
+    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        return;
+    }
     auto reply = m_dbusProxy->Reinforce(reinforcementItem);
-    reply.waitForFinished();
-    CHECK_ERROR_FOR_DBUS_REPLY(reply)
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    RETURN_IF_TRUE(reply.isError());
+    // 设置页面回退会进行加固，为保证不起冲突，每次加固时断开后重新连接
+    disconnect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), nullptr, nullptr);
+    connect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
+    m_progressInfo.method = PROCESS_METHOD_FASTEN;
+    clearState();
+    m_ui->m_itemTable->clearCheckedStatus(m_categories, BR_REINFORCEMENT_STATE_UNREINFORCE);
+    m_ui->m_progress->updateProgressUI(m_progressInfo.method);
+    disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     update();
 }
 
