@@ -424,7 +424,7 @@ void KernelProtectedTable::initTableHeaderButton()
                 m_statusKeys.removeAll(action->text());
             }
             // 去重
-            m_statusKeys = QSet<QString>::fromList(m_statusKeys).toList();
+            m_statusKeys = QStringList(m_statusKeys.begin(), m_statusKeys.end());
         }
         filterFixedString();
     });

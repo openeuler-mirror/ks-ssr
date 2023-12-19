@@ -15,11 +15,8 @@ file(GLOB_RECURSE SRC_H_FILES ./*.h)
 file(GLOB_RECURSE SRC_CPP_FILES ./*.cpp)
 
 qt5_add_dbus_adaptor(
-  DAEMON_SRCS
-  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/daemon.h
-  KS::Daemon
-  daemon_adaptor
+  DAEMON_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/daemon.h KS::Daemon daemon_adaptor
   DaemonAdaptor)
 
 qt5_add_dbus_adaptor(

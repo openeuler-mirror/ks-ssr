@@ -17,6 +17,9 @@
 #include <QHostAddress>
 #include <QStringBuilder>
 #include "config.h"
+#include "include/ssr-i.h"
+#include "manager.h"
+#include "src/daemon/account/manager.h"
 #include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/log/message.h"
 #include "src/daemon/log/realtime-alert.h"
@@ -38,15 +41,14 @@ namespace Log
 Manager* Manager::m_logManager = nullptr;
 
 Manager::Manager()
-    : m_path(QDir::cleanPath(ABSOLUTELOGFILEPATH)),
+    : m_fileLine(0),
+      m_path(QDir::cleanPath(ABSOLUTELOGFILEPATH)),
       m_file(new QFile(m_path, this)),
-      m_watcher(new QFileSystemWatcher(this)),
       m_backUpLogProcess(new QProcess(this)),
       m_configurations(),
-      m_messageQueue(new QQueue<QString>()),
       m_waitCondition(new QWaitCondition()),
-      m_thread(new WriteWorker(m_messageQueue, m_file, m_waitCondition, &m_queueMutex, &m_fileMutex, this)),
-      m_realTimeAlert(new Log::RealTimeAlert())
+      m_realTimeAlert(new RealTimeAlert()),
+      m_thread(new WriteWorker(this))
 {
     // 初始化日志文件
     QDir logFilePath;
@@ -59,34 +61,39 @@ Manager::Manager()
         }
     }
     KLOG_INFO() << "Message Path " << m_path;
-    if (!m_file->open(QIODevice::ReadWrite | QIODevice::Append))
+    if (!m_file->open(QIODevice::ReadWrite))
     {
         KLOG_ERROR() << "Failed to open log file !";
     }
+
+    // 内存需要管理的数量大小应该和当前本地所有日志数量一致
+    // m_logList 的初始化，它需要将本地所有的日志读入内存
+    // 注意 ks-ssr.log 和其他的 ks-ssr.log.* 是分开读取的， 因为还需要获取 ks-ssr.log 当前的日志条数
+    getAllLog();
+    while (!m_file->atEnd())
+    {
+        m_logList.append(Message::deserialize(m_file->readLine()));
+        m_fileLine++;
+    }
+    KLOG_DEBUG() << "Log nums: " << m_logList.size();
+    m_firstNeedWrite = m_logList.size();
 
     // 启动将日志写入磁盘的工作线程
     m_thread->start();
 
     // 设置备份日志文件
-    QString program = "sshpass";
-    QStringList arg;
-    arg << "-p" << m_configurations.m_passwd << "scp" << LOGFILENAME "-*"
-        << QString("%1@%2").arg(m_configurations.m_account, m_configurations.m_ip.toString()) << LOGFILEDIR;
-    m_backUpLogProcess->setProgram(program);
-    m_backUpLogProcess->setArguments(arg);
-    connect(m_backUpLogProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [this](int, QProcess::ExitStatus) {
-        QString logMsg{};
-        QTextStream logMsgStream{&logMsg};
-        uint rc = m_backUpLogProcess->exitCode();
-        if (rc != 0)
-        {
-            KLOG_WARNING() << "Failed to back up log!";
-        }
-        logMsgStream << "Back up return value: " << rc
-                     << ", output: " << m_backUpLogProcess->readAllStandardOutput();
-        logMsgStream.flush();
-        writeLog(Message{Message::LogType::LOG, logMsg}.serialize());
-    });
+    connect(m_backUpLogProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [this](int, QProcess::ExitStatus)
+            {
+                uint rc = m_backUpLogProcess->exitCode();
+                QString errMsg = m_backUpLogProcess->readAllStandardOutput() +
+                                 m_backUpLogProcess->readAllStandardError();
+                if (rc != 0)
+                {
+                    KLOG_WARNING() << "error code: " << rc
+                                   << ", Failed to back up overflow log! error message: " << errMsg;
+                    SSR_LOG(Account::Manager::AccountRole::NOACCOUNT, LogType::LOG, "Failed to back up overflow log!", false);
+                }
+            });
 
     // 初始化 DBus 接口
     new LogAdaptor(this);
@@ -95,21 +102,16 @@ Manager::Manager()
     {
         KLOG_ERROR() << "Register Log DBus object error:" << dbusConnection.lastError().message();
     }
-    if (!m_watcher->addPath(m_path))
-    {
-        KLOG_ERROR() << "Failed to make log file watcher, logrotate is disable";
-    }
-    connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &Manager::logFileChanged);
+    QObject::connect(this, &Manager::needLogRotate, this, &Manager::logFileRotate, Qt::QueuedConnection);
 }
 
 Manager::~Manager()
 {
     delete m_file;
     delete m_backUpLogProcess;
-    delete m_messageQueue;
 }
 
-void Log::Manager::globalInit()
+void Manager::globalInit()
 {
     if (Manager::m_logManager == nullptr)
     {
@@ -123,72 +125,100 @@ void Manager::globalDeinit()
     delete m_logManager;
 }
 
-QStringList Manager::GetLog(const uint per_page, const uint page)
+uint Manager::GetLogNum()
+{
+    QReadLocker locker(&m_listMutex);
+    return m_logList.size();
+}
+
+QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const time_t end_time_stamp, const int type, const uint result, const uint per_page, const uint page) const
 {
     auto callerPid = DBusHelper::getCallerUniqueName(m_logManager);
     RETURN_VAL_IF_TRUE(callerPid == -1, QStringList());
-
-    Manager::writeLog(Message{Message::LogType::LOG, "get logs"}.serialize());
-    QMutexLocker locker(&Manager::m_logManager->m_fileMutex);
+    auto _role = Account::Manager::m_accountManager->getRole(callerPid);
 
     KLOG_DEBUG() << "Get logs, per page limit is " << per_page << "page index is " << page;
     if ((per_page == 0 || per_page > 500) || page == 0)
     {
         KLOG_ERROR() << "per page limit and page index must greater than 0";
+        SSR_LOG(_role, LogType::LOG, "per page limit and page index must greater than 0, Failed to Get Log", false);
         return QStringList();
     }
-    // 读之前将所有缓冲区的内容写入到日志文件中。
-    if (!m_logManager->m_file->flush())
-    {
-        KLOG_ERROR() << "Failed to flush log, Error: "
-                     << m_logManager->m_file->errorString();
-        return QStringList();
-    }
+    QReadLocker locker(&m_logManager->m_listMutex);
 
     // 日志文件名称的List，排序： ks-ssr.log， ks-ssr.log.1， ks-ssr.log.2...
-    auto logFilesList = m_logManager->getLogFileList(false);
-    // 将要返回的日志 list
-    QStringList logList{};
+    // 临时变量，用于存储 Log 类型的数据，在锁释放后再序列化
+    QList<Log> tmpLogList{};
     // 需要忽略的日志数量
-    auto offset = (page - 1) * per_page;
-    while (!logFilesList.isEmpty())
+    auto totalOffset = (page - 1) * per_page;
+
+    // 最新的日志在最前面
+    auto reverseIt = m_logList.rbegin();
+    auto reverseEnd = m_logList.rend();
+    while (reverseIt != reverseEnd && static_cast<uint>(tmpLogList.size()) < per_page)
     {
-        auto logFileName = logFilesList.takeFirst();
-        QFile logFile(LOGFILEDIR + logFileName);
-        if (!logFile.open(QIODevice::OpenModeFlag::ReadOnly))
+        // 为了可读性，将判断条件取反了
+
+        if (!((static_cast<int>(reverseIt->role) & role) == 1))
         {
-            KLOG_ERROR() << "Failed to Open log file " << logFileName
-                         << ", error str: " << logFile.errorString();
-            return QStringList();
+            reverseIt++;
+            continue;
         }
-#warning "以文件行数为轮转标准，避免遍历文件来获取文件行数"
-        while (!logFile.atEnd())
+        if (reverseIt->timeStamp.toSecsSinceEpoch() < begin_time_stamp ||
+            reverseIt->timeStamp.toSecsSinceEpoch() >= end_time_stamp)
         {
-            if (static_cast<uint>(logList.count()) == (per_page))
+            reverseIt++;
+            continue;
+        }
+        if (!((static_cast<int>(reverseIt->type) & type) == 1))
+        {
+            reverseIt++;
+            continue;
+        }
+        // 当前端传入 LOG_RESULT_ALL 时代表需要所有结果的日志， 所以不针对日志的结果筛选
+        if (static_cast<uint>(reverseIt->result) != LogResult::LOG_RESULT_ALL)
+        {
+            if (!(static_cast<uint>(reverseIt->result) == result))
             {
-                std::reverse(logList.begin(), logList.end());
-                return logList;
-            }
-            // 抛弃当前行
-            if (offset != 0)
-            {
-                logFile.readLine();
-                offset--;
+                reverseIt++;
                 continue;
             }
-            logList << logFile.readLine();
         }
+        if (totalOffset != 0)
+        {
+            totalOffset--;
+            continue;
+        }
+        tmpLogList.append(*reverseIt);
     }
-    std::reverse(logList.begin(), logList.end());
-    return logList;
+    locker.unlock();
+    QStringList retLogList{};
+    for (const auto& log : tmpLogList)
+    {
+        retLogList << Message::serialize(log);
+    }
+    SSR_LOG(_role, LogType::LOG, "Get Log");
+    return retLogList;
 }
 
-void Log::Manager::backUpLog()
+void Manager::backUpLog(const QStringList& targetLogList)
 {
+    // 入参是不能修改的，所以构造一个副本。
+    QStringList _targetLogList{};
+    for (auto& log : targetLogList)
+    {
+        _targetLogList.append(LOGFILEDIR + log);
+    }
+    const QString bakUpProgram = "sshpass";
+
+    QStringList bakUpArg;
+    bakUpArg << "-p" << m_configurations.m_passwd << "rsync" << _targetLogList
+             << QString("%1@%2:%3").arg(m_configurations.m_account, m_configurations.m_ip.toString(), m_configurations.m_remotePath);
+    m_backUpLogProcess->setProgram(bakUpProgram);
+    m_backUpLogProcess->setArguments(bakUpArg);
     if (m_configurations.m_ip.isNull())
     {
-        writeLog(Message{Message::LogType::LOG, "No target ip, skip backup log"}.serialize());
-        KLOG_INFO() << "No target ip, skip backup log";
+        KLOG_INFO() << "No target ip, skip back up log";
         return;
     }
     if (m_backUpLogProcess->state() != QProcess::ProcessState::NotRunning)
@@ -197,9 +227,35 @@ void Log::Manager::backUpLog()
         return;
     }
     m_backUpLogProcess->start();
+    m_backUpLogProcess->waitForFinished();
 }
 
-inline QStringList Manager::getLogFileList(bool isReverse)
+void Manager::getAllLog()
+{
+    auto logList = getLogFileList(true);
+    // 去掉 ks-ssr.log
+    logList.removeLast();
+    for (const auto& log : logList)
+    {
+        // 跳过溢出的日志文件。
+        if (log.startsWith(LOGFILENAME "-"))
+        {
+            continue;
+        }
+        QFile logFile(LOGFILEDIR + log);
+        if (!logFile.open(QIODevice::OpenModeFlag::ReadOnly))
+        {
+            KLOG_ERROR() << "Failed to open log file: " << logFile.fileName();
+            continue;
+        }
+        while (!logFile.atEnd())
+        {
+            m_logList.append(Message::deserialize(logFile.readLine()));
+        }
+    }
+}
+
+inline QStringList Manager::getLogFileList(bool isReverse) const
 {
     int sortMode = QDir::Name;
     if (isReverse)
@@ -212,11 +268,21 @@ inline QStringList Manager::getLogFileList(bool isReverse)
                             static_cast<QDir::SortFlag>(sortMode));
 }
 
-void Manager::writeLog(const QString& log)
+void Manager::writeLog(const Log& log)
 {
     // 先将消息加入消息队列，如果日志可写则唤醒工作线程
-    QMutexLocker locker(&m_logManager->m_queueMutex);
-    m_logManager->m_messageQueue->enqueue(log);
+    QWriteLocker locker(&m_logManager->m_listMutex);
+    m_logManager->m_logList.append(log);
+    emit m_logManager->NewLogWritten(m_logManager->m_logList.size());
+    // 当日志的数据结构大于本地能容纳的日志数量时，去掉最老的那一条日志，也就是第一条日志。
+    // 旧日志的删除或备份由日志轮转功能保证。
+    if (static_cast<uint>(m_logManager->m_logList.size()) >
+        (m_logManager->m_configurations.m_maxLogFileLine * m_logManager->m_configurations.m_numLogs))
+    {
+        m_logManager->m_logList.removeFirst();
+        m_logManager->m_firstNeedWrite--;
+    }
+    locker.unlock();
     if (m_logManager->m_file == nullptr || !m_logManager->m_file->isWritable())
     {
         KLOG_WARNING() << "Cannot write log!";
@@ -225,66 +291,61 @@ void Manager::writeLog(const QString& log)
     m_logManager->m_waitCondition->notify_one();
 }
 
-void Manager::logFileChanged(const QString&)
+void Manager::logFileRotate()
 {
-    // 大小单位转换成 M
-    if (m_file->size() / (1024 * 1024) < m_configurations.m_maxLogFile)
-    {
-        return;
-    }
-    // 如果此时 watch 的文件数量为空，则代表此次文件改变事件是被 logFileChanged 本身触发，需忽略。
-    // QFileSystemWatcher 的 remove 操作本身是线程安全的
-    if (!m_watcher->removePath(m_path))
-    {
-        KLOG_INFO() << "Other handler is processing, ignore";
-        return;
-    }
     QMutexLocker locker(&m_fileMutex);
+    if (m_fileLine < m_configurations.m_maxLogFileLine)
+    {
+        KLOG_INFO() << "The log file has been rotated, ignored";
+        return;
+    }
+    m_fileLine = 0;
     delete m_file;
     // 按编号顺序排序，第一个是编号最大的
     auto logLists = getLogFileList(true);
+    // 移除不需要关注的日志
+    for (auto& logName : logLists)
+    {
+        if (!logName.startsWith(LOGFILENAME "-"))
+        {
+            continue;
+        }
+        logLists.removeOne(logName);
+    }
     KLOG_DEBUG() << "Log lists: " << logLists.join(", ");
 
     // 当前已有的日志文件数量小于配置文件中的设置，所以需要新建日志文件
-    constexpr auto sepIndex = sizeof(LOGFILENAME) - 1;
+    constexpr auto sepIndex = sizeof(LOGFILENAME);
 
     // logDiffNum 用于保存当前文件和配置文件中日志数量的差值
     // 当 logDiffNum 是负数时，证明当前日志文件数量小于日志中的数量，所以需要新建一个日志文件
     // 当 logDiffNum 大于等于 0 时，证明需要移除部分文件，需要移除的数量为 logDiffNum + 1, 加一是为了为新日志腾出空间
     int logDiffNum = logLists.count() - m_configurations.m_numLogs;
     bool isNeedBackUpLog = false;
-    KLOG_DEBUG() << "Will remove files " << logDiffNum;
+    KLOG_DEBUG() << "Will remove files num: " << (logDiffNum < 0 ? 0 : logDiffNum + 1);
+    // 将大于轮转数量的日志重命名为可备份的名称
+    // 如当前可轮转的数量为 5, 则 ks-ssr.log.6 会被重命名为 ks-ssr-${ISO_FORMAT_CURRENT_TIME}.log.6
+    // 然后将 ks-ssr.log-${ISO_FORMAT_CURRENT_TIME}.${NUM} 迁移至日志备份服务器
     while (logDiffNum >= 0)
     {
         isNeedBackUpLog = true;
         const auto logFile = logLists.takeFirst();
-        if (!QFile::rename(logFile,
-                           LOGFILENAME "-" + QDateTime::currentDateTime().toString() + "." + QString(logDiffNum)))
+        if (!QFile::rename(LOGFILEDIR + logFile,
+                           LOGFILEDIR LOGFILENAME "-" + QDateTime::currentDateTime().toString(Qt::ISODate) + "." + QString::number(logDiffNum)))
         {
             KLOG_WARNING() << "Failed to rename log file: " << logFile;
         }
         logDiffNum--;
     }
-
-    locker.unlock();
-    if (isNeedBackUpLog)
-    {
-        if (static_cast<uint>(logLists.count()) != m_configurations.m_numLogs - 1)
-        {
-            KLOG_ERROR() << "Internal error: Current log nums shoule be config's numLogs - 1 !"
-                         << "log nums = " << logLists.count() << ", config's numLogs = " << m_configurations.m_numLogs;
-            return;
-        }
-        backUpLog();
-    }
-    locker.relock();
     // 此时当前存在的日志数量应该为 m_configurations->m_numLogs -1, 将所有日志文件的编号加一然后再新建日志文件即可
     // 将当前所有日志文件编号加一
     for (const auto& logName : logLists)
     {
-        if (!QFile::rename(logName, LOGFILENAME "." + logName.mid(sepIndex).toInt() + 1))
+        auto newLogName = LOGFILENAME "." + QString::number(logName.mid(sepIndex).toInt() + 1);
+        if (!QFile::rename(LOGFILEDIR + logName,
+                           LOGFILEDIR + newLogName))
         {
-            KLOG_ERROR() << "Failed to mv " << logName << " to " << LOGFILENAME + logName.mid(sepIndex).toInt() + 1;
+            KLOG_ERROR() << "Failed to mv " << logName << " to " << newLogName;
         }
     }
 
@@ -294,7 +355,34 @@ void Manager::logFileChanged(const QString&)
     {
         KLOG_ERROR() << "failed to open log file !";
     }
-    m_watcher->addPath(m_path);
+    auto overFlowLogList = getLogFileList(true);
+    for (const auto& log : overFlowLogList)
+    {
+        if (log.startsWith(LOGFILENAME "-"))
+        {
+            continue;
+        }
+        overFlowLogList.removeOne(log);
+    }
+    if (isNeedBackUpLog)
+    {
+        if (static_cast<uint>(logLists.count()) != m_configurations.m_numLogs - 1)
+        {
+            KLOG_ERROR() << "Internal error: Current log nums shoule be config's numLogs - 1 !"
+                         << "log nums = " << logLists.count() << ", config's numLogs = " << m_configurations.m_numLogs;
+            return;
+        }
+        backUpLog(overFlowLogList);
+    }
+    // 无论是否备份到远程，都需要删除超出的文件
+    QDir logDir(LOGFILEDIR);
+    for (const auto& log : overFlowLogList)
+    {
+        logDir.remove(log);
+    }
+
+    // 通知执行线程完成未完成的工作
+    m_waitCondition->notify_one();
 }
 };  // namespace Log
 };  // namespace KS

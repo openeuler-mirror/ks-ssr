@@ -353,7 +353,7 @@ void DeviceListTable::initTableHeaderButton()
                 m_deviceTypeKeys.removeAll(action->text());
             }
             // 去重
-            m_deviceTypeKeys = QSet<QString>::fromList(m_deviceTypeKeys).toList();
+            m_deviceTypeKeys = QStringList(m_deviceTypeKeys.begin(), m_deviceTypeKeys.end());
             m_filterMap.insert("deviceTypeButton", m_deviceTypeKeys);
         }
         filterFixedString();
@@ -380,7 +380,7 @@ void DeviceListTable::initTableHeaderButton()
                 m_statusKeys.removeAll(action->text());
             }
             // 去重
-            m_statusKeys = QSet<QString>::fromList(m_statusKeys).toList();
+            m_statusKeys = QStringList(m_statusKeys.begin(), m_statusKeys.end());
             m_filterMap.insert("statusButton", m_statusKeys);
         }
         filterFixedString();
