@@ -12,14 +12,15 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "date-picker.h"
-#include <QHBoxLayout>
-#include "calendar-widget.h"
-#include <QStackedWidget>
 #include <QDateTime>
+#include <QHBoxLayout>
+#include <QStackedWidget>
+#include "calendar-widget.h"
 
 namespace KS
 {
-DatePicker::DatePicker(QWidget *parent) : QWidget(parent), m_startCalendar(nullptr), m_endCalendar(nullptr), m_stackedWidget(nullptr)
+DatePicker::DatePicker(QWidget *parent)
+    : QWidget(parent), m_startCalendar(nullptr), m_endCalendar(nullptr), m_stackedWidget(nullptr)
 {
     initUI();
 }
@@ -92,7 +93,7 @@ void DatePicker::initUI()
     QDate currDate = QDate::currentDate();
 
     m_startCalendar = new CalendarWidget(this);
-    //m_startCalendar->hideNextButton();
+    // m_startCalendar->hideNextButton();
     m_startCalendar->setSelectableStart(currDate.addDays(-7));
     m_startCalendar->setSelectableEnd(currDate);
     m_startCalendar->setMinimumDate(currDate.addDays(-7));
@@ -101,7 +102,7 @@ void DatePicker::initUI()
     connect(m_startCalendar, &CalendarWidget::clicked, this, &DatePicker::startDateChanged);
 
     m_endCalendar = new CalendarWidget(this);
-    //m_endCalendar->hidePreButton();
+    // m_endCalendar->hidePreButton();
     m_endCalendar->setSelectableStart(currDate.addDays(-7));
     m_endCalendar->setSelectableEnd(currDate);
     m_endCalendar->setMinimumDate(currDate.addDays(-7));

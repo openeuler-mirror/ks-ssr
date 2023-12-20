@@ -223,12 +223,13 @@ void DeviceManager::remountDevice(const QSharedPointer<Device> device,
     QStringList args{"-o"};
     QString options("remount");
     options.append(permission->write ? ",rw" : ",ro");
-    options.append(permission->execute ? "" :",noexec");
+    options.append(permission->execute ? "" : ",noexec");
     args.append({options, mount->device, mount->path});
     auto exitcode = QProcess::execute("mount", args);
     if (exitcode != 0)
     {
-        KLOG_WARNING() << "Failed to execute command: " << "mount " << args.join(' ') << ", exitcode is " << exitcode;
+        KLOG_WARNING() << "Failed to execute command: "
+                       << "mount " << args.join(' ') << ", exitcode is " << exitcode;
     }
 }
 

@@ -18,15 +18,16 @@
 #include "src/ui/ui_pagination.h"
 #include "ssr-marcos.h"
 
-//页码按钮个数
+// 页码按钮个数
 #define PAGE_BUTTON_SIZE 6
 
-//分割按钮所在的位置编号，从0开始
+// 分割按钮所在的位置编号，从0开始
 #define SEPARATE_BUTTON_NUM 4
 namespace KS
 {
-Pagination::Pagination(QWidget *parent) : QWidget(parent),
-                                          m_ui(new Ui::Pagination)
+Pagination::Pagination(QWidget *parent)
+    : QWidget(parent),
+      m_ui(new Ui::Pagination)
 {
     m_ui->setupUi(this);
     m_ui->m_pageNoInput->setValidator(new QIntValidator(m_ui->m_pageNoInput));
@@ -37,13 +38,13 @@ Pagination::Pagination(QWidget *parent) : QWidget(parent),
     connect(m_ui->m_pageNoInput, &QLineEdit::returnPressed, this, &Pagination::jump);
     connect(m_ui->m_pageJumper, &QPushButton::clicked, this, &Pagination::jump);
 
-    //m_ui->m_prev: 跳转至上一页的按钮
-    //m_ui->m_next: 跳转至下一页的按钮
+    // m_ui->m_prev: 跳转至上一页的按钮
+    // m_ui->m_next: 跳转至下一页的按钮
     connect(m_ui->m_prev, &QPushButton::clicked, this, &Pagination::prevClick);
     connect(m_ui->m_next, &QPushButton::clicked, this, &Pagination::nextClick);
-    //更新页码按钮
+    // 更新页码按钮
     connect(this, &Pagination::totalPageChanged, this, &Pagination::updatePageBtns);
-    //更新页码按钮
+    // 更新页码按钮
     connect(this, &Pagination::currentPageChanged, this, &Pagination::updatePageBtns);
 }
 
@@ -112,7 +113,7 @@ void Pagination::pageBtnClick()
 
 void Pagination::updatePageBtns(int number)
 {
-    //只有一页（8条）时隐藏分页控件
+    // 只有一页（8条）时隐藏分页控件
     if (m_totalPage <= 1)
         hide();
 }

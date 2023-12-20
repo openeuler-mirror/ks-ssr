@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "src/ui/tp/execute-protected-page.h"
 #include <qt5-log-i.h>
@@ -27,10 +27,11 @@ namespace KS
 {
 namespace TP
 {
-ExecuteProtectedPage::ExecuteProtectedPage(QWidget *parent) : Page(parent),
-                                                              m_ui(new Ui::ExecuteProtectedPage),
-                                                              m_dbusProxy(nullptr),
-                                                              m_refreshTimer(nullptr)
+ExecuteProtectedPage::ExecuteProtectedPage(QWidget *parent)
+    : Page(parent),
+      m_ui(new Ui::ExecuteProtectedPage),
+      m_dbusProxy(nullptr),
+      m_refreshTimer(nullptr)
 {
     m_ui->setupUi(this);
     m_ui->m_note->setWordWrap(true);
@@ -40,10 +41,11 @@ ExecuteProtectedPage::ExecuteProtectedPage(QWidget *parent) : Page(parent),
                                    this);
 
     // 初始化完成自动刷新
-    connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this] {
-        m_ui->m_executeTable->updateInfo();
-        emit initFinished();
-    });
+    connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this]
+            {
+                m_ui->m_executeTable->updateInfo();
+                emit initFinished();
+            });
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2"))
                     .arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()),
@@ -216,9 +218,9 @@ void ExecuteProtectedPage::updateRefreshIcon()
     temp.fill(Qt::transparent);
     QPainter painter(&temp);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-    painter.translate(imageWidth / 2, imageHeight / 2);        //让图片的中心作为旋转的中心
-    painter.rotate(rat);                                       //顺时针旋转90度
-    painter.translate(-(imageWidth / 2), -(imageHeight / 2));  //使原点复原
+    painter.translate(imageWidth / 2, imageHeight / 2);        // 让图片的中心作为旋转的中心
+    painter.rotate(rat);                                       // 顺时针旋转90度
+    painter.translate(-(imageWidth / 2), -(imageHeight / 2));  // 使原点复原
     painter.drawPixmap(0, 0, pix);
     painter.end();
     m_ui->m_refresh->setIcon(QIcon(temp));

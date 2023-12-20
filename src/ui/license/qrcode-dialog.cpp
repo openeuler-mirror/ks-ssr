@@ -24,8 +24,9 @@ namespace KS
 {
 namespace Activation
 {
-QRCodeDialog::QRCodeDialog(QWidget *parent) : TitlebarWindow(parent),
-                                              ui(new Ui::QRCodeDialog)
+QRCodeDialog::QRCodeDialog(QWidget *parent)
+    : TitlebarWindow(parent),
+      ui(new Ui::QRCodeDialog)
 {
     ui->setupUi(getWindowContentWidget());
     iniUI();

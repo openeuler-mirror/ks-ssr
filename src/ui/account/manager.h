@@ -32,7 +32,10 @@ public:
     static void globalInit(QWidget *parent);
     static void globalDeinit();
 
-    static Manager *instance() { return m_instance; };
+    static Manager *instance()
+    {
+        return m_instance;
+    };
 
     // 显示修改密码界面
     void showPasswordModification();

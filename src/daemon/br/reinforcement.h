@@ -30,13 +30,22 @@ public:
                   const Protocol::Reinforcement &rs);
     virtual ~Reinforcement(){};
 
-    QString getName() { return QString::fromStdString(this->config_.name()); };
-    QString getPluginName() { return this->plugin_id_; };
+    QString getName()
+    {
+        return QString::fromStdString(this->config_.name());
+    };
+    QString getPluginName()
+    {
+        return this->plugin_id_;
+    };
     QString getCategoryName();
     QString getLabel();
 
     void setRs(const Protocol::Reinforcement &rs);
-    const Protocol::Reinforcement &getRs() { return this->config_; };
+    const Protocol::Reinforcement &getRs()
+    {
+        return this->config_;
+    };
 
     // 判断与规则是否匹配
     bool matchRules(const QJsonObject &values);

@@ -41,7 +41,8 @@ UdevRuleManager *UdevRuleManager::instance()
     return pInst.data();
 }
 
-UdevRuleManager::UdevRuleManager(QObject *parent) : QObject(parent)
+UdevRuleManager::UdevRuleManager(QObject *parent)
+    : QObject(parent)
 {
     this->init();
 }

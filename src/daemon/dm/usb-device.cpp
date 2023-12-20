@@ -58,7 +58,8 @@ namespace DM
 
 QMap<QString, int> USBDevice::m_fixedTypes{{"096e:0202", DEVICE_TYPE_STORAGE}};
 
-USBDevice::USBDevice(const QString &syspath, QObject *parent) : Device(syspath, parent)
+USBDevice::USBDevice(const QString &syspath, QObject *parent)
+    : Device(syspath, parent)
 {
     m_devConfig = Configuration::instance();
 

@@ -93,10 +93,11 @@ QString Manager::getCurrentUserName() const
     return m_currentUserName;
 }
 
-Manager::Manager(QWidget *parent) : QWidget(parent),
-                                    m_dbusProxy(nullptr),
-                                    m_login(nullptr),
-                                    m_passwordModification(nullptr)
+Manager::Manager(QWidget *parent)
+    : QWidget(parent),
+      m_dbusProxy(nullptr),
+      m_login(nullptr),
+      m_passwordModification(nullptr)
 {
     init();
 }

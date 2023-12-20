@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "scan.h"
 #include <kylin-license/license-i.h>
@@ -32,8 +32,9 @@ namespace KS
 {
 namespace BR
 {
-Scan::Scan(QWidget *parent) : QWidget(parent),
-                              m_ui(new Ui::Scan)
+Scan::Scan(QWidget *parent)
+    : QWidget(parent),
+      m_ui(new Ui::Scan)
 {
     m_ui->setupUi(this);
     initConnection();
@@ -196,11 +197,18 @@ void Scan::initUI()
     m_customArgsDialog->hide();
 
     connect(m_customArgsDialog, &ReinforcementArgsDialog::okClicked, this, &Scan::setReinforcement);
-    connect(m_customArgsDialog, &ReinforcementArgsDialog::argError, this, [this](const QString &error) { POPUP_MESSAGE_DIALOG(error) });
-    connect(m_customArgsDialog, &ReinforcementArgsDialog::valueChanged, this, [this](const QString &reinforcementItem, const QString &argLabel, const QString &argValue, KS::Protocol::WidgetType::Value type) {
-        m_argTransfers.append(new ArgTransfer(reinforcementItem, argLabel, argValue, type));
-    });
-    connect(m_customArgsDialog, &ReinforcementArgsDialog::closed, this, [this] { m_argTransfers.clear(); });
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::argError, this, [this](const QString &error)
+            {
+                POPUP_MESSAGE_DIALOG(error)
+            });
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::valueChanged, this, [this](const QString &reinforcementItem, const QString &argLabel, const QString &argValue, KS::Protocol::WidgetType::Value type)
+            {
+                m_argTransfers.append(new ArgTransfer(reinforcementItem, argLabel, argValue, type));
+            });
+    connect(m_customArgsDialog, &ReinforcementArgsDialog::closed, this, [this]
+            {
+                m_argTransfers.clear();
+            });
     connect(m_customArgsDialog, &ReinforcementArgsDialog::reseted, this, &Scan::argReset);
 }
 
@@ -447,21 +455,23 @@ void Scan::generateReport()
     // 断开scan进程连接
     disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
     // 进行一次扫描 仅获取扫描结果，不对UI进行调整
-    connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult) {
-        ProgressInfo progressInfo;
-        // 获取加固后扫描结果
-        Utils::getDefault()->ssrJobResult(jobResult, progressInfo, m_afterReinForcementCategories, m_invalidData);
-    });
+    connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult)
+            {
+                ProgressInfo progressInfo;
+                // 获取加固后扫描结果
+                Utils::getDefault()->ssrJobResult(jobResult, progressInfo, m_afterReinForcementCategories, m_invalidData);
+            });
     // 监听进程完成后 导出报表
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-    connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this] {
-        disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
-        connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
-        disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-        RETURN_IF_TRUE(!Result::getDefault()->generateReports(m_categories, m_afterReinForcementCategories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
-        POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
-        m_afterReinForcementCategories.clear();
-    });
+    connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
+            {
+                disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
+                connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
+                disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
+                RETURN_IF_TRUE(!Result::getDefault()->generateReports(m_categories, m_afterReinForcementCategories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
+                POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
+                m_afterReinForcementCategories.clear();
+            });
     // 生成报表前扫描
     m_progressInfo.method = PROCESS_METHOD_SCAN;
     auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);

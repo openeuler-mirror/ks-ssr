@@ -28,9 +28,10 @@ namespace Config
 
 Table::Table(const QString &conf_path,
              const QString &split_pattern,
-             const QString &join_str) : conf_path_(conf_path),
-                                        split_pattern_(split_pattern),
-                                        join_str_(join_str)
+             const QString &join_str)
+    : conf_path_(conf_path),
+      split_pattern_(split_pattern),
+      join_str_(join_str)
 {
     if (this->join_str_.isEmpty())
     {

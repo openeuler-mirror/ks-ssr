@@ -76,7 +76,8 @@ private:
         cmd->setArguments(arg);
         QObject::connect(cmd.data(),
                          static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-                         [cmd, log](int exitCode, QProcess::ExitStatus exitStatus) mutable {
+                         [cmd, log](int exitCode, QProcess::ExitStatus exitStatus) mutable
+                         {
                              processFinishedHandler(log, exitCode, exitStatus, cmd);
                          });
         return cmd;

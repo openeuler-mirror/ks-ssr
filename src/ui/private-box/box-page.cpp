@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
@@ -30,9 +30,10 @@ namespace KS
 {
 namespace PrivateBox
 {
-BoxPage::BoxPage(QWidget *parent) : Page(parent),
-                                    m_ui(new Ui::BoxPage()),
-                                    m_createBox(nullptr)
+BoxPage::BoxPage(QWidget *parent)
+    : Page(parent),
+      m_ui(new Ui::BoxPage()),
+      m_createBox(nullptr)
 {
     m_ui->setupUi(this);
 
@@ -170,8 +171,14 @@ void BoxPage::newBoxClicked(bool checked)
     m_createBox->setTitle(tr("Create box"));
 
     connect(m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
-    connect(m_createBox, &BoxCreation::passwdInconsistent, this, [this] { POPUP_MESSAGE_DIALOG(tr("Please confirm whether the password is consistent.")); });
-    connect(m_createBox, &BoxCreation::inputEmpty, this, [this] { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
+    connect(m_createBox, &BoxCreation::passwdInconsistent, this, [this]
+            {
+                POPUP_MESSAGE_DIALOG(tr("Please confirm whether the password is consistent."));
+            });
+    connect(m_createBox, &BoxCreation::inputEmpty, this, [this]
+            {
+                POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
+            });
 
     int x = window()->x() + window()->width() / 4 + m_createBox->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_createBox->height() / 8;

@@ -40,9 +40,15 @@ public:
     // BRDBus(QObject *parent);
     virtual ~BRDBus();
 
-    static BRDBus *getInstance() { return m_instance; };
+    static BRDBus *getInstance()
+    {
+        return m_instance;
+    };
     static void globalInit(QObject *parent);
-    static void globalDeinit() { delete m_instance; };
+    static void globalDeinit()
+    {
+        delete m_instance;
+    };
 
 public:  // PROPERTIES
     Q_PROPERTY(uint notification_status READ notificationStatus)

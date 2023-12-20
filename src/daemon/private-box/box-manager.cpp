@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- *  
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "src/daemon/private-box/box-manager.h"
@@ -262,7 +262,8 @@ void BoxManager::UnMount(const QString &boxID)
     emit BoxChanged(boxID);
 }
 
-BoxManager::BoxManager(QObject *parent) : QObject(parent)
+BoxManager::BoxManager(QObject *parent)
+    : QObject(parent)
 {
     m_dbusAdaptor = new BoxManagerAdaptor(this);
     m_serviceWatcher = new QDBusServiceWatcher(this);
@@ -322,5 +323,5 @@ void BoxManager::unMountAllBoxs(const QString &service)
         }
     }
 }
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

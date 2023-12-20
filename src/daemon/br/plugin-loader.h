@@ -46,7 +46,10 @@ public:
     virtual bool load() override;
     virtual bool activate() override;
     virtual bool deactivate() override;
-    virtual QSharedPointer<BRPluginInterface> getInterface() override { return this->interface_; };
+    virtual QSharedPointer<BRPluginInterface> getInterface() override
+    {
+        return this->interface_;
+    };
 
 private:
     bool load_module();
@@ -72,7 +75,10 @@ public:
     virtual bool load() override;
     virtual bool activate() override;
     virtual bool deactivate() override;
-    virtual QSharedPointer<BRPluginInterface> getInterface() override { return this->interface_; };
+    virtual QSharedPointer<BRPluginInterface> getInterface() override
+    {
+        return this->interface_;
+    };
 
 private:
     // 包名

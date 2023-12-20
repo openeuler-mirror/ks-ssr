@@ -43,7 +43,7 @@ bool DeviceSwitch::get(const std::string &args, BRErrorCode &error_code)
     try
     {
         Json::Value values;
-        //默认禁用
+        // 默认禁用
         auto console = this->device_config_->get_value(DEVICE_CONF_KEY_CONSOLE);
         auto xconsole = this->device_config_->get_value(DEVICE_CONF_KEY_XCONSOLE);
 
