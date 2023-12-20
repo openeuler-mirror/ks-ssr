@@ -82,8 +82,8 @@ void Daemon::start()
     BRDaemon::Categories::globalInit();
     BRDaemon::Plugins::globalInit(BRDaemon::Configuration::getInstance());
     BRDaemon::BRDBus::globalInit(nullptr);
-    Log::Manager::globalInit();
     Account::Manager::globalInit();
+    Log::Manager::globalInit();
     ToolBox::Manager::globalInit();
     emit RegisterFinished();
 }

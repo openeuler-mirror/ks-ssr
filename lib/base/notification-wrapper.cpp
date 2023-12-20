@@ -43,7 +43,7 @@ NotificationWrapper::NotificationWrapper(std::string app_name)
 
 NotificationWrapper::~NotificationWrapper()
 {
-    for (auto i = 0; i < m_notifies.size() ; i++)
+    for (size_t i = 0; i < m_notifies.size() ; i++)
     {
         if (m_notifies.at(i))
         {

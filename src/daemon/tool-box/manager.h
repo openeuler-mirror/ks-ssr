@@ -17,6 +17,7 @@
 #include <QDBusContext>
 #include <QProcess>
 #include <QSharedPointer>
+#include "src/daemon/log/manager.h"
 
 namespace KS
 {
@@ -65,9 +66,9 @@ public:
 private:
     Manager();
     virtual ~Manager() = default;
-    static void processFinishedHandler(const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd);
+    static void processFinishedHandler(Log::Log& log, const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd);
 
-    inline static QSharedPointer<QProcess> getProcess(const QString& program, const QStringList& arg)
+    inline static QSharedPointer<QProcess> getProcess(Log::Log& log, const QString& program, const QStringList& arg)
     {
         auto cmd = QSharedPointer<QProcess>::create();
         cmd->setProcessChannelMode(QProcess::MergedChannels);
@@ -75,8 +76,8 @@ private:
         cmd->setArguments(arg);
         QObject::connect(cmd.data(),
                          static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-                         [cmd](int exitCode, QProcess::ExitStatus exitStatus) {
-                             processFinishedHandler(exitCode, exitStatus, cmd);
+                         [cmd, log](int exitCode, QProcess::ExitStatus exitStatus) mutable {
+                             processFinishedHandler(log, exitCode, exitStatus, cmd);
                          });
         return cmd;
     }

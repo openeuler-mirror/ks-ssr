@@ -115,6 +115,13 @@ extern "C"
 
 #define SSR_PERMISSION_AUTHENTICATION "com.kylinsec.SSR.PermissionAuthentication"
 
+    enum LogResult
+    {
+        LOG_RESULT_FALSE = 0,
+        LOG_RESULT_TRUE,
+        LOG_RESULT_ALL,
+    };
+
     enum DeviceType
     {
         DEVICE_TYPE_UNKNOWN = 0,

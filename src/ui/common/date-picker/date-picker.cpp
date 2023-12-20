@@ -32,7 +32,7 @@ QDateTime DatePicker::getStartDate()
 {
     QDate startDate = m_startCalendar->getSelectDate();
     QDate endDate = m_endCalendar->getSelectDate();
-    QDateTime start = QDateTime(startDate);
+    QDateTime start = startDate.startOfDay();
     if (startDate == endDate)
     {
         start.setTime(QTime(0, 0, 0));
@@ -44,7 +44,7 @@ QDateTime DatePicker::getEndDate()
 {
     QDate startDate = m_startCalendar->getSelectDate();
     QDate endDate = m_endCalendar->getSelectDate();
-    QDateTime end = QDateTime(endDate);
+    QDateTime end = endDate.startOfDay();
     if (startDate == endDate)
     {
         end.setTime(QTime(23, 59, 59));
