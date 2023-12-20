@@ -80,8 +80,10 @@ Window::Window()
                 disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, nullptr);
                 connect(
                     m_dbusProxy, &DaemonProxy::RegisterFinished, this, [this] {
-                disconnect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, nullptr);
-                login(); }, Qt::ConnectionType::UniqueConnection);
+                        disconnect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, nullptr);
+                        login();
+                    },
+                    Qt::ConnectionType::UniqueConnection);
             },
             Qt::ConnectionType::UniqueConnection);
     }
@@ -110,7 +112,10 @@ void Window::login()
 {
     connect(Account::Manager::instance(), &Account::Manager::loginFinished, this, &Window::start, Qt::ConnectionType::UniqueConnection);
     connect(
-        Account::Manager::instance(), &Account::Manager::softExited, this, [] { qApp->quit(); }, Qt::ConnectionType::UniqueConnection);
+        Account::Manager::instance(), &Account::Manager::softExited, this, [] {
+            qApp->quit();
+        },
+        Qt::ConnectionType::UniqueConnection);
     connect(Account::Manager::instance(), &Account::Manager::logouted, this, &Window::logout, Qt::ConnectionType::UniqueConnection);
     connect(Account::Manager::instance(), &Account::Manager::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
     Account::Manager::instance()->showLogin();

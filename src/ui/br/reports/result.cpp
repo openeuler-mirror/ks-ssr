@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "result.h"
@@ -36,7 +36,8 @@ namespace KS
 {
 namespace BR
 {
-Result::Result(QWidget *parent) : QWidget(parent)
+Result::Result(QWidget *parent)
+    : QWidget(parent)
 {
     init();
 }
@@ -288,12 +289,12 @@ void Result::createReportHomePage(int status, const QRect &rect)
     m_pdf = new PDF(QSysInfo::prettyProductName(), getIPPath(), getMacPath(), QSysInfo::kernelType() + QSysInfo::kernelVersion(), activeStatus, this);
     m_pdf->setPieChartText(m_categoryName, m_total, m_conform, m_inconform);
     auto pixmap = m_pdf->grab(m_pdf->rect());
-    //计算painter视口区域与抓取图片区域的尺寸比例因子
+    // 计算painter视口区域与抓取图片区域的尺寸比例因子
     float factor = (float)rect.width() / pixmap.width();
-    //绘制时按照比例因子放大
+    // 绘制时按照比例因子放大
     m_painter->scale(factor, factor);
 
-    //按照坐标画图
+    // 按照坐标画图
     m_painter->drawPixmap(0, 0, pixmap);
 }
 
@@ -483,7 +484,7 @@ void Result::calculateRatio()
     }
 }
 
-//picture
+// picture
 bool Result::exportReport(const QList<Category *> &afterReinforcementList, int status, const InvalidData &invalidData)
 {
     calculateRatio();
@@ -492,7 +493,7 @@ bool Result::exportReport(const QList<Category *> &afterReinforcementList, int s
     auto file = QString(tr("KylinSecHostReinforcementReport_%1_%2.pdf")).arg(QSysInfo::machineHostName()).arg(getIPPath());
     auto fileName = fileDialog.getSaveFileName(this, tr("Open File"), file, tr("PDF(*.pdf)"));
     RETURN_VAL_IF_TRUE(fileName == "", false)
-    //定义打印机 631端口被禁用可能会导致阻塞
+    // 定义打印机 631端口被禁用可能会导致阻塞
     QPrinter printerPixmap(QPrinter::ScreenResolution);
 #if QT_DEPRECATED_SINCE(5, 15)
     printerPixmap.setPageSize(QPageSize(QPageSize::PageSizeId::A4));

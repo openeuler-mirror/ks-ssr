@@ -71,7 +71,6 @@ FileSign::FileSign(QWidget* parent)
         auto oldIterator = data.begin() + index.row();
         auto oldSecurityContext = oldIterator->fileSeContext;
         auto filePath = oldIterator->filePath;
-
         // TODO 绘制自定义弹窗，继承TitlebarWindow，另外这里的逻辑较为复杂，封装一个函数吧
         QString newSecurityContext = QInputDialog::getText(this,
                                                            tr("modify security context"),

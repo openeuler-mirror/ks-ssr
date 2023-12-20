@@ -38,9 +38,15 @@ public:
     FileLock(int32_t file_descriptor, FileLockType lock_type);
     virtual ~FileLock();
 
-    int32_t getFileDescriptor() { return this->file_descriptor_; };
+    int32_t getFileDescriptor()
+    {
+        return this->file_descriptor_;
+    };
 
-    bool isValid() { return (this->file_descriptor_ > 0 && this->lock_type_ != FileLockType::FILE_LOCK_TYPE_LAST); };
+    bool isValid()
+    {
+        return (this->file_descriptor_ > 0 && this->lock_type_ != FileLockType::FILE_LOCK_TYPE_LAST);
+    };
 
     static QSharedPointer<FileLock> createShareLock(const QString &path,
                                                     int flags,

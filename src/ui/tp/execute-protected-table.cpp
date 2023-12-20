@@ -14,6 +14,7 @@
 
 #include "execute-protected-table.h"
 #include <qt5-log-i.h>
+#include <QAction>
 #include <QApplication>
 #include <QCheckBox>
 #include <QFileInfo>
@@ -24,14 +25,13 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
-#include <QAction>
 #include <QPalette>
 #include <QSpinBox>
 #include <QStandardItemModel>
 #include <QToolTip>
+#include "src/ui/common/table/header-button-delegate.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/delegate.h"
-#include "src/ui/common/table/header-button-delegate.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
 
@@ -58,7 +58,8 @@ enum ExecuteField
 #define KSS_JSON_KEY_DATA_STATUS SSR_KSS_JK_DATA_STATUS
 #define KSS_JSON_KEY_DATA_HASH SSR_KSS_JK_DATA_HASH
 
-ExecuteProtectedFilterModel::ExecuteProtectedFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+ExecuteProtectedFilterModel::ExecuteProtectedFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
@@ -91,8 +92,9 @@ bool ExecuteProtectedFilterModel::filterAcceptsRow(int sourceRow, const QModelIn
     return false;
 }
 
-ExecuteProtectedModel::ExecuteProtectedModel(QObject *parent) : QAbstractTableModel(parent),
-                                                                m_tpDBusProxy(nullptr)
+ExecuteProtectedModel::ExecuteProtectedModel(QObject *parent)
+    : QAbstractTableModel(parent),
+      m_tpDBusProxy(nullptr)
 {
     m_tpDBusProxy = new KSSDbusProxy(SSR_DBUS_NAME,
                                      SSR_KSS_INIT_DBUS_OBJECT_PATH,
@@ -312,8 +314,9 @@ void ExecuteProtectedModel::checkSelectStatus()
     emit stateChanged(state);
 }
 
-ExecuteProtectedTable::ExecuteProtectedTable(QWidget *parent) : QTableView(parent),
-                                                                m_filterProxy(nullptr)
+ExecuteProtectedTable::ExecuteProtectedTable(QWidget *parent)
+    : QTableView(parent),
+      m_filterProxy(nullptr)
 {
     initTable();
     initTableHeaderButton();
@@ -412,23 +415,25 @@ void KS::TP::ExecuteProtectedTable::initTableHeaderButton()
     m_fileTypeKeys << tr("Executable file") << tr("Executable script") << tr("Dynamic library");
     m_filterMap.insert("fileTypeButton", m_fileTypeKeys);
     m_fileTypeButton->addMenuActions(QList<QAction *>() << executeFiles << executeScripts << dynamicLibrary);
-    connect(m_fileTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this](){
-        for (auto action : m_fileTypeButton->getMenuActions())
-        {
-            if (action->isChecked())
+    connect(m_fileTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
             {
-                m_fileTypeKeys << action->text();
-            }
-            else
-            {
-                m_fileTypeKeys.removeAll(action->text());
-            }
-            // 去重
-            m_fileTypeKeys = QSet<QString>::fromList(m_fileTypeKeys).toList();
-            m_filterMap.insert("fileTypeButton", m_fileTypeKeys);
-        }
-        filterFixedString();
-    });
+                for (auto action : m_fileTypeButton->getMenuActions())
+                {
+                    if (action->isChecked())
+                    {
+                        m_fileTypeKeys << action->text();
+                    }
+                    else
+                    {
+                        m_fileTypeKeys.removeAll(action->text());
+                    }
+                    // 去重
+                    m_fileTypeKeys = QStringList(m_fileTypeKeys.begin(), m_fileTypeKeys.end());
+
+                    m_filterMap.insert("fileTypeButton", m_fileTypeKeys);
+                }
+                filterFixedString();
+            });
     // 状态筛选
     m_statusButton = new HeaderButtonDelegate(this);
     m_statusButton->setButtonText(tr("Status"));
@@ -438,23 +443,24 @@ void KS::TP::ExecuteProtectedTable::initTableHeaderButton()
     m_statusKeys << tr("Certified") << tr("Being tampered with");
     m_filterMap.insert("statusButton", m_statusKeys);
     m_statusButton->addMenuActions(QList<QAction *>() << certified << beingTamperedWith);
-    connect(m_statusButton, &HeaderButtonDelegate::menuTriggered, this, [this](){
-        for (auto action : m_statusButton->getMenuActions())
-        {
-            if (action->isChecked())
+    connect(m_statusButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
             {
-                m_statusKeys << action->text();
-            }
-            else
-            {
-                m_statusKeys.removeAll(action->text());
-            }
-            // 去重
-            m_statusKeys = QSet<QString>::fromList(m_statusKeys).toList();
-            m_filterMap.insert("statusButton", m_statusKeys);
-        }
-        filterFixedString();
-    });
+                for (auto action : m_statusButton->getMenuActions())
+                {
+                    if (action->isChecked())
+                    {
+                        m_statusKeys << action->text();
+                    }
+                    else
+                    {
+                        m_statusKeys.removeAll(action->text());
+                    }
+                    // 去重
+                    m_statusKeys = QStringList(m_statusKeys.begin(), m_statusKeys.end());
+                    m_filterMap.insert("statusButton", m_statusKeys);
+                }
+                filterFixedString();
+            });
     QMap<int, HeaderButtonDelegate *> headerButtons;
     headerButtons.insert(EXECUTE_FIELD_FILE_TYPE, m_fileTypeButton);
     headerButtons.insert(EXECUTE_FIELD_STATUS, m_statusButton);
@@ -469,7 +475,7 @@ void KS::TP::ExecuteProtectedTable::filterFixedString()
     {
         CONTINUE_IF_TRUE(value.isEmpty());
         QStringList keys;
-        for(auto key : value)
+        for (auto key : value)
         {
             CONTINUE_IF_TRUE(key.isEmpty());
             keys << key;

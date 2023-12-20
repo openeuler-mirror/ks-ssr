@@ -14,6 +14,7 @@
 
 #include "kernel-protected-table.h"
 #include <qt5-log-i.h>
+#include <QAction>
 #include <QApplication>
 #include <QCheckBox>
 #include <QFileInfo>
@@ -21,7 +22,6 @@
 #include <QHeaderView>
 #include <QItemDelegate>
 #include <QJsonDocument>
-#include <QAction>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
@@ -29,9 +29,9 @@
 #include <QSpinBox>
 #include <QStandardItemModel>
 #include <QToolTip>
+#include "src/ui/common/table/header-button-delegate.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/kernel-protected-delegate.h"
-#include "src/ui/common/table/header-button-delegate.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
 
@@ -58,7 +58,8 @@ enum KernelField
 #define KSS_JSON_KEY_DATA_HASH SSR_KSS_JK_DATA_HASH
 #define KSS_JSON_KEY_DATA_GUARD SSR_KSS_JK_DATA_GUARD
 
-KernelProtectedFilterModel::KernelProtectedFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+KernelProtectedFilterModel::KernelProtectedFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
@@ -89,8 +90,9 @@ bool KernelProtectedFilterModel::filterAcceptsRow(int sourceRow, const QModelInd
     return false;
 }
 
-KernelProtectedModel::KernelProtectedModel(QObject *parent) : QAbstractTableModel(parent),
-                                                              m_tpDBusProxy(nullptr)
+KernelProtectedModel::KernelProtectedModel(QObject *parent)
+    : QAbstractTableModel(parent),
+      m_tpDBusProxy(nullptr)
 {
     m_tpDBusProxy = new KSSDbusProxy(SSR_DBUS_NAME,
                                      SSR_KSS_INIT_DBUS_OBJECT_PATH,
@@ -322,8 +324,9 @@ void KernelProtectedModel::checkSelectStatus()
     emit stateChanged(state);
 }
 
-KernelProtectedTable::KernelProtectedTable(QWidget *parent) : QTableView(parent),
-                                                              m_filterProxy(nullptr)
+KernelProtectedTable::KernelProtectedTable(QWidget *parent)
+    : QTableView(parent),
+      m_filterProxy(nullptr)
 {
     initTable();
     initTableHeaderButton();
@@ -412,22 +415,23 @@ void KernelProtectedTable::initTableHeaderButton()
     auto beingTamperedWith = new QAction(tr("Being tampered with"), m_statusButton);
     m_statusKeys << tr("Certified") << tr("Being tampered with");
     m_statusButton->addMenuActions(QList<QAction *>() << certified << beingTamperedWith);
-    connect(m_statusButton, &HeaderButtonDelegate::menuTriggered, this, [this](){
-        for (auto action : m_statusButton->getMenuActions())
-        {
-            if (action->isChecked())
+    connect(m_statusButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
             {
-                m_statusKeys << action->text();
-            }
-            else
-            {
-                m_statusKeys.removeAll(action->text());
-            }
-            // 去重
-            m_statusKeys = QSet<QString>::fromList(m_statusKeys).toList();
-        }
-        filterFixedString();
-    });
+                for (auto action : m_statusButton->getMenuActions())
+                {
+                    if (action->isChecked())
+                    {
+                        m_statusKeys << action->text();
+                    }
+                    else
+                    {
+                        m_statusKeys.removeAll(action->text());
+                    }
+                    // 去重
+                    m_statusKeys = QStringList(m_statusKeys.begin(), m_statusKeys.end());
+                }
+                filterFixedString();
+            });
     QMap<int, HeaderButtonDelegate *> headerButtons;
     headerButtons.insert(KERNEL_FIELD_STATUS, m_statusButton);
     m_headerViewProxy->setHeaderButtons(headerButtons);
@@ -437,7 +441,7 @@ void KernelProtectedTable::initTableHeaderButton()
 void KernelProtectedTable::filterFixedString()
 {
     QStringList keys = {};
-    for(auto key : m_statusKeys)
+    for (auto key : m_statusKeys)
     {
         CONTINUE_IF_TRUE(key.isEmpty())
         keys << key;

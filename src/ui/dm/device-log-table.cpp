@@ -31,7 +31,8 @@ namespace DM
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-DeviceLogDelegate::DeviceLogDelegate(QObject *parent) : QStyledItemDelegate(parent)
+DeviceLogDelegate::DeviceLogDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -70,13 +71,13 @@ void DeviceLogDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     QStyleOptionViewItem viewOption(option);
     initStyleOption(&viewOption, index);
 
-    //绘制的文字向右偏移10px，与整体表格风格统一
+    // 绘制的文字向右偏移10px，与整体表格风格统一
     auto textRect = option.rect.adjusted(10, 0, 0, 0);
 
-    //绘制状态列:根据状态显示字体颜色
+    // 绘制状态列:根据状态显示字体颜色
     if (index.column() == LogTableField::LOG_TABLE_FIELD_STATUS)
     {
-        //TODO: 由于翻译成中文后使用map方式获取不到颜色值，后面要优化逻辑
+        // TODO: 由于翻译成中文后使用map方式获取不到颜色值，后面要优化逻辑
         auto state = index.data().toString();
         QColor color;
         if (state == SUCCESSFUL)
@@ -103,10 +104,11 @@ void DeviceLogDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     }
 }
 
-DeviceLogTable::DeviceLogTable(QWidget *parent) : QTableView(parent),
-                                                  m_filterProxy(nullptr),
-                                                  m_model(nullptr),
-                                                  m_deviceManagerProxy(nullptr)
+DeviceLogTable::DeviceLogTable(QWidget *parent)
+    : QTableView(parent),
+      m_filterProxy(nullptr),
+      m_model(nullptr),
+      m_deviceManagerProxy(nullptr)
 {
     m_deviceManagerProxy = new DeviceManagerProxy(SSR_DBUS_NAME,
                                                   SSR_DEVICE_MANAGER_DBUS_OBJECT_PATH,

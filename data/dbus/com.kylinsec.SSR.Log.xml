@@ -3,6 +3,21 @@
 <node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
     <interface name="com.kylinsec.SSR.Log">
         <method name="GetLog">
+            <arg type="i" name="role" direction="in">
+                <summary>Roles in the log.</summary>
+            </arg>
+            <arg type="x" name="time_stamp_begin" direction="in">
+                <summary>Begin timeStamp of the log.</summary>
+            </arg>
+            <arg type="x" name="time_stamp_end" direction="in">
+                <summary>End timeStamp of the log.</summary>
+            </arg>
+            <arg type="i" name="type" direction="in">
+                <summary>Type of Log.</summary>
+            </arg>
+            <arg type="u" name="result" direction="in">
+                <summary>Result of log.</summary>
+            </arg>
             <arg type="u" name="per_page" direction="in">
                 <summary>Number of logs per page.</summary>
             </arg>
@@ -14,6 +29,18 @@
             </arg>
             <description>Get logs, pagination.</description>
         </method>
+        <method name="GetLogNum">
+            <arg type="u" name="log_num" direction="out">
+                <summary>Get number of log.</summary>
+            </arg>
+            <description>Get logs, pagination.</description>
+        </method>
+        <signal name="NewLogWritten">
+            <arg name="log_num" type="u">
+                <summary>Number of log.</summary>
+            </arg>
+            <description>When this signal is emitted, it means that there are new log.</description>
+        </signal>
         <signal name="HazardDetected">
             <arg name="type" type="u">
                 <summary>type of alert.</summary>

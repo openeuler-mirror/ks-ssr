@@ -52,7 +52,7 @@ bool LoginLock::get(const std::string &args, BRErrorCode &error_code)
     }
 }
 
-//XXX：有关操作数的问题，需要对有操作数的内容进行处理。
+// XXX：有关操作数的问题，需要对有操作数的内容进行处理。
 bool LoginLock::set(const std::string &args, BRErrorCode &error_code)
 {
     if (!this->password_complextiy_config_)

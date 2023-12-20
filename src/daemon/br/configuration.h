@@ -35,11 +35,17 @@ public:
     Configuration(const QString& config_path);
     virtual ~Configuration();
 
-    static Configuration* getInstance() { return instance_; };
+    static Configuration* getInstance()
+    {
+        return instance_;
+    };
 
     static void globalInit(const QString& config_path);
 
-    static void globalDeinit() { delete instance_; };
+    static void globalDeinit()
+    {
+        delete instance_;
+    };
 
     // 获取最大线程数
     uint32_t getMaxThreadNum();
@@ -68,7 +74,10 @@ public:
     // 前台复选框勾选调用，checkbox后台默认为false
     void setRaCheckbox(const QString& name, const bool& status);
     // 获取加固标准
-    QSharedPointer<Protocol::RS> getRs() { return this->rs_; }
+    QSharedPointer<Protocol::RS> getRs()
+    {
+        return this->rs_;
+    }
     // 设置自定义加固标准
     bool setCustomRs(const QString& encrypted_rs, BRErrorCode& error_code);
     // 设置加固参数

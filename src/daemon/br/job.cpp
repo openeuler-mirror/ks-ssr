@@ -33,10 +33,11 @@ QSharedPointer<Job> Job::create()
     return job;
 }
 
-Job::Job(int64_t job_id) : job_id_(job_id),
-                           state_(BRJobState::BR_JOB_STATE_IDLE),
-                           timer(nullptr),
-                           need_cancel_(false)
+Job::Job(int64_t job_id)
+    : job_id_(job_id),
+      state_(BRJobState::BR_JOB_STATE_IDLE),
+      timer(nullptr),
+      need_cancel_(false)
 {
 }
 

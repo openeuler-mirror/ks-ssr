@@ -22,7 +22,8 @@ namespace KS
 {
 namespace DM
 {
-TableFilterModel::TableFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+TableFilterModel::TableFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 

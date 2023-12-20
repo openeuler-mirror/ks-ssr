@@ -26,9 +26,10 @@
 
 namespace KS
 {
-LicenseProxy::LicenseProxy(QObject* parent) : QObject(parent),
-                                              m_isActivated(false),
-                                              m_expiredTime(0)
+LicenseProxy::LicenseProxy(QObject* parent)
+    : QObject(parent),
+      m_isActivated(false),
+      m_expiredTime(0)
 {
     // 向下兼容，判断KSSSRManager是否激活，已激活则使用KSSSRManager
     m_objectPath = getObjectPath(getActivateStatus(LICENSE_OLD_OBJECT_NAME) ? LICENSE_OLD_OBJECT_NAME : LICENSE_OBJECT_NAME);
@@ -107,7 +108,7 @@ void LicenseProxy::updateLicense()
 
     QVariant firstArg = args.takeFirst();
     auto licenseInfoJson = firstArg.toString();
-    //解析授权信息Json字符串
+    // 解析授权信息Json字符串
     QJsonParseError jsonError;
     auto jsonDoc = QJsonDocument::fromJson(licenseInfoJson.toUtf8(), &jsonError);
     if (jsonDoc.isNull())
@@ -121,7 +122,7 @@ void LicenseProxy::updateLicense()
     m_machineCode = data.value(LICENSE_JK_MACHINE_CODE).toString();
     m_expiredTime = time_t(data.value(LICENSE_JK_EXPIRED_TIME).toVariant().toUInt());
 
-    //获取激活状态
+    // 获取激活状态
     auto activationStatus = (LicenseActivationStatus)data.value(LICENSE_JK_ACTIVATION_STATUS).toInt();
     m_isActivated = activationStatus == LAS_ACTIVATED;
 }
@@ -171,7 +172,7 @@ bool LicenseProxy::getActivateStatus(const QString& objectName)
 
     QVariant firstArg = args.takeFirst();
     auto licenseInfoJson = firstArg.toString();
-    //解析授权信息Json字符串
+    // 解析授权信息Json字符串
     QJsonParseError jsonError;
     auto jsonDoc = QJsonDocument::fromJson(licenseInfoJson.toUtf8(), &jsonError);
     if (jsonDoc.isNull())
@@ -181,7 +182,7 @@ bool LicenseProxy::getActivateStatus(const QString& objectName)
     }
 
     auto data = jsonDoc.object();
-    //获取激活状态
+    // 获取激活状态
     auto activationStatus = (LicenseActivationStatus)data.value(LICENSE_JK_ACTIVATION_STATUS).toInt();
     RETURN_VAL_IF_TRUE(activationStatus != LAS_ACTIVATED, false);
     return true;

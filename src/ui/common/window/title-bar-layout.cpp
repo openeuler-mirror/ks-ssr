@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 
@@ -92,9 +92,9 @@ QLayoutItem *TitlebarLayout::itemAt(int index) const
 
 void TitlebarLayout::setGeometry(const QRect &rect)
 {
-    ///如果标题栏自定义控件区域需要居中
-    ///１.算出左侧未省略文本和图标的一般宽度，算出右侧按钮的宽度，两者取最大值，都设置为最大值
-    ///2.如果在两边宽度相同的情况下，看是否能放下合适大小的自定义控件区域,如果不能则需要省略左侧文本，同时再计算左右宽度最大值同步
+    /// 如果标题栏自定义控件区域需要居中
+    /// １.算出左侧未省略文本和图标的一般宽度，算出右侧按钮的宽度，两者取最大值，都设置为最大值
+    /// 2.如果在两边宽度相同的情况下，看是否能放下合适大小的自定义控件区域,如果不能则需要省略左侧文本，同时再计算左右宽度最大值同步
     if (rect == geometry())
     {
         return;
@@ -107,7 +107,7 @@ void TitlebarLayout::setGeometry(const QRect &rect)
 
     QSize iconLabelSize = m_iconLabelItem->sizeHint();
 
-    //获取文本显示完全应该占用的大小
+    // 获取文本显示完全应该占用的大小
 #if 0
     QFontMetrics fontMetrics = m_titleLabelItem->widget()->fontMetrics();
     QSize titleLabelSize;
@@ -126,17 +126,17 @@ void TitlebarLayout::setGeometry(const QRect &rect)
     /*　居中左右两侧宽度需要同步，计算剩余宽度是否够　*/
     if (m_customWidgetCenter)
     {
-        //左侧需要占据的宽度
+        // 左侧需要占据的宽度
         int leftSideWidth = m_iconMargins.left() + iconLabelSize.width() + m_iconMargins.right() +
                             m_titleMargins.left() + titleLabelSize.width() + m_titleMargins.right();
-        //右侧需要占据的宽度
+        // 右侧需要占据的宽度
         int rightSideWidth = m_rightWidgetMargins.left() + rightWidgetSize.width() + m_rightWidgetMargins.right();
-        //如果不调整两侧宽度，判断是否能居中装下自定义组件
+        // 如果不调整两侧宽度，判断是否能居中装下自定义组件
         if ((contentRect.width() - (2 * qMax(leftSideWidth, rightSideWidth))) <
             (m_customWidgetMargins.left() + customWidgetSize.width() + m_customWidgetMargins.right()))
         {
             /* 剩下的空间不够的情况，需要省略文本,最多把左侧宽度压缩到右侧一样，不能改变右侧的宽度！ */
-            //计算出合适的两侧宽度
+            // 计算出合适的两侧宽度
             int fitSideWidth = (contentRect.width() - (m_customWidgetMargins.left() + customWidgetSize.width() +
                                                        m_customWidgetMargins.right())) /
                                2;
@@ -145,10 +145,10 @@ void TitlebarLayout::setGeometry(const QRect &rect)
                 qWarning("侧边宽度不能压缩小于右侧宽度");
                 return;
             }
-            //通过侧边宽度计算出左侧标题label的宽度
+            // 通过侧边宽度计算出左侧标题label的宽度
             int reducedTitleWidth = fitSideWidth - m_iconMargins.left() - iconLabelSize.width() - m_iconMargins.right() - m_titleMargins.left() - m_titleMargins.right();
             titleLabelSize.setWidth(reducedTitleWidth);
-            //设置右侧的宽度
+            // 设置右侧的宽度
             int rightWidgetWidth = fitSideWidth - m_rightWidgetMargins.left() - m_rightWidgetMargins.right();
             rightWidgetSize.setWidth(rightWidgetWidth);
         }
@@ -167,7 +167,7 @@ void TitlebarLayout::setGeometry(const QRect &rect)
                             m_titleMargins.left() + titleLabelSize.width() + m_titleMargins.right();
         int rightSideWidth = m_rightWidgetMargins.left() + rightWidgetSize.width() + m_rightWidgetMargins.right();
         int customWidgetWidth = m_customWidgetMargins.left() + customWidgetSize.width() + m_customWidgetMargins.right();
-        //如果该大小放置不下 CustomWidget则调整标题栏文本长度
+        // 如果该大小放置不下 CustomWidget则调整标题栏文本长度
         if ((contentRect.width() - leftSideWidth - rightSideWidth) <
             (m_customWidgetMargins.left() + customWidgetSize.width() + m_customWidgetMargins.right()))
         {
@@ -179,7 +179,7 @@ void TitlebarLayout::setGeometry(const QRect &rect)
         }
     }
 
-    //定位左侧的图标、标题栏
+    // 定位左侧的图标、标题栏
     QRect iconLabelRect(contentRect.left() + m_iconMargins.left(),
                         contentRect.top() + (contentRect.height() - iconLabelSize.height()) / 2,
                         iconLabelSize.width(),
@@ -197,7 +197,7 @@ void TitlebarLayout::setGeometry(const QRect &rect)
     m_titleLabelItem->setGeometry(titleLabelRect);
     contentRect.setLeft(titleLabelRect.right() + m_titleMargins.right());
 
-    //定位右侧的组件
+    // 定位右侧的组件
     QRect rightWidgetRect(contentRect.right() - m_rightWidgetMargins.right() - rightWidgetSize.width(),
                           contentRect.top() + (contentRect.height() - rightWidgetSize.height()) / 2,
                           rightWidgetSize.width(),
@@ -205,7 +205,7 @@ void TitlebarLayout::setGeometry(const QRect &rect)
     m_rightWidgetItem->setGeometry(rightWidgetRect);
     contentRect.setRight(rightWidgetRect.left() + m_rightWidgetMargins.left());
 
-    //自定义控件使用剩下的内容区域
+    // 自定义控件使用剩下的内容区域
     QRect customWidgetRect(contentRect.left() + m_customWidgetMargins.left(),
                            contentRect.top() + (contentRect.height() - customWidgetSize.height()) / 2,
                            contentRect.width() - m_customWidgetMargins.right(),
@@ -226,7 +226,7 @@ QSize TitlebarLayout::minimumSize() const
 
     if (m_customWidgetCenter)
     {
-        //NOTE:如果是居中自定义控件的话，标题栏最小宽度应该是右侧侧边栏宽度x2+自定义控件宽度
+        // NOTE:如果是居中自定义控件的话，标题栏最小宽度应该是右侧侧边栏宽度x2+自定义控件宽度
         int rightSideWidth = m_rightWidgetItem->sizeHint().width() + m_rightWidgetMargins.left() + m_rightWidgetMargins.right();
         int customWidgetWidth = m_customWidgetMargins.left() + m_customWidgetItem->sizeHint().width() + m_customWidgetMargins.right();
         minWidth += 2 * rightSideWidth;
@@ -234,7 +234,7 @@ QSize TitlebarLayout::minimumSize() const
     }
     else
     {
-        //NOTE:如果不需要居中自定义控件的话,标题Label宽度可以计算为0
+        // NOTE:如果不需要居中自定义控件的话,标题Label宽度可以计算为0
         int rightSideWidth = m_rightWidgetItem->sizeHint().width() + m_rightWidgetMargins.left() + m_rightWidgetMargins.right();
         int customWidgetWidth = m_customWidgetMargins.left() + m_customWidgetItem->sizeHint().width() + m_customWidgetMargins.right();
         int leftSideWidth = m_iconMargins.left() + m_iconLabelItem->sizeHint().width() + m_iconMargins.right();

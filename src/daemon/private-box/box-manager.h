@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.   
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #pragma once
@@ -37,11 +37,17 @@ public:
     static void globalInit(QObject *parent);
     static void globalDeinit();
 
-    static BoxManager *instance() { return m_instance; };
+    static BoxManager *instance()
+    {
+        return m_instance;
+    };
 
 public:  // PROPERTIES
     Q_PROPERTY(QString RSAPublicKey READ rsaPublicKey)
-    QString rsaPublicKey() const { return m_rsaPublicKey; };
+    QString rsaPublicKey() const
+    {
+        return m_rsaPublicKey;
+    };
 
 public Q_SLOTS:  // METHODS
     // 创建box
@@ -93,5 +99,5 @@ private:
     QString m_rsaPublicKey;  // property
     QString m_rsaPrivateKey;
 };
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

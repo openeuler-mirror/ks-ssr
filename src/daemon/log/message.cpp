@@ -14,54 +14,44 @@
 
 #include "src/daemon/log/message.h"
 #include <qt5-log-i.h>
+#include "src/daemon/account/manager.h"
+#include "src/daemon/log/manager.h"
 
 namespace KS
 {
 namespace Log
 {
 
-QMetaEnum Message::m_metaLogType = QMetaEnum::fromType<Message::LogType>();
-const QString& Log::Message::m_separator = "|";
+QMetaEnum Message::m_metaLogType = QMetaEnum::fromType<Manager::LogType>();
+const QString& Message::m_separator = "|";
 
-Message::Message()
-    : m_isValid(false)
+QString Message::serialize(const Log& log, Qt::DateFormat format)
 {
+    QStringList msg{};
+    msg << Account::Manager::m_accountManager->m_metaAccountEnum.valueToKey((static_cast<int>(log.role)))
+        << log.timeStamp.toString(format)
+        << m_metaLogType.valueToKey(static_cast<int>(log.type))
+        << QString(log.result ? "true" : "false")
+        << log.logMsg;
+    return msg.join(Message::m_separator);
 }
 
-Message::Message(const Message::LogType type, const QString& logMsg, const QDateTime& timeStamp)
-    : m_timeStamp(timeStamp),
-      m_type(type),
-      m_logMsg(logMsg),
-      m_isValid(true)
+Log Message::deserialize(const QString& str)
 {
-}
-
-QString Message::serialize(Qt::DateFormat format) const
-{
-    return QString("%1%2%3%4%5").arg(m_timeStamp.toString(format), Message::m_separator, m_metaLogType.valueToKey(static_cast<int>(m_type)), Message::m_separator, m_logMsg);
-}
-
-inline Message& Message::deserialize(const QString& str)
-{
-    auto firstSp = str.indexOf(Message::m_separator);
-    auto secondSp = str.indexOf(Message::m_separator, firstSp);
-    if (firstSp == -1 || secondSp == -1)
+    auto log = str.split(Message::m_separator);
+    // 判断日志中元素数量是否和现在的日志结构相等， 魔法数 5 是日志的属性数量。
+    if (log.size() != 5)
     {
-        m_isValid = false;
-        KLOG_WARNING() << "failed to deserialize: " << str;
-        return *this;
+        KLOG_WARNING() << "Failed to deserialize log: " << str << ", skip this.";
+        return Log{};
     }
-    m_isValid = true;
-    m_timeStamp = QDateTime::fromString(str.mid(0, firstSp));
-    m_type = static_cast<Message::LogType>(m_metaLogType.keyToValue(str.mid(firstSp, secondSp).toLocal8Bit()));
-    m_logMsg = str.mid(secondSp);
-
-    return *this;
-}
-
-bool Message::isValid() const
-{
-    return m_isValid;
+    return {
+        static_cast<Account::Manager::AccountRole>(
+            Account::Manager::m_accountManager->m_metaAccountEnum.keyToValue(log.at(0).toLatin1())),
+        QDateTime::fromString(log.at(1), Qt::ISODate),
+        static_cast<Manager::LogType>(m_metaLogType.keyToValue(log.at(2).toLatin1())),
+        log.at(3) == "true",
+        log.at(4)};
 }
 };  // namespace Log
 };  // namespace KS

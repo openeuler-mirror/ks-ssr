@@ -213,7 +213,8 @@ int CmdParser::processTable()
 {
     auto table = Table(this->options_.file_path, this->options_.split_pattern, this->options_.join_str);
     QVector<QPair<int32_t, QString>> cols = this->str2cols(this->options_.key);
-    std::function<bool(QVector<QString>)> pred = [&cols](QVector<QString> fields) -> bool {
+    std::function<bool(QVector<QString>)> pred = [&cols](QVector<QString> fields) -> bool
+    {
         for (auto iter = cols.begin(); iter != cols.end(); ++iter)
         {
             // 列不存在则直接返回不匹配

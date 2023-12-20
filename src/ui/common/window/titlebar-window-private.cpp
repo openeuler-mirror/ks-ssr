@@ -198,7 +198,7 @@ void TitlebarWindowPrivate::handlerMouseButtonReleaseEvent(QMouseEvent *ev)
 
 void TitlebarWindowPrivate::handlerMouseMoveEvent(QMouseEvent *ev)
 {
-    ///判断是否点击标题栏区域
+    /// 判断是否点击标题栏区域
     if (m_titlebarIsPressed)
     {
         QPoint pos = QCursor::pos();
@@ -235,13 +235,13 @@ void TitlebarWindowPrivate::handlerMouseDoubleClickEvent(QMouseEvent *ev)
 
 void TitlebarWindowPrivate::initOtherWidget()
 {
-    ///主布局
+    /// 主布局
     m_layout = new QVBoxLayout(q_ptr);
     m_layout->setObjectName("TitlebarMainLayout");
     m_layout->setMargin(0);
     m_layout->setSpacing(0);
 
-    ///背景
+    /// 背景
     m_frame = new QFrame(q_ptr);
     m_frame->setAttribute(Qt::WA_Hover);
     m_layout->addWidget(m_frame);
@@ -250,7 +250,7 @@ void TitlebarWindowPrivate::initOtherWidget()
     m_frameLayout->setMargin(0);
     m_frameLayout->setSpacing(0);
 
-    ///标题栏
+    /// 标题栏
     m_titlebarWidget = new QWidget(m_frame);
     m_titlebarWidget->setFocusPolicy(Qt::NoFocus);
     m_titlebarWidget->setObjectName("TitlebarWidget");
@@ -262,15 +262,15 @@ void TitlebarWindowPrivate::initOtherWidget()
     m_titleBarLayout->setSpacing(0);
     m_titleBarLayout->setObjectName("TitlebarLayout");
 
-    ///标题栏居左部分
-    //标题栏图标
+    /// 标题栏居左部分
+    // 标题栏图标
     m_titleIcon = new QLabel(m_titlebarWidget);
     m_titleIcon->setObjectName("TitlebarIcon");
     m_titleIcon->setFixedSize(24, 24);
     m_titleBarLayout->setTitleBarIconLabel(m_titleIcon);
     m_titleBarLayout->setTitleBarIconMargin(QMargins(12, 0, 0, 0));
 
-    //标题
+    // 标题
     m_title = new QLabel(m_titlebarWidget);
     m_title->setFont(QFontDatabase::systemFont(QFontDatabase::TitleFont));
     m_title->setObjectName("TitlebarTitle");
@@ -280,8 +280,8 @@ void TitlebarWindowPrivate::initOtherWidget()
     m_title->installEventFilter(this);
     m_titleBarLayout->setTitleBarTitleLabel(m_title);
 
-    ///标题栏居中部分
-    //自定义控件区域
+    /// 标题栏居中部分
+    // 自定义控件区域
     m_titlebarCenterWidget = new QWidget(m_titlebarWidget);
     m_titlebarCenterWidget->setObjectName("TitlebarCenterWidget");
     m_titlebarCenterWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -291,7 +291,7 @@ void TitlebarWindowPrivate::initOtherWidget()
     m_customLayout->setSpacing(0);
     m_customLayout->setObjectName("TitlebarCustomLayout");
 
-    ///标题栏居右部分
+    /// 标题栏居右部分
     m_titlebarRirghtWidget = new QWidget(m_titlebarWidget);
     m_titlebarRirghtWidget->setObjectName("TitlebarRightWidget");
     m_titlebarRirghtWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -301,56 +301,59 @@ void TitlebarWindowPrivate::initOtherWidget()
     titlebarRightlayout->setContentsMargins(0, 0, 6, 0);
     titlebarRightlayout->setSpacing(0);
 
-    //占位
+    // 占位
     QSpacerItem *spacerItem = new QSpacerItem(0, 20, QSizePolicy::Expanding);
     titlebarRightlayout->addItem(spacerItem);
 
-    //最小化
+    // 最小化
     m_btnMin = new QPushButton(m_titlebarWidget);
     m_btnMin->setObjectName("TitlebarMinButton");
     m_btnMin->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_btnMin->setVisible(false);
     m_btnMin->setFocusPolicy(Qt::NoFocus);
-    connect(m_btnMin, &QPushButton::clicked, [this](bool checked) {
-        Q_UNUSED(checked);
-        q_ptr->showMinimized();
-    });
+    connect(m_btnMin, &QPushButton::clicked, [this](bool checked)
+            {
+                Q_UNUSED(checked);
+                q_ptr->showMinimized();
+            });
     titlebarRightlayout->addWidget(m_btnMin, 0, Qt::AlignVCenter);
 
-    //最大化
+    // 最大化
     m_btnMax = new QPushButton(m_titlebarWidget);
     m_btnMax->setObjectName("TitlebarMaxButton");
     m_btnMax->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_btnMax->setVisible(false);
     m_btnMax->setFocusPolicy(Qt::NoFocus);
-    connect(m_btnMax, &QPushButton::clicked, [this](bool checked) {
-        Q_UNUSED(checked);
-        if (q_ptr->isMaximized())
-        {
-            q_ptr->showNormal();
-        }
-        else
-        {
-            q_ptr->showMaximized();
-        }
-    });
+    connect(m_btnMax, &QPushButton::clicked, [this](bool checked)
+            {
+                Q_UNUSED(checked);
+                if (q_ptr->isMaximized())
+                {
+                    q_ptr->showNormal();
+                }
+                else
+                {
+                    q_ptr->showMaximized();
+                }
+            });
     titlebarRightlayout->addWidget(m_btnMax, 0, Qt::AlignVCenter);
 
-    //关闭
+    // 关闭
     m_btnClose = new QPushButton(m_titlebarWidget);
     m_btnClose->setObjectName("TitlebarCloseButton");
     m_btnClose->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_btnClose->setVisible(false);
     m_btnClose->setFocusPolicy(Qt::NoFocus);
-    connect(m_btnClose, &QPushButton::clicked, [this](bool checked) {
-        Q_UNUSED(checked);
-        q_ptr->close();
-    });
+    connect(m_btnClose, &QPushButton::clicked, [this](bool checked)
+            {
+                Q_UNUSED(checked);
+                q_ptr->close();
+            });
     titlebarRightlayout->addWidget(m_btnClose, 0, Qt::AlignVCenter);
 
     setButtonHints(m_buttonHints);
 
-    ///内容窗口包装
+    /// 内容窗口包装
     m_windowContentWidgetWrapper = new QWidget(m_frame);
     m_windowContentWidgetWrapper->setObjectName("TitlebarContentWrapper");
     m_frameLayout->addWidget(m_windowContentWidgetWrapper);
@@ -459,8 +462,11 @@ bool TitlebarWindowPrivate::eventFilter(QObject *obj, QEvent *event)
             handlerMouseDoubleClickEvent(dynamic_cast<QMouseEvent *>(event));
             break;
         case QEvent::WindowStateChange:
-            //窗口状态变更时，加载不同的样式
-            QTimer::singleShot(0, [this]() { q_ptr->style()->polish(m_frame); });
+            // 窗口状态变更时，加载不同的样式
+            QTimer::singleShot(0, [this]()
+                               {
+                                   q_ptr->style()->polish(m_frame);
+                               });
             break;
         case QEvent::ActivationChange:
             updateShadowStyle(q_ptr->isActiveWindow());

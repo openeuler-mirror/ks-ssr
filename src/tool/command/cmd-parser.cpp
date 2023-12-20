@@ -21,8 +21,9 @@ namespace Cmd
 #define CONFIG_TYPE_PAM "PAM"
 #define CONFIG_TYPE_TABLE "TABLE"
 
-CmdParser::CmdParser() : option_context_(N_("FILE")),
-                         option_group_("config", "config options")
+CmdParser::CmdParser()
+    : option_context_(N_("FILE")),
+      option_group_("config", "config options")
 {
 }
 

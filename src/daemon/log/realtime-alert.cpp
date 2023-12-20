@@ -50,6 +50,7 @@ add ks-ssr-ip-set 127.0.0.1
 #pragma message("软件被移除时执行 iptables -D INPUT -p tcp --syn ! --dport 22 -j SET --add-set ks-ssr-ip-set src && ipset destroy ks-ssr-ip-set")
 #pragma message("此功能应该要有开关，方便用户开启或关闭")
 #pragma message("移至安全工具箱模块中，方便统一管理")
+#pragma message("ipset-devel 是 GPL 协议， 改成调用 ipset 命令行工具实现")
 namespace KS
 {
 namespace Log
@@ -254,7 +255,7 @@ void RealTimeAlert::processIPSetData()
     }
     RETURN_IF_TRUE(nmapAttackers.isEmpty());
     KLOG_DEBUG() << "Detect nmap attack, attacker ips: " << nmapAttackers;
-    Log::Manager::m_logManager->HazardDetected(ATTACK_DETECT, nmapAttackers.join(','));
+    Manager::m_logManager->HazardDetected(ATTACK_DETECT, nmapAttackers.join(','));
     char flushRes[] = "flush ks-ssr-ip-set";
     ipset_parse_line(m_ipset, flushRes);
 }
@@ -282,7 +283,7 @@ void RealTimeAlert::processAuditData(int socket)
         }
     }
     RETURN_IF_TRUE(alertMsgList.isEmpty());
-    emit Log::Manager::m_logManager->HazardDetected(HAZARD_BEHAVIOR, alertMsgList.join(','));
+    emit Manager::m_logManager->HazardDetected(HAZARD_BEHAVIOR, alertMsgList.join(','));
 }
 };  // namespace Log
 };  // namespace KS

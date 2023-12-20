@@ -116,7 +116,6 @@ private:
     QStringList m_statusKeys;
     QString m_searchText;
     QMap<QString, QStringList> m_filterMap;
-
 };
 
 }  // namespace TP

@@ -27,15 +27,16 @@ namespace KS
 {
 namespace DM
 {
-DeviceListPage::DeviceListPage(QWidget *parent) : Page(parent),
-                                                  m_ui(new Ui::DeviceListPage),
-                                                  m_devicePermission(nullptr),
-                                                  m_deviceManagerProxy(nullptr)
+DeviceListPage::DeviceListPage(QWidget *parent)
+    : Page(parent),
+      m_ui(new Ui::DeviceListPage),
+      m_devicePermission(nullptr),
+      m_deviceManagerProxy(nullptr)
 {
     m_ui->setupUi(this);
     m_ui->m_title->setText(tr("Device List"));
 
-    //设置搜索框搜索图标
+    // 设置搜索框搜索图标
     auto searchButton = new QPushButton(m_ui->m_search);
     searchButton->setObjectName("searchButton");
     searchButton->setIcon(QIcon(":/images/search"));
@@ -44,7 +45,7 @@ DeviceListPage::DeviceListPage(QWidget *parent) : Page(parent),
     action->setDefaultWidget(searchButton);
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
-    //获取设备列表数据插入表格
+    // 获取设备列表数据插入表格
     update();
 
     m_deviceManagerProxy = new DeviceManagerProxy(SSR_DBUS_NAME,
@@ -53,7 +54,10 @@ DeviceListPage::DeviceListPage(QWidget *parent) : Page(parent),
                                                   this);
 
     connect(m_deviceManagerProxy, &DeviceManagerProxy::DeviceChanged, this, &DeviceListPage::update);
-    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString &text) { m_ui->m_table->setSearchText(text); });
+    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString &text)
+            {
+                m_ui->m_table->setSearchText(text);
+            });
     connect(m_ui->m_table, &DeviceListTable::clicked, this, &DeviceListPage::popupEditDialog);
 }
 
@@ -129,10 +133,10 @@ void DeviceListPage::popupEditDialog(const QModelIndex &index)
 void DeviceListPage::updatePermission()
 {
     auto id = m_devicePermission->getDeviceID();
-    //获取用户选择的设备权限
+    // 获取用户选择的设备权限
     auto permissions = m_devicePermission->getDevicePermission();
 
-    //数据传入后台
+    // 数据传入后台
     QJsonDocument jsonDoc;
     QJsonObject jsonObj{
         {SSR_DEVICE_JK_READ, (permissions & PermissionType::PERMISSION_TYPE_READ) > 0},
@@ -152,13 +156,13 @@ void DeviceListPage::updatePermission()
 void DeviceListPage::updateState()
 {
     auto id = m_devicePermission->getDeviceID();
-    //获取用户选择的状态
+    // 获取用户选择的状态
     auto state = m_devicePermission->getDeviceStatus();
     RETURN_IF_TRUE(state != DeviceState::DEVICE_STATE_ENABLE && state != DeviceState::DEVICE_STATE_DISABLE);
 
     QDBusPendingReply<> reply;
 
-    //数据传入后台
+    // 数据传入后台
     if (state == DeviceState::DEVICE_STATE_ENABLE)
     {
         reply = m_deviceManagerProxy->Enable(id);

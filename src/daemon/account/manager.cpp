@@ -23,6 +23,7 @@
 #include <QtDBus>
 #include <iostream>
 #include "lib/base/crypto-helper.h"
+#include "src/daemon/log/manager.h"
 
 #define SSR_ACCOUNT_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Account"
 #define PASSWD_PATH "/etc/passwd"
@@ -47,9 +48,9 @@ namespace Account
 const Manager* Manager::m_accountManager = nullptr;
 
 Manager::Manager()
-    : m_uidReuseConfig(new QSettings(UID_REUSE_CONTROL_PATH, QSettings::IniFormat, this)),
+    : m_metaAccountEnum(QMetaEnum::fromType<AccountRole>()),
+      m_uidReuseConfig(new QSettings(UID_REUSE_CONTROL_PATH, QSettings::IniFormat, this)),
       m_isUidReusable(!!(m_uidReuseConfig->value(UID_REUSE_CONTROL_KEY, 0).toInt())),
-      m_metaAccountEnum(QMetaEnum::fromType<Manager::Role>()),
       m_db(new Database()),
       m_dbusServerWatcher(new QDBusServiceWatcher(this))
 
@@ -72,17 +73,18 @@ Manager::Manager()
 
     m_dbusServerWatcher->setConnection(dbusConnection);
     m_dbusServerWatcher->setWatchMode(QDBusServiceWatcher::WatchForOwnerChange);
-    connect(m_dbusServerWatcher, &QDBusServiceWatcher::serviceUnregistered, [this](const QString& service) {
-        this->m_dbusServerWatcher->removeWatchedService(service);
-        KLOG_INFO() << "The front program has exit, clean data. Unique Name: " << service;
-        auto it = this->m_clients.find(service);
-        if (it == this->m_clients.end())
-        {
-            return;
-        }
-        QMutexLocker locker(&(this->m_clientMutex));
-        this->m_clients.erase(it);
-    });
+    connect(m_dbusServerWatcher, &QDBusServiceWatcher::serviceUnregistered, [this](const QString& service)
+            {
+                this->m_dbusServerWatcher->removeWatchedService(service);
+                KLOG_INFO() << "The front program has exit, clean data. Unique Name: " << service;
+                QWriteLocker locker(&(this->m_clientMutex));
+                auto it = this->m_clients.find(service);
+                if (it == this->m_clients.end())
+                {
+                    return;
+                }
+                this->m_clients.erase(it);
+            });
 }
 
 Manager::~Manager()
@@ -105,6 +107,9 @@ void Manager::globDeinit()
 
 void Manager::SetUidReusable(bool enabled)
 {
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto role = m_accountManager->getRole(calledUniqueName);
+    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, enabled ? "Enable uid reuse" : "Disable uid reuse");
     m_isUidReusable = enabled;
     m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enabled));
     m_uidReuseConfig->sync();
@@ -112,40 +117,41 @@ void Manager::SetUidReusable(bool enabled)
 
 bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassphrase, const QString& newPassphrase)
 {
-    auto callerUnique = DBusHelper::getCallerUniqueName(this);
-    RETURN_VAL_IF_TRUE(callerUnique.isNull(), false);
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto role = m_accountManager->getRole(calledUniqueName);
 
     if (!verifyPassword(userName, oldPassphrase))
     {
         KLOG_INFO() << "Password error!, failed to change passphrase";
+        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Change password", false);
         return false;
     }
     auto isSuccess = changePassword(userName, newPassphrase);
     emit PasswordChanged(userName);
+    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Change password");
     return isSuccess;
 }
 
 bool Manager::Login(const QString& userName, const QString& passWord)
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
-    RETURN_VAL_IF_TRUE(callerUnique.isNull(), false);
-    m_dbusServerWatcher->addWatchedService(this->message().service());
 
     bool isSuccess = false;
     auto role_index = m_metaAccountEnum.keyToValue(userName.toLocal8Bit(), &isSuccess);
-    auto role = static_cast<Role>(role_index);
+    auto role = static_cast<AccountRole>(role_index);
     if (!isSuccess)
     {
         KLOG_ERROR() << "Unknown userName: " << userName << ", Unique name: " << callerUnique;
         return false;
     }
+    m_dbusServerWatcher->addWatchedService(callerUnique);
 
-    QMutexLocker locker(&m_clientMutex);
+    QWriteLocker locker(&m_clientMutex);
     auto it = m_clients.find(callerUnique);
     if (isLogin(it))
     {
         KLOG_WARNING() << "Forward program has login, Current role: "
-                       << m_metaAccountEnum.valueToKeys(static_cast<int>(it.value().m_role))
+                       << m_metaAccountEnum.valueToKeys(static_cast<int>(it.value().role))
                        << ", Unique name: " << callerUnique;
         return false;
     }
@@ -153,6 +159,7 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     if (isFreeze(userName))
     {
         KLOG_INFO() << userName << " has been freeze";
+        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login, but this ccount has been freeze", false);
         return false;
     }
 
@@ -160,19 +167,21 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     {
         KLOG_INFO() << "Passwd error";
         updateFreezeInfo(userName);
+        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login, Passwd error", false);
         return false;
     }
     resetFreezeInfo(userName);
     m_clients.insert(callerUnique, {true, role, DBusHelper::getCallerPid(this)});
+    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login");
     return true;
 }
 
 bool Manager::Logout()
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
-    RETURN_VAL_IF_TRUE(callerUnique.isNull(), false);
+    auto role = m_accountManager->getRole(callerUnique);
 
-    QMutexLocker locker(&m_clientMutex);
+    QReadLocker locker(&m_clientMutex);
     auto it = m_clients.find(callerUnique);
     if (!isLogin(it))
     {
@@ -180,6 +189,7 @@ bool Manager::Logout()
         return false;
     }
     it.value().isLogin = false;
+    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Logout");
     return true;
 }
 

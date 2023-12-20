@@ -24,8 +24,9 @@ namespace KS
 namespace Config
 {
 PAM::PAM(const QString &conf_path,
-         const QString &line_match_regex) : conf_path_(conf_path),
-                                            line_match_pattern_(line_match_regex)
+         const QString &line_match_regex)
+    : conf_path_(conf_path),
+      line_match_pattern_(line_match_regex)
 {
 }
 
