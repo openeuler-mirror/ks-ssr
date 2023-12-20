@@ -36,10 +36,10 @@
 #include "src/ui/private-box/box-page.h"
 #include "src/ui/settings/dialog.h"
 #include "src/ui/sidebar.h"
-#include "src/ui/tool-box/access-control-page.h"
-#include "src/ui/tool-box/file-shred-page.h"
-#include "src/ui/tool-box/file-sign-page.h"
-#include "src/ui/tool-box/privacy-cleanup-page.h"
+#include "src/ui/tool-box/access-control/access-control-page.h"
+#include "src/ui/tool-box/file-shred/file-shred-page.h"
+#include "src/ui/tool-box/file-sign/file-sign-page.h"
+#include "src/ui/tool-box/privacy-cleanup/privacy-cleanup-page.h"
 #include "src/ui/tp/execute-protected-page.h"
 #include "src/ui/tp/kernel-protected-page.h"
 #include "src/ui/ui_window.h"
@@ -230,7 +230,8 @@ void Window::initPageAndNavigation()
     {
         // 可信保护页面需判断是否加载成功
         auto execute = new TP::ExecuteProtectedPage(this);
-        connect(execute, &TP::ExecuteProtectedPage::initFinished, this, [this] {
+        connect(
+            execute, &TP::ExecuteProtectedPage::initFinished, this, [this] {
                 m_loading->setVisible(false);
                 m_ui->m_sidebar->setEnabled(true);
                 updatePage();
@@ -245,9 +246,9 @@ void Window::initPageAndNavigation()
     addPage(new DM::DeviceListPage(this));
     addPage(new DM::DeviceLogPage(this));
     addPage(new ToolBox::FileSign(this));
-    addPage(new ToolBox::FileShred(this));
-    addPage(new ToolBox::PrivacyCleanup(this));
-    addPage(new ToolBox::AccessControl(this));
+    addPage(new ToolBox::FileShredPage(this));
+    addPage(new ToolBox::PrivacyCleanupPage(this));
+    addPage(new ToolBox::AccessControlPage(this));
     m_ui->m_stackedPages->addWidget(m_loading);
     m_ui->m_stackedPages->setCurrentIndex(0);
 

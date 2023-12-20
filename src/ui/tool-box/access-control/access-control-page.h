@@ -12,37 +12,36 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "privacy-cleanup-page.h"
-#include "include/ssr-i.h"
+#pragma once
 
-#define PRIVACY_CLEANUP_ICON_NAME "/images/privacy-cleanup"
+#include "src/ui/common/page.h"
+
+namespace Ui
+{
+class AccessControlPage;
+}  // namespace Ui
 
 namespace KS
 {
 namespace ToolBox
 {
-PrivacyCleanup::PrivacyCleanup(QWidget* parent)
-    : Page(parent)
+class AccessControlPage : public Page
 {
-}
-PrivacyCleanup::~PrivacyCleanup()
-{
-}
-QString PrivacyCleanup::getNavigationUID()
-{
-    return tr("Tool Box");
-}
-QString PrivacyCleanup::getSidebarUID()
-{
-    return tr("Privacy Cleanup");
-}
-QString PrivacyCleanup::getSidebarIcon()
-{
-    return ":" PRIVACY_CLEANUP_ICON_NAME;
-}
-QString PrivacyCleanup::getAccountRoleName()
-{
-    return SSR_ACCOUNT_NAME_SECADM;
-}
+    Q_OBJECT
+public:
+    AccessControlPage(QWidget* parent = nullptr);
+    virtual ~AccessControlPage();
+    virtual QString getNavigationUID() override;
+    virtual QString getSidebarUID() override;
+    virtual QString getSidebarIcon() override;
+    virtual QString getAccountRoleName() override;
+
+private:
+    void initUI();
+    bool getSelinuxStatus();
+
+private:
+    Ui::AccessControlPage* m_ui;
+};
 }  // namespace ToolBox
 }  // namespace KS

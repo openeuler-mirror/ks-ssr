@@ -19,16 +19,15 @@
 #include <QTableView>
 
 class QWidget;
-template <typename T> class QList;
+template <typename T>
+class QList;
 
 namespace KS
 {
-
 class TableHeaderProxy;
 
 namespace ToolBox
 {
-
 enum FileSignField
 {
     FILE_SIGN_FIELD_CHECKBOX = 0,

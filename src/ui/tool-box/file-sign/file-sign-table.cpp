@@ -12,7 +12,7 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "src/ui/tool-box/file-sign-table.h"
+#include "src/ui/tool-box/file-sign/file-sign-table.h"
 #include <qt5-log-i.h>
 #include <QApplication>
 #include <QCheckBox>
@@ -38,7 +38,6 @@ namespace KS
 {
 namespace ToolBox
 {
-
 // 文件标记保护列数
 #define FILE_SIGN_TABLE_COL 4
 
@@ -206,6 +205,7 @@ void FileSignModel::removeData(const QStringList &filePaths)
         m_fileRecordMap.remove(filePath);
     }
     endResetModel();
+    checkSelectStatus();
 }
 
 FileSignRecordMap FileSignModel::getSelectedData() const

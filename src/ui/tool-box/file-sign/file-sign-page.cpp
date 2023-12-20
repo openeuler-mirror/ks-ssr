@@ -12,7 +12,7 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "src/ui/tool-box/file-sign-page.h"
+#include "src/ui/tool-box/file-sign/file-sign-page.h"
 #include <QDir>
 #include <QFileDialog>
 #include <QMetaEnum>
@@ -20,7 +20,7 @@
 #include "QInputDialog"
 #include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
-#include "src/ui/tool-box/file-sign-table.h"
+#include "src/ui/tool-box/file-sign/file-sign-table.h"
 #include "src/ui/toolbox_dbus_proxy.h"
 #include "src/ui/ui_file-sign-page.h"
 
@@ -71,6 +71,8 @@ FileSign::FileSign(QWidget* parent)
         auto oldIterator = data.begin() + index.row();
         auto oldSecurityContext = oldIterator->fileSeContext;
         auto filePath = oldIterator->filePath;
+
+        // TODO 绘制自定义弹窗，继承TitlebarWindow，另外这里的逻辑较为复杂，封装一个函数吧
         QString newSecurityContext = QInputDialog::getText(this,
                                                            tr("modify security context"),
                                                            tr("Please enter a new security context"),

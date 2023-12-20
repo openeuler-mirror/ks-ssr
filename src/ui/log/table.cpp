@@ -202,8 +202,8 @@ QVariant LogModel::headerData(int section, Qt::Orientation orientation, int role
         default:
             break;
         }
+        break;
     }
-    break;
     default:
         break;
     }

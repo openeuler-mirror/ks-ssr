@@ -51,7 +51,7 @@ FileProtectionPage::FileProtectionPage(QWidget *parent) : Page(parent),
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
     connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
-    connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addProtectedFile(bool)));
+    connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addProtectedFiles(bool)));
     //    connect(m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
     connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(popDeleteNotify(bool)));
     connect(m_ui->m_fileTable, &FileTable::filesUpdate, this, &FileProtectionPage::updateTips);
@@ -87,13 +87,13 @@ void FileProtectionPage::searchTextChanged(const QString &text)
     m_ui->m_fileTable->searchTextChanged(text);
 }
 
-void FileProtectionPage::addProtectedFile(bool checked)
+void FileProtectionPage::addProtectedFiles(bool checked)
 {
     RETURN_IF_TRUE(!checkTrustedLoadFinied(m_fileProtectedProxy->initialized()))
-    auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
-    if (!fileName.isEmpty())
+    auto fileNames = QFileDialog::getOpenFileNames(this, tr("Open file"), QDir::homePath());
+    if (!fileNames.isEmpty())
     {
-        auto reply = m_fileProtectedProxy->AddProtectedFile(fileName);
+        auto reply = m_fileProtectedProxy->AddProtectedFiles(fileNames);
         CHECK_ERROR_FOR_DBUS_REPLY(reply);
         return;
     }

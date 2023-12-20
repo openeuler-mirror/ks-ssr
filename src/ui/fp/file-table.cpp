@@ -27,10 +27,10 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QToolTip>
+#include "src/ui/common/table/header-button-delegate.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
-#include "src/ui/common/table/header-button-delegate.h"
 
 namespace KS
 {
@@ -205,6 +205,7 @@ QVariant FilesModel::data(const QModelIndex &index, int role) const
         default:
             break;
         }
+        break;
     }
     case Qt::EditRole:
     {
@@ -215,6 +216,7 @@ QVariant FilesModel::data(const QModelIndex &index, int role) const
         default:
             break;
         }
+        break;
     }
     default:
         break;
@@ -246,6 +248,7 @@ QVariant FilesModel::headerData(int section, Qt::Orientation orientation, int ro
         default:
             break;
         }
+        break;
     }
     case Qt::EditRole:
     {
@@ -254,6 +257,7 @@ QVariant FilesModel::headerData(int section, Qt::Orientation orientation, int ro
         case FileTableField::FILE_TABLE_FIELD_CHECKBOX:
             return QVariant();
         }
+        break;
     }
     default:
         break;

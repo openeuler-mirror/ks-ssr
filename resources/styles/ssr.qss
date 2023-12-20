@@ -168,7 +168,10 @@ KS--DM--DeviceListPage QHeaderView::section:first
 
 KS--TP--KernelProtectedPage QHeaderView::section:first,
 KS--TP--ExecuteProtectedPage QHeaderView::section:first,
-KS--FP--FileProtectionPage QHeaderView::section:first
+KS--FP--FileProtectionPage QHeaderView::section:first,
+KS--ToolBox--FileShredPage QHeaderView::section:first,
+KS--ToolBox--FileSign QHeaderView::section:first,
+KS--ToolBox--PrivacyCleanupPage QHeaderView::section:first
 {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
@@ -423,6 +426,7 @@ QPushButton#m_scanButton,
 QPushButton#m_scan,
 QPushButton#m_activate,
 QPushButton#m_confirm,
+QPushButton#m_select,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm
 {
     color:#FFFFFF;
@@ -441,6 +445,7 @@ QPushButton#m_scanButton:hover,
 QPushButton#m_scan:hover,
 QPushButton#m_activate:hover,
 QPushButton#m_confirm:hover,
+QPushButton#m_select:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
 {
     background:#79C3FF;
@@ -453,6 +458,7 @@ QPushButton#m_cancel,
 QPushButton#m_recertification,
 QPushButton#m_return,
 QPushButton#m_reset,
+QPushButton#m_remove
 KS--Settings--DeviceControl #MessageWindow QPushButton#cancel
 {
     color:#FFFFFF;
@@ -467,13 +473,16 @@ QPushButton#m_cancel:hover,
 QPushButton#m_recertification:hover,
 QPushButton#m_return:hover,
 QPushButton#m_reset:hover,
+QPushButton#m_remove:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#cancel:hover
 {
     background:#464646;
     border:4px;
 }
 
-QPushButton#m_unprotect
+QPushButton#m_unprotect,
+QPushButton#m_clean,
+QPushButton#m_shred
 {
     color:#FA4949;
     font:NotoSansCJKsc-Regular;
@@ -482,7 +491,9 @@ QPushButton#m_unprotect
     background:#393939;
 }
 
-QPushButton#m_unprotect:hover
+QPushButton#m_unprotect:hover,
+QPushButton#m_clean:hover,
+QPushButton#m_shred:hover
 {
     background:#464646;
     border:4px;
@@ -493,6 +504,30 @@ QPushButton#m_unprotect:hover
 QMenu#m_popupMenu
 {
     color:black;
+}
+
+/* Tool Box */
+KS--ToolBox--FileShredPage QTableView#m_table > QWidget,
+KS--ToolBox--PrivacyCleanupPage QTableView#m_table > QWidget,
+QTableView#m_fileSignTable > QWidget
+{
+    margin: 0px 22px 0px 0px;
+}
+
+KS--ToolBox--AccessControlPage QTableView#m_table > QWidget
+{
+    margin: 0px 0px 0px 0px;
+}
+
+KS--ToolBox--AccessControlPage QHeaderView::section:first
+{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+KS--ToolBox--AccessControlPage QWidget#m_controlLine
+{
+    border-radius: 4px;
+    background-color: #393939;
 }
 
 /* file protected */
@@ -651,32 +686,38 @@ KS--DM--DevicePermission QWidget#m_content
 }
 
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked
+KS--Settings--DeviceControl QCheckBox::indicator:unchecked,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked:hover
+KS--Settings--DeviceControl QCheckBox::indicator:unchecked:hover,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:hover
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked:pressed
+KS--Settings--DeviceControl QCheckBox::indicator:unchecked:pressed,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:pressed
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked
+KS--Settings--DeviceControl QCheckBox::indicator:checked,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:checked
 {
     image: url(:/images/switch-open);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked:hover
+KS--Settings--DeviceControl QCheckBox::indicator:checked:hover,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:hover
 {
     image: url(:/images/switch-open);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked:pressed
+KS--Settings--DeviceControl QCheckBox::indicator:checked:pressed,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:pressed
 {
     image: url(:/images/switch-open);
 }
