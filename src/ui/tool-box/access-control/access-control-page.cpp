@@ -60,13 +60,34 @@ QString AccessControlPage::getAccountRoleName()
 
 void AccessControlPage::initUI()
 {
+<<<<<<< HEAD
     auto selinuxStatus = m_ui->m_table->getSelinuxStatus();
     m_ui->m_swich->setCheckState(selinuxStatus ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     selinuxStatus ? m_ui->m_table->horizontalHeader()->show() : m_ui->m_table->horizontalHeader()->hide();
+=======
+    auto selinuxStatus = getSelinuxStatus();
+    m_ui->m_swich->setCheckState(selinuxStatus ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+    m_ui->m_table->openSelinux(selinuxStatus);
+>>>>>>> 65a2e96 (feature(tool-box) : Add tool box UI function.)
     connect(m_ui->m_swich, &QCheckBox::clicked, this, [this](bool checked) {
         RETURN_IF_TRUE(m_ui->m_table->openSelinux(checked));
         m_ui->m_swich->setCheckState(!checked ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     });
 }
+<<<<<<< HEAD
+=======
+
+bool AccessControlPage::getSelinuxStatus()
+{
+    // TODO 这个数据最好从后台获取,读取配置文件？
+    QProcess process;
+    process.start("bash", QStringList() << "-c"
+                                        << "getenforce");
+    // 五秒钟超时
+    process.waitForFinished(5 * 1000);
+    auto output = process.readAllStandardOutput();
+    return output != "Disabled\n";
+}
+>>>>>>> 65a2e96 (feature(tool-box) : Add tool box UI function.)
 }  // namespace ToolBox
 }  // namespace KS

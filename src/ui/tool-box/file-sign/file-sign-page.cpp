@@ -61,26 +61,28 @@ FileSign::FileSign(QWidget* parent)
     QObject::connect(m_ui->m_select, &QPushButton::clicked, this, &FileSign::openFileDialog);
     QObject::connect(m_ui->m_clean, &QPushButton::clicked, m_ui->m_fileSignTable, &FileSignTable::cleanSelectedData);
     m_ui->m_tips->setText(tr("A total of %1 records").arg((m_ui->m_fileSignTable->getData().size())));
-    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::dataSizeChanged, [this] {
-        m_ui->m_tips->setText(tr("A total of %1 records").arg(m_ui->m_fileSignTable->getData().size()));
-    });
-    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::doubleClicked, m_ui->m_fileSignTable, [this](const QModelIndex& index) {
-        // 目前功能只有双击点击编辑安全上下文
-        RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT);
-        auto data = this->m_ui->m_fileSignTable->getData();
-        auto oldIterator = data.begin() + index.row();
-        auto oldSecurityContext = oldIterator->fileSeContext;
-        auto filePath = oldIterator->filePath;
-        // TODO 绘制自定义弹窗，继承TitlebarWindow，另外这里的逻辑较为复杂，封装一个函数吧
-        QString newSecurityContext = QInputDialog::getText(this,
-                                                           tr("modify security context"),
-                                                           tr("Please enter a new security context"),
-                                                           QLineEdit::Normal,
-                                                           oldSecurityContext);
-        KLOG_DEBUG() << "New Security context: " << newSecurityContext;
-        RETURN_IF_TRUE(newSecurityContext.isEmpty() || newSecurityContext == oldSecurityContext);
-        this->m_dbusProxy->SetSecurityContext(filePath, newSecurityContext);
-    });
+    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::dataSizeChanged, [this]
+                     {
+                         m_ui->m_tips->setText(tr("A total of %1 records").arg(m_ui->m_fileSignTable->getData().size()));
+                     });
+    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::doubleClicked, m_ui->m_fileSignTable, [this](const QModelIndex& index)
+                     {
+                         // 目前功能只有双击点击编辑安全上下文
+                         RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT);
+                         auto data = this->m_ui->m_fileSignTable->getData();
+                         auto oldIterator = data.begin() + index.row();
+                         auto oldSecurityContext = oldIterator->fileSeContext;
+                         auto filePath = oldIterator->filePath;
+                         // TODO 绘制自定义弹窗，继承TitlebarWindow，另外这里的逻辑较为复杂，封装一个函数吧
+                         QString newSecurityContext = QInputDialog::getText(this,
+                                                                            tr("modify security context"),
+                                                                            tr("Please enter a new security context"),
+                                                                            QLineEdit::Normal,
+                                                                            oldSecurityContext);
+                         KLOG_DEBUG() << "New Security context: " << newSecurityContext;
+                         RETURN_IF_TRUE(newSecurityContext.isEmpty() || newSecurityContext == oldSecurityContext);
+                         this->m_dbusProxy->SetSecurityContext(filePath, newSecurityContext);
+                     });
 }
 
 FileSign::~FileSign()
