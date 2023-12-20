@@ -40,7 +40,8 @@ namespace BRDaemon
 
 using namespace Protocol;
 
-Configuration::Configuration(const QString& config_path) : config_path_(config_path)
+Configuration::Configuration(const QString& config_path)
+    : config_path_(config_path)
 {
 }
 

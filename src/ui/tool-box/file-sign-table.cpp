@@ -286,13 +286,14 @@ FileSignTable::FileSignTable(QWidget *parent)
     connect(m_headerViewProxy, &TableHeaderProxy::toggled, this, &FileSignTable::checkedAllItem);
 
     // 希望点击一行中的除了可编辑部分（Security context）的任意位置都可以使得 checkbox 被勾选。
-    connect(this, &FileSignTable::clicked, [this](const QModelIndex &index) {
-        RETURN_IF_TRUE(index.column() == FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT ||
-                       index.column() == FileSignField::FILE_SIGN_FIELD_CHECKBOX);
-        auto data = getData();
-        auto targetData = data.begin() + index.row();
-        this->m_model->setData(index, !targetData->isSelected);
-    });
+    connect(this, &FileSignTable::clicked, [this](const QModelIndex &index)
+            {
+                RETURN_IF_TRUE(index.column() == FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT ||
+                               index.column() == FileSignField::FILE_SIGN_FIELD_CHECKBOX);
+                auto data = getData();
+                auto targetData = data.begin() + index.row();
+                this->m_model->setData(index, !targetData->isSelected);
+            });
 }
 
 void FileSignTable::updateData(const FileSignRecordMap &newData)

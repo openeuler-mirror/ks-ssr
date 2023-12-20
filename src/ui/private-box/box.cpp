@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
@@ -36,12 +36,13 @@ namespace KS
 {
 namespace PrivateBox
 {
-Box::Box(const QString &uid) : m_uid(uid),
-                               m_name("Unknown"),
-                               m_mounted(false),
-                               m_modifyPassword(nullptr),
-                               m_retrievePassword(nullptr),
-                               m_popupMenu(nullptr)
+Box::Box(const QString &uid)
+    : m_uid(uid),
+      m_name("Unknown"),
+      m_mounted(false),
+      m_modifyPassword(nullptr),
+      m_retrievePassword(nullptr),
+      m_popupMenu(nullptr)
 {
     m_boxManagerProxy = new BoxManagerProxy(SSR_DBUS_NAME,
                                             SSR_BOX_MANAGER_DBUS_OBJECT_PATH,
@@ -257,7 +258,10 @@ void Box::retrievePassword()
     m_retrievePassword->setFixedSize(319, 239);
     m_retrievePassword->setTitle(tr("Retrieve password"));
     connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(acceptedRetrievePassword()));
-    connect(m_retrievePassword, &BoxPasswordRetrieve::inputEmpty, this, [this] { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
+    connect(m_retrievePassword, &BoxPasswordRetrieve::inputEmpty, this, [this]
+            {
+                POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
+            });
 
     int x = window()->x() + window()->width() / 4 + m_retrievePassword->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_retrievePassword->height() / 8;

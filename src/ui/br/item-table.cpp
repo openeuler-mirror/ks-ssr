@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "item-table.h"
@@ -32,9 +32,10 @@ namespace BR
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-//分类控件
-ItemTable::ItemTable(QWidget *parent) : QTreeView(parent),
-                                        m_model(nullptr)
+// 分类控件
+ItemTable::ItemTable(QWidget *parent)
+    : QTreeView(parent),
+      m_model(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setSelectionMode(QAbstractItemView::NoSelection);
@@ -96,7 +97,7 @@ void ItemTable::initHeader()
     m_headerProxy->setStretchLastSection(true);
 }
 
-//根据获取的数据，设置分类列表
+// 根据获取的数据，设置分类列表
 void ItemTable::setItem(const QList<Category *> &list)
 {
     initHeader();
@@ -175,21 +176,21 @@ item checkbox单击响应函数
 */
 void ItemTable::checkChanged(QStandardItem *item)
 {
-    //如果item是存在复选框的，那么就进行下面的操作
-    Qt::CheckState state = item->checkState();  //获取当前的选择状态
+    // 如果item是存在复选框的，那么就进行下面的操作
+    Qt::CheckState state = item->checkState();  // 获取当前的选择状态
     if (item->isAutoTristate())
     {
-        //如果item是三态的，说明可以对子目录进行全选和全不选的设置
+        // 如果item是三态的，说明可以对子目录进行全选和全不选的设置
         if (state != Qt::PartiallyChecked)
         {
-            //当前是选中状态，需要对其子项目设置为全选
+            // 当前是选中状态，需要对其子项目设置为全选
             checkAllChild(item, state == Qt::Checked ? true : false);
         }
     }
     else
     {
-        //说明是两态的，两态会对父级的三态有影响
-        //判断兄弟节点的情况
+        // 说明是两态的，两态会对父级的三态有影响
+        // 判断兄弟节点的情况
         checkChildChanged(item);
     }
 }
@@ -234,8 +235,8 @@ void ItemTable::checkAllChildRecursion(QStandardItem *item, bool check)
 // \brief 根据子节点的改变，更改父节点的选择情况
 // \param item
 //
-//此函数也是一个递归函数，首先要判断的是父级是否到达顶层
-//，到达底层作为递归的结束，然后通过函数checkSibling判断当前的兄弟节点的具体情况
+// 此函数也是一个递归函数，首先要判断的是父级是否到达顶层
+// ，到达底层作为递归的结束，然后通过函数checkSibling判断当前的兄弟节点的具体情况
 //
 void ItemTable::checkChildChanged(QStandardItem *item)
 {
@@ -272,7 +273,7 @@ void ItemTable::checkChildChanged(QStandardItem *item)
 // \return
 Qt::CheckState ItemTable::checkSibling(QStandardItem *item)
 {
-    //先通过父节点获取兄弟节点
+    // 先通过父节点获取兄弟节点
     auto parent = item->parent();
     if (nullptr == parent)
     {
@@ -310,7 +311,7 @@ Qt::CheckState ItemTable::checkSibling(QStandardItem *item)
     return Qt::Checked;
 }
 
-//根据勾选项合成json字串
+// 根据勾选项合成json字串
 QStringList ItemTable::getString(const QList<Category *> &list)
 {
     int count = 0;
@@ -325,7 +326,7 @@ QStringList ItemTable::getString(const QList<Category *> &list)
             CONTINUE_IF_TRUE(!checkStatus)
             auto name = list.at(i)->getReinforcementItem().at(j)->getName();
             scanStr.append(name);
-            //KLOG_DEBUG("scanStr = %s", name.toStdString().c_str());
+            // KLOG_DEBUG("scanStr = %s", name.toStdString().c_str());
             count++;
         }
     }
@@ -356,7 +357,7 @@ int ItemTable::getCount()
     return m_count;
 }
 
-//更新每项的状态
+// 更新每项的状态
 void ItemTable::updateStatus(const QList<Category *> &list)
 {
     for (int i = 0; i < list.length(); ++i)
@@ -571,7 +572,8 @@ void ItemTable::selectAllItem(Qt::CheckState state)
     }
 }
 
-ItemTableDelegate::ItemTableDelegate(QObject *parent) : QStyledItemDelegate(parent)
+ItemTableDelegate::ItemTableDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 

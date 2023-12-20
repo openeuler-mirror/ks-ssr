@@ -52,11 +52,12 @@ public:
     const MaxLogFileAction m_maxLogFileAction = MaxLogFileAction::ROTATE;
     // 由于日志轮转标准为日志行数， 所以不允许修改日志行数
     const uint m_maxLogFileLine = m_maxLogFileLineDefaultValue; /* 单个日志文件最大容量，单位为 M, 范围为 3000 <= m_maxLogFileLine < 500000 */
-    uint m_numLogs = m_numLogsDefaultValue;    /* 日志数量,范围为 1 <= m_numLogs < 10 */
+    uint m_numLogs = m_numLogsDefaultValue;                     /* 日志数量,范围为 1 <= m_numLogs < 10 */
     QString m_account;
     QString m_passwd;
     QString m_remotePath;
     QHostAddress m_ip;
+
 private:
     constexpr static const uint m_maxLogFileLineDefaultValue = 1000;
     constexpr static const uint m_numLogsDefaultValue = 5;

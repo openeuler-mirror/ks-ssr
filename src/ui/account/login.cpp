@@ -26,8 +26,9 @@ namespace KS
 {
 namespace Account
 {
-Login::Login(QWidget *parent) : TitlebarWindow(parent),
-                                m_ui(new Ui::Login)
+Login::Login(QWidget *parent)
+    : TitlebarWindow(parent),
+      m_ui(new Ui::Login)
 {
     m_ui->setupUi(getWindowContentWidget());
     initUI();
@@ -76,7 +77,7 @@ void Login::initUI()
     setTitle(tr("Login"));
     setMinimumSize(400, 320);
 
-    //给QCombobox设置代理才能设置下拉列表项的高度
+    // 给QCombobox设置代理才能设置下拉列表项的高度
     auto delegate = new QStyledItemDelegate(this);
     m_ui->m_comboBox->setItemDelegate(delegate);
     m_ui->m_comboBox->addItems(QStringList() << SSR_ACCOUNT_NAME_SYSADM

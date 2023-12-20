@@ -27,9 +27,9 @@ struct DeviceMount
 {
 public:
     DeviceMount() = default;
-    //设备文件
+    // 设备文件
     QString device;
-    //设备挂载位置
+    // 设备挂载位置
     QString path;
     bool read;
     bool write;

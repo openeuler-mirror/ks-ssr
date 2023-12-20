@@ -124,9 +124,10 @@ void CalendarWidget::initControl()
 
     initTopWidget();
 
-    connect(this, &QCalendarWidget::currentPageChanged, [this](int year, int month) {
-        setDataLabelTimeText(year, month);
-    });
+    connect(this, &QCalendarWidget::currentPageChanged, [this](int year, int month)
+            {
+                setDataLabelTimeText(year, month);
+            });
 }
 
 void CalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDate &date) const
@@ -264,14 +265,16 @@ void CalendarWidget::initBottomWidget()
     QVBoxLayout *vBodyLayout = qobject_cast<QVBoxLayout *>(layout());
     vBodyLayout->addWidget(bottomWidget);
 
-    connect(m_ensureBtn, &QPushButton::clicked, [this]() {
-        emit signalSetCalendarTime(selectedDate());
-        emit activated(selectedDate());
-    });
+    connect(m_ensureBtn, &QPushButton::clicked, [this]()
+            {
+                emit signalSetCalendarTime(selectedDate());
+                emit activated(selectedDate());
+            });
 
-    connect(m_toDayBtn, &QPushButton::clicked, [this]() {
-        showToday();
-    });
+    connect(m_toDayBtn, &QPushButton::clicked, [this]()
+            {
+                showToday();
+            });
 }
 
 void CalendarWidget::setDataLabelTimeText(int year, int month)

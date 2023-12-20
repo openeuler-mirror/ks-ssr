@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
@@ -27,10 +27,10 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QToolTip>
+#include "src/ui/common/table/header-button-delegate.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
-#include "src/ui/common/table/header-button-delegate.h"
 
 namespace KS
 {
@@ -54,7 +54,8 @@ enum FileTableField
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-FilesDelegate::FilesDelegate(QObject *parent) : QStyledItemDelegate(parent)
+FilesDelegate::FilesDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -138,7 +139,8 @@ bool FilesDelegate::editorEvent(QEvent *event,
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
-FilesFilterModel::FilesFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+FilesFilterModel::FilesFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
@@ -155,7 +157,8 @@ bool FilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &source
     return false;
 }
 
-FilesModel::FilesModel(QObject *parent) : QAbstractTableModel(parent)
+FilesModel::FilesModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
     m_fileProtectedProxy = new KSSDbusProxy(SSR_DBUS_NAME,
                                             SSR_KSS_INIT_DBUS_OBJECT_PATH,
@@ -359,8 +362,9 @@ void FilesModel::checkSelectStatus()
     emit stateChanged(state);
 }
 
-FileTable::FileTable(QWidget *parent) : QTableView(parent),
-                                        m_filterProxy(nullptr)
+FileTable::FileTable(QWidget *parent)
+    : QTableView(parent),
+      m_filterProxy(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 

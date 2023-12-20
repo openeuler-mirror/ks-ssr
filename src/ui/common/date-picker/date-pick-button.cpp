@@ -18,7 +18,8 @@
 
 namespace KS
 {
-DatePickButton::DatePickButton(QWidget *parent) : QPushButton(parent), m_dateLabel(nullptr)
+DatePickButton::DatePickButton(QWidget *parent)
+    : QPushButton(parent), m_dateLabel(nullptr)
 {
     initUI();
 }

@@ -22,9 +22,10 @@
 namespace KS
 {
 SidebarItem::SidebarItem(const ItemInfo &itemInfo,
-                         QWidget *parent) : QWidget(parent),
-                                            m_ui(new Ui::SidebarItem),
-                                            m_isSelected(false)
+                         QWidget *parent)
+    : QWidget(parent),
+      m_ui(new Ui::SidebarItem),
+      m_isSelected(false)
 {
     m_ui->setupUi(this);
     m_ui->m_text->setText(itemInfo.name);
@@ -70,7 +71,8 @@ void SidebarItem::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-SideBar::SideBar(QWidget *parent) : QListWidget(parent)
+SideBar::SideBar(QWidget *parent)
+    : QListWidget(parent)
 {
     setFixedWidth(200);
     connect(this, &QListWidget::currentRowChanged, this, &SideBar::setSideBarItemStatus);
@@ -98,7 +100,7 @@ QString SideBar::getSelectedUID()
 
 void SideBar::setSideBarItemStatus(int currentRow)
 {
-    //更新侧边栏item状态
+    // 更新侧边栏item状态
     for (auto i = 0; i < this->count(); i++)
     {
         auto customItem = qobject_cast<SidebarItem *>(this->itemWidget(this->item(i)));

@@ -36,7 +36,10 @@ public:
     virtual bool get(QString &args, QString &error);
     virtual bool set(const QString &args, QString &error);
 
-    bool isValid() { return valid_; };
+    bool isValid()
+    {
+        return valid_;
+    };
 
 private:
     bool check_call_result(PyObject *py_retval, const QString &function_name, QString &error);
@@ -63,7 +66,10 @@ public:
     virtual void deactivate() override;
     void clean();
 
-    virtual QSharedPointer<BRReinforcementInterface> getReinforcement(const QString &name) override { return MapHelper::getValue(this->reinforcements_, name); };
+    virtual QSharedPointer<BRReinforcementInterface> getReinforcement(const QString &name) override
+    {
+        return MapHelper::getValue(this->reinforcements_, name);
+    };
 
 private:
     void add_reinforcement(const QString &package_name,
@@ -71,7 +77,10 @@ private:
                            const QString &reinforcement_name,
                            const QString &function_prefix);
 
-    PyObject *get_reinforcement_module(const QString &module_fullname) { return MapHelper::getValue(this->reinforcements_modules_, module_fullname); };
+    PyObject *get_reinforcement_module(const QString &module_fullname)
+    {
+        return MapHelper::getValue(this->reinforcements_modules_, module_fullname);
+    };
 
 private:
     PyObject *module_;

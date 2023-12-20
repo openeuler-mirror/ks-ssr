@@ -31,10 +31,11 @@ namespace KS
 {
 namespace Activation
 {
-Activation::Activation(QWidget *parent) : TitlebarWindow(parent),
-                                          m_ui(new Ui::Activation),
-                                          m_licenseProxy(nullptr),
-                                          m_qrcodeDialog(nullptr)
+Activation::Activation(QWidget *parent)
+    : TitlebarWindow(parent),
+      m_ui(new Ui::Activation),
+      m_licenseProxy(nullptr),
+      m_qrcodeDialog(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
     initUI();
@@ -72,7 +73,7 @@ void Activation::initUI()
     setButtonHints(TitlebarCloseButtonHint);
     setFixedSize(469, 409);
 
-    //创建机器码二维码按钮
+    // 创建机器码二维码按钮
     auto machineLayout = new QHBoxLayout(m_ui->m_machine_code);
     machineLayout->setMargin(0);
     machineLayout->setContentsMargins(10, 0, 10, 0);
@@ -84,7 +85,7 @@ void Activation::initUI()
     machineLayout->addWidget(machineQRCodeBtn);
     connect(machineQRCodeBtn, &QPushButton::clicked, this, &Activation::handleQrcode);
 
-    //创建激活码二维码按钮
+    // 创建激活码二维码按钮
     auto activationLayout = new QHBoxLayout(m_ui->m_activation_code);
     activationLayout->setMargin(0);
     activationLayout->setContentsMargins(10, 0, 10, 0);

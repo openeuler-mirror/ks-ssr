@@ -30,7 +30,7 @@ public:
     ~DatePicker();
     QDateTime getStartDate();
     QDateTime getEndDate();
-    //start:0  end:1
+    // start:0  end:1
     void showDatePicker(int type);
 
 private slots:
@@ -52,4 +52,3 @@ private:
     QStackedWidget *m_stackedWidget;
 };
 }  // namespace KS
-

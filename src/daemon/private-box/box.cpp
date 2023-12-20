@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "box.h"
@@ -155,7 +155,7 @@ int Box::mount(const QString &currentPassword)
     }
 
     // 挂载
-    auto decryptPspr = CryptoHelper::aesDecrypt(boxInfo.encryptPassphrase);  //Pspr
+    auto decryptPspr = CryptoHelper::aesDecrypt(boxInfo.encryptPassphrase);  // Pspr
     auto decryptSig = CryptoHelper::aesDecrypt(boxInfo.encryptSig);
 
     // 在对应调用的用户根目录创建文件夹
@@ -221,11 +221,12 @@ Box::Box(const QString &name,
          const QString &password,
          uint userUID,
          const QString &boxID,
-         QObject *parent) : QObject(parent),
-                            m_name(name),
-                            m_boxID(boxID),
-                            m_password(password),
-                            m_userUID(userUID)
+         QObject *parent)
+    : QObject(parent),
+      m_name(name),
+      m_boxID(boxID),
+      m_password(password),
+      m_userUID(userUID)
 {
     m_boxDao = new BoxDao;
     m_ecryptFS = new EcryptFS(this);
@@ -361,5 +362,5 @@ QString Box::getRandStr(uint length)
 
     return str;
 }
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

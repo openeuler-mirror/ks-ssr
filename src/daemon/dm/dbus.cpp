@@ -27,8 +27,9 @@ namespace KS
 {
 namespace DM
 {
-DBus::DBus(DeviceManager *deviceManager, QObject *parent) : QObject(parent),
-                                                            m_deviceManager(deviceManager)
+DBus::DBus(DeviceManager *deviceManager, QObject *parent)
+    : QObject(parent),
+      m_deviceManager(deviceManager)
 {
     m_dbusAdaptor = new DeviceManagerAdaptor(this);
 }

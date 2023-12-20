@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "src/ui/log/table.h"
@@ -50,7 +50,8 @@ enum LogTableField
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-LogDelegate::LogDelegate(QObject *parent) : QStyledItemDelegate(parent)
+LogDelegate::LogDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -91,7 +92,8 @@ void LogDelegate::paint(QPainter *painter,
     QStyledItemDelegate::paint(painter, option, index);
 }
 
-LogFilterModel::LogFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+LogFilterModel::LogFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
@@ -107,7 +109,8 @@ bool LogFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePa
     return false;
 }
 
-LogModel::LogModel(QObject *parent) : QAbstractTableModel(parent)
+LogModel::LogModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
     m_logProxy = new LogProxy(SSR_DBUS_NAME,
                               SSR_KSS_INIT_DBUS_OBJECT_PATH,
@@ -234,8 +237,9 @@ QList<LogInfo> LogModel::getLogInfos()
     return m_logInfos;
 }
 
-LogTable::LogTable(QWidget *parent) : QTableView(parent),
-                                      m_filterProxy(nullptr)
+LogTable::LogTable(QWidget *parent)
+    : QTableView(parent),
+      m_filterProxy(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 

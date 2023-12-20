@@ -30,7 +30,8 @@ public:
         QString match_line;
         int32_t match_pos;
         bool is_match_comment;
-        MatchLineInfo() : match_pos(0), is_match_comment(false) {}
+        MatchLineInfo()
+            : match_pos(0), is_match_comment(false) {}
     };
 
     /**

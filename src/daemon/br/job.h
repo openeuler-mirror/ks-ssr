@@ -49,10 +49,11 @@ typedef QVector<QSharedPointer<Operation>> OperationVec;
 // 任务返回的结果
 struct JobResult
 {
-    JobResult() : job_id(0),
-                  sum_operation_num(0),
-                  finished_operation_num(0),
-                  queue_is_changed(false){};
+    JobResult()
+        : job_id(0),
+          sum_operation_num(0),
+          finished_operation_num(0),
+          queue_is_changed(false){};
 
     // 任务ID
     int64_t job_id;
@@ -80,13 +81,22 @@ public:
     static QSharedPointer<Job> create();
 
     // 获取任务ID
-    int64_t getId() { return this->job_id_; };
+    int64_t getId()
+    {
+        return this->job_id_;
+    };
 
     // 获取任务状态
-    BRJobState getState() { return this->state_; };
+    BRJobState getState()
+    {
+        return this->state_;
+    };
 
     // 获取操作
-    QSharedPointer<Operation> getOperation(int32_t operation_id) { return MapHelper::getValue(this->operations_, operation_id); };
+    QSharedPointer<Operation> getOperation(int32_t operation_id)
+    {
+        return MapHelper::getValue(this->operations_, operation_id);
+    };
 
     // 添加一个操作，返回操作ID
     QSharedPointer<Operation> addOperation(const QString &plugin_name,

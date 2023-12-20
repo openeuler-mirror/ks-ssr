@@ -25,11 +25,12 @@ namespace BRDaemon
 #define PYTHON_PLUGIN_VAR_REINFORCEMENTS "reinforcements"
 
 ReinforcementPython::ReinforcementPython(PyObject *module,
-                                         const QString &class_name) : module_(module),
-                                                                      class_name_(class_name),
-                                                                      class_(NULL),
-                                                                      class_instance_(NULL),
-                                                                      valid_(false)
+                                         const QString &class_name)
+    : module_(module),
+      class_name_(class_name),
+      class_(NULL),
+      class_instance_(NULL),
+      valid_(false)
 {
     Py_XINCREF(this->module_);
 
@@ -191,7 +192,8 @@ bool ReinforcementPython::check_call_result(PyObject *py_retval, const QString &
     return true;
 }
 
-PluginPython::PluginPython(PyObject *module) : module_(module)
+PluginPython::PluginPython(PyObject *module)
+    : module_(module)
 {
     Py_XINCREF(this->module_);
 }

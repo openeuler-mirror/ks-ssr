@@ -34,13 +34,25 @@ public:
     bool init();
 
     // 获取插件ID，由插件名称+语言拼接
-    QString getId() { return QString::fromStdString(this->plugin_config_->name() + "_" + this->plugin_config_->language_type()); };
+    QString getId()
+    {
+        return QString::fromStdString(this->plugin_config_->name() + "_" + this->plugin_config_->language_type());
+    };
     // 获取插件名称
-    std::string getName() { return this->plugin_config_->name(); };
+    std::string getName()
+    {
+        return this->plugin_config_->name();
+    };
     // 插件所属分类
-    std::string getCategoryName() { return this->plugin_config_->category(); };
+    std::string getCategoryName()
+    {
+        return this->plugin_config_->category();
+    };
     // 获取插件加载器
-    std::shared_ptr<PluginLoader> getLoader() { return this->loader_; };
+    std::shared_ptr<PluginLoader> getLoader()
+    {
+        return this->loader_;
+    };
     // 获取加固项名称列表
     std::vector<std::string> getReinforcementNames();
     // 获取加固项配置
