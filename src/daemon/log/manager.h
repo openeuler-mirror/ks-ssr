@@ -51,10 +51,8 @@ public:
     enum LogType
     {
         ERROR = -1,
-        AUDIT = (1 << 0),
-        DEVICE = (1 << 1),
-        LOG = (1 << 2),
-        TOOL_BOX = (1 << 3)
+        DEVICE = (1 << 0),
+        TOOL_BOX = (1 << 1)
     };
     Q_ENUM(LogType)
 
@@ -70,8 +68,8 @@ public:
     void setLog(Log& log, T value, Args... args);
     void setLog(Log& log);
     uint GetLogNum();
-    QStringList GetLog(const int role, const time_t time_stamp, const time_t end_time_stamp, const int type, const uint result, const uint per_page, const uint page) const;
-    bool SetLogRotateConfig(const QString& config);
+    QStringList GetLog(const int role, const time_t time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText, const uint per_page, const uint page) const;
+    // bool SetLogRotateConfig(const QString& config);
 
 private:
     void backUpLog(const QStringList& targetLogList);

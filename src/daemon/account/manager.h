@@ -40,7 +40,7 @@ public:
         SYSADMIN = (1 << 0),
         SECADMIN = (1 << 1),
         AUDITADMIN = (1 << 2),
-        NOACCOUNT = (1 << 3)
+        UNKNOWN_ACCOUNT = (1 << 3)
     };
     Q_ENUM(AccountRole)
     struct Account
@@ -110,7 +110,7 @@ public:  // PROPERTIES
         if (it == m_clients.end())
         {
             KLOG_WARNING() << "Unknown dbus id: " << dbusUniqueName;
-            return AccountRole::NOACCOUNT;
+            return AccountRole::UNKNOWN_ACCOUNT;
         }
         return it->role;
     }
@@ -126,7 +126,7 @@ public:  // PROPERTIES
             }
         }
         KLOG_WARNING() << "Unknown dbus id: " << dbusPid;
-        return AccountRole::NOACCOUNT;
+        return AccountRole::UNKNOWN_ACCOUNT;
     }
     QMetaEnum m_metaAccountEnum;
 Q_SIGNALS:  // SIGNALS

@@ -91,12 +91,31 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case SSRErrorCode::ERROR_DEVICE_DISABLE_HDMI:
         errorDesc = QObject::tr("The graphics card does not support HDMI interface shutdown.");
         break;
+    case SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR:
+        errorDesc = QObject::tr("Password error.");
+        break;
+    case SSRErrorCode::ERROR_ACCOUNT_BE_FREEZE:
+        errorDesc = QObject::tr("This account has been freeze.");
+        break;
+    case SSRErrorCode::ERROR_ACCOUNT_BE_DIFF_NEW_PASSWORD:
+        errorDesc = QObject::tr("New password must be different from old password.");
+        break;
+    case SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED:
+        errorDesc = QObject::tr("Permission denied.");
+        break;
+    case SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT:
+        errorDesc = QObject::tr("Unknown account.");
+        break;
+    case SSRErrorCode::ERROR_LOG_GET_LOG_PAGE_ERROR:
+        errorDesc = QObject::tr("per page limit must less than 100 and page index must greater than 0.");
+        break;
 
     default:
         errorDesc = QObject::tr("Unknown error.");
         break;
     }
 
+    errorDesc += QString(QObject::tr(" (error code: 0x%1)")).arg(QString::number((int)errorCode, 16));
     return errorDesc;
 }
 
@@ -107,49 +126,49 @@ BRError::BRError()
 {
 }
 
-QString BRError::getErrorDesc(BRErrorCode error_code)
+QString BRError::getErrorDesc(BRErrorCode errorCode)
 {
-    QString error_desc;
-    switch (error_code)
+    QString errorDesc;
+    switch (errorCode)
     {
     case BRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID:
-        error_desc = QObject::tr("The standard type is invalid.");
+        errorDesc = QObject::tr("The standard type is invalid.");
         break;
     case BRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID:
-        error_desc = QObject::tr("The strategy type is invalid.");
+        errorDesc = QObject::tr("The strategy type is invalid.");
         break;
     case BRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID:
-        error_desc = QObject::tr("The notification status is invalid.");
+        errorDesc = QObject::tr("The notification status is invalid.");
         break;
     case BRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID:
-        error_desc = QObject::tr("The resource monitor is invalid.");
+        errorDesc = QObject::tr("The resource monitor is invalid.");
         break;
     case BRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED:
     case BRErrorCode::ERROR_DAEMON_JSON2RS_FAILED:
     case BRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID:
-        error_desc = QObject::tr("Error format for reinforcement standard.");
+        errorDesc = QObject::tr("Error format for reinforcement standard.");
         break;
     case BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND:
-        error_desc = QObject::tr("Reinforcement item '{0}' is not found.");
+        errorDesc = QObject::tr("Reinforcement item '{0}' is not found.");
         break;
     case BRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING:
     case BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING:
-        error_desc = QObject::tr("The job is running, please don't repeat the operation.");
+        errorDesc = QObject::tr("The job is running, please don't repeat the operation.");
         break;
     case BRErrorCode::ERROR_DAEMON_FALLBACK_CANNOT_RUNNING:
-        error_desc = QObject::tr("The fallback is can't running, please wait for the reinforcement to be completed.");
+        errorDesc = QObject::tr("The fallback is can't running, please wait for the reinforcement to be completed.");
         break;
     case BRErrorCode::ERROR_DAEMON_GET_RS_FAILED:
-        error_desc = QObject::tr("The standard reinforcement configuration is not found.");
+        errorDesc = QObject::tr("The standard reinforcement configuration is not found.");
         break;
     case BRErrorCode::ERROR_DAEMON_MACHINE_CODE_TRANS_FAILED:
-        error_desc = QObject::tr("Machine code error.");
+        errorDesc = QObject::tr("Machine code error.");
         break;
     case BRErrorCode::ERROR_DAEMON_ACTIVATION_CODE_INVALID:
-        error_desc = QObject::tr("Activation code error.");
+        errorDesc = QObject::tr("Activation code error.");
         break;
     case BRErrorCode::ERROR_DAEMON_SET_FALLBACK_RH_EMPTY:
-        error_desc = QObject::tr("There is no historical state, please reinforce it and operation.");
+        errorDesc = QObject::tr("There is no historical state, please reinforce it and operation.");
         break;
     case BRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED:
     case BRErrorCode::ERROR_DAEMON_CONVERT_PLUGINS2JSON_FAILED:
@@ -174,18 +193,18 @@ QString BRError::getErrorDesc(BRErrorCode error_code)
     case BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED:
     case BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENTS_FAILED:
     case BRErrorCode::ERROR_DAEMON_PLUGIN_CALL_PYTHON_FUNC_FAILED:
-        error_desc = QObject::tr("Internel error.");
+        errorDesc = QObject::tr("Internel error.");
         break;
     case BRErrorCode::ERROR_DAEMON_SOFTWARE_UNACTIVATED:
-        error_desc = QObject::tr("The software is not activated.");
+        errorDesc = QObject::tr("The software is not activated.");
         break;
     default:
-        error_desc = QObject::tr("Unknown error.");
+        errorDesc = QObject::tr("Unknown error.");
         break;
     }
 
-    error_desc += QString(QObject::tr(" (error code: 0x%1)")).arg(QString::number((int)error_code, 16));
-    return error_desc;
+    errorDesc += QString(QObject::tr(" (error code: 0x%1)")).arg(QString::number((int)errorCode, 16));
+    return errorDesc;
 }
 
 }  // namespace KS

@@ -118,6 +118,12 @@ extern "C"
 
 #define SSR_PERMISSION_AUTHENTICATION "com.kylinsec.SSR.PermissionAuthentication"
 
+    enum OsUserType
+    {
+        USER_TYPE_MANAGER = 0,
+        USER_TYPE_NORMAL
+    };
+
     enum LogResult
     {
         LOG_RESULT_FALSE = 0,

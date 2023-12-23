@@ -43,5 +43,19 @@
             </arg>
             <description>remove users.</description>
         </method>
+
+        <method name="GetAccessStatus">
+            <arg type="b" name="selinux_status" direction="out">
+                <summary>The status of selinux.</summary>
+            </arg>
+            <description>Get status of selinux.</description>
+        </method>
+
+        <method name="GetAllUsers">
+            <arg type="s" name="user_information" direction="out">
+                <summary>The user_information is a json string.</summary>
+            </arg>
+            <description>Get all user's information.</description>
+        </method>
     </interface>
 </node>

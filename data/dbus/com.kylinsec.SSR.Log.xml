@@ -18,6 +18,9 @@
             <arg type="u" name="result" direction="in">
                 <summary>Result of log.</summary>
             </arg>
+            <arg type="s" name="search_text" direction="in">
+                <summary>Key word, be used search.</summary>
+            </arg>
             <arg type="u" name="per_page" direction="in">
                 <summary>Number of logs per page.</summary>
             </arg>
