@@ -72,7 +72,7 @@ int Utils::str2AccountRoleEnum(const QString &roleStr)
 
 void Utils::deserialize(const QStringList &logs, QList<LogInfo> &logInfos)
 {
-    for (auto& log : logs)
+    for (auto &log : logs)
     {
         auto logItems = log.split("|");
         CONTINUE_IF_TRUE(logItems.size() != 5);

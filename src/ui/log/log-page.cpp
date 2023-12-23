@@ -81,9 +81,10 @@ void LogPage::initUI()
     auto action = new QWidgetAction(m_ui->m_search);
     action->setDefaultWidget(searchButton);
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
-    connect(m_ui->m_centigrade, &QPushButton::clicked, this, [this] {
-        m_ui->m_logTable->search(m_ui->m_search->text());
-    });
+    connect(m_ui->m_centigrade, &QPushButton::clicked, this, [this]
+            {
+                m_ui->m_logTable->search(m_ui->m_search->text());
+            });
     connect(m_ui->m_logTable, &LogTable::logUpdated, this, &LogPage::updateTipsAndPagination);
 
     // 分页
@@ -97,9 +98,10 @@ void LogPage::initUI()
                                   MAX_PAGINATION_BUTTON_NUMBER,
                                   true,
                                   this);
-    connect(m_pagination, &Pagination::currentPageChanged, this, [this](int number) {
-        m_ui->m_logTable->setCurrentPage(uint(number));
-    });
+    connect(m_pagination, &Pagination::currentPageChanged, this, [this](int number)
+            {
+                m_ui->m_logTable->setCurrentPage(uint(number));
+            });
     m_ui->m_mainLayout->addWidget(m_pagination);
 
     // 日期选择
@@ -107,29 +109,37 @@ void LogPage::initUI()
     m_ui->m_calendarButton->setStartDate(QDateTime::currentDateTime().addMonths(-1).toString("yyyy-MM-dd"));
     m_ui->m_calendarButton->setEndDate(QDateTime::currentDateTime().toString("yyyy-MM-dd"));
     m_datePicker = new DatePicker(this);
-    connect(m_datePicker, &DatePicker::startDateChanged, this, [this](const QString &date) {
-        m_ui->m_calendarButton->setStartDate(date);
-        auto beginTime = QDateTime::fromString(date, "yyyy-MM-dd");
-        beginTime.setTime(QTime(0, 0, 0));
-        m_ui->m_logTable->setTimeStampBegin(beginTime.toSecsSinceEpoch());
-    });
-    connect(m_datePicker, &DatePicker::endDateChanged, this, [this](const QString &date) {
-        m_ui->m_calendarButton->setEndDate(date);
-        auto endTime = QDateTime::fromString(date, "yyyy-MM-dd");
-        endTime.setTime(QTime(23, 59, 59));
-        m_ui->m_logTable->setTimeStampEnd(endTime.toSecsSinceEpoch());
-    });
+    connect(m_datePicker, &DatePicker::startDateChanged, this, [this](const QString &date)
+            {
+                m_ui->m_calendarButton->setStartDate(date);
+                auto beginTime = QDateTime::fromString(date, "yyyy-MM-dd");
+                beginTime.setTime(QTime(0, 0, 0));
+                m_ui->m_logTable->setTimeStampBegin(beginTime.toSecsSinceEpoch());
+            });
+    connect(m_datePicker, &DatePicker::endDateChanged, this, [this](const QString &date)
+            {
+                m_ui->m_calendarButton->setEndDate(date);
+                auto endTime = QDateTime::fromString(date, "yyyy-MM-dd");
+                endTime.setTime(QTime(23, 59, 59));
+<<<<<<< HEAD
+                m_ui->m_logTable->setTimeStampEnd(endTime.toSecsSinceEpoch());
+=======
+            m_ui->m_logTable->setTimeStampBegin(endTime.toSecsSinceEpoch());
+>>>>>>> 45d6e43 (feature(log) : Impove log ui page)
+            });
 
-    connect(m_ui->m_calendarButton, &DatePickButton::fristDateClicked, this, [this] {
-        m_datePicker->move(QCursor::pos());
-        m_datePicker->showDatePicker(0);
-        m_datePicker->show();
-    });
-    connect(m_ui->m_calendarButton, &DatePickButton::endDateClicked, this, [this] {
-        m_datePicker->move(QCursor::pos());
-        m_datePicker->showDatePicker(1);
-        m_datePicker->show();
-    });
+    connect(m_ui->m_calendarButton, &DatePickButton::fristDateClicked, this, [this]
+            {
+                m_datePicker->move(QCursor::pos());
+                m_datePicker->showDatePicker(0);
+                m_datePicker->show();
+            });
+    connect(m_ui->m_calendarButton, &DatePickButton::endDateClicked, this, [this]
+            {
+                m_datePicker->move(QCursor::pos());
+                m_datePicker->showDatePicker(1);
+                m_datePicker->show();
+            });
 }
 
 void LogPage::updateTipsAndPagination(int total)
@@ -137,6 +147,7 @@ void LogPage::updateTipsAndPagination(int total)
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records")).arg(QString::number(total));
     m_ui->m_tips->setText(text);
+<<<<<<< HEAD
     auto remainValue = total % LOG_PAGE_NUMBER;
     auto pageTotal = total / LOG_PAGE_NUMBER;
     if (remainValue != 0)
@@ -144,6 +155,9 @@ void LogPage::updateTipsAndPagination(int total)
         pageTotal++;
     }
     m_pagination->setTotalPage(pageTotal);
+=======
+    m_pagination->setTotalPage(total / LOG_PAGE_NUMBER);
+>>>>>>> 45d6e43 (feature(log) : Impove log ui page)
 }
 }  // namespace Log
 }  // namespace KS

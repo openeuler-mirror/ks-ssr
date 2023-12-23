@@ -122,16 +122,24 @@ LogModel::LogModel(QObject *parent)
                               SSR_LOG_DBUS_OBJECT_PATH,
                               QDBusConnection::systemBus(),
                               this);
-    connect(m_logProxy, &LogProxy::HazardDetected, this, [](uint type, const QString &alertMessage) {
-        // TODO 区分类型弹窗？
-        Q_UNUSED(type)
-        Notify::NOTIFY_ERROR(alertMessage.toUtf8());
-    });
-    connect(m_logProxy, &LogProxy::NewLogWritten, this, [this]{
-         emit logUpdated(static_cast<int>(getLogNumbers()));
-    });
+    connect(m_logProxy, &LogProxy::HazardDetected, this, [](uint type, const QString &alertMessage)
+            {
+                // TODO 区分类型弹窗？
+                Q_UNUSED(type)
+                Notify::NOTIFY_ERROR(alertMessage.toUtf8());
+            });
+    connect(m_logProxy, &LogProxy::NewLogWritten, this, [this]
+            {
+                emit logUpdated(static_cast<int>(getLogNumbers()));
+            });
 
     updateRecord();
+
+    // TEST
+    if (m_logInfos.size() == 0)
+    {
+        m_logInfos << LogInfo{.type = LOG_TYPE_DEVICE, .role = ACCOUNT_ROLE_AUDITADMIN, .dataTime = "sdads", .message = "nbnbnb", .result = true};
+    }
 }
 
 int LogModel::rowCount(const QModelIndex &parent) const
@@ -400,15 +408,16 @@ void Log::LogTable::initLogTypeButton()
     auto toolBox = new QAction(tr("Tool box log"), m_logTypeButton);
 
     m_logTypeButton->addMenuActions(QList<QAction *>() << device << toolBox);
-    connect(m_logTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this]() {
-        int type = 0;
-        for (auto action : m_logTypeButton->getMenuActions())
-        {
-            CONTINUE_IF_TRUE(!action->isChecked());
-            type |= Utils::str2LogTypeEnum(action->text());
-        }
-        m_model->setLogType(static_cast<LogType>(type));
-    });
+    connect(m_logTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
+            {
+                int type = 0;
+                for (auto action : m_logTypeButton->getMenuActions())
+                {
+                    CONTINUE_IF_TRUE(!action->isChecked());
+                    type |= Utils::str2LogTypeEnum(action->text());
+                }
+                m_model->setLogType(static_cast<LogType>(type));
+            });
 }
 
 void Log::LogTable::initRoleButton()
@@ -421,15 +430,16 @@ void Log::LogTable::initRoleButton()
     auto audadm = new QAction(tr("Audadm"), m_roleButton);
 
     m_roleButton->addMenuActions(QList<QAction *>() << sysadm << secadm << audadm);
-    connect(m_roleButton, &HeaderButtonDelegate::menuTriggered, this, [this]() {
-        int role = 0;
-        for (auto action : m_roleButton->getMenuActions())
-        {
-            CONTINUE_IF_TRUE(!action->isChecked());
-            role |= Utils::str2AccountRoleEnum(action->text());
-        }
-        m_model->setRole(static_cast<AccountRole>(role));
-    });
+    connect(m_roleButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
+            {
+                int role = 0;
+                for (auto action : m_roleButton->getMenuActions())
+                {
+                    CONTINUE_IF_TRUE(!action->isChecked());
+                    role |= Utils::str2AccountRoleEnum(action->text());
+                }
+                m_model->setRole(static_cast<AccountRole>(role));
+            });
 }
 
 void Log::LogTable::initResultButton()
@@ -441,29 +451,30 @@ void Log::LogTable::initResultButton()
     auto fail = new QAction(tr("Failed"), m_resultButton);
 
     m_resultButton->addMenuActions(QList<QAction *>() << success << fail);
-    connect(m_resultButton, &HeaderButtonDelegate::menuTriggered, this, [this]() {
-        QMap<QString, bool> roleMap;
-        for (auto action : m_resultButton->getMenuActions())
-        {
-            roleMap.insert(action->text(), action->isChecked());
-        }
-        if (roleMap.value(tr("Success")) && roleMap.value(tr("Failed")))
-        {
-            // 全选
-            m_model->setLogResult(LOG_RESULT_ALL);
-        }
-        else
-        {
-            // 如果两个都未选中，设置result为3,获取表格为空
-            if (!roleMap.value(tr("Success")) && !roleMap.value(tr("Failed")))
+    connect(m_resultButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
             {
-                m_model->setLogResult(3);
-                return;
-            }
-            // 仅一个选中
-            m_model->setLogResult(roleMap.value(tr("Success")) ? LOG_RESULT_TRUE : LOG_RESULT_FALSE);
-        }
-    });
+                QMap<QString, bool> roleMap;
+                for (auto action : m_resultButton->getMenuActions())
+                {
+                    roleMap.insert(action->text(), action->isChecked());
+                }
+                if (roleMap.value(tr("Success")) && roleMap.value(tr("Failed")))
+                {
+                    // 全选
+                    m_model->setLogResult(LOG_RESULT_ALL);
+                }
+                else
+                {
+                    // 如果两个都未选中，设置result为3,获取表格为空
+                    if (!roleMap.value(tr("Success")) && !roleMap.value(tr("Failed")))
+                    {
+                        m_model->setLogResult(3);
+                        return;
+                    }
+                    // 仅一个选中
+                    m_model->setLogResult(roleMap.value(tr("Success")) ? LOG_RESULT_TRUE : LOG_RESULT_FALSE);
+                }
+            });
 }
 
 }  // namespace Log
