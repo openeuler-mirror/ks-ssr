@@ -19,11 +19,13 @@
 #include <QSharedPointer>
 #include "src/daemon/log/manager.h"
 
+class QFileSystemWatcher;
+class QReadWriteLock;
+
 namespace KS
 {
 namespace ToolBox
 {
-
 class Manager : public QObject, public QDBusContext
 {
     Q_OBJECT
@@ -63,6 +65,9 @@ public:
      */
     void RemoveUser(const QStringList& userNames);
 
+    bool GetAccessStatus();
+    QString GetAllUsers();
+
 private:
     Manager();
     virtual ~Manager() = default;
@@ -83,8 +88,13 @@ private:
         return cmd;
     }
 
+    void getAllUsers(const QString & path = "");
+
 private:
     static Manager* m_toolBoxManager;
+    QString m_osUserInfoJson;
+    QReadWriteLock* m_osUserNameMutex;
+    QFileSystemWatcher* m_userNameWatcher;
 };
 
 };  // namespace ToolBox

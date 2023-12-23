@@ -246,7 +246,7 @@ void RealTimeAlert::processIPSetData()
     QString localData = std::move(*m_ipsetData);
     RETURN_IF_TRUE(localData.isNull() || localData.isEmpty());
     QStringList nmapAttackers;
-    for (const auto line : localData.split('\n'))
+    for (const auto& line : localData.split('\n'))
     {
         CONTINUE_IF_TRUE(!line.startsWith(IPSET_NMAP_IP_KEYWORD));
         auto nmapAttackerIp = line.mid(sizeof(IPSET_NMAP_IP_KEYWORD) - 1);
@@ -271,9 +271,9 @@ void RealTimeAlert::processAuditData(int socket)
     }
     auto logEventList = parserAudit(data);
     QStringList alertMsgList;
-    for (const auto logEvent : logEventList)
+    for (const auto& logEvent : logEventList)
     {
-        for (const auto logRecord : logEvent)
+        for (const auto& logRecord : logEvent)
         {
             CONTINUE_IF_TRUE(!logRecord.field.contains("key"));
             CONTINUE_IF_TRUE(!logRecord.field.value("key").contains(KS_SSR_AUDIT_KEYWORD));

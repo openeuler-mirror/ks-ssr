@@ -17,7 +17,10 @@
 #include <QHostAddress>
 #include <QStringBuilder>
 #include "config.h"
+#include "include/ssr-error-i.h"
 #include "include/ssr-i.h"
+#include "include/ssr-marcos.h"
+#include "lib/base/error.h"
 #include "manager.h"
 #include "src/daemon/account/manager.h"
 #include "src/daemon/common/dbus-helper.h"
@@ -91,7 +94,7 @@ Manager::Manager()
                 {
                     KLOG_WARNING() << "error code: " << rc
                                    << ", Failed to back up overflow log! error message: " << errMsg;
-                    SSR_LOG(Account::Manager::AccountRole::NOACCOUNT, LogType::LOG, "Failed to back up overflow log!", false);
+                    // SSR_LOG(Account::Manager::AccountRole::UNKNOWN_ACCOUNT, LogType::LOG, "Failed to back up overflow log!", false);
                 }
             });
 
@@ -131,18 +134,21 @@ uint Manager::GetLogNum()
     return m_logList.size();
 }
 
-QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const time_t end_time_stamp, const int type, const uint result, const uint per_page, const uint page) const
+QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText, const uint per_page, const uint page) const
 {
-    auto callerPid = DBusHelper::getCallerUniqueName(m_logManager);
-    RETURN_VAL_IF_TRUE(callerPid == -1, QStringList());
-    auto _role = Account::Manager::m_accountManager->getRole(callerPid);
+    auto callerUnique = DBusHelper::getCallerUniqueName(m_logManager);
+    auto _role = Account::Manager::m_accountManager->getRole(callerUnique);
+    if (_role == KS::Account::Manager::AccountRole::UNKNOWN_ACCOUNT)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QStringList(), SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
+    }
+    // auto _role = Account::Manager::m_accountManager->getRole(callerPid);
 
     KLOG_DEBUG() << "Get logs, per page limit is " << per_page << "page index is " << page;
     if ((per_page == 0 || per_page > 500) || page == 0)
     {
-        KLOG_ERROR() << "per page limit and page index must greater than 0";
-        SSR_LOG(_role, LogType::LOG, "per page limit and page index must greater than 0, Failed to Get Log", false);
-        return QStringList();
+        KLOG_ERROR() << "per page limit must less than 100 and page index must greater than 0.";
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QStringList(), SSRErrorCode::ERROR_LOG_GET_LOG_PAGE_ERROR, this->message());
     }
     QReadLocker locker(&m_logManager->m_listMutex);
 
@@ -159,7 +165,7 @@ QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const
     {
         // 为了可读性，将判断条件取反了
 
-        if (!((static_cast<int>(reverseIt->role) & role) == 1))
+        if ((static_cast<int>(reverseIt->role) & role) == 0)
         {
             reverseIt++;
             continue;
@@ -170,13 +176,13 @@ QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const
             reverseIt++;
             continue;
         }
-        if (!((static_cast<int>(reverseIt->type) & type) == 1))
+        if ((static_cast<int>(reverseIt->type) & type) == 0)
         {
             reverseIt++;
             continue;
         }
         // 当前端传入 LOG_RESULT_ALL 时代表需要所有结果的日志， 所以不针对日志的结果筛选
-        if (static_cast<uint>(reverseIt->result) != LogResult::LOG_RESULT_ALL)
+        if (result != LogResult::LOG_RESULT_ALL)
         {
             if (!(static_cast<uint>(reverseIt->result) == result))
             {
@@ -184,12 +190,18 @@ QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const
                 continue;
             }
         }
+        if (!reverseIt->logMsg.contains(searchText, Qt::CaseSensitivity::CaseInsensitive))
+        {
+            reverseIt++;
+            continue;
+        }
         if (totalOffset != 0)
         {
             totalOffset--;
             continue;
         }
         tmpLogList.append(*reverseIt);
+        reverseIt++;
     }
     locker.unlock();
     QStringList retLogList{};
@@ -197,7 +209,7 @@ QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const
     {
         retLogList << Message::serialize(log);
     }
-    SSR_LOG(_role, LogType::LOG, "Get Log");
+    // SSR_LOG(_role, LogType::LOG, "Get Log");
     return retLogList;
 }
 

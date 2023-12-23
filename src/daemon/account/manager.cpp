@@ -22,7 +22,9 @@
 #include <QSettings>
 #include <QtDBus>
 #include <iostream>
+#include "include/ssr-marcos.h"
 #include "lib/base/crypto-helper.h"
+#include "lib/base/error.h"
 #include "src/daemon/log/manager.h"
 
 #define SSR_ACCOUNT_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Account"
@@ -109,6 +111,12 @@ void Manager::SetUidReusable(bool enabled)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = m_accountManager->getRole(calledUniqueName);
+    if (role == KS::Account::Manager::AccountRole::UNKNOWN_ACCOUNT)
+    {
+        KLOG_ERROR() << "Failed to set uid reusable, Permission denied";
+        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Permission Denied", false);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
+    }
     SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, enabled ? "Enable uid reuse" : "Disable uid reuse");
     m_isUidReusable = enabled;
     m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enabled));
@@ -119,12 +127,24 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = m_accountManager->getRole(calledUniqueName);
-
+    auto roleName = userName != KS::Account::Manager::m_accountManager->m_metaAccountEnum.valueToKey(static_cast<int>(role));
+    if (role == KS::Account::Manager::AccountRole::UNKNOWN_ACCOUNT ||
+        userName != roleName)
+    {
+        KLOG_ERROR() << "Failed to change " << userName << "'s passphrase, unique name: "
+                     << calledUniqueName << ", role: " << roleName;
+        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Failed to change %1's passphrase, unique name: %2, role: %3").arg(userName).arg(calledUniqueName).arg(roleName), false);
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
+    }
     if (!verifyPassword(userName, oldPassphrase))
     {
         KLOG_INFO() << "Password error!, failed to change passphrase";
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Change password", false);
-        return false;
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
+    }
+    if (oldPassphrase == newPassphrase)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_BE_DIFF_NEW_PASSWORD, this->message());
     }
     auto isSuccess = changePassword(userName, newPassphrase);
     emit PasswordChanged(userName);
@@ -139,10 +159,11 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     bool isSuccess = false;
     auto role_index = m_metaAccountEnum.keyToValue(userName.toLocal8Bit(), &isSuccess);
     auto role = static_cast<AccountRole>(role_index);
+
     if (!isSuccess)
     {
         KLOG_ERROR() << "Unknown userName: " << userName << ", Unique name: " << callerUnique;
-        return false;
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
     }
     m_dbusServerWatcher->addWatchedService(callerUnique);
 
@@ -159,7 +180,8 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     if (isFreeze(userName))
     {
         KLOG_INFO() << userName << " has been freeze";
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login, but this ccount has been freeze", false);
+        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login, but this account has been freeze", false);
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_BE_FREEZE, this->message());
         return false;
     }
 
@@ -168,6 +190,7 @@ bool Manager::Login(const QString& userName, const QString& passWord)
         KLOG_INFO() << "Passwd error";
         updateFreezeInfo(userName);
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login, Passwd error", false);
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
         return false;
     }
     resetFreezeInfo(userName);
@@ -180,6 +203,10 @@ bool Manager::Logout()
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto role = m_accountManager->getRole(callerUnique);
+    if (role == KS::Account::Manager::AccountRole::UNKNOWN_ACCOUNT)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
+    }
 
     QReadLocker locker(&m_clientMutex);
     auto it = m_clients.find(callerUnique);
