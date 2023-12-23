@@ -77,6 +77,9 @@ extern "C"
 #define SSR_TOOL_BOX_DBUS_NAME "com.kylinsec.SSR.ToolBox"
 #define SSR_TOOL_BOX_DBUS_OBJECT_PATH "/com/kylinsec/SSR/ToolBox"
 
+#define SSR_LOG_DBUS_NAME "com.kylinsec.SSR.Log"
+#define SSR_LOG_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Log"
+
     enum SSRKSSTrustedFileType
     {
         SSR_KSS_TRUSTED_FILE_TYPE_EXECUTE = 0,
@@ -120,6 +123,14 @@ extern "C"
         LOG_RESULT_FALSE = 0,
         LOG_RESULT_TRUE,
         LOG_RESULT_ALL,
+    };
+
+    enum AccountRole
+    {
+        ACCOUNT_ROLE_SYSADMIN = (1 << 0),
+        ACCOUNT_ROLE_SECADMIN = (1 << 1),
+        ACCOUNT_ROLE_AUDITADMIN = (1 << 2),
+        ACCOUNT_ROLE_NOACCOUNT = (1 << 3)
     };
 
     enum DeviceType

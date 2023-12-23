@@ -25,6 +25,9 @@ class LogPage;
 
 namespace KS
 {
+class Pagination;
+class DatePicker;
+
 namespace Log
 {
 class LogPage : public Page
@@ -39,14 +42,17 @@ public:
     QString getSidebarIcon() override;
     QString getAccountRoleName() override;
 
+private:
+    void initUI();
+
 private Q_SLOTS:
-    void searchTextChanged(const QString &text);
-    void updateTips(int total);
+    void updateTipsAndPagination(int total);
 
 private:
     Ui::LogPage *m_ui;
-
+    Pagination *m_pagination;
     LogProxy *m_logProxy;
+    DatePicker *m_datePicker;
 };
 }  // namespace Log
 }  // namespace KS

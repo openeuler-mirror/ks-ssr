@@ -37,7 +37,6 @@ BaselineReinforcement::BaselineReinforcement(QWidget *parent)
                                   BR_DBUS_OBJECT_PATH,
                                   QDBusConnection::systemBus(),
                                   this);
-    Notify::NotificationWrapper::globalInit(tr("Safety reinforcement").toStdString());
     initConnection();
     initUI();
 }
@@ -55,84 +54,74 @@ void BaselineReinforcement::initConnection()
     connect(m_ui->m_timeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &BaselineReinforcement::timedScanSettings);
     m_timedScan = new QTimer(this);
     connect(m_timedScan, &QTimer::timeout, this, &BaselineReinforcement::scan);
-    connect(m_ui->m_openMonitor, &QRadioButton::clicked, [this]
-            {
-                m_dbusProxy->SetResourceMonitorSwitch(BR_RESOURCE_MONITOR_OPEN);
-                if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
-                {
-                    Notify::NOTIFY_INFO(tr("Resource monitor open!").toUtf8());
-                }
-                KLOG_INFO() << "Resource monitor open!";
-            });
-    connect(m_ui->m_closeMonitor, &QRadioButton::clicked, [this]
-            {
-                m_dbusProxy->SetResourceMonitorSwitch(BR_RESOURCE_MONITOR_CLOSE);
-                if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
-                {
-                    Notify::NOTIFY_INFO(tr("Resource monitor close!").toUtf8());
-                }
-                KLOG_INFO() << "Resource monitor close!";
-            });
+    connect(m_ui->m_openMonitor, &QRadioButton::clicked, [this] {
+        m_dbusProxy->SetResourceMonitorSwitch(BR_RESOURCE_MONITOR_OPEN);
+        if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
+        {
+            Notify::NOTIFY_INFO(tr("Resource monitor open!").toUtf8());
+        }
+        KLOG_INFO() << "Resource monitor open!";
+    });
+    connect(m_ui->m_closeMonitor, &QRadioButton::clicked, [this] {
+        m_dbusProxy->SetResourceMonitorSwitch(BR_RESOURCE_MONITOR_CLOSE);
+        if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
+        {
+            Notify::NOTIFY_INFO(tr("Resource monitor close!").toUtf8());
+        }
+        KLOG_INFO() << "Resource monitor close!";
+    });
 
-    connect(m_ui->m_openNotify, &QRadioButton::clicked, [this]
-            {
-                m_dbusProxy->SetNotificationStatus(BR_NOTIFICATION_STATUS_OPEN);
-                Notify::NOTIFY_INFO(tr("Notify open!").toUtf8());
-                KLOG_INFO() << "Notify open!";
-            });
-    connect(m_ui->m_closeNotify, &QRadioButton::clicked, [this]
-            {
-                m_dbusProxy->SetNotificationStatus(BR_NOTIFICATION_STATUS_CLOSE);
-                Notify::NOTIFY_INFO(tr("Notify close!").toUtf8());
-                KLOG_INFO() << "Notify close!";
-            });
+    connect(m_ui->m_openNotify, &QRadioButton::clicked, [this] {
+        m_dbusProxy->SetNotificationStatus(BR_NOTIFICATION_STATUS_OPEN);
+        Notify::NOTIFY_INFO(tr("Notify open!").toUtf8());
+        KLOG_INFO() << "Notify open!";
+    });
+    connect(m_ui->m_closeNotify, &QRadioButton::clicked, [this] {
+        m_dbusProxy->SetNotificationStatus(BR_NOTIFICATION_STATUS_CLOSE);
+        Notify::NOTIFY_INFO(tr("Notify close!").toUtf8());
+        KLOG_INFO() << "Notify close!";
+    });
 
-    connect(m_ui->m_fallbackInit, &QPushButton::clicked, this, [this]
-            {
-                fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL);
-            });
-    connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this]
-            {
-                fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST);
-            });
+    connect(m_ui->m_fallbackInit, &QPushButton::clicked, this, [this] {
+        fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL);
+    });
+    connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this] {
+        fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST);
+    });
 
-    connect(m_dbusProxy, &BRDbusProxy::HomeFreeSpaceRatioLower, this, [this](const QString &spaceRatio)
-            {
-                // 家目录可用空间小于10%告警
-                KLOG_WARNING() << "home free space less than 10% , ratio : " << spaceRatio;
-                if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
-                {
-                    Notify::NOTIFY_WARN(tr("home free space less than 10%").toUtf8());
-                }
-            });
-    connect(m_dbusProxy, &BRDbusProxy::RootFreeSpaceRatioLower, this, [this](const QString &spaceRatio)
-            {
-                // 根目录可用空间小于10%告警
-                KLOG_WARNING() << "root free space less than 10% , ratio : " << spaceRatio;
-                if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
-                {
-                    Notify::NOTIFY_WARN(tr("root free space less than 10%").toUtf8());
-                }
-            });
-    connect(m_dbusProxy, &BRDbusProxy::CpuAverageLoadRatioHigher, this, [this](const QString &loadRatio)
-            {
-                // cpu单核五分钟平均负载大于1告警
-                KLOG_WARNING() << "The average load of a single core CPU exceeds 1 , ratio : " << loadRatio;
-                if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
-                {
-                    Notify::NOTIFY_WARN(tr("The average load of a single core CPU exceeds 1").toUtf8())
-                }
-            });
+    connect(m_dbusProxy, &BRDbusProxy::HomeFreeSpaceRatioLower, this, [this](const QString &spaceRatio) {
+        // 家目录可用空间小于10%告警
+        KLOG_WARNING() << "home free space less than 10% , ratio : " << spaceRatio;
+        if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
+        {
+            Notify::NOTIFY_WARN(tr("home free space less than 10%").toUtf8());
+        }
+    });
+    connect(m_dbusProxy, &BRDbusProxy::RootFreeSpaceRatioLower, this, [this](const QString &spaceRatio) {
+        // 根目录可用空间小于10%告警
+        KLOG_WARNING() << "root free space less than 10% , ratio : " << spaceRatio;
+        if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
+        {
+            Notify::NOTIFY_WARN(tr("root free space less than 10%").toUtf8());
+        }
+    });
+    connect(m_dbusProxy, &BRDbusProxy::CpuAverageLoadRatioHigher, this, [this](const QString &loadRatio) {
+        // cpu单核五分钟平均负载大于1告警
+        KLOG_WARNING() << "The average load of a single core CPU exceeds 1 , ratio : " << loadRatio;
+        if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
+        {
+            Notify::NOTIFY_WARN(tr("The average load of a single core CPU exceeds 1").toUtf8())
+        }
+    });
 
-    connect(m_dbusProxy, &BRDbusProxy::MemoryAbnormal, this, [this](const QString &ratio)
-            {
-                // 内存不足10%告警
-                KLOG_WARNING() << "Memory space remaining " << ratio << ", below 10%";
-                if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
-                {
-                    Notify::NOTIFY_WARN(tr("Memory space remaining").toUtf8())
-                }
-            });
+    connect(m_dbusProxy, &BRDbusProxy::MemoryAbnormal, this, [this](const QString &ratio) {
+        // 内存不足10%告警
+        KLOG_WARNING() << "Memory space remaining " << ratio << ", below 10%";
+        if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
+        {
+            Notify::NOTIFY_WARN(tr("Memory space remaining").toUtf8())
+        }
+    });
 }
 
 void BaselineReinforcement::initUI()
@@ -230,29 +219,27 @@ void BaselineReinforcement::scan()
     // 断开scan进程连接
     disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
     // 进行一次扫描 仅获取扫描结果
-    connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult)
-            {
-                InvalidData invalidData = {};
-                KS::BR::Utils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categories, invalidData);
-            });
+    connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult) {
+        InvalidData invalidData = {};
+        KS::BR::Utils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categories, invalidData);
+    });
     // 监听进程完成后
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-    connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
-            {
-                disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-                updateProgressInfo(m_progressInfo);
-                if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
-                {
-                    Notify::NOTIFY_INFO(QString(tr("Timed scan finished, Scaned %1, %2 conform, %3 inconform!")).arg(m_progressInfo.failureCount + m_progressInfo.successCount).arg(m_progressInfo.successCount).arg(m_progressInfo.failureCount).toUtf8());
-                }
-                KLOG_INFO() << "Timed scan finied, Scaned "
-                            << m_progressInfo.failureCount + m_progressInfo.successCount
-                            << ", "
-                            << m_progressInfo.successCount
-                            << " conform, "
-                            << m_progressInfo.failureCount
-                            << "inconform!";
-            });
+    connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this] {
+        disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
+        updateProgressInfo(m_progressInfo);
+        if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
+        {
+            Notify::NOTIFY_INFO(QString(tr("Timed scan finished, Scaned %1, %2 conform, %3 inconform!")).arg(m_progressInfo.failureCount + m_progressInfo.successCount).arg(m_progressInfo.successCount).arg(m_progressInfo.failureCount).toUtf8());
+        }
+        KLOG_INFO() << "Timed scan finied, Scaned "
+                    << m_progressInfo.failureCount + m_progressInfo.successCount
+                    << ", "
+                    << m_progressInfo.successCount
+                    << " conform, "
+                    << m_progressInfo.failureCount
+                    << "inconform!";
+    });
 
     QStringList scanStr;
     for (auto categories : m_categories)
@@ -292,12 +279,11 @@ void BaselineReinforcement::fallback(int status)
     }
 
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-    connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
-            {
-                POPUP_MESSAGE_DIALOG(tr("Fallback finished!"));
-                disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-                m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED);
-            });
+    connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this] {
+        POPUP_MESSAGE_DIALOG(tr("Fallback finished!"));
+        disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
+        m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED);
+    });
     m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS);
 }
 }  // namespace Settings

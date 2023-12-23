@@ -22,6 +22,7 @@
 #include <QStackedWidget>
 #include <QX11Info>
 #include "include/ssr-i.h"
+#include "lib/base/notification-wrapper.h"
 #include "lib/license/license-proxy.h"
 #include "src/ui/about.h"
 #include "src/ui/account/manager.h"
@@ -32,6 +33,7 @@
 #include "src/ui/dm/device-list-page.h"
 #include "src/ui/dm/device-log-page.h"
 #include "src/ui/fp/file-protection-page.h"
+#include "src/ui/log/log-page.h"
 #include "src/ui/navigation.h"
 #include "src/ui/private-box/box-page.h"
 #include "src/ui/settings/dialog.h"
@@ -64,7 +66,7 @@ Window::Window()
                                   SSR_DBUS_OBJECT_PATH,
                                   QDBusConnection::systemBus(),
                                   this);
-
+    Notify::NotificationWrapper::globalInit(tr("Safety reinforcement").toStdString());
     Account::Manager::globalInit(this);
 
     initWindow();
@@ -96,6 +98,7 @@ Window::~Window()
     delete m_ui;
     Settings::Dialog::globalDeinit();
     Account::Manager::globalDeinit();
+    Notify::NotificationWrapper::globalDeinit();
 }
 
 void Window::resizeEvent(QResizeEvent *event)
@@ -254,6 +257,7 @@ void Window::initPageAndNavigation()
     addPage(new ToolBox::FileShredPage(this));
     addPage(new ToolBox::PrivacyCleanupPage(this));
     addPage(new ToolBox::AccessControlPage(this));
+    addPage(new Log::LogPage(this));
     m_ui->m_stackedPages->addWidget(m_loading);
     m_ui->m_stackedPages->setCurrentIndex(0);
 
@@ -286,6 +290,10 @@ void Window::initPageAndNavigation()
         else if (navigationUID == tr("Tool Box"))
         {
             m_ui->m_navigation->addItem(new NavigationItem(":/images/tool-box", tr("Tool Box")));
+        }
+        else if (navigationUID == tr("Log auditd"))
+        {
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/log-audit", tr("Log auditd")));
         }
     }
     m_ui->m_navigation->setBtnChecked(0);

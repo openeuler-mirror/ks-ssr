@@ -74,6 +74,7 @@
         <file alias="year-right">images/year-right.png</file>
         <file alias="month-left">images/month-left.png</file>
         <file alias="month-right">images/month-right.png</file>
+        <file alias="log-audit">images/log-audit.png</file>
     </qresource>
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>

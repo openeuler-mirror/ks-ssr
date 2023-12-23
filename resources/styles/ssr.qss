@@ -427,6 +427,7 @@ QPushButton#m_scan,
 QPushButton#m_activate,
 QPushButton#m_confirm,
 QPushButton#m_select,
+QPushButton#m_centigrade,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm
 {
     color:#FFFFFF;
@@ -446,6 +447,7 @@ QPushButton#m_scan:hover,
 QPushButton#m_activate:hover,
 QPushButton#m_confirm:hover,
 QPushButton#m_select:hover,
+QPushButton#m_centigrade:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
 {
     background:#79C3FF;
@@ -1020,39 +1022,6 @@ KS--Settings--BaselineReinforcement QSpinBox::down-button
     border : 0px;
 }
 
-/* 暂时不设置QSpinBox箭头
-KS--BR--ArgHandle QSpinBox::up-button
-{
-    subcontrol-origin: border;
-    width: 24px;
-    background-color:#00a2ff;
-    border-right: 1px solid #454545;
-    border-top: 1px solid #454545;
-    /* 左上 右上 右下 左下 */
-    border-radius: 0px 12px 0px 0px;
-    /* image: url(:/images/spinBox-up); */
-}
-
-KS--BR--ArgHandle QSpinBox::down-button
-{
-    subcontrol-origin: border;
-    width: 24px;
-    background-color:#00a2ff;
-    border-bottom: 1px solid #454545;
-    border-right: 1px solid #454545;
-    /* 左上 右上 右下 左下 */
-    border-radius: 0px 0px 12px 0px;
-    /* image: url(:/images/spinBox-down); */
-}
-KS--BR--ArgHandle QSpinBox::up-button:hover,
-KS--BR--ArgHandle QSpinBox::up-button:selected,
-KS--BR--ArgHandle QSpinBox::down-button:hover,
-KS--BR--ArgHandle QSpinBox::down-button:selected
-{
-    background-color:#79C3FF;
-}
-*/
-
 KS--BR--ArgHandle QPushButton#noteIcon
 {
     background-color: transparent;
@@ -1065,4 +1034,47 @@ QWidget#m_content
     background-color:#2d2d2d;
 }
 
+/******  log audit  ******/
+KS--DatePickButton
+{
+    background-color: #222222;
+    border: 1px solid #454545;
+    border-radius: 6px;
+    font-size: 12px;
+    color: white;
+    font:NotoSansCJKsc-Regular;
+}
 
+KS--DatePickButton QWidget
+{
+    background-color: #222222;
+}
+
+KS--Pagination QPushButton
+{
+    color:#FFFFFF;
+    background-color: #393939;
+    outline: none;
+    border:0px;
+    border-radius: 4px;
+}
+
+KS--Pagination QPushButton:checked
+{
+    background-color: #2eb3ff;
+}
+KS--Pagination QPushButton:hover
+{
+    background-color: #464646;
+}
+
+KS--Log--LogPage QTableView#m_logTable > QWidget
+{
+    margin: 0px 22px 0px 0px;
+}
+
+KS--Log--LogPage QHeaderView::section:first
+{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}

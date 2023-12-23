@@ -33,7 +33,7 @@ QDateTime DatePicker::getStartDate()
 {
     QDate startDate = m_startCalendar->getSelectDate();
     QDate endDate = m_endCalendar->getSelectDate();
-    QDateTime start = startDate.startOfDay();
+    QDateTime start = QDateTime(startDate);
     if (startDate == endDate)
     {
         start.setTime(QTime(0, 0, 0));
@@ -45,7 +45,7 @@ QDateTime DatePicker::getEndDate()
 {
     QDate startDate = m_startCalendar->getSelectDate();
     QDate endDate = m_endCalendar->getSelectDate();
-    QDateTime end = endDate.startOfDay();
+    QDateTime end = QDateTime(endDate);
     if (startDate == endDate)
     {
         end.setTime(QTime(23, 59, 59));
@@ -58,59 +58,70 @@ void DatePicker::showDatePicker(int type)
     m_stackedWidget->setCurrentIndex(type);
 }
 
-void DatePicker::startDateChanged(QDate date)
+void DatePicker::changeStartDate(QDate date)
 {
+    m_startDate = date;
     m_endCalendar->setMinimumDate(date);
     m_endCalendar->setSelectableStart(date);
     m_endCalendar->setSelectableEnd(m_endCalendar->selectedDate());
     m_startCalendar->setSelectableStart(date);
     m_startCalendar->setSelectableEnd(m_endCalendar->selectedDate());
-
-    emit sigStartdateChange(date.toString("yy-MM-dd"));
+    setDateLimit();
+    emit startDateChanged(date.toString("yyyy-MM-dd"));
 }
 
-void DatePicker::endDateChanged(QDate date)
+void DatePicker::changeEndDate(QDate date)
 {
+    m_endDate = date;
     m_endCalendar->setSelectableStart(m_startCalendar->selectedDate());
     m_endCalendar->setSelectableEnd(date);
     m_startCalendar->setSelectableStart(m_startCalendar->selectedDate());
     m_startCalendar->setSelectableEnd(date);
-
-    emit sigEndDateChange(date.toString("yy-MM-dd"));
+    setDateLimit();
+    emit endDateChanged(date.toString("yyyy-MM-dd"));
 }
 
 void DatePicker::initUI()
 {
     setWindowFlags(Qt::Widget | Qt::Popup | Qt::FramelessWindowHint);
-    QHBoxLayout *mainLayout = new QHBoxLayout();
-    mainLayout->setMargin(0);
+    setMinimumSize(200, 300);
+    auto mainLayout = new QHBoxLayout(this);
+    mainLayout->setContentsMargins(4, 4, 4, 4);
     mainLayout->setSpacing(10);
     setLayout(mainLayout);
 
     m_stackedWidget = new QStackedWidget(this);
     mainLayout->addWidget(m_stackedWidget);
 
-    QDate currDate = QDate::currentDate();
+    m_endDate = QDate::currentDate();
+    m_startDate = m_endDate.addMonths(-1);
 
-    m_startCalendar = new CalendarWidget(this);
-    // m_startCalendar->hideNextButton();
-    m_startCalendar->setSelectableStart(currDate.addDays(-7));
-    m_startCalendar->setSelectableEnd(currDate);
-    m_startCalendar->setMinimumDate(currDate.addDays(-7));
-    m_startCalendar->setMaximumDate(currDate);
-    m_startCalendar->setSelectedDate(currDate.addDays(-7));
-    connect(m_startCalendar, &CalendarWidget::clicked, this, &DatePicker::startDateChanged);
+    m_startCalendar = new CalendarWidget(m_stackedWidget);
+    // TODO 确认是否有需求现在最大和最小可选数
+    m_startCalendar->setSelectedDate(m_startDate);
+    m_startCalendar->setSelectableStart(QDate::currentDate().addMonths(-1));
+    m_startCalendar->setMinimumDate(QDate::currentDate().addMonths(-1));
+    connect(m_startCalendar, &CalendarWidget::clicked, this, &DatePicker::changeStartDate);
 
-    m_endCalendar = new CalendarWidget(this);
-    // m_endCalendar->hidePreButton();
-    m_endCalendar->setSelectableStart(currDate.addDays(-7));
-    m_endCalendar->setSelectableEnd(currDate);
-    m_endCalendar->setMinimumDate(currDate.addDays(-7));
-    m_endCalendar->setMaximumDate(currDate);
-    m_endCalendar->setSelectedDate(currDate);
-    connect(m_endCalendar, &CalendarWidget::clicked, this, &DatePicker::endDateChanged);
+    m_endCalendar = new CalendarWidget(m_stackedWidget);
+    //     m_endCalendar->hidePreButton();
+    m_endCalendar->setSelectableEnd(QDate::currentDate());
+    m_endCalendar->setMaximumDate(QDate::currentDate());
+    m_endCalendar->setSelectedDate(m_endDate);
+    connect(m_endCalendar, &CalendarWidget::clicked, this, &DatePicker::changeEndDate);
+
+    setDateLimit();
 
     m_stackedWidget->addWidget(m_startCalendar);
     m_stackedWidget->addWidget(m_endCalendar);
+}
+
+void DatePicker::setDateLimit()
+{
+    m_startCalendar->setSelectableEnd(m_endDate.addDays(-1));
+    m_startCalendar->setMaximumDate(m_endDate.addDays(-1));
+
+    m_endCalendar->setSelectableStart(m_startDate.addDays(1));
+    m_endCalendar->setMinimumDate(m_startDate.addDays(1));
 }
 }  // namespace KS

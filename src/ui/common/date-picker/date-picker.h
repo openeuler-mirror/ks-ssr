@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <QDate>
 #include <QWidget>
 
 class QStackedWidget;
@@ -34,21 +35,22 @@ public:
     void showDatePicker(int type);
 
 private slots:
-    void startDateChanged(QDate date);
-    void endDateChanged(QDate date);
+    void changeStartDate(QDate date);
+    void changeEndDate(QDate date);
 
 signals:
-    void sigStartdateChange(const QString &);
-    void sigEndDateChange(const QString &);
+    void startDateChanged(const QString &);
+    void endDateChanged(const QString &);
 
 private:
     void initUI();
+    void setDateLimit();
 
 private:
     CalendarWidget *m_startCalendar;
     CalendarWidget *m_endCalendar;
-    QString m_startDate;
-    QString m_endDate;
+    QDate m_startDate;
+    QDate m_endDate;
     QStackedWidget *m_stackedWidget;
 };
 }  // namespace KS

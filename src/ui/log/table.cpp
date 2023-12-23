@@ -15,6 +15,7 @@
 #include "src/ui/log/table.h"
 #include <qt5-log-i.h>
 #include <stdio.h>
+#include <QAction>
 #include <QApplication>
 #include <QCheckBox>
 #include <QHBoxLayout>
@@ -26,15 +27,19 @@
 #include <QSpinBox>
 #include <QStandardItemModel>
 #include <QTableView>
-#include <QToolTip>
+#include "common/ssr-marcos-ui.h"
+#include "lib/base/notification-wrapper.h"
+#include "src/ui/common/table/header-button-delegate.h"
+#include "src/ui/log/utils.h"
 #include "src/ui/log_proxy.h"
-#include "ssr-i.h"
-#include "ssr-marcos.h"
 
 namespace KS
 {
 namespace Log
 {
+#define ALL_LOG_ROLE ACCOUNT_ROLE_SYSADMIN | ACCOUNT_ROLE_SECADMIN | ACCOUNT_ROLE_AUDITADMIN | ACCOUNT_ROLE_NOACCOUNT
+#define ALL_LOG_TYPE LOG_TYPE_DEVICE | LOG_TYPE_TOOL_BOX
+
 enum LogTableField
 {
     LOG_TABLE_FIELD_NUMBER,
@@ -112,14 +117,25 @@ bool LogFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePa
 LogModel::LogModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
+    initGetLogArgs();
     m_logProxy = new LogProxy(SSR_DBUS_NAME,
-                              SSR_KSS_INIT_DBUS_OBJECT_PATH,
+                              SSR_LOG_DBUS_OBJECT_PATH,
                               QDBusConnection::systemBus(),
                               this);
-    // TODO 连接后台信号DetectHazard, 使用NotificationWrapper弹窗
-    //    connect(m_logProxy, &LogProxy::连接后台信号DetectHazard, this, &LogModel::updateRecord);
+    connect(m_logProxy, &LogProxy::HazardDetected, this, [](uint type, const QString &alertMessage) {
+        // TODO 区分类型弹窗？
+        Q_UNUSED(type)
+        Notify::NOTIFY_ERROR(alertMessage.toUtf8());
+    });
+    connect(m_logProxy, &LogProxy::NewLogWritten, this, &LogModel::logUpdated);
 
     updateRecord();
+
+    // TEST
+    if (m_logInfos.size() == 0)
+    {
+        m_logInfos << LogInfo{.type = LOG_TYPE_DEVICE, .role = ACCOUNT_ROLE_AUDITADMIN, .dataTime = "sdads", .message = "nbnbnb", .result = true};
+    }
 }
 
 int LogModel::rowCount(const QModelIndex &parent) const
@@ -152,18 +168,15 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
         case LogTableField::LOG_TABLE_FIELD_NUMBER:
             return index.row() + 1;
         case LogTableField::LOG_TABLE_FIELD_LOG_TYPE:
-            // TODO type2str
-            return logInfo.type;
-            //        case LogTableField::LOG_TABLE_FIELD_RESOURCE:
-            //            return logInfo.resource;
+            return Utils::logTypeEnum2Str(logInfo.type);
         case LogTableField::LOG_TABLE_FIELD_USERNAME:
-            return logInfo.userName;
+            return Utils::accountRoleEnum2Str(logInfo.role);
         case LogTableField::LOG_TABLE_FIELD_DATATIME:
             return logInfo.dataTime;
         case LogTableField::LOG_TABLE_FIELD_MESSAGE:
             return logInfo.message;
         case LogTableField::LOG_TABLE_FIELD_RESULT:
-            return logInfo.result;
+            return logInfo.result ? tr("Success") : tr("Failed");
         default:
             break;
         }
@@ -191,17 +204,17 @@ QVariant LogModel::headerData(int section, Qt::Orientation orientation, int role
         case LogTableField::LOG_TABLE_FIELD_NUMBER:
             return tr("Number");
         case LogTableField::LOG_TABLE_FIELD_LOG_TYPE:
-            return tr("Log type");
+            return "";
             //        case LogTableField::LOG_TABLE_FIELD_RESOURCE:
             //            return tr("App resource");
         case LogTableField::LOG_TABLE_FIELD_USERNAME:
-            return tr("User name");
+            return "";
         case LogTableField::LOG_TABLE_FIELD_DATATIME:
             return tr("Data time");
         case LogTableField::LOG_TABLE_FIELD_MESSAGE:
             return tr("Message");
         case LogTableField::LOG_TABLE_FIELD_RESULT:
-            return tr("Result");
+            return "";
         default:
             break;
         }
@@ -224,17 +237,78 @@ void LogModel::updateRecord()
     SCOPE_EXIT({
         endResetModel();
     });
-
     m_logInfos.clear();
-    // TODO 从后台取数据，存入m_logInfos
-    // auto reply = m_logProxy->GetProtectedFiles();
-
-    emit logUpdated(m_logInfos.size());
+    // TODO 添加关键字搜索
+    auto reply = m_logProxy->GetLog(m_args.role, m_args.timeStampBegin, m_args.timeStampEnd, m_args.type, m_args.result, LOG_PAGE_NUMBER, m_args.currentPage);
+    reply.waitForFinished();
+    Utils::deserialize(reply.value(), m_logInfos);
 }
 
-QList<LogInfo> LogModel::getLogInfos()
+void Log::LogModel::initGetLogArgs()
 {
-    return m_logInfos;
+    m_args.role = AccountRole(ALL_LOG_ROLE);
+    // 一个月前
+    m_args.timeStampBegin = QDateTime::currentDateTime().addMonths(-1).toSecsSinceEpoch();
+    m_args.timeStampEnd = QDateTime::currentSecsSinceEpoch();
+    m_args.type = LogType(ALL_LOG_TYPE);
+    m_args.result = LOG_RESULT_ALL;
+    m_args.currentPage = 1;
+}
+
+uint Log::LogModel::getLogNumbers()
+{
+    auto reply = m_logProxy->GetLogNum();
+    reply.waitForFinished();
+    return reply.value();
+}
+
+void Log::LogModel::setRole(uint role)
+{
+    RETURN_IF_TRUE(m_args.role == role);
+    m_args.role = role;
+    updateRecord();
+}
+
+void Log::LogModel::setTimeStampBegin(qlonglong timeStampBegin)
+{
+    RETURN_IF_TRUE(m_args.timeStampBegin == timeStampBegin);
+    m_args.timeStampBegin = timeStampBegin;
+    updateRecord();
+}
+
+void Log::LogModel::setTimeStampEnd(qlonglong timeStampEnd)
+{
+    RETURN_IF_TRUE(m_args.timeStampEnd == timeStampEnd);
+    m_args.timeStampEnd = timeStampEnd;
+    updateRecord();
+}
+
+void Log::LogModel::setLogType(Log::LogType type)
+{
+    RETURN_IF_TRUE(m_args.type == type);
+    m_args.type = type;
+    updateRecord();
+}
+
+void Log::LogModel::setLogResult(uint result)
+{
+    RETURN_IF_TRUE(m_args.result == result);
+    m_args.result = result;
+    updateRecord();
+}
+
+void Log::LogModel::setCurrentPage(uint currentPage)
+{
+    RETURN_IF_TRUE(m_args.currentPage == currentPage);
+    m_args.currentPage = currentPage;
+    updateRecord();
+}
+
+void Log::LogModel::setSearchKey(const QString &text)
+{
+    RETURN_IF_TRUE(text.isEmpty());
+    m_args.searchKey = text;
+    updateRecord();
 }
 
 LogTable::LogTable(QWidget *parent)
@@ -242,7 +316,38 @@ LogTable::LogTable(QWidget *parent)
       m_filterProxy(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    initTable();
+    initTableHeaderButton();
+}
 
+void LogTable::search(const QString &text)
+{
+    // TODO 传数据给后台，后台进行关键字搜索
+    m_model->setSearchKey(text);
+}
+
+uint Log::LogTable::getLogNumbers()
+{
+    return m_model->getLogNumbers();
+}
+
+void Log::LogTable::setCurrentPage(uint currentPage)
+{
+    m_model->setCurrentPage(currentPage);
+}
+
+void Log::LogTable::setTimeStampBegin(qlonglong timeStampBegin)
+{
+    m_model->setTimeStampBegin(timeStampBegin);
+}
+
+void Log::LogTable::setTimeStampEnd(qlonglong timeStampEnd)
+{
+    m_model->setTimeStampEnd(timeStampEnd);
+}
+
+void Log::LogTable::initTable()
+{
     // 设置Model
     m_model = new LogModel(this);
     m_headerViewProxy = new TableHeaderProxy(this);
@@ -276,18 +381,95 @@ LogTable::LogTable(QWidget *parent)
     auto verticalHeader = this->verticalHeader();
     verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
     verticalHeader->setDefaultSectionSize(38);
+    verticalHeader->hide();
 }
 
-void LogTable::searchTextChanged(const QString &text)
+void Log::LogTable::initTableHeaderButton()
 {
-    KLOG_DEBUG() << "The search text is change to " << text;
-    // TODO 传数据给后台，后台进行关键字搜索
-    m_filterProxy->setFilterFixedString(text);
+    initLogTypeButton();
+    initRoleButton();
+    initResultButton();
+
+    QMap<int, HeaderButtonDelegate *> headerButtons;
+    headerButtons.insert(LOG_TABLE_FIELD_LOG_TYPE, m_logTypeButton);
+    headerButtons.insert(LOG_TABLE_FIELD_USERNAME, m_roleButton);
+    headerButtons.insert(LOG_TABLE_FIELD_RESULT, m_resultButton);
+    m_headerViewProxy->setHeaderButtons(headerButtons);
 }
 
-QList<LogInfo> LogTable::getLogInfos()
+void Log::LogTable::initLogTypeButton()
 {
-    return m_model->getLogInfos();
+    // 日志类型筛选
+    m_logTypeButton = new HeaderButtonDelegate(this);
+    m_logTypeButton->setButtonText(tr("Log type"));
+    auto device = new QAction(tr("Device log"), m_logTypeButton);
+    auto toolBox = new QAction(tr("Tool log"), m_logTypeButton);
+
+    m_logTypeButton->addMenuActions(QList<QAction *>() << device << toolBox);
+    connect(m_logTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this]() {
+        int type = 0;
+        for (auto action : m_logTypeButton->getMenuActions())
+        {
+            CONTINUE_IF_TRUE(!action->isChecked());
+            type |= Utils::str2LogTypeEnum(action->text());
+        }
+        m_model->setLogType(LogType(type));
+    });
+}
+
+void Log::LogTable::initRoleButton()
+{
+    // 日志角色筛选
+    m_roleButton = new HeaderButtonDelegate(this);
+    m_roleButton->setButtonText(tr("User name"));
+    auto sysadm = new QAction(tr("Sysadm"), m_roleButton);
+    auto secadm = new QAction(tr("Secadm"), m_roleButton);
+    auto audadm = new QAction(tr("Audadm"), m_roleButton);
+
+    m_roleButton->addMenuActions(QList<QAction *>() << sysadm << secadm << audadm);
+    connect(m_roleButton, &HeaderButtonDelegate::menuTriggered, this, [this]() {
+        int role = 0;
+        for (auto action : m_roleButton->getMenuActions())
+        {
+            CONTINUE_IF_TRUE(!action->isChecked());
+            role |= Utils::str2AccountRoleEnum(action->text());
+        }
+        m_model->setRole(AccountRole(role));
+    });
+}
+
+void Log::LogTable::initResultButton()
+{
+    // 日志结果筛选
+    m_resultButton = new HeaderButtonDelegate(this);
+    m_resultButton->setButtonText(tr("Result"));
+    auto success = new QAction(tr("Success"), m_resultButton);
+    auto fail = new QAction(tr("Failed"), m_resultButton);
+
+    m_resultButton->addMenuActions(QList<QAction *>() << success << fail);
+    connect(m_resultButton, &HeaderButtonDelegate::menuTriggered, this, [this]() {
+        QMap<QString, bool> roleMap;
+        for (auto action : m_resultButton->getMenuActions())
+        {
+            roleMap.insert(action->text(), action->isChecked());
+        }
+        if (roleMap.value(tr("Success")) && roleMap.value(tr("Failed")))
+        {
+            // 全选
+            m_model->setLogResult(LOG_RESULT_ALL);
+        }
+        else
+        {
+            // 如果两个都未选中，设置result为3,获取表格为空
+            if (!roleMap.value(tr("Success")) && !roleMap.value(tr("Failed")))
+            {
+                m_model->setLogResult(3);
+                return;
+            }
+            // 仅一个选中
+            m_model->setLogResult(roleMap.value(tr("Success")) ? LOG_RESULT_TRUE : LOG_RESULT_FALSE);
+        }
+    });
 }
 
 }  // namespace Log

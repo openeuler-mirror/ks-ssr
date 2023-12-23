@@ -101,37 +101,40 @@ void CalendarWidget::hidePreButton()
 void CalendarWidget::initControl()
 {
     setObjectName("CalendarWidget");
-    layout()->setSizeConstraint(QLayout::SetFixedSize);
+    layout()->setSizeConstraint(QLayout::SetDefaultConstraint);
     setLocale(QLocale(QLocale::Chinese));
     setNavigationBarVisible(false);
     setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
     setHorizontalHeaderFormat(QCalendarWidget::SingleLetterDayNames);
     setStyle(new QCustomStyle(this));
+    // TODO QSS
+    this->setStyleSheet("background-color: #2d2d2d");
 
     QFont font;
     font.setPixelSize(14);
     QTextCharFormat singleFormat;
-    singleFormat.setForeground(QColor(0, 0, 0));
-    singleFormat.setBackground(QColor(218, 226, 239));
+    singleFormat.setForeground(QColor(145, 145, 145));
+    singleFormat.setBackground(QColor(57, 57, 57));
     singleFormat.setFont(font);
-    QTextCharFormat doubleFormat;
-    doubleFormat.setForeground(QColor(0, 0, 0));
-    doubleFormat.setFont(font);
+
+    QTextCharFormat weekFormat;
+    weekFormat.setForeground(QColor(145, 145, 145));
+    weekFormat.setFont(font);
 
     setHeaderTextFormat(singleFormat);
-    setWeekdayTextFormat(Qt::Saturday, doubleFormat);
-    setWeekdayTextFormat(Qt::Sunday, doubleFormat);
+    setWeekdayTextFormat(Qt::Saturday, weekFormat);
+    setWeekdayTextFormat(Qt::Sunday, weekFormat);
 
     initTopWidget();
 
-    connect(this, &QCalendarWidget::currentPageChanged, [this](int year, int month)
-            {
-                setDataLabelTimeText(year, month);
-            });
+    connect(this, &QCalendarWidget::currentPageChanged, [this](int year, int month) {
+        setDataLabelTimeText(year, month);
+    });
 }
 
 void CalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDate &date) const
 {
+    QCalendarWidget::paintCell(painter, rect, date);
     if (date == selectedDate())
     {
         painter->save();
@@ -149,7 +152,7 @@ void CalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDate
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(218, 226, 239));
+        painter->setBrush(QColor(57, 57, 57));
 
         painter->drawRect(rect.x(), rect.y(), rect.width(), rect.height());
         painter->setPen(QColor(255, 255, 255));
@@ -162,16 +165,12 @@ void CalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDate
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(255, 255, 255));
+        painter->setBrush(QColor(145, 145, 145));
         painter->drawRect(rect.x(), rect.y(), rect.width(), rect.height());
 
-        painter->setPen(QColor(0, 0, 0));
+        painter->setPen(QColor(145, 145, 145));
         painter->drawText(rect, Qt::AlignCenter, QString::number(date.day()));
         painter->restore();
-    }
-    else
-    {
-        QCalendarWidget::paintCell(painter, rect, date);
     }
 }
 
@@ -186,12 +185,12 @@ void CalendarWidget::paintEvent(QPaintEvent *event)
 
 void CalendarWidget::initTopWidget()
 {
-    QWidget *topWidget = new QWidget(this);
+    auto topWidget = new QWidget(this);
     topWidget->setObjectName("CalendarTopWidget");
     topWidget->setFixedHeight(40);
     topWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    QHBoxLayout *hboxLayout = new QHBoxLayout;
+    auto hboxLayout = new QHBoxLayout(topWidget);
     hboxLayout->setContentsMargins(12, 0, 12, 0);
     hboxLayout->setSpacing(4);
 
@@ -207,6 +206,7 @@ void CalendarWidget::initTopWidget()
     m_rightMonthBtn->setObjectName("CalendarRightMonthBtn");
     m_dataLabel->setObjectName("CalendarDataLabel");
 
+    // TODO 替换箭头
     m_leftYearBtn->setFixedSize(16, 16);
     m_leftYearBtn->setIcon(QIcon(":/images/year-left"));
     m_leftMonthBtn->setFixedSize(16, 16);
@@ -223,9 +223,8 @@ void CalendarWidget::initTopWidget()
     hboxLayout->addStretch();
     hboxLayout->addWidget(m_rightMonthBtn);
     hboxLayout->addWidget(m_rightYearBtn);
-    topWidget->setLayout(hboxLayout);
 
-    QVBoxLayout *vBodyLayout = qobject_cast<QVBoxLayout *>(layout());
+    auto vBodyLayout = qobject_cast<QVBoxLayout *>(layout());
     vBodyLayout->insertWidget(0, topWidget);
 
     connect(m_leftYearBtn, SIGNAL(clicked()), this, SLOT(onbtnClicked()));
@@ -238,12 +237,12 @@ void CalendarWidget::initTopWidget()
 
 void CalendarWidget::initBottomWidget()
 {
-    QWidget *bottomWidget = new QWidget(this);
+    auto bottomWidget = new QWidget(this);
     bottomWidget->setObjectName("CalendarBottomWidget");
     bottomWidget->setFixedHeight(40);
     bottomWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    QHBoxLayout *hboxLayout = new QHBoxLayout;
+    auto hboxLayout = new QHBoxLayout(bottomWidget);
     hboxLayout->setContentsMargins(12, 0, 12, 0);
     hboxLayout->setSpacing(6);
 
@@ -260,21 +259,18 @@ void CalendarWidget::initBottomWidget()
     hboxLayout->addStretch();
     hboxLayout->addWidget(m_toDayBtn);
     hboxLayout->addWidget(m_ensureBtn);
-    bottomWidget->setLayout(hboxLayout);
 
-    QVBoxLayout *vBodyLayout = qobject_cast<QVBoxLayout *>(layout());
+    auto vBodyLayout = qobject_cast<QVBoxLayout *>(layout());
     vBodyLayout->addWidget(bottomWidget);
 
-    connect(m_ensureBtn, &QPushButton::clicked, [this]()
-            {
-                emit signalSetCalendarTime(selectedDate());
-                emit activated(selectedDate());
-            });
+    connect(m_ensureBtn, &QPushButton::clicked, [this]() {
+        emit signalSetCalendarTime(selectedDate());
+        emit activated(selectedDate());
+    });
 
-    connect(m_toDayBtn, &QPushButton::clicked, [this]()
-            {
-                showToday();
-            });
+    connect(m_toDayBtn, &QPushButton::clicked, [this]() {
+        showToday();
+    });
 }
 
 void CalendarWidget::setDataLabelTimeText(int year, int month)
@@ -284,7 +280,7 @@ void CalendarWidget::setDataLabelTimeText(int year, int month)
 
 void CalendarWidget::onbtnClicked()
 {
-    QPushButton *senderBtn = qobject_cast<QPushButton *>(sender());
+    auto senderBtn = qobject_cast<QPushButton *>(sender());
     if (senderBtn == m_leftYearBtn)
     {
         showPreviousYear();
