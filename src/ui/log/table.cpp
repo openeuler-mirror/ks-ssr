@@ -37,8 +37,8 @@ namespace KS
 {
 namespace Log
 {
-#define ALL_LOG_ROLE ACCOUNT_ROLE_SYSADMIN | ACCOUNT_ROLE_SECADMIN | ACCOUNT_ROLE_AUDITADMIN | ACCOUNT_ROLE_NOACCOUNT
-#define ALL_LOG_TYPE LOG_TYPE_DEVICE | LOG_TYPE_TOOL_BOX
+#define ALL_LOG_ROLE 0xFFFF
+#define ALL_LOG_TYPE 0xFFFF
 
 enum LogTableField
 {
@@ -127,15 +127,11 @@ LogModel::LogModel(QObject *parent)
         Q_UNUSED(type)
         Notify::NOTIFY_ERROR(alertMessage.toUtf8());
     });
-    connect(m_logProxy, &LogProxy::NewLogWritten, this, &LogModel::logUpdated);
+    connect(m_logProxy, &LogProxy::NewLogWritten, this, [this]{
+         emit logUpdated(static_cast<int>(getLogNumbers()));
+    });
 
     updateRecord();
-
-    // TEST
-    if (m_logInfos.size() == 0)
-    {
-        m_logInfos << LogInfo{.type = LOG_TYPE_DEVICE, .role = ACCOUNT_ROLE_AUDITADMIN, .dataTime = "sdads", .message = "nbnbnb", .result = true};
-    }
 }
 
 int LogModel::rowCount(const QModelIndex &parent) const
@@ -238,26 +234,26 @@ void LogModel::updateRecord()
         endResetModel();
     });
     m_logInfos.clear();
-    // TODO 添加关键字搜索
-    auto reply = m_logProxy->GetLog(m_args.role, m_args.timeStampBegin, m_args.timeStampEnd, m_args.type, m_args.result, LOG_PAGE_NUMBER, m_args.currentPage);
+    auto reply = m_logProxy->GetLog(static_cast<int>(m_args.role), m_args.timeStampBegin, m_args.timeStampEnd, m_args.type, m_args.result, m_args.searchKey, LOG_PAGE_NUMBER, m_args.currentPage);
     reply.waitForFinished();
     Utils::deserialize(reply.value(), m_logInfos);
+    emit logUpdated(static_cast<int>(getLogNumbers()));
 }
 
 void Log::LogModel::initGetLogArgs()
 {
-    m_args.role = AccountRole(ALL_LOG_ROLE);
+    m_args.role = static_cast<AccountRole>(ALL_LOG_ROLE);
     // 一个月前
     m_args.timeStampBegin = QDateTime::currentDateTime().addMonths(-1).toSecsSinceEpoch();
     m_args.timeStampEnd = QDateTime::currentSecsSinceEpoch();
-    m_args.type = LogType(ALL_LOG_TYPE);
+    m_args.type = static_cast<LogType>(ALL_LOG_TYPE);
     m_args.result = LOG_RESULT_ALL;
     m_args.currentPage = 1;
 }
 
 uint Log::LogModel::getLogNumbers()
 {
-    auto reply = m_logProxy->GetLogNum();
+    auto reply = m_logProxy->GetLogNum(static_cast<int>(m_args.role), m_args.timeStampBegin, m_args.timeStampEnd, m_args.type, m_args.result, m_args.searchKey);
     reply.waitForFinished();
     return reply.value();
 }
@@ -306,7 +302,6 @@ void Log::LogModel::setCurrentPage(uint currentPage)
 
 void Log::LogModel::setSearchKey(const QString &text)
 {
-    RETURN_IF_TRUE(text.isEmpty());
     m_args.searchKey = text;
     updateRecord();
 }
@@ -322,7 +317,6 @@ LogTable::LogTable(QWidget *parent)
 
 void LogTable::search(const QString &text)
 {
-    // TODO 传数据给后台，后台进行关键字搜索
     m_model->setSearchKey(text);
 }
 
@@ -403,7 +397,7 @@ void Log::LogTable::initLogTypeButton()
     m_logTypeButton = new HeaderButtonDelegate(this);
     m_logTypeButton->setButtonText(tr("Log type"));
     auto device = new QAction(tr("Device log"), m_logTypeButton);
-    auto toolBox = new QAction(tr("Tool log"), m_logTypeButton);
+    auto toolBox = new QAction(tr("Tool box log"), m_logTypeButton);
 
     m_logTypeButton->addMenuActions(QList<QAction *>() << device << toolBox);
     connect(m_logTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this]() {
@@ -413,7 +407,7 @@ void Log::LogTable::initLogTypeButton()
             CONTINUE_IF_TRUE(!action->isChecked());
             type |= Utils::str2LogTypeEnum(action->text());
         }
-        m_model->setLogType(LogType(type));
+        m_model->setLogType(static_cast<LogType>(type));
     });
 }
 
@@ -434,7 +428,7 @@ void Log::LogTable::initRoleButton()
             CONTINUE_IF_TRUE(!action->isChecked());
             role |= Utils::str2AccountRoleEnum(action->text());
         }
-        m_model->setRole(AccountRole(role));
+        m_model->setRole(static_cast<AccountRole>(role));
     });
 }
 

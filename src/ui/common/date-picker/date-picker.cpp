@@ -99,8 +99,8 @@ void DatePicker::initUI()
     m_startCalendar = new CalendarWidget(m_stackedWidget);
     // TODO 确认是否有需求现在最大和最小可选数
     m_startCalendar->setSelectedDate(m_startDate);
-    m_startCalendar->setSelectableStart(QDate::currentDate().addMonths(-1));
-    m_startCalendar->setMinimumDate(QDate::currentDate().addMonths(-1));
+//    m_startCalendar->setSelectableStart(QDate::currentDate().addMonths(-1));
+//    m_startCalendar->setMinimumDate(QDate::currentDate().addMonths(-1));
     connect(m_startCalendar, &CalendarWidget::clicked, this, &DatePicker::changeStartDate);
 
     m_endCalendar = new CalendarWidget(m_stackedWidget);

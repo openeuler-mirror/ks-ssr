@@ -32,7 +32,7 @@ class HeaderButtonDelegate;
 namespace Log
 {
 // 一页多少条日志
-#define LOG_PAGE_NUMBER 8
+#define LOG_PAGE_NUMBER 20
 
 enum LogType
 {

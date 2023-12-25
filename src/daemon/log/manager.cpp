@@ -40,7 +40,6 @@ namespace KS
 {
 namespace Log
 {
-
 Manager* Manager::m_logManager = nullptr;
 
 Manager::Manager()
@@ -85,18 +84,17 @@ Manager::Manager()
     m_thread->start();
 
     // 设置备份日志文件
-    connect(m_backUpLogProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [this](int, QProcess::ExitStatus)
-            {
-                uint rc = m_backUpLogProcess->exitCode();
-                QString errMsg = m_backUpLogProcess->readAllStandardOutput() +
-                                 m_backUpLogProcess->readAllStandardError();
-                if (rc != 0)
-                {
-                    KLOG_WARNING() << "error code: " << rc
-                                   << ", Failed to back up overflow log! error message: " << errMsg;
-                    // SSR_LOG(Account::Manager::AccountRole::UNKNOWN_ACCOUNT, LogType::LOG, "Failed to back up overflow log!", false);
-                }
-            });
+    connect(m_backUpLogProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [this](int, QProcess::ExitStatus) {
+        uint rc = m_backUpLogProcess->exitCode();
+        QString errMsg = m_backUpLogProcess->readAllStandardOutput() +
+                         m_backUpLogProcess->readAllStandardError();
+        if (rc != 0)
+        {
+            KLOG_WARNING() << "error code: " << rc
+                           << ", Failed to back up overflow log! error message: " << errMsg;
+            // SSR_LOG(Account::Manager::AccountRole::unknown_account, LogType::LOG, "Failed to back up overflow log!", false);
+        }
+    });
 
     // 初始化 DBus 接口
     new LogAdaptor(this);
@@ -128,21 +126,59 @@ void Manager::globalDeinit()
     delete m_logManager;
 }
 
-uint Manager::GetLogNum()
+uint Manager::GetLogNum(const int role, const time_t begin_time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText)
 {
     QReadLocker locker(&m_listMutex);
-    return m_logList.size();
+    uint logSize = 0;
+    auto reverseIt = m_logList.rbegin();
+    auto reverseEnd = m_logList.rend();
+    while (reverseIt != reverseEnd)
+    {
+        // 为了可读性，将判断条件取反了
+        if ((static_cast<int>(reverseIt->role) & role) == 0)
+        {
+            reverseIt++;
+            continue;
+        }
+        if (reverseIt->timeStamp.toSecsSinceEpoch() < begin_time_stamp ||
+            reverseIt->timeStamp.toSecsSinceEpoch() >= end_time_stamp)
+        {
+            reverseIt++;
+            continue;
+        }
+        if ((static_cast<int>(reverseIt->type) & type) == 0)
+        {
+            reverseIt++;
+            continue;
+        }
+        // 当前端传入 LOG_RESULT_ALL 时代表需要所有结果的日志， 所以不针对日志的结果筛选
+        if (result != LogResult::LOG_RESULT_ALL)
+        {
+            if (!(static_cast<uint>(reverseIt->result) == result))
+            {
+                reverseIt++;
+                continue;
+            }
+        }
+        if (!reverseIt->logMsg.contains(searchText, Qt::CaseSensitivity::CaseInsensitive))
+        {
+            reverseIt++;
+            continue;
+        }
+        logSize++;
+        reverseIt++;
+    }
+    return logSize;
 }
 
 QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText, const uint per_page, const uint page) const
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(m_logManager);
     auto _role = Account::Manager::m_accountManager->getRole(callerUnique);
-    if (_role == KS::Account::Manager::AccountRole::UNKNOWN_ACCOUNT)
+    if (_role == KS::Account::Manager::AccountRole::unknown_account)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QStringList(), SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
     }
-    // auto _role = Account::Manager::m_accountManager->getRole(callerPid);
 
     KLOG_DEBUG() << "Get logs, per page limit is " << per_page << "page index is " << page;
     if ((per_page == 0 || per_page > 500) || page == 0)
@@ -164,7 +200,6 @@ QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const
     while (reverseIt != reverseEnd && static_cast<uint>(tmpLogList.size()) < per_page)
     {
         // 为了可读性，将判断条件取反了
-
         if ((static_cast<int>(reverseIt->role) & role) == 0)
         {
             reverseIt++;
@@ -198,6 +233,7 @@ QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const
         if (totalOffset != 0)
         {
             totalOffset--;
+            reverseIt++;
             continue;
         }
         tmpLogList.append(*reverseIt);

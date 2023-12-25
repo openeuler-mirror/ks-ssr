@@ -34,7 +34,7 @@ struct PrivacyCleanupInfo
     bool selected;
     // 用户名
     QString userName;
-    // 日期时间
+    // 用户类型
     QString userType;
 };
 
@@ -102,7 +102,10 @@ public:
     PrivacyCleanupTable(QWidget *parent = nullptr);
     virtual ~PrivacyCleanupTable(){};
 
-    PrivacyCleanupFilterModel *getFilterProxy() { return m_filterProxy; };
+    PrivacyCleanupFilterModel *getFilterProxy()
+    {
+        return m_filterProxy;
+    };
     void setSearchText(const QString &text);
     int getPrivacyCleanupInfosSize();
     void cleanCheckedUsers();
@@ -112,6 +115,7 @@ signals:
 
 private:
     void initTable();
+    QList<PrivacyCleanupInfo> getTableInfos();
 
 private slots:
     void checkedAllItem(Qt::CheckState checkState);

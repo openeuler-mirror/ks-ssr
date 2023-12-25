@@ -33,6 +33,24 @@
             <description>Get logs, pagination.</description>
         </method>
         <method name="GetLogNum">
+            <arg type="i" name="role" direction="in">
+                <summary>Roles in the log.</summary>
+            </arg>
+            <arg type="x" name="time_stamp_begin" direction="in">
+                <summary>Begin timeStamp of the log.</summary>
+            </arg>
+            <arg type="x" name="time_stamp_end" direction="in">
+                <summary>End timeStamp of the log.</summary>
+            </arg>
+            <arg type="i" name="type" direction="in">
+                <summary>Type of Log.</summary>
+            </arg>
+            <arg type="u" name="result" direction="in">
+                <summary>Result of log.</summary>
+            </arg>
+            <arg type="s" name="search_text" direction="in">
+                <summary>Key word, be used search.</summary>
+            </arg>
             <arg type="u" name="log_num" direction="out">
                 <summary>Get number of log.</summary>
             </arg>

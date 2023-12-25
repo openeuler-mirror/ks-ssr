@@ -46,7 +46,12 @@ enum PrivacyCleanupTableField
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-PrivacyCleanupDelegate::PrivacyCleanupDelegate(QObject *parent) : QStyledItemDelegate(parent)
+// 表格json信息key
+#define USER_NAME_JSON_KEY "name"
+#define USER_TYPE_JSON_KEY "type"
+
+PrivacyCleanupDelegate::PrivacyCleanupDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -129,7 +134,8 @@ bool PrivacyCleanupDelegate::editorEvent(QEvent *event,
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
-PrivacyCleanupFilterModel::PrivacyCleanupFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+PrivacyCleanupFilterModel::PrivacyCleanupFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
@@ -145,10 +151,9 @@ bool PrivacyCleanupFilterModel::filterAcceptsRow(int sourceRow, const QModelInde
     return false;
 }
 
-PrivacyCleanupModel::PrivacyCleanupModel(QObject *parent) : QAbstractTableModel(parent)
+PrivacyCleanupModel::PrivacyCleanupModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
-    // TODO 获取列表内容
-    m_infos = {};
 }
 
 int PrivacyCleanupModel::rowCount(const QModelIndex &parent) const
@@ -307,6 +312,11 @@ QStringList PrivacyCleanupModel::getCheckedUserName()
 
 void PrivacyCleanupModel::setInfos(const QList<PrivacyCleanupInfo> &infos)
 {
+    beginResetModel();
+    SCOPE_EXIT({
+        endResetModel();
+    });
+    m_infos.clear();
     m_infos = infos;
     emit tableUpdated(m_infos.size());
 }
@@ -330,8 +340,9 @@ void ToolBox::PrivacyCleanupModel::delcheckedInfos()
     emit tableUpdated(m_infos.size());
 }
 
-PrivacyCleanupTable::PrivacyCleanupTable(QWidget *parent) : QTableView(parent),
-                                                            m_filterProxy(nullptr)
+PrivacyCleanupTable::PrivacyCleanupTable(QWidget *parent)
+    : QTableView(parent),
+      m_filterProxy(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_dbusProxy = new ToolBoxDbusProxy(SSR_DBUS_NAME,
@@ -358,6 +369,7 @@ void KS::ToolBox::PrivacyCleanupTable::cleanCheckedUsers()
     auto reply = m_dbusProxy->RemoveUser(checkedUserName);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     RETURN_IF_TRUE(reply.isError());
+    m_model->setInfos(getTableInfos());
     m_model->delcheckedInfos();
 }
 
@@ -365,8 +377,7 @@ void KS::ToolBox::PrivacyCleanupTable::initTable()
 {
     // 设置Model
     m_model = new PrivacyCleanupModel(this);
-    // TODO 需要获取用户列表信息
-    //    m_model->setInfos()
+    m_model->setInfos(getTableInfos());
     m_headerViewProxy = new TableHeaderProxy(this);
     setHorizontalHeader(m_headerViewProxy);
     setMouseTracking(true);
@@ -397,6 +408,30 @@ void KS::ToolBox::PrivacyCleanupTable::initTable()
     auto verticalHeader = this->verticalHeader();
     verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
     verticalHeader->setDefaultSectionSize(38);
+}
+
+QList<KS::ToolBox::PrivacyCleanupInfo> KS::ToolBox::PrivacyCleanupTable::getTableInfos()
+{
+    QList<KS::ToolBox::PrivacyCleanupInfo> infos;
+    auto reply = m_dbusProxy->GetAllUsers();
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+
+    QJsonParseError jsonError;
+    auto jsonDoc = QJsonDocument::fromJson(reply.value().toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser files Recordrmation failed: " << jsonError.errorString();
+        return infos;
+    }
+    for (auto json : jsonDoc.array())
+    {
+        PrivacyCleanupInfo info{
+            .selected = false,
+            .userName = json.toObject().value(USER_NAME_JSON_KEY).toString(),
+            .userType = json.toObject().value(USER_TYPE_JSON_KEY).toInt() == 0 ? tr("Manager user") : tr("Normat user")};
+        infos << info;
+    }
+    return infos;
 }
 
 int PrivacyCleanupTable::getPrivacyCleanupInfosSize()

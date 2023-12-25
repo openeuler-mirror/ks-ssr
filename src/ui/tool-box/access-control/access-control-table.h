@@ -77,6 +77,7 @@ public:
     virtual ~AccessControlTable(){};
 
     bool openSelinux(bool isOpen);
+    bool getSelinuxStatus();
 
 private:
     void initTable();

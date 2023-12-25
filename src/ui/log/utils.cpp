@@ -33,7 +33,7 @@ QString Utils::logTypeEnum2Str(uint type)
         //    case LOG_TYPE_LOG:
         //        return tr("Log");
     case LOG_TYPE_TOOL_BOX:
-        return tr("Tool log");
+        return tr("Tool box log");
     default:
         break;
     }
@@ -42,18 +42,9 @@ QString Utils::logTypeEnum2Str(uint type)
 
 int Utils::str2LogTypeEnum(const QString &typeStr)
 {
-    if (typeStr == tr("Device log"))
-    {
-        return LOG_TYPE_DEVICE;
-    }
-    else if (typeStr == tr("Tool log"))
-    {
-        return LOG_TYPE_TOOL_BOX;
-    }
-    else
-    {
-        return -1;
-    }
+    RETURN_VAL_IF_TRUE(typeStr == tr("Device log"), LOG_TYPE_DEVICE);
+    RETURN_VAL_IF_TRUE(typeStr == tr("Tool box log"), LOG_TYPE_TOOL_BOX);
+    return -1;
 }
 
 QString Utils::accountRoleEnum2Str(uint role)
@@ -73,33 +64,21 @@ QString Utils::accountRoleEnum2Str(uint role)
 
 int Utils::str2AccountRoleEnum(const QString &roleStr)
 {
-    if (roleStr == tr("Sysadm"))
-    {
-        return ACCOUNT_ROLE_SYSADMIN;
-    }
-    else if (roleStr == tr("Secadm"))
-    {
-        return ACCOUNT_ROLE_SECADMIN;
-    }
-    else if (roleStr == tr("Audadm"))
-    {
-        return ACCOUNT_ROLE_AUDITADMIN;
-    }
-    else
-    {
-        return -1;
-    }
+    RETURN_VAL_IF_TRUE(roleStr == tr("Sysadm"), ACCOUNT_ROLE_SYSADMIN);
+    RETURN_VAL_IF_TRUE(roleStr == tr("Secadm"), ACCOUNT_ROLE_SECADMIN);
+    RETURN_VAL_IF_TRUE(roleStr == tr("Audadm"), ACCOUNT_ROLE_AUDITADMIN);
+    return -1;
 }
 
 void Utils::deserialize(const QStringList &logs, QList<LogInfo> &logInfos)
 {
-    for (auto log : logs)
+    for (auto& log : logs)
     {
         auto logItems = log.split("|");
-        CONTINUE_IF_TRUE(log.size() != 5);
+        CONTINUE_IF_TRUE(logItems.size() != 5);
         auto logInfo = LogInfo{
-            .type = LogType(logStrType2Enum(logItems.at(2))),
-            .role = AccountRole(roleStrType2Enum(logItems.at(0))),
+            .type = static_cast<LogType>(logStrType2Enum(logItems.at(2))),
+            .role = static_cast<AccountRole>(roleStrType2Enum(logItems.at(0))),
             .dataTime = QDateTime::fromString(logItems.at(1), Qt::ISODate).toString("yyyy/MM/dd HH:mm"),
             .message = logItems.at(4),
             .result = logItems.at(3) == "true"};
@@ -109,14 +88,8 @@ void Utils::deserialize(const QStringList &logs, QList<LogInfo> &logInfos)
 
 int Utils::logStrType2Enum(const QString &logStr)
 {
-    if (logStr == "TOOL_BOX")
-    {
-        return LOG_TYPE_TOOL_BOX;
-    }
-    else if (logStr == "DEVICE")
-    {
-        return LOG_TYPE_DEVICE;
-    }
+    RETURN_VAL_IF_TRUE(logStr == "TOOL_BOX", LOG_TYPE_TOOL_BOX);
+    RETURN_VAL_IF_TRUE(logStr == "DEVICE", LOG_TYPE_DEVICE);
     //    else if (logStr == "LOG")
     //    {
     //        return LOG_TYPE_LOG;
@@ -125,34 +98,16 @@ int Utils::logStrType2Enum(const QString &logStr)
     //    {
     //        return LOG_TYPE_AUDIT;
     //    }
-    else
-    {
-        return -1;
-    }
+    return -1;
 }
 
 int Utils::roleStrType2Enum(const QString &roleStr)
 {
-    if (roleStr == "SYSADMIN")
-    {
-        return ACCOUNT_ROLE_SYSADMIN;
-    }
-    else if (roleStr == "SECADMIN")
-    {
-        return ACCOUNT_ROLE_SECADMIN;
-    }
-    else if (roleStr == "AUDITADMIN")
-    {
-        return ACCOUNT_ROLE_AUDITADMIN;
-    }
-    else if (roleStr == "NOACCOUNT")
-    {
-        return ACCOUNT_ROLE_NOACCOUNT;
-    }
-    else
-    {
-        return -1;
-    }
+    RETURN_VAL_IF_TRUE(roleStr == "sysadm", ACCOUNT_ROLE_SYSADMIN);
+    RETURN_VAL_IF_TRUE(roleStr == "secadm", ACCOUNT_ROLE_SECADMIN);
+    RETURN_VAL_IF_TRUE(roleStr == "audadm", ACCOUNT_ROLE_AUDITADMIN);
+    RETURN_VAL_IF_TRUE(roleStr == "unknown_account", ACCOUNT_ROLE_NOACCOUNT);
+    return -1;
 }
 
 }  // namespace Log

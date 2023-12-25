@@ -41,7 +41,8 @@ enum AccessControlTableField
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-AccessControlDelegate::AccessControlDelegate(QObject *parent) : QStyledItemDelegate(parent)
+AccessControlDelegate::AccessControlDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -81,10 +82,9 @@ void AccessControlDelegate::paint(QPainter *painter,
     QStyledItemDelegate::paint(painter, option, index);
 }
 
-AccessControlModel::AccessControlModel(QObject *parent) : QAbstractTableModel(parent)
+AccessControlModel::AccessControlModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
-    // TODO 获取列表内容
-    m_infos = {};
 }
 
 int AccessControlModel::rowCount(const QModelIndex &parent) const
@@ -185,7 +185,8 @@ void AccessControlModel::showInfos(bool isShow)
     m_infos << sysadmInfo << secadmInfo << audadmInfo;
 }
 
-AccessControlTable::AccessControlTable(QWidget *parent) : QTableView(parent)
+AccessControlTable::AccessControlTable(QWidget *parent)
+    : QTableView(parent)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_dbusProxy = new ToolBoxDbusProxy(SSR_DBUS_NAME,
@@ -203,6 +204,15 @@ bool AccessControlTable::openSelinux(bool isOpen)
     m_model->showInfos(isOpen);
     isOpen ? m_headerViewProxy->show() : m_headerViewProxy->hide();
     return true;
+}
+
+bool ToolBox::AccessControlTable::getSelinuxStatus()
+{
+    auto reply = m_dbusProxy->GetAccessStatus();
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    RETURN_VAL_IF_TRUE(reply.isError(), false);
+
+    return reply.value();
 }
 
 void KS::ToolBox::AccessControlTable::initTable()

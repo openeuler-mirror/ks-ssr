@@ -42,7 +42,6 @@ namespace KS
 {
 namespace ToolBox
 {
-
 Manager* Manager::m_toolBoxManager = nullptr;
 
 void Manager::globalInit()
@@ -76,9 +75,9 @@ void Manager::SetAccessControlStatus(bool enable)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
-    if (role != KS::Account::Manager::AccountRole::SECADMIN)
+    if (role != KS::Account::Manager::AccountRole::secadm)
     {
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to set access control status, permission denied", false)
+        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to set access control status, permission denied", false);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     QProcess process{};
@@ -97,6 +96,7 @@ void Manager::SetAccessControlStatus(bool enable)
                      << ", exitcode: " << process.exitCode()
                      << ", output: " << process.readAllStandardOutput();
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to set access control status", false);
+        // TODO 返回应该发送一条错误消息
         return;
     }
     SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("set access control status to ") + (enable ? "enable" : "disable"));
@@ -106,7 +106,7 @@ QString Manager::GetSecurityContext(const QString& filePath)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
-    if (role != KS::Account::Manager::AccountRole::SECADMIN)
+    if (role != KS::Account::Manager::AccountRole::secadm)
     {
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to get security context, permission denied", false)
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
@@ -130,7 +130,7 @@ void Manager::SetSecurityContext(const QString& filePath, const QString& Securit
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
-    if (role != KS::Account::Manager::AccountRole::SECADMIN)
+    if (role != KS::Account::Manager::AccountRole::secadm)
     {
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to set security context, permission denied", false)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
@@ -146,11 +146,12 @@ void Manager::SetSecurityContext(const QString& filePath, const QString& Securit
     SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Set %1 selinux context to: %2").arg(filePath).arg(SecurityContext));
 }
 
+// TODO 这个接口也没有生效，和RemoveUser一样，cmd可能没有被执行。
 void Manager::ShredFile(const QStringList& filePath)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
-    if (role != KS::Account::Manager::AccountRole::SECADMIN)
+    if (role != KS::Account::Manager::AccountRole::secadm)
     {
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to shred file, permission denied", false)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
@@ -160,11 +161,12 @@ void Manager::ShredFile(const QStringList& filePath)
     cmd->startDetached();
 }
 
+// TODO 这个接口没有生效，而且不生效没有日志打印也没有错误消息？
 void Manager::RemoveUser(const QStringList& userNames)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
-    if (role != KS::Account::Manager::AccountRole::SECADMIN)
+    if (role != KS::Account::Manager::AccountRole::secadm)
     {
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to remove user, permission denied", false)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());

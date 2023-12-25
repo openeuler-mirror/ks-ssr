@@ -75,10 +75,12 @@ void Manager::showLogin()
     m_login->show();
 }
 
-void Manager::Logout()
+void Manager::logout()
 {
     RETURN_IF_TRUE(m_currentUserName.isEmpty());
-    emit logouted(m_currentUserName);
+    auto reply = m_dbusProxy->Logout();
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    RETURN_IF_TRUE(reply.isError());
     m_currentUserName = "";
     showLogin();
 }

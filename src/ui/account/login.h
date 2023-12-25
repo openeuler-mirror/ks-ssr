@@ -24,14 +24,6 @@ namespace KS
 {
 namespace Account
 {
-// 账户角色控制，仅提供三个账户
-// enum AccountRole
-//{
-//    ACCOUNT_ROLE_SYSADMIN = 0,
-//    ACCOUNT_ROLE_SECADMIN,
-//    ACCOUNT_ROLE_AUDITADMIN
-//};
-
 class Login : public TitlebarWindow
 {
     Q_OBJECT

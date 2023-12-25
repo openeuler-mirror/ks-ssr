@@ -119,7 +119,6 @@ void Window::login()
             qApp->quit();
         },
         Qt::ConnectionType::UniqueConnection);
-    connect(Account::Manager::instance(), &Account::Manager::logouted, this, &Window::logout, Qt::ConnectionType::UniqueConnection);
     connect(Account::Manager::instance(), &Account::Manager::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
     Account::Manager::instance()->showLogin();
 }
@@ -291,9 +290,9 @@ void Window::initPageAndNavigation()
         {
             m_ui->m_navigation->addItem(new NavigationItem(":/images/tool-box", tr("Tool Box")));
         }
-        else if (navigationUID == tr("Log auditd"))
+        else if (navigationUID == tr("Log audit"))
         {
-            m_ui->m_navigation->addItem(new NavigationItem(":/images/log-audit", tr("Log auditd")));
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/log-audit", tr("Log audit")));
         }
     }
     m_ui->m_navigation->setBtnChecked(0);
@@ -527,7 +526,7 @@ void Window::logout(const QString &userName)
     m_ui->m_navigation->clearItems();
 
     Account::Manager::instance()->setLoginUserName(userName);
-    login();
+    Account::Manager::instance()->logout();
 }
 
 void Window::relogin(const QString &userName)

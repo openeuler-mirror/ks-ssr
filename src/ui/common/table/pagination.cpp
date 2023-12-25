@@ -45,6 +45,7 @@ Pagination::Pagination(int totalPage, int maxShowPages, bool jumpEdit, QWidget *
     initUI();
     connect(m_ui->m_goto, &QPushButton::clicked, this, &Pagination::jumpPage);
     setTotalPage(totalPage, m_currentPage);
+    m_totalPage > 1 ? show() : hide();
 }
 
 Pagination::Pagination(int totalPage, QWidget *parent)
@@ -275,6 +276,7 @@ void Pagination::forceChangeCurrentPage(int currentPage)
 void Pagination::setTotalPage(int totalPage)
 {
     setTotalPage(totalPage, m_currentPage);
+    m_totalPage > 1 ? show() : hide();
 }
 
 void Pagination::setCheckedButton(int currentPage)

@@ -50,7 +50,7 @@ LogPage::~LogPage()
 
 QString LogPage::getNavigationUID()
 {
-    return tr("Log auditd");
+    return tr("Log audit");
 }
 
 QString LogPage::getSidebarUID()
@@ -87,7 +87,13 @@ void LogPage::initUI()
     connect(m_ui->m_logTable, &LogTable::logUpdated, this, &LogPage::updateTipsAndPagination);
 
     // 分页
-    m_pagination = new Pagination(m_ui->m_logTable->getLogNumbers() / LOG_PAGE_NUMBER,
+    auto remainValue = m_ui->m_logTable->getLogNumbers() % LOG_PAGE_NUMBER;
+    auto pageTotal = m_ui->m_logTable->getLogNumbers() / LOG_PAGE_NUMBER;
+    if (remainValue != 0)
+    {
+        pageTotal++;
+    }
+    m_pagination = new Pagination(int(pageTotal),
                                   MAX_PAGINATION_BUTTON_NUMBER,
                                   true,
                                   this);
@@ -111,7 +117,7 @@ void LogPage::initUI()
         m_ui->m_calendarButton->setEndDate(date);
         auto endTime = QDateTime::fromString(date, "yyyy-MM-dd");
         endTime.setTime(QTime(23, 59, 59));
-        m_ui->m_logTable->setTimeStampBegin(endTime.toSecsSinceEpoch());
+        m_ui->m_logTable->setTimeStampEnd(endTime.toSecsSinceEpoch());
     });
 
     connect(m_ui->m_calendarButton, &DatePickButton::fristDateClicked, this, [this] {
@@ -131,7 +137,13 @@ void LogPage::updateTipsAndPagination(int total)
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records")).arg(QString::number(total));
     m_ui->m_tips->setText(text);
-    m_pagination->setTotalPage(total / LOG_PAGE_NUMBER);
+    auto remainValue = total % LOG_PAGE_NUMBER;
+    auto pageTotal = total / LOG_PAGE_NUMBER;
+    if (remainValue != 0)
+    {
+        pageTotal++;
+    }
+    m_pagination->setTotalPage(pageTotal);
 }
 }  // namespace Log
 }  // namespace KS

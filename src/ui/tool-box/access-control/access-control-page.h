@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #pragma once
@@ -38,7 +38,6 @@ public:
 
 private:
     void initUI();
-    bool getSelinuxStatus();
 
 private:
     Ui::AccessControlPage* m_ui;

@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "access-control-page.h"
@@ -59,25 +59,12 @@ QString AccessControlPage::getAccountRoleName()
 
 void AccessControlPage::initUI()
 {
-    auto selinuxStatus = getSelinuxStatus();
+    auto selinuxStatus = m_ui->m_table->getSelinuxStatus();
     m_ui->m_swich->setCheckState(selinuxStatus ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
-    m_ui->m_table->openSelinux(selinuxStatus);
     connect(m_ui->m_swich, &QCheckBox::clicked, this, [this](bool checked) {
         RETURN_IF_TRUE(m_ui->m_table->openSelinux(checked));
         m_ui->m_swich->setCheckState(!checked ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     });
-}
-
-bool AccessControlPage::getSelinuxStatus()
-{
-    // TODO 这个数据最好从后台获取,读取配置文件？
-    QProcess process;
-    process.start("bash", QStringList() << "-c"
-                                        << "getenforce");
-    // 五秒钟超时
-    process.waitForFinished(5 * 1000);
-    auto output = process.readAllStandardOutput();
-    return output != "Disabled\n";
 }
 }  // namespace ToolBox
 }  // namespace KS
