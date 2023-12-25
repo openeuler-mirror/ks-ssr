@@ -170,6 +170,13 @@ QString BRError::getErrorDesc(BRErrorCode errorCode)
     case BRErrorCode::ERROR_DAEMON_SET_FALLBACK_RH_EMPTY:
         errorDesc = QObject::tr("There is no historical state, please reinforce it and operation.");
         break;
+    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1:
+        errorDesc = QObject::tr("The subsequest configuration item scan progress has been cancelled.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB:
+    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2:
+        errorDesc = QObject::tr("The subsequest configuration item reinforcement progress has been cancelled.");
+        break;
     case BRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED:
     case BRErrorCode::ERROR_DAEMON_CONVERT_PLUGINS2JSON_FAILED:
     case BRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND:
@@ -184,9 +191,6 @@ QString BRError::getErrorDesc(BRErrorCode errorCode)
     case BRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID:
     case BRErrorCode::ERROR_PLUGIN_CONFIG_REINFORCEMENT_NOTFOUND:
     case BRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID:
-    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1:
-    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2:
-    case BRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB:
     case BRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED:
     case BRErrorCode::ERROR_PLUGIN_AUDIT_GET_JSON_ERROR:
     case BRErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR:

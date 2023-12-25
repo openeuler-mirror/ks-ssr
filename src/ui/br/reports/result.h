@@ -45,6 +45,15 @@ private slots:
     bool exportReport(const QList<Category *> &afterReinforcementList, int status, const InvalidData &invalidData);
 
 private:
+    struct CategoryContent
+    {
+        QString itemName;
+        int scanStatus;
+        int afterReinforceScanStatus;
+        QString remarks;
+    };
+
+private:
     void init();
     QString state2Str(int state);
     QColor state2Color(int state);
@@ -58,6 +67,8 @@ private:
     void calculateRatio();
     bool scanFilesAnalysis(QStringList &filelist, const InvalidData &invalidData);
     bool scanVulnerability(QStringList &rpmlist, const InvalidData &invalidData);
+    void addCategoryResults(QPrinter &printer, const QList<CategoryContent> &categoryContents, bool &showTailFlag);
+    void addNewPainterPage(QPrinter &printer);
 
 private:
     QList<Category *> m_categories;

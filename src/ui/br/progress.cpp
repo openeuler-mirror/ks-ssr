@@ -65,14 +65,15 @@ void Progress::timeInit()
     m_progressTimer = new QTimer(this);
     m_waitTimer = new QTimer(this);
     m_waitTimer->stop();
-    m_secTime = 0;
+    // 记时由1s开始
+    m_secTime = 1;
     connect(m_progressTimer, SIGNAL(timeout()), this, SLOT(changeProgress()));
     connect(m_waitTimer, SIGNAL(timeout()), this, SLOT(waitProgress()));
 }
 
 void Progress::updateProgressUI(ProcessMethod method)
 {
-    m_secTime = 0;
+    m_secTime = 1;
     m_progressTimer->start(1000);
     if (method == PROCESS_METHOD_FASTEN)
     {
