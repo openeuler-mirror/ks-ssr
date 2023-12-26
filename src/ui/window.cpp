@@ -53,6 +53,15 @@ namespace KS
 // 检测命令是否存在
 #define KSS_CMD_PATH SSR_INSTALL_BINDIR "/kss"
 
+// 锁屏状态
+#define KIRAN_SCREENSAVER_DBUS_NAME "com.kylinsec.Kiran.ScreenSaver"
+#define KIRAN_SCREENSAVER_DBUS_PATH "/com/kylinsec/Kiran/ScreenSaver"
+#define KIRAN_SCREENSAVER_DBUS_INTERFACE "com.kylinsec.Kiran.ScreenSaver"
+
+#define MATE_SCREENSAVER_DBUS_NAME "org.mate.ScreenSaver"
+#define MATE_SCREENSAVER_DBUS_PATH "/"
+#define MATE_SCREENSAVER_DBUS_INTERFACE "org.mate.ScreenSaver"
+
 Window::Window()
     : TitlebarWindow(nullptr),
       m_ui(new Ui::Window),
@@ -66,9 +75,8 @@ Window::Window()
                                   SSR_DBUS_OBJECT_PATH,
                                   QDBusConnection::systemBus(),
                                   this);
-    Notify::NotificationWrapper::globalInit(tr("Safety reinforcement").toStdString());
     Account::Manager::globalInit(this);
-
+    initNotification();
     initWindow();
     initActivation();
     if (m_licenseProxy->isActivated())
@@ -151,6 +159,23 @@ void Window::initActivation()
             m_activation->hide();
     });
     connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Window::updateActivation, Qt::UniqueConnection);
+}
+
+void Window::initNotification()
+{
+    Notify::NotificationWrapper::globalInit(tr("Safety reinforcement").toStdString());
+    QDBusConnection::sessionBus().connect(QString(),
+                                          KIRAN_SCREENSAVER_DBUS_PATH,
+                                          KIRAN_SCREENSAVER_DBUS_INTERFACE,
+                                          "ActiveChanged",
+                                          this,
+                                          SLOT(setNotifyStatus(bool)));
+    QDBusConnection::sessionBus().connect(QString(),
+                                          MATE_SCREENSAVER_DBUS_PATH,
+                                          MATE_SCREENSAVER_DBUS_INTERFACE,
+                                          "ActiveChanged",
+                                          this,
+                                          SLOT(setNotifyStatus(bool)));
 }
 
 void Window::initWindow()
@@ -509,6 +534,11 @@ void Window::updateSidebar()
             break;
         }
     }
+}
+
+void Window::setNotifyStatus(bool disabled)
+{
+    Notify::NotificationWrapper::getInstance()->setNofityEnable(!disabled);
 }
 
 void Window::logout(const QString &userName)
