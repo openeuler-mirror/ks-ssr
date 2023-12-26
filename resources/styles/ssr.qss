@@ -696,36 +696,42 @@ KS--DM--DevicePermission QWidget#m_content
 
 
 KS--Settings--DeviceControl QCheckBox::indicator:unchecked,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked
 {
     image: url(:/images/switch-close);
 }
 
 KS--Settings--DeviceControl QCheckBox::indicator:unchecked:hover,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked:hover,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:hover
 {
     image: url(:/images/switch-close);
 }
 
 KS--Settings--DeviceControl QCheckBox::indicator:unchecked:pressed,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked:pressed,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:pressed
 {
     image: url(:/images/switch-close);
 }
 
 KS--Settings--DeviceControl QCheckBox::indicator:checked,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:checked,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:checked
 {
     image: url(:/images/switch-open);
 }
 
 KS--Settings--DeviceControl QCheckBox::indicator:checked:hover,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:checked:hover,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:hover
 {
     image: url(:/images/switch-open);
 }
 
 KS--Settings--DeviceControl QCheckBox::indicator:checked:pressed,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:checked:pressed,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:pressed
 {
     image: url(:/images/switch-open);

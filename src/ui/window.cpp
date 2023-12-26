@@ -330,28 +330,19 @@ void Window::initSettings()
 {
     Settings::Dialog::globalInit(this);
     QStringList settingsSidebars;
-    // 从page中获取需要添加设置页面的项
-    for (auto pages : m_pages.values())
+    // 通过登入账户判断需要显示的设置页面
+    auto currentUser = Account::Manager::instance()->getCurrentUserName();
+    if (currentUser == SSR_ACCOUNT_NAME_SYSADM)
     {
-        auto navigationUID = pages.first()->getNavigationUID();
-        CONTINUE_IF_TRUE(navigationUID.isEmpty());
-
-        if (navigationUID == tr("Baseline reinforcement"))
-        {
-            settingsSidebars << tr("Baseline reinforcement");
-        }
-        else if (navigationUID == tr("Trusted protected"))
-        {
-            settingsSidebars << tr("Trusted protect");
-        }
-        else if (navigationUID == tr("Device management"))
-        {
-            settingsSidebars << tr("Interface Control");
-        }
-        else
-        {
-            continue;
-        }
+        settingsSidebars << tr("Baseline reinforcement") << tr("Interface Control");
+    }
+    else if (currentUser == SSR_ACCOUNT_NAME_SECADM)
+    {
+        settingsSidebars << tr("Trusted protect") << tr("Identity authentication");
+    }
+    else if (currentUser == SSR_ACCOUNT_NAME_AUDADM)
+    {
+        // TODO audit用户暂无设置
     }
     Settings::Dialog::instance()->addSidebars(settingsSidebars);
     // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
