@@ -57,5 +57,9 @@
             </arg>
             <description>Get all user's information.</description>
         </method>
+
+        <signal name="UserChanged">
+            <description>Os account has changed, please get user list.</description>
+        </signal>
     </interface>
 </node>

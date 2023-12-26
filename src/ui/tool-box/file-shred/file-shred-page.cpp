@@ -83,21 +83,25 @@ void FileShredPage::initUI()
     action->setDefaultWidget(searchButton);
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
-    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString& text) {
-        m_ui->m_table->setSearchText(text);
-    });
+    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString& text)
+            {
+                m_ui->m_table->setSearchText(text);
+            });
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addFiles(bool)));
-    connect(m_ui->m_remove, &QPushButton::clicked, this, [this] {
-        m_ui->m_table->delFiles();
-    });
-    connect(m_ui->m_shred, &QPushButton::clicked, this, [this] {
-        m_ui->m_table->shredFiles();
-    });
-    connect(m_ui->m_table, &FileShredTable::tableUpdated, this, [this](int total) {
-        // 更新表格右上角提示信息
-        auto text = QString(tr("A total of %1 records")).arg(QString::number(total));
-        m_ui->m_tips->setText(text);
-    });
+    connect(m_ui->m_remove, &QPushButton::clicked, this, [this]
+            {
+                m_ui->m_table->delFiles();
+            });
+    connect(m_ui->m_shred, &QPushButton::clicked, this, [this]
+            {
+                m_ui->m_table->shredFiles();
+            });
+    connect(m_ui->m_table, &FileShredTable::tableUpdated, this, [this](int total)
+            {
+                // 更新表格右上角提示信息
+                auto text = QString(tr("A total of %1 records")).arg(QString::number(total));
+                m_ui->m_tips->setText(text);
+            });
 }
 
 }  // namespace ToolBox

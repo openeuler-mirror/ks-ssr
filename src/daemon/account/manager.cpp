@@ -74,17 +74,18 @@ Manager::Manager()
 
     m_dbusServerWatcher->setConnection(dbusConnection);
     m_dbusServerWatcher->setWatchMode(QDBusServiceWatcher::WatchForOwnerChange);
-    connect(m_dbusServerWatcher, &QDBusServiceWatcher::serviceUnregistered, [this](const QString& service) {
-        this->m_dbusServerWatcher->removeWatchedService(service);
-        KLOG_INFO() << "The front program has exit, clean data. Unique Name: " << service;
-        QWriteLocker locker(&(this->m_clientMutex));
-        auto it = this->m_clients.find(service);
-        if (it == this->m_clients.end())
-        {
-            return;
-        }
-        this->m_clients.erase(it);
-    });
+    connect(m_dbusServerWatcher, &QDBusServiceWatcher::serviceUnregistered, [this](const QString& service)
+            {
+                this->m_dbusServerWatcher->removeWatchedService(service);
+                KLOG_INFO() << "The front program has exit, clean data. Unique Name: " << service;
+                QWriteLocker locker(&(this->m_clientMutex));
+                auto it = this->m_clients.find(service);
+                if (it == this->m_clients.end())
+                {
+                    return;
+                }
+                this->m_clients.erase(it);
+            });
 }
 
 Manager::~Manager()

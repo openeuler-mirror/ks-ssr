@@ -121,11 +121,7 @@ void LogPage::initUI()
                 m_ui->m_calendarButton->setEndDate(date);
                 auto endTime = QDateTime::fromString(date, "yyyy-MM-dd");
                 endTime.setTime(QTime(23, 59, 59));
-<<<<<<< HEAD
                 m_ui->m_logTable->setTimeStampEnd(endTime.toSecsSinceEpoch());
-=======
-            m_ui->m_logTable->setTimeStampBegin(endTime.toSecsSinceEpoch());
->>>>>>> 45d6e43 (feature(log) : Impove log ui page)
             });
 
     connect(m_ui->m_calendarButton, &DatePickButton::fristDateClicked, this, [this]
@@ -147,7 +143,6 @@ void LogPage::updateTipsAndPagination(int total)
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records")).arg(QString::number(total));
     m_ui->m_tips->setText(text);
-<<<<<<< HEAD
     auto remainValue = total % LOG_PAGE_NUMBER;
     auto pageTotal = total / LOG_PAGE_NUMBER;
     if (remainValue != 0)
@@ -155,9 +150,6 @@ void LogPage::updateTipsAndPagination(int total)
         pageTotal++;
     }
     m_pagination->setTotalPage(pageTotal);
-=======
-    m_pagination->setTotalPage(total / LOG_PAGE_NUMBER);
->>>>>>> 45d6e43 (feature(log) : Impove log ui page)
 }
 }  // namespace Log
 }  // namespace KS
