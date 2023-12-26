@@ -31,8 +31,11 @@
 #include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/tool-box/manager.h"
 
-#define SHRED_PATH "/usr/bin/shred -f -u"
-#define USERDEL_PATH "/usr/sbin/userdel -m"
+#define SHRED_PATH "/usr/bin/shred"
+#define SHRED_ARG_1 "-f"
+#define SHRED_ARG_2 "-u"
+#define USERDEL_PATH "/usr/sbin/userdel"
+#define USERDEL_ARG_1 "-r"
 #define SED_PATH "/usr/bin/sed"
 #define DISABLE_SELINUX "-i -re 's/SELINUX=(enforcing|permissive|disabled)/SELINUX=disabled/' /etc/selinux/config"
 #define ENABLE_SELINUX "-i -re 's/SELINUX=(enforcing|permissive|disabled)/SELINUX=enforcing/' /etc/selinux/config"
@@ -59,7 +62,7 @@ void Manager::globalDeinit()
 
 Manager::Manager()
     : m_osUserNameMutex(new QReadWriteLock()),
-      m_userNameWatcher(new QFileSystemWatcher(QStringList(PASSWD_FILE)))
+      m_userNameWatcher(new QFileSystemWatcher(QStringList(PASSWD_FILE), this))
 {
     new ToolBoxAdaptor(this);
     QDBusConnection dbusConnection = QDBusConnection::systemBus();
@@ -68,7 +71,17 @@ Manager::Manager()
         KLOG_ERROR() << "Register ToolBox DBus object error:" << dbusConnection.lastError().message();
     }
     getAllUsers();
-    connect(m_userNameWatcher, &QFileSystemWatcher::fileChanged, this, &KS::ToolBox::Manager::getAllUsers);
+    connect(m_userNameWatcher, &QFileSystemWatcher::fileChanged, [this](const QString&)
+            {
+                // linux 创建和删除用户时， 可能会存在 /etc/passwd 文件删除又创建的情况
+                this->m_userNameWatcher->removePath(PASSWD_FILE);
+                if (QFile::exists(PASSWD_FILE))
+                {
+                    this->m_userNameWatcher->addPath(PASSWD_FILE);
+                }
+                this->getAllUsers();
+                emit this->UserChanged();
+            });
 }
 
 void Manager::SetAccessControlStatus(bool enable)
@@ -96,7 +109,7 @@ void Manager::SetAccessControlStatus(bool enable)
                      << ", exitcode: " << process.exitCode()
                      << ", output: " << process.readAllStandardOutput();
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to set access control status", false);
-        // TODO 返回应该发送一条错误消息
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_ACCESS_CONTROL, this->message());
         return;
     }
     SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("set access control status to ") + (enable ? "enable" : "disable"));
@@ -146,7 +159,6 @@ void Manager::SetSecurityContext(const QString& filePath, const QString& Securit
     SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Set %1 selinux context to: %2").arg(filePath).arg(SecurityContext));
 }
 
-// TODO 这个接口也没有生效，和RemoveUser一样，cmd可能没有被执行。
 void Manager::ShredFile(const QStringList& filePath)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
@@ -157,11 +169,10 @@ void Manager::ShredFile(const QStringList& filePath)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     Log::Log log = {role, QDateTime::currentDateTime(), Log::Manager::LogType::TOOL_BOX, false, "Shred file"};
-    auto cmd = getProcess(log, SHRED_PATH, filePath);
+    auto cmd = getProcess(log, SHRED_PATH, QStringList{SHRED_ARG_1, SHRED_ARG_2} << filePath);
     cmd->startDetached();
 }
 
-// TODO 这个接口没有生效，而且不生效没有日志打印也没有错误消息？
 void Manager::RemoveUser(const QStringList& userNames)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
@@ -174,8 +185,8 @@ void Manager::RemoveUser(const QStringList& userNames)
     Log::Log log = {role, QDateTime::currentDateTime(), Log::Manager::LogType::TOOL_BOX, false, "Remove user"};
     for (const auto& userName : userNames)
     {
-        auto cmd = getProcess(log, USERDEL_PATH, QStringList(userName));
-        cmd->start();
+        auto cmd = getProcess(log, USERDEL_PATH, QStringList{USERDEL_ARG_1} << userName);
+        cmd->startDetached();
     }
 }
 
@@ -186,6 +197,7 @@ bool Manager::GetAccessStatus()
 
 QString Manager::GetAllUsers()
 {
+    getAllUsers();
     QReadLocker locker(m_osUserNameMutex);
     return m_osUserInfoJson;
 }

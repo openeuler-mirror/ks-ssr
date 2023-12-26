@@ -66,17 +66,20 @@ void PrivacyCleanupPage::initUI()
     action->setDefaultWidget(searchButton);
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
-    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString& text) {
-        m_ui->m_table->setSearchText(text);
-    });
-    connect(m_ui->m_clean, &QPushButton::clicked, this, [this] {
-        m_ui->m_table->cleanCheckedUsers();
-    });
-    connect(m_ui->m_table, &PrivacyCleanupTable::tableUpdated, this, [this](int total) {
-        // 更新表格右上角提示信息
-        auto text = QString(tr("A total of %1 records")).arg(QString::number(total));
-        m_ui->m_tips->setText(text);
-    });
+    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString& text)
+            {
+                m_ui->m_table->setSearchText(text);
+            });
+    connect(m_ui->m_clean, &QPushButton::clicked, this, [this]
+            {
+                m_ui->m_table->cleanCheckedUsers();
+            });
+    connect(m_ui->m_table, &PrivacyCleanupTable::tableUpdated, this, [this](int total)
+            {
+                // 更新表格右上角提示信息
+                auto text = QString(tr("A total of %1 records")).arg(QString::number(total));
+                m_ui->m_tips->setText(text);
+            });
 }
 }  // namespace ToolBox
 }  // namespace KS

@@ -59,7 +59,10 @@ extern "C"
         ERROR_ACCOUNT_UNKNOWN_ACCOUNT,
 
         // Log
-        ERROR_LOG_GET_LOG_PAGE_ERROR
+        ERROR_LOG_GET_LOG_PAGE_ERROR,
+
+        // Tool Box
+        ERROR_TOOL_BOX_FAILED_SET_ACCESS_CONTROL
     };
 
     enum class BRErrorCode

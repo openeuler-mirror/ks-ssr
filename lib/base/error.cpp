@@ -109,6 +109,9 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case SSRErrorCode::ERROR_LOG_GET_LOG_PAGE_ERROR:
         errorDesc = QObject::tr("per page limit must less than 100 and page index must greater than 0.");
         break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_ACCESS_CONTROL:
+        errorDesc = QObject::tr("Failed to set selinux status.");
+        break;
 
     default:
         errorDesc = QObject::tr("Unknown error.");

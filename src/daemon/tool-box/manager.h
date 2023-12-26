@@ -68,6 +68,9 @@ public:
     bool GetAccessStatus();
     QString GetAllUsers();
 
+Q_SIGNALS:  // SIGNALS
+    void UserChanged();
+
 private:
     Manager();
     virtual ~Manager() = default;
@@ -88,7 +91,7 @@ private:
         return cmd;
     }
 
-    void getAllUsers(const QString & path = "");
+    void getAllUsers(const QString& path = "");
 
 private:
     static Manager* m_toolBoxManager;

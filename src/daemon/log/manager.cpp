@@ -84,17 +84,18 @@ Manager::Manager()
     m_thread->start();
 
     // 设置备份日志文件
-    connect(m_backUpLogProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [this](int, QProcess::ExitStatus) {
-        uint rc = m_backUpLogProcess->exitCode();
-        QString errMsg = m_backUpLogProcess->readAllStandardOutput() +
-                         m_backUpLogProcess->readAllStandardError();
-        if (rc != 0)
-        {
-            KLOG_WARNING() << "error code: " << rc
-                           << ", Failed to back up overflow log! error message: " << errMsg;
-            // SSR_LOG(Account::Manager::AccountRole::unknown_account, LogType::LOG, "Failed to back up overflow log!", false);
-        }
-    });
+    connect(m_backUpLogProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [this](int, QProcess::ExitStatus)
+            {
+                uint rc = m_backUpLogProcess->exitCode();
+                QString errMsg = m_backUpLogProcess->readAllStandardOutput() +
+                                 m_backUpLogProcess->readAllStandardError();
+                if (rc != 0)
+                {
+                    KLOG_WARNING() << "error code: " << rc
+                                   << ", Failed to back up overflow log! error message: " << errMsg;
+                    // SSR_LOG(Account::Manager::AccountRole::unknown_account, LogType::LOG, "Failed to back up overflow log!", false);
+                }
+            });
 
     // 初始化 DBus 接口
     new LogAdaptor(this);
