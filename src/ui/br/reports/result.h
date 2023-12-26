@@ -61,7 +61,7 @@ private:
     QString getMacPath();
     void createPainter(QPrinter &printer);
     void createReportHomePage(int status, const QRect &rect);
-    void createReportcontent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData);
+    void createReportContent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData);
     bool createFilesScanResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag);
     bool createVulnerabilityResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag);
     void calculateRatio();

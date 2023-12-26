@@ -14,6 +14,7 @@
 
 #include "access-control-page.h"
 #include <QProcess>
+#include <QHeaderView>
 #include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
 #include "src/ui/ui_access-control-page.h"
@@ -61,6 +62,7 @@ void AccessControlPage::initUI()
 {
     auto selinuxStatus = m_ui->m_table->getSelinuxStatus();
     m_ui->m_swich->setCheckState(selinuxStatus ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+    selinuxStatus ? m_ui->m_table->horizontalHeader()->show() : m_ui->m_table->horizontalHeader()->hide();
     connect(m_ui->m_swich, &QCheckBox::clicked, this, [this](bool checked) {
         RETURN_IF_TRUE(m_ui->m_table->openSelinux(checked));
         m_ui->m_swich->setCheckState(!checked ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);

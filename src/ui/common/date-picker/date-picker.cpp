@@ -96,15 +96,12 @@ void DatePicker::initUI()
     m_endDate = QDate::currentDate();
     m_startDate = m_endDate.addMonths(-1);
 
+    // 最小可选择日期不做限制
     m_startCalendar = new CalendarWidget(m_stackedWidget);
-    // TODO 确认是否有需求现在最大和最小可选数
     m_startCalendar->setSelectedDate(m_startDate);
-//    m_startCalendar->setSelectableStart(QDate::currentDate().addMonths(-1));
-//    m_startCalendar->setMinimumDate(QDate::currentDate().addMonths(-1));
     connect(m_startCalendar, &CalendarWidget::clicked, this, &DatePicker::changeStartDate);
 
     m_endCalendar = new CalendarWidget(m_stackedWidget);
-    //     m_endCalendar->hidePreButton();
     m_endCalendar->setSelectableEnd(QDate::currentDate());
     m_endCalendar->setMaximumDate(QDate::currentDate());
     m_endCalendar->setSelectedDate(m_endDate);

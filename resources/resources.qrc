@@ -70,11 +70,11 @@
         <file alias="note">images/note.png</file>
         <file alias="br-progress-finish">images/br-progress-finish.png</file>
         <file alias="icon-calendar">images/icon-calendar.png</file>
-        <file alias="year-left">images/year-left.png</file>
-        <file alias="year-right">images/year-right.png</file>
-        <file alias="month-left">images/month-left.png</file>
-        <file alias="month-right">images/month-right.png</file>
         <file alias="log-audit">images/log-audit.png</file>
+        <file alias="arrow-left">images/arrow-left.svg</file>
+        <file alias="double-arrow-left">images/double-arrow-left.svg</file>
+        <file alias="double-arrow-right">images/double-arrow-right.svg</file>
+        <file alias="user-manager">images/user-manager.svg</file>
     </qresource>
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>

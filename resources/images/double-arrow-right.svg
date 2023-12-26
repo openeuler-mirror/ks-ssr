@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="10" viewBox="0 0 12 10">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="双箭头_icon" data-name="双箭头 icon" class="cls-1" d="M7304.13,2067h-2.14l4.88-5-4.88-5h2.14l4.87,5Zm-5,0h-2.14l4.88-5-4.88-5h2.14l4.87,5Z" transform="translate(-7297 -2057)"/>
+</svg>

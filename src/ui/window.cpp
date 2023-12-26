@@ -192,9 +192,8 @@ void Window::initWindow()
 
     auto accountMenu = new QMenu(this);
     accountButton->setMenu(accountMenu);
-    accountMenu->setObjectName("accountMenu");
 
-    accountMenu->addAction(tr("Modify password"), this, [this] {
+    accountMenu->addAction(tr("Modify password"), this, [] {
         Account::Manager::instance()->showPasswordModification();
     });
     accountMenu->addAction(tr("Logout"), this, [this] {
@@ -208,7 +207,6 @@ void Window::initWindow()
 
     auto settingMenu = new QMenu(this);
     btnForMenu->setMenu(settingMenu);
-    settingMenu->setObjectName("settingMenu");
 
     settingMenu->addAction(tr("Settings"), this, &Window::popupSettingsDialog);
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);

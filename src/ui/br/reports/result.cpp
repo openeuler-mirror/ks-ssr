@@ -228,7 +228,7 @@ void Result::addCategoryResults(QPrinter &printer, const QList<Result::CategoryC
 {
     auto count = 0;
     // 先遍历添加不符合的项后添加符合项
-    for (auto categoryContent : categoryContents)
+    for (auto& categoryContent : categoryContents)
     {
         count++;
         if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_SAFE) == 1)
@@ -253,7 +253,7 @@ void Result::addCategoryResults(QPrinter &printer, const QList<Result::CategoryC
                          count % 2 == 1 ? "#f2f2f2" : "#ffffff");
     }
     // 符合项
-    for (auto categoryContent : categoryContents)
+    for (auto& categoryContent : categoryContents)
     {
         count++;
         if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_UNSAFE) == 2)
@@ -363,7 +363,7 @@ void Result::createReportHomePage(int status, const QRect &rect)
     m_painter->drawPixmap(0, 0, pixmap);
 }
 
-void Result::createReportcontent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData)
+void Result::createReportContent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData)
 {
     bool flag = false;
     int i = 0;
@@ -561,7 +561,7 @@ bool Result::exportReport(const QList<Category *> &afterReinforcementList, int s
     // 报表首页
     createReportHomePage(status, printerPixmap.pageLayout().fullRectPixels(printerPixmap.resolution()));
     printerPixmap.newPage();
-    createReportcontent(printerPixmap, afterReinforcementList, invalidData);
+    createReportContent(printerPixmap, afterReinforcementList, invalidData);
 
     return true;
 }

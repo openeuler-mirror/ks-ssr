@@ -20,6 +20,7 @@
 #include <QProxyStyle>
 #include <QPushButton>
 #include <QStyleOption>
+#include <QSize>
 #include <QTableView>
 #include <QTextCharFormat>
 
@@ -200,21 +201,14 @@ void CalendarWidget::initTopWidget()
     m_rightMonthBtn = new QPushButton(this);
     m_dataLabel = new QLabel(this);
 
-    m_leftYearBtn->setObjectName("CalendarLeftYearBtn");
-    m_leftMonthBtn->setObjectName("CalendarLeftMonthBtn");
-    m_rightYearBtn->setObjectName("CalendarRightYearBtn");
-    m_rightMonthBtn->setObjectName("CalendarRightMonthBtn");
-    m_dataLabel->setObjectName("CalendarDataLabel");
-
-    // TODO 替换箭头
-    m_leftYearBtn->setFixedSize(16, 16);
-    m_leftYearBtn->setIcon(QIcon(":/images/year-left"));
-    m_leftMonthBtn->setFixedSize(16, 16);
-    m_leftMonthBtn->setIcon(QIcon(":/images/month-left"));
-    m_rightYearBtn->setFixedSize(16, 16);
-    m_rightYearBtn->setIcon(QIcon(":/images/year-right"));
-    m_rightMonthBtn->setFixedSize(16, 16);
-    m_rightMonthBtn->setIcon(QIcon(":/images/month-right"));
+    m_leftYearBtn->setIcon(QIcon(":/images/double-arrow-left"));
+    m_leftYearBtn->setIconSize(QSize(12, 10));
+    m_leftMonthBtn->setIcon(QIcon(":/images/arrow-left"));
+    m_leftMonthBtn->setIconSize(QSize(8, 10));
+    m_rightYearBtn->setIcon(QIcon(":/images/double-arrow-right"));
+    m_rightYearBtn->setIconSize(QSize(12, 10));
+    m_rightMonthBtn->setIcon(QIcon(":/images/right-arrow"));
+    m_rightMonthBtn->setIconSize(QSize(8, 10));
 
     hboxLayout->addWidget(m_leftYearBtn);
     hboxLayout->addWidget(m_leftMonthBtn);

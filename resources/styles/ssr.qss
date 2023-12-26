@@ -295,6 +295,7 @@ KS--Loading#maskWidget
 }
 
 KS--Window QPushButton#btnForMenu,
+KS--Window QPushButton#accountButton,
 KS--Window QStackedWidget#m_stackedPages
 {
     background:#2d2d2d;
@@ -303,6 +304,12 @@ KS--Window QStackedWidget#m_stackedPages
 KS--Window QPushButton#btnForMenu::menu-indicator
 {
     image: url(:/images/more);
+    subcontrol-position: center center;
+    subcontrol-origin: padding;
+}
+KS--Window QPushButton#accountButton::menu-indicator
+{
+    image: url(:/images/user-manager);
     subcontrol-position: center center;
     subcontrol-origin: padding;
 }
