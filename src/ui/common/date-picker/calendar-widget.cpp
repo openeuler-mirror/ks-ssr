@@ -19,8 +19,8 @@
 #include <QPainter>
 #include <QProxyStyle>
 #include <QPushButton>
-#include <QStyleOption>
 #include <QSize>
+#include <QStyleOption>
 #include <QTableView>
 #include <QTextCharFormat>
 

@@ -21,13 +21,13 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QJsonDocument>
-#include <QToolTip>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QSpinBox>
 #include <QStandardItemModel>
 #include <QTableView>
+#include <QToolTip>
 #include "common/ssr-marcos-ui.h"
 #include "lib/base/notification-wrapper.h"
 #include "src/ui/common/table/header-button-delegate.h"
@@ -476,7 +476,7 @@ void Log::LogTable::initResultButton()
                     // 仅一个选中
                     m_model->setLogResult(roleMap.value(tr("Success")) ? LOG_RESULT_TRUE : LOG_RESULT_FALSE);
                 }
-    });
+            });
 }
 
 void Log::LogTable::mouseEnter(const QModelIndex &index)

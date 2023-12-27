@@ -228,7 +228,7 @@ void Result::addCategoryResults(QPrinter &printer, const QList<Result::CategoryC
 {
     auto count = 0;
     // 先遍历添加不符合的项后添加符合项
-    for (auto& categoryContent : categoryContents)
+    for (auto &categoryContent : categoryContents)
     {
         count++;
         if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_SAFE) == 1)
@@ -253,7 +253,7 @@ void Result::addCategoryResults(QPrinter &printer, const QList<Result::CategoryC
                          count % 2 == 1 ? "#f2f2f2" : "#ffffff");
     }
     // 符合项
-    for (auto& categoryContent : categoryContents)
+    for (auto &categoryContent : categoryContents)
     {
         count++;
         if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_UNSAFE) == 2)

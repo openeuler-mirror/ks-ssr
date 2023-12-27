@@ -86,10 +86,12 @@ Window::Window()
     else
     {
         connect(
-            m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, [this] {
+            m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, [this]
+            {
                 disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, nullptr);
                 connect(
-                    m_dbusProxy, &DaemonProxy::RegisterFinished, this, [this] {
+                    m_dbusProxy, &DaemonProxy::RegisterFinished, this, [this]
+                    {
                         disconnect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, nullptr);
                         login();
                     },
@@ -123,7 +125,8 @@ void Window::login()
 {
     connect(Account::Manager::instance(), &Account::Manager::loginFinished, this, &Window::start, Qt::ConnectionType::UniqueConnection);
     connect(
-        Account::Manager::instance(), &Account::Manager::softExited, this, [] {
+        Account::Manager::instance(), &Account::Manager::softExited, this, []
+        {
             qApp->quit();
         },
         Qt::ConnectionType::UniqueConnection);
@@ -151,13 +154,14 @@ void Window::initActivation()
         m_activation->raise();
         m_activation->show();
     }
-    connect(m_activation, &Activation::Activation::closed, [this] {
-        // 未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
-        if (!m_licenseProxy->isActivated())
-            qApp->quit();
-        else
-            m_activation->hide();
-    });
+    connect(m_activation, &Activation::Activation::closed, [this]
+            {
+                // 未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
+                if (!m_licenseProxy->isActivated())
+                    qApp->quit();
+                else
+                    m_activation->hide();
+            });
     connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Window::updateActivation, Qt::UniqueConnection);
 }
 
@@ -218,12 +222,14 @@ void Window::initWindow()
     auto accountMenu = new QMenu(this);
     accountButton->setMenu(accountMenu);
 
-    accountMenu->addAction(tr("Modify password"), this, [] {
-        Account::Manager::instance()->showPasswordModification();
-    });
-    accountMenu->addAction(tr("Logout"), this, [this] {
-        logout(Account::Manager::instance()->getCurrentUserName());
-    });
+    accountMenu->addAction(tr("Modify password"), this, []
+                           {
+                               Account::Manager::instance()->showPasswordModification();
+                           });
+    accountMenu->addAction(tr("Logout"), this, [this]
+                           {
+                               logout(Account::Manager::instance()->getCurrentUserName());
+                           });
 
     // 创建标题栏右侧菜单按钮
     auto btnForMenu = new QPushButton(this);
@@ -261,7 +267,8 @@ void Window::initPageAndNavigation()
         // 可信保护页面需判断是否加载成功
         auto execute = new TP::ExecuteProtectedPage(this);
         connect(
-            execute, &TP::ExecuteProtectedPage::initFinished, this, [this] {
+            execute, &TP::ExecuteProtectedPage::initFinished, this, [this]
+            {
                 m_loading->setVisible(false);
                 m_ui->m_sidebar->setEnabled(true);
                 updatePage();
@@ -348,7 +355,8 @@ void Window::initSettings()
     Settings::Dialog::instance()->addSidebars(settingsSidebars);
     // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
     connect(
-        Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this] {
+        Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this]
+        {
             for (auto page : m_pages.value(tr("Baseline reinforcement")))
             {
                 if (page->isVisible())
@@ -360,7 +368,8 @@ void Window::initSettings()
         },
         Qt::UniqueConnection);
     connect(
-        Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this] {
+        Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this]
+        {
             for (auto page : m_pages.value(tr("Baseline reinforcement")))
             {
                 if (page->isVisible())

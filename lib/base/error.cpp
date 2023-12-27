@@ -106,6 +106,9 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT:
         errorDesc = QObject::tr("Unknown account.");
         break;
+    case SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE:
+        errorDesc = QObject::tr("Failed to Change Multi-Factor authentication state.");
+        break;
     case SSRErrorCode::ERROR_LOG_GET_LOG_PAGE_ERROR:
         errorDesc = QObject::tr("per page limit must less than 100 and page index must greater than 0.");
         break;

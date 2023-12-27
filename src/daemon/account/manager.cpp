@@ -13,6 +13,7 @@
  */
 
 #include "src/daemon/account/manager.h"
+#include <kiran-authentication-service/kas-authentication-i.h>
 #include <qt5-log-i.h>
 #include <src/daemon/account_adaptor.h>
 #include <src/daemon/common/dbus-helper.h>
@@ -41,6 +42,17 @@
 #define USER_FREEZE_DB_COLUMN2 "tryTimes"
 #define USER_FREEZE_DB_COLUMN3 "lastTryTime"
 #define RSA_KEY_LENGTH 512
+#define PAM_SYSTEM_PATH "/etc/pam.d/system-auth"
+#define PAM_KIRAN_PATH "/etc/pam.d/kiran-authentication-service"
+#define PAM_KIRAN_AUTH_CONFIG "auth        include        kiran-authentication-service\n"
+#define PAM_KIRAN_ACCOUNT_CONFIG "account     include       kiran-authentication-service\n"
+#define REGEXP_PAM_AUTH_REQ_FAILLOCKDOTSO_REGEXP R"(auth[ ]+requisite[ ]+pam_faillock.so)"
+#define REGEXP_PAM_AUTH_INC_KIRANAUTHSERVICE R"(auth[ ]+include[ ]+kiran-authentication-service\n)"
+#define REGEXP_PAM_ACCOUNT_INC_KIRANAUTHSERVICE R"(account[ ]+include[ ]+kiran-authentication-service\n)"
+#define REGEXP_PAM_AUTH_SUF_PAMUNIXDOTSO R"((auth[ ]+sufficient[ ]+pam_unix.so))"
+#define REGEXP_PAM_ACCOUNT_REQ_PAMUNIXDOTSO R"((account[ ]+required[ ]+pam_unix.so))"
+#define REGEXP_MULTI_WAY_AUTH R"((.*)(auth[ ]+\[success=done ignore=2 default=bad authinfo_unavail=die\][ ]+pam_kiran_authentication.so[ ]+doauth))"
+#define REGEXP_MULTI_FACTOR_AUTH R"((.*)(auth[ ]+\[success=2 default=bad\][ ]+pam_kiran_authentication.so[ ]+doauth))"
 
 namespace KS
 {
@@ -86,6 +98,8 @@ Manager::Manager()
                 }
                 this->m_clients.erase(it);
             });
+    m_multiFactorAuthState = getMultiFactorAuthState();
+    KLOG_INFO() << "Multi-Factor Authentication state: " + QString(m_multiFactorAuthState ? "enable" : "disable");
 }
 
 Manager::~Manager()
