@@ -21,6 +21,9 @@
 #include "src/daemon/dm/device-factory.h"
 #include "src/daemon/dm/sd/sd-device-enumerator.h"
 #include "src/daemon/dm/udev-rule-manager.h"
+#include "src/daemon/account/manager.h"
+#include "src/daemon/common/dbus-helper.h"
+#include "src/daemon/log/manager.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
 
@@ -266,7 +269,9 @@ void DeviceManager::recordDeviceConnection(QSharedPointer<Device> device)
 
     // 以秒为单位的时间戳
     record.time = QDateTime::currentSecsSinceEpoch();
-
+    SSR_LOG(Account::Manager::AccountRole::sysadm,
+            Log::Manager::LogType::DEVICE, "Device access, name is " + record.name + ", type is " + deviceTypeEnum2Str(record.type),
+            device->getState() == DEVICE_STATE_ENABLE);
     m_deviceLog->addDeviceRecord(record);
 }
 
@@ -344,5 +349,42 @@ bool DeviceManager::isSupportHDMIDisable()
 
     return false;
 }
+
+QString DeviceManager::deviceTypeEnum2Str(int type) const
+{
+    switch (type)
+    {
+    case DEVICE_TYPE_STORAGE:
+        return "Storage";
+    case DEVICE_TYPE_CD:
+        return "CD";
+    case DEVICE_TYPE_MOUSE:
+        return "Mouse";
+    case DEVICE_TYPE_KEYBOARD:
+        return "Keyboard";
+    case DEVICE_TYPE_NET_CARD:
+        return "Network card";
+    case DEVICE_TYPE_WIRELESS_NET_CARD:
+        return "Wireless network card";
+    case DEVICE_TYPE_VIDEO:
+        return "Video";
+    case DEVICE_TYPE_AUDIO:
+        return "Audio";
+    case DEVICE_TYPE_PRINTER:
+        return "Printer";
+    case DEVICE_TYPE_HUB:
+        return "Hub";
+    case DEVICE_TYPE_COMMUNICATIONS:
+        return "Communications";
+    case DEVICE_TYPE_BLUETOOTH:
+        return "Bluetooth";
+    case DEVICE_TYPE_UNKNOWN:
+        return "Unknown";
+    default:
+        break;
+    }
+    return QString();
+}
+
 }  // namespace DM
 }  // namespace KS

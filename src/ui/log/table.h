@@ -39,7 +39,17 @@ enum LogType
     // 设备日志
     LOG_TYPE_DEVICE = (1 << 0),
     // 工具箱日志
-    LOG_TYPE_TOOL_BOX = (1 << 1)
+    LOG_TYPE_TOOL_BOX = (1 << 1),
+    // 基线加固
+    LOG_TYPE_BASELINE_REINFORCEMENT = (1 << 2),
+    // 可信保护
+    LOG_TYPE_TRUSTED_PROTECTION = (1 << 3),
+    // 文件保护
+    LOG_TYPE_FILES_PROTECTION = (1 << 4),
+    // 保险箱
+    LOG_TYPE_PRIVATE_BOX = (1 << 5),
+    // 账户日志
+    LOG_TYPE_ACCOUNT = (1 << 6)
 };
 
 struct LogInfo
@@ -152,6 +162,9 @@ private:
     void initLogTypeButton();
     void initRoleButton();
     void initResultButton();
+
+private slots:
+    void mouseEnter(const QModelIndex &index);
 
 signals:
     void logUpdated(int total);

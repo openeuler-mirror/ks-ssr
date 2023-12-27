@@ -28,12 +28,18 @@ QString Utils::logTypeEnum2Str(uint type)
     {
     case LOG_TYPE_DEVICE:
         return tr("Device log");
-        //    case LOG_TYPE_AUDIT:
-        //        return tr("Audit log");
-        //    case LOG_TYPE_LOG:
-        //        return tr("Log");
     case LOG_TYPE_TOOL_BOX:
         return tr("Tool box log");
+    case LOG_TYPE_BASELINE_REINFORCEMENT:
+        return tr("Baseline reinforcement log");
+    case LOG_TYPE_TRUSTED_PROTECTION:
+        return tr("Trusted protection log");
+    case LOG_TYPE_FILES_PROTECTION:
+        return tr("Files protection log");
+    case LOG_TYPE_PRIVATE_BOX:
+        return tr("Private box log");
+    case LOG_TYPE_ACCOUNT:
+        return tr("Account log");
     default:
         break;
     }
@@ -44,6 +50,11 @@ int Utils::str2LogTypeEnum(const QString &typeStr)
 {
     RETURN_VAL_IF_TRUE(typeStr == tr("Device log"), LOG_TYPE_DEVICE);
     RETURN_VAL_IF_TRUE(typeStr == tr("Tool box log"), LOG_TYPE_TOOL_BOX);
+    RETURN_VAL_IF_TRUE(typeStr == tr("Baseline reinforcement log"), LOG_TYPE_BASELINE_REINFORCEMENT);
+    RETURN_VAL_IF_TRUE(typeStr == tr("Trusted protection log"), LOG_TYPE_TRUSTED_PROTECTION);
+    RETURN_VAL_IF_TRUE(typeStr == tr("Files protection log"), LOG_TYPE_FILES_PROTECTION);
+    RETURN_VAL_IF_TRUE(typeStr == tr("Private box log"), LOG_TYPE_PRIVATE_BOX);
+    RETURN_VAL_IF_TRUE(typeStr == tr("Account log"), LOG_TYPE_ACCOUNT);
     return -1;
 }
 
@@ -90,14 +101,11 @@ int Utils::logStrType2Enum(const QString &logStr)
 {
     RETURN_VAL_IF_TRUE(logStr == "TOOL_BOX", LOG_TYPE_TOOL_BOX);
     RETURN_VAL_IF_TRUE(logStr == "DEVICE", LOG_TYPE_DEVICE);
-    //    else if (logStr == "LOG")
-    //    {
-    //        return LOG_TYPE_LOG;
-    //    }
-    //    else if (logStr == "AUDIT")
-    //    {
-    //        return LOG_TYPE_AUDIT;
-    //    }
+    RETURN_VAL_IF_TRUE(logStr == "BASELINE_REINFORCEMENT", LOG_TYPE_BASELINE_REINFORCEMENT);
+    RETURN_VAL_IF_TRUE(logStr == "TRUSTED_PROTECTION", LOG_TYPE_TRUSTED_PROTECTION);
+    RETURN_VAL_IF_TRUE(logStr == "FILES_PROTECTION", LOG_TYPE_FILES_PROTECTION);
+    RETURN_VAL_IF_TRUE(logStr == "PRIVATE_BOX", LOG_TYPE_PRIVATE_BOX);
+    RETURN_VAL_IF_TRUE(logStr == "ACCOUNT", LOG_TYPE_ACCOUNT);
     return -1;
 }
 
