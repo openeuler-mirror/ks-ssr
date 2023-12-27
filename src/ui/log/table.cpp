@@ -21,6 +21,7 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QJsonDocument>
+#include <QToolTip>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
@@ -134,12 +135,6 @@ LogModel::LogModel(QObject *parent)
             });
 
     updateRecord();
-
-    // TEST
-    if (m_logInfos.size() == 0)
-    {
-        m_logInfos << LogInfo{.type = LOG_TYPE_DEVICE, .role = ACCOUNT_ROLE_AUDITADMIN, .dataTime = "sdads", .message = "nbnbnb", .result = true};
-    }
 }
 
 int LogModel::rowCount(const QModelIndex &parent) const
@@ -368,10 +363,10 @@ void Log::LogTable::initTable()
 
     // 设置水平行表头
     m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_NUMBER, 50);
-    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_LOG_TYPE, 100);
+    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_LOG_TYPE, 200);
     m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_USERNAME, 100);
-    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_DATATIME, 200);
-    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_MESSAGE, 200);
+    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_DATATIME, 150);
+    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_MESSAGE, 300);
     m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_RESULT, 100);
     m_headerViewProxy->setStretchLastSection(true);
     m_headerViewProxy->setSectionsMovable(false);
@@ -384,6 +379,8 @@ void Log::LogTable::initTable()
     verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
     verticalHeader->setDefaultSectionSize(38);
     verticalHeader->hide();
+
+    connect(this, &LogTable::entered, this, &LogTable::mouseEnter);
 }
 
 void Log::LogTable::initTableHeaderButton()
@@ -406,8 +403,13 @@ void Log::LogTable::initLogTypeButton()
     m_logTypeButton->setButtonText(tr("Log type"));
     auto device = new QAction(tr("Device log"), m_logTypeButton);
     auto toolBox = new QAction(tr("Tool box log"), m_logTypeButton);
+    auto baselineReinforcement = new QAction(tr("Baseline reinforcement log"), m_logTypeButton);
+    auto trustedProtection = new QAction(tr("Trusted protection log"), m_logTypeButton);
+    auto filesProtection = new QAction(tr("Files protection log"), m_logTypeButton);
+    auto privateBox = new QAction(tr("Private box log"), m_logTypeButton);
+    auto account = new QAction(tr("Account log"), m_logTypeButton);
 
-    m_logTypeButton->addMenuActions(QList<QAction *>() << device << toolBox);
+    m_logTypeButton->addMenuActions(QList<QAction *>() << device << toolBox << baselineReinforcement << trustedProtection << filesProtection << privateBox << account);
     connect(m_logTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
             {
                 int type = 0;
@@ -474,8 +476,14 @@ void Log::LogTable::initResultButton()
                     // 仅一个选中
                     m_model->setLogResult(roleMap.value(tr("Success")) ? LOG_RESULT_TRUE : LOG_RESULT_FALSE);
                 }
-            });
+    });
 }
 
+void Log::LogTable::mouseEnter(const QModelIndex &index)
+{
+    RETURN_IF_TRUE(index.column() != LogTableField::LOG_TABLE_FIELD_MESSAGE);
+    auto mod = selectionModel()->model()->data(index);
+    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
+}
 }  // namespace Log
 }  // namespace KS

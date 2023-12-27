@@ -52,7 +52,12 @@ public:
     {
         ERROR = -1,
         DEVICE = (1 << 0),
-        TOOL_BOX = (1 << 1)
+        TOOL_BOX = (1 << 1),
+        BASELINE_REINFORCEMENT = (1 << 2),
+        TRUSTED_PROTECTION = (1 << 3),
+        FILES_PROTECTION = (1 << 4),
+        PRIVATE_BOX = (1 << 5),
+        ACCOUNT = (1 << 6)
     };
     Q_ENUM(LogType)
 

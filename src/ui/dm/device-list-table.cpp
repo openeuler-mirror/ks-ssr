@@ -293,12 +293,12 @@ void DeviceListTable::initTable()
                                     << tr("Interface")
                                     << ""
                                     << tr("Permission"));
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_NUMBER, 60);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_NAME, 180);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_STATUS, 100);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_INTERFACE, 80);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_TYPE, 100);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_ID, 80);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_NUMBER, 50);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_NAME, 200);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_STATUS, 150);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_INTERFACE, 150);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_TYPE, 150);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_ID, 100);
 
     // 设置垂直列表头
     verticalHeader()->setVisible(false);

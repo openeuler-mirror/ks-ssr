@@ -113,10 +113,10 @@ void Manager::SetUidReusable(bool enabled)
     if (role == KS::Account::Manager::AccountRole::unknown_account)
     {
         KLOG_ERROR() << "Failed to set uid reusable, Permission denied";
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Permission Denied", false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Permission Denied", false);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, enabled ? "Enable uid reuse" : "Disable uid reuse");
+    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, enabled ? "Enable uid reuse" : "Disable uid reuse");
     m_isUidReusable = enabled;
     m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enabled));
     m_uidReuseConfig->sync();
@@ -387,13 +387,13 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
     {
         KLOG_ERROR() << "Failed to change " << userName << "'s passphrase, unique name: "
                      << calledUniqueName << ", role: " << roleName;
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Failed to change %1's passphrase, unique name: %2, role: %3").arg(userName).arg(calledUniqueName).arg(roleName), false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, QString("Failed to change %1's passphrase, unique name: %2, role: %3").arg(userName).arg(calledUniqueName).arg(roleName), false);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     if (!verifyPassword(userName, oldPassphrase))
     {
         KLOG_INFO() << "Password error!, failed to change passphrase";
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Change password", false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Change password", false);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
     if (oldPassphrase == newPassphrase)
@@ -402,7 +402,7 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
     }
     auto isSuccess = changePassword(userName, newPassphrase);
     emit PasswordChanged(userName);
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Change password");
+    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Change password");
     return isSuccess;
 }
 
@@ -433,7 +433,7 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     if (isFreeze(userName))
     {
         KLOG_INFO() << userName << " has been freeze";
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login, but this account has been freeze", false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Login, but this account has been freeze", false);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_BE_FREEZE, this->message());
     }
 
@@ -441,12 +441,12 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     {
         KLOG_INFO() << "Passwd error";
         updateFreezeInfo(userName);
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login, Passwd error", false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Login, Passwd error", false);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
     resetFreezeInfo(userName);
     m_clients.insert(callerUnique, {true, role, DBusHelper::getCallerPid(this)});
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login");
+    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Login");
     return true;
 }
 
@@ -467,7 +467,7 @@ bool Manager::Logout()
         return false;
     }
     it.value().isLogin = false;
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Logout");
+    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Logout");
     return true;
 }
 

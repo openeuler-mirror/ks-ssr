@@ -274,7 +274,8 @@ void Window::initPageAndNavigation()
     }
     addPage(new PrivateBox::BoxPage(this));
     addPage(new DM::DeviceListPage(this));
-    addPage(new DM::DeviceLogPage(this));
+    // TODO 新增日志模块写入设备日志，旧的设备日志代码是否需要保留？若后续没有作用了在发布之前删除
+    // addPage(new DM::DeviceLogPage(this));
     addPage(new ToolBox::FileSign(this));
     addPage(new ToolBox::FileShredPage(this));
     addPage(new ToolBox::PrivacyCleanupPage(this));
