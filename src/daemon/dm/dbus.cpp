@@ -18,12 +18,12 @@
 #include <ssr-i.h>
 #include <ssr-marcos.h>
 #include "lib/base/error.h"
+#include "src/daemon/account/manager.h"
+#include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/common/polkit-proxy.h"
 #include "src/daemon/device_manager_adaptor.h"
 #include "src/daemon/dm/configuration.h"
 #include "src/daemon/dm/device-manager.h"
-#include "src/daemon/account/manager.h"
-#include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/log/manager.h"
 
 namespace KS

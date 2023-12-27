@@ -17,12 +17,12 @@
 #include <QDBusConnection>
 #include <QDateTime>
 #include <QProcess>
+#include "src/daemon/account/manager.h"
+#include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/dm/dbus.h"
 #include "src/daemon/dm/device-factory.h"
 #include "src/daemon/dm/sd/sd-device-enumerator.h"
 #include "src/daemon/dm/udev-rule-manager.h"
-#include "src/daemon/account/manager.h"
-#include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/log/manager.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"

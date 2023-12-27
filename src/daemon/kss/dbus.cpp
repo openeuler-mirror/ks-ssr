@@ -26,12 +26,12 @@
 #include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
 #include "lib/base/error.h"
-#include "src/daemon/common/polkit-proxy.h"
 #include "src/daemon/account/manager.h"
 #include "src/daemon/common/dbus-helper.h"
-#include "src/daemon/log/manager.h"
+#include "src/daemon/common/polkit-proxy.h"
 #include "src/daemon/kss/wrapper.h"
 #include "src/daemon/kss_dbus_adaptor.h"
+#include "src/daemon/log/manager.h"
 
 namespace KS
 {
@@ -344,7 +344,7 @@ void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QS
 
     emit TrustedFilesChange();
 
-    SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Remove trusted file successed. Sum is " +  QString::number(fileList.size()));
+    SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Remove trusted file successed. Sum is " + QString::number(fileList.size()));
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }

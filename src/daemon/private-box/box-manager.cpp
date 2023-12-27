@@ -22,11 +22,11 @@
 #include "include/ssr-marcos.h"
 #include "lib/base/crypto-helper.h"
 #include "lib/base/error.h"
-#include "src/daemon/private-box/box-dao.h"
-#include "src/daemon/private_manager_adaptor.h"
 #include "src/daemon/account/manager.h"
 #include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/log/manager.h"
+#include "src/daemon/private-box/box-dao.h"
+#include "src/daemon/private_manager_adaptor.h"
 
 namespace KS
 {

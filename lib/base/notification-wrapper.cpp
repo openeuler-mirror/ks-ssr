@@ -97,7 +97,7 @@ void NotificationWrapper::error(const char *message)
 
 void NotificationWrapper::notifySend(const char *msg, const char *icon)
 {
-    if(!m_enabled)
+    if (!m_enabled)
     {
         return;
     }

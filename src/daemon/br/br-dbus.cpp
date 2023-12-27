@@ -501,7 +501,8 @@ void BRDBus::Scan(const QStringList& names)
 
             this->m_scanJob->addOperation(reinforcement->getPluginName(),
                                           reinforcement->getName(),
-                                          [reinforcement_interface]() -> QString {
+                                          [reinforcement_interface]() -> QString
+                                          {
                                               //    QJsonValue retval;
                                               QJsonObject retval;
                                               QString args;
@@ -673,7 +674,8 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
 
         this->m_reinforceJob->addOperation(reinforcement->getPluginName(),
                                            reinforcement->getName(),
-                                           [reinforcement_interface, param_str]() -> QString {
+                                           [reinforcement_interface, param_str]() -> QString
+                                           {
                                                QString error;
                                                QJsonObject retval;
                                                if (!reinforcement_interface->set(param_str, error))
@@ -819,13 +821,14 @@ void BRDBus::init()
     QObject::connect(this->m_resourceMonitor, &ResourceMonitor::memoryRemainingRatio_, this, &BRDBus::memoryRemainingRatio);
 
     // 进程完成后，回退状态置为未开始
-    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]() {
-        RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->m_configuration->getFallbackStatus());
-        if (!this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
-        {
-            KLOG_ERROR() << "set fallback status failed.";
-        }
-    });
+    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]()
+                     {
+                         RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->m_configuration->getFallbackStatus());
+                         if (!this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
+                         {
+                             KLOG_ERROR() << "set fallback status failed.";
+                         }
+                     });
 
     if (m_configuration->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {

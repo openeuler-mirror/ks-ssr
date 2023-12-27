@@ -82,13 +82,13 @@ QString DeviceListPage::getNavigationUID()
 
 QString DeviceListPage::getSidebarUID()
 {
-//    return tr("Device List");
+    //    return tr("Device List");
     return "";
 }
 
 QString DeviceListPage::getSidebarIcon()
 {
-//    return ":/images/device-list";
+    //    return ":/images/device-list";
     return "";
 }
 

@@ -96,6 +96,10 @@ public:
      */
     bool Logout();
 
+    bool GetUidReusable();
+    void SetMultiFactorAuthState(bool enabled);
+    bool GetMultiFactorAuthState();
+
 public:  // PROPERTIES
     Q_PROPERTY(QString RSAPublicKey READ rsaPublicKey)
     QString rsaPublicKey() const
@@ -141,6 +145,9 @@ private:
     bool isFreeze(const QString& userName) const;
     void updateFreezeInfo(const QString& userName) const;
     void resetFreezeInfo(const QString& userName) const;
+    bool getMultiFactorAuthState();
+    void disableMultiFactorAuthState();
+    void enableMultiFactorAuthState();
 
     inline bool isLogin(QMap<QString, Account>::iterator& it)
     {
@@ -178,6 +185,7 @@ private:
     QDBusServiceWatcher* m_dbusServerWatcher;
     QString m_rsaPublicKey;  // property
     QString m_rsaPrivateKey;
+    bool m_multiFactorAuthState;
 };
 };  // namespace Account
 };  // namespace KS
