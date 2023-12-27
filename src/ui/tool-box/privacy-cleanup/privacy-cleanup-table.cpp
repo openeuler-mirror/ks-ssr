@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.h"
@@ -363,7 +363,7 @@ void KS::ToolBox::PrivacyCleanupTable::cleanCheckedUsers()
     auto checkedUserName = m_model->getCheckedUserName();
     if (checkedUserName.isEmpty())
     {
-        POPUP_MESSAGE_DIALOG(tr("Please selecte items."))
+        POPUP_MESSAGE_DIALOG(tr("Please select items."))
         return;
     }
     auto reply = m_dbusProxy->RemoveUser(checkedUserName);
@@ -384,6 +384,11 @@ void KS::ToolBox::PrivacyCleanupTable::initTable()
     connect(m_headerViewProxy, &TableHeaderProxy::toggled, this, &PrivacyCleanupTable::checkedAllItem);
     connect(m_model, &PrivacyCleanupModel::stateChanged, m_headerViewProxy, &TableHeaderProxy::setCheckState);
     connect(m_model, &PrivacyCleanupModel::tableUpdated, this, &PrivacyCleanupTable::tableUpdated);
+    connect(m_dbusProxy, &ToolBoxDbusProxy::UserChanged, [this]
+            {
+                m_model->setInfos(getTableInfos());
+                emit tableUpdated(m_model->getPrivacyCleanupInfosSize());
+            });
 
     m_filterProxy = new PrivacyCleanupFilterModel(this);
     m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
@@ -420,7 +425,7 @@ QList<KS::ToolBox::PrivacyCleanupInfo> KS::ToolBox::PrivacyCleanupTable::getTabl
     auto jsonDoc = QJsonDocument::fromJson(reply.value().toUtf8(), &jsonError);
     if (jsonDoc.isNull())
     {
-        KLOG_WARNING() << "Parser files Recordrmation failed: " << jsonError.errorString();
+        KLOG_WARNING() << "Parser files Record information failed: " << jsonError.errorString();
         return infos;
     }
     for (auto json : jsonDoc.array())
@@ -428,9 +433,10 @@ QList<KS::ToolBox::PrivacyCleanupInfo> KS::ToolBox::PrivacyCleanupTable::getTabl
         PrivacyCleanupInfo info{
             .selected = false,
             .userName = json.toObject().value(USER_NAME_JSON_KEY).toString(),
-            .userType = json.toObject().value(USER_TYPE_JSON_KEY).toInt() == 0 ? tr("Manager user") : tr("Normat user")};
+            .userType = json.toObject().value(USER_TYPE_JSON_KEY).toInt() == 0 ? tr("Manager user") : tr("Normal user")};
         infos << info;
     }
+    KLOG_DEBUG() << "infos: " << jsonDoc;
     return infos;
 }
 

@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "src/ui/tool-box/file-shred/file-shred-table.h"
@@ -46,7 +46,8 @@ enum FileShredTableField
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-FileShredDelegate::FileShredDelegate(QObject *parent) : QStyledItemDelegate(parent)
+FileShredDelegate::FileShredDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -129,7 +130,8 @@ bool FileShredDelegate::editorEvent(QEvent *event,
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
-FileShredFilterModel::FileShredFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+FileShredFilterModel::FileShredFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
@@ -145,7 +147,8 @@ bool FileShredFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &so
     return false;
 }
 
-FileShredModel::FileShredModel(QObject *parent) : QAbstractTableModel(parent)
+FileShredModel::FileShredModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
     m_infos = {};
 }
@@ -352,8 +355,9 @@ void ToolBox::FileShredModel::delFiles()
     emit tableUpdated(m_infos.size());
 }
 
-FileShredTable::FileShredTable(QWidget *parent) : QTableView(parent),
-                                                  m_filterProxy(nullptr)
+FileShredTable::FileShredTable(QWidget *parent)
+    : QTableView(parent),
+      m_filterProxy(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_dbusProxy = new ToolBoxDbusProxy(SSR_DBUS_NAME,
