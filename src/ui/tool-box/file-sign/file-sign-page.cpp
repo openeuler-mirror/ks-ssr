@@ -19,8 +19,9 @@
 #include <QWidgetAction>
 #include "QInputDialog"
 #include "include/ssr-i.h"
-#include "include/ssr-marcos.h"
+#include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/tool-box/file-sign/file-sign-table.h"
+#include "src/ui/tool-box/file-sign/modify-security-context.h"
 #include "src/ui/toolbox_dbus_proxy.h"
 #include "src/ui/ui_file-sign-page.h"
 
@@ -65,24 +66,7 @@ FileSign::FileSign(QWidget* parent)
                      {
                          m_ui->m_tips->setText(tr("A total of %1 records").arg(m_ui->m_fileSignTable->getData().size()));
                      });
-    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::doubleClicked, m_ui->m_fileSignTable, [this](const QModelIndex& index)
-                     {
-                         // 目前功能只有双击点击编辑安全上下文
-                         RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT);
-                         auto data = this->m_ui->m_fileSignTable->getData();
-                         auto oldIterator = data.begin() + index.row();
-                         auto oldSecurityContext = oldIterator->fileSeContext;
-                         auto filePath = oldIterator->filePath;
-                         // TODO 绘制自定义弹窗，继承TitlebarWindow，另外这里的逻辑较为复杂，封装一个函数吧
-                         QString newSecurityContext = QInputDialog::getText(this,
-                                                                            tr("modify security context"),
-                                                                            tr("Please enter a new security context"),
-                                                                            QLineEdit::Normal,
-                                                                            oldSecurityContext);
-                         KLOG_DEBUG() << "New Security context: " << newSecurityContext;
-                         RETURN_IF_TRUE(newSecurityContext.isEmpty() || newSecurityContext == oldSecurityContext);
-                         this->m_dbusProxy->SetSecurityContext(filePath, newSecurityContext);
-                     });
+    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::doubleClicked, this, &FileSign::popModifySecurityContext);
 }
 
 FileSign::~FileSign()
@@ -131,6 +115,33 @@ void FileSign::updateTableData(const QStringList& fileList)
 void FileSign::refreshTable(bool)
 {
     updateTableData(m_ui->m_fileSignTable->getData().keys());
+}
+
+void FileSign::popModifySecurityContext(const QModelIndex &index)
+{
+    // 目前功能只有双击点击编辑安全上下文
+    RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT);
+    auto data = this->m_ui->m_fileSignTable->getData();
+    auto oldIterator = data.begin() + index.row();
+    auto oldSecurityContext = oldIterator->fileSeContext;
+    auto filePath = oldIterator->filePath;
+
+    m_modifySecurityContext = new ModifySecurityContext(this);
+    m_modifySecurityContext->setSecurityContext(oldSecurityContext);
+    m_modifySecurityContext->setFilePath(filePath);
+    QObject::connect(m_modifySecurityContext, &ModifySecurityContext::accepted, this, &FileSign::acceptedSecurityContext);
+
+    auto x = window()->x() + window()->width() / 2 - m_modifySecurityContext->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - m_modifySecurityContext->height() / 2;
+    m_modifySecurityContext->move(x, y);
+    m_modifySecurityContext->show();
+}
+
+void FileSign::acceptedSecurityContext()
+{
+    RETURN_IF_TRUE(m_modifySecurityContext->getFilePath().isEmpty());
+    auto reply = m_dbusProxy->SetSecurityContext(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getSecurityContext());
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
 }
 }  // namespace ToolBox
 }  // namespace KS

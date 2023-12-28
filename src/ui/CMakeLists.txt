@@ -95,6 +95,7 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/execute-protected-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/log/log-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/file-sign/file-sign-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/file-sign/modify-security-context.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/file-shred/file-shred-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/privacy-cleanup/privacy-cleanup-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/access-control/access-control-page.ui

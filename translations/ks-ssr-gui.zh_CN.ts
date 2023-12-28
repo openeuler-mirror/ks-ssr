@@ -3383,33 +3383,31 @@
 <context>
     <name>KS::ToolBox::FileSign</name>
     <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="63"/>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="66"/>
+        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="64"/>
+        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="67"/>
         <source>A total of %1 records</source>
         <translation>总共%1条记录</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="78"/>
         <source>modify security context</source>
-        <translation>编辑安全上下文</translation>
+        <translation type="vanished">编辑安全上下文</translation>
+    </message>
+    <message>
+        <source>Please enter a new security context</source>
+        <translation type="vanished">请输入新的安全上下文</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="79"/>
-        <source>Please enter a new security context</source>
-        <translation>请输入新的安全上下文</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="95"/>
         <source>Tool Box</source>
         <translation>安全工具箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="100"/>
+        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="84"/>
         <source>File Sign</source>
         <translation>文件标记</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="110"/>
+        <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="94"/>
         <source>Open files</source>
         <translation>打开文件</translation>
     </message>
@@ -3430,6 +3428,14 @@
         <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="140"/>
         <source>Complete Label</source>
         <translation>完整性标签</translation>
+    </message>
+</context>
+<context>
+    <name>KS::ToolBox::ModifySecurityContext</name>
+    <message>
+        <location filename="../src/ui/tool-box/file-sign/modify-security-context.cpp" line="69"/>
+        <source>modify security context</source>
+        <translation>编辑安全上下文</translation>
     </message>
 </context>
 <context>
@@ -3803,6 +3809,29 @@
     <message>
         <location filename="../src/ui/account/login.ui" line="144"/>
         <location filename="../build/src/ui/ui_login.h" line="134"/>
+        <source>cancel</source>
+        <translation>取消</translation>
+    </message>
+</context>
+<context>
+    <name>ModifySecurityContext</name>
+    <message>
+        <location filename="../src/ui/tool-box/file-sign/modify-security-context.ui" line="14"/>
+        <source>Form</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tool-box/file-sign/modify-security-context.ui" line="68"/>
+        <source>Please input new security context :</source>
+        <translation>请输入新的安全上下文:</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tool-box/file-sign/modify-security-context.ui" line="112"/>
+        <source>ok</source>
+        <translation>确认</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/tool-box/file-sign/modify-security-context.ui" line="131"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
