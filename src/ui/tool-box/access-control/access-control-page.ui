@@ -43,7 +43,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Clear users and their privacy information</string>
+        <string>Access permissions prevent users from illegally operating system resources, engance system security and integrity.</string>
        </property>
       </widget>
      </item>

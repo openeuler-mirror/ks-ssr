@@ -95,7 +95,7 @@ QString ExecuteProtectedPage::getNavigationUID()
 
 QString ExecuteProtectedPage::getSidebarUID()
 {
-    return tr("Execute protecked");
+    return tr("Execute files protected");
 }
 
 QString ExecuteProtectedPage::getSidebarIcon()
