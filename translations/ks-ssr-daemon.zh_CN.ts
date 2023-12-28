@@ -2310,6 +2310,89 @@
     </message>
 </context>
 <context>
+    <name>KS::Log::LogTable</name>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="403"/>
+        <source>Log type</source>
+        <translation>日志类型</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="404"/>
+        <source>Device log</source>
+        <translation>设备日志</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="405"/>
+        <source>Tool box log</source>
+        <translation>工具箱日志</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="406"/>
+        <source>Baseline reinforcement log</source>
+        <translation>基线加固日志</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="407"/>
+        <source>Trusted protection log</source>
+        <translation>可信保护日志</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="408"/>
+        <source>Files protection log</source>
+        <translation>文件保护日志</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="409"/>
+        <source>Private box log</source>
+        <translation>保险箱日志</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="410"/>
+        <source>Account log</source>
+        <translation>账户日志</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="429"/>
+        <source>User name</source>
+        <translation>用户</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="430"/>
+        <source>Sysadm</source>
+        <translation>sysadm</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="431"/>
+        <source>Secadm</source>
+        <translation>secadm</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="432"/>
+        <source>Audadm</source>
+        <translation>audadm</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="451"/>
+        <source>Result</source>
+        <translation>结果</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="452"/>
+        <location filename="../src/ui/log/table.cpp" line="463"/>
+        <location filename="../src/ui/log/table.cpp" line="471"/>
+        <location filename="../src/ui/log/table.cpp" line="477"/>
+        <source>Success</source>
+        <translation>成功</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/log/table.cpp" line="453"/>
+        <location filename="../src/ui/log/table.cpp" line="463"/>
+        <location filename="../src/ui/log/table.cpp" line="471"/>
+        <source>Failed</source>
+        <translation>失败</translation>
+    </message>
+</context>
+<context>
     <name>KS::Log::Utils</name>
     <message>
         <location filename="../src/ui/log/utils.cpp" line="30"/>
@@ -2696,8 +2779,7 @@
     <message>
         <location filename="../src/ui/settings/dialog.cpp" line="105"/>
         <source>Identity authentication</source>
-        <translatorcomment>身份鉴别</translatorcomment>
-        <translation></translation>
+        <translation>身份鉴别</translation>
     </message>
 </context>
 <context>
@@ -3240,17 +3322,17 @@
 <context>
     <name>KS::ToolBox::FileSignModel</name>
     <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="140"/>
+        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="136"/>
         <source>File Name</source>
         <translation>文件名</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="142"/>
+        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="138"/>
         <source>Security Context</source>
         <translation>安全上下文</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="144"/>
+        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="140"/>
         <source>Complete Label</source>
         <translation>完整性标签</translation>
     </message>
@@ -3367,62 +3449,62 @@
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="300"/>
-        <location filename="../src/ui/window.cpp" line="345"/>
-        <location filename="../src/ui/window.cpp" line="360"/>
-        <location filename="../src/ui/window.cpp" line="373"/>
+        <location filename="../src/ui/window.cpp" line="299"/>
+        <location filename="../src/ui/window.cpp" line="344"/>
+        <location filename="../src/ui/window.cpp" line="359"/>
+        <location filename="../src/ui/window.cpp" line="372"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="304"/>
-        <location filename="../src/ui/window.cpp" line="306"/>
-        <location filename="../src/ui/window.cpp" line="515"/>
+        <location filename="../src/ui/window.cpp" line="303"/>
+        <location filename="../src/ui/window.cpp" line="305"/>
+        <location filename="../src/ui/window.cpp" line="514"/>
         <source>Trusted protected</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="308"/>
-        <location filename="../src/ui/window.cpp" line="310"/>
+        <location filename="../src/ui/window.cpp" line="307"/>
+        <location filename="../src/ui/window.cpp" line="309"/>
         <source>File protected</source>
         <translation>文件保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="312"/>
-        <location filename="../src/ui/window.cpp" line="314"/>
+        <location filename="../src/ui/window.cpp" line="311"/>
+        <location filename="../src/ui/window.cpp" line="313"/>
         <source>Private box</source>
         <translation>私密保险箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="316"/>
-        <location filename="../src/ui/window.cpp" line="318"/>
+        <location filename="../src/ui/window.cpp" line="315"/>
+        <location filename="../src/ui/window.cpp" line="317"/>
         <source>Device management</source>
         <translation>设备管理</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="320"/>
-        <location filename="../src/ui/window.cpp" line="322"/>
+        <location filename="../src/ui/window.cpp" line="319"/>
+        <location filename="../src/ui/window.cpp" line="321"/>
         <source>Tool Box</source>
         <translation>安全工具箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="324"/>
-        <location filename="../src/ui/window.cpp" line="326"/>
+        <location filename="../src/ui/window.cpp" line="323"/>
+        <location filename="../src/ui/window.cpp" line="325"/>
         <source>Log audit</source>
         <translation>日志审计</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="345"/>
+        <location filename="../src/ui/window.cpp" line="344"/>
         <source>Interface Control</source>
         <translation>接口控制</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="349"/>
+        <location filename="../src/ui/window.cpp" line="348"/>
         <source>Trusted protect</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="349"/>
+        <location filename="../src/ui/window.cpp" line="348"/>
         <source>Identity authentication</source>
         <translation>身份鉴别</translation>
     </message>
@@ -3496,84 +3578,64 @@
 <context>
     <name>Log::LogTable</name>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="403"/>
         <source>Log type</source>
-        <translation>日志类型</translation>
+        <translation type="vanished">日志类型</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="404"/>
         <source>Device log</source>
-        <translation>设备日志</translation>
+        <translation type="vanished">设备日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="405"/>
         <source>Tool box log</source>
-        <translation>工具箱日志</translation>
+        <translation type="vanished">工具箱日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="406"/>
         <source>Baseline reinforcement log</source>
-        <translation>基线加固日志</translation>
+        <translation type="vanished">基线加固日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="407"/>
         <source>Trusted protection log</source>
-        <translation>可信保护日志</translation>
+        <translation type="vanished">可信保护日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="408"/>
         <source>Files protection log</source>
-        <translation>可信保护日志</translation>
+        <translation type="vanished">可信保护日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="409"/>
         <source>Private box log</source>
-        <translation>保险箱日志</translation>
+        <translation type="vanished">保险箱日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="410"/>
         <source>Account log</source>
-        <translation>账户日志</translation>
+        <translation type="vanished">账户日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="429"/>
         <source>User name</source>
-        <translation>用户</translation>
+        <translation type="vanished">用户</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="430"/>
         <source>Sysadm</source>
-        <translation>sysadm</translation>
+        <translation type="vanished">sysadm</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="431"/>
         <source>Secadm</source>
-        <translation>secadm</translation>
+        <translation type="vanished">secadm</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="432"/>
         <source>Audadm</source>
-        <translation>audadm</translation>
+        <translation type="vanished">audadm</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="451"/>
         <source>Result</source>
-        <translation>结果</translation>
+        <translation type="vanished">结果</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="452"/>
-        <location filename="../src/ui/log/table.cpp" line="463"/>
-        <location filename="../src/ui/log/table.cpp" line="471"/>
-        <location filename="../src/ui/log/table.cpp" line="477"/>
         <source>Success</source>
-        <translation>成功</translation>
+        <translation type="vanished">成功</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="453"/>
-        <location filename="../src/ui/log/table.cpp" line="463"/>
-        <location filename="../src/ui/log/table.cpp" line="471"/>
         <source>Failed</source>
-        <translation>失败</translation>
+        <translation type="vanished">失败</translation>
     </message>
 </context>
 <context>

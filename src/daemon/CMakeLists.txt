@@ -64,19 +64,18 @@ set(TARGET_NAME ks-ssr-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
 qt5_create_translation(
-  QM_FILES
-  ${CMAKE_SOURCE_DIR}/cmake
-  ${CMAKE_SOURCE_DIR}/config
-  ${CMAKE_SOURCE_DIR}/data
-  ${CMAKE_SOURCE_DIR}/include
-  ${CMAKE_SOURCE_DIR}/lib
-  ${CMAKE_SOURCE_DIR}/plugins
-  ${CMAKE_SOURCE_DIR}/resource
-  ${CMAKE_SOURCE_DIR}/src
-  ${CMAKE_SOURCE_DIR}/test
-  OPTIONS
-  -I
-  ${PROJECT_SOURCE_DIR})
+    QM_FILES
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml.in
+    ${CMAKE_SOURCE_DIR}/data/br-categories.ini.in
+    ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-audit.xml.in
+    ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-config.xml.in
+    ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-external.xml.in
+    ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-network.xml.in
+    ${TS_FILES}
+    OPTIONS
+    -I
+    ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}

@@ -267,7 +267,7 @@ Qt::ItemFlags FileShredModel::flags(const QModelIndex &index) const
     return Qt::ItemFlag::NoItemFlags;
 }
 
-void ToolBox::FileShredModel::checkSelectStatus()
+void FileShredModel::checkSelectStatus()
 {
     auto state = Qt::Unchecked;
     int selectCount = 0;
@@ -307,7 +307,7 @@ QStringList FileShredModel::getCheckedPath()
     return list;
 }
 
-void ToolBox::FileShredModel::addFiles(const QStringList &paths)
+void FileShredModel::addFiles(const QStringList &paths)
 {
     beginResetModel();
     SCOPE_EXIT({
@@ -336,7 +336,7 @@ void ToolBox::FileShredModel::addFiles(const QStringList &paths)
     emit tableUpdated(m_infos.size());
 }
 
-void ToolBox::FileShredModel::delFiles()
+void FileShredModel::delFiles()
 {
     beginResetModel();
     SCOPE_EXIT({
@@ -379,7 +379,7 @@ void KS::ToolBox::FileShredTable::addFiles(const QStringList &paths)
     m_model->addFiles(paths);
 }
 
-void KS::ToolBox::FileShredTable::delFiles()
+void FileShredTable::delFiles()
 {
     if (m_model->getCheckedPath().isEmpty())
     {
@@ -389,7 +389,7 @@ void KS::ToolBox::FileShredTable::delFiles()
     m_model->delFiles();
 }
 
-void KS::ToolBox::FileShredTable::shredFiles()
+void FileShredTable::shredFiles()
 {
     auto checkedPath = m_model->getCheckedPath();
     if (checkedPath.isEmpty())
@@ -403,7 +403,7 @@ void KS::ToolBox::FileShredTable::shredFiles()
     m_model->delFiles();
 }
 
-void KS::ToolBox::FileShredTable::initTable()
+void FileShredTable::initTable()
 {
     // 设置Model
     m_model = new FileShredModel(this);
@@ -444,7 +444,7 @@ int FileShredTable::getFileShredInfosSize()
     return m_model->getFileShredInfosSize();
 }
 
-void ToolBox::FileShredTable::checkedAllItem(Qt::CheckState checkState)
+void FileShredTable::checkedAllItem(Qt::CheckState checkState)
 {
     for (int i = 0; i < selectionModel()->model()->rowCount(); i++)
     {

@@ -54,7 +54,7 @@ private:
     void initPageAndNavigation();
     void initSettings();
     void addPage(Page *page);
-    void showLoading(bool isShow);
+    void hideLoading(bool ishide);
     void clearSidebar();
 
 private slots:

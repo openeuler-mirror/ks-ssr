@@ -207,7 +207,7 @@ bool AccessControlTable::openSelinux(bool isOpen)
     return true;
 }
 
-bool ToolBox::AccessControlTable::getSelinuxStatus()
+bool AccessControlTable::getSelinuxStatus()
 {
     auto reply = m_dbusProxy->GetAccessStatus();
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
@@ -216,7 +216,7 @@ bool ToolBox::AccessControlTable::getSelinuxStatus()
     return reply.value();
 }
 
-void KS::ToolBox::AccessControlTable::initTable()
+void AccessControlTable::initTable()
 {
     setSelectionMode(QAbstractItemView::NoSelection);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -234,7 +234,7 @@ void KS::ToolBox::AccessControlTable::initTable()
     setItemDelegate(new AccessControlDelegate(this));
 
     // 设置水平行表头
-    m_headerViewProxy->resizeSection(AccessControlTableField::ACCESS_CONTROL_TABLE_FIELD_USER_NAME, 100);
+    m_headerViewProxy->resizeSection(AccessControlTableField::ACCESS_CONTROL_TABLE_FIELD_USER_NAME, 150);
     m_headerViewProxy->resizeSection(AccessControlTableField::ACCESS_CONTROL_TABLE_FIELD_USER_FUNCTION, 500);
     m_headerViewProxy->setStretchLastSection(true);
     m_headerViewProxy->setSectionsMovable(false);

@@ -277,7 +277,6 @@ void Window::initPageAndNavigation()
         addPage(execute);
         addPage(new TP::KernelProtectedPage(this));
         addPage(new FP::FileProtectionPage(this));
-        m_loading->setFixedSize(execute->size());
     }
     addPage(new PrivateBox::BoxPage(this));
     addPage(new DM::DeviceListPage(this));
@@ -401,9 +400,9 @@ void Window::addPage(Page *page)
     m_ui->m_stackedPages->addWidget(page);
 }
 
-void Window::showLoading(bool isShow)
+void Window::hideLoading(bool ishide)
 {
-    RETURN_IF_TRUE(isShow)
+    RETURN_IF_TRUE(ishide)
 
     if (!m_loading->isVisible())
     {
@@ -515,7 +514,13 @@ void Window::updatePage()
     if (tr("Trusted protected") == pages.first()->getNavigationUID())
     {
         auto page = qobject_cast<TP::ExecuteProtectedPage *>(pages.first());
-        showLoading(page->getInitialized());
+        hideLoading(page->getInitialized());
+    }
+    else
+    {
+        // 其它侧边栏可用
+        hideLoading(true);
+        m_ui->m_sidebar->setEnabled(true);
     }
 }
 

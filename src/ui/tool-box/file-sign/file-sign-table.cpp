@@ -94,13 +94,10 @@ QVariant FileSignModel::data(const QModelIndex &index, int role) const
         {
         case FileSignField::FILE_SIGN_FIELD_FILE_PATH:
             return QFileInfo(m_fileRecordMap[fileSignRecord].filePath).fileName();
-            break;
         case FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT:
             return m_fileRecordMap[fileSignRecord].fileSeContext;
-            break;
         case FileSignField::FILE_SIGN_FIELD_FILE_COMPLETE_LABEL:
             return m_fileRecordMap[fileSignRecord].fileCompleteLabel;
-            break;
         default:
             break;
         }
@@ -111,13 +108,12 @@ QVariant FileSignModel::data(const QModelIndex &index, int role) const
         {
         case 0:
             return m_fileRecordMap[fileSignRecord].isSelected;
-            break;
         case FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT:
             return m_fileRecordMap[fileSignRecord].fileSeContext;
-            break;
         default:
             break;
         }
+        break;
     }
     default:
         break;
@@ -145,6 +141,7 @@ QVariant FileSignModel::headerData(int section, Qt::Orientation orientation, int
         default:
             break;
         }
+        break;
     }
     default:
         break;
@@ -266,9 +263,9 @@ FileSignTable::FileSignTable(QWidget *parent)
 
     // 设置水平行表头
     m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_CHECKBOX, 50);
-    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_PATH, 100);
-    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT, 350);
-    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_COMPLETE_LABEL, 100);
+    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_PATH, 150);
+    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT, 300);
+    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_COMPLETE_LABEL, 150);
 
     m_headerViewProxy->setStretchLastSection(true);
     m_headerViewProxy->setSectionsMovable(false);
@@ -294,6 +291,8 @@ FileSignTable::FileSignTable(QWidget *parent)
                 auto targetData = data.begin() + index.row();
                 this->m_model->setData(index, !targetData->isSelected);
             });
+
+    connect(this, &FileSignTable::entered, this, &FileSignTable::mouseEnter);
 }
 
 void FileSignTable::updateData(const FileSignRecordMap &newData)
@@ -319,6 +318,13 @@ void FileSignTable::searchTextChanged(const QString &text)
     KLOG_DEBUG() << "The search text is change to " << text;
 
     m_filterProxy->setFilterFixedString(text);
+}
+
+void FileSignTable::mouseEnter(const QModelIndex &index)
+{
+    RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_FILE_COMPLETE_LABEL);
+    auto mod = selectionModel()->model()->data(index);
+    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
 }
 
 void FileSignTable::checkedAllItem(Qt::CheckState checkState)
