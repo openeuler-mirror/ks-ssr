@@ -174,9 +174,10 @@ void Manager::disableMultiFactorAuthState()
     }
     systemAuthContent.remove(authIncKiranAuthService);
     systemAuthContent.remove(accountIncKiranAuthService);
-    systemAuth.seek(0);
+    systemAuth.resize(0);
     systemAuth.write(systemAuthContent.toLocal8Bit());
     systemAuth.flush();
+    systemAuth.close();
 
     QFile kiranAuth(PAM_KIRAN_PATH);
     if (!kiranAuth.open(QIODevice::ReadWrite))
@@ -259,7 +260,7 @@ void Manager::enableMultiFactorAuthState()
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
     }
     systemAuthContent.replace(accountReqPamUnixDotSO, PAM_KIRAN_ACCOUNT_CONFIG + matchAccount.captured(1));
-    systemAuth.seek(0);
+    systemAuth.resize(0);
     systemAuth.write(systemAuthContent.toLocal8Bit());
     systemAuth.flush();
 
