@@ -115,6 +115,12 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_ACCESS_CONTROL:
         errorDesc = QObject::tr("Failed to set selinux status.");
         break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_SECURITY_CONTEXT:
+        errorDesc = QObject::tr("Failed to set Security Context.");
+        break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_GET_SECURITY_CONTEXT:
+        errorDesc = QObject::tr("Failed to get Security Context.");
+        break;
 
     default:
         errorDesc = QObject::tr("Unknown error.");

@@ -131,6 +131,7 @@ QString Manager::GetSecurityContext(const QString& filePath)
                      << "selinux context, error message: " << strerror(errno);
         freecon(context);
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Failed to get %1 selinux context").arg(filePath), false);
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_TOOL_BOX_FAILED_GET_SECURITY_CONTEXT, this->message());
         return QString();
     }
     QString rs(context);
@@ -154,6 +155,7 @@ void Manager::SetSecurityContext(const QString& filePath, const QString& Securit
                      << " selinux context: " << SecurityContext
                      << "error message: " << strerror(errno);
         SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Failed to set %1 selinux context, error msg: %2").arg(filePath).arg(strerror(errno)), false);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_SECURITY_CONTEXT, this->message());
         return;
     }
     SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Set %1 selinux context to: %2").arg(filePath).arg(SecurityContext));
