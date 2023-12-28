@@ -110,6 +110,9 @@ public slots:
     void searchTextChanged(const QString &text);
 
 private slots:
+    void mouseEnter(const QModelIndex &index);
+
+private slots:
     void checkedAllItem(Qt::CheckState checkState);
 
 Q_SIGNALS:

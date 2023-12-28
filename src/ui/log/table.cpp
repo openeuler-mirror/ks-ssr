@@ -243,7 +243,7 @@ void LogModel::updateRecord()
     emit logUpdated(static_cast<int>(getLogNumbers()));
 }
 
-void Log::LogModel::initGetLogArgs()
+void LogModel::initGetLogArgs()
 {
     m_args.role = static_cast<AccountRole>(ALL_LOG_ROLE);
     // 一个月前
@@ -254,56 +254,56 @@ void Log::LogModel::initGetLogArgs()
     m_args.currentPage = 1;
 }
 
-uint Log::LogModel::getLogNumbers()
+uint LogModel::getLogNumbers()
 {
     auto reply = m_logProxy->GetLogNum(static_cast<int>(m_args.role), m_args.timeStampBegin, m_args.timeStampEnd, m_args.type, m_args.result, m_args.searchKey);
     reply.waitForFinished();
     return reply.value();
 }
 
-void Log::LogModel::setRole(uint role)
+void LogModel::setRole(uint role)
 {
     RETURN_IF_TRUE(m_args.role == role);
     m_args.role = role;
     updateRecord();
 }
 
-void Log::LogModel::setTimeStampBegin(qlonglong timeStampBegin)
+void LogModel::setTimeStampBegin(qlonglong timeStampBegin)
 {
     RETURN_IF_TRUE(m_args.timeStampBegin == timeStampBegin);
     m_args.timeStampBegin = timeStampBegin;
     updateRecord();
 }
 
-void Log::LogModel::setTimeStampEnd(qlonglong timeStampEnd)
+void LogModel::setTimeStampEnd(qlonglong timeStampEnd)
 {
     RETURN_IF_TRUE(m_args.timeStampEnd == timeStampEnd);
     m_args.timeStampEnd = timeStampEnd;
     updateRecord();
 }
 
-void Log::LogModel::setLogType(Log::LogType type)
+void LogModel::setLogType(Log::LogType type)
 {
     RETURN_IF_TRUE(m_args.type == type);
     m_args.type = type;
     updateRecord();
 }
 
-void Log::LogModel::setLogResult(uint result)
+void LogModel::setLogResult(uint result)
 {
     RETURN_IF_TRUE(m_args.result == result);
     m_args.result = result;
     updateRecord();
 }
 
-void Log::LogModel::setCurrentPage(uint currentPage)
+void LogModel::setCurrentPage(uint currentPage)
 {
     RETURN_IF_TRUE(m_args.currentPage == currentPage);
     m_args.currentPage = currentPage;
     updateRecord();
 }
 
-void Log::LogModel::setSearchKey(const QString &text)
+void LogModel::setSearchKey(const QString &text)
 {
     m_args.searchKey = text;
     updateRecord();
@@ -323,27 +323,27 @@ void LogTable::search(const QString &text)
     m_model->setSearchKey(text);
 }
 
-uint Log::LogTable::getLogNumbers()
+uint LogTable::getLogNumbers()
 {
     return m_model->getLogNumbers();
 }
 
-void Log::LogTable::setCurrentPage(uint currentPage)
+void LogTable::setCurrentPage(uint currentPage)
 {
     m_model->setCurrentPage(currentPage);
 }
 
-void Log::LogTable::setTimeStampBegin(qlonglong timeStampBegin)
+void LogTable::setTimeStampBegin(qlonglong timeStampBegin)
 {
     m_model->setTimeStampBegin(timeStampBegin);
 }
 
-void Log::LogTable::setTimeStampEnd(qlonglong timeStampEnd)
+void LogTable::setTimeStampEnd(qlonglong timeStampEnd)
 {
     m_model->setTimeStampEnd(timeStampEnd);
 }
 
-void Log::LogTable::initTable()
+void LogTable::initTable()
 {
     // 设置Model
     m_model = new LogModel(this);
@@ -383,7 +383,7 @@ void Log::LogTable::initTable()
     connect(this, &LogTable::entered, this, &LogTable::mouseEnter);
 }
 
-void Log::LogTable::initTableHeaderButton()
+void LogTable::initTableHeaderButton()
 {
     initLogTypeButton();
     initRoleButton();
@@ -396,7 +396,7 @@ void Log::LogTable::initTableHeaderButton()
     m_headerViewProxy->setHeaderButtons(headerButtons);
 }
 
-void Log::LogTable::initLogTypeButton()
+void LogTable::initLogTypeButton()
 {
     // 日志类型筛选
     m_logTypeButton = new HeaderButtonDelegate(this);
@@ -422,7 +422,7 @@ void Log::LogTable::initLogTypeButton()
             });
 }
 
-void Log::LogTable::initRoleButton()
+void LogTable::initRoleButton()
 {
     // 日志角色筛选
     m_roleButton = new HeaderButtonDelegate(this);
@@ -444,7 +444,7 @@ void Log::LogTable::initRoleButton()
             });
 }
 
-void Log::LogTable::initResultButton()
+void LogTable::initResultButton()
 {
     // 日志结果筛选
     m_resultButton = new HeaderButtonDelegate(this);
@@ -479,7 +479,7 @@ void Log::LogTable::initResultButton()
             });
 }
 
-void Log::LogTable::mouseEnter(const QModelIndex &index)
+void LogTable::mouseEnter(const QModelIndex &index)
 {
     RETURN_IF_TRUE(index.column() != LogTableField::LOG_TABLE_FIELD_MESSAGE);
     auto mod = selectionModel()->model()->data(index);

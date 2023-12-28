@@ -403,7 +403,7 @@ void KS::TP::ExecuteProtectedTable::initTable()
     connect(this, &ExecuteProtectedTable::clicked, this, &ExecuteProtectedTable::showDetails);
 }
 
-void KS::TP::ExecuteProtectedTable::initTableHeaderButton()
+void ExecuteProtectedTable::initTableHeaderButton()
 {
     // 文件类型筛选
     m_fileTypeButton = new HeaderButtonDelegate(this);

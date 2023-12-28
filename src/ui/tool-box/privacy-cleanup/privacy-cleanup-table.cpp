@@ -321,7 +321,7 @@ void PrivacyCleanupModel::setInfos(const QList<PrivacyCleanupInfo> &infos)
     emit tableUpdated(m_infos.size());
 }
 
-void ToolBox::PrivacyCleanupModel::delcheckedInfos()
+void PrivacyCleanupModel::delcheckedInfos()
 {
     beginResetModel();
     SCOPE_EXIT({
@@ -358,7 +358,7 @@ void PrivacyCleanupTable::setSearchText(const QString &text)
     m_filterProxy->setFilterFixedString(text);
 }
 
-void KS::ToolBox::PrivacyCleanupTable::cleanCheckedUsers()
+void PrivacyCleanupTable::cleanCheckedUsers()
 {
     auto checkedUserName = m_model->getCheckedUserName();
     if (checkedUserName.isEmpty())
@@ -373,7 +373,7 @@ void KS::ToolBox::PrivacyCleanupTable::cleanCheckedUsers()
     m_model->delcheckedInfos();
 }
 
-void KS::ToolBox::PrivacyCleanupTable::initTable()
+void PrivacyCleanupTable::initTable()
 {
     // 设置Model
     m_model = new PrivacyCleanupModel(this);
@@ -415,7 +415,7 @@ void KS::ToolBox::PrivacyCleanupTable::initTable()
     verticalHeader->setDefaultSectionSize(38);
 }
 
-QList<KS::ToolBox::PrivacyCleanupInfo> KS::ToolBox::PrivacyCleanupTable::getTableInfos()
+QList<KS::ToolBox::PrivacyCleanupInfo> PrivacyCleanupTable::getTableInfos()
 {
     QList<KS::ToolBox::PrivacyCleanupInfo> infos;
     auto reply = m_dbusProxy->GetAllUsers();
@@ -445,7 +445,7 @@ int PrivacyCleanupTable::getPrivacyCleanupInfosSize()
     return m_model->getPrivacyCleanupInfosSize();
 }
 
-void ToolBox::PrivacyCleanupTable::checkedAllItem(Qt::CheckState checkState)
+void PrivacyCleanupTable::checkedAllItem(Qt::CheckState checkState)
 {
     for (int i = 0; i < selectionModel()->model()->rowCount(); i++)
     {
