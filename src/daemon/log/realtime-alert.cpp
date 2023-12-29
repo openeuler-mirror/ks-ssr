@@ -55,7 +55,6 @@ namespace KS
 {
 namespace Log
 {
-
 struct AuditLogRecord
 {
     QString type;

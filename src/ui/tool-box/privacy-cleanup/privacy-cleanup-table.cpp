@@ -313,9 +313,10 @@ QStringList PrivacyCleanupModel::getCheckedUserName()
 void PrivacyCleanupModel::setInfos(const QList<PrivacyCleanupInfo> &infos)
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
     m_infos.clear();
     m_infos = infos;
     emit tableUpdated(m_infos.size());
@@ -324,9 +325,10 @@ void PrivacyCleanupModel::setInfos(const QList<PrivacyCleanupInfo> &infos)
 void PrivacyCleanupModel::delcheckedInfos()
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
     auto i = -1;
     for (auto info : m_infos)
     {

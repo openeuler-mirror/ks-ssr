@@ -117,7 +117,7 @@ void FileSign::refreshTable(bool)
     updateTableData(m_ui->m_fileSignTable->getData().keys());
 }
 
-void FileSign::popModifySecurityContext(const QModelIndex &index)
+void FileSign::popModifySecurityContext(const QModelIndex& index)
 {
     // 目前功能只有双击点击编辑安全上下文
     RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT);

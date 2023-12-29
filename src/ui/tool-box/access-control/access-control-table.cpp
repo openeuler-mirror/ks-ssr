@@ -166,9 +166,10 @@ Qt::ItemFlags AccessControlModel::flags(const QModelIndex &index) const
 void AccessControlModel::showInfos(bool isShow)
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
     m_infos.clear();
     RETURN_IF_TRUE(!isShow);
 

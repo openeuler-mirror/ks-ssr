@@ -12,9 +12,9 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "modify-security-context.h"
-#include "ui_modify-security-context.h"
-#include <QPushButton>
 #include <QIcon>
+#include <QPushButton>
+#include "ui_modify-security-context.h"
 
 namespace KS
 {

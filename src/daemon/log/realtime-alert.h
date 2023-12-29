@@ -26,7 +26,6 @@ namespace KS
 {
 namespace Log
 {
-
 struct AuditLogRecord;
 
 class RealTimeAlert : public QObject

@@ -253,9 +253,10 @@ Qt::ItemFlags KernelProtectedModel::flags(const QModelIndex &index) const
 void KernelProtectedModel::updateRecord()
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
 
     m_kernelRecords.clear();
     // 刷新时checkbox状态清空
