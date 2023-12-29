@@ -17,12 +17,15 @@
 #include <QDBusContext>
 #include <QProcess>
 #include <QSharedPointer>
+#include "src/daemon/log/manager.h"
+
+class QFileSystemWatcher;
+class QReadWriteLock;
 
 namespace KS
 {
 namespace ToolBox
 {
-
 class Manager : public QObject, public QDBusContext
 {
     Q_OBJECT
@@ -54,7 +57,7 @@ public:
      * @brief 调用 shred 来彻底删除文件的函数
      * @param filePath 需要删除的文件的路径
      */
-    void SherdFile(const QStringList& filePath);
+    void ShredFile(const QStringList& filePath);
 
     /**
      * @brief 删除用户及其相关数据
@@ -62,12 +65,18 @@ public:
      */
     void RemoveUser(const QStringList& userNames);
 
+    bool GetAccessStatus();
+    QString GetAllUsers();
+
+Q_SIGNALS:  // SIGNALS
+    void UserChanged();
+
 private:
     Manager();
     virtual ~Manager() = default;
-    static void processFinishedHandler(const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd);
+    static void processFinishedHandler(Log::Log& log, const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd);
 
-    inline static QSharedPointer<QProcess> getProcess(const QString& program, const QStringList& arg)
+    inline static QSharedPointer<QProcess> getProcess(Log::Log& log, const QString& program, const QStringList& arg)
     {
         auto cmd = QSharedPointer<QProcess>::create();
         cmd->setProcessChannelMode(QProcess::MergedChannels);
@@ -75,14 +84,20 @@ private:
         cmd->setArguments(arg);
         QObject::connect(cmd.data(),
                          static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-                         [cmd](int exitCode, QProcess::ExitStatus exitStatus) {
-                             processFinishedHandler(exitCode, exitStatus, cmd);
+                         [cmd, log](int exitCode, QProcess::ExitStatus exitStatus) mutable
+                         {
+                             processFinishedHandler(log, exitCode, exitStatus, cmd);
                          });
         return cmd;
     }
 
+    void getAllUsers(const QString& path = "");
+
 private:
     static Manager* m_toolBoxManager;
+    QString m_osUserInfoJson;
+    QReadWriteLock* m_osUserNameMutex;
+    QFileSystemWatcher* m_userNameWatcher;
 };
 
 };  // namespace ToolBox

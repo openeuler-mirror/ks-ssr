@@ -9,6 +9,27 @@
             <description>enable the reuseale uid.</description>
         </method>
 
+        <method name="GetUidReusable">
+            <arg type="b" name="enabled" direction="out">
+                <summary>the state of switch that reuseable</summary>
+            </arg>
+            <description>Get status of reuseale uid.</description>
+        </method>
+
+        <method name="SetMultiFactorAuthState">
+            <arg type="b" name="enabled" direction="in">
+                <summary>the state of switch that Multi-factor authentication</summary>
+            </arg>
+            <description>enable the Multi-factor authentication.</description>
+        </method>
+
+        <method name="GetMultiFactorAuthState">
+            <arg type="b" name="enabled" direction="out">
+                <summary>the state of switch that Multi-factor authentication</summary>
+            </arg>
+            <description>Get state of Multi-factor authentication.</description>
+        </method>
+
         <method name="ChangePassphrase">
             <arg type="s" name="user_name" direction="in">
                 <summary>new passphrase.</summary>

@@ -111,6 +111,20 @@ QHeaderView#tableHeaderProxy
     color: #919191;
 }
 
+KS--HeaderButtonDelegate QLabel
+{
+    color: #919191;
+}
+
+KS--HeaderButtonDelegate
+{
+    background-color: transparent;
+}
+KS--HeaderButtonDelegate::menu-indicator
+{
+    image: none;
+}
+
 /* SideBar */
 KS--SideBar
 {
@@ -154,7 +168,10 @@ KS--DM--DeviceListPage QHeaderView::section:first
 
 KS--TP--KernelProtectedPage QHeaderView::section:first,
 KS--TP--ExecuteProtectedPage QHeaderView::section:first,
-KS--FP--FileProtectionPage QHeaderView::section:first
+KS--FP--FileProtectionPage QHeaderView::section:first,
+KS--ToolBox--FileShredPage QHeaderView::section:first,
+KS--ToolBox--FileSign QHeaderView::section:first,
+KS--ToolBox--PrivacyCleanupPage QHeaderView::section:first
 {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
@@ -169,7 +186,7 @@ QHeaderView::section:last
 
 QTableView::item
 {
-    border: 0px;
+    border: none;
     /*background-color: #393939;*/
     background-color: transparent;
     margin: 2px 0px 2px 0px;
@@ -278,6 +295,7 @@ KS--Loading#maskWidget
 }
 
 KS--Window QPushButton#btnForMenu,
+KS--Window QPushButton#accountButton,
 KS--Window QStackedWidget#m_stackedPages
 {
     background:#2d2d2d;
@@ -286,6 +304,12 @@ KS--Window QStackedWidget#m_stackedPages
 KS--Window QPushButton#btnForMenu::menu-indicator
 {
     image: url(:/images/more);
+    subcontrol-position: center center;
+    subcontrol-origin: padding;
+}
+KS--Window QPushButton#accountButton::menu-indicator
+{
+    image: url(:/images/user-manager);
     subcontrol-position: center center;
     subcontrol-origin: padding;
 }
@@ -408,7 +432,9 @@ QPushButton#m_newBox,
 QPushButton#m_scanButton,
 QPushButton#m_scan,
 QPushButton#m_activate,
-KS--DM--DevicePermission QPushButton#m_confirm,
+QPushButton#m_confirm,
+QPushButton#m_select,
+QPushButton#m_centigrade,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm
 {
     color:#FFFFFF;
@@ -426,7 +452,9 @@ QPushButton#m_newBox:hover,
 QPushButton#m_scanButton:hover,
 QPushButton#m_scan:hover,
 QPushButton#m_activate:hover,
-KS--DM--DevicePermission QPushButton#m_confirm:hover,
+QPushButton#m_confirm:hover,
+QPushButton#m_select:hover,
+QPushButton#m_centigrade:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
 {
     background:#79C3FF;
@@ -437,9 +465,9 @@ KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
 QPushButton#passwdCancelBtn,
 QPushButton#m_cancel,
 QPushButton#m_recertification,
-QPushButton#m_unprotect,
 QPushButton#m_return,
 QPushButton#m_reset,
+QPushButton#m_remove
 KS--Settings--DeviceControl #MessageWindow QPushButton#cancel
 {
     color:#FFFFFF;
@@ -452,16 +480,18 @@ KS--Settings--DeviceControl #MessageWindow QPushButton#cancel
 QPushButton#passwdCancelBtn:hover,
 QPushButton#m_cancel:hover,
 QPushButton#m_recertification:hover,
-QPushButton#m_unprotect:hover,
 QPushButton#m_return:hover,
 QPushButton#m_reset:hover,
+QPushButton#m_remove:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#cancel:hover
 {
     background:#464646;
     border:4px;
 }
 
-QPushButton#m_unprotect
+QPushButton#m_unprotect,
+QPushButton#m_clean,
+QPushButton#m_shred
 {
     color:#FA4949;
     font:NotoSansCJKsc-Regular;
@@ -470,7 +500,9 @@ QPushButton#m_unprotect
     background:#393939;
 }
 
-QPushButton#m_unprotect:hover
+QPushButton#m_unprotect:hover,
+QPushButton#m_clean:hover,
+QPushButton#m_shred:hover
 {
     background:#464646;
     border:4px;
@@ -481,6 +513,30 @@ QPushButton#m_unprotect:hover
 QMenu#m_popupMenu
 {
     color:black;
+}
+
+/* Tool Box */
+KS--ToolBox--FileShredPage QTableView#m_table > QWidget,
+KS--ToolBox--PrivacyCleanupPage QTableView#m_table > QWidget,
+QTableView#m_fileSignTable > QWidget
+{
+    margin: 0px 22px 0px 0px;
+}
+
+KS--ToolBox--AccessControlPage QTableView#m_table > QWidget
+{
+    margin: 0px 0px 0px 0px;
+}
+
+KS--ToolBox--AccessControlPage QHeaderView::section:first
+{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+KS--ToolBox--AccessControlPage QWidget#m_controlLine
+{
+    border-radius: 4px;
+    background-color: #393939;
 }
 
 /* file protected */
@@ -632,32 +688,51 @@ KS--DM--DevicePermission QComboBox QLineEdit#lineEdit
     background-color:#222222;
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked
+KS--DM--DevicePermission QWidget#m_content
+{
+    border-radius: 6px;
+    background-color:#2d2d2d;
+}
+
+
+KS--Settings--DeviceControl QCheckBox::indicator:unchecked,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked:hover
+KS--Settings--DeviceControl QCheckBox::indicator:unchecked:hover,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked:hover,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:hover
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked:pressed
+KS--Settings--DeviceControl QCheckBox::indicator:unchecked:pressed,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked:pressed,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:pressed
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked
+KS--Settings--DeviceControl QCheckBox::indicator:checked,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:checked,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:checked
 {
     image: url(:/images/switch-open);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked:hover
+KS--Settings--DeviceControl QCheckBox::indicator:checked:hover,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:checked:hover,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:hover
 {
     image: url(:/images/switch-open);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked:pressed
+KS--Settings--DeviceControl QCheckBox::indicator:checked:pressed,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:checked:pressed,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:pressed
 {
     image: url(:/images/switch-open);
 }
@@ -675,20 +750,24 @@ KS--BR--Home QLabel#m_heading
     font:NotoSansCJKsc-Regular;
 }
 
-QComboBox#m_scanComboBox
+KS--BR--Home QComboBox#m_scanComboBox
 {
     background-color: transparent;
     border: 0px;
-    combobox-popup:0;
     color:#00a2ff;
 }
-QComboBox#m_scanComboBox::down-arrow
+KS--BR--Home QComboBox#m_scanComboBox::down-arrow
 {
     background-color: transparent;
     border: 0px;
-    combobox-popup:0;
     image:url(:/images/combobox-arrow);
 }
+KS--BR--Home QComboBox#m_scanComboBox::drop-down
+{
+    background-color: transparent;
+    border: 0px;
+}
+
 QComboBox#m_scanComboBox QAbstractItemView
 {
     background-color: #393939;
@@ -756,7 +835,7 @@ KS--BR--Scan QTreeView::item:has-children
 {
     margin: 4px 0px 0px 0px;
     background-color: #393939;
-    border: 0px;
+    border: none;
     padding-left:14px;
 }
 
@@ -779,6 +858,7 @@ KS--BR--Scan QTreeView::item:last:has-children
 {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
+    padding-left:70px;
 }
 /* 有子项的最后一列展开 */
 KS--BR--Scan QTreeView::item:open:last:has-children
@@ -792,7 +872,7 @@ KS--BR--Scan QTreeView::item:!has-children
 {
     margin: 0px 0px 0px 0px;
     background-color: #393939;
-    border: 0px;
+    border: none;
     padding-left:14px;
 }
 
@@ -865,13 +945,15 @@ KS--BR--Scan QTreeView::indicator::disabled:indeterminate{
 }
 */
 
-KS--BR--Plugins--ReinforcementArgsDialog QListWidget
+KS--BR--ReinforcementArgsDialog QListWidget
 {
     background-color: transparent;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox,
-KS--BR--Plugins--ArgHandle QLineEdit
+KS--BR--ArgHandle QComboBox,
+KS--BR--ArgHandle QLineEdit,
+KS--Account--Manager QComboBox,
+KS--Account--Manager QLineEdit
 {
     height: 36px;
     background-color: #222222;
@@ -885,7 +967,8 @@ KS--BR--Plugins--ArgHandle QLineEdit
     font:NotoSansCJKsc-Regular;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView
+KS--BR--ArgHandle QComboBox QAbstractItemView,
+KS--Account--Manager QComboBox QAbstractItemView
 {
     background-color:#222222;
     color: white;
@@ -897,32 +980,37 @@ KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView
     selection-background-color: #222222;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView::item
+KS--BR--ArgHandle QComboBox QAbstractItemView::item,
+KS--Account--Manager QComboBox QAbstractItemView::item
 {
     height: 36px;
     border-top: 1px solid #454545;
     padding-left:10px;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView::item:hover,
-KS--BR--Plugins--ArgHandle QComboBox QAbstractItemView::item:selected
+KS--BR--ArgHandle QComboBox QAbstractItemView::item:hover,
+KS--BR--ArgHandle QComboBox QAbstractItemView::item:selected,
+KS--Account--Manager QComboBox QAbstractItemView::item:hover,
+KS--Account--Manager QComboBox QAbstractItemView::item:selected
 {
     background-color:#00a2ff;
     color: white;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox::drop-down
+KS--BR--ArgHandle QComboBox::drop-down,
+KS--Account--Manager QComboBox::drop-down
 {
     border:none;
     padding-right:12px;
 }
 
-KS--BR--Plugins--ArgHandle QComboBox::down-arrow
+KS--BR--ArgHandle QComboBox::down-arrow,
+KS--Account--Manager QComboBox::down-arrow
 {
       image: url(:/images/arrow-down);
 }
 
-KS--BR--Plugins--ArgHandle QSpinBox,
+KS--BR--ArgHandle QSpinBox,
 KS--Settings--BaselineReinforcement QSpinBox
 {
     height: 36px;
@@ -937,8 +1025,8 @@ KS--Settings--BaselineReinforcement QSpinBox
     font:NotoSansCJKsc-Regular;
 }
 /* 屏蔽QSpinBox加减 */
-KS--BR--Plugins--ArgHandle QSpinBox::up-button,
-KS--BR--Plugins--ArgHandle QSpinBox::down-button,
+KS--BR--ArgHandle QSpinBox::up-button,
+KS--BR--ArgHandle QSpinBox::down-button,
 KS--Settings--BaselineReinforcement QSpinBox::up-button,
 KS--Settings--BaselineReinforcement QSpinBox::down-button
 {
@@ -947,75 +1035,9 @@ KS--Settings--BaselineReinforcement QSpinBox::down-button
     border : 0px;
 }
 
-/* 暂时不设置QSpinBox箭头
-KS--BR--Plugins--ArgHandle QSpinBox::up-button
-{
-    subcontrol-origin: border;
-    width: 24px;
-    background-color:#00a2ff;
-    border-right: 1px solid #454545;
-    border-top: 1px solid #454545;
-    /* 左上 右上 右下 左下 */
-    border-radius: 0px 12px 0px 0px;
-    /* image: url(:/images/spinBox-up); */
-}
-
-KS--BR--Plugins--ArgHandle QSpinBox::down-button
-{
-    subcontrol-origin: border;
-    width: 24px;
-    background-color:#00a2ff;
-    border-bottom: 1px solid #454545;
-    border-right: 1px solid #454545;
-    /* 左上 右上 右下 左下 */
-    border-radius: 0px 0px 12px 0px;
-    /* image: url(:/images/spinBox-down); */
-}
-KS--BR--Plugins--ArgHandle QSpinBox::up-button:hover,
-KS--BR--Plugins--ArgHandle QSpinBox::up-button:selected,
-KS--BR--Plugins--ArgHandle QSpinBox::down-button:hover,
-KS--BR--Plugins--ArgHandle QSpinBox::down-button:selected
-{
-    background-color:#79C3FF;
-}
-*/
-
-KS--BR--Plugins--ArgHandle QPushButton#noteIcon,
-KS--BR--Reports--Table QWidget#spacerWidget,
-KS--BR--Reports--RoundProgressBar,
-KS--BR--Reports--RoundProgressBar QLabel
+KS--BR--ArgHandle QPushButton#noteIcon
 {
     background-color: transparent;
-}
-
-/* BR Reports */
-KS--BR--Reports--Table QLabel
-{
-    font: NotoSansCJKsc-Regular;
-    font-size: 14px;
-    border-radius:0px;
-    color: #000000;
-}
-
-KS--BR--Reports--RoundProgressBar QLabel#m_percentLabel
-{
-    color:black;
-    font:AdobeHeitiStd-Regular;
-    font-size:30px;
-}
-
-KS--BR--Reports--RoundProgressBar QLabel#m_nameLabel
-{
-    color:black;
-    font:AdobeHeitiStd-Regular;
-    font-size:25px;
-}
-
-KS--BR--Reports--RoundProgressBar QLabel#m_noteLabel
-{
-    color: #1b1f25;
-    font: NotoSansCJKsc-Regular;
-    font-size: 17px;
 }
 
 /*********License*****************/
@@ -1025,4 +1047,47 @@ QWidget#m_content
     background-color:#2d2d2d;
 }
 
+/******  log audit  ******/
+KS--DatePickButton
+{
+    background-color: #222222;
+    border: 1px solid #454545;
+    border-radius: 6px;
+    font-size: 12px;
+    color: white;
+    font:NotoSansCJKsc-Regular;
+}
 
+KS--DatePickButton QWidget
+{
+    background-color: #222222;
+}
+
+KS--Pagination QPushButton
+{
+    color:#FFFFFF;
+    background-color: #393939;
+    outline: none;
+    border:0px;
+    border-radius: 4px;
+}
+
+KS--Pagination QPushButton:checked
+{
+    background-color: #2eb3ff;
+}
+KS--Pagination QPushButton:hover
+{
+    background-color: #464646;
+}
+
+KS--Log--LogPage QTableView#m_logTable > QWidget
+{
+    margin: 0px 22px 0px 0px;
+}
+
+KS--Log--LogPage QHeaderView::section:first
+{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}

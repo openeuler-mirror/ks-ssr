@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
@@ -22,8 +22,9 @@
 namespace KS
 {
 NavigationItem::NavigationItem(const QString &iconName,
-                               const QString &description) : m_icon(nullptr),
-                                                             m_description(nullptr)
+                               const QString &description)
+    : m_icon(nullptr),
+      m_description(nullptr)
 {
     setFixedWidth(88);
     auto layout = new QVBoxLayout();
@@ -53,20 +54,15 @@ NavigationItem::NavigationItem(const QString &iconName,
     setLayout(layout);
 
     connect(m_icon, &QPushButton::clicked, [this](bool checked)
-            { clicked(checked); });
+            {
+                clicked(checked);
+            });
 }
 
-Navigation::Navigation(QWidget *parent) : QWidget(parent)
+Navigation::Navigation(QWidget *parent)
+    : QWidget(parent)
 {
-    m_items = new QButtonGroup(this);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-    connect(m_items, &QButtonGroup::idClicked, [this](int id)
-            { Q_EMIT currentUIDChanged(); });
-#else
-    connect(m_items, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id)
-            { Q_EMIT currentUIDChanged(); });
-#endif
+    buildItems();
 }
 
 void Navigation::addItem(NavigationItem *item)
@@ -90,6 +86,45 @@ QString Navigation::getSelectedUID()
 void Navigation::setBtnChecked(int id)
 {
     m_items->button(id)->setChecked(true);
+}
+
+void Navigation::clearItems()
+{
+    auto count = layout()->count();
+    for (auto i = 0; i < count; i++)
+    {
+        auto item = layout()->itemAt(0);
+        auto widget = item->widget();
+        if (widget)
+        {
+            delete widget;
+            widget = nullptr;
+        }
+    }
+    if (m_items)
+    {
+        delete m_items;
+        buildItems();
+    }
+
+    m_itemUIDs.clear();
+}
+
+void Navigation::buildItems()
+{
+    m_items = new QButtonGroup(this);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    connect(m_items, &QButtonGroup::idClicked, [this](int id)
+            {
+                Q_EMIT currentUIDChanged();
+            });
+#else
+    connect(m_items, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id)
+            {
+                Q_EMIT currentUIDChanged();
+            });
+#endif
 }
 
 }  // namespace KS

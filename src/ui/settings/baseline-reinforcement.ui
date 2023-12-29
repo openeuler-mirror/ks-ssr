@@ -22,7 +22,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Reinforcement strategy:</string>
+        <string>Custom strategy:</string>
        </property>
       </widget>
      </item>

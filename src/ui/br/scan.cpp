@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "scan.h"
 #include <kylin-license/license-i.h>
@@ -32,13 +32,13 @@ namespace KS
 {
 namespace BR
 {
-Scan::Scan(QWidget *parent) : QWidget(parent),
-                              m_ui(new Ui::Scan)
+Scan::Scan(QWidget *parent)
+    : QWidget(parent),
+      m_ui(new Ui::Scan)
 {
     m_ui->setupUi(this);
-
-    init();
     initConnection();
+    parsingCategories();
     initUI();
 }
 
@@ -54,6 +54,7 @@ void Scan::emitScanSignal()
 
 void Scan::usingSystemStrategy()
 {
+    m_strategyType = BR_STRATEGY_TYPE_SYSTEM;
     KLOG_DEBUG() << "use system strategy.";
     resetAllReinforcementItem();
     m_ui->m_itemTable->setAllCheckBoxEditStatus(false);
@@ -64,12 +65,13 @@ void Scan::usingSystemStrategy()
 void Scan::usingCustomStrategy()
 {
     KLOG_DEBUG() << "use custom strategy.";
+    m_strategyType = BR_STRATEGY_TYPE_CUSTOM;
     disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     // 修改UI界面参数以及复选框状态
     m_ui->m_itemTable->setAllCheckBoxEditStatus(true);
-    m_ui->m_itemTable->setAllChecked(Qt::Unchecked);
     m_ui->m_itemTable->hideCheckBox(false);
+    m_ui->m_itemTable->setAllChecked(Qt::Unchecked);
     // 所有状态重置后再修改
     resetAllReinforcementItem();
 
@@ -161,7 +163,7 @@ bool Scan::exportStrategy()
     return true;
 }
 
-void Scan::init()
+void Scan::parsingCategories()
 {
     m_dbusProxy = new BRDbusProxy(SSR_DBUS_NAME,
                                   BR_DBUS_OBJECT_PATH,
@@ -172,6 +174,7 @@ void Scan::init()
     // else if (m_dbusProxy->standard_type() == STANDARD_TYPE_CUSTOM)
     auto reply = m_dbusProxy->GetCategories();
     reply.waitForFinished();
+    CHECK_ERROR_FOR_DBUS_REPLY(reply)
     RETURN_IF_TRUE(reply.isError())
     Utils::getDefault()->jsonParsing(reply.value().toUtf8(), m_categories);
     Utils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_categories);
@@ -183,14 +186,10 @@ void Scan::initUI()
     if (BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_SYSTEM)
     {
         m_strategyType = BR_STRATEGY_TYPE_SYSTEM;
-        resetAllReinforcementItem();
-        m_ui->m_itemTable->hideCheckBox(true);
     }
     else
     {
         m_strategyType = BR_STRATEGY_TYPE_CUSTOM;
-        m_ui->m_itemTable->hideCheckBox(false);
-
         connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     }
 
@@ -199,11 +198,17 @@ void Scan::initUI()
 
     connect(m_customArgsDialog, &ReinforcementArgsDialog::okClicked, this, &Scan::setReinforcement);
     connect(m_customArgsDialog, &ReinforcementArgsDialog::argError, this, [this](const QString &error)
-            { POPUP_MESSAGE_DIALOG(error) });
+            {
+                POPUP_MESSAGE_DIALOG(error)
+            });
     connect(m_customArgsDialog, &ReinforcementArgsDialog::valueChanged, this, [this](const QString &reinforcementItem, const QString &argLabel, const QString &argValue, KS::Protocol::WidgetType::Value type)
-            { m_argTransfers.append(new ArgTransfer(reinforcementItem, argLabel, argValue, type)); });
+            {
+                m_argTransfers.append(new ArgTransfer(reinforcementItem, argLabel, argValue, type));
+            });
     connect(m_customArgsDialog, &ReinforcementArgsDialog::closed, this, [this]
-            { m_argTransfers.clear(); });
+            {
+                m_argTransfers.clear();
+            });
     connect(m_customArgsDialog, &ReinforcementArgsDialog::reseted, this, &Scan::argReset);
 }
 
@@ -218,7 +223,6 @@ void Scan::initConnection()
     connect(m_ui->m_itemTable, SIGNAL(modelEntered(QModelIndex)), this, SLOT(showErrorMessage(QModelIndex)));
 
     //    connect(m_dbusProxy, SIGNAL(standardChanged(uint)), this, SLOT(standardTypeChanged(uint)));
-    connect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
 }
 
 void Scan::resetAllReinforcementItem()
@@ -303,6 +307,11 @@ void Scan::setReinforcement()
             reinforcementItem->changeFlag = true;
             arg->jsonValue = StrUtils::str2jsonValue(argTransfer->value);
             arg->widgetType = argTransfer->widgetType;
+            // str2jsonValue中的类型转换没法区分line输入纯数字和数字输入框spin输入的纯数字，都会被转为double类型，这里需要进行判断
+            if (arg->widgetType == KS::Protocol::WidgetType::TEXT)
+            {
+                arg->jsonValue = QJsonValue::fromVariant(argTransfer->value);
+            }
         }
     }
 
@@ -370,8 +379,13 @@ bool Scan::checkAndSetCheckbox()
 
 void Scan::startScan()
 {
+    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        return;
+    }
     // 设置页面定时扫描时会操作这个信号，为保证不起冲突，每次扫描时断开后重新连接
-    disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), 0, 0);
+    disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), nullptr, nullptr);
     connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
     m_progressInfo.method = PROCESS_METHOD_SCAN;
     clearState();
@@ -380,7 +394,9 @@ void Scan::startScan()
     // TODO 托盘功能是否有必要
     //    if (is_minTray)
     //        showNormal();
-    auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
+    auto scanItems = m_strategyType == BR_STRATEGY_TYPE_CUSTOM
+                         ? m_ui->m_itemTable->getString(m_categories)
+                         : m_ui->m_itemTable->getAllString(m_categories);
     if (scanItems.empty())
     {
         POPUP_MESSAGE_DIALOG(tr("Please check the reinforcement items to be scanned or reinforcement classification for scanning."))
@@ -388,7 +404,6 @@ void Scan::startScan()
         return;
     }
     m_ui->m_progress->updateProgressUI(m_progressInfo.method);
-    disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
 
     m_dbusProxy->Scan(scanItems);
     update();
@@ -396,28 +411,39 @@ void Scan::startScan()
 
 void Scan::startReinforcement()
 {
-    m_progressInfo.method = PROCESS_METHOD_FASTEN;
-    clearState();
-    m_ui->m_itemTable->clearCheckedStatus(m_categories, BR_REINFORCEMENT_STATE_UNREINFORCE);
-
-    auto reinforcementItem = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
+    auto reinforcementItem = m_strategyType == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
     if (reinforcementItem.empty())
     {
         POPUP_MESSAGE_DIALOG(tr("Please check the content to be reinforced."))
         return;
     }
 
-    m_ui->m_progress->updateProgressUI(m_progressInfo.method);
-
-    disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
+    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        return;
+    }
     auto reply = m_dbusProxy->Reinforce(reinforcementItem);
-    reply.waitForFinished();
-    CHECK_ERROR_FOR_DBUS_REPLY(reply)
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    RETURN_IF_TRUE(reply.isError());
+    // 设置页面回退会进行加固，为保证不起冲突，每次加固时断开后重新连接
+    disconnect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), nullptr, nullptr);
+    connect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
+    m_progressInfo.method = PROCESS_METHOD_FASTEN;
+    clearState();
+    m_ui->m_itemTable->clearCheckedStatus(m_categories, BR_REINFORCEMENT_STATE_UNREINFORCE);
+    m_ui->m_progress->updateProgressUI(m_progressInfo.method);
+    disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     update();
 }
 
 void Scan::generateReport()
 {
+    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        return;
+    }
     KLOG_DEBUG() << "generate reports !";
     if (m_progressInfo.method == PROCESS_METHOD_FASTEN)
     {
@@ -512,8 +538,8 @@ void Scan::runProgress(const QString &jobResult)
 {
     m_progressInfo.total = m_ui->m_itemTable->getCount();
     Utils::getDefault()->ssrJobResult(jobResult, m_progressInfo, m_categories, m_invalidData);
+    // TODO 确认在扫描完成之后是否允许修改勾选的加固项 m_progressInfo.method == PROCESS_METHOD_FASTEN
     m_ui->m_itemTable->setAllCheckBoxEditStatus(false);
-
     if (double(100) == m_progressInfo.progress)
     {
         m_ui->m_itemTable->getProgressCount(m_categories, m_progressInfo);

@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
@@ -28,6 +28,8 @@ class QLabel;
 
 namespace KS
 {
+class PasswordModification;
+
 namespace PrivateBox
 {
 struct BoxInfo
@@ -40,7 +42,6 @@ struct BoxInfo
     bool mounted;
 };
 
-class BoxPasswordModification;
 class BoxPasswordRetrieve;
 class BoxPasswordChecked;
 class MessageDialog;
@@ -54,7 +55,10 @@ public:
     virtual ~Box(){};
 
     // 获取保险箱UID
-    QString getUID() { return m_uid; }
+    QString getUID()
+    {
+        return m_uid;
+    }
 
 public slots:
     void boxChanged();
@@ -73,10 +77,11 @@ private:
     void retrievePassword();
 
 private slots:
-    void modifyPasswordAccepted();
-    void retrievePasswordAccepted();
-    void inputMountPasswordAccepted();
-    void inputDelBoxPasswordAccepted();
+    void popDeleteNotify();
+    void acceptedModifyPassword();
+    void acceptedRetrievePassword();
+    void acceptedInputMountPassword();
+    void acceptedInputDelBoxPassword();
 
 private:
     // 保险箱唯一标识
@@ -95,7 +100,7 @@ private:
     BoxImage *m_imageUnlock;
 
     BoxManagerProxy *m_boxManagerProxy;
-    BoxPasswordModification *m_modifyPassword;
+    PasswordModification *m_modifyPassword;
     BoxPasswordRetrieve *m_retrievePassword;
     BoxPasswordChecked *m_inputMountPassword;
     BoxPasswordChecked *m_inputDelBoxPassword;
@@ -104,5 +109,5 @@ private:
 
     QProcess *m_process;
 };
-}  //namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

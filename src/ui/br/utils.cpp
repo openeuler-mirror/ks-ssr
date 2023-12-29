@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "utils.h"
 #include <qt5-log-i.h>
@@ -163,11 +163,11 @@ void Utils::jsonParsing(const QByteArray &categoriesJson, QList<Category *> &cat
         auto iconName = arrayObj.at(i).toObject().value("icon_name");
         auto label = arrayObj.at(i).toObject().value("label");
         auto name = arrayObj.at(i).toObject().value("name");
-        auto categories = new Category;
-        categories->setIconName(iconName.toString());
-        categories->setLabel(categoriesLabel2Translate(label.toString()));
-        categories->setName(name.toString());
-        categoriesList.append(categories);
+        auto category = new Category;
+        category->setIconName(iconName.toString());
+        category->setLabel(categoriesLabel2Translate(label.toString()));
+        category->setName(name.toString());
+        categoriesList.append(category);
     }
 }
 
@@ -190,7 +190,6 @@ bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categ
         for (auto arg : iter.arg())
         {
             auto value = StrUtils::str2jsonValue(arg.value());
-            KLOG_DEBUG() << "value = " << value;
             QString defaultLabel = "", defaultNote = "";
             for (auto label : arg.layout().get().label())
             {
@@ -252,7 +251,7 @@ bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categ
                 defaultDescription = QString(description.c_str());
                 continue;
             }
-            //获取系统语言来进行匹配，符合获取符合系统语言的label
+            // 获取系统语言来进行匹配，符合获取符合系统语言的label
             if (local.name().toStdString() == description.lang().get())
             {
                 defaultDescription = QString(description.c_str());
@@ -438,7 +437,7 @@ bool Utils::ssrJobResult(const QString &xmlString,
     return true;
 }
 
-//设置加固项
+// 设置加固项
 QStringList Utils::ssrSetReinforcement(const QString &xmlString, QList<Category *> &categoriesList)
 {
     QStringList retStringList = {};

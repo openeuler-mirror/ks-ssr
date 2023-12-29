@@ -13,11 +13,13 @@
  */
 
 #include <QThread>
+#include "src/daemon/log/manager.h"
 
-class QFile;
 class QWaitCondition;
+class QReadWriteLock;
 class QMutex;
-template <typename T> class QQueue;
+class QFile;
+class Log;
 
 namespace KS
 {
@@ -26,13 +28,9 @@ namespace Log
 class WriteWorker : public QThread
 {
 public:
-    explicit WriteWorker(QQueue<QString>* queue, QFile* logFile, QWaitCondition* waitCondition, QMutex* writeQueue, QMutex* writeFile, QObject* parent = nullptr)
-        : QThread(parent),
-          m_messageQueue(queue),
-          m_file(logFile),
-          m_waitCondition(waitCondition),
-          m_queueMutex(writeQueue),
-          m_fileMutex(writeFile)
+    explicit WriteWorker(Manager* logManager)
+        : QThread(logManager),
+          m_logManager(logManager)
     {
     }
     void run() override;
@@ -40,12 +38,8 @@ public:
     void stop();
 
 private:
-    QQueue<QString>* m_messageQueue;
-    QFile* m_file;
-    QWaitCondition* m_waitCondition;
+    Manager* m_logManager;
     QMutex* m_condition;
-    QMutex* m_queueMutex;
-    QMutex* m_fileMutex;
     bool m_isStop = false;
 };
 };  // namespace Log

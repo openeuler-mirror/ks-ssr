@@ -20,6 +20,7 @@
 namespace KS
 {
 #define LICENSE_OBJECT_NAME "KSSSR"
+#define LICENSE_OLD_OBJECT_NAME "KSSSRManager"
 #define TIMEOUT_MS 5000
 #define METHOD_GET_LICENSE "GetLicense"
 #define METHOD_GET_LICENSE_OBJECT "GetLicenseObject"
@@ -30,7 +31,7 @@ class LicenseProxy : public QObject
 {
     Q_OBJECT
 public:
-    LicenseProxy(QObject* parent = 0);
+    LicenseProxy(QObject* parent = nullptr);
     static QSharedPointer<LicenseProxy> getDefault();
     virtual ~LicenseProxy();
 
@@ -55,7 +56,13 @@ public:
      *         false:授权失败
      */
     bool activateByActivationCode(const QString& activation_Code, QString& errorMsg);
-
+    /**
+     * @brief getActivateStatus:获取旧版本激活状态
+     * @param objectName:激活对象名称
+     * @return true： 已授权
+     *         false：未授权/授权已过期
+     */
+    bool getActivateStatus(const QString& objectName);
     /**
      * @brief isActivate:判断是否授权
      * @return true： 已授权

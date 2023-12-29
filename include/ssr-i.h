@@ -24,9 +24,20 @@ extern "C"
 #define SSR_DBUS_OBJECT_PATH "/com/kylinsec/SSR"
 #define SSR_DBUS_INTERFACE_NAME "com.kylinsec.SSR"
 
-// 授权相关定义
-#define SSR_LICENSE_DBUS_OBJECT_PATH "/com/kylinsec/SSR/License"
-#define SSR_LICENSE_DBUS_INTERFACE_NAME "com.kylinsec.SSR.License"
+// 用户名定义
+#define SSR_ACCOUNT_NAME_SYSADM "sysadm"
+#define SSR_ACCOUNT_NAME_SECADM "secadm"
+#define SSR_ACCOUNT_NAME_AUDADM "audadm"
+
+#define SSR_ACCOUNT_NAME_COMADM "comadm"
+
+// 用户名称长度以及保险箱密码长度
+#define SSR_USER_NAME_MAX_LENGTH 16
+#define SSR_PASSWORD_MAX_LENGTH 16
+
+// 用户管理相关定义
+#define SSR_ACCOUNT_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Account"
+#define SSR_ACCOUNT_BUS_INTERFACE_NAME "com.kylinsec.SSR.Account"
 
 // 保密箱相关定义
 #define SSR_BOX_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SSR/PrivateBox"
@@ -36,10 +47,6 @@ extern "C"
 #define SSR_BM_JK_BOX_UID "uid"
 #define SSR_BM_JK_BOX_NAME "name"
 #define SSR_BM_JK_BOX_MOUNTED "mounted"
-
-// 保险箱名称长度以及保险箱密码长度
-#define SSR_BOX_NAME_MAX_LENGTH 16
-#define SSR_BOX_PASSWORD_MAX_LENGTH 16
 
 // KSS相关定义, 包括TP FP的接口
 #define SSR_KSS_INIT_DBUS_OBJECT_PATH "/com/kylinsec/SSR/KSS"
@@ -66,6 +73,12 @@ extern "C"
 
 #define SSR_BR_CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
 #define SSR_BR_CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra.xml"
+
+#define SSR_TOOL_BOX_DBUS_NAME "com.kylinsec.SSR.ToolBox"
+#define SSR_TOOL_BOX_DBUS_OBJECT_PATH "/com/kylinsec/SSR/ToolBox"
+
+#define SSR_LOG_DBUS_NAME "com.kylinsec.SSR.Log"
+#define SSR_LOG_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Log"
 
     enum SSRKSSTrustedFileType
     {
@@ -104,6 +117,27 @@ extern "C"
 #define SSR_DI_JK_ENABLE "enable"
 
 #define SSR_PERMISSION_AUTHENTICATION "com.kylinsec.SSR.PermissionAuthentication"
+
+    enum OsUserType
+    {
+        USER_TYPE_MANAGER = 0,
+        USER_TYPE_NORMAL
+    };
+
+    enum LogResult
+    {
+        LOG_RESULT_FALSE = 0,
+        LOG_RESULT_TRUE,
+        LOG_RESULT_ALL,
+    };
+
+    enum AccountRole
+    {
+        ACCOUNT_ROLE_SYSADMIN = (1 << 0),
+        ACCOUNT_ROLE_SECADMIN = (1 << 1),
+        ACCOUNT_ROLE_AUDITADMIN = (1 << 2),
+        ACCOUNT_ROLE_NOACCOUNT = (1 << 3)
+    };
 
     enum DeviceType
     {
@@ -255,15 +289,26 @@ extern "C"
         BR_RESOURCE_MONITOR_OTHER
     };
 
-    // 回退状态
-    enum BRSnapshotStatus
+    // 回退方式
+    enum BRFallbackMethod
     {
         // 回到初始状态
-        BR_SNAPSHOT_STATUS_INITIAL = 0,
+        BR_FALLBACK_METHOD_INITIAL = 0,
         // 回到上一次加固
-        BR_SNAPSHOT_STATUS_LAST,
+        BR_FALLBACK_METHOD_LAST,
         // 其它
-        BR_SNAPSHOT_STATUS_OTHER
+        BR_FALLBACK_METHOD_OTHER
+    };
+
+    // 回退状态
+    enum BRFallbackStatus
+    {
+        // 回退未开始
+        BR_FALLBACK_STATUS_NOT_STARTED = 0,
+        // 回退进行中
+        BR_FALLBACK_STATUS_IN_PROGRESS,
+        // 回退完成
+        BR_FALLBACK_STATUS_IS_FINISHED
     };
 
     enum LOGAlertType

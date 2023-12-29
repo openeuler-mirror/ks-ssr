@@ -20,7 +20,8 @@ namespace KS
 {
 namespace DM
 {
-DRMDevice::DRMDevice(const QString &syspath, QObject *parent) : Device(syspath, parent)
+DRMDevice::DRMDevice(const QString &syspath, QObject *parent)
+    : Device(syspath, parent)
 {
     this->init();
 }

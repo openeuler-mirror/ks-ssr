@@ -15,6 +15,11 @@ file(GLOB_RECURSE SRC_H_FILES ./*.h)
 file(GLOB_RECURSE SRC_CPP_FILES ./*.cpp)
 
 qt5_add_dbus_adaptor(
+  DAEMON_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/daemon.h KS::Daemon daemon_adaptor
+  DaemonAdaptor)
+
+qt5_add_dbus_adaptor(
   PRIVATE_BOX_MANAGER_SRCS
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.PrivateBox.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/private-box/box-manager.h
@@ -59,23 +64,24 @@ set(TARGET_NAME ks-ssr-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
 qt5_create_translation(
-  QM_FILES
-  ${CMAKE_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml.in
-  ${CMAKE_SOURCE_DIR}/data/br-categories.ini.in
-  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-audit.xml.in
-  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-config.xml.in
-  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-external.xml.in
-  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-network.xml.in
-  ${TS_FILES}
-  OPTIONS
-  -I
-  ${PROJECT_SOURCE_DIR})
+    QM_FILES
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml.in
+    ${CMAKE_SOURCE_DIR}/data/br-categories.ini.in
+    ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-audit.xml.in
+    ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-config.xml.in
+    ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-external.xml.in
+    ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-network.xml.in
+    ${TS_FILES}
+    OPTIONS
+    -I
+    ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}
   ${SRC_H_FILES}
   ${SRC_CPP_FILES}
+  ${DAEMON_SRCS}
   ${PRIVATE_BOX_MANAGER_SRCS}
   ${TRUSTED_MANAGER_SRCS}
   ${FILES_PROTECTED_MANAGER_SRCS}

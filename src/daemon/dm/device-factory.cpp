@@ -23,7 +23,8 @@ namespace KS
 {
 namespace DM
 {
-DeviceFactory::DeviceFactory(QObject* parent) : QObject{parent}
+DeviceFactory::DeviceFactory(QObject* parent)
+    : QObject{parent}
 {
 }
 

@@ -22,39 +22,18 @@ namespace KS
 {
 namespace Log
 {
-
-class Message : public QObject
+struct Log;
+class Message : QObject
 {
     Q_OBJECT
-
 public:
-    // 此枚举标识日志消息属于哪个模块，审计日志不由此类写，但是前端拿日志数据时审计日志也会从此类的接口拿，所以在此定义审计类型。
-
-    enum class LogType
-    {
-        ERROR = -1,
-        AUDIT,
-        DEVICE,
-        LOG,
-        TOOL_BOX
-    };
-    Q_ENUM(LogType)
-
-    Message();
-    ~Message() = default;
-    Message(const LogType type, const QString& logMsg, const QDateTime& timeStamp = QDateTime::currentDateTime());
-    QString serialize(Qt::DateFormat format = Qt::ISODateWithMs) const;
-    inline Message& deserialize(const QString& str);
-
-    // Message 未被初始化时， isValid 函数返回 false
-    bool isValid() const;
+    Message() = delete;
+    virtual ~Message(){};
+    static QString serialize(const Log& log, Qt::DateFormat format = Qt::ISODateWithMs);
+    static Log deserialize(const QString& str);
 
 private:
-    QDateTime m_timeStamp;
-    LogType m_type;
-    QString m_logMsg;
     // Message 未被初始化时， isValid 函数返回 false
-    bool m_isValid;
     static QMetaEnum m_metaLogType;
     static const QString& m_separator;
 };

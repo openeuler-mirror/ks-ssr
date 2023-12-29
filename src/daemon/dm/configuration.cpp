@@ -171,11 +171,12 @@ void Configuration::setIFCEnable(int type, bool enable)
     }
 }
 
-Configuration::Configuration(QObject *parent) : QObject(parent),
-                                                m_deviceSettings(nullptr),
-                                                m_interfaceSettings(nullptr),
-                                                m_grubUpdateThread(nullptr),
-                                                m_waitingUpdateGrub(false)
+Configuration::Configuration(QObject *parent)
+    : QObject(parent),
+      m_deviceSettings(nullptr),
+      m_interfaceSettings(nullptr),
+      m_grubUpdateThread(nullptr),
+      m_waitingUpdateGrub(false)
 {
     this->init();
 }

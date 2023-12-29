@@ -20,7 +20,7 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 #include <QWidget>
-#include "src/ui/common/table-header-proxy.h"
+#include "src/ui/common/table/table-header-proxy.h"
 #include "src/ui/tp/utils.h"
 
 class KSSDbusProxy;
@@ -35,9 +35,13 @@ class ExecuteProtectedFilterModel : public QSortFilterProxyModel
 public:
     ExecuteProtectedFilterModel(QObject *parent = nullptr);
     virtual ~ExecuteProtectedFilterModel(){};
+    void setSearchText(const QString &text);
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+
+private:
+    QString m_searchText;
 };
 
 class ExecuteProtectedModel : public QAbstractTableModel
@@ -59,10 +63,6 @@ public:
     bool setData(const QModelIndex &index,
                  const QVariant &value,
                  int role = Qt::EditRole) override;
-    //    bool setHeaderData(int section,
-    //                       Qt::Orientation orientation,
-    //                       const QVariant &value,
-    //                       int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     void updateRecord();
@@ -89,13 +89,16 @@ public:
     ExecuteProtectedTable(QWidget *parent = nullptr);
     virtual ~ExecuteProtectedTable(){};
 
-    void searchTextChanged(const QString &text);
+    void setSearchText(const QString &text);
     void updateInfo();
     QList<TrustedRecord> getExecuteRecords();
     int getExecutetamperedNums();
 
 private:
     void showDetails(const QModelIndex &index);
+    void initTable();
+    void initTableHeaderButton();
+    void filterFixedString();
 
 signals:
     void filesUpdate(int total);
@@ -107,6 +110,12 @@ private:
     ExecuteProtectedFilterModel *m_filterProxy;
     ExecuteProtectedModel *m_model;
     TableHeaderProxy *m_headerViewProxy;
+    HeaderButtonDelegate *m_fileTypeButton;
+    QStringList m_fileTypeKeys;
+    HeaderButtonDelegate *m_statusButton;
+    QStringList m_statusKeys;
+    QString m_searchText;
+    QMap<QString, QStringList> m_filterMap;
 };
 
 }  // namespace TP

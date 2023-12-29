@@ -28,21 +28,21 @@ namespace KS
 {
 namespace Account
 {
-
 struct Account;
 
 class Manager : public QObject, public QDBusContext
 {
     Q_OBJECT
 public:
-    enum class Role
+    // 此枚举类型为与前台传入参数保持一致，使用小写定义枚举
+    enum class AccountRole
     {
-        SYSADMIN,
-        SECADMIN,
-        AUDITADMIN
+        sysadm = (1 << 0),
+        secadm = (1 << 1),
+        audadm = (1 << 2),
+        unknown_account = (1 << 3)
     };
-    Q_ENUM(Role)
-
+    Q_ENUM(AccountRole)
     struct Account
     {
         /**
@@ -52,7 +52,7 @@ public:
         /**
          * @brief 当前用户角色，可考虑细分不同角色用户的权限
          */
-        Manager::Role m_role;
+        AccountRole role;
 
         /**
          * @brief 前端程序的 pid
@@ -96,6 +96,10 @@ public:
      */
     bool Logout();
 
+    bool GetUidReusable();
+    void SetMultiFactorAuthState(bool enabled);
+    bool GetMultiFactorAuthState();
+
 public:  // PROPERTIES
     Q_PROPERTY(QString RSAPublicKey READ rsaPublicKey)
     QString rsaPublicKey() const
@@ -103,6 +107,32 @@ public:  // PROPERTIES
         return m_rsaPublicKey;
     };
 
+    AccountRole getRole(QString dbusUniqueName) const
+    {
+        QReadLocker locker(&m_clientMutex);
+        auto it = m_clients.find(dbusUniqueName);
+        if (it == m_clients.end())
+        {
+            KLOG_WARNING() << "Unknown dbus id: " << dbusUniqueName;
+            return AccountRole::unknown_account;
+        }
+        return it->role;
+    }
+
+    AccountRole getRole(pid_t dbusPid) const
+    {
+        QReadLocker locker(&m_clientMutex);
+        for (const auto& client : m_clients)
+        {
+            if (client.pid == dbusPid)
+            {
+                return client.role;
+            }
+        }
+        KLOG_WARNING() << "Unknown dbus id: " << dbusPid;
+        return AccountRole::unknown_account;
+    }
+    QMetaEnum m_metaAccountEnum;
 Q_SIGNALS:  // SIGNALS
     void PasswordChanged(const QString& user_name);
 
@@ -115,6 +145,9 @@ private:
     bool isFreeze(const QString& userName) const;
     void updateFreezeInfo(const QString& userName) const;
     void resetFreezeInfo(const QString& userName) const;
+    bool getMultiFactorAuthState();
+    void disableMultiFactorAuthState();
+    void enableMultiFactorAuthState();
 
     inline bool isLogin(QMap<QString, Account>::iterator& it)
     {
@@ -140,8 +173,6 @@ private:
      */
     QMap<QString, Account> m_clients;
 
-    QMetaEnum m_metaAccountEnum;
-
     /**
      * @brief 冻结时间， 3分钟，可以考虑做成配置文件中的配置项
      */
@@ -149,11 +180,12 @@ private:
 
     Database* m_db;
 
-    mutable QMutex m_clientMutex;
+    mutable QReadWriteLock m_clientMutex;
     mutable QReadWriteLock m_dbMutex;
     QDBusServiceWatcher* m_dbusServerWatcher;
     QString m_rsaPublicKey;  // property
     QString m_rsaPrivateKey;
+    bool m_multiFactorAuthState;
 };
 };  // namespace Account
 };  // namespace KS

@@ -58,7 +58,8 @@ namespace DM
 
 QMap<QString, int> USBDevice::m_fixedTypes{{"096e:0202", DEVICE_TYPE_STORAGE}};
 
-USBDevice::USBDevice(const QString &syspath, QObject *parent) : Device(syspath, parent)
+USBDevice::USBDevice(const QString &syspath, QObject *parent)
+    : Device(syspath, parent)
 {
     m_devConfig = Configuration::instance();
 
@@ -208,6 +209,7 @@ int USBDevice::wcProtocol2DevcieType(const InterfaceClass &interface)
     return type;
 }
 
+#pragma message("将 USB 的默认权限设置为启用")
 void USBDevice::initPermission()
 {
     auto setting = m_devConfig->getDeviceSetting(m_uid);

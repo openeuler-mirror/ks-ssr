@@ -30,8 +30,9 @@ namespace BRDaemon
      (PY_MAJOR_VERSION == (major) && PY_MINOR_VERSION == (minor) && \
       PY_MICRO_VERSION >= (micro)))
 
-Plugins::Plugins(Configuration* configuration) : configuration_(configuration),
-                                                 thread_pool_(this->configuration_->getMaxThreadNum())
+Plugins::Plugins(Configuration* configuration)
+    : configuration_(configuration),
+      thread_pool_(this->configuration_->getMaxThreadNum())
 {
 }
 

@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "progress.h"
 #include <QDateTime>
@@ -22,8 +22,9 @@ namespace KS
 {
 namespace BR
 {
-Progress::Progress(QWidget *parent) : QWidget(parent),
-                                      m_ui(new Ui::Progress)
+Progress::Progress(QWidget *parent)
+    : QWidget(parent),
+      m_ui(new Ui::Progress)
 {
     m_ui->setupUi(this);
     setMouseTracking(true);
@@ -39,19 +40,13 @@ Progress::~Progress()
 
 void Progress::resetProgress()
 {
-    m_ui->m_icon->finishedProgress(false);
+    m_ui->m_icon->finishedProgress(ProgressIconStatus::PROGRESS_ICON_STATUS_INITIAL);
     m_progressTimer->stop();
     m_ui->m_definition->setText(tr("Security reinforcement is protecting your computer"));
     m_ui->m_note->setText(tr("KylinSec Host Security Reinforcement Software Detects Risks in Advance to Ensure Asset Security"));
     m_ui->m_scan->disconnect();
     m_ui->m_scan->setText(tr("Strat scan"));
-    connect(m_ui->m_scan, &QPushButton::clicked, this, [this]()
-            {
-                m_secTime = 0;
-                m_progressTimer->start(1000);
-                updateProgressUI(PROCESS_METHOD_SCAN);
-                emit scanClicked();
-            });
+    connect(m_ui->m_scan, &QPushButton::clicked, this, &Progress::scanClicked);
 
     m_ui->m_return->disconnect();
     m_ui->m_return->setText(tr("Return"));
@@ -70,14 +65,21 @@ void Progress::timeInit()
     m_progressTimer = new QTimer(this);
     m_waitTimer = new QTimer(this);
     m_waitTimer->stop();
-    m_secTime = 0;
+    // 记时由1s开始
+    m_secTime = 1;
     connect(m_progressTimer, SIGNAL(timeout()), this, SLOT(changeProgress()));
     connect(m_waitTimer, SIGNAL(timeout()), this, SLOT(waitProgress()));
 }
 
 void Progress::updateProgressUI(ProcessMethod method)
 {
-    m_ui->m_icon->finishedProgress(false);
+    m_secTime = 1;
+    m_progressTimer->start(1000);
+    if (method == PROCESS_METHOD_FASTEN)
+    {
+        m_ui->m_generateReport->hide();
+    }
+    m_ui->m_icon->finishedProgress(ProgressIconStatus::PROGRESS_ICON_STATUS_WORKING);
     m_ui->m_definition->setText(QString(tr("In %1, please wait..."))
                                     .arg(method == PROCESS_METHOD_SCAN
                                              ? QString(tr("Scan"))
@@ -138,26 +140,15 @@ void Progress::completeProcess(ProgressInfo info)
     m_ui->m_scan->disconnect();
     m_ui->m_scan->show();
     m_ui->m_return->show();
-    m_ui->m_icon->finishedProgress(true);
+    m_ui->m_icon->finishedProgress(ProgressIconStatus::PROGRESS_ICON_STATUS_FINISHED);
 
     if (info.method == PROCESS_METHOD_SCAN)
     {
         m_ui->m_scan->setText(tr("Reinforcement"));
         m_ui->m_return->setText(tr("Return"));
         m_ui->m_generateReport->show();
-        connect(m_ui->m_return, &QPushButton::clicked, this, [this]()
-                {
-                    m_ui->m_generateReport->hide();
-                    emit returnHomeClicked();
-                });
-        connect(m_ui->m_scan, &QPushButton::clicked, this, [this]()
-                {
-                    m_secTime = 0;
-                    m_progressTimer->start(1000);
-                    updateProgressUI(PROCESS_METHOD_FASTEN);
-                    m_ui->m_generateReport->hide();
-                    emit reinforcementClicked();
-                });
+        connect(m_ui->m_return, &QPushButton::clicked, this, &Progress::returnHomeClicked);
+        connect(m_ui->m_scan, &QPushButton::clicked, this, &Progress::reinforcementClicked);
     }
     else
     {
@@ -166,7 +157,7 @@ void Progress::completeProcess(ProgressInfo info)
         connect(m_ui->m_scan, &QPushButton::clicked, this, &Progress::generateReportClicked);
         connect(m_ui->m_return, &QPushButton::clicked, this, &Progress::returnHomeClicked);
     }
-}
+}  // namespace BR
 
 void Progress::stopWorkingProcess()
 {

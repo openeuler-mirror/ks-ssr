@@ -16,7 +16,7 @@
 
 #include "lib/base/base.h"
 
-/* 
+/*
 KV类型配置：
     每行是一个分割符分割的两列组成的键值(key-value)对。
     写入时首先判断文件是否已经存在key，如果存在则直接替换value，否则新增一行。
@@ -34,7 +34,7 @@ public:
      * @param {kv_split_pattern}  分割键值对的正则表达式
      * @param {kv_join_str}  拼接键值对的字符串
      * @param {comment} 注释字符串
-     * @return {} 
+     * @return {}
      */
     KV(const QString &conf_path,
        const QString &kv_split_pattern,

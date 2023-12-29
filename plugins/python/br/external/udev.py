@@ -101,7 +101,7 @@ class CDROM(DRIVERS):
                 # self.reload_drive(self.get_kernel_version())
 
         except Exception as e:
-            br.log.debug('Exception_open', e)
+            br.log.error('Exception_open', e)
             return (False, str(e))
 
     def close(self):
@@ -118,9 +118,12 @@ class CDROM(DRIVERS):
 
                 other_mod = str(br.utils.subprocess_has_output(
                     "cat /proc/modules |grep cdrom"))
-                other_names = other_mod.split(" ")[3].split(",")
+                if len(other_mod) != 0:
+                    other_names = other_mod.split(" ")[3].split(",")
+                else:
+                    other_names = list()
                 for other_name in other_names:
-                    if other_name == '':
+                    if other_name == '' or other_name == '-':
                         continue
                     br.utils.subprocess_not_output(
                         "{0} {1}".format(UNINSTALL_DRIVE, other_name))

@@ -12,13 +12,21 @@ AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: All
+# 是否允许函数体一行
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#allowshortfunctionsonasingleline
+AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: true
+# 是否允许 lambda 表达式的函数体一行
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#allowshortlambdasonasingleline
+AllowShortLambdasOnASingleLine: Empty
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
-AlwaysBreakTemplateDeclarations: Yes
+# 是否在模板的定义后换行
+# 这里选择 No 是因为有时短模板的申明换行不好看，所以默认作者写什么样就什么样，不对模板的定义 format
+# AlwaysBreakTemplateDeclarations
+AlwaysBreakTemplateDeclarations: No
 BinPackArguments: true
 BinPackParameters: true
 BraceWrapping:   

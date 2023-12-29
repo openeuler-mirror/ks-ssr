@@ -1,15 +1,15 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #pragma once
@@ -17,13 +17,15 @@
 #include <QLabel>
 #include <QMap>
 #include "src/ui/common/page.h"
-#include "src/ui/common/titlebar-window.h"
+#include "src/ui/common/window/titlebar-window.h"
 #include "src/ui/license/activation.h"
 
 namespace Ui
 {
 class Window;
 }
+
+class DaemonProxy;
 
 namespace KS
 {
@@ -42,13 +44,17 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
+    void login();
+    void start();
     void initActivation();
+    void initNotification();
     // 窗口整体初始化
     void initWindow();
-    // 导航和导航项初始化
-    void initNavigation();
+    // 导航项以及子页面初始化
+    void initPageAndNavigation();
+    void initSettings();
     void addPage(Page *page);
-    void showLoading(bool isShow);
+    void hideLoading(bool ishide);
     void clearSidebar();
 
 private slots:
@@ -60,6 +66,11 @@ private slots:
     void activateMetaObject();
     void updatePage();
     void updateSidebar();
+    void setNotifyStatus(bool disabled);
+
+    void logout(const QString &userName);
+    // 重新登录
+    void relogin(const QString &userName);
 
 private:
     Ui::Window *m_ui;
@@ -68,5 +79,6 @@ private:
     QLabel *m_activateStatus;
     Loading *m_loading;
     QSharedPointer<LicenseProxy> m_licenseProxy;
+    DaemonProxy *m_dbusProxy;
 };
 }  // namespace KS

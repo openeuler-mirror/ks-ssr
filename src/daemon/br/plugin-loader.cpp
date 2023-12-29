@@ -23,8 +23,9 @@ namespace KS
 {
 namespace BRDaemon
 {
-PluginCPPLoader::PluginCPPLoader(const QString &so_path) : so_path_(so_path),
-                                                           is_activate_(false)
+PluginCPPLoader::PluginCPPLoader(const QString &so_path)
+    : so_path_(so_path),
+      is_activate_(false)
 {
 }
 
@@ -87,8 +88,9 @@ bool PluginCPPLoader::load_module()
     return true;
 }
 
-PluginPythonLoader::PluginPythonLoader(const QString &package_name) : package_name_(package_name),
-                                                                      is_activate_(false)
+PluginPythonLoader::PluginPythonLoader(const QString &package_name)
+    : package_name_(package_name),
+      is_activate_(false)
 {
 }
 

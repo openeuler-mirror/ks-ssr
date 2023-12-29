@@ -18,7 +18,8 @@ namespace KS
 {
 namespace BRDaemon
 {
-Plugin::Plugin(const QString& conf_path) : conf_path_(conf_path)
+Plugin::Plugin(const QString& conf_path)
+    : conf_path_(conf_path)
 {
 }
 

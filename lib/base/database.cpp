@@ -16,8 +16,8 @@
 #include <sqlcipher/sqlite3.h>
 #include <QDir>
 #include <QTextStream>
-#include <QVector>
 #include <QVariant>
+#include <QVector>
 #include "config.h"
 
 #define PLAINTEXT_DB_PATH SSR_INSTALL_DATADIR "/ssr.dat"
@@ -61,7 +61,8 @@ bool Database::exec(const QString& cmd, SqlDataType* const result)
         rc = sqlite3_exec(m_db, cmd.toLatin1(), nullptr, result, nullptr);
         return checkExec(rc, cmd);
     }
-    auto callback = [](void* callback_arg, int argc, char** argv, char** azColName) -> int {
+    auto callback = [](void* callback_arg, int argc, char** argv, char** azColName) -> int
+    {
         auto ret = reinterpret_cast<SqlDataType*>(callback_arg);
         SqlRowDataType row;
         row.reserve(argc);

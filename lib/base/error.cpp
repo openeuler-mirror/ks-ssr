@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "lib/base/error.h"
 #include <QObject>
@@ -91,12 +91,43 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case SSRErrorCode::ERROR_DEVICE_DISABLE_HDMI:
         errorDesc = QObject::tr("The graphics card does not support HDMI interface shutdown.");
         break;
+    case SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR:
+        errorDesc = QObject::tr("Password error.");
+        break;
+    case SSRErrorCode::ERROR_ACCOUNT_BE_FREEZE:
+        errorDesc = QObject::tr("This account has been freeze.");
+        break;
+    case SSRErrorCode::ERROR_ACCOUNT_BE_DIFF_NEW_PASSWORD:
+        errorDesc = QObject::tr("New password must be different from old password.");
+        break;
+    case SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED:
+        errorDesc = QObject::tr("Permission denied.");
+        break;
+    case SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT:
+        errorDesc = QObject::tr("Unknown account.");
+        break;
+    case SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE:
+        errorDesc = QObject::tr("Failed to Change Multi-Factor authentication state.");
+        break;
+    case SSRErrorCode::ERROR_LOG_GET_LOG_PAGE_ERROR:
+        errorDesc = QObject::tr("per page limit must less than 100 and page index must greater than 0.");
+        break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_ACCESS_CONTROL:
+        errorDesc = QObject::tr("Failed to set selinux status.");
+        break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_SECURITY_CONTEXT:
+        errorDesc = QObject::tr("Failed to set Security Context.");
+        break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_GET_SECURITY_CONTEXT:
+        errorDesc = QObject::tr("Failed to get Security Context.");
+        break;
 
     default:
         errorDesc = QObject::tr("Unknown error.");
         break;
     }
 
+    errorDesc += QString(QObject::tr(" (error code: 0x%1)")).arg(QString::number((int)errorCode, 16));
     return errorDesc;
 }
 
@@ -107,43 +138,56 @@ BRError::BRError()
 {
 }
 
-QString BRError::getErrorDesc(BRErrorCode error_code)
+QString BRError::getErrorDesc(BRErrorCode errorCode)
 {
-    QString error_desc;
-    switch (error_code)
+    QString errorDesc;
+    switch (errorCode)
     {
     case BRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID:
-        error_desc = QObject::tr("The standard type is invalid.");
+        errorDesc = QObject::tr("The standard type is invalid.");
         break;
     case BRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID:
-        error_desc = QObject::tr("The strategy type is invalid.");
+        errorDesc = QObject::tr("The strategy type is invalid.");
         break;
     case BRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID:
-        error_desc = QObject::tr("The notification status is invalid.");
+        errorDesc = QObject::tr("The notification status is invalid.");
         break;
     case BRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID:
-        error_desc = QObject::tr("The resource monitor is invalid.");
+        errorDesc = QObject::tr("The resource monitor is invalid.");
         break;
     case BRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED:
     case BRErrorCode::ERROR_DAEMON_JSON2RS_FAILED:
     case BRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID:
-        error_desc = QObject::tr("Error format for reinforcement standard.");
+        errorDesc = QObject::tr("Error format for reinforcement standard.");
         break;
     case BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND:
-        error_desc = QObject::tr("Reinforcement item '{0}' is not found.");
+        errorDesc = QObject::tr("Reinforcement item '{0}' is not found.");
         break;
     case BRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING:
     case BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING:
-        error_desc = QObject::tr("The job is running, please don't repeat the operation.");
+        errorDesc = QObject::tr("The job is running, please don't repeat the operation.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_FALLBACK_CANNOT_RUNNING:
+        errorDesc = QObject::tr("The fallback is can't running, please wait for the reinforcement to be completed.");
         break;
     case BRErrorCode::ERROR_DAEMON_GET_RS_FAILED:
-        error_desc = QObject::tr("The standard reinforcement configuration is not found.");
+        errorDesc = QObject::tr("The standard reinforcement configuration is not found.");
         break;
     case BRErrorCode::ERROR_DAEMON_MACHINE_CODE_TRANS_FAILED:
-        error_desc = QObject::tr("Machine code error.");
+        errorDesc = QObject::tr("Machine code error.");
         break;
     case BRErrorCode::ERROR_DAEMON_ACTIVATION_CODE_INVALID:
-        error_desc = QObject::tr("Activation code error.");
+        errorDesc = QObject::tr("Activation code error.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_SET_FALLBACK_RH_EMPTY:
+        errorDesc = QObject::tr("There is no historical state, please reinforce it and operation.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1:
+        errorDesc = QObject::tr("The subsequest configuration item scan progress has been cancelled.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB:
+    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2:
+        errorDesc = QObject::tr("The subsequest configuration item reinforcement progress has been cancelled.");
         break;
     case BRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED:
     case BRErrorCode::ERROR_DAEMON_CONVERT_PLUGINS2JSON_FAILED:
@@ -159,27 +203,24 @@ QString BRError::getErrorDesc(BRErrorCode error_code)
     case BRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID:
     case BRErrorCode::ERROR_PLUGIN_CONFIG_REINFORCEMENT_NOTFOUND:
     case BRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID:
-    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1:
-    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2:
-    case BRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB:
     case BRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED:
     case BRErrorCode::ERROR_PLUGIN_AUDIT_GET_JSON_ERROR:
     case BRErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR:
     case BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED:
     case BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENTS_FAILED:
     case BRErrorCode::ERROR_DAEMON_PLUGIN_CALL_PYTHON_FUNC_FAILED:
-        error_desc = QObject::tr("Internel error.");
+        errorDesc = QObject::tr("Internel error.");
         break;
     case BRErrorCode::ERROR_DAEMON_SOFTWARE_UNACTIVATED:
-        error_desc = QObject::tr("The software is not activated.");
+        errorDesc = QObject::tr("The software is not activated.");
         break;
     default:
-        error_desc = QObject::tr("Unknown error.");
+        errorDesc = QObject::tr("Unknown error.");
         break;
     }
 
-    error_desc += QString(QObject::tr(" (error code: 0x%1)")).arg(QString::number((int)error_code, 16));
-    return error_desc;
+    errorDesc += QString(QObject::tr(" (error code: 0x%1)")).arg(QString::number((int)errorCode, 16));
+    return errorDesc;
 }
 
 }  // namespace KS

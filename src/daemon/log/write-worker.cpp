@@ -16,6 +16,7 @@
 #include <QFile>
 #include <QMutexLocker>
 #include <QQueue>
+#include <QReadWriteLock>
 #include <QTextStream>
 #include <QWaitCondition>
 
@@ -29,30 +30,45 @@ void WriteWorker::run()
     m_condition = new QMutex();
     while (true)
     {
-        m_waitCondition->wait(m_condition);
+        m_logManager->m_waitCondition->wait(m_condition);
         if (m_isStop)
         {
             break;
         }
         QString log;
+        // 现将日志 copy 到本地变量中， 然后释放临界资源再序列化本地变量写入文件。
+        static QList<Log> tmpList;
         QTextStream logStream(&log);
-        m_queueMutex->lock();
-        while (!m_messageQueue->isEmpty())
+        m_logManager->m_listMutex.lockForRead();
+        while (m_logManager->m_firstNeedWrite != static_cast<uint>(m_logManager->m_logList.size()))
         {
-            logStream << m_messageQueue->dequeue() << '\n';
+            tmpList << m_logManager->m_logList.at(m_logManager->m_firstNeedWrite);
+            m_logManager->m_firstNeedWrite++;
         }
-        m_queueMutex->unlock();
-        m_fileMutex->lock();
-        m_file->write(log.toLocal8Bit());
-        m_file->flush();
-        m_fileMutex->unlock();
+        m_logManager->m_listMutex.unlock();
+        m_logManager->m_fileMutex.lock();
+        while (tmpList.size() > 0)
+        {
+            if (m_logManager->m_fileLine >= m_logManager->m_configurations.m_maxLogFileLine)
+            {
+                emit m_logManager->needLogRotate();
+                break;
+            }
+            m_logManager->m_fileLine++;
+            auto firstLog = tmpList.takeFirst();
+            logStream << Message::serialize(firstLog) << '\n';
+        }
+        logStream.flush();
+        m_logManager->m_file->write(log.toLocal8Bit());
+        m_logManager->m_file->flush();
+        m_logManager->m_fileMutex.unlock();
     }
 }
 void WriteWorker::stop()
 {
     QMutexLocker lock(m_condition);
     m_isStop = true;
-    m_waitCondition->notify_one();
+    m_logManager->m_waitCondition->notify_one();
 }
 };  // namespace Log
 };  // namespace KS

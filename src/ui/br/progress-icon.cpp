@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "progress-icon.h"
 #include <QLabel>
@@ -22,17 +22,18 @@ namespace BR
 {
 #define CIRCLE_SPEED_MS 50
 static int angle;
-ProgressIcon::ProgressIcon(QWidget *parent) : QWidget(parent)
+ProgressIcon::ProgressIcon(QWidget *parent)
+    : QWidget(parent)
 {
     angle = 0;
     m_isFinishedProgress = false;
     initUI();
 }
 
-void ProgressIcon::finishedProgress(bool isFinish)
+void ProgressIcon::finishedProgress(ProgressIconStatus isFinish)
 {
-    m_isFinishedProgress = isFinish;
-    if (!isFinish)
+    m_isFinishedProgress = isFinish == PROGRESS_ICON_STATUS_FINISHED;
+    if (isFinish == PROGRESS_ICON_STATUS_WORKING)
     {
         m_circlePixmapLabel->show();
         m_timer->start(CIRCLE_SPEED_MS);

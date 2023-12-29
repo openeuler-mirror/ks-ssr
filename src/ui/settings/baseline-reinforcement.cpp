@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "baseline-reinforcement.h"
 #include <qt5-log-i.h>
@@ -27,8 +27,9 @@ namespace KS
 {
 namespace Settings
 {
-BaselineReinforcement::BaselineReinforcement(QWidget *parent) : QWidget(parent),
-                                                                m_ui(new Ui::BaselineReinforcement)
+BaselineReinforcement::BaselineReinforcement(QWidget *parent)
+    : QWidget(parent),
+      m_ui(new Ui::BaselineReinforcement)
 {
     m_ui->setupUi(this);
 
@@ -36,7 +37,6 @@ BaselineReinforcement::BaselineReinforcement(QWidget *parent) : QWidget(parent),
                                   BR_DBUS_OBJECT_PATH,
                                   QDBusConnection::systemBus(),
                                   this);
-    Notify::NotificationWrapper::globalInit(tr("Safety reinforcement").toStdString());
     initConnection();
     initUI();
 }
@@ -87,9 +87,13 @@ void BaselineReinforcement::initConnection()
             });
 
     connect(m_ui->m_fallbackInit, &QPushButton::clicked, this, [this]
-            { fallback(BRSnapshotStatus::BR_SNAPSHOT_STATUS_INITIAL); });
+            {
+                fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL);
+            });
     connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this]
-            { fallback(BRSnapshotStatus::BR_SNAPSHOT_STATUS_LAST); });
+            {
+                fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST);
+            });
 
     connect(m_dbusProxy, &BRDbusProxy::HomeFreeSpaceRatioLower, this, [this](const QString &spaceRatio)
             {
@@ -272,14 +276,28 @@ void BaselineReinforcement::setMonitorStatus(bool isOpen)
 
 void BaselineReinforcement::fallback(int status)
 {
+    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        return;
+    }
+
+    auto reply = m_dbusProxy->SetFallback(BRFallbackMethod(status));
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    if (reply.isError())
+    {
+        m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_NOT_STARTED);
+        return;
+    }
+
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
             {
                 POPUP_MESSAGE_DIALOG(tr("Fallback finished!"));
                 disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
+                m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED);
             });
-    auto reply = m_dbusProxy->SetFallback(BRSnapshotStatus(status));
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS);
 }
 }  // namespace Settings
 }  // namespace KS

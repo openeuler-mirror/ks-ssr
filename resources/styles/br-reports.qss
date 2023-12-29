@@ -1,0 +1,42 @@
+/* BR Reports */
+KS--BR--Table QWidget#spacerWidget,
+KS--BR--RoundProgressBar,
+KS--BR--RoundProgressBar QLabel
+{
+    background-color: transparent;
+}
+
+/* BR Reports */
+KS--BR--Table QLabel
+{
+    font: NotoSansCJKsc-Regular;
+    font-size: 14px;
+    border-radius:0px;
+}
+KS--BR--Table QLabel#nameLabel,
+KS--BR--Table QLabel#remarksLabel,
+KS--BR--Table QLabel#scanLabel
+{
+    color:black;
+}
+
+KS--BR--RoundProgressBar QLabel#m_percentLabel
+{
+    color:black;
+    font:AdobeHeitiStd-Regular;
+    font-size:30px;
+}
+
+KS--BR--RoundProgressBar QLabel#m_nameLabel
+{
+    color:black;
+    font:AdobeHeitiStd-Regular;
+    font-size:25px;
+}
+
+KS--BR--RoundProgressBar QLabel#m_noteLabel
+{
+    color: #1b1f25;
+    font: NotoSansCJKsc-Regular;
+    font-size: 17px;
+}
