@@ -70,42 +70,7 @@ qt5_add_dbus_interface(
 
 qt5_wrap_ui(
   UI_FILES
-  ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/sidebar.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/license/activation.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/license/qrcode-dialog.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/common/table/pagination.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/common/delete-notify.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/common/password-modification.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/br/home.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/br/scan.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/br/progress.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/br/reinforcement-items/reinforcement-args-dialog.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/br/reports/pdf.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/br/reports/table.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/private-box/box-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/private-box/box-creation.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/private-box/box-password-retrieve.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/private-box/box-password-checked.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/fp/file-protection-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-list-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-log-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/dm/device-permission.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tp/kernel-protected-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tp/execute-protected-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/log/log-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/file-sign/file-sign-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/file-sign/modify-security-context.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/file-shred/file-shred-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/privacy-cleanup/privacy-cleanup-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tool-box/access-control/access-control-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/settings/dialog.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-protected.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/settings/trusted-user-pin.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/settings/baseline-reinforcement.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/settings/identity-authentication.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/account/login.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/about.ui)
+  ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
 
 set(TARGET_NAME ks-ssr-gui)
 
