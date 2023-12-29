@@ -24,7 +24,6 @@ namespace KS
 {
 namespace Log
 {
-
 void WriteWorker::run()
 {
     m_condition = new QMutex();

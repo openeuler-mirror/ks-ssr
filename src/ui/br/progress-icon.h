@@ -21,7 +21,6 @@ namespace KS
 {
 namespace BR
 {
-
 enum ProgressIconStatus
 {
     PROGRESS_ICON_STATUS_INITIAL,

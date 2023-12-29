@@ -310,9 +310,10 @@ QStringList FileShredModel::getCheckedPath()
 void FileShredModel::addFiles(const QStringList &paths)
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
 
     // 取出路径列表，用于判断是否有重复文件
     QStringList list;
@@ -339,9 +340,10 @@ void FileShredModel::addFiles(const QStringList &paths)
 void FileShredModel::delFiles()
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
     auto i = -1;
     for (auto info : m_infos)
     {
