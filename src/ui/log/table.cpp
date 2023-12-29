@@ -233,9 +233,10 @@ Qt::ItemFlags LogModel::flags(const QModelIndex &index) const
 void LogModel::updateRecord()
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
     m_logInfos.clear();
     auto reply = m_logProxy->GetLog(static_cast<int>(m_args.role), m_args.timeStampBegin, m_args.timeStampEnd, m_args.type, m_args.result, m_args.searchKey, LOG_PAGE_NUMBER, m_args.currentPage);
     reply.waitForFinished();

@@ -49,7 +49,7 @@ private slots:
 private:
     Ui::FileSignPage* m_ui;
     ToolBoxDbusProxy* m_dbusProxy;
-    ModifySecurityContext *m_modifySecurityContext;
+    ModifySecurityContext* m_modifySecurityContext;
 };
 }  // namespace ToolBox
 }  // namespace KS

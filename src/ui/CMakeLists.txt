@@ -68,9 +68,7 @@ qt5_add_dbus_interface(
   ACCOUNT_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Account.xml
   account_proxy)
 
-qt5_wrap_ui(
-  UI_FILES
-  ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
 
 set(TARGET_NAME ks-ssr-gui)
 
