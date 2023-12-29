@@ -410,7 +410,8 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
         SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Change password", false);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
-    if (oldPassphrase == newPassphrase)
+    if (CryptoHelper::rsaDecryptString(m_rsaPrivateKey, oldPassphrase) ==
+        CryptoHelper::rsaDecryptString(m_rsaPrivateKey, newPassphrase))
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_BE_DIFF_NEW_PASSWORD, this->message());
     }
