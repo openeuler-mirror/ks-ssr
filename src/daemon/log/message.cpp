@@ -21,7 +21,6 @@ namespace KS
 {
 namespace Log
 {
-
 QMetaEnum Message::m_metaLogType = QMetaEnum::fromType<Manager::LogType>();
 const QString& Message::m_separator = "|";
 

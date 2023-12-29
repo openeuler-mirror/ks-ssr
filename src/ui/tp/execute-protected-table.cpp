@@ -245,9 +245,10 @@ Qt::ItemFlags ExecuteProtectedModel::flags(const QModelIndex &index) const
 void ExecuteProtectedModel::updateRecord()
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
 
     m_executeRecords.clear();
     // 刷新时checkbox状态清空

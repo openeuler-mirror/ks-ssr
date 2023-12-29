@@ -193,9 +193,10 @@ void PolkitProxy::onFinishCheckAuth(QDBusPendingCallWatcher *watcher, QSharedPoi
     bool isSuccess = false;
     QDBusPendingReply<PolkitCheckAuthResult> reply = *watcher;
 
-    SCOPE_EXIT({
-        watcher->deleteLater();
-    });
+    SCOPE_EXIT(
+        {
+            watcher->deleteLater();
+        });
 
     if (reply.isError())
     {

@@ -26,7 +26,6 @@
 
 namespace KS
 {
-
 #pragma message("在 spec 中完成 ssr.dat 到 ssr.db 的迁移")
 #pragma message("使用 \%config 标记数据库")
 #warning "发布时记得修改密码"

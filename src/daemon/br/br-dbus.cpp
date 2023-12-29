@@ -544,9 +544,10 @@ void BRDBus::Scan(const QStringList& names)
 
 void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
 {
-    SCOPE_EXIT({
-        QDBusConnection::systemBus().send(message.createReply());
-    });
+    SCOPE_EXIT(
+        {
+            QDBusConnection::systemBus().send(message.createReply());
+        });
     KLOG_INFO() << "Reinforce. range : " << names.join(" ").toLocal8Bit();
     auto role = Account::Manager::m_accountManager->getRole(message.service());
     m_isScanFlag = false;
@@ -747,9 +748,10 @@ void BRDBus::Cancel(const qlonglong& jobID)
 
 void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotStatus)
 {
-    SCOPE_EXIT({
-        QDBusConnection::systemBus().send(message.createReply());
-    });
+    SCOPE_EXIT(
+        {
+            QDBusConnection::systemBus().send(message.createReply());
+        });
     auto role = Account::Manager::m_accountManager->getRole(message.service());
 
     KLOG_INFO("Set fallback. snapshotStatus: %d.", snapshotStatus);

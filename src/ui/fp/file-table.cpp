@@ -297,9 +297,10 @@ Qt::ItemFlags FilesModel::flags(const QModelIndex &index) const
 void FilesModel::updateRecord()
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
 
     m_filesInfo.clear();
     // 刷新时checkbox状态清空
