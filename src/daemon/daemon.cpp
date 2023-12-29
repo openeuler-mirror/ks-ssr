@@ -52,6 +52,13 @@ Daemon::~Daemon()
     KSS::DBus::globalDeinit();
     DM::DeviceManager::globalDeinit();
     PrivateBox::BoxManager::globalDeinit();
+    BRDaemon::Configuration::globalDeinit();
+    BRDaemon::Categories::globalDeinit();
+    BRDaemon::Plugins::globalDeinit();
+    BRDaemon::BRDBus::globalDeinit();
+    Log::Manager::globalDeinit();
+    ToolBox::Manager::globalDeinit();
+    Account::Manager::globDeinit();
 }
 
 void Daemon::init()
@@ -72,6 +79,8 @@ void Daemon::init()
 void Daemon::start()
 {
     m_licenseProxy->disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
+    Account::Manager::globalInit();
+    Log::Manager::globalInit();
     PrivateBox::BoxManager::globalInit(this);
     DM::DeviceManager::globalInit(this);
     // TODO 暂时通过有无kss命令的方式判断是否支持可信，需考虑更好的方法
@@ -83,8 +92,6 @@ void Daemon::start()
     BRDaemon::Categories::globalInit();
     BRDaemon::Plugins::globalInit(BRDaemon::Configuration::getInstance());
     BRDaemon::BRDBus::globalInit(nullptr);
-    Account::Manager::globalInit();
-    Log::Manager::globalInit();
     ToolBox::Manager::globalInit();
     emit RegisterFinished();
 }

@@ -34,7 +34,7 @@ DeviceListPage::DeviceListPage(QWidget *parent)
       m_deviceManagerProxy(nullptr)
 {
     m_ui->setupUi(this);
-    m_ui->m_title->setText(tr("Device List"));
+    m_ui->m_title->setText(tr("Control peripheral permissions to prevent unauthorized device access"));
 
     // 设置搜索框搜索图标
     auto searchButton = new QPushButton(m_ui->m_search);
@@ -82,12 +82,14 @@ QString DeviceListPage::getNavigationUID()
 
 QString DeviceListPage::getSidebarUID()
 {
-    return tr("Device List");
+    //    return tr("Device List");
+    return "";
 }
 
 QString DeviceListPage::getSidebarIcon()
 {
-    return ":/images/device-list";
+    //    return ":/images/device-list";
+    return "";
 }
 
 QString DeviceListPage::getAccountRoleName()

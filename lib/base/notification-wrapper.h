@@ -40,6 +40,10 @@ public:
     static void globalInit(std::string m_appName);
 
     static void globalDeinit();
+
+    // 禁用弹窗 锁屏状态下不弹窗
+    void setNofityEnable(bool enabled);
+
     // 普通消息
     void info(const char *message);
 
@@ -58,7 +62,7 @@ private:
     static NotificationWrapper *m_instance;
     // 存储消息列表 至多5条
     std::vector<NotifyNotification *> m_notifies;
-
+    bool m_enabled;
     std::string m_appName;
 };
 }  // namespace Notify

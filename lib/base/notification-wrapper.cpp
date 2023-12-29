@@ -32,6 +32,7 @@ namespace Notify
 
 NotificationWrapper::NotificationWrapper(std::string app_name)
     : m_notifies({}),
+      m_enabled(true),
       m_appName(app_name)
 {
     // TODO:notify 目前为gtk实现，改为QT实现后此处逻辑需要修改为KLOG_WARRING
@@ -74,6 +75,11 @@ void NotificationWrapper::globalDeinit()
     delete m_instance;
 }
 
+void NotificationWrapper::setNofityEnable(bool enabled)
+{
+    m_enabled = enabled;
+}
+
 void NotificationWrapper::info(const char *message)
 {
     this->notifySend(message, NOTIFY_ICON_INFO);
@@ -91,6 +97,11 @@ void NotificationWrapper::error(const char *message)
 
 void NotificationWrapper::notifySend(const char *msg, const char *icon)
 {
+    if (!m_enabled)
+    {
+        return;
+    }
+
 #if LIBNOTIFY_CHECK_VERSION(0, 7)
     auto notify = notify_notification_new(m_appName.c_str(), msg, icon);
 #else

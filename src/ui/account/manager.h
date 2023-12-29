@@ -43,7 +43,7 @@ public:
     void showLogin();
 
     // 退出用户
-    void Logout();
+    void logout();
 
     void setLoginUserName(const QString &userName);
 
@@ -64,7 +64,6 @@ signals:
     void softExited();
     void loginFinished();
     void passwordChanged(const QString &userName);
-    void logouted(const QString &userName);
 
 private:
     static Manager *m_instance;

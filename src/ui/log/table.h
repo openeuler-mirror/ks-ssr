@@ -21,40 +21,50 @@
 #include <QTableView>
 #include <QWidget>
 #include "src/ui/common/table/table-header-proxy.h"
+#include "ssr-i.h"
 
 class LogProxy;
 
 namespace KS
 {
+class HeaderButtonDelegate;
+
 namespace Log
 {
+// 一页多少条日志
+#define LOG_PAGE_NUMBER 20
+
 enum LogType
 {
     // 设备日志
-    LOG_TYPE_DEVICE,
-    // 审计日志
-    LOG_TYPE_AUDIT,
-    // 可信日志
-    LOG_TYPE_TRUSTED,
-    LOG_TYPE_OTHER
+    LOG_TYPE_DEVICE = (1 << 0),
+    // 工具箱日志
+    LOG_TYPE_TOOL_BOX = (1 << 1),
+    // 基线加固
+    LOG_TYPE_BASELINE_REINFORCEMENT = (1 << 2),
+    // 可信保护
+    LOG_TYPE_TRUSTED_PROTECTION = (1 << 3),
+    // 文件保护
+    LOG_TYPE_FILES_PROTECTION = (1 << 4),
+    // 保险箱
+    LOG_TYPE_PRIVATE_BOX = (1 << 5),
+    // 账户日志
+    LOG_TYPE_ACCOUNT = (1 << 6)
 };
 
 struct LogInfo
 {
-    // 序号
-    int number;
     // 日志类型
     LogType type;
     // 应用资源 不理解标注图上这一列的作用，是否与日志类型是一个含义
     //  QString resource;
-    // 用户名
-    QString userName;
+    AccountRole role;
     // 日期时间
     QString dataTime;
     // 操作
     QString message;
     // 结果
-    QString result;
+    bool result;
 };
 
 class LogDelegate : public QStyledItemDelegate
@@ -85,6 +95,17 @@ class LogModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
+    struct GetLogArgs
+    {
+        uint role;
+        qlonglong timeStampBegin;
+        qlonglong timeStampEnd;
+        LogType type;
+        uint result;
+        uint currentPage;
+        QString searchKey;
+    };
+
     LogModel(QObject *parent = nullptr);
     virtual ~LogModel(){};
 
@@ -96,18 +117,29 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    QList<LogInfo> getLogInfos();
+    uint getLogNumbers();
+
+    // 改变索引
+    // 设置权限分类
+    void setRole(uint role);
+    void setTimeStampBegin(qlonglong timeStampBegin);
+    void setTimeStampEnd(qlonglong timeStampEnd);
+    void setLogType(LogType type);
+    void setLogResult(uint result);
+    void setCurrentPage(uint currentPage);
+    void setSearchKey(const QString &text);
+
+private:
+    void initGetLogArgs();
+    void updateRecord();
 
 signals:
     void logUpdated(int total);
 
 private:
-    // TODO 需要修改函数逻辑，切换页面或搜索时调用更新
-    void updateRecord();
-
-private:
     LogProxy *m_logProxy;
     QList<LogInfo> m_logInfos;
+    GetLogArgs m_args;
 };
 
 class LogTable : public QTableView
@@ -118,12 +150,21 @@ public:
     LogTable(QWidget *parent = nullptr);
     virtual ~LogTable(){};
 
-    LogFilterModel *getFilterProxy()
-    {
-        return m_filterProxy;
-    };
-    void searchTextChanged(const QString &text);
-    QList<LogInfo> getLogInfos();
+    void search(const QString &text);
+    uint getLogNumbers();
+    void setCurrentPage(uint currentPage);
+    void setTimeStampBegin(qlonglong timeStampBegin);
+    void setTimeStampEnd(qlonglong timeStampEnd);
+
+private:
+    void initTable();
+    void initTableHeaderButton();
+    void initLogTypeButton();
+    void initRoleButton();
+    void initResultButton();
+
+private slots:
+    void mouseEnter(const QModelIndex &index);
 
 signals:
     void logUpdated(int total);
@@ -132,6 +173,10 @@ private:
     LogFilterModel *m_filterProxy;
     LogModel *m_model;
     TableHeaderProxy *m_headerViewProxy;
+
+    HeaderButtonDelegate *m_logTypeButton;
+    HeaderButtonDelegate *m_roleButton;
+    HeaderButtonDelegate *m_resultButton;
 };
 }  // namespace Log
 }  // namespace KS

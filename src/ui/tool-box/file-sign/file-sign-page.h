@@ -26,6 +26,8 @@ namespace KS
 {
 namespace ToolBox
 {
+class ModifySecurityContext;
+
 class FileSign : public Page
 {
     Q_OBJECT
@@ -41,10 +43,13 @@ public:
 private slots:
     void openFileDialog(bool);
     void refreshTable(bool);
+    void popModifySecurityContext(const QModelIndex& index);
+    void acceptedSecurityContext();
 
 private:
     Ui::FileSignPage* m_ui;
     ToolBoxDbusProxy* m_dbusProxy;
+    ModifySecurityContext *m_modifySecurityContext;
 };
 }  // namespace ToolBox
 }  // namespace KS

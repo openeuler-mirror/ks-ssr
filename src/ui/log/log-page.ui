@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="m_mainLayout">
    <property name="spacing">
     <number>10</number>
    </property>
@@ -88,7 +88,27 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="KS::DatePicker" name="m_calendar" native="true"/>
+       <widget class="KS::DatePickButton" name="m_calendarButton" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>252</width>
+          <height>36</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="spacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="m_search">
@@ -116,19 +136,6 @@
        </widget>
       </item>
       <item>
-       <spacer name="spacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
        <widget class="QPushButton" name="m_centigrade">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -153,18 +160,9 @@
    <item>
     <widget class="KS::Log::LogTable" name="m_logTable" native="true"/>
    </item>
-   <item>
-    <widget class="KS::Pagination" name="m_pagination" native="true"/>
-   </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KS::Pagination</class>
-   <extends>QWidget</extends>
-   <header>src/ui/common/table/pagination.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>KS::Log::LogTable</class>
    <extends>QWidget</extends>
@@ -172,9 +170,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KS::DatePicker</class>
+   <class>KS::DatePickButton</class>
    <extends>QWidget</extends>
-   <header>src/ui/common/date-picker/date-picker.h</header>
+   <header>src/ui/common/date-picker/date-pick-button.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

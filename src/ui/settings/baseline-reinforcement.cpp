@@ -37,7 +37,6 @@ BaselineReinforcement::BaselineReinforcement(QWidget *parent)
                                   BR_DBUS_OBJECT_PATH,
                                   QDBusConnection::systemBus(),
                                   this);
-    Notify::NotificationWrapper::globalInit(tr("Safety reinforcement").toStdString());
     initConnection();
     initUI();
 }

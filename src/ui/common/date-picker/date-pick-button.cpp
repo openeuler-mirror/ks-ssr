@@ -13,20 +13,26 @@
  */
 #include "date-pick-button.h"
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QPainter>
 #include <QStyleOption>
 
 namespace KS
 {
 DatePickButton::DatePickButton(QWidget *parent)
-    : QPushButton(parent), m_dateLabel(nullptr)
+    : QPushButton(parent), m_fristDate(nullptr), m_endDate(nullptr)
 {
     initUI();
 }
 
-void DatePickButton::setText(const QString &date)
+void DatePickButton::setStartDate(const QString &fristDate)
 {
-    m_dateLabel->setText(date);
+    m_fristDate->setText(fristDate);
+}
+
+void DatePickButton::setEndDate(const QString &endDate)
+{
+    m_endDate->setText(endDate);
 }
 
 void DatePickButton::paintEvent(QPaintEvent *event)
@@ -40,20 +46,37 @@ void DatePickButton::paintEvent(QPaintEvent *event)
 
 void DatePickButton::initUI()
 {
-    QHBoxLayout *mainLayout = new QHBoxLayout();
+    auto mainLayout = new QHBoxLayout(this);
     mainLayout->setMargin(0);
-    mainLayout->setContentsMargins(10, 0, 0, 0);
-    mainLayout->setSpacing(10);
-    setLayout(mainLayout);
+    mainLayout->setContentsMargins(10, 0, 10, 0);
+    mainLayout->setSpacing(0);
 
-    QLabel *labIcon = new QLabel(this);
-    labIcon->setObjectName("lab_icon");
-    labIcon->setFixedSize(16, 16);
-    labIcon->setPixmap(QPixmap(":/images/icon-calendar"));
+    auto firstDateIcon = new QLabel(this);
+    firstDateIcon->setObjectName("lab_icon");
+    firstDateIcon->setFixedSize(16, 16);
+    firstDateIcon->setPixmap(QPixmap(":/images/icon-calendar"));
+    auto endDateIcon = new QLabel(this);
+    endDateIcon->setObjectName("lab_icon");
+    endDateIcon->setFixedSize(16, 16);
+    endDateIcon->setPixmap(QPixmap(":/images/icon-calendar"));
 
-    m_dateLabel = new QLabel(this);
+    m_fristDate = new QPushButton(this);
+    m_fristDate->setObjectName("m_fristDate");
+    connect(m_fristDate, &QPushButton::clicked, this, &DatePickButton::fristDateClicked);
 
-    mainLayout->addWidget(labIcon);
-    mainLayout->addWidget(m_dateLabel);
+    auto labelSplit = new QLabel(this);
+    labelSplit->setObjectName("labelSplit");
+    labelSplit->setFixedSize(16, 16);
+    labelSplit->setText("--");
+
+    m_endDate = new QPushButton(this);
+    m_endDate->setObjectName("m_fristDate");
+    connect(m_endDate, &QPushButton::clicked, this, &DatePickButton::endDateClicked);
+
+    mainLayout->addWidget(firstDateIcon);
+    mainLayout->addWidget(m_fristDate);
+    mainLayout->addWidget(labelSplit);
+    mainLayout->addWidget(endDateIcon);
+    mainLayout->addWidget(m_endDate);
 }
 }  // namespace KS

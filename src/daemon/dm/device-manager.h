@@ -93,6 +93,7 @@ private:
     void remountDevice(const QSharedPointer<Device> device,
                        const DeviceMount *mount);
     QString getMountSyspath(const DeviceMount *mount);
+    QString deviceTypeEnum2Str(int type) const;
 
 private:
     static DeviceManager *m_instance;

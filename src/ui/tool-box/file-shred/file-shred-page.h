@@ -9,27 +9,41 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #pragma once
 
 #include "src/ui/common/page.h"
 
+namespace Ui
+{
+class FileShredPage;
+}  // namespace Ui
+
 namespace KS
 {
 namespace ToolBox
 {
-class PrivacyCleanup : public Page
+class FileShredPage : public Page
 {
     Q_OBJECT
 public:
-    PrivacyCleanup(QWidget *parent = nullptr);
-    virtual ~PrivacyCleanup();
+    FileShredPage(QWidget* parent = nullptr);
+    virtual ~FileShredPage();
     virtual QString getNavigationUID() override;
     virtual QString getSidebarUID() override;
     virtual QString getSidebarIcon() override;
     virtual QString getAccountRoleName() override;
+
+private slots:
+    void addFiles(bool checked);
+
+private:
+    void initUI();
+
+private:
+    Ui::FileShredPage* m_ui;
 };
 }  // namespace ToolBox
 }  // namespace KS

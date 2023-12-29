@@ -22,6 +22,7 @@
 #include <QStackedWidget>
 #include <QX11Info>
 #include "include/ssr-i.h"
+#include "lib/base/notification-wrapper.h"
 #include "lib/license/license-proxy.h"
 #include "src/ui/about.h"
 #include "src/ui/account/manager.h"
@@ -32,14 +33,15 @@
 #include "src/ui/dm/device-list-page.h"
 #include "src/ui/dm/device-log-page.h"
 #include "src/ui/fp/file-protection-page.h"
+#include "src/ui/log/log-page.h"
 #include "src/ui/navigation.h"
 #include "src/ui/private-box/box-page.h"
 #include "src/ui/settings/dialog.h"
 #include "src/ui/sidebar.h"
-#include "src/ui/tool-box/access-control-page.h"
-#include "src/ui/tool-box/file-shred-page.h"
-#include "src/ui/tool-box/file-sign-page.h"
-#include "src/ui/tool-box/privacy-cleanup-page.h"
+#include "src/ui/tool-box/access-control/access-control-page.h"
+#include "src/ui/tool-box/file-shred/file-shred-page.h"
+#include "src/ui/tool-box/file-sign/file-sign-page.h"
+#include "src/ui/tool-box/privacy-cleanup/privacy-cleanup-page.h"
 #include "src/ui/tp/execute-protected-page.h"
 #include "src/ui/tp/kernel-protected-page.h"
 #include "src/ui/ui_window.h"
@@ -50,6 +52,15 @@ namespace KS
 #define SSR_STYLE_PATH ":/styles/ssr"
 // 检测命令是否存在
 #define KSS_CMD_PATH SSR_INSTALL_BINDIR "/kss"
+
+// 锁屏状态
+#define KIRAN_SCREENSAVER_DBUS_NAME "com.kylinsec.Kiran.ScreenSaver"
+#define KIRAN_SCREENSAVER_DBUS_PATH "/com/kylinsec/Kiran/ScreenSaver"
+#define KIRAN_SCREENSAVER_DBUS_INTERFACE "com.kylinsec.Kiran.ScreenSaver"
+
+#define MATE_SCREENSAVER_DBUS_NAME "org.mate.ScreenSaver"
+#define MATE_SCREENSAVER_DBUS_PATH "/"
+#define MATE_SCREENSAVER_DBUS_INTERFACE "org.mate.ScreenSaver"
 
 Window::Window()
     : TitlebarWindow(nullptr),
@@ -64,9 +75,8 @@ Window::Window()
                                   SSR_DBUS_OBJECT_PATH,
                                   QDBusConnection::systemBus(),
                                   this);
-
     Account::Manager::globalInit(this);
-
+    initNotification();
     initWindow();
     initActivation();
     if (m_licenseProxy->isActivated())
@@ -98,6 +108,7 @@ Window::~Window()
     delete m_ui;
     Settings::Dialog::globalDeinit();
     Account::Manager::globalDeinit();
+    Notify::NotificationWrapper::globalDeinit();
 }
 
 void Window::resizeEvent(QResizeEvent *event)
@@ -119,7 +130,6 @@ void Window::login()
             qApp->quit();
         },
         Qt::ConnectionType::UniqueConnection);
-    connect(Account::Manager::instance(), &Account::Manager::logouted, this, &Window::logout, Qt::ConnectionType::UniqueConnection);
     connect(Account::Manager::instance(), &Account::Manager::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
     Account::Manager::instance()->showLogin();
 }
@@ -153,6 +163,23 @@ void Window::initActivation()
                     m_activation->hide();
             });
     connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Window::updateActivation, Qt::UniqueConnection);
+}
+
+void Window::initNotification()
+{
+    Notify::NotificationWrapper::globalInit(tr("Safety reinforcement").toStdString());
+    QDBusConnection::sessionBus().connect(QString(),
+                                          KIRAN_SCREENSAVER_DBUS_PATH,
+                                          KIRAN_SCREENSAVER_DBUS_INTERFACE,
+                                          "ActiveChanged",
+                                          this,
+                                          SLOT(setNotifyStatus(bool)));
+    QDBusConnection::sessionBus().connect(QString(),
+                                          MATE_SCREENSAVER_DBUS_PATH,
+                                          MATE_SCREENSAVER_DBUS_INTERFACE,
+                                          "ActiveChanged",
+                                          this,
+                                          SLOT(setNotifyStatus(bool)));
 }
 
 void Window::initWindow()
@@ -194,9 +221,8 @@ void Window::initWindow()
 
     auto accountMenu = new QMenu(this);
     accountButton->setMenu(accountMenu);
-    accountMenu->setObjectName("accountMenu");
 
-    accountMenu->addAction(tr("Modify password"), this, [this]
+    accountMenu->addAction(tr("Modify password"), this, []
                            {
                                Account::Manager::instance()->showPasswordModification();
                            });
@@ -212,7 +238,6 @@ void Window::initWindow()
 
     auto settingMenu = new QMenu(this);
     btnForMenu->setMenu(settingMenu);
-    settingMenu->setObjectName("settingMenu");
 
     settingMenu->addAction(tr("Settings"), this, &Window::popupSettingsDialog);
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
@@ -252,15 +277,16 @@ void Window::initPageAndNavigation()
         addPage(execute);
         addPage(new TP::KernelProtectedPage(this));
         addPage(new FP::FileProtectionPage(this));
-        m_loading->setFixedSize(execute->size());
     }
     addPage(new PrivateBox::BoxPage(this));
     addPage(new DM::DeviceListPage(this));
-    addPage(new DM::DeviceLogPage(this));
+    // TODO 新增日志模块写入设备日志，旧的设备日志代码是否需要保留？若后续没有作用了在发布之前删除
+    // addPage(new DM::DeviceLogPage(this));
     addPage(new ToolBox::FileSign(this));
-    addPage(new ToolBox::FileShred(this));
-    addPage(new ToolBox::PrivacyCleanup(this));
-    addPage(new ToolBox::AccessControl(this));
+    addPage(new ToolBox::FileShredPage(this));
+    addPage(new ToolBox::PrivacyCleanupPage(this));
+    addPage(new ToolBox::AccessControlPage(this));
+    addPage(new Log::LogPage(this));
     m_ui->m_stackedPages->addWidget(m_loading);
     m_ui->m_stackedPages->setCurrentIndex(0);
 
@@ -294,6 +320,10 @@ void Window::initPageAndNavigation()
         {
             m_ui->m_navigation->addItem(new NavigationItem(":/images/tool-box", tr("Tool Box")));
         }
+        else if (navigationUID == tr("Log audit"))
+        {
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/log-audit", tr("Log audit")));
+        }
     }
     m_ui->m_navigation->setBtnChecked(0);
 
@@ -307,28 +337,19 @@ void Window::initSettings()
 {
     Settings::Dialog::globalInit(this);
     QStringList settingsSidebars;
-    // 从page中获取需要添加设置页面的项
-    for (auto pages : m_pages.values())
+    // 通过登入账户判断需要显示的设置页面
+    auto currentUser = Account::Manager::instance()->getCurrentUserName();
+    if (currentUser == SSR_ACCOUNT_NAME_SYSADM)
     {
-        auto navigationUID = pages.first()->getNavigationUID();
-        CONTINUE_IF_TRUE(navigationUID.isEmpty());
-
-        if (navigationUID == tr("Baseline reinforcement"))
-        {
-            settingsSidebars << tr("Baseline reinforcement");
-        }
-        else if (navigationUID == tr("Trusted protected"))
-        {
-            settingsSidebars << tr("Trusted protect");
-        }
-        else if (navigationUID == tr("Device management"))
-        {
-            settingsSidebars << tr("Interface Control");
-        }
-        else
-        {
-            continue;
-        }
+        settingsSidebars << tr("Baseline reinforcement") << tr("Interface Control");
+    }
+    else if (currentUser == SSR_ACCOUNT_NAME_SECADM)
+    {
+        settingsSidebars << tr("Trusted protect") << tr("Identity authentication");
+    }
+    else if (currentUser == SSR_ACCOUNT_NAME_AUDADM)
+    {
+        // TODO audit用户暂无设置
     }
     Settings::Dialog::instance()->addSidebars(settingsSidebars);
     // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
@@ -379,9 +400,9 @@ void Window::addPage(Page *page)
     m_ui->m_stackedPages->addWidget(page);
 }
 
-void Window::showLoading(bool isShow)
+void Window::hideLoading(bool ishide)
 {
-    RETURN_IF_TRUE(isShow)
+    RETURN_IF_TRUE(ishide)
 
     if (!m_loading->isVisible())
     {
@@ -493,7 +514,13 @@ void Window::updatePage()
     if (tr("Trusted protected") == pages.first()->getNavigationUID())
     {
         auto page = qobject_cast<TP::ExecuteProtectedPage *>(pages.first());
-        showLoading(page->getInitialized());
+        hideLoading(page->getInitialized());
+    }
+    else
+    {
+        // 其它侧边栏可用
+        hideLoading(true);
+        m_ui->m_sidebar->setEnabled(true);
     }
 }
 
@@ -515,6 +542,11 @@ void Window::updateSidebar()
     }
 }
 
+void Window::setNotifyStatus(bool disabled)
+{
+    Notify::NotificationWrapper::getInstance()->setNofityEnable(!disabled);
+}
+
 void Window::logout(const QString &userName)
 {
     clearSidebar();
@@ -528,7 +560,7 @@ void Window::logout(const QString &userName)
     m_ui->m_navigation->clearItems();
 
     Account::Manager::instance()->setLoginUserName(userName);
-    login();
+    Account::Manager::instance()->logout();
 }
 
 void Window::relogin(const QString &userName)

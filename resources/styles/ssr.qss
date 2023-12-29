@@ -168,7 +168,10 @@ KS--DM--DeviceListPage QHeaderView::section:first
 
 KS--TP--KernelProtectedPage QHeaderView::section:first,
 KS--TP--ExecuteProtectedPage QHeaderView::section:first,
-KS--FP--FileProtectionPage QHeaderView::section:first
+KS--FP--FileProtectionPage QHeaderView::section:first,
+KS--ToolBox--FileShredPage QHeaderView::section:first,
+KS--ToolBox--FileSign QHeaderView::section:first,
+KS--ToolBox--PrivacyCleanupPage QHeaderView::section:first
 {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
@@ -292,6 +295,7 @@ KS--Loading#maskWidget
 }
 
 KS--Window QPushButton#btnForMenu,
+KS--Window QPushButton#accountButton,
 KS--Window QStackedWidget#m_stackedPages
 {
     background:#2d2d2d;
@@ -300,6 +304,12 @@ KS--Window QStackedWidget#m_stackedPages
 KS--Window QPushButton#btnForMenu::menu-indicator
 {
     image: url(:/images/more);
+    subcontrol-position: center center;
+    subcontrol-origin: padding;
+}
+KS--Window QPushButton#accountButton::menu-indicator
+{
+    image: url(:/images/user-manager);
     subcontrol-position: center center;
     subcontrol-origin: padding;
 }
@@ -423,6 +433,8 @@ QPushButton#m_scanButton,
 QPushButton#m_scan,
 QPushButton#m_activate,
 QPushButton#m_confirm,
+QPushButton#m_select,
+QPushButton#m_centigrade,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm
 {
     color:#FFFFFF;
@@ -441,6 +453,8 @@ QPushButton#m_scanButton:hover,
 QPushButton#m_scan:hover,
 QPushButton#m_activate:hover,
 QPushButton#m_confirm:hover,
+QPushButton#m_select:hover,
+QPushButton#m_centigrade:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
 {
     background:#79C3FF;
@@ -453,6 +467,7 @@ QPushButton#m_cancel,
 QPushButton#m_recertification,
 QPushButton#m_return,
 QPushButton#m_reset,
+QPushButton#m_remove
 KS--Settings--DeviceControl #MessageWindow QPushButton#cancel
 {
     color:#FFFFFF;
@@ -467,13 +482,16 @@ QPushButton#m_cancel:hover,
 QPushButton#m_recertification:hover,
 QPushButton#m_return:hover,
 QPushButton#m_reset:hover,
+QPushButton#m_remove:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#cancel:hover
 {
     background:#464646;
     border:4px;
 }
 
-QPushButton#m_unprotect
+QPushButton#m_unprotect,
+QPushButton#m_clean,
+QPushButton#m_shred
 {
     color:#FA4949;
     font:NotoSansCJKsc-Regular;
@@ -482,7 +500,9 @@ QPushButton#m_unprotect
     background:#393939;
 }
 
-QPushButton#m_unprotect:hover
+QPushButton#m_unprotect:hover,
+QPushButton#m_clean:hover,
+QPushButton#m_shred:hover
 {
     background:#464646;
     border:4px;
@@ -493,6 +513,30 @@ QPushButton#m_unprotect:hover
 QMenu#m_popupMenu
 {
     color:black;
+}
+
+/* Tool Box */
+KS--ToolBox--FileShredPage QTableView#m_table > QWidget,
+KS--ToolBox--PrivacyCleanupPage QTableView#m_table > QWidget,
+QTableView#m_fileSignTable > QWidget
+{
+    margin: 0px 22px 0px 0px;
+}
+
+KS--ToolBox--AccessControlPage QTableView#m_table > QWidget
+{
+    margin: 0px 0px 0px 0px;
+}
+
+KS--ToolBox--AccessControlPage QHeaderView::section:first
+{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+KS--ToolBox--AccessControlPage QWidget#m_controlLine
+{
+    border-radius: 4px;
+    background-color: #393939;
 }
 
 /* file protected */
@@ -651,32 +695,44 @@ KS--DM--DevicePermission QWidget#m_content
 }
 
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked
+KS--Settings--DeviceControl QCheckBox::indicator:unchecked,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked:hover
+KS--Settings--DeviceControl QCheckBox::indicator:unchecked:hover,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked:hover,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:hover
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked:pressed
+KS--Settings--DeviceControl QCheckBox::indicator:unchecked:pressed,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked:pressed,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:pressed
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked
+KS--Settings--DeviceControl QCheckBox::indicator:checked,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:checked,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:checked
 {
     image: url(:/images/switch-open);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked:hover
+KS--Settings--DeviceControl QCheckBox::indicator:checked:hover,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:checked:hover,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:hover
 {
     image: url(:/images/switch-open);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked:pressed
+KS--Settings--DeviceControl QCheckBox::indicator:checked:pressed,
+KS--Settings--IdentityAuthentication QCheckBox::indicator:checked:pressed,
+KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:pressed
 {
     image: url(:/images/switch-open);
 }
@@ -979,39 +1035,6 @@ KS--Settings--BaselineReinforcement QSpinBox::down-button
     border : 0px;
 }
 
-/* 暂时不设置QSpinBox箭头
-KS--BR--ArgHandle QSpinBox::up-button
-{
-    subcontrol-origin: border;
-    width: 24px;
-    background-color:#00a2ff;
-    border-right: 1px solid #454545;
-    border-top: 1px solid #454545;
-    /* 左上 右上 右下 左下 */
-    border-radius: 0px 12px 0px 0px;
-    /* image: url(:/images/spinBox-up); */
-}
-
-KS--BR--ArgHandle QSpinBox::down-button
-{
-    subcontrol-origin: border;
-    width: 24px;
-    background-color:#00a2ff;
-    border-bottom: 1px solid #454545;
-    border-right: 1px solid #454545;
-    /* 左上 右上 右下 左下 */
-    border-radius: 0px 0px 12px 0px;
-    /* image: url(:/images/spinBox-down); */
-}
-KS--BR--ArgHandle QSpinBox::up-button:hover,
-KS--BR--ArgHandle QSpinBox::up-button:selected,
-KS--BR--ArgHandle QSpinBox::down-button:hover,
-KS--BR--ArgHandle QSpinBox::down-button:selected
-{
-    background-color:#79C3FF;
-}
-*/
-
 KS--BR--ArgHandle QPushButton#noteIcon
 {
     background-color: transparent;
@@ -1024,4 +1047,47 @@ QWidget#m_content
     background-color:#2d2d2d;
 }
 
+/******  log audit  ******/
+KS--DatePickButton
+{
+    background-color: #222222;
+    border: 1px solid #454545;
+    border-radius: 6px;
+    font-size: 12px;
+    color: white;
+    font:NotoSansCJKsc-Regular;
+}
 
+KS--DatePickButton QWidget
+{
+    background-color: #222222;
+}
+
+KS--Pagination QPushButton
+{
+    color:#FFFFFF;
+    background-color: #393939;
+    outline: none;
+    border:0px;
+    border-radius: 4px;
+}
+
+KS--Pagination QPushButton:checked
+{
+    background-color: #2eb3ff;
+}
+KS--Pagination QPushButton:hover
+{
+    background-color: #464646;
+}
+
+KS--Log--LogPage QTableView#m_logTable > QWidget
+{
+    margin: 0px 22px 0px 0px;
+}
+
+KS--Log--LogPage QHeaderView::section:first
+{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}

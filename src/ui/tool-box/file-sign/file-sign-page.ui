@@ -126,25 +126,6 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="m_clean">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>72</width>
-          <height>36</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>clean</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="m_select">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -160,6 +141,25 @@
         </property>
         <property name="text">
          <string>select</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="m_clean">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>72</width>
+          <height>36</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>clean</string>
         </property>
        </widget>
       </item>
@@ -191,7 +191,7 @@
   <customwidget>
    <class>KS::ToolBox::FileSignTable</class>
    <extends>QWidget</extends>
-   <header>src/ui/tool-box/file-sign-table.h</header>
+   <header>src/ui/tool-box/file-sign/file-sign-table.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -47,13 +47,14 @@ private:
     void login();
     void start();
     void initActivation();
+    void initNotification();
     // 窗口整体初始化
     void initWindow();
     // 导航项以及子页面初始化
     void initPageAndNavigation();
     void initSettings();
     void addPage(Page *page);
-    void showLoading(bool isShow);
+    void hideLoading(bool ishide);
     void clearSidebar();
 
 private slots:
@@ -65,6 +66,7 @@ private slots:
     void activateMetaObject();
     void updatePage();
     void updateSidebar();
+    void setNotifyStatus(bool disabled);
 
     void logout(const QString &userName);
     // 重新登录

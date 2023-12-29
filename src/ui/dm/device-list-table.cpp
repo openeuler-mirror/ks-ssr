@@ -293,12 +293,12 @@ void DeviceListTable::initTable()
                                     << tr("Interface")
                                     << ""
                                     << tr("Permission"));
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_NUMBER, 60);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_NAME, 180);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_STATUS, 100);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_INTERFACE, 80);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_TYPE, 100);
-    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_ID, 80);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_NUMBER, 50);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_NAME, 200);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_STATUS, 150);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_INTERFACE, 150);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_TYPE, 150);
+    m_headerViewProxy->resizeSection(ListTableField::LIST_TABLE_FIELD_ID, 100);
 
     // 设置垂直列表头
     verticalHeader()->setVisible(false);
@@ -356,7 +356,7 @@ void DeviceListTable::initTableHeaderButton()
                         m_deviceTypeKeys.removeAll(action->text());
                     }
                     // 去重
-                    m_deviceTypeKeys = QStringList(m_deviceTypeKeys.begin(), m_deviceTypeKeys.end());
+                    m_deviceTypeKeys = QSet<QString>::fromList(m_deviceTypeKeys).toList();
                     m_filterMap.insert("deviceTypeButton", m_deviceTypeKeys);
                 }
                 filterFixedString();
@@ -384,7 +384,7 @@ void DeviceListTable::initTableHeaderButton()
                         m_statusKeys.removeAll(action->text());
                     }
                     // 去重
-                    m_statusKeys = QStringList(m_statusKeys.begin(), m_statusKeys.end());
+                    m_statusKeys = QSet<QString>::fromList(m_statusKeys).toList();
                     m_filterMap.insert("statusButton", m_statusKeys);
                 }
                 filterFixedString();

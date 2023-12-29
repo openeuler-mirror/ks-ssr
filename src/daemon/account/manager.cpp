@@ -13,6 +13,7 @@
  */
 
 #include "src/daemon/account/manager.h"
+#include <kiran-authentication-service/kas-authentication-i.h>
 #include <qt5-log-i.h>
 #include <src/daemon/account_adaptor.h>
 #include <src/daemon/common/dbus-helper.h>
@@ -41,12 +42,22 @@
 #define USER_FREEZE_DB_COLUMN2 "tryTimes"
 #define USER_FREEZE_DB_COLUMN3 "lastTryTime"
 #define RSA_KEY_LENGTH 512
+#define PAM_SYSTEM_PATH "/etc/pam.d/system-auth"
+#define PAM_KIRAN_PATH "/etc/pam.d/kiran-authentication-service"
+#define PAM_KIRAN_AUTH_CONFIG "auth        include        kiran-authentication-service\n"
+#define PAM_KIRAN_ACCOUNT_CONFIG "account     include       kiran-authentication-service\n"
+#define REGEXP_PAM_AUTH_REQ_FAILLOCKDOTSO_REGEXP R"(auth[ ]+requisite[ ]+pam_faillock.so)"
+#define REGEXP_PAM_AUTH_INC_KIRANAUTHSERVICE R"(auth[ ]+include[ ]+kiran-authentication-service\n)"
+#define REGEXP_PAM_ACCOUNT_INC_KIRANAUTHSERVICE R"(account[ ]+include[ ]+kiran-authentication-service\n)"
+#define REGEXP_PAM_AUTH_SUF_PAMUNIXDOTSO R"((auth[ ]+sufficient[ ]+pam_unix.so))"
+#define REGEXP_PAM_ACCOUNT_REQ_PAMUNIXDOTSO R"((account[ ]+required[ ]+pam_unix.so))"
+#define REGEXP_MULTI_WAY_AUTH R"((.*)(auth[ ]+\[success=done ignore=2 default=bad authinfo_unavail=die\][ ]+pam_kiran_authentication.so[ ]+doauth))"
+#define REGEXP_MULTI_FACTOR_AUTH R"((.*)(auth[ ]+\[success=2 default=bad\][ ]+pam_kiran_authentication.so[ ]+doauth))"
 
 namespace KS
 {
 namespace Account
 {
-
 const Manager* Manager::m_accountManager = nullptr;
 
 Manager::Manager()
@@ -87,6 +98,8 @@ Manager::Manager()
                 }
                 this->m_clients.erase(it);
             });
+    m_multiFactorAuthState = getMultiFactorAuthState();
+    KLOG_INFO() << "Multi-Factor Authentication state: " + QString(m_multiFactorAuthState ? "enable" : "disable");
 }
 
 Manager::~Manager()
@@ -111,35 +124,290 @@ void Manager::SetUidReusable(bool enabled)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = m_accountManager->getRole(calledUniqueName);
-    if (role == KS::Account::Manager::AccountRole::UNKNOWN_ACCOUNT)
+    if (role == KS::Account::Manager::AccountRole::unknown_account)
     {
         KLOG_ERROR() << "Failed to set uid reusable, Permission denied";
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Permission Denied", false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Permission Denied", false);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, enabled ? "Enable uid reuse" : "Disable uid reuse");
+    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, enabled ? "Enable uid reuse" : "Disable uid reuse");
     m_isUidReusable = enabled;
     m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enabled));
     m_uidReuseConfig->sync();
+}
+
+bool Manager::GetUidReusable()
+{
+    return m_isUidReusable;
+}
+
+void Manager::disableMultiFactorAuthState()
+{
+    auto msg = QDBusMessage::createMethodCall(KAD_MANAGER_DBUS_NAME,
+                                              KAD_MANAGER_DBUS_OBJECT_PATH,
+                                              KAD_MANAGER_DBUS_INTERFACE_NAME,
+                                              "SetAuthTypeEnabled");
+    msg.setArguments({static_cast<int>(KAD_AUTH_APPLICATION_LOGIN), false});
+    auto replyMsg = QDBusConnection::systemBus().call(msg);
+    if (replyMsg.type() != QDBusMessage::ReplyMessage)
+    {
+        KLOG_WARNING() << "Failed to call dbus method SetAuthTypeEnabled: " << replyMsg.errorMessage();
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    // auth        include        kiran-authentication-service
+    QRegExp authIncKiranAuthService(REGEXP_PAM_AUTH_INC_KIRANAUTHSERVICE);
+
+    // account     include        kiran-authentication-service
+    QRegExp accountIncKiranAuthService(REGEXP_PAM_ACCOUNT_INC_KIRANAUTHSERVICE);
+    QFile systemAuth(PAM_SYSTEM_PATH);
+    if (!systemAuth.open(QIODevice::ReadWrite))
+    {
+        KLOG_ERROR() << "Failed to open system auth file";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    QString systemAuthContent = systemAuth.readAll();
+    if (!systemAuthContent.contains(authIncKiranAuthService) ||
+        !systemAuthContent.contains(accountIncKiranAuthService))
+    {
+        KLOG_ERROR() << "Multi-Factor Authentication is disable, skip";
+        return;
+    }
+    systemAuthContent.remove(authIncKiranAuthService);
+    systemAuthContent.remove(accountIncKiranAuthService);
+    systemAuth.resize(0);
+    systemAuth.write(systemAuthContent.toLocal8Bit());
+    systemAuth.flush();
+    systemAuth.close();
+
+    QFile kiranAuth(PAM_KIRAN_PATH);
+    if (!kiranAuth.open(QIODevice::ReadWrite))
+    {
+        KLOG_ERROR() << "Failed to open kiran auth file";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    QString kiranAuthContent = kiranAuth.readAll();
+    QRegularExpression multiWay(REGEXP_MULTI_WAY_AUTH);
+    auto multiWayMatch = multiWay.match(kiranAuthContent);
+    if (!multiWayMatch.hasMatch())
+    {
+        KLOG_ERROR() << "Failed to match Multi-Way authentication";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    // ((#)(auth  [success=done ignore=2 default=bad authinfo_unavail=die] pam_kiran_authentication.so doauth))
+    kiranAuthContent.replace(multiWayMatch.captured(0), multiWayMatch.captured(2));
+
+    QRegularExpression multiFactor(REGEXP_MULTI_FACTOR_AUTH);
+    auto multiFactorMatch = multiFactor.match(kiranAuthContent);
+    if (!multiFactorMatch.hasMatch())
+    {
+        KLOG_ERROR() << "Failed to match Multi-Factor authentication";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    kiranAuthContent.replace(multiFactorMatch.captured(0), "#" + multiFactorMatch.captured(2));
+    kiranAuth.seek(0);
+    kiranAuth.write(kiranAuthContent.toLocal8Bit());
+    kiranAuth.flush();
+}
+
+void Manager::enableMultiFactorAuthState()
+{
+    auto msg = QDBusMessage::createMethodCall(KAD_MANAGER_DBUS_NAME,
+                                              KAD_MANAGER_DBUS_OBJECT_PATH,
+                                              KAD_MANAGER_DBUS_INTERFACE_NAME,
+                                              "SetAuthTypeEnabled");
+    msg.setArguments({static_cast<int>(KAD_AUTH_APPLICATION_LOGIN), true});
+    auto replyMsg = QDBusConnection::systemBus().call(msg);
+    if (replyMsg.type() != QDBusMessage::ReplyMessage)
+    {
+        KLOG_WARNING() << "Failed to call dbus method SetAuthTypeEnabled: " << replyMsg.errorMessage();
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    // auth        include        kiran-authentication-service
+    QRegExp authIncKiranAuthService(REGEXP_PAM_AUTH_INC_KIRANAUTHSERVICE);
+
+    // account     include        kiran-authentication-service
+    QRegExp accountIncKiranAuthService(REGEXP_PAM_ACCOUNT_INC_KIRANAUTHSERVICE);
+    QFile systemAuth(PAM_SYSTEM_PATH);
+    if (!systemAuth.open(QIODevice::ReadWrite))
+    {
+        KLOG_ERROR() << "Failed to open system auth file";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    QString systemAuthContent = systemAuth.readAll();
+    if (systemAuthContent.contains(authIncKiranAuthService) ||
+        systemAuthContent.contains(accountIncKiranAuthService))
+    {
+        KLOG_INFO() << "Multi-Factor Authentication is enable, skip";
+        return;
+    }
+
+    // (auth[ ]+sufficient[ ]+pam_unix.so)
+    QRegularExpression authSufPamUnixDotSO(REGEXP_PAM_AUTH_SUF_PAMUNIXDOTSO);
+    // (account[ ]+required[ ]+pam_unix.so)
+    QRegularExpression accountReqPamUnixDotSO(REGEXP_PAM_ACCOUNT_REQ_PAMUNIXDOTSO);
+    auto matchAuth = authSufPamUnixDotSO.match(systemAuthContent);
+    if (!matchAuth.hasMatch())
+    {
+        KLOG_ERROR() << "Failed to match pam auth";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    systemAuthContent.replace(authSufPamUnixDotSO, PAM_KIRAN_AUTH_CONFIG + matchAuth.captured(1));
+
+    auto matchAccount = accountReqPamUnixDotSO.match(systemAuthContent);
+    if (!matchAccount.hasMatch())
+    {
+        KLOG_ERROR() << "Failed to match pam account";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    systemAuthContent.replace(accountReqPamUnixDotSO, PAM_KIRAN_ACCOUNT_CONFIG + matchAccount.captured(1));
+    systemAuth.resize(0);
+    systemAuth.write(systemAuthContent.toLocal8Bit());
+    systemAuth.flush();
+
+    QFile kiranAuth(PAM_KIRAN_PATH);
+    if (!kiranAuth.open(QIODevice::ReadWrite))
+    {
+        KLOG_ERROR() << "Failed to open kiran auth file";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    QString kiranAuthContent = kiranAuth.readAll();
+    QRegularExpression multiWay(REGEXP_MULTI_WAY_AUTH);
+    auto multiWayMatch = multiWay.match(kiranAuthContent);
+    if (!multiWayMatch.hasMatch())
+    {
+        KLOG_ERROR() << "Failed to match Multi-Way authentication";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    KLOG_DEBUG() << multiWayMatch.captured(0);
+    KLOG_DEBUG() << multiWayMatch.captured(1);
+    KLOG_DEBUG() << multiWayMatch.captured(2);
+    // ((#)(auth  [success=done ignore=2 default=bad authinfo_unavail=die] pam_kiran_authentication.so doauth))
+    kiranAuthContent.replace(multiWayMatch.captured(0), "#" + multiWayMatch.captured(2));
+
+    QRegularExpression multiFactor(REGEXP_MULTI_FACTOR_AUTH);
+    auto multiFactorMatch = multiFactor.match(kiranAuthContent);
+    if (!multiFactorMatch.hasMatch())
+    {
+        KLOG_ERROR() << "Failed to match Multi-Factor authentication";
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
+    }
+    kiranAuthContent.replace(multiFactorMatch.captured(0), multiFactorMatch.captured(2));
+    kiranAuth.seek(0);
+    kiranAuth.write(kiranAuthContent.toLocal8Bit());
+    kiranAuth.flush();
+}
+
+void Manager::SetMultiFactorAuthState(bool enabled)
+{
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto role = m_accountManager->getRole(calledUniqueName);
+    if (role == KS::Account::Manager::AccountRole::unknown_account)
+    {
+        KLOG_ERROR() << "Failed to set Multi-Factor Authentication state, Permission denied";
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Permission Denied", false);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
+    }
+    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, enabled ? "Enable Multi-Factor Authentication" : "Disable Multi-Factor Authentication");
+    if (enabled)
+    {
+        enableMultiFactorAuthState();
+    }
+    else
+    {
+        disableMultiFactorAuthState();
+    }
+}
+
+bool Manager::getMultiFactorAuthState()
+{
+    auto msg = QDBusMessage::createMethodCall(KAD_MANAGER_DBUS_NAME,
+                                              KAD_MANAGER_DBUS_OBJECT_PATH,
+                                              KAD_MANAGER_DBUS_INTERFACE_NAME,
+                                              "GetAuthTypeByApp");
+    msg.setArguments({static_cast<int>(KAD_AUTH_APPLICATION_LOGIN)});
+    auto replyMsg = QDBusConnection::systemBus().call(msg);
+    if (replyMsg.type() != QDBusMessage::ReplyMessage)
+    {
+        KLOG_WARNING() << "Failed to call dbus method GetAuthTypeByApp: " << replyMsg.errorMessage();
+        return false;
+    }
+    QDBusPendingReply<QList<int>> reply(replyMsg);
+    auto ret = reply.value();
+    if (!ret.contains(static_cast<int>(KAD_AUTH_TYPE_UKEY)))
+    {
+        return false;
+    }
+    msg = QDBusMessage::createMethodCall(KAD_MANAGER_DBUS_NAME,
+                                         KAD_MANAGER_DBUS_OBJECT_PATH,
+                                         KAD_MANAGER_DBUS_INTERFACE_NAME,
+                                         "GetAuthTypeEnabled");
+    msg.setArguments({static_cast<int>(KAD_AUTH_TYPE_UKEY)});
+    replyMsg = QDBusConnection::systemBus().call(msg);
+    if (replyMsg.type() != QDBusMessage::ReplyMessage)
+    {
+        KLOG_WARNING() << "Failed to call dbus method GetAuthTypeEnabled: " << replyMsg.errorMessage();
+        return false;
+    }
+    if (replyMsg.arguments().at(0).toBool() == false)
+    {
+        return false;
+    }
+
+    QFile systemAuth(PAM_SYSTEM_PATH);
+    // auth        requisite      pam_faillock.so  preauth audit deny=3...
+    QRegExp authReqFailLockDotSo(REGEXP_PAM_AUTH_REQ_FAILLOCKDOTSO_REGEXP);
+
+    // auth        include        kiran-authentication-service
+    QRegExp authIncKiranAuthService(REGEXP_PAM_AUTH_INC_KIRANAUTHSERVICE);
+
+    // account     include        kiran-authentication-service
+    QRegExp accountIncKiranAuthService(REGEXP_PAM_ACCOUNT_INC_KIRANAUTHSERVICE);
+    if (!systemAuth.open(QIODevice::ReadOnly))
+    {
+        KLOG_ERROR() << "Failed to open system auth file";
+        return false;
+    }
+    QString systemAuthContent = systemAuth.readAll();
+    if (!systemAuthContent.contains(authReqFailLockDotSo))
+    {
+        KLOG_INFO() << "Auth pam_faillock.so must be requisite";
+        return false;
+    }
+    if (!systemAuthContent.contains(authIncKiranAuthService))
+    {
+        KLOG_INFO() << "System auth doesn't contain kiran-authentication-server";
+        return false;
+    }
+    if (!systemAuthContent.contains(accountIncKiranAuthService))
+    {
+        KLOG_INFO() << "System account doesn't contain kiran-authentication-server";
+        return false;
+    }
+    return true;
+}
+
+bool Manager::GetMultiFactorAuthState()
+{
+    return m_multiFactorAuthState;
 }
 
 bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassphrase, const QString& newPassphrase)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = m_accountManager->getRole(calledUniqueName);
-    auto roleName = userName != KS::Account::Manager::m_accountManager->m_metaAccountEnum.valueToKey(static_cast<int>(role));
-    if (role == KS::Account::Manager::AccountRole::UNKNOWN_ACCOUNT ||
+    auto roleName = KS::Account::Manager::m_accountManager->m_metaAccountEnum.valueToKey(static_cast<int>(role));
+    if (role == KS::Account::Manager::AccountRole::unknown_account ||
         userName != roleName)
     {
         KLOG_ERROR() << "Failed to change " << userName << "'s passphrase, unique name: "
                      << calledUniqueName << ", role: " << roleName;
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Failed to change %1's passphrase, unique name: %2, role: %3").arg(userName).arg(calledUniqueName).arg(roleName), false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, QString("Failed to change %1's passphrase, unique name: %2, role: %3").arg(userName).arg(calledUniqueName).arg(roleName), false);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     if (!verifyPassword(userName, oldPassphrase))
     {
         KLOG_INFO() << "Password error!, failed to change passphrase";
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Change password", false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Change password", false);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
     if (oldPassphrase == newPassphrase)
@@ -148,21 +416,20 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
     }
     auto isSuccess = changePassword(userName, newPassphrase);
     emit PasswordChanged(userName);
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Change password");
+    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Change password");
     return isSuccess;
 }
 
 bool Manager::Login(const QString& userName, const QString& passWord)
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
-
     bool isSuccess = false;
     auto role_index = m_metaAccountEnum.keyToValue(userName.toLocal8Bit(), &isSuccess);
     auto role = static_cast<AccountRole>(role_index);
 
     if (!isSuccess)
     {
-        KLOG_ERROR() << "Unknown userName: " << userName << ", Unique name: " << callerUnique;
+        KLOG_ERROR() << "Unknown meta user name: " << userName << ", Unique name: " << callerUnique;
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
     }
     m_dbusServerWatcher->addWatchedService(callerUnique);
@@ -180,22 +447,20 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     if (isFreeze(userName))
     {
         KLOG_INFO() << userName << " has been freeze";
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login, but this account has been freeze", false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Login, but this account has been freeze", false);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_BE_FREEZE, this->message());
-        return false;
     }
 
     if (!verifyPassword(userName, passWord))
     {
         KLOG_INFO() << "Passwd error";
         updateFreezeInfo(userName);
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login, Passwd error", false);
+        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Login, Passwd error", false);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
-        return false;
     }
     resetFreezeInfo(userName);
     m_clients.insert(callerUnique, {true, role, DBusHelper::getCallerPid(this)});
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Login");
+    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Login");
     return true;
 }
 
@@ -203,7 +468,7 @@ bool Manager::Logout()
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto role = m_accountManager->getRole(callerUnique);
-    if (role == KS::Account::Manager::AccountRole::UNKNOWN_ACCOUNT)
+    if (role == KS::Account::Manager::AccountRole::unknown_account)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
     }
@@ -216,7 +481,7 @@ bool Manager::Logout()
         return false;
     }
     it.value().isLogin = false;
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Logout");
+    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Logout");
     return true;
 }
 

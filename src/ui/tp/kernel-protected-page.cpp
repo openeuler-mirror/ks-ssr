@@ -89,7 +89,7 @@ QString KernelProtectedPage::getNavigationUID()
 
 QString KernelProtectedPage::getSidebarUID()
 {
-    return tr("Kernel protecked");
+    return tr("Kernel model protected");
 }
 
 QString KernelProtectedPage::getSidebarIcon()

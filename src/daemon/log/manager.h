@@ -52,7 +52,12 @@ public:
     {
         ERROR = -1,
         DEVICE = (1 << 0),
-        TOOL_BOX = (1 << 1)
+        TOOL_BOX = (1 << 1),
+        BASELINE_REINFORCEMENT = (1 << 2),
+        TRUSTED_PROTECTION = (1 << 3),
+        FILES_PROTECTION = (1 << 4),
+        PRIVATE_BOX = (1 << 5),
+        ACCOUNT = (1 << 6)
     };
     Q_ENUM(LogType)
 
@@ -67,7 +72,7 @@ public:
     template <typename T, typename... Args>
     void setLog(Log& log, T value, Args... args);
     void setLog(Log& log);
-    uint GetLogNum();
+    uint GetLogNum(const int role, const time_t begin_time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText);
     QStringList GetLog(const int role, const time_t time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText, const uint per_page, const uint page) const;
     // bool SetLogRotateConfig(const QString& config);
 

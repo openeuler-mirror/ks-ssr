@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <QLabel>
 #include <QPushButton>
 
 namespace KS
@@ -24,13 +23,19 @@ class DatePickButton : public QPushButton
     Q_OBJECT
 public:
     explicit DatePickButton(QWidget *parent = nullptr);
-    void setText(const QString &);
+    void setStartDate(const QString &fristDate);
+    void setEndDate(const QString &endDate);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
 
+signals:
+    void fristDateClicked();
+    void endDateClicked();
+
 private:
     void initUI();
-    QLabel *m_dateLabel;
+    QPushButton *m_fristDate;
+    QPushButton *m_endDate;
 };
 }  // namespace KS

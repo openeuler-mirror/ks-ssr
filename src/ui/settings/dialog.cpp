@@ -16,6 +16,7 @@
 #include "include/ssr-marcos.h"
 #include "src/ui/settings/baseline-reinforcement.h"
 #include "src/ui/settings/device-control.h"
+#include "src/ui/settings/identity-authentication.h"
 #include "src/ui/settings/trusted-protected.h"
 #include "ui_dialog.h"
 
@@ -100,6 +101,11 @@ void Dialog::addSubPage(const QString &sidebarName)
     {
         auto deviceSettings = new DeviceControl(this);
         m_ui->m_stacked->addWidget(deviceSettings);
+    }
+    else if (sidebarName == tr("Identity authentication"))
+    {
+        auto identityAuthentication = new IdentityAuthentication(this);
+        m_ui->m_stacked->addWidget(identityAuthentication);
     }
 }
 }  // namespace Settings

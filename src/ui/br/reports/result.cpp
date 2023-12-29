@@ -224,6 +224,71 @@ bool Result::scanVulnerability(QStringList &rpmlist, const InvalidData &invalidD
     return true;
 }
 
+void Result::addCategoryResults(QPrinter &printer, const QList<Result::CategoryContent> &categoryContents, bool &showTailFlag)
+{
+    auto count = 0;
+    // 先遍历添加不符合的项后添加符合项
+    for (auto &categoryContent : categoryContents)
+    {
+        count++;
+        if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_SAFE) == 1)
+        {
+            count--;
+            continue;
+        }
+
+        if (count >= TABLE_MAX_LINE)
+        {
+            count = 1;
+            addNewPainterPage(printer);
+        }
+        showTailFlag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
+
+        m_table->addLine(categoryContent.itemName,
+                         state2Str(categoryContent.scanStatus),
+                         state2Str(categoryContent.afterReinforceScanStatus),
+                         categoryContent.remarks,
+                         state2Color(categoryContent.scanStatus),
+                         state2Color(categoryContent.afterReinforceScanStatus),
+                         count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+    }
+    // 符合项
+    for (auto &categoryContent : categoryContents)
+    {
+        count++;
+        if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_UNSAFE) == 2)
+        {
+            count--;
+            continue;
+        }
+
+        if (count >= TABLE_MAX_LINE)
+        {
+            count = 1;
+            addNewPainterPage(printer);
+        }
+        showTailFlag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
+        m_table->addLine(categoryContent.itemName,
+                         state2Str(categoryContent.scanStatus),
+                         state2Str(categoryContent.afterReinforceScanStatus),
+                         categoryContent.remarks,
+                         state2Color(categoryContent.scanStatus),
+                         state2Color(categoryContent.afterReinforceScanStatus),
+                         count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+    }
+}
+
+void Result::addNewPainterPage(QPrinter &printer)
+{
+    m_table->addSpacer();
+    auto page = m_table->grab(m_table->rect());
+    m_painter->drawPixmap(0, 0, page);
+    printer.newPage();
+
+    delete m_table;
+    m_table = new Table(this);
+}
+
 QString Result::getIPPath()
 {
     QString strIpAddress;
@@ -298,43 +363,30 @@ void Result::createReportHomePage(int status, const QRect &rect)
     m_painter->drawPixmap(0, 0, pixmap);
 }
 
-void Result::createReportcontent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData)
+void Result::createReportContent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData)
 {
     bool flag = false;
-    int count = 0;
     int i = 0;
-
+    // 用于排序，不符合项需放在最前面
+    QList<CategoryContent> categoryContents;
     m_table = new Table(this);
     // 扫描结果
-    for (auto categories : m_categories)
+    for (auto category : m_categories)
     {
         i++;
-        for (auto reinforcementItem : categories->getReinforcementItem())
+        for (auto reinforcementItem : category->getReinforcementItem())
         {
-            ++count;
-            if (count >= TABLE_MAX_LINE)
-            {
-                m_table->addSpacer();
-                count = 1;
-                auto page = m_table->grab(m_table->rect());
-                m_painter->drawPixmap(0, 0, page);
-                printer.newPage();
-
-                delete m_table;
-                m_table = new Table(this);
-            }
-
-            flag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
-
-            if (!reinforcementItem->getCheckStatus())
-            {
-                count--;
-                continue;
-            }
+            CONTINUE_IF_TRUE(!reinforcementItem->getCheckStatus());
             auto afterReinforcementScanState = afterReinforcementList.isEmpty() ? BR_REINFORCEMENT_STATE_UNREINFORCE : afterReinforcementList.value(i - 1)->find(reinforcementItem->getName())->getScanState();
-            m_table->addLine(reinforcementItem->getLabel(), state2Str(reinforcementItem->getScanState()), state2Str(afterReinforcementScanState), "-", state2Color(reinforcementItem->getScanState()), state2Color(afterReinforcementScanState), count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+            categoryContents << CategoryContent{
+                .itemName = reinforcementItem->getLabel(),
+                .scanStatus = reinforcementItem->getScanState(),
+                .afterReinforceScanStatus = afterReinforcementScanState,
+                .remarks = "-"};
         }
     }
+    addCategoryResults(printer, categoryContents, flag);
+
     // 扫描文件结果
     auto isScan = createFilesScanResults(printer, invalidData, flag);
 
@@ -509,7 +561,7 @@ bool Result::exportReport(const QList<Category *> &afterReinforcementList, int s
     // 报表首页
     createReportHomePage(status, printerPixmap.pageLayout().fullRectPixels(printerPixmap.resolution()));
     printerPixmap.newPage();
-    createReportcontent(printerPixmap, afterReinforcementList, invalidData);
+    createReportContent(printerPixmap, afterReinforcementList, invalidData);
 
     return true;
 }

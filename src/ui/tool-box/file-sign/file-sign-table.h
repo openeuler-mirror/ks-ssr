@@ -19,16 +19,15 @@
 #include <QTableView>
 
 class QWidget;
-template <typename T> class QList;
+template <typename T>
+class QList;
 
 namespace KS
 {
-
 class TableHeaderProxy;
 
 namespace ToolBox
 {
-
 enum FileSignField
 {
     FILE_SIGN_FIELD_CHECKBOX = 0,
@@ -109,6 +108,9 @@ public:
 public slots:
     void cleanSelectedData();
     void searchTextChanged(const QString &text);
+
+private slots:
+    void mouseEnter(const QModelIndex &index);
 
 private slots:
     void checkedAllItem(Qt::CheckState checkState);
