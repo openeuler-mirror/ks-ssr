@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
@@ -24,23 +24,25 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include "lib/base/crypto-helper.h"
-#include "src/ui/private-box/box-password-checked.h"
-#include "src/ui/private-box/box-password-modification.h"
-#include "src/ui/private-box/box-password-retrieve.h"
 #include "src/ui/box_manager_proxy.h"
+#include "src/ui/common/delete-notify.h"
+#include "src/ui/common/password-modification.h"
 #include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/private-box/box-password-checked.h"
+#include "src/ui/private-box/box-password-retrieve.h"
 #include "ssr-i.h"
 
 namespace KS
 {
 namespace PrivateBox
 {
-Box::Box(const QString &uid) : m_uid(uid),
-                               m_name("Unknown"),
-                               m_mounted(false),
-                               m_modifyPassword(nullptr),
-                               m_retrievePassword(nullptr),
-                               m_popupMenu(nullptr)
+Box::Box(const QString &uid)
+    : m_uid(uid),
+      m_name("Unknown"),
+      m_mounted(false),
+      m_modifyPassword(nullptr),
+      m_retrievePassword(nullptr),
+      m_popupMenu(nullptr)
 {
     m_boxManagerProxy = new BoxManagerProxy(SSR_DBUS_NAME,
                                             SSR_BOX_MANAGER_DBUS_OBJECT_PATH,
@@ -136,9 +138,6 @@ void Box::initBoxInfo()
 void Box::initMenu()
 {
     auto mounted = m_boxManagerProxy->IsMounted(m_uid).value();
-
-    // m_modifyPassword = new BoxPasswordModification();
-
     m_popupMenu = new QMenu(this);
     m_popupMenu->setObjectName("m_popupMenu");
 
@@ -146,7 +145,7 @@ void Box::initMenu()
                                                    this,
                                                    &Box::switchMountedStatus);
     m_popupMenu->addAction(tr("Modify password"), this, &Box::modifyPassword);
-    m_popupMenu->addAction(tr("Delete"), this, &Box::delBox);
+    m_popupMenu->addAction(tr("Delete"), this, &Box::popDeleteNotify);
     m_popupMenu->addAction(tr("Retrieve the password"), this, &Box::retrievePassword);
 }
 
@@ -205,7 +204,7 @@ void Box::switchMountedStatus()
     {
         m_inputMountPassword = new BoxPasswordChecked(window());
         m_inputMountPassword->setTitle(tr("Unlock"));
-        connect(m_inputMountPassword, &BoxPasswordChecked::accepted, this, &Box::inputMountPasswordAccepted);
+        connect(m_inputMountPassword, &BoxPasswordChecked::accepted, this, &Box::acceptedInputMountPassword);
 
         int x = window()->x() / 2 + m_inputMountPassword->width();
         int y = window()->y() / 2 + m_inputMountPassword->height();
@@ -216,17 +215,10 @@ void Box::switchMountedStatus()
 
 void Box::modifyPassword()
 {
-    m_modifyPassword = new BoxPasswordModification(window());
-    m_modifyPassword->setFixedSize(419, 419);
-    m_modifyPassword->setTitle(tr("Modify password"));
+    m_modifyPassword = new PasswordModification(window());
+    connect(m_modifyPassword, SIGNAL(accepted()), this, SLOT(acceptedModifyPassword()));
 
-    connect(m_modifyPassword, SIGNAL(accepted()), this, SLOT(modifyPasswordAccepted()));
-    connect(m_modifyPassword, &BoxPasswordModification::passwdInconsistent, this, [this]
-            { POPUP_MESSAGE_DIALOG(QString(tr("Please confirm whether the password is consistent."))); });
-    connect(m_modifyPassword, &BoxPasswordModification::inputEmpty, this, [this]
-            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
-
-    m_modifyPassword->setBoxName(m_name);
+    m_modifyPassword->setTitleNameTail(m_name);
 
     int x = window()->x() + window()->width() / 4 + m_modifyPassword->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_modifyPassword->height() / 8;
@@ -234,11 +226,25 @@ void Box::modifyPassword()
     m_modifyPassword->show();
 }
 
+void Box::popDeleteNotify()
+{
+    auto deleteNotify = new DeleteNotify(this);
+    deleteNotify->setNotifyMessage(tr("Remove box"), tr("The operation will delete the content inside the box."
+                                                        "Are you sure you want to delete it?"));
+    auto x = window()->x() + window()->width() / 2 - deleteNotify->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - deleteNotify->height() / 2;
+
+    deleteNotify->move(x, y);
+    deleteNotify->show();
+
+    connect(deleteNotify, &DeleteNotify::accepted, this, &Box::delBox);
+}
+
 void Box::delBox()
 {
     m_inputDelBoxPassword = new BoxPasswordChecked(window());
     m_inputDelBoxPassword->setTitle(tr("Del box"));
-    connect(m_inputDelBoxPassword, &BoxPasswordChecked::accepted, this, &Box::inputDelBoxPasswordAccepted);
+    connect(m_inputDelBoxPassword, &BoxPasswordChecked::accepted, this, &Box::acceptedInputDelBoxPassword);
 
     int x = window()->x() / 2 + m_inputDelBoxPassword->width();
     int y = window()->y() / 2 + m_inputDelBoxPassword->height();
@@ -251,9 +257,11 @@ void Box::retrievePassword()
     m_retrievePassword = new BoxPasswordRetrieve(window());
     m_retrievePassword->setFixedSize(319, 239);
     m_retrievePassword->setTitle(tr("Retrieve password"));
-    connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(retrievePasswordAccepted()));
+    connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(acceptedRetrievePassword()));
     connect(m_retrievePassword, &BoxPasswordRetrieve::inputEmpty, this, [this]
-            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information.")); });
+            {
+                POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
+            });
 
     int x = window()->x() + window()->width() / 4 + m_retrievePassword->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_retrievePassword->height() / 8;
@@ -261,7 +269,7 @@ void Box::retrievePassword()
     m_retrievePassword->show();
 }
 
-void Box::modifyPasswordAccepted()
+void Box::acceptedModifyPassword()
 {
     auto encryptCurrentPassword = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getCurrentPassword());
     auto encryptNewPassword = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_modifyPassword->getNewPassword());
@@ -275,7 +283,7 @@ void Box::modifyPasswordAccepted()
     }
 }
 
-void Box::retrievePasswordAccepted()
+void Box::acceptedRetrievePassword()
 {
     auto encryptPassphrase = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_retrievePassword->getPassphrase());
     auto reply = m_boxManagerProxy->RetrieveBoxPassword(m_uid, encryptPassphrase);
@@ -286,7 +294,7 @@ void Box::retrievePasswordAccepted()
     }
 }
 
-void Box::inputMountPasswordAccepted()
+void Box::acceptedInputMountPassword()
 {
     auto encryptPasswd = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_inputMountPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->Mount(m_uid, encryptPasswd);
@@ -297,7 +305,7 @@ void Box::inputMountPasswordAccepted()
     }
 }
 
-void Box::inputDelBoxPasswordAccepted()
+void Box::acceptedInputDelBoxPassword()
 {
     auto encryptPasswd = CryptoHelper::rsaEncryptString(m_boxManagerProxy->rSAPublicKey(), m_inputDelBoxPassword->getBoxPasswordChecked());
     auto reply = m_boxManagerProxy->DelBox(m_uid, encryptPasswd);
@@ -307,5 +315,5 @@ void Box::inputDelBoxPasswordAccepted()
         POPUP_MESSAGE_DIALOG(QString(tr("Delete success!")));
     }
 }
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

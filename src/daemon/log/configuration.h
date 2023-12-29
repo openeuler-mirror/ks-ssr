@@ -47,16 +47,20 @@ public:
     virtual ~Configurations();
 
     void operator=(const Configurations& other);
-    bool isValid();
 
     QSettings* m_config;
     const MaxLogFileAction m_maxLogFileAction = MaxLogFileAction::ROTATE;
-    uint m_maxLogFile = 8; /* 单个日志文件最大容量，单位为 M, 范围为 5 <= m_maxLogFile < 50 */
-    uint m_numLogs = 5;    /* 日志数量,范围为 1 <= m_numLogs < 10 */
+    // 由于日志轮转标准为日志行数， 所以不允许修改日志行数
+    const uint m_maxLogFileLine = m_maxLogFileLineDefaultValue; /* 单个日志文件最大容量，单位为 M, 范围为 3000 <= m_maxLogFileLine < 500000 */
+    uint m_numLogs = m_numLogsDefaultValue;                     /* 日志数量,范围为 1 <= m_numLogs < 10 */
     QString m_account;
     QString m_passwd;
+    QString m_remotePath;
     QHostAddress m_ip;
-#pragma message("TODO: SCP 还需要对应服务端的路径")
+
+private:
+    constexpr static const uint m_maxLogFileLineDefaultValue = 1000;
+    constexpr static const uint m_numLogsDefaultValue = 5;
 };
 };  // namespace Log
 };  // namespace KS

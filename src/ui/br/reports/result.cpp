@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "result.h"
@@ -30,12 +30,14 @@
 
 #define TABLE_MAX_LINE 28
 #define TABLE_SHOW_TAIL_MAX_LINE 20
+#define SSR_REPORTS_STYLE_PATH ":/styles/br-reports"
 
 namespace KS
 {
 namespace BR
 {
-Result::Result(QWidget *parent) : QWidget(parent)
+Result::Result(QWidget *parent)
+    : QWidget(parent)
 {
     init();
 }
@@ -53,6 +55,17 @@ QSharedPointer<Result> Result::getDefault()
 void Result::init()
 {
     setWindowModality(Qt::ApplicationModal);
+    // 初始化样式表
+    QFile file(SSR_REPORTS_STYLE_PATH);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QString windowStyle = file.readAll();
+        setStyleSheet(styleSheet() + windowStyle);
+    }
+    else
+    {
+        KLOG_WARNING() << "Failed to open file " << SSR_REPORTS_STYLE_PATH;
+    }
 }
 
 QString Result::state2Str(int state)
@@ -211,6 +224,71 @@ bool Result::scanVulnerability(QStringList &rpmlist, const InvalidData &invalidD
     return true;
 }
 
+void Result::addCategoryResults(QPrinter &printer, const QList<Result::CategoryContent> &categoryContents, bool &showTailFlag)
+{
+    auto count = 0;
+    // 先遍历添加不符合的项后添加符合项
+    for (auto &categoryContent : categoryContents)
+    {
+        count++;
+        if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_SAFE) == 1)
+        {
+            count--;
+            continue;
+        }
+
+        if (count >= TABLE_MAX_LINE)
+        {
+            count = 1;
+            addNewPainterPage(printer);
+        }
+        showTailFlag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
+
+        m_table->addLine(categoryContent.itemName,
+                         state2Str(categoryContent.scanStatus),
+                         state2Str(categoryContent.afterReinforceScanStatus),
+                         categoryContent.remarks,
+                         state2Color(categoryContent.scanStatus),
+                         state2Color(categoryContent.afterReinforceScanStatus),
+                         count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+    }
+    // 符合项
+    for (auto &categoryContent : categoryContents)
+    {
+        count++;
+        if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_UNSAFE) == 2)
+        {
+            count--;
+            continue;
+        }
+
+        if (count >= TABLE_MAX_LINE)
+        {
+            count = 1;
+            addNewPainterPage(printer);
+        }
+        showTailFlag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
+        m_table->addLine(categoryContent.itemName,
+                         state2Str(categoryContent.scanStatus),
+                         state2Str(categoryContent.afterReinforceScanStatus),
+                         categoryContent.remarks,
+                         state2Color(categoryContent.scanStatus),
+                         state2Color(categoryContent.afterReinforceScanStatus),
+                         count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+    }
+}
+
+void Result::addNewPainterPage(QPrinter &printer)
+{
+    m_table->addSpacer();
+    auto page = m_table->grab(m_table->rect());
+    m_painter->drawPixmap(0, 0, page);
+    printer.newPage();
+
+    delete m_table;
+    m_table = new Table(this);
+}
+
 QString Result::getIPPath()
 {
     QString strIpAddress;
@@ -276,52 +354,39 @@ void Result::createReportHomePage(int status, const QRect &rect)
     m_pdf = new PDF(QSysInfo::prettyProductName(), getIPPath(), getMacPath(), QSysInfo::kernelType() + QSysInfo::kernelVersion(), activeStatus, this);
     m_pdf->setPieChartText(m_categoryName, m_total, m_conform, m_inconform);
     auto pixmap = m_pdf->grab(m_pdf->rect());
-    //计算painter视口区域与抓取图片区域的尺寸比例因子
+    // 计算painter视口区域与抓取图片区域的尺寸比例因子
     float factor = (float)rect.width() / pixmap.width();
-    //绘制时按照比例因子放大
+    // 绘制时按照比例因子放大
     m_painter->scale(factor, factor);
 
-    //按照坐标画图
+    // 按照坐标画图
     m_painter->drawPixmap(0, 0, pixmap);
 }
 
-void Result::createReportcontent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData)
+void Result::createReportContent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData)
 {
     bool flag = false;
-    int count = 0;
     int i = 0;
-
+    // 用于排序，不符合项需放在最前面
+    QList<CategoryContent> categoryContents;
     m_table = new Table(this);
     // 扫描结果
-    for (auto categories : m_categories)
+    for (auto category : m_categories)
     {
         i++;
-        for (auto reinforcementItem : categories->getReinforcementItem())
+        for (auto reinforcementItem : category->getReinforcementItem())
         {
-            ++count;
-            if (count >= TABLE_MAX_LINE)
-            {
-                m_table->addSpacer();
-                count = 1;
-                auto page = m_table->grab(m_table->rect());
-                m_painter->drawPixmap(0, 0, page);
-                printer.newPage();
-
-                delete m_table;
-                m_table = new Table(this);
-            }
-
-            flag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
-
-            if (!reinforcementItem->getCheckStatus())
-            {
-                count--;
-                continue;
-            }
+            CONTINUE_IF_TRUE(!reinforcementItem->getCheckStatus());
             auto afterReinforcementScanState = afterReinforcementList.isEmpty() ? BR_REINFORCEMENT_STATE_UNREINFORCE : afterReinforcementList.value(i - 1)->find(reinforcementItem->getName())->getScanState();
-            m_table->addLine(reinforcementItem->getLabel(), state2Str(reinforcementItem->getScanState()), state2Str(afterReinforcementScanState), "-", state2Color(reinforcementItem->getScanState()), state2Color(afterReinforcementScanState), count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+            categoryContents << CategoryContent{
+                .itemName = reinforcementItem->getLabel(),
+                .scanStatus = reinforcementItem->getScanState(),
+                .afterReinforceScanStatus = afterReinforcementScanState,
+                .remarks = "-"};
         }
     }
+    addCategoryResults(printer, categoryContents, flag);
+
     // 扫描文件结果
     auto isScan = createFilesScanResults(printer, invalidData, flag);
 
@@ -471,7 +536,7 @@ void Result::calculateRatio()
     }
 }
 
-//picture
+// picture
 bool Result::exportReport(const QList<Category *> &afterReinforcementList, int status, const InvalidData &invalidData)
 {
     calculateRatio();
@@ -480,7 +545,7 @@ bool Result::exportReport(const QList<Category *> &afterReinforcementList, int s
     auto file = QString(tr("KylinSecHostReinforcementReport_%1_%2.pdf")).arg(QSysInfo::machineHostName()).arg(getIPPath());
     auto fileName = fileDialog.getSaveFileName(this, tr("Open File"), file, tr("PDF(*.pdf)"));
     RETURN_VAL_IF_TRUE(fileName == "", false)
-    //定义打印机 631端口被禁用可能会导致阻塞
+    // 定义打印机 631端口被禁用可能会导致阻塞
     QPrinter printerPixmap(QPrinter::ScreenResolution);
 #if QT_DEPRECATED_SINCE(5, 15)
     printerPixmap.setPageSize(QPageSize(QPageSize::PageSizeId::A4));
@@ -496,7 +561,7 @@ bool Result::exportReport(const QList<Category *> &afterReinforcementList, int s
     // 报表首页
     createReportHomePage(status, printerPixmap.pageLayout().fullRectPixels(printerPixmap.resolution()));
     printerPixmap.newPage();
-    createReportcontent(printerPixmap, afterReinforcementList, invalidData);
+    createReportContent(printerPixmap, afterReinforcementList, invalidData);
 
     return true;
 }

@@ -22,6 +22,9 @@
 
 namespace KS
 {
+class TableHeaderProxy;
+class HeaderButtonDelegate;
+
 namespace DM
 {
 struct DeviceInfo
@@ -38,7 +41,7 @@ struct DeviceInfo
 
 enum ListTableField
 {
-    LIST_TABLE_FIELD_NUMBER,
+    LIST_TABLE_FIELD_NUMBER = 0,
     LIST_TABLE_FIELD_NAME,
     LIST_TABLE_FIELD_TYPE,
     LIST_TABLE_FIELD_ID,
@@ -74,7 +77,7 @@ public:
     int getPermission(int row);
     int getColCount();
     int getRowCount();
-    TableFilterModel *getFilterProxy();
+    void setSearchText(const QString &text);
 
 protected:
     void leaveEvent(QEvent *event);
@@ -82,6 +85,9 @@ protected:
 private:
     void initTable();
     void setHeaderSections(QStringList sections);
+    void initTableHeaderButton();
+
+    void filterFixedString();
 
 private slots:
     void updateCusor(const QModelIndex &index);
@@ -91,6 +97,14 @@ private:
     TableFilterModel *m_filterProxy;
     QStandardItemModel *m_model;
     DeviceManagerProxy *m_deviceManagerProxy;
+    TableHeaderProxy *m_headerViewProxy;
+    HeaderButtonDelegate *m_deviceTypeButton;
+    QStringList m_deviceTypeKeys;
+    HeaderButtonDelegate *m_statusButton;
+    QStringList m_statusKeys;
+    QString m_searchText;
+    QMap<QString, QStringList> m_filterMap;
+
     QList<DeviceInfo> m_devicesInfo;
 };
 }  // namespace DM

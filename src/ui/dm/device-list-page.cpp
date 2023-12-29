@@ -27,15 +27,16 @@ namespace KS
 {
 namespace DM
 {
-DeviceListPage::DeviceListPage(QWidget *parent) : Page(parent),
-                                                  m_ui(new Ui::DeviceListPage),
-                                                  m_devicePermission(nullptr),
-                                                  m_deviceManagerProxy(nullptr)
+DeviceListPage::DeviceListPage(QWidget *parent)
+    : Page(parent),
+      m_ui(new Ui::DeviceListPage),
+      m_devicePermission(nullptr),
+      m_deviceManagerProxy(nullptr)
 {
     m_ui->setupUi(this);
-    m_ui->m_title->setText(tr("Device List"));
+    m_ui->m_title->setText(tr("Control peripheral permissions to prevent unauthorized device access"));
 
-    //设置搜索框搜索图标
+    // 设置搜索框搜索图标
     auto searchButton = new QPushButton(m_ui->m_search);
     searchButton->setObjectName("searchButton");
     searchButton->setIcon(QIcon(":/images/search"));
@@ -44,7 +45,7 @@ DeviceListPage::DeviceListPage(QWidget *parent) : Page(parent),
     action->setDefaultWidget(searchButton);
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
-    //获取设备列表数据插入表格
+    // 获取设备列表数据插入表格
     update();
 
     m_deviceManagerProxy = new DeviceManagerProxy(SSR_DBUS_NAME,
@@ -53,18 +54,16 @@ DeviceListPage::DeviceListPage(QWidget *parent) : Page(parent),
                                                   this);
 
     connect(m_deviceManagerProxy, &DeviceManagerProxy::DeviceChanged, this, &DeviceListPage::update);
-    connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceListPage::searchTextChanged);
+    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString &text)
+            {
+                m_ui->m_table->setSearchText(text);
+            });
     connect(m_ui->m_table, &DeviceListTable::clicked, this, &DeviceListPage::popupEditDialog);
 }
 
 DeviceListPage::~DeviceListPage()
 {
     delete m_ui;
-    if (m_devicePermission)
-    {
-        delete m_devicePermission;
-        m_devicePermission = nullptr;
-    }
 }
 
 void DeviceListPage::update()
@@ -83,17 +82,19 @@ QString DeviceListPage::getNavigationUID()
 
 QString DeviceListPage::getSidebarUID()
 {
-    return tr("Device List");
+    //    return tr("Device List");
+    return "";
 }
 
 QString DeviceListPage::getSidebarIcon()
 {
-    return ":/images/device-list";
+    //    return ":/images/device-list";
+    return "";
 }
 
-int DeviceListPage::getSelinuxType()
+QString DeviceListPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SYSADM;
 }
 
 void DeviceListPage::paintEvent(QPaintEvent *event)
@@ -105,55 +106,39 @@ void DeviceListPage::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void DeviceListPage::searchTextChanged(const QString &text)
-{
-    auto filterProxy = m_ui->m_table->getFilterProxy();
-    filterProxy->setFilterFixedString(text);
-}
-
 void DeviceListPage::popupEditDialog(const QModelIndex &index)
 {
-    if (index.column() == m_ui->m_table->getColCount() - 1)
-    {
-        if (!m_devicePermission)
-        {
-            m_devicePermission = new DevicePermission(this);
-            connect(m_devicePermission, &DevicePermission::permissionChanged, this, &DeviceListPage::updatePermission);
-            connect(m_devicePermission, &DevicePermission::stateChanged, this, &DeviceListPage::updateState);
-            connect(m_devicePermission, &DevicePermission::deviceChanged, this, &DeviceListPage::update);
-            connect(m_devicePermission, &DevicePermission::destroyed,
-                    [this]
-                    {
-                        m_devicePermission->deleteLater();
-                        m_devicePermission = nullptr;
-                    });
-        }
+    RETURN_IF_TRUE(index.column() != m_ui->m_table->getColCount() - 1)
 
-        auto deviceName = m_ui->m_table->getName(index.row());
-        auto deviceID = m_ui->m_table->getID(index.row());
-        auto state = m_ui->m_table->getState(index.row());
-        auto permissions = m_ui->m_table->getPermission(index.row());
-        auto type = m_ui->m_table->getType(index.row());
+    m_devicePermission = new DevicePermission(this);
+    connect(m_devicePermission, &DevicePermission::permissionChanged, this, &DeviceListPage::updatePermission);
+    connect(m_devicePermission, &DevicePermission::stateChanged, this, &DeviceListPage::updateState);
+    connect(m_devicePermission, &DevicePermission::deviceChanged, this, &DeviceListPage::update);
 
-        m_devicePermission->setTitle(deviceName);
-        m_devicePermission->setDeviceID(deviceID);
-        m_devicePermission->setDeviceStatus(state);
-        m_devicePermission->setDevicePermission(type, permissions);
+    auto deviceName = m_ui->m_table->getName(index.row());
+    auto deviceID = m_ui->m_table->getID(index.row());
+    auto state = m_ui->m_table->getState(index.row());
+    auto permissions = m_ui->m_table->getPermission(index.row());
+    auto type = m_ui->m_table->getType(index.row());
 
-        int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
-        int y = this->y() + this->height() / 4 + m_devicePermission->height() / 4;
-        m_devicePermission->move(x, y);
-        m_devicePermission->show();
-    }
+    m_devicePermission->setTitle(deviceName);
+    m_devicePermission->setDeviceID(deviceID);
+    m_devicePermission->setDeviceStatus(state);
+    m_devicePermission->setDevicePermission(type, permissions);
+
+    int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
+    int y = this->y() + this->height() / 4 + m_devicePermission->height() / 4;
+    m_devicePermission->move(x, y);
+    m_devicePermission->show();
 }
 
 void DeviceListPage::updatePermission()
 {
     auto id = m_devicePermission->getDeviceID();
-    //获取用户选择的设备权限
+    // 获取用户选择的设备权限
     auto permissions = m_devicePermission->getDevicePermission();
 
-    //数据传入后台
+    // 数据传入后台
     QJsonDocument jsonDoc;
     QJsonObject jsonObj{
         {SSR_DEVICE_JK_READ, (permissions & PermissionType::PERMISSION_TYPE_READ) > 0},
@@ -173,13 +158,13 @@ void DeviceListPage::updatePermission()
 void DeviceListPage::updateState()
 {
     auto id = m_devicePermission->getDeviceID();
-    //获取用户选择的状态
+    // 获取用户选择的状态
     auto state = m_devicePermission->getDeviceStatus();
     RETURN_IF_TRUE(state != DeviceState::DEVICE_STATE_ENABLE && state != DeviceState::DEVICE_STATE_DISABLE);
 
     QDBusPendingReply<> reply;
 
-    //数据传入后台
+    // 数据传入后台
     if (state == DeviceState::DEVICE_STATE_ENABLE)
     {
         reply = m_deviceManagerProxy->Enable(id);
@@ -192,6 +177,8 @@ void DeviceListPage::updateState()
     if (reply.isError())
     {
         POPUP_MESSAGE_DIALOG(reply.error().message());
+        // 更新状态已经失败了，不需要再继续往下执行updatePermission的操作
+        disconnect(m_devicePermission, &DevicePermission::permissionChanged, this, &DeviceListPage::updatePermission);
         return;
     }
 }

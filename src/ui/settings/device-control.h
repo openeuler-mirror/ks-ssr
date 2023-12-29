@@ -59,7 +59,7 @@ private:
     QGridLayout *m_usbLayout;
     QGridLayout *m_kbdMouseLayout;
     QWidget *m_kbdMouseContent;
-    //绑定接口控制QCheckbox以及接口类型
+    // 绑定接口控制QCheckbox以及接口类型
     QMap<InterfaceType, QCheckBox *> m_checkboxs;
     QCheckBox *m_clickedCheckbox;
     RespondDialog *m_respondDlg;

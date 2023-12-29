@@ -26,14 +26,15 @@ namespace KS
 {
 namespace Settings
 {
-DeviceControl::DeviceControl(QWidget *parent) : QWidget(parent),
-                                                m_deviceManagerProxy(nullptr),
-                                                m_gridLayout(nullptr),
-                                                m_usbLayout(nullptr),
-                                                m_kbdMouseLayout(nullptr),
-                                                m_kbdMouseContent(nullptr),
-                                                m_clickedCheckbox(nullptr),
-                                                m_respondDlg(nullptr)
+DeviceControl::DeviceControl(QWidget *parent)
+    : QWidget(parent),
+      m_deviceManagerProxy(nullptr),
+      m_gridLayout(nullptr),
+      m_usbLayout(nullptr),
+      m_kbdMouseLayout(nullptr),
+      m_kbdMouseContent(nullptr),
+      m_clickedCheckbox(nullptr),
+      m_respondDlg(nullptr)
 {
     initUI();
 

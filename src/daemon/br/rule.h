@@ -26,9 +26,15 @@ class Rule
 {
 public:
     // 规则类型
-    virtual Protocol::RuleType getType() { return Protocol::RuleType::Value::NONE; };
+    virtual Protocol::RuleType getType()
+    {
+        return Protocol::RuleType::Value::NONE;
+    };
     // 判断该值是否符合规则
-    virtual bool match(const QJsonValue &value) { return false; };
+    virtual bool match(const QJsonValue &value)
+    {
+        return false;
+    };
 
     static QSharedPointer<Rule> create(const Protocol::Rule &rule);
 
@@ -59,7 +65,10 @@ public:
     virtual ~RuleRange(){};
 
     // 规则类型
-    virtual Protocol::RuleType getType() override { return Protocol::RuleType::Value::RANGE; };
+    virtual Protocol::RuleType getType() override
+    {
+        return Protocol::RuleType::Value::RANGE;
+    };
     // 判断该值是否符合规则
     virtual bool match(const QJsonValue &value) override;
 
@@ -77,7 +86,10 @@ public:
     virtual ~RuleFixed(){};
 
     // 规则类型
-    virtual Protocol::RuleType getType() override { return Protocol::RuleType::Value::RANGE; };
+    virtual Protocol::RuleType getType() override
+    {
+        return Protocol::RuleType::Value::RANGE;
+    };
 };
 
 class RuleEnum : public Rule
@@ -87,7 +99,10 @@ public:
     virtual ~RuleEnum(){};
 
     // 规则类型
-    virtual Protocol::RuleType getType() override { return Protocol::RuleType::Value::ENUM; };
+    virtual Protocol::RuleType getType() override
+    {
+        return Protocol::RuleType::Value::ENUM;
+    };
     // 判断该值是否符合规则
     virtual bool match(const QJsonValue &value) override;
 

@@ -21,11 +21,14 @@
 #include "src/daemon/br/configuration.h"
 #include "src/daemon/br/plugins.h"
 
+class DaemonAdaptor;
+
 namespace KS
 {
 class LicenseProxy;
 
-class Daemon : public QObject
+class Daemon : public QObject,
+               protected QDBusContext
 {
     Q_OBJECT
 public:
@@ -52,13 +55,16 @@ public:
         delete m_instance;
     };
 
+Q_SIGNALS:  // SIGNALS
+    void RegisterFinished();
+
 private:
     void init();
     void start();
 
 private:
     static Daemon *m_instance;
-
+    DaemonAdaptor *m_dbusAdaptor;
     QSharedPointer<LicenseProxy> m_licenseProxy;
 };
 }  // namespace KS

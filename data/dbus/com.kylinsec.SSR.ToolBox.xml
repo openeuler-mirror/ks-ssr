@@ -30,7 +30,7 @@
             <description>set file's security context.</description>
         </method>
 
-        <method name="SherdFile">
+        <method name="ShredFile">
             <arg type="as" name="file_paths" direction="in">
                 <summary>the path of destination files.</summary>
             </arg>
@@ -43,5 +43,23 @@
             </arg>
             <description>remove users.</description>
         </method>
+
+        <method name="GetAccessStatus">
+            <arg type="b" name="selinux_status" direction="out">
+                <summary>The status of selinux.</summary>
+            </arg>
+            <description>Get status of selinux.</description>
+        </method>
+
+        <method name="GetAllUsers">
+            <arg type="s" name="user_information" direction="out">
+                <summary>The user_information is a json string.</summary>
+            </arg>
+            <description>Get all user's information.</description>
+        </method>
+
+        <signal name="UserChanged">
+            <description>Os account has changed, please get user list.</description>
+        </signal>
     </interface>
 </node>

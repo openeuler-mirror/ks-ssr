@@ -30,24 +30,45 @@ public:
     Plugins(Configuration* configuration);
     virtual ~Plugins();
 
-    static Plugins* getInstance() { return instance_; };
+    static Plugins* getInstance()
+    {
+        return instance_;
+    };
 
     static void globalInit(Configuration* configuration);
 
-    static void globalDeinit() { delete instance_; };
+    static void globalDeinit()
+    {
+        delete instance_;
+    };
 
-    ThreadPool& getThreadPool() { return this->thread_pool_; }
+    ThreadPool& getThreadPool()
+    {
+        return this->thread_pool_;
+    }
 
     // 获取所有插件信息
-    BRPluginVec getPlugins() { return MapHelper::getValues(this->plugins_); };
+    BRPluginVec getPlugins()
+    {
+        return MapHelper::getValues(this->plugins_);
+    };
     // 获取插件信息，如果不存在则返回空指针
-    QSharedPointer<Plugin> getPlugin(const QString& id) { return MapHelper::getValue(this->plugins_, id); };
+    QSharedPointer<Plugin> getPlugin(const QString& id)
+    {
+        return MapHelper::getValue(this->plugins_, id);
+    };
     // 通过加固项名称获取插件
     QSharedPointer<Plugin> getPluginByReinforcement(const QString& name);
 
     // 获取使用的加固项
-    QSharedPointer<Reinforcement> getReinforcement(const QString& name) { return MapHelper::getValue(this->reinforcements_, name); }
-    BRReinforcementVec getReinforcements() { return MapHelper::getValues(this->reinforcements_); };
+    QSharedPointer<Reinforcement> getReinforcement(const QString& name)
+    {
+        return MapHelper::getValue(this->reinforcements_, name);
+    }
+    BRReinforcementVec getReinforcements()
+    {
+        return MapHelper::getValues(this->reinforcements_);
+    };
     // 获取指定分类的加固项
     BRReinforcementVec getReinforcementsByCategory(const QString& category_name);
 

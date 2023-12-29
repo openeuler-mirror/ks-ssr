@@ -33,10 +33,11 @@ namespace Config
 KV::KV(const QString &conf_path,
        const QString &kv_split_pattern,
        const QString &kv_join_str,
-       const QString &comment) : conf_path_(conf_path),
-                                 kv_split_pattern_(kv_split_pattern),
-                                 kv_join_str_(kv_join_str),
-                                 comment_(comment)
+       const QString &comment)
+    : conf_path_(conf_path),
+      kv_split_pattern_(kv_split_pattern),
+      kv_join_str_(kv_join_str),
+      comment_(comment)
 {
     if (this->kv_split_pattern_.isEmpty())
     {

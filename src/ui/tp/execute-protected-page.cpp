@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "src/ui/tp/execute-protected-page.h"
 #include <qt5-log-i.h>
@@ -17,8 +17,8 @@
 #include <QFileDialog>
 #include <QPainter>
 #include <QWidgetAction>
+#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_execute-protected-page.h"
 #include "ssr-i.h"
@@ -27,10 +27,11 @@ namespace KS
 {
 namespace TP
 {
-ExecuteProtectedPage::ExecuteProtectedPage(QWidget *parent) : Page(parent),
-                                                              m_ui(new Ui::ExecuteProtectedPage),
-                                                              m_dbusProxy(nullptr),
-                                                              m_refreshTimer(nullptr)
+ExecuteProtectedPage::ExecuteProtectedPage(QWidget *parent)
+    : Page(parent),
+      m_ui(new Ui::ExecuteProtectedPage),
+      m_dbusProxy(nullptr),
+      m_refreshTimer(nullptr)
 {
     m_ui->setupUi(this);
     m_ui->m_note->setWordWrap(true);
@@ -94,7 +95,7 @@ QString ExecuteProtectedPage::getNavigationUID()
 
 QString ExecuteProtectedPage::getSidebarUID()
 {
-    return tr("Execute protecked");
+    return tr("Execute files protected");
 }
 
 QString ExecuteProtectedPage::getSidebarIcon()
@@ -102,9 +103,9 @@ QString ExecuteProtectedPage::getSidebarIcon()
     return ":/images/execution-control";
 }
 
-int ExecuteProtectedPage::getSelinuxType()
+QString ExecuteProtectedPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 
 void ExecuteProtectedPage::updateTips(int total)
@@ -129,13 +130,20 @@ bool ExecuteProtectedPage::isExistSelectedItem()
 
 void ExecuteProtectedPage::searchTextChanged(const QString &text)
 {
-    m_ui->m_executeTable->searchTextChanged(text);
+    m_ui->m_executeTable->setSearchText(text);
 }
 
 void ExecuteProtectedPage::addExecuteFile(bool checked)
 {
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     RETURN_IF_TRUE(fileName.isEmpty())
+
+    QFileInfo fileInfo(fileName);
+    if (fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz")
+    {
+        POPUP_MESSAGE_DIALOG(tr("Added file types are not supported."));
+        return;
+    }
 
     auto reply = m_dbusProxy->AddTrustedFile(fileName);
     CHECK_ERROR_FOR_DBUS_REPLY(reply)
@@ -170,15 +178,16 @@ void ExecuteProtectedPage::popDeleteNotify(bool checked)
         return;
     }
 
-    auto deleteNotify = new TableDeleteNotify(this);
-
-    int x = window()->x() + width() / 4 + deleteNotify->width() / 4;
-    int y = window()->y() + height() / 4 + deleteNotify->height() / 4;
+    auto deleteNotify = new DeleteNotify(this);
+    deleteNotify->setNotifyMessage(tr("Remove protection"), tr("The removal operation is irreversible."
+                                                               "Do you confirm the removal of the selected record from the whitelist?"));
+    auto x = window()->x() + window()->width() / 2 - deleteNotify->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - deleteNotify->height() / 2;
 
     deleteNotify->move(x, y);
     deleteNotify->show();
 
-    connect(deleteNotify, &TableDeleteNotify::accepted, this, &ExecuteProtectedPage::removeExecuteFiles);
+    connect(deleteNotify, &DeleteNotify::accepted, this, &ExecuteProtectedPage::removeExecuteFiles);
 }
 
 void ExecuteProtectedPage::removeExecuteFiles()
@@ -209,9 +218,9 @@ void ExecuteProtectedPage::updateRefreshIcon()
     temp.fill(Qt::transparent);
     QPainter painter(&temp);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-    painter.translate(imageWidth / 2, imageHeight / 2);        //让图片的中心作为旋转的中心
-    painter.rotate(rat);                                       //顺时针旋转90度
-    painter.translate(-(imageWidth / 2), -(imageHeight / 2));  //使原点复原
+    painter.translate(imageWidth / 2, imageHeight / 2);        // 让图片的中心作为旋转的中心
+    painter.rotate(rat);                                       // 顺时针旋转90度
+    painter.translate(-(imageWidth / 2), -(imageHeight / 2));  // 使原点复原
     painter.drawPixmap(0, 0, pix);
     painter.end();
     m_ui->m_refresh->setIcon(QIcon(temp));

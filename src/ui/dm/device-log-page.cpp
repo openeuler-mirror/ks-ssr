@@ -26,14 +26,15 @@ namespace KS
 {
 namespace DM
 {
-DeviceLogPage::DeviceLogPage(QWidget *parent) : Page(parent),
-                                                m_ui(new Ui::DeviceLogPage),
-                                                m_deviceManagerProxy(nullptr)
+DeviceLogPage::DeviceLogPage(QWidget *parent)
+    : Page(parent),
+      m_ui(new Ui::DeviceLogPage),
+      m_deviceManagerProxy(nullptr)
 {
     m_ui->setupUi(this);
     m_ui->m_title->setText(tr("Device Log"));
 
-    //设置搜索框搜索图标
+    // 设置搜索框搜索图标
     auto searchButton = new QPushButton(m_ui->m_search);
     searchButton->setObjectName("searchButton");
     searchButton->setIcon(QIcon(":/images/search"));
@@ -48,7 +49,7 @@ DeviceLogPage::DeviceLogPage(QWidget *parent) : Page(parent),
                                                   this);
     connect(m_deviceManagerProxy, &DeviceManagerProxy::DeviceChanged, this, &DeviceLogPage::update);
 
-    //获取设备记录数据插入表格
+    // 获取设备记录数据插入表格
     update();
 
     connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceLogPage::searchTextChanged);
@@ -91,9 +92,9 @@ QString DeviceLogPage::getSidebarIcon()
     return ":/images/device-log";
 }
 
-int DeviceLogPage::getSelinuxType()
+QString DeviceLogPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SYSADM;
 }
 
 void DeviceLogPage::searchTextChanged(const QString &text)

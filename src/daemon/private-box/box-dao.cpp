@@ -92,17 +92,18 @@ QList<BoxRecord> BoxDao::getBoxs()
     }
     else
     {
-        std::for_each(result.cbegin(), result.cend(), [&boxRecordList](const SqlRowDataType& row) {
-            BoxRecord boxRecord;
-            boxRecord.boxName = row[0].toString();
-            boxRecord.boxID = row[1].toString();
-            boxRecord.mounted = row[2].toBool();
-            boxRecord.encryptpassword = row[3].toString();
-            boxRecord.encryptPassphrase = row[4].toString();
-            boxRecord.encryptSig = row[5].toString();
-            boxRecord.userUID = row[6].toInt();
-            boxRecordList << boxRecord;
-        });
+        std::for_each(result.cbegin(), result.cend(), [&boxRecordList](const SqlRowDataType &row)
+                      {
+                          BoxRecord boxRecord;
+                          boxRecord.boxName = row[0].toString();
+                          boxRecord.boxID = row[1].toString();
+                          boxRecord.mounted = row[2].toBool();
+                          boxRecord.encryptpassword = row[3].toString();
+                          boxRecord.encryptPassphrase = row[4].toString();
+                          boxRecord.encryptSig = row[5].toString();
+                          boxRecord.userUID = row[6].toInt();
+                          boxRecordList << boxRecord;
+                      });
     }
     return boxRecordList;
 }
@@ -158,5 +159,5 @@ bool BoxDao::execute(const QString &cmd)
 
     return true;
 }
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS

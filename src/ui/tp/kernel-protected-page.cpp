@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "src/ui/tp/kernel-protected-page.h"
 #include <qt5-log-i.h>
@@ -17,8 +17,8 @@
 #include <QFileDialog>
 #include <QPainter>
 #include <QWidgetAction>
+#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_kernel-protected-page.h"
 #include "ssr-i.h"
@@ -27,10 +27,11 @@ namespace KS
 {
 namespace TP
 {
-KernelProtectedPage::KernelProtectedPage(QWidget *parent) : Page(parent),
-                                                            m_ui(new Ui::KernelProtectedPage),
-                                                            m_dbusProxy(nullptr),
-                                                            m_refreshTimer(nullptr)
+KernelProtectedPage::KernelProtectedPage(QWidget *parent)
+    : Page(parent),
+      m_ui(new Ui::KernelProtectedPage),
+      m_dbusProxy(nullptr),
+      m_refreshTimer(nullptr)
 {
     m_ui->setupUi(this);
 
@@ -40,7 +41,9 @@ KernelProtectedPage::KernelProtectedPage(QWidget *parent) : Page(parent),
                                    this);
     // 初始化完成自动刷新
     connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this]
-            { m_ui->m_kernelTable->updateInfo(); });
+            {
+                m_ui->m_kernelTable->updateInfo();
+            });
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2"))
                     .arg(QString::number(m_ui->m_kernelTable->getKernelRecords().size()),
@@ -64,7 +67,7 @@ KernelProtectedPage::KernelProtectedPage(QWidget *parent) : Page(parent),
     m_refreshTimer = new QTimer(this);
     connect(m_refreshTimer, &QTimer::timeout, this, &KernelProtectedPage::updateRefreshIcon);
 
-    connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
+    connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(setSearchText(const QString &)));
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addKernelFile(bool)));
     connect(m_ui->m_recertification, SIGNAL(clicked(bool)), this, SLOT(recertification(bool)));
     connect(m_ui->m_refresh, SIGNAL(clicked(bool)), this, SLOT(updateKernelList(bool)));
@@ -86,7 +89,7 @@ QString KernelProtectedPage::getNavigationUID()
 
 QString KernelProtectedPage::getSidebarUID()
 {
-    return tr("Kernel protecked");
+    return tr("Kernel model protected");
 }
 
 QString KernelProtectedPage::getSidebarIcon()
@@ -94,9 +97,9 @@ QString KernelProtectedPage::getSidebarIcon()
     return ":/images/kernel-module-protected";
 }
 
-int KernelProtectedPage::getSelinuxType()
+QString KernelProtectedPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 
 void KernelProtectedPage::updateTips(int total)
@@ -119,16 +122,21 @@ bool KernelProtectedPage::isExistSelectedItem()
     return false;
 }
 
-void KernelProtectedPage::searchTextChanged(const QString &text)
+void KernelProtectedPage::setSearchText(const QString &text)
 {
-    m_ui->m_kernelTable->searchTextChanged(text);
+    m_ui->m_kernelTable->setSearchText(text);
 }
 
 void KernelProtectedPage::addKernelFile(bool checked)
 {
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath(), "", 0, QFileDialog::DontUseCustomDirectoryIcons);
     RETURN_IF_TRUE(fileName.isEmpty())
-
+    QFileInfo fileInfo(fileName);
+    if (fileInfo.suffix() != "ko" && fileInfo.suffix() != "xz")
+    {
+        POPUP_MESSAGE_DIALOG(tr("Added file types are not supported."));
+        return;
+    }
     auto reply = m_dbusProxy->AddTrustedFile(fileName);
     CHECK_ERROR_FOR_DBUS_REPLY(reply)
 }
@@ -162,14 +170,15 @@ void KernelProtectedPage::popDeleteNotify(bool checked)
         return;
     }
 
-    auto deleteNotify = new TableDeleteNotify(this);
-
-    int x = window()->x() + width() / 4 + deleteNotify->width() / 4;
-    int y = window()->y() + height() / 4 + deleteNotify->height() / 4;
+    auto deleteNotify = new DeleteNotify(this);
+    deleteNotify->setNotifyMessage(tr("Remove protection"), tr("The removal operation is irreversible."
+                                                               "Do you confirm the removal of the selected record from the whitelist?"));
+    auto x = window()->x() + window()->width() / 2 - deleteNotify->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - deleteNotify->height() / 2;
     deleteNotify->move(x, y);
     deleteNotify->show();
 
-    connect(deleteNotify, &TableDeleteNotify::accepted, this, &KernelProtectedPage::removeKernelFiles);
+    connect(deleteNotify, &DeleteNotify::accepted, this, &KernelProtectedPage::removeKernelFiles);
 }
 
 void KernelProtectedPage::removeKernelFiles()
@@ -211,9 +220,9 @@ void KernelProtectedPage::updateRefreshIcon()
     temp.fill(Qt::transparent);
     QPainter painter(&temp);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-    painter.translate(imageWidth / 2, imageHeight / 2);        //让图片的中心作为旋转的中心
-    painter.rotate(rat);                                       //顺时针旋转90度
-    painter.translate(-(imageWidth / 2), -(imageHeight / 2));  //使原点复原
+    painter.translate(imageWidth / 2, imageHeight / 2);        // 让图片的中心作为旋转的中心
+    painter.rotate(rat);                                       // 顺时针旋转90度
+    painter.translate(-(imageWidth / 2), -(imageHeight / 2));  // 使原点复原
     painter.drawPixmap(0, 0, pix);
     painter.end();
     m_ui->m_refresh->setIcon(QIcon(temp));

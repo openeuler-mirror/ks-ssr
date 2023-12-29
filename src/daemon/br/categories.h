@@ -48,17 +48,29 @@ public:
     Categories();
     virtual ~Categories(){};
 
-    static Categories* getInstance() { return instance_; };
+    static Categories* getInstance()
+    {
+        return instance_;
+    };
 
     static void globalInit();
 
-    static void globalDeinit() { delete instance_; };
+    static void globalDeinit()
+    {
+        delete instance_;
+    };
 
     // 获取分类，如果不存在则返回空指针
-    QSharedPointer<Category> getCategory(const QString& name) { return MapHelper::getValue(this->categories_, name); };
+    QSharedPointer<Category> getCategory(const QString& name)
+    {
+        return MapHelper::getValue(this->categories_, name);
+    };
 
     // 获取所有分类
-    CategoryVec getCategories() { return MapHelper::getValues(this->categories_); };
+    CategoryVec getCategories()
+    {
+        return MapHelper::getValues(this->categories_);
+    };
 
 private:
     // 初始化

@@ -1,19 +1,20 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "wrapper.h"
 #include <qt5-log-i.h>
+#include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -63,7 +64,8 @@ namespace KSS
 // 关闭防卸载
 #define KSS_CLOSE_PROHIBIT_UNLOADING_CMD "kss kmod del --path"
 
-Wrapper::Wrapper(QObject *parent) : QObject(parent), m_kssInitThread(nullptr)
+Wrapper::Wrapper(QObject *parent)
+    : QObject(parent), m_kssInitThread(nullptr)
 {
     m_process = new QProcess(parent);
     m_ini = new QSettings(KSS_INI_PATH, QSettings::IniFormat, this);
@@ -106,7 +108,7 @@ void Wrapper::removeTrustedFile(const QString &filePath)
     QJsonParseError jsonError;
     auto trustedFilesJson = getTrustedFiles(SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_KERNEL).toUtf8();
     auto jsonDoc = QJsonDocument::fromJson(trustedFilesJson, &jsonError);
-    
+
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
@@ -298,7 +300,7 @@ void Wrapper::initTrustedResults()
 
 void Wrapper::init()
 {
-    RETURN_IF_TRUE(m_ini->value(KSS_INI_KEY).toInt() != 0)
+    RETURN_IF_TRUE(m_ini->value(KSS_INI_KEY).toInt() != 0);
 
     KLOG_INFO() << "Start kss initialisation.";
     execute(QString("%1 %2").arg(KSS_INIT_CMD, KSS_DEFAULT_USER_PIN));

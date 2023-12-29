@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
@@ -18,8 +18,8 @@
 #include <QFileDialog>
 #include <QWidgetAction>
 #include "config.h"
+#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table-delete-notify.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_file-protection-page.h"
 #include "ssr-i.h"
@@ -28,8 +28,9 @@ namespace KS
 {
 namespace FP
 {
-FileProtectionPage::FileProtectionPage(QWidget *parent) : Page(parent),
-                                                          m_ui(new Ui::FileProtectionPage())
+FileProtectionPage::FileProtectionPage(QWidget *parent)
+    : Page(parent),
+      m_ui(new Ui::FileProtectionPage())
 {
     m_ui->setupUi(this);
 
@@ -51,7 +52,7 @@ FileProtectionPage::FileProtectionPage(QWidget *parent) : Page(parent),
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
     connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
-    connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addProtectedFile(bool)));
+    connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addProtectedFiles(bool)));
     //    connect(m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
     connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(popDeleteNotify(bool)));
     connect(m_ui->m_fileTable, &FileTable::filesUpdate, this, &FileProtectionPage::updateTips);
@@ -77,9 +78,9 @@ QString FileProtectionPage::getSidebarIcon()
     return "";
 }
 
-int FileProtectionPage::getSelinuxType()
+QString FileProtectionPage::getAccountRoleName()
 {
-    return 0;
+    return SSR_ACCOUNT_NAME_SECADM;
 }
 
 void FileProtectionPage::searchTextChanged(const QString &text)
@@ -87,13 +88,13 @@ void FileProtectionPage::searchTextChanged(const QString &text)
     m_ui->m_fileTable->searchTextChanged(text);
 }
 
-void FileProtectionPage::addProtectedFile(bool checked)
+void FileProtectionPage::addProtectedFiles(bool checked)
 {
     RETURN_IF_TRUE(!checkTrustedLoadFinied(m_fileProtectedProxy->initialized()))
-    auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
-    if (!fileName.isEmpty())
+    auto fileNames = QFileDialog::getOpenFileNames(this, tr("Open file"), QDir::homePath());
+    if (!fileNames.isEmpty())
     {
-        auto reply = m_fileProtectedProxy->AddProtectedFile(fileName);
+        auto reply = m_fileProtectedProxy->AddProtectedFiles(fileNames);
         CHECK_ERROR_FOR_DBUS_REPLY(reply);
         return;
     }
@@ -133,15 +134,15 @@ void FileProtectionPage::popDeleteNotify(bool checked)
         return;
     }
 
-    auto unprotectNotify = new TableDeleteNotify(this);
-
-    int x = window()->x() + width() / 4 + unprotectNotify->width() / 4;
-    int y = window()->y() + height() / 4 + unprotectNotify->height() / 4;
-
+    auto unprotectNotify = new DeleteNotify(this);
+    unprotectNotify->setNotifyMessage(tr("Remove protection"), tr("The removal operation is irreversible."
+                                                                  "Do you confirm the removal of the selected record from the whitelist?"));
+    auto x = window()->x() + window()->width() / 2 - unprotectNotify->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - unprotectNotify->height() / 2;
     unprotectNotify->move(x, y);
     unprotectNotify->show();
 
-    connect(unprotectNotify, &TableDeleteNotify::accepted, this, &FileProtectionPage::removeProtectedFiles);
+    connect(unprotectNotify, &DeleteNotify::accepted, this, &FileProtectionPage::removeProtectedFiles);
 }
 
 void FileProtectionPage::removeProtectedFiles()

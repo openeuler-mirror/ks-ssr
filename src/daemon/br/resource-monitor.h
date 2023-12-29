@@ -40,13 +40,13 @@ private:
     bool monitorResource();
 
 private:
-    //home 可用空间 MB
+    // home 可用空间 MB
     unsigned long long m_homeFreeSpace = 0;
-    //home 总空间 MB
+    // home 总空间 MB
     unsigned long long m_homeTotalSpace = 0;
-    //根目录 可用空间 MB
+    // 根目录 可用空间 MB
     unsigned long long m_rootFreeSpace = 0;
-    //根目录 总空间 MB
+    // 根目录 总空间 MB
     unsigned long long m_rootTotalSpace = 0;
 
 signals:

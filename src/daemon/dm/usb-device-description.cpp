@@ -37,7 +37,8 @@ USBDeviceDescription *USBDeviceDescription::instance()
     return pInst.data();
 }
 
-USBDeviceDescription::USBDeviceDescription(QObject *parent) : QObject(parent)
+USBDeviceDescription::USBDeviceDescription(QObject *parent)
+    : QObject(parent)
 {
     m_prevVendorID = QString();
     this->init();
@@ -76,12 +77,12 @@ void USBDeviceDescription::processDescriptionLine(const QString idLine)
 
     if (idLine.startsWith("\t"))
     {
-        //设备名称描述行
+        // 设备名称描述行
         m_descs.insert(QString("%1:%2").arg(m_prevVendorID, id), desc);
     }
     else
     {
-        //厂商名称描述行
+        // 厂商名称描述行
         m_prevVendorID = id;
         m_descs.insert(id, desc);
     }

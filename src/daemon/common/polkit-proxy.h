@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2022 ~ 2023 KylinSec Co., Ltd. 
+ * Copyright (c) 2022 ~ 2023 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
@@ -62,6 +62,17 @@ namespace KS
                                                       true,                                                                                  \
                                                       this->message(),                                                                       \
                                                       std::bind(&className::callback, this, std::placeholders::_1, value1, value2, value3)); \
+    }
+
+#define CHECK_AUTH_WITH_1ARGS_AND_RETVAL(className, retType, funName, callback, action, arg1Type)                            \
+    retType className::funName(arg1Type value1)                                                                              \
+    {                                                                                                                        \
+        this->setDelayedReply(true);                                                                                         \
+        PolkitProxy::getDefault()->checkAuthorization(action,                                                                \
+                                                      true,                                                                  \
+                                                      this->message(),                                                       \
+                                                      std::bind(&className::callback, this, std::placeholders::_1, value1)); \
+        return retType();                                                                                                    \
     }
 
 #define CHECK_AUTH_WITH_3ARGS_AND_RETVAL(className, retType, funName, callback, action, arg1Type, arg2Type, arg3Type)                        \

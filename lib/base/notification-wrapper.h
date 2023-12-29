@@ -1,20 +1,22 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #pragma once
 
 #include <iostream>
+#include <vector>
 #define INIT_LIBNOTIFY_ERROR -1
+#define MAX_NOTIFY_NUMBER 5
 
 struct _NotifyNotification;
 typedef struct _NotifyNotification NotifyNotification;
@@ -38,6 +40,10 @@ public:
     static void globalInit(std::string m_appName);
 
     static void globalDeinit();
+
+    // 禁用弹窗 锁屏状态下不弹窗
+    void setNofityEnable(bool enabled);
+
     // 普通消息
     void info(const char *message);
 
@@ -49,11 +55,14 @@ public:
 
 private:
     void notifySend(const char *msg, const char *icon);
-    std::string m_appName;
+    // 超过5条将开始的一条销毁
+    void checkNotifiesAndDelete();
 
 private:
     static NotificationWrapper *m_instance;
-
-    NotifyNotification *m_notify;
+    // 存储消息列表 至多5条
+    std::vector<NotifyNotification *> m_notifies;
+    bool m_enabled;
+    std::string m_appName;
 };
 }  // namespace Notify

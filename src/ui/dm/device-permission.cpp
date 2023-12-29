@@ -26,15 +26,17 @@ namespace KS
 {
 namespace DM
 {
-DevicePermission::DevicePermission(QWidget *parent) : TitlebarWindow(parent),
-                                                      m_ui(new Ui::DevicePermission)
+DevicePermission::DevicePermission(QWidget *parent)
+    : TitlebarWindow(parent),
+      m_ui(new Ui::DevicePermission)
 {
     m_ui->setupUi(getWindowContentWidget());
     setIcon(QIcon(":/images/logo"));
     setWindowModality(Qt::ApplicationModal);
+    // 页面关闭时销毁
     setAttribute(Qt::WA_DeleteOnClose);
 
-    //给QCombobox设置代理才能设置下拉列表项的高度
+    // 给QCombobox设置代理才能设置下拉列表项的高度
     auto delegate = new QStyledItemDelegate(this);
     m_ui->m_status->setItemDelegate(delegate);
 
@@ -68,7 +70,7 @@ void DevicePermission::setDeviceStatus(const DeviceState &status)
     {
     case DeviceState::DEVICE_STATE_UNAUTHORIED:
     {
-        //由于qt5 .15.2及以上的版本设置QCombobox占位符，无法正常显示，见QTBUG - 90595，因此使用自定义QLineEdit来显示占位符
+        // 由于qt5 .15.2及以上的版本设置QCombobox占位符，无法正常显示，见QTBUG - 90595，因此使用自定义QLineEdit来显示占位符
         auto line = new QLineEdit(m_ui->m_status);
         line->setObjectName("lineEdit");
         line->setPlaceholderText(tr("Please select device status"));
@@ -100,7 +102,7 @@ void DevicePermission::setDevicePermission(const QString type, int permission)
 {
     m_permissions = permission;
 
-    //针对挂载的存储设备，默认有可读权限，并且用户无法取消勾选
+    // 针对挂载的存储设备，默认有可读权限，并且用户无法取消勾选
     if (type == Utils::deviceTypeEnum2Str(DeviceType::DEVICE_TYPE_STORAGE))
     {
         m_permissions |= PermissionType::PERMISSION_TYPE_READ;
@@ -156,7 +158,7 @@ void DevicePermission::confirm()
         emit stateChanged();
     }
 
-    //禁用状态下无法修改权限，只有在启用状态下才能修改权限
+    // 禁用状态下无法修改权限，只有在启用状态下才能修改权限
     if (state == DeviceState::DEVICE_STATE_ENABLE)
     {
         m_permissions = permissions;
@@ -169,18 +171,18 @@ void DevicePermission::confirm()
         emit deviceChanged();
     }
 
-    hide();
+    close();
 }
 
 void DevicePermission::update(int index)
 {
-    //设备未授权状态下不能修改权限和状态
+    // 设备未授权状态下不能修改权限和状态
     m_ui->m_confirm->setDisabled(0 > index);
 
     auto state = (DeviceState)m_ui->m_status->currentData().toInt();
     m_ui->m_groupBox->setDisabled(state != DeviceState::DEVICE_STATE_ENABLE);
 
-    //若选择禁用，还原权限
+    // 若选择禁用，还原权限
     if (state != DeviceState::DEVICE_STATE_ENABLE)
     {
         m_ui->m_read->setChecked(m_permissions & PermissionType::PERMISSION_TYPE_READ);
@@ -206,7 +208,7 @@ bool DevicePermission::eventFilter(QObject *watched, QEvent *event)
         m_ui->m_status->showPopup();
         return true;
     }
-    //由于QCombobox在鼠标双击后会选中输入框的文字 ，因此过滤鼠标双击事件，不进行任何处理，避免选中情况
+    // 由于QCombobox在鼠标双击后会选中输入框的文字 ，因此过滤鼠标双击事件，不进行任何处理，避免选中情况
     else if (event->type() == QEvent::MouseButtonDblClick)
     {
         return true;

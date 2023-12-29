@@ -14,6 +14,7 @@
 
 #include "execute-protected-table.h"
 #include <qt5-log-i.h>
+#include <QAction>
 #include <QApplication>
 #include <QCheckBox>
 #include <QFileInfo>
@@ -28,6 +29,7 @@
 #include <QSpinBox>
 #include <QStandardItemModel>
 #include <QToolTip>
+#include "src/ui/common/table/header-button-delegate.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/delegate.h"
 #include "ssr-i.h"
@@ -56,25 +58,43 @@ enum ExecuteField
 #define KSS_JSON_KEY_DATA_STATUS SSR_KSS_JK_DATA_STATUS
 #define KSS_JSON_KEY_DATA_HASH SSR_KSS_JK_DATA_HASH
 
-ExecuteProtectedFilterModel::ExecuteProtectedFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+ExecuteProtectedFilterModel::ExecuteProtectedFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
+}
+
+void ExecuteProtectedFilterModel::setSearchText(const QString &text)
+{
+    m_searchText = text;
 }
 
 bool ExecuteProtectedFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    QString textComb;
+    // 适用于有多个表头筛选列的情况下，正则由格式为 (表头1正则).*(表头n正则)，若没有).*(，则代表有一列是没有选中的筛选项的，表格不需要显示数据
+    RETURN_VAL_IF_TRUE(filterRegExp().isEmpty() || !filterRegExp().pattern().contains(").*("), false)
+    QString sourceString;
     for (auto i = 0; i < EXECUTE_TABLE_COL; ++i)
     {
         auto index = sourceModel()->index(sourceRow, i, sourceParent);
         auto text = sourceModel()->data(index).toString();
-        RETURN_VAL_IF_TRUE(text.contains(filterRegExp()), true);
+        sourceString += text;
+    }
+
+    if (!m_searchText.isEmpty())
+    {
+        RETURN_VAL_IF_TRUE(sourceString.contains(m_searchText) && sourceString.contains(filterRegExp()), true);
+    }
+    else
+    {
+        RETURN_VAL_IF_TRUE(sourceString.contains(filterRegExp()), true);
     }
 
     return false;
 }
 
-ExecuteProtectedModel::ExecuteProtectedModel(QObject *parent) : QAbstractTableModel(parent),
-                                                                m_tpDBusProxy(nullptr)
+ExecuteProtectedModel::ExecuteProtectedModel(QObject *parent)
+    : QAbstractTableModel(parent),
+      m_tpDBusProxy(nullptr)
 {
     m_tpDBusProxy = new KSSDbusProxy(SSR_DBUS_NAME,
                                      SSR_KSS_INIT_DBUS_OBJECT_PATH,
@@ -185,9 +205,9 @@ QVariant ExecuteProtectedModel::headerData(int section, Qt::Orientation orientat
         case ExecuteField::EXECUTE_FIELD_FILE_PATH:
             return tr("File path");
         case ExecuteField::EXECUTE_FIELD_FILE_TYPE:
-            return tr("Type");
+            return "";
         case ExecuteField::EXECUTE_FIELD_STATUS:
-            return tr("Status");
+            return "";
         default:
             break;
         }
@@ -294,8 +314,53 @@ void ExecuteProtectedModel::checkSelectStatus()
     emit stateChanged(state);
 }
 
-ExecuteProtectedTable::ExecuteProtectedTable(QWidget *parent) : QTableView(parent),
-                                                                m_filterProxy(nullptr)
+ExecuteProtectedTable::ExecuteProtectedTable(QWidget *parent)
+    : QTableView(parent),
+      m_filterProxy(nullptr)
+{
+    initTable();
+    initTableHeaderButton();
+}
+
+void ExecuteProtectedTable::setSearchText(const QString &text)
+{
+    m_searchText = text;
+    m_filterProxy->setSearchText(m_searchText);
+    filterFixedString();
+}
+
+void ExecuteProtectedTable::updateInfo()
+{
+    m_model->updateRecord();
+}
+
+QList<TrustedRecord> ExecuteProtectedTable::getExecuteRecords()
+{
+    return m_model->getExecuteRecords();
+}
+
+int ExecuteProtectedTable::getExecutetamperedNums()
+{
+    int executetamperedNums = 0;
+    for (auto executeRecord : m_model->getExecuteRecords())
+    {
+        if (executeRecord.status != tr("Certified"))
+        {
+            executetamperedNums++;
+        }
+    }
+    return executetamperedNums;
+}
+
+void ExecuteProtectedTable::showDetails(const QModelIndex &index)
+{
+    RETURN_IF_TRUE(index.column() != ExecuteField::EXECUTE_FIELD_FILE_PATH)
+
+    auto module = selectionModel()->model()->data(index);
+    QToolTip::showText(QCursor::pos(), QString(tr("%1")).arg(module.toString()), this);
+}
+
+void KS::TP::ExecuteProtectedTable::initTable()
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -338,42 +403,88 @@ ExecuteProtectedTable::ExecuteProtectedTable(QWidget *parent) : QTableView(paren
     connect(this, &ExecuteProtectedTable::clicked, this, &ExecuteProtectedTable::showDetails);
 }
 
-void ExecuteProtectedTable::searchTextChanged(const QString &text)
+void ExecuteProtectedTable::initTableHeaderButton()
 {
-    KLOG_DEBUG() << "The search text is change to " << text;
+    // 文件类型筛选
+    m_fileTypeButton = new HeaderButtonDelegate(this);
+    m_fileTypeButton->setButtonText(tr("Type"));
 
-    m_filterProxy->setFilterFixedString(text);
+    auto executeFiles = new QAction(tr("Executable file"), m_fileTypeButton);
+    auto executeScripts = new QAction(tr("Executable script"), m_fileTypeButton);
+    auto dynamicLibrary = new QAction(tr("Dynamic library"), m_fileTypeButton);
+    m_fileTypeKeys << tr("Executable file") << tr("Executable script") << tr("Dynamic library");
+    m_filterMap.insert("fileTypeButton", m_fileTypeKeys);
+    m_fileTypeButton->addMenuActions(QList<QAction *>() << executeFiles << executeScripts << dynamicLibrary);
+    connect(m_fileTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
+            {
+                for (auto action : m_fileTypeButton->getMenuActions())
+                {
+                    if (action->isChecked())
+                    {
+                        m_fileTypeKeys << action->text();
+                    }
+                    else
+                    {
+                        m_fileTypeKeys.removeAll(action->text());
+                    }
+                    // 去重
+                    m_fileTypeKeys = QSet<QString>::fromList(m_fileTypeKeys).toList();
+
+                    m_filterMap.insert("fileTypeButton", m_fileTypeKeys);
+                }
+                filterFixedString();
+            });
+    // 状态筛选
+    m_statusButton = new HeaderButtonDelegate(this);
+    m_statusButton->setButtonText(tr("Status"));
+
+    auto certified = new QAction(tr("Certified"), m_statusButton);
+    auto beingTamperedWith = new QAction(tr("Being tampered with"), m_statusButton);
+    m_statusKeys << tr("Certified") << tr("Being tampered with");
+    m_filterMap.insert("statusButton", m_statusKeys);
+    m_statusButton->addMenuActions(QList<QAction *>() << certified << beingTamperedWith);
+    connect(m_statusButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
+            {
+                for (auto action : m_statusButton->getMenuActions())
+                {
+                    if (action->isChecked())
+                    {
+                        m_statusKeys << action->text();
+                    }
+                    else
+                    {
+                        m_statusKeys.removeAll(action->text());
+                    }
+                    // 去重
+                    m_statusKeys = QSet<QString>::fromList(m_statusKeys).toList();
+                    m_filterMap.insert("statusButton", m_statusKeys);
+                }
+                filterFixedString();
+            });
+    QMap<int, HeaderButtonDelegate *> headerButtons;
+    headerButtons.insert(EXECUTE_FIELD_FILE_TYPE, m_fileTypeButton);
+    headerButtons.insert(EXECUTE_FIELD_STATUS, m_statusButton);
+    m_headerViewProxy->setHeaderButtons(headerButtons);
+    filterFixedString();
 }
 
-void ExecuteProtectedTable::updateInfo()
+void KS::TP::ExecuteProtectedTable::filterFixedString()
 {
-    m_model->updateRecord();
-}
-
-QList<TrustedRecord> ExecuteProtectedTable::getExecuteRecords()
-{
-    return m_model->getExecuteRecords();
-}
-
-int ExecuteProtectedTable::getExecutetamperedNums()
-{
-    int executetamperedNums = 0;
-    for (auto executeRecord : m_model->getExecuteRecords())
+    QStringList patternList = {};
+    for (auto value : m_filterMap.values())
     {
-        if (executeRecord.status != tr("Certified"))
+        CONTINUE_IF_TRUE(value.isEmpty());
+        QStringList keys;
+        for (auto key : value)
         {
-            executetamperedNums++;
+            CONTINUE_IF_TRUE(key.isEmpty());
+            keys << key;
         }
+        patternList << keys.join("|");
     }
-    return executetamperedNums;
-}
-
-void ExecuteProtectedTable::showDetails(const QModelIndex &index)
-{
-    RETURN_IF_TRUE(index.column() != ExecuteField::EXECUTE_FIELD_FILE_PATH)
-
-    auto module = selectionModel()->model()->data(index);
-    QToolTip::showText(QCursor::pos(), QString(tr("%1")).arg(module.toString()), this);
+    QString pattern = "(" + patternList.join(").*(") + ")";
+    KLOG_DEBUG() << "The search text is change to " << pattern;
+    m_filterProxy->setFilterRegExp(pattern);
 }
 
 void ExecuteProtectedTable::checkedAllItem(Qt::CheckState checkState)

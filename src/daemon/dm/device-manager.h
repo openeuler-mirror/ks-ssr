@@ -36,26 +36,35 @@ public:
     static void globalInit(QObject *parent);
     static void globalDeinit();
 
-    static DeviceManager *instance() { return m_instance; };
+    static DeviceManager *instance()
+    {
+        return m_instance;
+    };
 
 public:
     // 获取所有设备信息
     DeviceList getDevices();
     DeviceList getDevicesByInterface(int interfaceType);
     // 获取特定设备信息
-    QSharedPointer<Device> getDevice(const QString &syspath) { return m_devices.value(syspath); };
+    QSharedPointer<Device> getDevice(const QString &syspath)
+    {
+        return m_devices.value(syspath);
+    };
     // FIXME: 需要处理ID重复的情况
     QSharedPointer<Device> getDeviceByID(const QString &id);
     // 获取设备日志对象
-    QSharedPointer<DeviceLog> getDeviceLog() { return m_deviceLog; };
+    QSharedPointer<DeviceLog> getDeviceLog()
+    {
+        return m_deviceLog;
+    };
 
-    //检查设备挂载权限
+    // 检查设备挂载权限
     void checkDeviceMount(const QSharedPointer<Device> device);
 
-    //重放接口设备事件
+    // 重放接口设备事件
     void triggerInterfaceDevices(int interfaceType);
 
-    //是否支持HDMI关闭
+    // 是否支持HDMI关闭
     bool isSupportHDMIDisable();
 
 private:
@@ -84,6 +93,7 @@ private:
     void remountDevice(const QSharedPointer<Device> device,
                        const DeviceMount *mount);
     QString getMountSyspath(const DeviceMount *mount);
+    QString deviceTypeEnum2Str(int type) const;
 
 private:
     static DeviceManager *m_instance;

@@ -21,8 +21,9 @@ namespace KS
 namespace BRDaemon
 {
 Reinforcement::Reinforcement(const QString &plugin_id,
-                             const Protocol::Reinforcement &rs) : plugin_id_(plugin_id),
-                                                                  config_(rs)
+                             const Protocol::Reinforcement &rs)
+    : plugin_id_(plugin_id),
+      config_(rs)
 {
     this->reload();
 }

@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
@@ -22,8 +22,9 @@ namespace KS
 {
 namespace PrivateBox
 {
-BoxCreation::BoxCreation(QWidget *parent) : TitlebarWindow(parent),
-                                            m_ui(new Ui::BoxCreation())
+BoxCreation::BoxCreation(QWidget *parent)
+    : TitlebarWindow(parent),
+      m_ui(new Ui::BoxCreation())
 {
     m_ui->setupUi(getWindowContentWidget());
     // 页面关闭时销毁
@@ -41,9 +42,9 @@ BoxCreation::BoxCreation(QWidget *parent) : TitlebarWindow(parent),
     m_ui->m_confirmPassword->setValidator(validator);
 
     // 限制输入长度
-    m_ui->m_name->setMaxLength(SSR_BOX_NAME_MAX_LENGTH);
-    m_ui->m_password->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
-    m_ui->m_confirmPassword->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_name->setMaxLength(SSR_USER_NAME_MAX_LENGTH);
+    m_ui->m_password->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
+    m_ui->m_confirmPassword->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
 
     m_ui->m_password->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
@@ -90,5 +91,5 @@ void BoxCreation::onOkClicked()
     m_ui->m_password->setText("");
     m_ui->m_confirmPassword->setText("");
 };
-}  // namespace Box
+}  // namespace PrivateBox
 }  // namespace KS
