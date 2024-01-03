@@ -103,7 +103,7 @@ int USBDevice::parseDeviceType()
     auto type = m_fixedTypes.value(m_idVendor + ":" + m_idProduct,
                                    this->parseDeviceInterfaceClassType());
 
-    RETURN_VAL_IF_TRUE(type != DEVICE_TYPE_UNKNOWN, type)
+    RETURN_VAL_IF_TRUE(type != DEVICE_TYPE_OTHER, type)
 
     return this->deviceClass2DeviceType();
 }
@@ -114,7 +114,7 @@ int USBDevice::deviceClass2DeviceType()
 
     RETURN_VAL_IF_TRUE(bDeviceClass == USB_DEVICE_CLASS_HUB, DEVICE_TYPE_HUB)
 
-    return DEVICE_TYPE_UNKNOWN;
+    return DEVICE_TYPE_OTHER;
 }
 
 int USBDevice::parseDeviceInterfaceClassType()
@@ -123,11 +123,11 @@ int USBDevice::parseDeviceInterfaceClassType()
     auto syspath = this->getSyspath();
     auto sysname = this->getSDDevcie()->getSysname();
 
-    RETURN_VAL_IF_TRUE(syspath.isNull() || sysname.isNull(), DEVICE_TYPE_UNKNOWN)
+    RETURN_VAL_IF_TRUE(syspath.isNull() || sysname.isNull(), DEVICE_TYPE_OTHER)
 
     auto childDeviceSyspath = QString("%1/%2:1.0").arg(syspath, sysname);
 
-    RETURN_VAL_IF_FALSE(QFile::exists(childDeviceSyspath), DEVICE_TYPE_UNKNOWN)
+    RETURN_VAL_IF_FALSE(QFile::exists(childDeviceSyspath), DEVICE_TYPE_OTHER)
 
     SDDevice childDevice(childDeviceSyspath);
 
@@ -140,7 +140,7 @@ int USBDevice::parseDeviceInterfaceClassType()
 
 int USBDevice::interfaceProtocol2DevcieType(const InterfaceClass &interface)
 {
-    int type = DEVICE_TYPE_UNKNOWN;
+    int type = DEVICE_TYPE_OTHER;
 
     switch (interface.bInterfaceClass)
     {
@@ -259,7 +259,7 @@ void USBDevice::update()
 {
     auto type = this->parseDeviceType();
 
-    if (type != DEVICE_TYPE_UNKNOWN)
+    if (type != DEVICE_TYPE_OTHER)
     {
         this->setType(type);
     }
