@@ -141,7 +141,7 @@ extern "C"
 
     enum DeviceType
     {
-        DEVICE_TYPE_UNKNOWN = 0,
+        DEVICE_TYPE_OTHER = 0,
         DEVICE_TYPE_STORAGE,
         DEVICE_TYPE_CD,
         DEVICE_TYPE_MOUSE,

@@ -378,8 +378,8 @@ QString DeviceManager::deviceTypeEnum2Str(int type) const
         return "Communications";
     case DEVICE_TYPE_BLUETOOTH:
         return "Bluetooth";
-    case DEVICE_TYPE_UNKNOWN:
-        return "Unknown";
+    case DEVICE_TYPE_OTHER:
+        return "Other";
     default:
         break;
     }
