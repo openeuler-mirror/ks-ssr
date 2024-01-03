@@ -24,7 +24,7 @@ namespace DM
 {
 Device::Device(const QString& syspath, QObject* parent)
     : QObject(parent),
-      m_type(DeviceType::DEVICE_TYPE_UNKNOWN),
+      m_type(DeviceType::DEVICE_TYPE_OTHER),
       m_interfaceType(InterfaceType::INTERFACE_TYPE_UNKNOWN),
       m_state(DeviceState::DEVICE_STATE_UNAUTHORIED)
 {

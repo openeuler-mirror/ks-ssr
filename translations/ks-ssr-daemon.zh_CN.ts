@@ -1919,6 +1919,10 @@
     </message>
     <message>
         <location filename="../src/ui/dm/utils.cpp" line="49"/>
+        <source>OTHER</source>
+        <translation>其他</translation>
+    </message>
+    <message>
         <location filename="../src/ui/dm/utils.cpp" line="73"/>
         <source>Unknown</source>
         <translation>未知</translation>
@@ -2407,82 +2411,82 @@
 <context>
     <name>KS::Log::LogTable</name>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="403"/>
+        <location filename="../src/ui/log/table.cpp" line="404"/>
         <source>Log type</source>
         <translation>日志类型</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="404"/>
+        <location filename="../src/ui/log/table.cpp" line="405"/>
         <source>Device log</source>
         <translation>设备日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="405"/>
+        <location filename="../src/ui/log/table.cpp" line="406"/>
         <source>Tool box log</source>
         <translation>工具箱日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="406"/>
+        <location filename="../src/ui/log/table.cpp" line="407"/>
         <source>Baseline reinforcement log</source>
         <translation>基线加固日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="407"/>
+        <location filename="../src/ui/log/table.cpp" line="408"/>
         <source>Trusted protection log</source>
         <translation>可信保护日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="408"/>
+        <location filename="../src/ui/log/table.cpp" line="409"/>
         <source>Files protection log</source>
         <translation>文件保护日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="409"/>
+        <location filename="../src/ui/log/table.cpp" line="410"/>
         <source>Private box log</source>
         <translation>保险箱日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="410"/>
+        <location filename="../src/ui/log/table.cpp" line="411"/>
         <source>Account log</source>
         <translation>账户日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="429"/>
+        <location filename="../src/ui/log/table.cpp" line="430"/>
         <source>User name</source>
         <translation>用户</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="430"/>
+        <location filename="../src/ui/log/table.cpp" line="431"/>
         <source>Sysadm</source>
         <translation>sysadm</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="431"/>
+        <location filename="../src/ui/log/table.cpp" line="432"/>
         <source>Secadm</source>
         <translation>secadm</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="432"/>
+        <location filename="../src/ui/log/table.cpp" line="433"/>
         <source>Audadm</source>
         <translation>audadm</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="451"/>
+        <location filename="../src/ui/log/table.cpp" line="452"/>
         <source>Result</source>
         <translation>结果</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="452"/>
-        <location filename="../src/ui/log/table.cpp" line="463"/>
-        <location filename="../src/ui/log/table.cpp" line="471"/>
-        <location filename="../src/ui/log/table.cpp" line="477"/>
+        <location filename="../src/ui/log/table.cpp" line="453"/>
+        <location filename="../src/ui/log/table.cpp" line="464"/>
+        <location filename="../src/ui/log/table.cpp" line="472"/>
+        <location filename="../src/ui/log/table.cpp" line="478"/>
         <source>Success</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="453"/>
-        <location filename="../src/ui/log/table.cpp" line="463"/>
-        <location filename="../src/ui/log/table.cpp" line="471"/>
+        <location filename="../src/ui/log/table.cpp" line="454"/>
+        <location filename="../src/ui/log/table.cpp" line="464"/>
+        <location filename="../src/ui/log/table.cpp" line="472"/>
         <source>Failed</source>
         <translation>失败</translation>
     </message>
@@ -2589,7 +2593,7 @@
 <context>
     <name>KS::PolkitProxy</name>
     <message>
-        <location filename="../src/daemon/common/polkit-proxy.cpp" line="217"/>
+        <location filename="../src/daemon/common/polkit-proxy.cpp" line="218"/>
         <source>Authorization failed.</source>
         <translation>认证失败。</translation>
     </message>
@@ -3011,48 +3015,48 @@
 <context>
     <name>KS::TP::ExecuteProtectedTable</name>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="347"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="441"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="443"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="348"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="442"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="444"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="360"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="361"/>
         <source>%1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="410"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="411"/>
         <source>Type</source>
         <translation>文件类型</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="412"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="415"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="413"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="416"/>
         <source>Executable file</source>
         <translation>可执行程序</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="413"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="415"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="414"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="416"/>
         <source>Executable script</source>
         <translation>可执行脚本</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="414"/>
         <location filename="../src/ui/tp/execute-protected-table.cpp" line="415"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="416"/>
         <source>Dynamic library</source>
         <translation>动态库</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="439"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="440"/>
         <source>Status</source>
         <translation>当前状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="442"/>
         <location filename="../src/ui/tp/execute-protected-table.cpp" line="443"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="444"/>
         <source>Being tampered with</source>
         <translation>被篡改</translation>
     </message>
@@ -3158,26 +3162,26 @@
 <context>
     <name>KS::TP::KernelProtectedTable</name>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="357"/>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="414"/>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="416"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="358"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="415"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="417"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="412"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="413"/>
         <source>Status</source>
         <translation>当前状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="415"/>
         <location filename="../src/ui/tp/kernel-protected-table.cpp" line="416"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="417"/>
         <source>Being tampered with</source>
         <translation>被篡改</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="459"/>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="476"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="460"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="477"/>
         <source>%1</source>
         <translation></translation>
     </message>
@@ -3286,32 +3290,32 @@
         <translation>权限类型</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="177"/>
+        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="178"/>
         <source>sysadm(system admin)</source>
         <translation>sysadm（系统管理员）</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="178"/>
+        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="179"/>
         <source>Use, Network, Soft, Password, Device, Time, Drive, Resource, Log manager</source>
         <translation>用户管理、网络管理、软件管理、密码管理、设备管理、时间管理、驱动管理、资源管理、日志管理</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="180"/>
+        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="181"/>
         <source>secadm(secure admin)</source>
         <translation>secadm（安全管理员）</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="181"/>
+        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="182"/>
         <source>User role, Access policy, CAP authorzation modification, Role attribute, files secure manager</source>
         <translation>用户角色管理、访问策略管理、CAP权限修改、角色属性管理、文件安全属性管理</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="183"/>
+        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="184"/>
         <source>audadm(audit admin)</source>
         <translation>audadm（审计管理员）</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="184"/>
+        <location filename="../src/ui/tool-box/access-control/access-control-table.cpp" line="185"/>
         <source>Secure audit, Audit policy manager, Audit log manager</source>
         <translation>安全审计、审计策略管理、审计日志管理</translation>
     </message>
@@ -3374,8 +3378,8 @@
 <context>
     <name>KS::ToolBox::FileShredTable</name>
     <message>
-        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="386"/>
-        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="397"/>
+        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="388"/>
+        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="399"/>
         <source>Please selecte files.</source>
         <translation>请选择文件。</translation>
     </message>
@@ -3478,17 +3482,17 @@
 <context>
     <name>KS::ToolBox::PrivacyCleanupTable</name>
     <message>
-        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="366"/>
+        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="368"/>
         <source>Please select items.</source>
         <translation>请选择要清除的用户。</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="436"/>
+        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="438"/>
         <source>Manager user</source>
         <translation>管理员用户</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="436"/>
+        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="438"/>
         <source>Normal user</source>
         <translation>普通用户</translation>
     </message>
