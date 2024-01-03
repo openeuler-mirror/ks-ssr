@@ -5,6 +5,11 @@ variables:
                    name=LICENSE
                    gpgcheck=0
                    baseurl=http://192.168.120.71/kojifiles/repos/KY3.5-1-ks-license-2.6-build/latest/x86_64/
+
+                   [KIRAN-UI-2.6]
+                   name=KIRAN-UI-2.6
+                   gpgcheck=0
+                   baseurl=https://192.168.120.71/kojifiles/repos/KY3.5-1-KiranUI-2.6-build/latest/x86_64/
   RPM_BUILD_REQUIRES: 'cmake gcc gcc-c++ make qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel cryptopp-devel kiran-log-qt5-devel systemd-devel ks-license-devel qrencode-devel xerces-c-devel audit-devel fmt-devel openssl-devel python3-devel xsd intltool sqlcipher sqlcipher-devel libnotify libnotify-devel ipset ipset-devel ipset-libs kiran-authentication-service-devel'
 include:
   - project: 'os/gitlab-ci'

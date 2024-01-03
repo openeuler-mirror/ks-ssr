@@ -47,7 +47,6 @@ pkg_search_module(LIBAUDIT REQUIRED audit)
 pkg_search_module(SQLCIPHER REQUIRED sqlcipher)
 pkg_search_module(LIBSELINUX REQUIRED libselinux)
 pkg_search_module(LIBNOTIFY REQUIRED libnotify)
-pkg_search_module(LIBIPSET REQUIRED libipset)
 
 string(REGEX MATCHALL "[0-9]+" LIBNOTIFY_VERSION_LIST ${LIBNOTIFY_VERSION})
 list(GET LIBNOTIFY_VERSION_LIST 0 LIBNOTIFY_MAJOR)

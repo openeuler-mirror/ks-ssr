@@ -15,16 +15,16 @@
 #pragma once
 
 #include <QObject>
+#include <QProcess>
 #include <QSocketNotifier>
 
 template <typename T> class QList;
 class QTimer;
-struct ipset;
-struct ipset_session;
+class QProcess;
 
 namespace KS
 {
-namespace Log
+namespace ToolBox
 {
 struct AuditLogRecord;
 
@@ -41,20 +41,19 @@ private:
     bool initAuditReceiver();
     bool initIPSetMonitor();
     QList<AuditLogEvent> parserAudit(const char* audit_log);
-    static int ipsetGetDataCB(struct ipset_session* session, void* p, const char* fmt, ...) __attribute__((format(printf, 3, 4)));
-    static int ipsetCustomErrorCB(struct ipset* ipset, void* p, int status, const char* fmt, ...) __attribute__((format(printf, 4, 5)));
-    static int ipsetStandardErrorCB(ipset* ipset, void* p);
 
 private slots:
     void processAuditData(int socket);
     void processIPSetData();
+    void getIPSetData(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     QSocketNotifier* m_auditNotifier;
     // ipset 无法注册回调来处理数据，所以用定时器定时轮循处理
     QTimer* m_nmapDetectTimer;
-    QString* m_ipsetData;
-    ipset* m_ipset;
+    QString m_ipsetData;
+    QProcess* m_getIPSetDataProcess;
+    QProcess* m_clearIPSetDataProcess;
 };
 
 };  // namespace Log
