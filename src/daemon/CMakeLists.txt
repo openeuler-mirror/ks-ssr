@@ -124,7 +124,6 @@ target_link_libraries(
           ${LIBAUDIT_LIBRARIES}
           ${LIBSYSTEMD_LIBRARIES}
           ${LIBSELINUX_LIBRARIES}
-          ${LIBIPSET_LIBRARIES}
           auparse)
 
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
