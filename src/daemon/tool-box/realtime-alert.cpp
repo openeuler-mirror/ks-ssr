@@ -12,10 +12,9 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "src/daemon/log/realtime-alert.h"
+#include "src/daemon/tool-box/realtime-alert.h"
 #include <auparse.h>
 #include <libaudit.h>
-#include <libipset/ipset.h>
 #include <linux/un.h>
 #include <qt5-log-i.h>
 #include <unistd.h>
@@ -29,7 +28,7 @@
 #include "include/ssr-marcos.h"
 #include "realtime-alert.h"
 #include "src/daemon/account/manager.h"
-#include "src/daemon/log/manager.h"
+#include "src/daemon/tool-box/manager.h"
 
 #define SOCKET_PATH "/var/run/audispd_events"
 #define KS_SSR_AUDIT_KEYWORD "(ks-ssr)"
@@ -41,6 +40,8 @@ add ks-ssr-ip-set 127.0.0.1
 #define IPSET_NMAP_IP_KEYWORD "add ks-ssr-ip-set "
 #define IPSET_CMD "ipset"
 #define IPSET_CREATE_SSR_SET "create ks-ssr-ip-set hash:ip"
+#define IPSET_GET_DATA "list ks-ssr-ip-set -o save"
+#define IPSET_CLEAR_DATA "flush ks-ssr-ip-set"
 
 #define IPTABLES_CMD "iptables"
 #define IPTABLES_CREATE_SSR_RULE "-A INPUT -p tcp --syn ! --dport 22 -j SET --add-set ks-ssr-ip-set src"
@@ -49,11 +50,9 @@ add ks-ssr-ip-set 127.0.0.1
 #pragma message("审计告警功能需要将 /etc/audit/plugins.d/af_unix.conf 中 active 字段设置为 yes 并重启 auditd")
 #pragma message("软件被移除时执行 iptables -D INPUT -p tcp --syn ! --dport 22 -j SET --add-set ks-ssr-ip-set src && ipset destroy ks-ssr-ip-set")
 #pragma message("此功能应该要有开关，方便用户开启或关闭")
-#pragma message("移至安全工具箱模块中，方便统一管理")
-#pragma message("ipset-devel 是 GPL 协议， 改成调用 ipset 命令行工具实现")
 namespace KS
 {
-namespace Log
+namespace ToolBox
 {
 struct AuditLogRecord
 {
@@ -64,8 +63,8 @@ struct AuditLogRecord
 
 RealTimeAlert::RealTimeAlert()
     : m_nmapDetectTimer(new QTimer(this)),
-      m_ipsetData(new QString()),
-      m_ipset(nullptr)
+      m_getIPSetDataProcess(new QProcess()),
+      m_clearIPSetDataProcess(new QProcess())
 {
 #pragma message("审计规则应该由接口配置，而不是写死在配置文件中")
     if (!initAuditReceiver())
@@ -81,7 +80,6 @@ RealTimeAlert::RealTimeAlert()
 
 RealTimeAlert::~RealTimeAlert()
 {
-    ipset_fini(m_ipset);
 }
 
 bool RealTimeAlert::initAuditReceiver()
@@ -133,12 +131,12 @@ bool RealTimeAlert::initIPSetMonitor()
         return false;
     }
     // 流程参考 ipset 源码
-    ipset_load_types();
-    m_ipset = ipset_init();
-    // 设置输出，默认将数据输出至终端
-    ipset_custom_printf(m_ipset, ipsetCustomErrorCB, ipsetStandardErrorCB, RealTimeAlert::ipsetGetDataCB, reinterpret_cast<void *>(m_ipsetData));
-    // 数据格式
-    ipset_session_output(::ipset_session(m_ipset), IPSET_LIST_SAVE);
+    m_getIPSetDataProcess->setProgram(IPSET_CMD);
+    m_getIPSetDataProcess->setArguments(QString(IPSET_GET_DATA).split(' '));
+    QObject::connect(m_getIPSetDataProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
+                     this, SLOT(getIPSetData(int, QProcess::ExitStatus)));
+    m_clearIPSetDataProcess->setProgram(IPSET_CMD);
+    m_clearIPSetDataProcess->setArguments(QString(IPSET_CLEAR_DATA).split(' '));
     m_nmapDetectTimer->setInterval(5 * 1000);
     m_nmapDetectTimer->start();
     QObject::connect(m_nmapDetectTimer, &QTimer::timeout, this, &RealTimeAlert::processIPSetData);
@@ -195,57 +193,23 @@ QList<RealTimeAlert::AuditLogEvent> RealTimeAlert::parserAudit(const char *audit
     return logEventList;
 }
 
-int RealTimeAlert::ipsetCustomErrorCB(ipset *ipset, void *p, int status, const char *fmt, ...)
+void RealTimeAlert::getIPSetData(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    RETURN_VAL_IF_TRUE((!status || !fmt), -1);
-    va_list args;
-    va_start(args, fmt);
-    char *msg = va_arg(args, char *);
-    KLOG_ERROR() << "Failed to Read IPSet data, error msg: " << msg;
-    va_end(args);
-    return -1;
-}
-
-int RealTimeAlert::ipsetStandardErrorCB(ipset *ipset, void *p)
-{
-    struct ipset_session *session = ipset_session(ipset);
-    enum ipset_err_type err_type = ipset_session_report_type(session);
-
-    if (err_type == IPSET_WARNING || err_type == IPSET_NOTICE)
+    if (exitStatus != QProcess::NormalExit || exitCode != 0)
     {
-        KLOG_WARNING() << "IPSet " << (err_type == IPSET_WARNING ? "Warning: " : "Notice: ") << ipset_session_report_msg(session);
+        KLOG_WARNING() << "Failed to get IPSet data, exitCode: " << exitCode
+                       << ", error msg: " << this->m_getIPSetDataProcess->readAllStandardError();
     }
-    if (err_type == IPSET_ERROR)
-    {
-        return RealTimeAlert::ipsetCustomErrorCB(ipset, p, IPSET_SESSION_PROBLEM, "%s", ipset_session_report_msg(session));
-    }
-
-    ipset_session_report_reset(session);
-    return -1;
-}
-
-int RealTimeAlert::ipsetGetDataCB(struct ipset_session *session, void *p, const char *fmt, ...)
-{
-    va_list args;
-    QString *data = reinterpret_cast<QString *>(p);
-    va_start(args, fmt);
-    char *curData = va_arg(args, char *);
-    int rc_len = strlen(curData);
-    va_end(args);
-    data->append(curData);
-    return rc_len;
+    m_ipsetData = QString::fromLocal8Bit(this->m_getIPSetDataProcess->readAllStandardOutput());
 }
 
 void RealTimeAlert::processIPSetData()
 {
-    // libipset 提供的接口的参数中的 char* 中都没有 const 修饰，为了避免一些 UB 行为，所以用数组保存字符串参数
-    char showRes[] = "list ks-ssr-ip-set";
-    ipset_parse_line(m_ipset, showRes);
-    //
-    QString localData = std::move(*m_ipsetData);
-    RETURN_IF_TRUE(localData.isNull() || localData.isEmpty());
+    m_getIPSetDataProcess->start();
+    m_getIPSetDataProcess->waitForFinished();
+    RETURN_IF_TRUE(m_ipsetData.isNull() || m_ipsetData.isEmpty());
     QStringList nmapAttackers;
-    for (const auto &line : localData.split('\n'))
+    for (const auto &line : m_ipsetData.split('\n'))
     {
         CONTINUE_IF_TRUE(!line.startsWith(IPSET_NMAP_IP_KEYWORD));
         auto nmapAttackerIp = line.mid(sizeof(IPSET_NMAP_IP_KEYWORD) - 1);
@@ -254,9 +218,10 @@ void RealTimeAlert::processIPSetData()
     }
     RETURN_IF_TRUE(nmapAttackers.isEmpty());
     KLOG_DEBUG() << "Detect nmap attack, attacker ips: " << nmapAttackers;
-    Manager::m_logManager->HazardDetected(ATTACK_DETECT, nmapAttackers.join(','));
-    char flushRes[] = "flush ks-ssr-ip-set";
-    ipset_parse_line(m_ipset, flushRes);
+    Manager::hazardDetected(ATTACK_DETECT, nmapAttackers.join(','));
+    SSR_LOG(Account::Manager::AccountRole::unknown_account, Log::Manager::LogType::TOOL_BOX, QString("Detected nmap attack! attacker ip:$1").arg(nmapAttackers.join(',')), true);
+    m_ipsetData.clear();
+    m_clearIPSetDataProcess->start();
 }
 
 void RealTimeAlert::processAuditData(int socket)
@@ -282,7 +247,8 @@ void RealTimeAlert::processAuditData(int socket)
         }
     }
     RETURN_IF_TRUE(alertMsgList.isEmpty());
-    emit Manager::m_logManager->HazardDetected(HAZARD_BEHAVIOR, alertMsgList.join(','));
+    Manager::hazardDetected(HAZARD_BEHAVIOR, alertMsgList.join(','));
+    SSR_LOG(Account::Manager::AccountRole::unknown_account, Log::Manager::LogType::TOOL_BOX, QString("Detected hazard behavior! msg:$1").arg(alertMsgList.join(',')), true);
 }
-};  // namespace Log
+};  // namespace ToolBox
 };  // namespace KS

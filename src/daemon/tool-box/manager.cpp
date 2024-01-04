@@ -29,6 +29,7 @@
 #include "include/ssr-i.h"
 #include "lib/base/error.h"
 #include "src/daemon/common/dbus-helper.h"
+#include "src/daemon/tool-box/realtime-alert.h"
 #include "src/daemon/tool-box/manager.h"
 
 #define SHRED_PATH "/usr/bin/shred"
@@ -62,7 +63,8 @@ void Manager::globalDeinit()
 
 Manager::Manager()
     : m_osUserNameMutex(new QReadWriteLock()),
-      m_userNameWatcher(new QFileSystemWatcher(QStringList(PASSWD_FILE), this))
+      m_userNameWatcher(new QFileSystemWatcher(QStringList(PASSWD_FILE), this)),
+      m_realTimeAlert(new RealTimeAlert())
 {
     new ToolBoxAdaptor(this);
     QDBusConnection dbusConnection = QDBusConnection::systemBus();
@@ -271,5 +273,11 @@ void Manager::processFinishedHandler(Log::Log& log, const int exitCode, const QP
     log.result = false;
     KS::Log::Manager::m_logManager->writeLog(log);
 }
+
+void Manager::hazardDetected(uint type, const QString& alert_msg)
+{
+    emit m_toolBoxManager->HazardDetected(type, alert_msg);
+}
+
 };  // namespace ToolBox
 };  // namespace KS

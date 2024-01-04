@@ -26,6 +26,9 @@ namespace KS
 {
 namespace ToolBox
 {
+
+class RealTimeAlert;
+
 class Manager : public QObject, public QDBusContext
 {
     Q_OBJECT
@@ -66,10 +69,14 @@ public:
     void RemoveUser(const QStringList& userNames);
 
     bool GetAccessStatus();
+
     QString GetAllUsers();
+
+    static void hazardDetected(uint type, const QString& alert_msg);
 
 Q_SIGNALS:  // SIGNALS
     void UserChanged();
+    void HazardDetected(uint type, const QString& alert_msg);
 
 private:
     Manager();
@@ -98,6 +105,7 @@ private:
     QString m_osUserInfoJson;
     QReadWriteLock* m_osUserNameMutex;
     QFileSystemWatcher* m_userNameWatcher;
+    RealTimeAlert* m_realTimeAlert;
 };
 
 };  // namespace ToolBox

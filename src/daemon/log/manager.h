@@ -83,7 +83,6 @@ private:
     void logFileRotate();
 
 Q_SIGNALS:  // SIGNALS
-    void HazardDetected(uint type, const QString& alert_msg);
     void NewLogWritten(uint log_num);
     void needLogRotate();
 
@@ -106,7 +105,6 @@ private:
     QReadWriteLock m_listMutex;
     // 临界资源日志文件的锁
     QMutex m_fileMutex;
-    RealTimeAlert* m_realTimeAlert;
     QThread* m_thread;
 
     friend class WriteWorker;
