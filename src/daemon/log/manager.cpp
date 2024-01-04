@@ -25,7 +25,7 @@
 #include "src/daemon/account/manager.h"
 #include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/log/message.h"
-#include "src/daemon/log/realtime-alert.h"
+
 #include "src/daemon/log/write-worker.h"
 #include "src/daemon/log_adaptor.h"
 #include "ssr-marcos.h"
@@ -35,6 +35,8 @@
 #define LOGFILEDIR SSR_INSTALL_DATADIR "/log/"
 #define LOGFILENAME "ks-ssr.log"
 #define ABSOLUTELOGFILEPATH LOGFILEDIR LOGFILENAME
+
+#pragma message("将用户名类型修改为 QString")
 
 namespace KS
 {
@@ -49,7 +51,6 @@ Manager::Manager()
       m_backUpLogProcess(new QProcess(this)),
       m_configurations(),
       m_waitCondition(new QWaitCondition()),
-      m_realTimeAlert(new RealTimeAlert()),
       m_thread(new WriteWorker(this))
 {
     // 初始化日志文件

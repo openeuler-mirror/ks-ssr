@@ -13,7 +13,7 @@
  */
 
 #include "src/ui/tool-box/file-shred/file-shred-table.h"
-#include <stdio.h>
+// #include <stdio.h>
 #include <QApplication>
 #include <QCheckBox>
 #include <QFileInfo>
@@ -25,6 +25,7 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QToolTip>
+#include "lib/base/notification-wrapper.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/common/table/table-header-proxy.h"
 #include "src/ui/toolbox_dbus_proxy.h"
@@ -366,6 +367,12 @@ FileShredTable::FileShredTable(QWidget *parent)
                                        SSR_TOOL_BOX_DBUS_OBJECT_PATH,
                                        QDBusConnection::systemBus(),
                                        this);
+    connect(m_dbusProxy, &ToolBoxDbusProxy::HazardDetected, this, [](uint type, const QString &alertMessage)
+            {
+                // TODO 区分类型弹窗？
+                Q_UNUSED(type)
+                Notify::NOTIFY_ERROR(alertMessage.toUtf8());
+            });
     initTable();
 }
 

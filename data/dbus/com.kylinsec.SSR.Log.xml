@@ -62,14 +62,5 @@
             </arg>
             <description>When this signal is emitted, it means that there are new log.</description>
         </signal>
-        <signal name="HazardDetected">
-            <arg name="type" type="u">
-                <summary>type of alert.</summary>
-            </arg>
-            <arg name="alert_msg" type="s">
-                <summary>Content of the alarm.</summary>
-            </arg>
-            <description>When this signal is emitted, it means that some dangerous behaviour has been detected.</description>
-        </signal>
     </interface>
 </node>

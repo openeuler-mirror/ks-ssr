@@ -29,7 +29,6 @@
 #include <QTableView>
 #include <QToolTip>
 #include "common/ssr-marcos-ui.h"
-#include "lib/base/notification-wrapper.h"
 #include "src/ui/common/table/header-button-delegate.h"
 #include "src/ui/log/utils.h"
 #include "src/ui/log_proxy.h"
@@ -123,12 +122,6 @@ LogModel::LogModel(QObject *parent)
                               SSR_LOG_DBUS_OBJECT_PATH,
                               QDBusConnection::systemBus(),
                               this);
-    connect(m_logProxy, &LogProxy::HazardDetected, this, [](uint type, const QString &alertMessage)
-            {
-                // TODO 区分类型弹窗？
-                Q_UNUSED(type)
-                Notify::NOTIFY_ERROR(alertMessage.toUtf8());
-            });
     connect(m_logProxy, &LogProxy::NewLogWritten, this, [this]
             {
                 emit logUpdated(static_cast<int>(getLogNumbers()));
