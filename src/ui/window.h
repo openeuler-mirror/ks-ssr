@@ -80,5 +80,7 @@ private:
     Loading *m_loading;
     QSharedPointer<LicenseProxy> m_licenseProxy;
     DaemonProxy *m_dbusProxy;
+    // 设置选项，若无设置页面需隐藏这个按钮
+    QAction *m_settings;
 };
 }  // namespace KS

@@ -79,6 +79,8 @@ public:
     bool openSelinux(bool isOpen);
     bool getSelinuxStatus();
 
+    void showTable(bool isShow);
+
 private:
     void initTable();
 

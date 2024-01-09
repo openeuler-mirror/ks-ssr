@@ -124,6 +124,7 @@ LogModel::LogModel(QObject *parent)
                               this);
     connect(m_logProxy, &LogProxy::NewLogWritten, this, [this]
             {
+                updateRecord();
                 emit logUpdated(static_cast<int>(getLogNumbers()));
             });
 

@@ -59,7 +59,8 @@ int main(int argc, char *argv[])
     }
 
     KS::Window window;
-    window.show();
+    // TODO 登入后再显示
+     window.show();
 
     return app.exec();
 }

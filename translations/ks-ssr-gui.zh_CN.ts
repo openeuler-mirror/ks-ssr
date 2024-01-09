@@ -890,13 +890,13 @@
     <name>KS::BR::ArgHandle</name>
     <message>
         <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="159"/>
-        <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="273"/>
+        <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="275"/>
         <source>Yes</source>
         <translation>是</translation>
     </message>
     <message>
         <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="160"/>
-        <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="274"/>
+        <location filename="../src/ui/br/reinforcement-items/arghandle.cpp" line="276"/>
         <source>No</source>
         <translation>否</translation>
     </message>
@@ -2369,27 +2369,27 @@
 <context>
     <name>KS::Log::LogModel</name>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="178"/>
+        <location filename="../src/ui/log/table.cpp" line="171"/>
         <source>Success</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="178"/>
+        <location filename="../src/ui/log/table.cpp" line="171"/>
         <source>Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="204"/>
+        <location filename="../src/ui/log/table.cpp" line="197"/>
         <source>Number</source>
         <translation>序号</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="212"/>
+        <location filename="../src/ui/log/table.cpp" line="205"/>
         <source>Data time</source>
         <translation>时间</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="214"/>
+        <location filename="../src/ui/log/table.cpp" line="207"/>
         <source>Message</source>
         <translation>内容</translation>
     </message>
@@ -2411,82 +2411,82 @@
 <context>
     <name>KS::Log::LogTable</name>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="404"/>
+        <location filename="../src/ui/log/table.cpp" line="397"/>
         <source>Log type</source>
         <translation>日志类型</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="405"/>
+        <location filename="../src/ui/log/table.cpp" line="398"/>
         <source>Device log</source>
         <translation>设备日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="406"/>
+        <location filename="../src/ui/log/table.cpp" line="399"/>
         <source>Tool box log</source>
         <translation>工具箱日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="407"/>
+        <location filename="../src/ui/log/table.cpp" line="400"/>
         <source>Baseline reinforcement log</source>
         <translation>基线加固日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="408"/>
+        <location filename="../src/ui/log/table.cpp" line="401"/>
         <source>Trusted protection log</source>
         <translation>可信保护日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="409"/>
+        <location filename="../src/ui/log/table.cpp" line="402"/>
         <source>Files protection log</source>
         <translation>文件保护日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="410"/>
+        <location filename="../src/ui/log/table.cpp" line="403"/>
         <source>Private box log</source>
         <translation>保险箱日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="411"/>
+        <location filename="../src/ui/log/table.cpp" line="404"/>
         <source>Account log</source>
         <translation>账户日志</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="430"/>
+        <location filename="../src/ui/log/table.cpp" line="423"/>
         <source>User name</source>
         <translation>用户</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="431"/>
+        <location filename="../src/ui/log/table.cpp" line="424"/>
         <source>Sysadm</source>
         <translation>sysadm</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="432"/>
+        <location filename="../src/ui/log/table.cpp" line="425"/>
         <source>Secadm</source>
         <translation>secadm</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="433"/>
+        <location filename="../src/ui/log/table.cpp" line="426"/>
         <source>Audadm</source>
         <translation>audadm</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="452"/>
+        <location filename="../src/ui/log/table.cpp" line="445"/>
         <source>Result</source>
         <translation>结果</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="453"/>
-        <location filename="../src/ui/log/table.cpp" line="464"/>
-        <location filename="../src/ui/log/table.cpp" line="472"/>
-        <location filename="../src/ui/log/table.cpp" line="478"/>
+        <location filename="../src/ui/log/table.cpp" line="446"/>
+        <location filename="../src/ui/log/table.cpp" line="457"/>
+        <location filename="../src/ui/log/table.cpp" line="465"/>
+        <location filename="../src/ui/log/table.cpp" line="471"/>
         <source>Success</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../src/ui/log/table.cpp" line="454"/>
-        <location filename="../src/ui/log/table.cpp" line="464"/>
-        <location filename="../src/ui/log/table.cpp" line="472"/>
+        <location filename="../src/ui/log/table.cpp" line="447"/>
+        <location filename="../src/ui/log/table.cpp" line="457"/>
+        <location filename="../src/ui/log/table.cpp" line="465"/>
         <source>Failed</source>
         <translation>失败</translation>
     </message>
@@ -3196,7 +3196,7 @@
     <message>
         <location filename="../src/ui/tp/utils.cpp" line="37"/>
         <source>Executable file</source>
-        <translation>可执行文件</translation>
+        <translation>可执行程序</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/utils.cpp" line="40"/>
@@ -3336,17 +3336,17 @@
 <context>
     <name>KS::ToolBox::FileShredModel</name>
     <message>
-        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="225"/>
+        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="226"/>
         <source>Number</source>
         <translation>序号</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="227"/>
+        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="228"/>
         <source>File name</source>
         <translation>文件名称</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="229"/>
+        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="230"/>
         <source>File path</source>
         <translation>文件路径</translation>
     </message>
@@ -3378,8 +3378,8 @@
 <context>
     <name>KS::ToolBox::FileShredTable</name>
     <message>
-        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="388"/>
-        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="399"/>
+        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="395"/>
+        <location filename="../src/ui/tool-box/file-shred/file-shred-table.cpp" line="406"/>
         <source>Please selecte files.</source>
         <translation>请选择文件。</translation>
     </message>
