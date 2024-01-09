@@ -20,7 +20,7 @@
 namespace KS
 {
 // TODO：使用eventfilter实现，无需再封装一个类
-// 无实际意义 用于屏蔽鼠标滚动
+// 无实际意义 用于屏蔽鼠标滚动和屏蔽输入逗号
 class SpinBox : public QSpinBox
 {
     Q_OBJECT
@@ -31,5 +31,7 @@ public:
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
+    // 屏蔽输入逗号
+    void keyPressEvent(QKeyEvent *event) override;
 };
 }  // namespace KS

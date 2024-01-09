@@ -12,6 +12,8 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "spinbox.h"
+#include <QKeyEvent>
+
 namespace KS
 {
 SpinBox::SpinBox(QWidget *parent)
@@ -27,5 +29,16 @@ void SpinBox::wheelEvent(QWheelEvent *event)
 {
     Q_ASSERT(event);
     return;
+}
+
+void SpinBox::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() != Qt::Key_Comma)
+    {
+        QSpinBox::keyPressEvent(event);
+        return;
+    }
+
+    event->ignore();
 }
 }  // namespace KS

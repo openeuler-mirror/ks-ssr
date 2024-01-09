@@ -62,7 +62,7 @@ void AccessControlPage::initUI()
 {
     auto selinuxStatus = m_ui->m_table->getSelinuxStatus();
     m_ui->m_swich->setCheckState(selinuxStatus ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
-    selinuxStatus ? m_ui->m_table->horizontalHeader()->show() : m_ui->m_table->horizontalHeader()->hide();
+    m_ui->m_table->showTable(selinuxStatus);
     connect(m_ui->m_swich, &QCheckBox::clicked, this, [this](bool checked)
             {
                 RETURN_IF_TRUE(m_ui->m_table->openSelinux(checked));

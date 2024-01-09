@@ -32,7 +32,7 @@ LicenseProxy::LicenseProxy(QObject* parent)
       m_expiredTime(0)
 {
     // 向下兼容，判断KSSSRManager是否激活，已激活则使用KSSSRManager
-    m_objectPath = getObjectPath(getActivateStatus(LICENSE_OLD_OBJECT_NAME) ? LICENSE_OLD_OBJECT_NAME : LICENSE_OBJECT_NAME);
+    m_objectPath = getObjectPath(LICENSE_OBJECT_NAME);
     QDBusConnection::systemBus().connect(LICENSE_MANAGER_DBUS_NAME,
                                          m_objectPath,
                                          LICENSE_OBJECT_DBUS_NAME,
