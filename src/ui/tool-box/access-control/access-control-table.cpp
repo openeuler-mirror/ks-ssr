@@ -203,8 +203,7 @@ bool AccessControlTable::openSelinux(bool isOpen)
     auto reply = m_dbusProxy->SetAccessControlStatus(isOpen);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     RETURN_VAL_IF_TRUE(reply.isError(), false);
-    m_model->showInfos(isOpen);
-    isOpen ? m_headerViewProxy->show() : m_headerViewProxy->hide();
+    showTable(isOpen);
     return true;
 }
 
@@ -215,6 +214,12 @@ bool AccessControlTable::getSelinuxStatus()
     RETURN_VAL_IF_TRUE(reply.isError(), false);
 
     return reply.value();
+}
+
+void AccessControlTable::showTable(bool isShow)
+{
+    m_model->showInfos(isShow);
+    isShow ? m_headerViewProxy->show() : m_headerViewProxy->hide();
 }
 
 void AccessControlTable::initTable()

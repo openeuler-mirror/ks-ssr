@@ -82,7 +82,7 @@ void Scan::usingCustomStrategy()
     }
     else
     {
-        for (auto iter : m_categories)
+        for (auto &iter : m_categories)
         {
             for (auto raReinforcement = raReinforcements.begin(); raReinforcement != raReinforcements.end(); ++raReinforcement)
             {
@@ -107,8 +107,10 @@ void Scan::usingCustomStrategy()
                 for (auto raArg = raReinforcement->arg().begin(); raArg != raReinforcement->arg().end(); ++raArg)
                 {
                     auto arg = reinforcementItem->find(raArg->name().c_str());
-                    CONTINUE_IF_TRUE(arg == NULL)
-                    arg->jsonValue = StrUtils::str2jsonValue(raArg->value());
+                    CONTINUE_IF_TRUE(arg == nullptr);
+                    // str2jsonValue中的类型转换没法区分line输入纯数字和数字输入框spin输入的纯数字，都会被转为double类型，这里需要进行判断
+                    arg->jsonValue = arg->jsonValue.isString() ? QJsonValue::fromVariant(raArg->value().c_str())
+                                                               : StrUtils::str2jsonValue(raArg->value());
                 }
             }
         }
@@ -116,7 +118,7 @@ void Scan::usingCustomStrategy()
         auto reinforcementXML = Utils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categories);
         for (auto xml : reinforcementXML)
         {
-            CONTINUE_IF_TRUE(xml == NULL)
+            CONTINUE_IF_TRUE(xml == nullptr)
             auto reply = m_dbusProxy->SetReinforcement(xml);
             CHECK_ERROR_FOR_DBUS_REPLY(reply)
         }
