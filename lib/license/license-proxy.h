@@ -19,8 +19,7 @@
 
 namespace KS
 {
-#define LICENSE_OBJECT_NAME "KSSSR"
-#define LICENSE_OLD_OBJECT_NAME "KSSSRManager"
+#define LICENSE_OBJECT_NAME "KSSSRManager"
 #define TIMEOUT_MS 5000
 #define METHOD_GET_LICENSE "GetLicense"
 #define METHOD_GET_LICENSE_OBJECT "GetLicenseObject"

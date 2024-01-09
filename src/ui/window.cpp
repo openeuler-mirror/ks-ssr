@@ -239,7 +239,9 @@ void Window::initWindow()
     auto settingMenu = new QMenu(this);
     btnForMenu->setMenu(settingMenu);
 
-    settingMenu->addAction(tr("Settings"), this, &Window::popupSettingsDialog);
+    m_settings = new QAction(tr("Settings"), this);
+    connect(m_settings, &QAction::triggered, this, &Window::popupSettingsDialog, Qt::UniqueConnection);
+    settingMenu->addAction(m_settings);
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
     settingMenu->addAction(tr("About"), this, &Window::popupAboutDialog);
 
@@ -351,6 +353,9 @@ void Window::initSettings()
     {
         // TODO audit用户暂无设置
     }
+
+    // settingsSidebars为空，隐藏设置按钮
+    m_settings->setVisible(!settingsSidebars.isEmpty());
     Settings::Dialog::instance()->addSidebars(settingsSidebars);
     // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
     connect(
