@@ -17,6 +17,7 @@
 #include <QDBusContext>
 #include <QStringView>
 #include <QTimer>
+#include "br-protocol.hxx"
 #include "job.h"
 #include "resource-monitor.h"
 
@@ -158,6 +159,8 @@ private:
     void scanProgressFinished();
     // 加固完成处理函数
     void reinforceProgressFinished();
+
+    void parseJsonParam(const Protocol::Reinforcement::ArgSequence &argSequence, QJsonObject &param);
 
     void homeFreeSpaceRatio(float spaceRatio);
     void rootFreeSpaceRatio(float spaceRatio);
