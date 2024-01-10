@@ -20,7 +20,6 @@
 #include <QTimer>
 #include <fstream>
 #include <iostream>
-#include "br-protocol.hxx"
 #include "categories.h"
 #include "configuration.h"
 #include "include/ssr-marcos.h"
@@ -625,10 +624,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
             {
                 CONTINUE_IF_TRUE(iter->name() != name.toStdString());
                 auto& iter_args = iter->arg();
-                for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
-                {
-                    param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
-                }
+                parseJsonParam(iter_args, param);
                 param_str = StrUtils::json2str(param);
             }
             KLOG_DEBUG() << "frist fallback name : " << name << ", frist fallback param_str: " << param_str;
@@ -642,10 +638,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
             {
                 CONTINUE_IF_TRUE(iter->name() != name.toStdString());
                 auto& iter_args = iter->arg();
-                for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
-                {
-                    param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
-                }
+                parseJsonParam(iter_args, param);
                 param_str = StrUtils::json2str(param);
             }
             auto rh_last = this->m_configuration->readRhFromFile(RH_BR_OPERATE_DATA_LAST);
@@ -655,10 +648,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
             {
                 CONTINUE_IF_TRUE(iter->name() != name.toStdString());
                 auto& iter_args = iter->arg();
-                for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
-                {
-                    param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
-                }
+                parseJsonParam(iter_args, param);
             }
 
             param_str = StrUtils::json2str(param);
@@ -666,10 +656,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         else
         {
             auto& args = reinforcement->getRs().arg();
-            for (auto arg_iter = args.begin(); arg_iter != args.end(); ++arg_iter)
-            {
-                param.insert(arg_iter->name().c_str(), StrUtils::str2jsonValue(arg_iter->value()));
-            }
+            parseJsonParam(args, param);
             param_str = StrUtils::json2str(param);
         }
 
@@ -1040,7 +1027,7 @@ bool BRDBus::onResourceMonitor()
     return true;
 }
 
-void KS::BRDaemon::BRDBus::scanProgressFinished()
+void BRDBus::scanProgressFinished()
 {
     m_isScanFlag = true;
     // 回退中，不关注扫描完成
@@ -1050,11 +1037,24 @@ void KS::BRDaemon::BRDBus::scanProgressFinished()
     }
 }
 
-void KS::BRDaemon::BRDBus::reinforceProgressFinished()
+void BRDBus::reinforceProgressFinished()
 {
     this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
     m_isScanFlag = true;
     emit ProgressFinished();
+}
+
+void BRDBus::parseJsonParam(const Protocol::Reinforcement::ArgSequence &argSequence, QJsonObject &param)
+{
+    for (auto arg_iter = argSequence.begin(); arg_iter != argSequence.end(); ++arg_iter)
+    {
+        QString inputExample = arg_iter->input_example() != nullptr ? arg_iter->input_example().get().c_str() : "";
+
+        // str2jsonValue中的类型转换没法区分line输入纯数字和数字输入框spin输入的纯数字，都会被转为double类型，这里需要进行判断,
+        // 如果存在inputExample则肯定为line输入的纯数字，参数应该为str类型
+        param.insert(arg_iter->name().c_str(), inputExample.isEmpty() ? StrUtils::str2jsonValue(arg_iter->value())
+                                                                      : QJsonValue::fromVariant(arg_iter->value().c_str()));
+    }
 }
 
 void BRDBus::homeFreeSpaceRatio(float spaceRatio)
