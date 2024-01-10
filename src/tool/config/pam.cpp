@@ -52,7 +52,6 @@ bool PAM::getValue(const QString &key, const QString &kv_split_pattern, QString 
 
     for (auto iter = lines.begin(); iter != lines.end(); ++iter)
     {
-        // Glib::MatchInfo match_info;
         auto trim_line = StrUtils::trim(*iter);
         // 忽略空行和注释行
         CONTINUE_IF_TRUE(trim_line.isEmpty() || trim_line[0] == '#');
@@ -91,9 +90,7 @@ bool PAM::setValue(const QString &key,
     if (match_info.match_line.size() > 0 && !match_info.is_match_comment)
     {
         QString kv_pattern(kv_split_pattern.isEmpty() ? QString("(%1)").arg(key) : QString("(%1[\\s]*%2[\\s]*)(\\S+)").arg(key, kv_split_pattern));
-        // auto kv_pattern = kv_split_pattern.isEmpty() ? fmt::format("({0})", key) : fmt::format("({0}[\\s]*{1}[\\s]*)(\\S+)", key, kv_split_pattern);
         QRegExp kv_regex(kv_pattern);
-        // auto kv_regex = Glib::Regex::create(kv_pattern);
         QString replace_line = match_info.match_line;
         if (kv_regex.indexIn(match_info.match_line) != -1)
         {
@@ -106,12 +103,16 @@ bool PAM::setValue(const QString &key,
         else
         {
             // 添加键值对
-            replace_line += (this->isWhitespaceInTail(match_info.match_line) ? "" : " ") + key;
-            if (kv_split_pattern.isEmpty() || value.isEmpty())
+            if (value.isEmpty())
             {
                 KLOG_WARNING("Unknown situation.");
+                return false;
             }
-            replace_line += kv_join_str + value;
+            replace_line += (this->isWhitespaceInTail(match_info.match_line) ? "" : " ") + key;
+            if (!kv_split_pattern.isEmpty())
+            {
+                replace_line += kv_join_str + value;
+            }
         }
 
         match_info.content.replace(match_info.match_pos, match_info.match_line.size(), replace_line);
@@ -137,7 +138,8 @@ bool PAM::delValue(const QString &key, const QString &kv_split_pattern)
         !match_info.is_match_comment &&
         kv_regex.indexIn(match_info.match_line) != -1)
     {
-        auto replace_line = match_info.match_line.replace(kv_regex, "");
+        auto match_line = match_info.match_line;
+        auto replace_line = match_line.replace(kv_regex, "");
         match_info.content.replace(match_info.match_pos, match_info.match_line.size(), replace_line);
         KLOG_DEBUG() << "Replace line: " << match_info.match_line.toLatin1() << ", with " << replace_line.toLatin1();
         return this->writeToFile(match_info.content);
