@@ -57,8 +57,9 @@ class Dmesg:
 
     def get(self):
         retdata = dict()
-        retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = bool(
-            self.conf.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ) == "1")
+        retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = bool(self.conf.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ) == "1")
+        if len(self.conf_sys.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)) != 0:
+            retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = bool(self.conf_sys.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ) == "1")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):

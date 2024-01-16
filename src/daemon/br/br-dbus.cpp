@@ -20,7 +20,6 @@
 #include <QTimer>
 #include <fstream>
 #include <iostream>
-#include "br-protocol.hxx"
 #include "categories.h"
 #include "configuration.h"
 #include "include/ssr-marcos.h"
@@ -75,7 +74,10 @@ static int _audit_log(int type, int rc, const char* op)
 }
 
 BRDBus::BRDBus(QObject* parent)
-    : QObject(parent), timer(nullptr)
+    : QObject(parent),
+      m_resouceMonitorTimer(nullptr),
+      m_isScanFlag(true),
+      m_isFinishRHWrite(true)
 {
     this->m_dbus = new BRAdaptor(this);
     init();
@@ -83,11 +85,11 @@ BRDBus::BRDBus(QObject* parent)
 
 BRDBus::~BRDBus()
 {
-    if (this->timer)
+    if (this->m_resouceMonitorTimer)
     {
-        timer->stop();
-        QObject::disconnect(this->timer, SIGNAL(QTimer::timeout()), this, SLOT(BRDBus::onResourceMonitor()));
-        delete this->timer;
+        m_resouceMonitorTimer->stop();
+        QObject::disconnect(this->m_resouceMonitorTimer, SIGNAL(QTimer::timeout()), this, SLOT(BRDBus::setResourceMonitor()));
+        delete this->m_resouceMonitorTimer;
     }
 }
 
@@ -313,13 +315,13 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
         return;
     }
 
-    timer->stop();
-    QObject::disconnect(this->timer, SIGNAL(timeout()), this, SLOT(BRDBus::onResourceMonitor()));
+    m_resouceMonitorTimer->stop();
+    QObject::disconnect(this->m_resouceMonitorTimer, SIGNAL(timeout()), this, SLOT(BRDBus::setResourceMonitor()));
     if (BRResourceMonitor(resourceMonitor) == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {
-        this->timer = new QTimer();
-        QObject::connect(this->timer, &QTimer::timeout, this, &BRDBus::onResourceMonitor);
-        this->timer->start(RESOURCEMONITORMS);
+        this->m_resouceMonitorTimer = new QTimer(this);
+        QObject::connect(this->m_resouceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
+        this->m_resouceMonitorTimer->start(RESOURCEMONITORMS);
     }
 
     SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set resource monitor switch to " + QString::number(resourceMonitor));
@@ -459,7 +461,7 @@ void BRDBus::ResetReinforcement(const QString& name)
 
 void BRDBus::Scan(const QStringList& names)
 {
-    KLOG_INFO() << "Scan. range : " << names.join(" ").toLocal8Bit();
+    KLOG_DEBUG() << "Carry out scan progress. range is " << names.join(" ").toLocal8Bit();
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
@@ -474,8 +476,6 @@ void BRDBus::Scan(const QStringList& names)
     try
     {
         this->m_scanJob = Job::create();
-        if (!m_isFristReinfoce)
-            m_isFristReinfoceFinish = false;
         for (auto iter = names.begin(); iter != names.end(); ++iter)
         {
             auto& name = (*iter);
@@ -503,7 +503,6 @@ void BRDBus::Scan(const QStringList& names)
                                           reinforcement->getName(),
                                           [reinforcement_interface]() -> QString
                                           {
-                                              //    QJsonValue retval;
                                               QJsonObject retval;
                                               QString args;
                                               QString error;
@@ -528,9 +527,9 @@ void BRDBus::Scan(const QStringList& names)
         return;
     }
     QObject::disconnect(this->m_scanJob.get(), &Job::process_finished_, 0, 0);
-    QObject::connect(this->m_scanJob.get(), &Job::process_finished_, this, &BRDBus::scanProgressFinished);
+    QObject::connect(this->m_scanJob.get(), &Job::process_finished_, this, &BRDBus::finishedScanProgress);
     QObject::disconnect(this->m_scanJob.get(), &Job::process_changed_, 0, 0);
-    QObject::connect(this->m_scanJob.get(), &Job::process_changed_, this, &BRDBus::onScanProcessChangedCb);
+    QObject::connect(this->m_scanJob.get(), &Job::process_changed_, this, &BRDBus::scanProcessChangedCb);
 
     if (!this->m_scanJob->runAsync())
     {
@@ -548,7 +547,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         {
             QDBusConnection::systemBus().send(message.createReply());
         });
-    KLOG_INFO() << "Reinforce. range : " << names.join(" ").toLocal8Bit();
+    KLOG_DEBUG() << "Carry out reinforcement progress. range is " << names.join(" ").toLocal8Bit();
     auto role = Account::Manager::m_accountManager->getRole(message.service());
     m_isScanFlag = false;
     // 已经在加固则返回错误
@@ -559,38 +558,9 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to reinforcement.", false);
         return;
     }
-
     this->m_reinforceJob = Job::create();
-
-    // 首次加固保存所有加固前配置
-    m_isFristReinfoceFinish = false;
-
-    if (m_isFristReinfoce)
-    {
-        QStringList names_rh;
-        auto rh = this->m_configuration->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
-        if (rh->reinforcement().empty())
-        {
-            auto reinforcements = this->m_plugins->getReinforcements();
-            for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
-            {
-                auto& rs_reinforcement = (*iter)->getRs();
-                names_rh.push_back(QString::fromStdString(rs_reinforcement.name()));
-                rh->reinforcement().push_back(rs_reinforcement);
-            }
-            this->m_configuration->writeRhToFile(rh, RH_BR_OPERATE_DATA_FIRST);
-
-            m_isFristReinfoceFinish = true;
-            Scan(names_rh);
-        }
-        // 此处需等待扫描进程完成后置为false
-        m_isFristReinfoce = false;
-    }
-    else
-    {
-        KLOG_DEBUG("Reinforce m_isScanFlag = %d", m_isScanFlag);
-        Scan(names);
-    }
+    // 加固前进行一次扫描
+    Scan(names);
 
     for (auto iter = names.begin(); iter != names.end(); ++iter)
     {
@@ -614,72 +584,14 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
             return;
         }
 
-        QJsonObject param;
-        QString param_str = "";
-
-        if (m_fallbackMethod == BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL)
-        {
-            auto rh = this->m_configuration->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
-            auto& rh_reinforcements = rh->reinforcement();
-            for (auto iter = rh_reinforcements.begin(); iter != rh_reinforcements.end(); ++iter)
-            {
-                CONTINUE_IF_TRUE(iter->name() != name.toStdString());
-                auto& iter_args = iter->arg();
-                for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
-                {
-                    param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
-                }
-                param_str = StrUtils::json2str(param);
-            }
-            KLOG_DEBUG() << "frist fallback name : " << name << ", frist fallback param_str: " << param_str;
-        }
-        else if (m_fallbackMethod == BRFallbackMethod::BR_FALLBACK_METHOD_LAST)
-        {
-            //
-            auto rh = this->m_configuration->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
-            auto& rh_reinforcements = rh->reinforcement();
-            for (auto iter = rh_reinforcements.begin(); iter != rh_reinforcements.end(); ++iter)
-            {
-                CONTINUE_IF_TRUE(iter->name() != name.toStdString());
-                auto& iter_args = iter->arg();
-                for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
-                {
-                    param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
-                }
-                param_str = StrUtils::json2str(param);
-            }
-            auto rh_last = this->m_configuration->readRhFromFile(RH_BR_OPERATE_DATA_LAST);
-            auto& rh_last_reinforcements = rh_last->reinforcement();
-
-            for (auto iter = rh_last_reinforcements.begin(); iter != rh_last_reinforcements.end(); ++iter)
-            {
-                CONTINUE_IF_TRUE(iter->name() != name.toStdString());
-                auto& iter_args = iter->arg();
-                for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
-                {
-                    param.insert(iter_arg->name().c_str(), StrUtils::str2jsonValue(iter_arg->value()));
-                }
-            }
-
-            param_str = StrUtils::json2str(param);
-        }
-        else
-        {
-            auto& args = reinforcement->getRs().arg();
-            for (auto arg_iter = args.begin(); arg_iter != args.end(); ++arg_iter)
-            {
-                param.insert(arg_iter->name().c_str(), StrUtils::str2jsonValue(arg_iter->value()));
-            }
-            param_str = StrUtils::json2str(param);
-        }
-
+        auto paramStr = getJsonParam(name);
         this->m_reinforceJob->addOperation(reinforcement->getPluginName(),
                                            reinforcement->getName(),
-                                           [reinforcement_interface, param_str]() -> QString
+                                           [reinforcement_interface, paramStr]() -> QString
                                            {
                                                QString error;
                                                QJsonObject retval;
-                                               if (!reinforcement_interface->set(param_str, error))
+                                               if (!reinforcement_interface->set(paramStr, error))
                                                {
                                                    retval[JOB_ERROR_STR] = error;
                                                }
@@ -692,9 +604,9 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
                                            });
     }
     QObject::disconnect(this->m_reinforceJob.get(), &Job::process_changed_, 0, 0);
-    QObject::connect(this->m_reinforceJob.get(), &Job::process_changed_, this, &BRDBus::onReinforceProcessChangedCb);
+    QObject::connect(this->m_reinforceJob.get(), &Job::process_changed_, this, &BRDBus::reinforceProcessChangedCb);
     QObject::disconnect(this->m_reinforceJob.get(), &Job::process_finished_, 0, 0);
-    QObject::connect(this->m_reinforceJob.get(), &Job::process_finished_, this, &BRDBus::reinforceProgressFinished);
+    QObject::connect(this->m_reinforceJob.get(), &Job::process_finished_, this, &BRDBus::finishedReinforceProgress);
 
     if (!this->m_reinforceJob->runAsync())
     {
@@ -757,20 +669,11 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
     KLOG_INFO("Set fallback. snapshotStatus: %d.", snapshotStatus);
     RETURN_IF_TRUE(snapshotStatus == BRFallbackMethod::BR_FALLBACK_METHOD_OTHER);
     QStringList names_rh;
-    auto rh = this->m_configuration->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
-    auto& rh_reinforcements = rh->reinforcement();
-    if (rh_reinforcements.empty())
+    auto reinforcements = this->m_plugins->getReinforcements();
+    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        auto replyMessage = message.createErrorReply(QDBusError::Failed, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_FALLBACK_RH_EMPTY));
-        QDBusConnection::systemBus().send(replyMessage);
-        this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set fallback.", false);
-        return;
-    }
-    for (auto iter = rh_reinforcements.begin(); iter != rh_reinforcements.end(); ++iter)
-    {
-        // 获取所有加固项name
-        names_rh.push_back(QString::fromStdString(iter->name()));
+        auto& rs_reinforcement = (*iter)->getRs();
+        names_rh.push_back(QString::fromStdString(rs_reinforcement.name()));
     }
     if (names_rh.empty())
     {
@@ -834,18 +737,30 @@ void BRDBus::init()
 
     if (m_configuration->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {
-        timer = new QTimer();
-        QObject::connect(this->timer, &QTimer::timeout, this, &BRDBus::onResourceMonitor);
-        timer->start(RESOURCEMONITORMS);
+        m_resouceMonitorTimer = new QTimer(this);
+        QObject::connect(this->m_resouceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
+        m_resouceMonitorTimer->start(RESOURCEMONITORMS);
+    }
+
+    // 服务启动时自动扫描一次，获取系统默认配置存入rh-frist文件
+    if (!QFile::exists(RH_BR_OPERATE_DATA_FIRST))
+    {
+        QStringList names;
+        auto reinforcements = this->m_plugins->getReinforcements();
+        for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
+        {
+            auto& rs_reinforcement = (*iter)->getRs();
+            names.push_back(QString::fromStdString(rs_reinforcement.name()));
+        }
+        m_isScanFlag = false;
+        m_isFinishRHWrite = false;
+        Scan(names);
     }
 }
 
-void BRDBus::onScanProcessChangedCb(const JobResult& jobResult)
+void BRDBus::scanProcessChangedCb(const JobResult& jobResult)
 {
-    KLOG_DEBUG() << "onScanProcessChangedCb";
-
     Protocol::JobResult scanResult(0, 0, 0);
-
     try
     {
         scanResult.process(jobResult.finished_operation_num * 100.0 / jobResult.sum_operation_num);
@@ -893,21 +808,7 @@ void BRDBus::onScanProcessChangedCb(const JobResult& jobResult)
                 reinforcementResult.args(StrUtils::json2str(resultValues).toStdString());
             }
             auto reinforcement = this->m_plugins->getReinforcement(operation->reinforcement_name);
-
-            // 上一次历史操作存入rh文件
-            if (!m_isScanFlag)
-            {
-                auto rh_reinforcement = reinforcement->getRs();
-                auto& iter_args = rh_reinforcement.arg();
-                for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
-                {
-                    if (!resultValues[JOB_RETURN_VALUE][iter_arg->name().c_str()].toVariant().toString().isEmpty())
-                    {
-                        iter_arg->value(resultValues[JOB_RETURN_VALUE].toObject()[iter_arg->name().c_str()].toVariant().toString().toStdString());
-                    }
-                }
-                this->m_configuration->setCustomRh(rh_reinforcement, RH_BR_OPERATE_DATA_LAST);
-            }
+            updateRH(operation->reinforcement_name, resultValues[JOB_RETURN_VALUE].toObject());
 
             if ((state & BRReinforcementState::BR_REINFORCEMENT_STATE_SCAN_DONE) != 0 &&
                 reinforcement &&
@@ -921,26 +822,6 @@ void BRDBus::onScanProcessChangedCb(const JobResult& jobResult)
                 if (state != BRReinforcementState::BR_REINFORCEMENT_STATE_UNSCAN)
                 {
                     state = BRReinforcementState(state | BRReinforcementState::BR_REINFORCEMENT_STATE_UNSAFE);
-                }
-
-                // 首次加固修改保存的历史操作文件，改为获取到的值,本身不符合才需要获取当前值，若为符合则直接使用默认值
-                if (m_isFristReinfoceFinish)
-                {
-                    auto rh_frist = this->m_configuration->readRhFromFile(RH_BR_OPERATE_DATA_FIRST);
-
-                    auto& reinforcements = rh_frist->reinforcement();
-                    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
-                    {
-                        CONTINUE_IF_TRUE(iter->name() != reinforcementResult.name());
-                        KLOG_DEBUG() << "iter->name() = " << iter->name().c_str() << ", reinforcementResult.name =" << reinforcementResult.name().c_str() << "suscess";
-                        auto& iter_args = iter->arg();
-                        for (auto iter_arg = iter_args.begin(); iter_arg != iter_args.end(); ++iter_arg)
-                        {
-                            if (!resultValues[JOB_RETURN_VALUE][iter_arg->name().c_str()].toVariant().toString().isEmpty())
-                                iter_arg->value(resultValues[JOB_RETURN_VALUE].toObject()[iter_arg->name().c_str()].toVariant().toString().toStdString());
-                        }
-                    }
-                    this->m_configuration->writeRhToFile(rh_frist, RH_BR_OPERATE_DATA_FIRST);
                 }
             }
             reinforcementResult.state(int32_t(state));
@@ -962,12 +843,9 @@ void BRDBus::onScanProcessChangedCb(const JobResult& jobResult)
     }
 }
 
-void BRDBus::onReinforceProcessChangedCb(const JobResult& jobResult)
+void BRDBus::reinforceProcessChangedCb(const JobResult& jobResult)
 {
-    KLOG_DEBUG("onReinforceProcessChangedCb");
-
     Protocol::JobResult reinforceResult(0, 0, 0);
-
     try
     {
         reinforceResult.process(jobResult.finished_operation_num * 100.0 / jobResult.sum_operation_num);
@@ -1028,9 +906,8 @@ void BRDBus::onReinforceProcessChangedCb(const JobResult& jobResult)
     }
 }
 
-bool BRDBus::onResourceMonitor()
+bool BRDBus::setResourceMonitor()
 {
-    KLOG_DEBUG("onResourceMonitor.");
     if (m_configuration->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
         m_resourceMonitor->startMonitor();
     else if (m_configuration->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_CLOSE)
@@ -1040,9 +917,10 @@ bool BRDBus::onResourceMonitor()
     return true;
 }
 
-void KS::BRDaemon::BRDBus::scanProgressFinished()
+void BRDBus::finishedScanProgress()
 {
     m_isScanFlag = true;
+    m_isFinishRHWrite = true;
     // 回退中，不关注扫描完成
     if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
     {
@@ -1050,11 +928,85 @@ void KS::BRDaemon::BRDBus::scanProgressFinished()
     }
 }
 
-void KS::BRDaemon::BRDBus::reinforceProgressFinished()
+void BRDBus::finishedReinforceProgress()
 {
     this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
     m_isScanFlag = true;
     emit ProgressFinished();
+}
+
+void BRDBus::parseJsonParam(const Protocol::Reinforcement::ArgSequence &argSequence, QJsonObject &param)
+{
+    for (auto argIter = argSequence.begin(); argIter != argSequence.end(); ++argIter)
+    {
+        QString inputExample = argIter->input_example() != nullptr ? argIter->input_example().get().c_str() : "";
+
+        // str2jsonValue中的类型转换没法区分line输入纯数字和数字输入框spin输入的纯数字，都会被转为double类型，这里需要进行判断,
+        // 如果存在inputExample则肯定为line输入的纯数字，参数应该为str类型
+        param.insert(argIter->name().c_str(), inputExample.isEmpty() ? StrUtils::str2jsonValue(argIter->value())
+                                                                      : QJsonValue::fromVariant(argIter->value().c_str()));
+    }
+}
+
+QString BRDBus::getJsonParam(const QString &reinforceName)
+{
+    QJsonObject param;
+    QString paramStr;
+    auto reinforcement = this->m_plugins->getReinforcement(reinforceName);
+    if (m_fallbackMethod == BR_FALLBACK_METHOD_OTHER)
+    {
+        auto& args = reinforcement->getRs().arg();
+        parseJsonParam(args, param);
+        paramStr = StrUtils::json2str(param);
+    }
+    else
+    {
+        // 获取rh文件里面的参数
+        auto reinforcements = this->m_plugins->getReinforcements();
+        for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
+        {
+            auto& rs_reinforcement = (*iter)->getRs();
+            CONTINUE_IF_TRUE(rs_reinforcement.name() != reinforceName.toStdString());
+            auto& iter_args = rs_reinforcement.arg();
+            parseJsonParam(iter_args, param);
+            paramStr = StrUtils::json2str(param);
+        }
+        auto rhLast = this->m_configuration->readRhFromFile(m_fallbackMethod == BR_FALLBACK_METHOD_LAST ? RH_BR_OPERATE_DATA_LAST : RH_BR_OPERATE_DATA_FIRST);
+        auto& rhLastReinforcements = rhLast->reinforcement();
+
+        for (auto iter = rhLastReinforcements.begin(); iter != rhLastReinforcements.end(); ++iter)
+        {
+            CONTINUE_IF_TRUE(iter->name() != reinforceName.toStdString());
+            auto& iter_args = iter->arg();
+            parseJsonParam(iter_args, param);
+        }
+
+        paramStr = StrUtils::json2str(param);
+    }
+    return paramStr;
+}
+
+void BRDBus::updateRH(const QString &reinforceName, const QJsonObject &resultReturnValue)
+{
+    auto reinforcement = this->m_plugins->getReinforcement(reinforceName);
+
+    // 上一次历史操作存入rh文件
+    if (!m_isScanFlag && BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
+    {
+        auto rhReinforcement = reinforcement->getRs();
+        auto& iterArgs = rhReinforcement.arg();
+        for (auto iterArg = iterArgs.begin(); iterArg != iterArgs.end(); ++iterArg)
+        {
+            CONTINUE_IF_TRUE(resultReturnValue[iterArg->name().c_str()].toVariant().toString().isEmpty());
+            iterArg->value(resultReturnValue[iterArg->name().c_str()].toVariant().toString().toStdString());
+        }
+        this->m_configuration->setCustomRh(rhReinforcement, RH_BR_OPERATE_DATA_LAST);
+        if (!m_isFinishRHWrite)
+        {
+            // 首次加固修改保存的历史操作文件
+            this->m_configuration->setCustomRh(rhReinforcement, RH_BR_OPERATE_DATA_FIRST);
+        }
+    }
 }
 
 void BRDBus::homeFreeSpaceRatio(float spaceRatio)
