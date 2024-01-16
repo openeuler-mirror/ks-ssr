@@ -53,8 +53,8 @@ GET_MAXIMUM_UID = "awk '/^UID_MAX/ {print $2}' /etc/login.defs"
 class Accounts:
     def check_user_exists(self, username):
         try:
-            # 使用os.getpwnam函数获取用户信息
-            user_info = os.getpwnam(username)
+            # 使用pwd.getpwnam函数获取用户信息
+            user_info = pwd.getpwnam(username)
             # 如果获取到用户信息，则用户存在
             return True
         except Exception as e:
@@ -142,7 +142,7 @@ class LoginLimit(Accounts):
                         "usermod -s /sbin/nologin {0}".format(pwdent.pw_name))
         # 过检需求，这个名单直接设置为可登录
         for permission_user in permission_users:
-            if permission_user != "" and permission_user != "\"\"":
+            if permission_user == "" or permission_user == "\"\"":
                 continue
             if not self.check_user_exists(permission_user):
                 continue

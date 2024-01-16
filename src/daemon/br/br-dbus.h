@@ -150,17 +150,21 @@ private:
 private:
     void init();
     // 扫描进度信号处理
-    void onScanProcessChangedCb(const JobResult &jobResult);
+    void scanProcessChangedCb(const JobResult &jobResult);
     // 加固进度信号处理
-    void onReinforceProcessChangedCb(const JobResult &jobResult);
+    void reinforceProcessChangedCb(const JobResult &jobResult);
     // 资源监控开启/关闭
-    bool onResourceMonitor();
+    bool setResourceMonitor();
     // 进程完成处理函数
-    void scanProgressFinished();
+    void finishedScanProgress();
     // 加固完成处理函数
-    void reinforceProgressFinished();
+    void finishedReinforceProgress();
 
     void parseJsonParam(const Protocol::Reinforcement::ArgSequence &argSequence, QJsonObject &param);
+    // 通过加固项名获取加固参数，返回值为json字符串
+    QString getJsonParam(const QString &reinforceName);
+    // 更新rh文件
+    void updateRH(const QString &reinforceName, const QJsonObject &resultReturnValue);
 
     void homeFreeSpaceRatio(float spaceRatio);
     void rootFreeSpaceRatio(float spaceRatio);
@@ -169,12 +173,7 @@ private:
 
 private:
     static BRDBus *m_instance;
-
-    // ::BRDBus::Connection dbus_connection_;
-
-    QTimer *timer;
-    // sigc::connection timeout_handler_;
-
+    QTimer *m_resouceMonitorTimer;
     Configuration *m_configuration;
     Categories *m_categories;
     Plugins *m_plugins;
@@ -188,13 +187,10 @@ private:
     // 激活信息
     QJsonValue m_licenseValues;
 
-    // 首次加固 全盘扫描
-    // 是否首次加固
-    bool m_isFristReinfoce = true;
-    // 首次加固是否完成
-    bool m_isFristReinfoceFinish = false;
     // 加固前需要进行一次扫描，用于判断是否这次扫描是否为正常调用dbus接口的扫描
-    bool m_isScanFlag = true;
+    bool m_isScanFlag;
+    // 首次扫描的rh文件是否写入完成
+    bool m_isFinishRHWrite;
 
     BRFallbackMethod m_fallbackMethod = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
     BRAdaptor *m_dbus;
