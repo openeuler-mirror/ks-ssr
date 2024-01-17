@@ -14,11 +14,16 @@
 
 #include "file-shred-page.h"
 #include <QDir>
+#include <QDialogButtonBox>
 #include <QFileDialog>
+#include <QTreeView>
+#include <QListView>
 #include <QWidgetAction>
 #include "include/ssr-i.h"
 #include "src/ui/ui_file-shred-page.h"
+#include "src/ui/tool-box/file-shred/files-dirs-dilog.h"
 #include "ssr-marcos.h"
+
 
 #define FILE_SHRED_ICON_NAME "/images/file-shred"
 
@@ -62,10 +67,33 @@ QString FileShredPage::getAccountRoleName()
 void FileShredPage::addFiles(bool checked)
 {
     Q_UNUSED(checked);
-    auto fileNames = QFileDialog::getOpenFileNames(this, tr("Open file"), QDir::homePath());
-    RETURN_IF_TRUE(fileNames.isEmpty());
+    // 添加文件或目录
+    auto fileDialog = new FilesDirsDilog(this);
+    fileDialog->setOption(QFileDialog::Option::DontUseNativeDialog);
 
-    m_ui->m_table->addFiles(fileNames);
+    // 多选
+    auto listView = fileDialog->findChild<QListView *>();
+    if (listView)
+    {
+        listView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    }
+    auto treeView = fileDialog->findChild<QTreeView *>();
+    if (treeView)
+    {
+        treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    }
+    auto buttonBox = fileDialog->findChild<QDialogButtonBox *>();
+    disconnect(buttonBox, &QDialogButtonBox::accepted, fileDialog, nullptr);
+    connect(buttonBox, &QDialogButtonBox::accepted, fileDialog, &FilesDirsDilog::selectedAccept);
+
+    QStringList names;
+    if (fileDialog->exec() == QDialog::Accepted)
+    {
+        names = fileDialog->selectedFiles();
+    }
+
+    RETURN_IF_TRUE(names.isEmpty());
+    m_ui->m_table->addFiles(names);
 }
 
 void FileShredPage::initUI()

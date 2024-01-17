@@ -178,6 +178,11 @@ void BaselineReinforcement::updateProgressInfo(KS::BR::ProgressInfo &progressInf
     }
 }
 
+uint BaselineReinforcement::getFallbackStatus()
+{
+    return m_dbusProxy->fallback_status();
+}
+
 void BaselineReinforcement::importStrategy()
 {
     auto fileName = QFileDialog::getOpenFileName(this, tr("Files"), "/", tr("strategy(*.xml)"));
