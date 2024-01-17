@@ -120,6 +120,7 @@ private:
 
 private slots:
     void checkedAllItem(Qt::CheckState checkState);
+    void mouseEnter(const QModelIndex &index);
 
 private:
     FileShredFilterModel *m_filterProxy;

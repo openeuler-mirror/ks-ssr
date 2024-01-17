@@ -144,14 +144,14 @@ int Box::mount(const QString &currentPassword)
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Mount password error!";
-        return (int)SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
+        return static_cast<int>(SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR);
     }
 
     // 已挂载则返回
     if (boxInfo.mounted)
     {
         KLOG_WARNING() << "The box has been mounted and there is no need to repeat the operation. uid = " << m_boxID;
-        return (int)SSRErrorCode::SUCCESS;
+        return static_cast<int>(SSRErrorCode::SUCCESS);
     }
 
     // 挂载
@@ -162,21 +162,21 @@ int Box::mount(const QString &currentPassword)
     auto mountPath = QString("%1/%2").arg(SSR_BOX_MOUNT_DIR, boxInfo.boxName);
     if (!m_ecryptFS->mkdirBoxDir(mountPath, getUser()))
     {
-        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return static_cast<int>(SSRErrorCode::ERROR_BM_INTERNAL_ERRORS);
     }
 
     auto mountObjectPath = QString("%1/%2%3").arg(SSR_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
     if (!m_ecryptFS->decrypt(mountObjectPath, mountPath, decryptPspr, decryptSig))
     {
-        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return static_cast<int>(SSRErrorCode::ERROR_BM_INTERNAL_ERRORS);
     }
 
     // 修改数据库中挂载状态
     if (!m_boxDao->modifyMountStatus(m_boxID, true))
     {
-        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return static_cast<int>(SSRErrorCode::ERROR_BM_INTERNAL_ERRORS);
     }
-    return (int)SSRErrorCode::SUCCESS;
+    return static_cast<int>(SSRErrorCode::SUCCESS);
 }
 
 int Box::umount(bool isForce)
@@ -268,7 +268,6 @@ bool Box::addToDao()
 
     // 创建随机uid 暂定为六位字符, 作为唯一标识符
     m_boxID = getRandBoxUid();
-
     // 插入数据库
     m_boxDao->addBox(m_name,
                      m_boxID,
