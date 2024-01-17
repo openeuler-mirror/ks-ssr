@@ -464,5 +464,17 @@ void FileShredTable::checkedAllItem(Qt::CheckState checkState)
     }
 }
 
+void FileShredTable::mouseEnter(const QModelIndex &index)
+{
+    // 判断内容是否显示完整
+    auto itemRect = this->visualRect(index);
+    // 计算文本宽度
+    QFontMetrics metrics(this->font());
+    auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
+    RETURN_IF_TRUE(textWidth <= itemRect.width())
+    auto mod = selectionModel()->model()->data(index);
+    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
+}
+
 }  // namespace ToolBox
 }  // namespace KS
