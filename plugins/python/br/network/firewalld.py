@@ -181,6 +181,13 @@ class FirewallManager(Firewall):
             br.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
             self.flag_first = False
 
+        if "tcp" in args['tcp-udp']:
+            self.del_iptables_history('udp', 'INPUT')
+            self.del_iptables_history('udp', 'OUTPUT')
+        else:
+            self.del_iptables_history('tcp', 'INPUT')
+            self.del_iptables_history('tcp', 'OUTPUT')
+
         if args['input-ports-connect-nums'] == 0:
             self.del_iptables_history('1:60999')
         else:

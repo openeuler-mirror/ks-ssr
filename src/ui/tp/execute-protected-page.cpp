@@ -124,7 +124,6 @@ bool ExecuteProtectedPage::isExistSelectedItem()
     {
         RETURN_VAL_IF_TRUE(trustedInfo.selected, true)
     }
-
     return false;
 }
 
@@ -161,10 +160,13 @@ void ExecuteProtectedPage::recertification(bool checked)
     auto trustedInfos = m_ui->m_executeTable->getExecuteRecords();
     for (auto trustedInfo : trustedInfos)
     {
-        if (trustedInfo.selected)
-        {
-            fileList << trustedInfo.filePath;
-        }
+        CONTINUE_IF_TRUE(!trustedInfo.selected)
+        fileList << trustedInfo.filePath;
+    }
+    if (fileList.isEmpty())
+    {
+        POPUP_MESSAGE_DIALOG(tr("Please select the content that needs to be operated."));
+        return;
     }
     auto reply = m_dbusProxy->AddTrustedFiles(fileList);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);

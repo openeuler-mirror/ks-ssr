@@ -128,7 +128,6 @@ void Scan::usingCustomStrategy()
 void Scan::reset()
 {
     m_ui->m_progress->resetProgress();
-    clearState();
 }
 
 bool Scan::exportStrategy()

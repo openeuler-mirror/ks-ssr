@@ -76,28 +76,23 @@ class Job : public QObject
     Q_OBJECT
 public:
     virtual ~Job();
-
     // 创建任务
     static QSharedPointer<Job> create();
-
     // 获取任务ID
     int64_t getId()
     {
-        return this->job_id_;
+        return this->m_jobID;
     };
-
     // 获取任务状态
     BRJobState getState()
     {
-        return this->state_;
+        return this->m_state;
     };
-
     // 获取操作
-    QSharedPointer<Operation> getOperation(int32_t operation_id)
+    QSharedPointer<Operation> getOperation(int32_t operationID)
     {
-        return MapHelper::getValue(this->operations_, operation_id);
+        return MapHelper::getValue(this->m_operations, operationID);
     };
-
     // 添加一个操作，返回操作ID
     QSharedPointer<Operation> addOperation(const QString &plugin_name,
                                            const QString &reinforcement_name,
@@ -105,54 +100,41 @@ public:
 
     // 同步运行任务
     bool runSync();
-
     // 异步运行任务
     bool runAsync();
-
     // 取消任务，只对run_async有效
     bool cancel();
 
-    // sigc::signal<void, const JobResult &> &signal_process_changed() { return this->process_changed_; };
-
-    // sigc::signal<void> &signal_process_finished() { return this->process_finished_; };
-
 private:
     Job(int64_t job_id);
-
     // 运行前初始化
-    void run_init();
-
+    void runInit();
     // 线程中运行操作
-    void run_operation(QSharedPointer<Operation> operation);
-
+    void runOperation(QSharedPointer<Operation> operation);
     // 空闲时监听任务的进度
-    bool idle_check_operation();
+    bool idleCheckOperation();
 
 private:
-    int64_t job_id_;
-    BRJobState state_;
-    QTimer *timer;
-    // sigc::connection timeout_handler_;
+    int64_t m_jobID;
+    BRJobState m_state;
+    // 定时监控任务完成状态
+    QTimer *m_monitorTimer;
     // 操作集合
-    QMap<int32_t, QSharedPointer<Operation>> operations_;
+    QMap<int32_t, QSharedPointer<Operation>> m_operations;
     // 任务执行的结果
-    JobResult job_result_;
+    JobResult m_jobResult;
     // 操作互斥
-    QMutex operations_mutex_;
+    QMutex m_operationsMutex;
     // 任务需要取消
-    bool need_cancel_;
-
-    static int64_t job_count_;
-
-    // sigc::signal<void, const JobResult &> process_changed_;
-    // sigc::signal<void> process_finished_;
+    bool m_isNeedCancel;
+    static int64_t m_jobCount;
 
 signals:
     // 任务进度变化的信号
-    void process_changed_(const JobResult &);
+    void processChanged(const JobResult &);
 
     // 任务完成信号
-    void process_finished_();
+    void processFinished();
 };
 
 typedef QVector<QSharedPointer<Job>> BRJobVec;

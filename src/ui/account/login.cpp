@@ -83,12 +83,9 @@ void Login::initUI()
     m_ui->m_comboBox->addItems(QStringList() << SSR_ACCOUNT_NAME_SYSADM
                                              << SSR_ACCOUNT_NAME_SECADM
                                              << SSR_ACCOUNT_NAME_AUDADM);
-
-    //    connect(m_ui->m_comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this](int index){
-    //        emit accountChanged(AccountRole(index));
-    //    });
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &Login::close);
     connect(m_ui->m_ok, &QPushButton::clicked, this, &Login::accepted);
+    connect(m_ui->m_password, &QLineEdit::returnPressed, this, &Login::accepted);
 
     // 限制字符
     m_ui->m_password->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
