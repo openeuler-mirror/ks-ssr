@@ -42,11 +42,6 @@ bool TableFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &source
     {
         auto index = sourceModel()->index(sourceRow, i, sourceParent);
         auto text = sourceModel()->data(index).toString();
-        // 状态栏为枚举值，需要进行转换
-        if (i == LIST_TABLE_FIELD_STATUS)
-        {
-            text = Utils::deviceStateEnum2Str(DeviceState(sourceModel()->data(index).toInt()));
-        }
         sourceString += text;
     }
 

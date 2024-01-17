@@ -150,9 +150,9 @@ private:
 private:
     void init();
     // 扫描进度信号处理
-    void scanProcessChangedCb(const JobResult &jobResult);
+    void scanResultHandle(const JobResult &jobResult);
     // 加固进度信号处理
-    void reinforceProcessChangedCb(const JobResult &jobResult);
+    void reinforceResultHandle(const JobResult &jobResult);
     // 资源监控开启/关闭
     bool setResourceMonitor();
     // 进程完成处理函数
@@ -173,7 +173,7 @@ private:
 
 private:
     static BRDBus *m_instance;
-    QTimer *m_resouceMonitorTimer;
+    QTimer *m_resourceMonitorTimer;
     Configuration *m_configuration;
     Categories *m_categories;
     Plugins *m_plugins;

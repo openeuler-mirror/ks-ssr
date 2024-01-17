@@ -173,6 +173,7 @@ void Manager::ShredFile(const QStringList& filePath)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     Log::Log log = {role, QDateTime::currentDateTime(), Log::Manager::LogType::TOOL_BOX, false, "Shred file"};
+    // TODO : 粉碎文件夹不生效
     auto cmd = getProcess(log, SHRED_PATH, QStringList{SHRED_ARG_1, SHRED_ARG_2} << filePath);
     cmd->startDetached();
 }

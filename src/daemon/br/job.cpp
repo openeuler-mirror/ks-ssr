@@ -25,29 +25,29 @@ namespace KS
 {
 namespace BRDaemon
 {
-int64_t Job::job_count_ = 0;
+int64_t Job::m_jobCount = 0;
 
 QSharedPointer<Job> Job::create()
 {
-    QSharedPointer<Job> job(new Job(++Job::job_count_));
+    QSharedPointer<Job> job(new Job(++Job::m_jobCount));
     return job;
 }
 
 Job::Job(int64_t job_id)
-    : job_id_(job_id),
-      state_(BRJobState::BR_JOB_STATE_IDLE),
-      timer(nullptr),
-      need_cancel_(false)
+    : m_jobID(job_id),
+      m_state(BRJobState::BR_JOB_STATE_IDLE),
+      m_monitorTimer(nullptr),
+      m_isNeedCancel(false)
 {
 }
 
 Job::~Job()
 {
-    if (this->timer)
+    if (this->m_monitorTimer)
     {
         // this->timeout_handler_.disconnect();
-        QObject::disconnect(this->timer, &QTimer::timeout, this, &Job::idle_check_operation);
-        delete this->timer;
+        QObject::disconnect(this->m_monitorTimer, &QTimer::timeout, this, &Job::idleCheckOperation);
+        delete this->m_monitorTimer;
     }
 }
 
@@ -55,70 +55,70 @@ QSharedPointer<Operation> Job::addOperation(const QString &plugin_name,
                                             const QString &reinforcement_name,
                                             std::function<QString(void)> func)
 {
-    auto operation = QSharedPointer<Operation>(new Operation({this->job_id_,
-                                                              this->operations_.size() + 1,
+    auto operation = QSharedPointer<Operation>(new Operation({this->m_jobID,
+                                                              this->m_operations.size() + 1,
                                                               plugin_name,
                                                               reinforcement_name,
                                                               std::move(func)}));
-    if (this->operations_.find(operation->operation_id) != this->operations_.end())
+    if (this->m_operations.find(operation->operation_id) != this->m_operations.end())
     {
         // 正常不应该执行到这里
         KLOG_WARNING("The operation %d is already exist.", operation->operation_id);
         return QSharedPointer<Operation>();
     }
-    this->operations_[operation->operation_id] = operation;
+    this->m_operations[operation->operation_id] = operation;
     return operation;
 }
 
 bool Job::runSync()
 {
-    KLOG_DEBUG("job id: %ld, operation num: %d.", this->job_id_, this->operations_.size());
+    KLOG_DEBUG("job id: %ld, operation num: %d.", this->m_jobID, this->m_operations.size());
 
-    RETURN_VAL_IF_FALSE(this->state_ == BRJobState::BR_JOB_STATE_IDLE, false);
-    this->state_ = BRJobState::BR_JOB_STATE_RUNNING;
+    RETURN_VAL_IF_FALSE(this->m_state == BRJobState::BR_JOB_STATE_IDLE, false);
+    this->m_state = BRJobState::BR_JOB_STATE_RUNNING;
 
-    this->run_init();
+    this->runInit();
 
-    for (auto iter = this->operations_.begin(); iter != this->operations_.end(); ++iter)
+    for (auto iter = this->m_operations.begin(); iter != this->m_operations.end(); ++iter)
     {
         OperationResult result;
         auto operation = iter.value();
         result.operation_id = operation->operation_id;
         result.result = operation->func();
-        ++this->job_result_.finished_operation_num;
-        this->job_result_.current_finished_operations.push_back(std::move(result));
+        ++this->m_jobResult.finished_operation_num;
+        this->m_jobResult.current_finished_operations.push_back(std::move(result));
 
-        if (this->job_result_.finished_operation_num == this->job_result_.sum_operation_num)
-            this->state_ = BRJobState::BR_JOB_STATE_DONE;
-        Q_EMIT this->process_changed_(this->job_result_);
-        if (this->job_result_.finished_operation_num == this->job_result_.sum_operation_num)
-            Q_EMIT this->process_finished_();
+        if (this->m_jobResult.finished_operation_num == this->m_jobResult.sum_operation_num)
+            this->m_state = BRJobState::BR_JOB_STATE_DONE;
+        Q_EMIT this->processChanged(this->m_jobResult);
+        if (this->m_jobResult.finished_operation_num == this->m_jobResult.sum_operation_num)
+            Q_EMIT this->processFinished();
     }
-    this->state_ = BRJobState::BR_JOB_STATE_IDLE;
+    this->m_state = BRJobState::BR_JOB_STATE_IDLE;
     return true;
 }
 
 bool Job::runAsync()
 {
-    KLOG_DEBUG("job id: %ld, operation num: %d.", this->job_id_, this->operations_.size());
+    KLOG_DEBUG("job id: %ld, operation num: %d.", this->m_jobID, this->m_operations.size());
 
-    RETURN_VAL_IF_FALSE(this->state_ == BRJobState::BR_JOB_STATE_IDLE, false);
-    this->state_ = BRJobState::BR_JOB_STATE_RUNNING;
+    RETURN_VAL_IF_FALSE(this->m_state == BRJobState::BR_JOB_STATE_IDLE, false);
+    this->m_state = BRJobState::BR_JOB_STATE_RUNNING;
 
-    this->run_init();
+    this->runInit();
 
     // 定时监听任务完成的情况
-    timer = new QTimer();
-    timer->setInterval(100);
-    connect(this->timer, &QTimer::timeout, this, &Job::idle_check_operation);
-    this->timer->start();
+    m_monitorTimer = new QTimer(this);
+    m_monitorTimer->setInterval(100);
+    connect(this->m_monitorTimer, &QTimer::timeout, this, &Job::idleCheckOperation);
+    this->m_monitorTimer->start();
     auto &thread_pool = Plugins::getInstance()->getThreadPool();
     {
-        QMutexLocker guard(&(this->operations_mutex_));
-        for (auto iter = this->operations_.begin(); iter != this->operations_.end(); ++iter)
+        QMutexLocker guard(&(this->m_operationsMutex));
+        for (auto iter = this->m_operations.begin(); iter != this->m_operations.end(); ++iter)
         {
             thread_pool.enqueueByIdx(std::hash<std::string>()(iter.value()->reinforcement_name.toStdString()),
-                                     std::bind(&Job::run_operation, this, iter.value()));
+                                     std::bind(&Job::runOperation, this, iter.value()));
         }
     }
     return true;
@@ -127,22 +127,22 @@ bool Job::runAsync()
 bool Job::cancel()
 {
     // 只有在运行中的任务才可以取消
-    RETURN_VAL_IF_FALSE(this->state_ == BRJobState::BR_JOB_STATE_RUNNING, false);
-    this->need_cancel_ = true;
+    RETURN_VAL_IF_FALSE(this->m_state == BRJobState::BR_JOB_STATE_RUNNING, false);
+    this->m_isNeedCancel = true;
     return true;
 }
 
-void Job::run_init()
+void Job::runInit()
 {
-    this->job_result_.job_id = this->job_id_;
-    this->job_result_.sum_operation_num = this->operations_.size();
-    this->job_result_.finished_operation_num = 0;
-    this->job_result_.running_operations.clear();
-    this->job_result_.current_finished_operations.clear();
-    this->need_cancel_ = false;
+    this->m_jobResult.job_id = this->m_jobID;
+    this->m_jobResult.sum_operation_num = this->m_operations.size();
+    this->m_jobResult.finished_operation_num = 0;
+    this->m_jobResult.running_operations.clear();
+    this->m_jobResult.current_finished_operations.clear();
+    this->m_isNeedCancel = false;
 }
 
-void Job::run_operation(QSharedPointer<Operation> operation)
+void Job::runOperation(QSharedPointer<Operation> operation)
 {
     RETURN_IF_FALSE(operation);
 
@@ -152,13 +152,13 @@ void Job::run_operation(QSharedPointer<Operation> operation)
     KLOG_DEBUG("running operation: %d, job id: %lu.", operation->operation_id, operation->job_id);
 
     {
-        QMutexLocker guard(&(this->operations_mutex_));
-        this->job_result_.running_operations.push_back(operation->operation_id);
-        this->job_result_.queue_is_changed = true;
+        QMutexLocker guard(&(this->m_operationsMutex));
+        this->m_jobResult.running_operations.push_back(operation->operation_id);
+        this->m_jobResult.queue_is_changed = true;
     }
 
     // 任务如果已经取消，则不再执行插件函数
-    if (!this->need_cancel_)
+    if (!this->m_isNeedCancel)
     {
         result.result = operation->func();
     }
@@ -166,27 +166,27 @@ void Job::run_operation(QSharedPointer<Operation> operation)
     KLOG_DEBUG("finished operation: %d, job id: %ld.", operation->operation_id, operation->job_id);
 
     {
-        QMutexLocker guard(&(this->operations_mutex_));
-        ++this->job_result_.finished_operation_num;
+        QMutexLocker guard(&(this->m_operationsMutex));
+        ++this->m_jobResult.finished_operation_num;
         // 从正在运行的队列中删除
-        auto iter = std::remove(this->job_result_.running_operations.begin(), this->job_result_.running_operations.end(), operation->operation_id);
-        this->job_result_.running_operations.erase(iter, this->job_result_.running_operations.end());
+        auto iter = std::remove(this->m_jobResult.running_operations.begin(), this->m_jobResult.running_operations.end(), operation->operation_id);
+        this->m_jobResult.running_operations.erase(iter, this->m_jobResult.running_operations.end());
         // 添加到已完成队列
-        this->job_result_.current_finished_operations.push_back(std::move(result));
-        this->job_result_.queue_is_changed = true;
+        this->m_jobResult.current_finished_operations.push_back(std::move(result));
+        this->m_jobResult.queue_is_changed = true;
     }
 }
 
-bool Job::idle_check_operation()
+bool Job::idleCheckOperation()
 {
     JobResult tmp_result;
     {
-        QMutexLocker guard(&(this->operations_mutex_));
-        if (this->job_result_.queue_is_changed)
+        QMutexLocker guard(&(this->m_operationsMutex));
+        if (this->m_jobResult.queue_is_changed)
         {
-            tmp_result = this->job_result_;
-            this->job_result_.current_finished_operations.clear();
-            this->job_result_.queue_is_changed = false;
+            tmp_result = this->m_jobResult;
+            this->m_jobResult.current_finished_operations.clear();
+            this->m_jobResult.queue_is_changed = false;
         }
     }
 
@@ -200,19 +200,19 @@ bool Job::idle_check_operation()
                    tmp_result.current_finished_operations.size());
 
         if (tmp_result.finished_operation_num == tmp_result.sum_operation_num)
-            this->state_ = this->need_cancel_ ? BRJobState::BR_JOB_STATE_CANCEL_DONE : BRJobState::BR_JOB_STATE_DONE;
+            this->m_state = this->m_isNeedCancel ? BRJobState::BR_JOB_STATE_CANCEL_DONE : BRJobState::BR_JOB_STATE_DONE;
 
-        Q_EMIT this->process_changed_(tmp_result);
+        Q_EMIT this->processChanged(tmp_result);
         if (tmp_result.finished_operation_num == tmp_result.sum_operation_num)
         {
-            Q_EMIT this->process_finished_();
+            Q_EMIT this->processFinished();
         }
 
         // 确保前面的信号发送出去后再将状态设置为空闲，这样信号的回调函数能够收到正确的状态值
-        if (this->state_ == BRJobState::BR_JOB_STATE_DONE ||
-            this->state_ == BRJobState::BR_JOB_STATE_CANCEL_DONE)
+        if (this->m_state == BRJobState::BR_JOB_STATE_DONE ||
+            this->m_state == BRJobState::BR_JOB_STATE_CANCEL_DONE)
         {
-            this->state_ = BRJobState::BR_JOB_STATE_IDLE;
+            this->m_state = BRJobState::BR_JOB_STATE_IDLE;
             return false;
         }
     }

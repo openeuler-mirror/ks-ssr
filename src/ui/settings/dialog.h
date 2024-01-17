@@ -38,6 +38,8 @@ public:
     };
 
     void addSidebars(const QStringList &sidebarNames);
+    // 获取回退状态，当退回进行中时，不允许用户退出
+    uint getFallbackStatus();
 
 private:
     Dialog(QWidget *parent = nullptr);

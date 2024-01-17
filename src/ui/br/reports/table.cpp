@@ -14,7 +14,7 @@
 
 #include "table.h"
 #include "ui_table.h"
-
+#include <QFileInfo>
 #include <QSizePolicy>
 #include <QVBoxLayout>
 
@@ -62,7 +62,10 @@ Table::Table(QWidget *parent,
     }
 
     m_ui->m_tailBar->setText(tr("Technical support：Hunan KylinSec Technology Co. Ltd.,  Telephone：400-012-6606"));
-
+    // 通过判断图片是否存在来确认字体颜色
+    QFileInfo end(":/images/pdf-end");
+    auto style = QString("QLabel{color: %1;}").arg(end.size() == 0 ? "black" : "white");
+    m_ui->m_tailBar->setStyleSheet(style);
     m_ui->m_tailBar->hide();
     m_ui->m_tailPic->hide();
 }

@@ -39,7 +39,7 @@ Pagination::Pagination(int totalPage, int maxShowPages, bool jumpEdit, QWidget *
         m_jumpLineEdit->setFixedSize(QSize(72, 30));
         m_ui->horizontalLayout_jump->addWidget(m_jumpLineEdit);
         m_jumpLineEdit->setValidator(new QIntValidator(this));
-        m_jumpLineEdit->setPlaceholderText("Input page");
+        m_jumpLineEdit->setPlaceholderText(tr("Input page"));
         connect(m_jumpLineEdit, SIGNAL(returnPressed()), this, SLOT(jumpPage()));
     }
     initUI();
