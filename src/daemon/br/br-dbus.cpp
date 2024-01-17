@@ -75,7 +75,7 @@ static int _audit_log(int type, int rc, const char* op)
 
 BRDBus::BRDBus(QObject* parent)
     : QObject(parent),
-      m_resouceMonitorTimer(nullptr),
+      m_resourceMonitorTimer(nullptr),
       m_isScanFlag(true),
       m_isFinishRHWrite(true)
 {
@@ -85,11 +85,11 @@ BRDBus::BRDBus(QObject* parent)
 
 BRDBus::~BRDBus()
 {
-    if (this->m_resouceMonitorTimer)
+    if (this->m_resourceMonitorTimer)
     {
-        m_resouceMonitorTimer->stop();
-        QObject::disconnect(this->m_resouceMonitorTimer, SIGNAL(QTimer::timeout()), this, SLOT(BRDBus::setResourceMonitor()));
-        delete this->m_resouceMonitorTimer;
+        m_resourceMonitorTimer->stop();
+        QObject::disconnect(this->m_resourceMonitorTimer, SIGNAL(QTimer::timeout()), this, SLOT(BRDBus::setResourceMonitor()));
+        delete this->m_resourceMonitorTimer;
     }
 }
 
@@ -146,6 +146,7 @@ void BRDBus::SetStandardType(const uint32_t& standardType)
     if (standardType >= BRStandardType::BR_STANDARD_TYPE_LAST)
     {
         sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID));
+        return;
     }
 
     RETURN_IF_TRUE(standardType == this->m_configuration->getStandardType())
@@ -153,6 +154,7 @@ void BRDBus::SetStandardType(const uint32_t& standardType)
     if (!this->m_configuration->setStandardType(BRStandardType(standardType)))
     {
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_STANDARD_TYPE_FAILED));
+        return;
     }
 }
 
@@ -161,10 +163,10 @@ void BRDBus::ImportCustomRS(const QString& encodedStandard)
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
-    BRErrorCode error_code = BRErrorCode::SUCCESS;
-    if (!this->m_configuration->setCustomRs(encodedStandard, error_code))
+    BRErrorCode errorCode = BRErrorCode::SUCCESS;
+    if (!this->m_configuration->setCustomRs(encodedStandard, errorCode))
     {
-        sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(error_code));
+        sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(errorCode));
         SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Fail to import custom reinforce standard.", false);
         return;
     }
@@ -185,6 +187,7 @@ void BRDBus::SetStrategyType(const uint32_t& strategyType)
     if (strategyType == this->m_configuration->getStrategyType())
     {
         SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set strategy type to " + QString::number(strategyType));
+        return;
     }
 
     if (!this->m_configuration->setStrategyType(BRStrategyType(strategyType)))
@@ -315,13 +318,13 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
         return;
     }
 
-    m_resouceMonitorTimer->stop();
-    QObject::disconnect(this->m_resouceMonitorTimer, SIGNAL(timeout()), this, SLOT(BRDBus::setResourceMonitor()));
+    m_resourceMonitorTimer->stop();
+    QObject::disconnect(this->m_resourceMonitorTimer, SIGNAL(timeout()), this, SLOT(BRDBus::setResourceMonitor()));
     if (BRResourceMonitor(resourceMonitor) == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {
-        this->m_resouceMonitorTimer = new QTimer(this);
-        QObject::connect(this->m_resouceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
-        this->m_resouceMonitorTimer->start(RESOURCEMONITORMS);
+        this->m_resourceMonitorTimer = new QTimer(this);
+        QObject::connect(this->m_resourceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
+        this->m_resourceMonitorTimer->start(RESOURCEMONITORMS);
     }
 
     SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set resource monitor switch to " + QString::number(resourceMonitor));
@@ -353,7 +356,7 @@ QString BRDBus::GetCategories()
 
 QString BRDBus::GetRS()
 {
-    std::ostringstream ostring_stream;
+    std::ostringstream ostringStream;
     auto rs = this->m_configuration->getRs();
 
     if (!rs)
@@ -363,38 +366,38 @@ QString BRDBus::GetRS()
 
     try
     {
-        Protocol::br_rs(ostring_stream, *rs.get());
+        Protocol::br_rs(ostringStream, *rs.get());
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_GET_RS_FAILED));
     }
-    return QString::fromStdString(ostring_stream.str());
+    return QString::fromStdString(ostringStream.str());
 }
 
 QString BRDBus::GetReinforcements()
 {
-    std::ostringstream ostring_stream;
-    Protocol::Reinforcements protocol_reinforcements;
+    std::ostringstream ostringStream;
+    Protocol::Reinforcements protocolReinforcements;
 
     auto reinforcements = this->m_plugins->getReinforcements();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        auto& rs_reinforcement = (*iter)->getRs();
-        protocol_reinforcements.reinforcement().push_back(rs_reinforcement);
+        auto& rsReinforcement = (*iter)->getRs();
+        protocolReinforcements.reinforcement().push_back(rsReinforcement);
     }
 
     try
     {
-        Protocol::br_reinforcements(ostring_stream, protocol_reinforcements);
+        Protocol::br_reinforcements(ostringStream, protocolReinforcements);
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED));
     }
-    return QString::fromStdString(ostring_stream.str());
+    return QString::fromStdString(ostringStream.str());
 }
 
 void BRDBus::ResetReinforcements()
@@ -408,24 +411,24 @@ void BRDBus::ResetReinforcements()
 
 QString BRDBus::GetReinforcement(const QString& name)
 {
-    std::ostringstream ostring_stream;
+    std::ostringstream ostringStream;
     auto reinforcement = this->m_plugins->getReinforcement(name);
     if (!reinforcement)
     {
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
     }
-    auto& rs_reinforcement = reinforcement->getRs();
+    auto& rsReinforcement = reinforcement->getRs();
 
     try
     {
-        Protocol::br_reinforcement(ostring_stream, rs_reinforcement);
+        Protocol::br_reinforcement(ostringStream, rsReinforcement);
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED));
     }
-    return QString::fromStdString(ostring_stream.str());
+    return QString::fromStdString(ostringStream.str());
 }
 
 void BRDBus::SetReinforcement(const QString& reinforcementXML)
@@ -434,9 +437,9 @@ void BRDBus::SetReinforcement(const QString& reinforcementXML)
 
     try
     {
-        std::istringstream istring_stream(reinforcementXML.toStdString());
-        auto rs_reinforcement = Protocol::br_reinforcement(istring_stream, xml_schema::Flags::dont_validate);
-        if (!this->m_configuration->setCustomRa(*rs_reinforcement.get()))
+        std::istringstream istringStream(reinforcementXML.toStdString());
+        auto rsReinforcement = Protocol::br_reinforcement(istringStream, xml_schema::Flags::dont_validate);
+        if (!this->m_configuration->setCustomRa(*rsReinforcement.get()))
         {
             sendErrorReply(QDBusError::InternalError,
                            BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
@@ -501,8 +504,7 @@ void BRDBus::Scan(const QStringList& names)
 
             this->m_scanJob->addOperation(reinforcement->getPluginName(),
                                           reinforcement->getName(),
-                                          [reinforcement_interface]() -> QString
-                                          {
+                                          [reinforcement_interface]() -> QString {
                                               QJsonObject retval;
                                               QString args;
                                               QString error;
@@ -526,10 +528,10 @@ void BRDBus::Scan(const QStringList& names)
         SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to scan.", false);
         return;
     }
-    QObject::disconnect(this->m_scanJob.get(), &Job::process_finished_, 0, 0);
-    QObject::connect(this->m_scanJob.get(), &Job::process_finished_, this, &BRDBus::finishedScanProgress);
-    QObject::disconnect(this->m_scanJob.get(), &Job::process_changed_, 0, 0);
-    QObject::connect(this->m_scanJob.get(), &Job::process_changed_, this, &BRDBus::scanProcessChangedCb);
+    QObject::disconnect(this->m_scanJob.get(), &Job::processFinished, 0, 0);
+    QObject::connect(this->m_scanJob.get(), &Job::processFinished, this, &BRDBus::finishedScanProgress);
+    QObject::disconnect(this->m_scanJob.get(), &Job::processChanged, 0, 0);
+    QObject::connect(this->m_scanJob.get(), &Job::processChanged, this, &BRDBus::scanResultHandle);
 
     if (!this->m_scanJob->runAsync())
     {
@@ -587,8 +589,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         auto paramStr = getJsonParam(name);
         this->m_reinforceJob->addOperation(reinforcement->getPluginName(),
                                            reinforcement->getName(),
-                                           [reinforcement_interface, paramStr]() -> QString
-                                           {
+                                           [reinforcement_interface, paramStr]() -> QString {
                                                QString error;
                                                QJsonObject retval;
                                                if (!reinforcement_interface->set(paramStr, error))
@@ -603,10 +604,10 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
                                                return StrUtils::json2str(retval);
                                            });
     }
-    QObject::disconnect(this->m_reinforceJob.get(), &Job::process_changed_, 0, 0);
-    QObject::connect(this->m_reinforceJob.get(), &Job::process_changed_, this, &BRDBus::reinforceProcessChangedCb);
-    QObject::disconnect(this->m_reinforceJob.get(), &Job::process_finished_, 0, 0);
-    QObject::connect(this->m_reinforceJob.get(), &Job::process_finished_, this, &BRDBus::finishedReinforceProgress);
+    QObject::disconnect(this->m_reinforceJob.get(), &Job::processChanged, 0, 0);
+    QObject::connect(this->m_reinforceJob.get(), &Job::processChanged, this, &BRDBus::reinforceResultHandle);
+    QObject::disconnect(this->m_reinforceJob.get(), &Job::processFinished, 0, 0);
+    QObject::connect(this->m_reinforceJob.get(), &Job::processFinished, this, &BRDBus::finishedReinforceProgress);
 
     if (!this->m_reinforceJob->runAsync())
     {
@@ -623,7 +624,7 @@ void BRDBus::Cancel(const qlonglong& jobID)
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
-    BRErrorCode error_code = BRErrorCode::SUCCESS;
+    BRErrorCode errorCode = BRErrorCode::SUCCESS;
 
     if (this->m_scanJob &&
         jobID == this->m_scanJob->getId() &&
@@ -631,7 +632,7 @@ void BRDBus::Cancel(const qlonglong& jobID)
     {
         if (!this->m_scanJob->cancel())
         {
-            error_code = BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1;
+            errorCode = BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1;
         }
     }
     else if (this->m_reinforceJob &&
@@ -640,17 +641,17 @@ void BRDBus::Cancel(const qlonglong& jobID)
     {
         if (!this->m_reinforceJob->cancel())
         {
-            error_code = BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2;
+            errorCode = BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2;
         }
     }
     else
     {
-        error_code = BRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB;
+        errorCode = BRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB;
     }
 
-    if (error_code != BRErrorCode::SUCCESS)
+    if (errorCode != BRErrorCode::SUCCESS)
     {
-        sendErrorReply(QDBusError::Failed, BR_ERROR2STR(error_code));
+        sendErrorReply(QDBusError::Failed, BR_ERROR2STR(errorCode));
         SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to cancel progress.", false);
         return;
     }
@@ -672,8 +673,8 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
     auto reinforcements = this->m_plugins->getReinforcements();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        auto& rs_reinforcement = (*iter)->getRs();
-        names_rh.push_back(QString::fromStdString(rs_reinforcement.name()));
+        auto& rsReinforcement = (*iter)->getRs();
+        names_rh.push_back(QString::fromStdString(rsReinforcement.name()));
     }
     if (names_rh.empty())
     {
@@ -726,31 +727,30 @@ void BRDBus::init()
     QObject::connect(this->m_resourceMonitor, &ResourceMonitor::memoryRemainingRatio_, this, &BRDBus::memoryRemainingRatio);
 
     // 进程完成后，回退状态置为未开始
-    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]()
-                     {
-                         RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->m_configuration->getFallbackStatus());
-                         if (!this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
-                         {
-                             KLOG_ERROR() << "set fallback status failed.";
-                         }
-                     });
+    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]() {
+        RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->m_configuration->getFallbackStatus());
+        if (!this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
+        {
+            KLOG_ERROR() << "set fallback status failed.";
+        }
+    });
 
     if (m_configuration->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {
-        m_resouceMonitorTimer = new QTimer(this);
-        QObject::connect(this->m_resouceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
-        m_resouceMonitorTimer->start(RESOURCEMONITORMS);
+        m_resourceMonitorTimer = new QTimer(this);
+        QObject::connect(this->m_resourceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
+        m_resourceMonitorTimer->start(RESOURCEMONITORMS);
     }
 
-    // 服务启动时自动扫描一次，获取系统默认配置存入rh-frist文件
+    // 服务启动时自动扫描一次，获取系统默认配置存入rh-first文件
     if (!QFile::exists(RH_BR_OPERATE_DATA_FIRST))
     {
         QStringList names;
         auto reinforcements = this->m_plugins->getReinforcements();
         for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
         {
-            auto& rs_reinforcement = (*iter)->getRs();
-            names.push_back(QString::fromStdString(rs_reinforcement.name()));
+            auto& rsReinforcement = (*iter)->getRs();
+            names.push_back(QString::fromStdString(rsReinforcement.name()));
         }
         m_isScanFlag = false;
         m_isFinishRHWrite = false;
@@ -758,7 +758,7 @@ void BRDBus::init()
     }
 }
 
-void BRDBus::scanProcessChangedCb(const JobResult& jobResult)
+void BRDBus::scanResultHandle(const JobResult& jobResult)
 {
     Protocol::JobResult scanResult(0, 0, 0);
     try
@@ -831,9 +831,9 @@ void BRDBus::scanProcessChangedCb(const JobResult& jobResult)
 
         if (m_isScanFlag)
         {
-            std::ostringstream ostring_stream;
-            Protocol::br_job_result(ostring_stream, scanResult);
-            emit ScanProgress(QString(ostring_stream.str().c_str()));
+            std::ostringstream ostringStream;
+            Protocol::br_job_result(ostringStream, scanResult);
+            emit ScanProgress(QString(ostringStream.str().c_str()));
         }
     }
     catch (const std::exception& e)
@@ -843,7 +843,7 @@ void BRDBus::scanProcessChangedCb(const JobResult& jobResult)
     }
 }
 
-void BRDBus::reinforceProcessChangedCb(const JobResult& jobResult)
+void BRDBus::reinforceResultHandle(const JobResult& jobResult)
 {
     Protocol::JobResult reinforceResult(0, 0, 0);
     try
@@ -894,9 +894,9 @@ void BRDBus::reinforceProcessChangedCb(const JobResult& jobResult)
         // 回退中，不关注进程信息
         if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
         {
-            std::ostringstream ostring_stream;
-            Protocol::br_job_result(ostring_stream, reinforceResult);
-            emit ReinforceProgress(QString(ostring_stream.str().c_str()));
+            std::ostringstream ostringStream;
+            Protocol::br_job_result(ostringStream, reinforceResult);
+            emit ReinforceProgress(QString(ostringStream.str().c_str()));
         }
     }
     catch (const std::exception& e)
@@ -935,7 +935,7 @@ void BRDBus::finishedReinforceProgress()
     emit ProgressFinished();
 }
 
-void BRDBus::parseJsonParam(const Protocol::Reinforcement::ArgSequence &argSequence, QJsonObject &param)
+void BRDBus::parseJsonParam(const Protocol::Reinforcement::ArgSequence& argSequence, QJsonObject& param)
 {
     for (auto argIter = argSequence.begin(); argIter != argSequence.end(); ++argIter)
     {
@@ -944,11 +944,11 @@ void BRDBus::parseJsonParam(const Protocol::Reinforcement::ArgSequence &argSeque
         // str2jsonValue中的类型转换没法区分line输入纯数字和数字输入框spin输入的纯数字，都会被转为double类型，这里需要进行判断,
         // 如果存在inputExample则肯定为line输入的纯数字，参数应该为str类型
         param.insert(argIter->name().c_str(), inputExample.isEmpty() ? StrUtils::str2jsonValue(argIter->value())
-                                                                      : QJsonValue::fromVariant(argIter->value().c_str()));
+                                                                     : QJsonValue::fromVariant(argIter->value().c_str()));
     }
 }
 
-QString BRDBus::getJsonParam(const QString &reinforceName)
+QString BRDBus::getJsonParam(const QString& reinforceName)
 {
     QJsonObject param;
     QString paramStr;
@@ -965,9 +965,9 @@ QString BRDBus::getJsonParam(const QString &reinforceName)
         auto reinforcements = this->m_plugins->getReinforcements();
         for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
         {
-            auto& rs_reinforcement = (*iter)->getRs();
-            CONTINUE_IF_TRUE(rs_reinforcement.name() != reinforceName.toStdString());
-            auto& iter_args = rs_reinforcement.arg();
+            auto& rsReinforcement = (*iter)->getRs();
+            CONTINUE_IF_TRUE(rsReinforcement.name() != reinforceName.toStdString());
+            auto& iter_args = rsReinforcement.arg();
             parseJsonParam(iter_args, param);
             paramStr = StrUtils::json2str(param);
         }
@@ -986,7 +986,7 @@ QString BRDBus::getJsonParam(const QString &reinforceName)
     return paramStr;
 }
 
-void BRDBus::updateRH(const QString &reinforceName, const QJsonObject &resultReturnValue)
+void BRDBus::updateRH(const QString& reinforceName, const QJsonObject& resultReturnValue)
 {
     auto reinforcement = this->m_plugins->getReinforcement(reinforceName);
 

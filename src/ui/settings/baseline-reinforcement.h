@@ -39,12 +39,11 @@ class BaselineReinforcement : public QWidget
 public:
     explicit BaselineReinforcement(QWidget *parent = nullptr);
     ~BaselineReinforcement();
+    uint getFallbackStatus();
 
 private:
-    void
-    initConnection();
+    void initConnection();
     void initUI();
-
     void updateProgressInfo(KS::BR::ProgressInfo &progressInfo);
 
 private slots:

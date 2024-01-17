@@ -14,6 +14,7 @@
 #include "dialog.h"
 #include <QIcon>
 #include "include/ssr-marcos.h"
+#include "src/ui/account/manager.h"
 #include "src/ui/settings/baseline-reinforcement.h"
 #include "src/ui/settings/device-control.h"
 #include "src/ui/settings/identity-authentication.h"
@@ -55,6 +56,13 @@ void Dialog::addSidebars(const QStringList &sidebarNames)
     }
     m_ui->m_sidebar->setCurrentRow(0);
     m_ui->m_stacked->setCurrentIndex(0);
+}
+
+uint Dialog::getFallbackStatus()
+{
+    RETURN_VAL_IF_TRUE(Account::Manager::instance()->getCurrentUserName() != SSR_ACCOUNT_NAME_SYSADM, BR_FALLBACK_STATUS_NOT_STARTED);
+    auto brSettings = static_cast<BaselineReinforcement *>(m_ui->m_stacked->widget(0));
+    return brSettings->getFallbackStatus();
 };
 
 Dialog::Dialog(QWidget *parent)

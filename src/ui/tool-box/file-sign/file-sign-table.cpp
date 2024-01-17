@@ -30,7 +30,7 @@
 #include <QToolTip>
 #include "file-sign-table.h"
 #include "include/ssr-i.h"
-#include "include/ssr-marcos.h"
+#include "common/ssr-marcos-ui.h"
 #include "src/ui/common/table/table-header-proxy.h"
 #include "src/ui/tp/delegate.h"
 
@@ -269,7 +269,7 @@ FileSignTable::FileSignTable(QWidget *parent)
 
     m_headerViewProxy->setStretchLastSection(true);
     m_headerViewProxy->setSectionsMovable(false);
-    m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft);
     m_headerViewProxy->setFixedHeight(24);
 
     // 设置垂直列表头
@@ -309,6 +309,12 @@ FileSignRecordMap FileSignTable::getData() const
 
 void FileSignTable::cleanSelectedData()
 {
+    auto keys = m_model->getSelectedData().keys();
+    if (keys.isEmpty())
+    {
+        POPUP_MESSAGE_DIALOG(tr("Please select the content that needs to be removed."));
+        return;
+    }
     m_model->removeData(m_model->getSelectedData().keys());
     emit dataSizeChanged();
 }

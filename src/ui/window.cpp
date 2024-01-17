@@ -14,6 +14,7 @@
 
 #include "src/ui/window.h"
 #include <qt5-log-i.h>
+#include <QCloseEvent>
 #include <QDBusConnection>
 #include <QFile>
 #include <QMenu>
@@ -21,6 +22,7 @@
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QX11Info>
+#include "common/ssr-marcos-ui.h"
 #include "include/ssr-i.h"
 #include "lib/base/notification-wrapper.h"
 #include "lib/license/license-proxy.h"
@@ -45,7 +47,6 @@
 #include "src/ui/tp/execute-protected-page.h"
 #include "src/ui/tp/kernel-protected-page.h"
 #include "src/ui/ui_window.h"
-#include "ssr-marcos.h"
 
 namespace KS
 {
@@ -119,6 +120,18 @@ void Window::resizeEvent(QResizeEvent *event)
         m_loading->setAutoFillBackground(true);
         m_loading->setFixedSize(720, 408);
     }
+}
+
+void Window::closeEvent(QCloseEvent *event)
+{
+    if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        event->ignore();
+        return;
+    }
+
+    TitlebarWindow::closeEvent(event);
 }
 
 void Window::login()
@@ -554,6 +567,11 @@ void Window::setNotifyStatus(bool disabled)
 
 void Window::logout(const QString &userName)
 {
+    if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        return;
+    }
     clearSidebar();
     while (m_ui->m_stackedPages->currentWidget() != nullptr)
     {
