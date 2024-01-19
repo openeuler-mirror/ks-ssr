@@ -48,7 +48,7 @@ void About::initUI()
     setResizeable(false);
 
     m_ui->m_version->setText(tr("KylinSec Security reinforcement sofware V1"));
-    m_ui->m_info->setText(QString("Version : V1.2"));
+    m_ui->m_info->setText(tr("Version : V1.2"));
     m_ui->m_license->setText("Copyright (c) 2023 ~ 2024 KylinSec Co. Ltd. All Rights Reserved.");
 }
 

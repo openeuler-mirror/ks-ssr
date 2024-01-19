@@ -146,7 +146,7 @@ void BaselineReinforcement::initConnection()
                 KLOG_WARNING() << "Memory space remaining " << ratio << ", below 10%";
                 if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
                 {
-                    Notify::NOTIFY_WARN(tr("Memory space remaining").toUtf8())
+                    Notify::NOTIFY_WARN(tr("Memory space less than 10%").toUtf8())
                 }
             });
 }
