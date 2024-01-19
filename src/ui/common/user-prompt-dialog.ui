@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DeleteNotify</class>
- <widget class="QWidget" name="DeleteNotify">
+ <class>UserPromptDialog</class>
+ <widget class="QWidget" name="UserPromptDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

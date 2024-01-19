@@ -50,7 +50,7 @@ public:
 private:
     Ui::Table *m_ui;
 
-    int m_rowHeight = 36;
+    int m_rowHeight;
 };
 }  // namespace BR
 }  // namespace KS

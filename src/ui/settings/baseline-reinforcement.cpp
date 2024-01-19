@@ -20,6 +20,7 @@
 #include "src/ui/br/br-i.h"
 #include "src/ui/br/reinforcement-items/category.h"
 #include "src/ui/br/utils.h"
+#include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "ui_baseline-reinforcement.h"
 
@@ -88,11 +89,27 @@ void BaselineReinforcement::initConnection()
 
     connect(m_ui->m_fallbackInit, &QPushButton::clicked, this, [this]
             {
-                fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL);
+                auto userPrompt = new UserPromptDialog(this);
+                userPrompt->setNotifyMessage(tr("Fallback"), tr("Are you sure you want to go back to the initialization state."));
+                auto x = window()->x() + window()->width() / 2 - userPrompt->width() / 2;
+                auto y = window()->y() + window()->height() / 2 - userPrompt->height() / 2;
+                userPrompt->move(x, y);
+                userPrompt->show();
+                connect(userPrompt, &UserPromptDialog::accepted, this, [this]{
+                    fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL);
+                });
             });
     connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this]
             {
-                fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST);
+                auto userPrompt = new UserPromptDialog(this);
+                userPrompt->setNotifyMessage(tr("Fallback"), tr("Are you sure you want to go back to the previous state."));
+                auto x = window()->x() + window()->width() / 2 - userPrompt->width() / 2;
+                auto y = window()->y() + window()->height() / 2 - userPrompt->height() / 2;
+                userPrompt->move(x, y);
+                userPrompt->show();
+                connect(userPrompt, &UserPromptDialog::accepted, this, [this]{
+                    fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST);
+                });
             });
 
     connect(m_dbusProxy, &BRDbusProxy::HomeFreeSpaceRatioLower, this, [this](const QString &spaceRatio)

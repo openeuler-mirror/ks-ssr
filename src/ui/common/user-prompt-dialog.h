@@ -19,18 +19,18 @@
 
 namespace Ui
 {
-class DeleteNotify;
+class UserPromptDialog;
 }
 
 namespace KS
 {
-class DeleteNotify : public TitlebarWindow
+class UserPromptDialog : public TitlebarWindow
 {
     Q_OBJECT
 
 public:
-    explicit DeleteNotify(QWidget *parent = nullptr);
-    ~DeleteNotify();
+    explicit UserPromptDialog(QWidget *parent = nullptr);
+    ~UserPromptDialog();
 
     void setNotifyMessage(const QString &title, const QString &message);
 
@@ -41,6 +41,6 @@ signals:
     void accepted();
 
 private:
-    Ui::DeleteNotify *m_ui;
+    Ui::UserPromptDialog *m_ui;
 };
 }  // namespace KS
