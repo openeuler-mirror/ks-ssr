@@ -31,6 +31,8 @@
 #define TABLE_MAX_LINE 28
 #define TABLE_SHOW_TAIL_MAX_LINE 20
 #define SSR_REPORTS_STYLE_PATH ":/styles/br-reports"
+// 初始扫描状态（未扫描）
+#define INI_SCAN_STATUS 4
 
 namespace KS
 {
@@ -227,55 +229,43 @@ bool Result::scanVulnerability(QStringList &rpmlist, const InvalidData &invalidD
 void Result::addCategoryResults(QPrinter &printer, const QList<Result::CategoryContent> &categoryContents, bool &showTailFlag)
 {
     auto count = 0;
+    // 由于会有三种状态，符合/不符合/未扫描，需要遍历三次进行添加
     // 先遍历添加不符合的项后添加符合项
     for (auto &categoryContent : categoryContents)
     {
-        count++;
-        if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_SAFE) == 1)
-        {
-            count--;
-            continue;
-        }
-
-        if (count >= TABLE_MAX_LINE)
-        {
-            count = 1;
-            addNewPainterPage(printer);
-        }
-        showTailFlag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
-
-        m_table->addLine(categoryContent.itemName,
-                         state2Str(categoryContent.scanStatus),
-                         state2Str(categoryContent.afterReinforceScanStatus),
-                         categoryContent.remarks,
-                         state2Color(categoryContent.scanStatus),
-                         state2Color(categoryContent.afterReinforceScanStatus),
-                         count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+        CONTINUE_IF_TRUE((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_SAFE) == 1 || categoryContent.scanStatus == INI_SCAN_STATUS);
+        addLineToTable(printer, categoryContent, showTailFlag, count);
     }
     // 符合项
     for (auto &categoryContent : categoryContents)
     {
-        count++;
-        if ((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_UNSAFE) == 2)
-        {
-            count--;
-            continue;
-        }
-
-        if (count >= TABLE_MAX_LINE)
-        {
-            count = 1;
-            addNewPainterPage(printer);
-        }
-        showTailFlag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
-        m_table->addLine(categoryContent.itemName,
-                         state2Str(categoryContent.scanStatus),
-                         state2Str(categoryContent.afterReinforceScanStatus),
-                         categoryContent.remarks,
-                         state2Color(categoryContent.scanStatus),
-                         state2Color(categoryContent.afterReinforceScanStatus),
-                         count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+        CONTINUE_IF_TRUE((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_UNSAFE) == 2 || categoryContent.scanStatus == INI_SCAN_STATUS);
+        addLineToTable(printer, categoryContent, showTailFlag, count);
     }
+    // TODO ： 取消扫描，但是加固项是勾选的，确认取消扫描后未扫描项是否需要在报表中展示 #25701
+    // for (auto &categoryContent : categoryContents)
+    // {
+    //    CONTINUE_IF_TRUE(categoryContent.scanStatus != INI_SCAN_STATUS);
+    //    addLineToTable(printer, categoryContent, showTailFlag, count);
+    // }
+}
+
+void Result::addLineToTable(QPrinter &printer, const Result::CategoryContent &categoryContent, bool &showTailFlag, int &count)
+{
+    count++;
+    if (count >= TABLE_MAX_LINE)
+    {
+        count = 1;
+        addNewPainterPage(printer);
+    }
+    showTailFlag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
+    m_table->addLine(categoryContent.itemName,
+                     state2Str(categoryContent.scanStatus),
+                     state2Str(categoryContent.afterReinforceScanStatus),
+                     categoryContent.remarks,
+                     state2Color(categoryContent.scanStatus),
+                     state2Color(categoryContent.afterReinforceScanStatus),
+                     count % 2 == 1 ? "#f2f2f2" : "#ffffff");
 }
 
 void Result::addNewPainterPage(QPrinter &printer)
@@ -385,6 +375,7 @@ void Result::createReportContent(QPrinter &printer, const QList<Category *> &aft
                 .remarks = "-"};
         }
     }
+
     addCategoryResults(printer, categoryContents, flag);
 
     // 扫描文件结果

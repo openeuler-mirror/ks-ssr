@@ -16,6 +16,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenu>
+#include "src/ui/common/table/header-menu-proxy.h"
 
 namespace KS
 {
@@ -61,7 +62,8 @@ void HeaderButtonDelegate::initUI()
     m_layout->addStretch();
     m_layout->setContentsMargins(16, 0, 0, 0);
 
-    m_menu = new QMenu(this);
+    m_menu = new HeaderMenuProxy(this);
+    m_menu->setFocusPolicy(Qt::NoFocus);
     setMenu(m_menu);
     connect(m_menu, &QMenu::triggered, this, &HeaderButtonDelegate::menuTriggered);
 }

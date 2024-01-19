@@ -474,7 +474,6 @@ void Scan::generateReport()
                 m_afterReinForcementCategories.clear();
             });
     // 生成报表前扫描
-    m_progressInfo.method = PROCESS_METHOD_SCAN;
     auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);
     m_dbusProxy->Scan(scanItems);
 }

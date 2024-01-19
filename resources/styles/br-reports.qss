@@ -13,6 +13,7 @@ KS--BR--Table QLabel
     font-size: 14px;
     border-radius:0px;
 }
+
 KS--BR--Table QLabel#nameLabel,
 KS--BR--Table QLabel#remarksLabel,
 KS--BR--Table QLabel#scanLabel
