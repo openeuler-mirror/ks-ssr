@@ -28,7 +28,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Two-factor authentication</string>
+        <string>Two-factor authentication(Reboot after restart)</string>
        </property>
       </widget>
      </item>
