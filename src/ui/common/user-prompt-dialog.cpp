@@ -11,32 +11,32 @@
  *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
-#include "delete-notify.h"
-#include "ui_delete-notify.h"
+#include "user-prompt-dialog.h"
+#include "ui_user-prompt-dialog.h"
 
 namespace KS
 {
-DeleteNotify::DeleteNotify(QWidget *parent)
+UserPromptDialog::UserPromptDialog(QWidget *parent)
     : TitlebarWindow(parent),
-      m_ui(new Ui::DeleteNotify)
+      m_ui(new Ui::UserPromptDialog)
 {
     m_ui->setupUi(getWindowContentWidget());
 
     init();
 }
 
-DeleteNotify::~DeleteNotify()
+UserPromptDialog::~UserPromptDialog()
 {
     delete m_ui;
 }
 
-void DeleteNotify::setNotifyMessage(const QString &title, const QString &message)
+void UserPromptDialog::setNotifyMessage(const QString &title, const QString &message)
 {
     setTitle(title);
     m_ui->m_notify->setText(message);
 }
 
-void DeleteNotify::init()
+void UserPromptDialog::init()
 {
     // 页面关闭时销毁
     setAttribute(Qt::WA_DeleteOnClose);
@@ -48,11 +48,10 @@ void DeleteNotify::init()
     setResizeable(false);
     m_ui->m_notify->setWordWrap(true);
 
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, &DeleteNotify::close);
-    connect(m_ui->m_ok, &QPushButton::clicked, this, [this]
-            {
-                close();
-                emit accepted();
-            });
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, &UserPromptDialog::close);
+    connect(m_ui->m_ok, &QPushButton::clicked, this, [this] {
+        close();
+        emit accepted();
+    });
 }
 }  // namespace KS

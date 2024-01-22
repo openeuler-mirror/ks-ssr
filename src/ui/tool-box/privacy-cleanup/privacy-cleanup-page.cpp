@@ -15,6 +15,7 @@
 #include "privacy-cleanup-page.h"
 #include <QWidgetAction>
 #include "include/ssr-i.h"
+#include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/ui_privacy-cleanup-page.h"
 
 #define PRIVACY_CLEANUP_ICON_NAME "/images/privacy-cleanup"
@@ -72,7 +73,16 @@ void PrivacyCleanupPage::initUI()
             });
     connect(m_ui->m_clean, &QPushButton::clicked, this, [this]
             {
-                m_ui->m_table->cleanCheckedUsers();
+                auto cleanNotify = new UserPromptDialog(this);
+                cleanNotify->setNotifyMessage(tr("Privacy cleanup"), tr("The user privacy cleaning operation is irreversible. "
+                                                                   "Are you sure you want to continue?"));
+                auto x = window()->x() + window()->width() / 2 - cleanNotify->width() / 2;
+                auto y = window()->y() + window()->height() / 2 - cleanNotify->height() / 2;
+                cleanNotify->move(x, y);
+                cleanNotify->show();
+                connect(cleanNotify, &UserPromptDialog::accepted, this, [this]{
+                    m_ui->m_table->cleanCheckedUsers();
+                });
             });
     connect(m_ui->m_table, &PrivacyCleanupTable::tableUpdated, this, [this](int total)
             {

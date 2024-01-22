@@ -211,7 +211,7 @@
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="text">
-          <string>Fallback to previous time</string>
+          <string>Fallback to the pre reforce status</string>
          </property>
         </widget>
        </item>

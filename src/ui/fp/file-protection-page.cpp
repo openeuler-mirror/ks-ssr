@@ -18,8 +18,8 @@
 #include <QFileDialog>
 #include <QWidgetAction>
 #include "config.h"
-#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_file-protection-page.h"
 #include "ssr-i.h"
@@ -134,7 +134,7 @@ void FileProtectionPage::popDeleteNotify(bool checked)
         return;
     }
 
-    auto unprotectNotify = new DeleteNotify(this);
+    auto unprotectNotify = new UserPromptDialog(this);
     unprotectNotify->setNotifyMessage(tr("Remove protection"), tr("The removal operation is irreversible."
                                                                   "Do you confirm the removal of the selected record from the whitelist?"));
     auto x = window()->x() + window()->width() / 2 - unprotectNotify->width() / 2;
@@ -142,7 +142,7 @@ void FileProtectionPage::popDeleteNotify(bool checked)
     unprotectNotify->move(x, y);
     unprotectNotify->show();
 
-    connect(unprotectNotify, &DeleteNotify::accepted, this, &FileProtectionPage::removeProtectedFiles);
+    connect(unprotectNotify, &UserPromptDialog::accepted, this, &FileProtectionPage::removeProtectedFiles);
 }
 
 void FileProtectionPage::removeProtectedFiles()

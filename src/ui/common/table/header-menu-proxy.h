@@ -14,36 +14,18 @@
 
 #pragma once
 
-#include <QPushButton>
+#include <QMenu>
 
-class QLabel;
-class QHBoxLayout;
-class QAction;
 namespace KS
 {
-class HeaderMenuProxy;
-
-class HeaderButtonDelegate : public QPushButton
+// 实现menu中点击action不关闭菜单功能
+class HeaderMenuProxy : public QMenu
 {
-    Q_OBJECT
 public:
-    explicit HeaderButtonDelegate(QWidget *parent = nullptr);
-    virtual ~HeaderButtonDelegate(){};
+    explicit HeaderMenuProxy(QWidget *parent);
+    virtual ~HeaderMenuProxy(){};
 
-    void addMenuActions(QList<QAction *> actions);
-    void setButtonText(const QString &text);
-    QList<QAction *> getMenuActions() const;
-
-private:
-    void initUI();
-
-signals:
-    void menuTriggered(QAction *);
-
-private:
-    QLabel *m_text;
-    QPushButton *m_icon;
-    QHBoxLayout *m_layout;
-    HeaderMenuProxy *m_menu;
+protected:
+    void mouseReleaseEvent(QMouseEvent *event) override;
 };
 }  // namespace KS

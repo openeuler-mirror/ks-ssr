@@ -57,7 +57,7 @@ bool Database::exec(const QString& cmd, SqlDataType* const result)
     KLOG_DEBUG() << "Exec sql cmd: " << cmd;
     if (result == nullptr)
     {
-        rc = sqlite3_exec(m_db, cmd.toLatin1(), nullptr, result, nullptr);
+        rc = sqlite3_exec(m_db, cmd.toLocal8Bit(), nullptr, result, nullptr);
         return checkExec(rc, cmd);
     }
     auto callback = [](void* callback_arg, int argc, char** argv, char** azColName) -> int
@@ -72,7 +72,7 @@ bool Database::exec(const QString& cmd, SqlDataType* const result)
         ret->append(row);
         return SQLITE_OK;
     };
-    rc = sqlite3_exec(m_db, cmd.toLatin1(), callback, result, nullptr);
+    rc = sqlite3_exec(m_db, cmd.toLocal8Bit(), callback, result, nullptr);
     return checkExec(rc, cmd);
 }
 

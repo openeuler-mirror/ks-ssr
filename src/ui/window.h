@@ -26,7 +26,7 @@ class Window;
 }
 
 class DaemonProxy;
-
+class QPushButton;
 namespace KS
 {
 class Navigation;
@@ -78,6 +78,7 @@ private:
     QMap<QString, QList<Page *>> m_pages;
     Activation::Activation *m_activation;
     QLabel *m_activateStatus;
+    QPushButton *m_accountButton;
     Loading *m_loading;
     QSharedPointer<LicenseProxy> m_licenseProxy;
     DaemonProxy *m_dbusProxy;

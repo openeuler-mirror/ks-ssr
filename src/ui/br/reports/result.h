@@ -68,6 +68,8 @@ private:
     bool scanFilesAnalysis(QStringList &filelist, const InvalidData &invalidData);
     bool scanVulnerability(QStringList &rpmlist, const InvalidData &invalidData);
     void addCategoryResults(QPrinter &printer, const QList<CategoryContent> &categoryContents, bool &showTailFlag);
+    // 插入一行到扫描结果表格
+    void addLineToTable(QPrinter &printer, const CategoryContent &categoryContent, bool &showTailFlag, int &count);
     void addNewPainterPage(QPrinter &printer);
 
 private:

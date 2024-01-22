@@ -113,3 +113,6 @@ install(
 # iptables rules files
 install(FILES ${PROJECT_SOURCE_DIR}/data/br-iptables.rules
         DESTINATION ${SSR_INSTALL_DATADIR}/)
+
+install(FILES ${PROJECT_SOURCE_DIR}/data/help.pdf
+        DESTINATION ${SSR_INSTALL_DATADIR}/)

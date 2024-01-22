@@ -22,6 +22,7 @@
 #include "include/ssr-i.h"
 #include "src/ui/ui_file-shred-page.h"
 #include "src/ui/tool-box/file-shred/files-dirs-dilog.h"
+#include "src/ui/common/user-prompt-dialog.h"
 #include "ssr-marcos.h"
 
 
@@ -122,7 +123,16 @@ void FileShredPage::initUI()
             });
     connect(m_ui->m_shred, &QPushButton::clicked, this, [this]
             {
-                m_ui->m_table->shredFiles();
+                auto shredNotify = new UserPromptDialog(this);
+                shredNotify->setNotifyMessage(tr("File shred"), tr("After crushing, files or folders cannot be recovered."
+                                                                   "Are you sure you want to crush them?"));
+                auto x = window()->x() + window()->width() / 2 - shredNotify->width() / 2;
+                auto y = window()->y() + window()->height() / 2 - shredNotify->height() / 2;
+                shredNotify->move(x, y);
+                shredNotify->show();
+                connect(shredNotify, &UserPromptDialog::accepted, this, [this]{
+                    m_ui->m_table->shredFiles();
+                });
             });
     connect(m_ui->m_table, &FileShredTable::tableUpdated, this, [this](int total)
             {

@@ -84,7 +84,7 @@ void ItemTable::initHeader()
     this->setHeaderHidden(false);
     m_model->setHorizontalHeaderLabels(QStringList()
                                        << QString(tr("Reinforcement Item"))
-                                       << QString(tr("Info"))
+                                       << QString(tr("Info(Double click this column to modify the reinforcement parameters)"))
                                        << QString(tr("State"))
                                        << QString(""));
 

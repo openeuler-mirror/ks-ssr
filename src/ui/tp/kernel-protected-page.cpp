@@ -17,8 +17,8 @@
 #include <QFileDialog>
 #include <QPainter>
 #include <QWidgetAction>
-#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/ui_kernel-protected-page.h"
 #include "ssr-i.h"
@@ -40,10 +40,9 @@ KernelProtectedPage::KernelProtectedPage(QWidget *parent)
                                    QDBusConnection::systemBus(),
                                    this);
     // 初始化完成自动刷新
-    connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this]
-            {
-                m_ui->m_kernelTable->updateInfo();
-            });
+    connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this] {
+        m_ui->m_kernelTable->updateInfo();
+    });
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2"))
                     .arg(QString::number(m_ui->m_kernelTable->getKernelRecords().size()),
@@ -174,7 +173,7 @@ void KernelProtectedPage::popDeleteNotify(bool checked)
         return;
     }
 
-    auto deleteNotify = new DeleteNotify(this);
+    auto deleteNotify = new UserPromptDialog(this);
     deleteNotify->setNotifyMessage(tr("Remove protection"), tr("The removal operation is irreversible."
                                                                "Do you confirm the removal of the selected record from the whitelist?"));
     auto x = window()->x() + window()->width() / 2 - deleteNotify->width() / 2;
@@ -182,7 +181,7 @@ void KernelProtectedPage::popDeleteNotify(bool checked)
     deleteNotify->move(x, y);
     deleteNotify->show();
 
-    connect(deleteNotify, &DeleteNotify::accepted, this, &KernelProtectedPage::removeKernelFiles);
+    connect(deleteNotify, &UserPromptDialog::accepted, this, &KernelProtectedPage::removeKernelFiles);
 }
 
 void KernelProtectedPage::removeKernelFiles()
