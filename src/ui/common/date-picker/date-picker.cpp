@@ -115,10 +115,10 @@ void DatePicker::initUI()
 
 void DatePicker::setDateLimit()
 {
-    m_startCalendar->setSelectableEnd(m_endDate.addDays(-1));
-    m_startCalendar->setMaximumDate(m_endDate.addDays(-1));
+    m_startCalendar->setSelectableEnd(m_endDate);
+    m_startCalendar->setMaximumDate(m_endDate);
 
-    m_endCalendar->setSelectableStart(m_startDate.addDays(1));
-    m_endCalendar->setMinimumDate(m_startDate.addDays(1));
+    m_endCalendar->setSelectableStart(m_startDate);
+    m_endCalendar->setMinimumDate(m_startDate);
 }
 }  // namespace KS

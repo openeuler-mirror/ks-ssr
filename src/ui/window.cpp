@@ -21,6 +21,7 @@
 #include <QMutex>
 #include <QPushButton>
 #include <QStackedWidget>
+#include <QDesktopServices>
 #include <QX11Info>
 #include "common/ssr-marcos-ui.h"
 #include "include/ssr-i.h"
@@ -53,6 +54,8 @@ namespace KS
 #define SSR_STYLE_PATH ":/styles/ssr"
 // 检测命令是否存在
 #define KSS_CMD_PATH SSR_INSTALL_BINDIR "/kss"
+// 帮助手册路径
+#define HELP_MANUAL_PATH SSR_INSTALL_DATADIR "/help.pdf"
 
 // 锁屏状态
 #define KIRAN_SCREENSAVER_DBUS_NAME "com.kylinsec.Kiran.ScreenSaver"
@@ -149,6 +152,7 @@ void Window::login()
 
 void Window::start()
 {
+    m_accountButton->setToolTip(Account::Manager::instance()->getCurrentUserName());
     initPageAndNavigation();
     initSettings();
 }
@@ -228,12 +232,12 @@ void Window::initWindow()
     m_activateStatus->hide();
 
     // 创建账户管理按钮
-    auto accountButton = new QPushButton(this);
-    accountButton->setObjectName("accountButton");
-    accountButton->setFixedSize(QSize(16, 16));
+    m_accountButton = new QPushButton(this);
+    m_accountButton->setObjectName("accountButton");
+    m_accountButton->setFixedSize(QSize(16, 16));
 
     auto accountMenu = new QMenu(this);
-    accountButton->setMenu(accountMenu);
+    m_accountButton->setMenu(accountMenu);
 
     accountMenu->addAction(tr("Modify password"), this, []
                            {
@@ -256,9 +260,16 @@ void Window::initWindow()
     connect(m_settings, &QAction::triggered, this, &Window::popupSettingsDialog, Qt::UniqueConnection);
     settingMenu->addAction(m_settings);
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
+    settingMenu->addAction(tr("Help"), this, []{
+        if (QFile::exists(HELP_MANUAL_PATH))
+        {
+            KLOG_DEBUG() << "Open help manual PDF.";
+            QDesktopServices::openUrl(QUrl::fromLocalFile(HELP_MANUAL_PATH));
+        }
+    });
     settingMenu->addAction(tr("About"), this, &Window::popupAboutDialog);
 
-    layout->addWidget(accountButton);
+    layout->addWidget(m_accountButton);
     layout->addWidget(m_activateStatus);
     layout->addWidget(btnForMenu);
     layout->setAlignment(Qt::AlignRight);

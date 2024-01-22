@@ -48,11 +48,6 @@ void MessageDialog::setMessage(const QString &message)
     ok->setObjectName("okBtn");
     connect(ok, &QPushButton::clicked, this, &QWidget::close);
 
-    auto okHBox = new QHBoxLayout(this);
-    okHBox->addStretch();
-    okHBox->addWidget(ok);
-    okHBox->addStretch();
-
     m_contentLayout->addWidget(label);
     m_contentLayout->addStretch();
     m_contentLayout->addWidget(ok, 0, Qt::AlignHCenter);
@@ -67,7 +62,7 @@ void MessageDialog::initUI()
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    setFixedSize(259, 219);
+    setFixedSize(259, 229);
 
     auto vlay = new QVBoxLayout(getWindowContentWidget());
     vlay->setContentsMargins(4, 4, 4, 4);
@@ -75,7 +70,7 @@ void MessageDialog::initUI()
     auto cusWidget = new QWidget(getWindowContentWidget());
     m_contentLayout = new QVBoxLayout(cusWidget);
     cusWidget->setObjectName("messageDialog");
-    m_contentLayout->setContentsMargins(24, 24, 24, 12);
+    m_contentLayout->setContentsMargins(24, 24, 24, 24);
 
     vlay->addWidget(cusWidget);
     //    show();

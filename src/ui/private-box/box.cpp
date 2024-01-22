@@ -25,9 +25,9 @@
 #include <QVBoxLayout>
 #include "lib/base/crypto-helper.h"
 #include "src/ui/box_manager_proxy.h"
-#include "src/ui/common/delete-notify.h"
 #include "src/ui/common/password-modification.h"
 #include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/private-box/box-password-checked.h"
 #include "src/ui/private-box/box-password-retrieve.h"
 #include "ssr-i.h"
@@ -228,7 +228,7 @@ void Box::modifyPassword()
 
 void Box::popDeleteNotify()
 {
-    auto deleteNotify = new DeleteNotify(this);
+    auto deleteNotify = new UserPromptDialog(this);
     deleteNotify->setNotifyMessage(tr("Remove box"), tr("The operation will delete the content inside the box."
                                                         "Are you sure you want to delete it?"));
     auto x = window()->x() + window()->width() / 2 - deleteNotify->width() / 2;
@@ -237,7 +237,7 @@ void Box::popDeleteNotify()
     deleteNotify->move(x, y);
     deleteNotify->show();
 
-    connect(deleteNotify, &DeleteNotify::accepted, this, &Box::delBox);
+    connect(deleteNotify, &UserPromptDialog::accepted, this, &Box::delBox);
 }
 
 void Box::delBox()
@@ -258,10 +258,9 @@ void Box::retrievePassword()
     m_retrievePassword->setFixedSize(319, 239);
     m_retrievePassword->setTitle(tr("Retrieve password"));
     connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(acceptedRetrievePassword()));
-    connect(m_retrievePassword, &BoxPasswordRetrieve::inputEmpty, this, [this]
-            {
-                POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
-            });
+    connect(m_retrievePassword, &BoxPasswordRetrieve::inputEmpty, this, [this] {
+        POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
+    });
 
     int x = window()->x() + window()->width() / 4 + m_retrievePassword->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_retrievePassword->height() / 8;

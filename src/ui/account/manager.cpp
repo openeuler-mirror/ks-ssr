@@ -136,8 +136,13 @@ void Manager::acceptedPasswordModification()
     auto encryptCurrentPassword = CryptoHelper::rsaEncryptString(m_dbusProxy->rSAPublicKey(), m_passwordModification->getCurrentPassword());
     auto encryptNewPassword = CryptoHelper::rsaEncryptString(m_dbusProxy->rSAPublicKey(), m_passwordModification->getNewPassword());
     auto reply = m_dbusProxy->ChangePassphrase(m_currentUserName, encryptCurrentPassword, encryptNewPassword);
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
-    RETURN_IF_TRUE(reply.isError());
+    reply.waitForFinished();
+    // 后台验证密码错误，此时前台已经将修改密码弹窗关闭了，需要进行再次显示（#25868）
+    if (reply.isError())
+    {
+        showPasswordModification();
+        POPUP_MESSAGE_DIALOG(reply.error().message());
+    }
 }
 }  // namespace Account
 }  // namespace KS
