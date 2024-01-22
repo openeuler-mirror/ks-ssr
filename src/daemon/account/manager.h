@@ -49,10 +49,16 @@ public:
          * @brief 当前是否是登录状态
          */
         bool isLogin;
+
         /**
          * @brief 当前用户角色，可考虑细分不同角色用户的权限
          */
         AccountRole role;
+
+        /**
+         * @brief 用户名
+         */
+        QString name;
 
         /**
          * @brief 前端程序的 pid
@@ -132,17 +138,44 @@ public:  // PROPERTIES
         KLOG_WARNING() << "Unknown dbus id: " << dbusPid;
         return AccountRole::unknown_account;
     }
+
+    QString getUserName(QString dbusUniqueName) const
+    {
+        QReadLocker locker(&m_clientMutex);
+        auto it = m_clients.find(dbusUniqueName);
+        if (it == m_clients.end())
+        {
+            KLOG_WARNING() << "Unknown dbus id: " << dbusUniqueName;
+            return "unknown";
+        }
+        return it->name;
+    }
+
+    QString getUserName(pid_t dbusPid) const
+    {
+        QReadLocker locker(&m_clientMutex);
+        for (const auto& client : m_clients)
+        {
+            if (client.pid == dbusPid)
+            {
+                return client.name;
+            }
+        }
+        KLOG_WARNING() << "Unknown dbus id: " << dbusPid;
+        return "unknown";
+    }
     QMetaEnum m_metaAccountEnum;
 Q_SIGNALS:  // SIGNALS
     void PasswordChanged(const QString& user_name);
 
 private:
+    void createUser(const QString& userName, const QString& role, const QString& password);
     void initDatabase();
     void initUserInfoTable();
-    void initUserFreezeTable();
     bool verifyPassword(const QString& userName, const QString& passwd) const;
     bool changePassword(const QString& userName, const QString& newPasswd) const;
     bool isFreeze(const QString& userName) const;
+    AccountRole getRoleFromDB(const QString& userName) const;
     void updateFreezeInfo(const QString& userName) const;
     void resetFreezeInfo(const QString& userName) const;
     bool getMultiFactorAuthState();

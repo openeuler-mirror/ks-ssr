@@ -29,8 +29,8 @@
 #include "include/ssr-i.h"
 #include "lib/base/error.h"
 #include "src/daemon/common/dbus-helper.h"
-#include "src/daemon/tool-box/realtime-alert.h"
 #include "src/daemon/tool-box/manager.h"
+#include "src/daemon/tool-box/realtime-alert.h"
 
 #define SHRED_PATH "/usr/bin/shred"
 #define SHRED_ARG_1 "-f"
@@ -92,7 +92,9 @@ void Manager::SetAccessControlStatus(bool enable)
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to set access control status, permission denied", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to set access control status, permission denied"),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     QProcess process{};
@@ -110,11 +112,15 @@ void Manager::SetAccessControlStatus(bool enable)
                      << " " << process.arguments().join(' ')
                      << ", exitcode: " << process.exitCode()
                      << ", output: " << process.readAllStandardOutput();
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to set access control status", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to set access control status"),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_ACCESS_CONTROL, this->message());
         return;
     }
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("set access control status to ") + (enable ? "enable" : "disable"));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
+                    tr("set access control status to %1").arg(enable ? "enable" : "disable"),
+                    calledUniqueName);
 }
 
 QString Manager::GetSecurityContext(const QString& filePath)
@@ -123,7 +129,9 @@ QString Manager::GetSecurityContext(const QString& filePath)
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to get security context, permission denied", false)
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to get security context, permission denied"),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     char* context = nullptr;
@@ -132,13 +140,17 @@ QString Manager::GetSecurityContext(const QString& filePath)
         KLOG_ERROR() << "Failed to get " << filePath
                      << "selinux context, error message: " << strerror(errno);
         freecon(context);
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Failed to get %1 selinux context").arg(filePath), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to get %1 selinux context").arg(filePath),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_TOOL_BOX_FAILED_GET_SECURITY_CONTEXT, this->message());
         return QString();
     }
     QString rs(context);
     freecon(context);
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Get %1 selinux context").arg(filePath));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
+                    tr("Get %1 selinux context").arg(filePath),
+                    calledUniqueName);
     return rs;
 }
 
@@ -148,7 +160,9 @@ void Manager::SetSecurityContext(const QString& filePath, const QString& Securit
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to set security context, permission denied", false)
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to set security context, permission denied"),
+                      calledUniqueName)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     if (setfilecon(filePath.toLocal8Bit(), SecurityContext.toLocal8Bit()) == -1)
@@ -156,23 +170,30 @@ void Manager::SetSecurityContext(const QString& filePath, const QString& Securit
         KLOG_ERROR() << "Failed to set " << filePath
                      << " selinux context: " << SecurityContext
                      << "error message: " << strerror(errno);
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Failed to set %1 selinux context, error msg: %2").arg(filePath).arg(strerror(errno)), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to set %1 selinux context, error msg: %2").arg(filePath).arg(strerror(errno)),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_SECURITY_CONTEXT, this->message());
         return;
     }
-    SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, QString("Set %1 selinux context to: %2").arg(filePath).arg(SecurityContext));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
+                    tr("Set %1 selinux context to: %2").arg(filePath).arg(SecurityContext),
+                    calledUniqueName);
 }
 
 void Manager::ShredFile(const QStringList& filePath)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
+    auto userName = Account::Manager::m_accountManager->getUserName(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to shred file, permission denied", false)
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to shred file, permission denied"),
+                      calledUniqueName)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    Log::Log log = {role, QDateTime::currentDateTime(), Log::Manager::LogType::TOOL_BOX, false, "Shred file"};
+    Log::Log log = {userName, role, QDateTime::currentDateTime(), Log::Manager::LogType::TOOL_BOX, false, "Shred file"};
     // TODO : 粉碎文件夹不生效
     auto cmd = getProcess(log, SHRED_PATH, QStringList{SHRED_ARG_1, SHRED_ARG_2} << filePath);
     cmd->startDetached();
@@ -182,12 +203,15 @@ void Manager::RemoveUser(const QStringList& userNames)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
+    auto userName = Account::Manager::m_accountManager->getUserName(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
-        SSR_LOG(role, Log::Manager::LogType::TOOL_BOX, "Failed to remove user, permission denied", false)
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to remove user, permission denied"),
+                      calledUniqueName)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    Log::Log log = {role, QDateTime::currentDateTime(), Log::Manager::LogType::TOOL_BOX, false, "Remove user"};
+    Log::Log log = {userName, role, QDateTime::currentDateTime(), Log::Manager::LogType::TOOL_BOX, false, "Remove user"};
     for (const auto& userName : userNames)
     {
         auto cmd = getProcess(log, USERDEL_PATH, QStringList{USERDEL_ARG_1} << userName);
