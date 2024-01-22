@@ -28,13 +28,22 @@ class QFile;
 
 class WriteWorker;
 
-#define SSR_LOG(...)                                              \
-    {                                                             \
-        KS::Log::Log log{};                                       \
-        log.timeStamp = QDateTime::currentDateTime();             \
-        log.result = true;                                        \
-        KS::Log::Manager::m_logManager->setLog(log, __VA_ARGS__); \
-        KS::Log::Manager::m_logManager->writeLog(log);            \
+#define SSR_LOG_SUCCESS(logType, logMsg, dbusId)                                 \
+    {                                                                            \
+        auto role = KS::Account::Manager::m_accountManager->getRole(dbusId);     \
+        auto name = KS::Account::Manager::m_accountManager->getUserName(dbusId); \
+        auto timePoint = QDateTime::currentDateTime();                           \
+        KS::Log::Log log{name, role, timePoint, logType, true, logMsg};          \
+        KS::Log::Manager::writeLog(log);                                         \
+    }
+
+#define SSR_LOG_ERROR(logType, logMsg, dbusId)                                   \
+    {                                                                              \
+        auto role = KS::Account::Manager::m_accountManager->getRole(dbusId);     \
+        auto name = KS::Account::Manager::m_accountManager->getUserName(dbusId); \
+        auto timePoint = QDateTime::currentDateTime();                             \
+        KS::Log::Log log{name, role, timePoint, logType, false, logMsg};           \
+        KS::Log::Manager::writeLog(log);                                           \
     }
 
 // Qt 自身的文件读写就有一个大小为 16384 大小的缓冲区，所以在此类中不再做缓冲
@@ -69,9 +78,6 @@ public:
     static void globalInit();
     static void globalDeinit();
     static void writeLog(const Log& log);
-    template <typename T, typename... Args>
-    void setLog(Log& log, T value, Args... args);
-    void setLog(Log& log);
     uint GetLogNum(const int role, const time_t begin_time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText);
     QStringList GetLog(const int role, const time_t time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText, const uint per_page, const uint page) const;
     // bool SetLogRotateConfig(const QString& config);
@@ -112,49 +118,12 @@ private:
 
 struct Log
 {
+    QString name;
     Account::Manager::AccountRole role;
     QDateTime timeStamp;
     Manager::LogType type;
     bool result;
     QString logMsg;
-    void setField(Account::Manager::AccountRole value)
-    {
-        this->role = value;
-    }
-
-    void setField(QDateTime value)
-    {
-        this->timeStamp = value;
-    }
-
-    void setField(Manager::LogType value)
-    {
-        this->type = value;
-    }
-
-    void setField(bool value)
-    {
-        this->result = value;
-    }
-
-    void setField(const char* value)
-    {
-        this->logMsg = value;
-    }
-
-    void setField(QString value)
-    {
-        this->logMsg = value;
-    }
 };
-
-template <typename T, typename... Args>
-inline void Manager::setLog(Log& log, T value, Args... args)
-{
-    log.setField(value);
-    setLog(log, args...);
-}
-
-inline void Manager::setLog(Log& log) {}
 };  // namespace Log
 };  // namespace KS

@@ -122,10 +122,9 @@ LogModel::LogModel(QObject *parent)
                               SSR_LOG_DBUS_OBJECT_PATH,
                               QDBusConnection::systemBus(),
                               this);
-    connect(m_logProxy, &LogProxy::NewLogWritten, this, [this]
+    connect(m_logProxy, &LogProxy::NewLogWritten, this, [this](uint log_num)
             {
                 updateRecord();
-                emit logUpdated(static_cast<int>(getLogNumbers()));
             });
 
     updateRecord();
@@ -232,7 +231,10 @@ void LogModel::updateRecord()
             endResetModel();
         });
     m_logInfos.clear();
-    auto reply = m_logProxy->GetLog(static_cast<int>(m_args.role), m_args.timeStampBegin, m_args.timeStampEnd, m_args.type, m_args.result, m_args.searchKey, LOG_PAGE_NUMBER, m_args.currentPage);
+    auto reply = m_logProxy->GetLog(static_cast<int>(m_args.role), m_args.timeStampBegin,
+                                    m_args.timeStampEnd, m_args.type,
+                                    m_args.result, m_args.searchKey, LOG_PAGE_NUMBER,
+                                    m_args.currentPage);
     reply.waitForFinished();
     Utils::deserialize(reply.value(), m_logInfos);
     emit logUpdated(static_cast<int>(getLogNumbers()));
@@ -243,7 +245,7 @@ void LogModel::initGetLogArgs()
     m_args.role = static_cast<AccountRole>(ALL_LOG_ROLE);
     // 一个月前
     m_args.timeStampBegin = QDateTime::currentDateTime().addMonths(-1).toSecsSinceEpoch();
-    m_args.timeStampEnd = QDateTime::currentSecsSinceEpoch();
+    m_args.timeStampEnd = LONG_LONG_MAX;
     m_args.type = static_cast<LogType>(ALL_LOG_TYPE);
     m_args.result = LOG_RESULT_ALL;
     m_args.currentPage = 1;

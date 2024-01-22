@@ -140,11 +140,12 @@ CHECK_AUTH_WITH_1ARGS(BRDBus, SetFallback, setFallback, SSR_PERMISSION_AUTHENTIC
 void BRDBus::SetStandardType(const uint32_t& standardType)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set standard type to " + QString::number(standardType));
-
     if (standardType >= BRStandardType::BR_STANDARD_TYPE_LAST)
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set standard type to %1, invalid args")
+                          .arg(standardType == BR_STANDARD_TYPE_SYSTEM ? tr("system") : tr("custom")),
+                      calledUniqueName);
         sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID));
         return;
     }
@@ -153,122 +154,168 @@ void BRDBus::SetStandardType(const uint32_t& standardType)
 
     if (!this->m_configuration->setStandardType(BRStandardType(standardType)))
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set standard type to %1, Internal error")
+                          .arg(standardType == BR_STANDARD_TYPE_SYSTEM ? tr("system") : tr("custom")),
+                      calledUniqueName);
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_STANDARD_TYPE_FAILED));
         return;
     }
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Set standard type to %1")
+                        .arg(standardType == BR_STANDARD_TYPE_SYSTEM ? tr("system") : tr("custom")),
+                    calledUniqueName);
 }
 
 void BRDBus::ImportCustomRS(const QString& encodedStandard)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
     BRErrorCode errorCode = BRErrorCode::SUCCESS;
     if (!this->m_configuration->setCustomRs(encodedStandard, errorCode))
     {
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(errorCode));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Fail to import custom reinforce standard.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to import custom reinforce standard."),
+                      calledUniqueName);
         return;
     }
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Import custom reinforce standard. encoded standard: " + encodedStandard);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Import custom reinforce standard. encoded standard: %1").arg(encodedStandard),
+                    calledUniqueName);
 }
 
 void BRDBus::SetStrategyType(const uint32_t& strategyType)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
-
     if (strategyType >= BRStrategyType::BR_STRATEGY_TYPE_LAST)
     {
         sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set strategy type", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set strategy type"),
+                      calledUniqueName);
         return;
     }
     if (strategyType == this->m_configuration->getStrategyType())
     {
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set strategy type to " + QString::number(strategyType));
+        SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                        tr("Set strategy type to %1")
+                            .arg(strategyType == BR_STRATEGY_TYPE_SYSTEM ? tr("system") : tr("custom")),
+                        calledUniqueName);
         return;
     }
 
     if (!this->m_configuration->setStrategyType(BRStrategyType(strategyType)))
     {
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_STRATEGY_TYPE_FAILED));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set strategy type", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set strategy type"),
+                      calledUniqueName);
         return;
     }
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set strategy type to " + QString::number(strategyType));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Set strategy type to %1")
+                        .arg(strategyType == BR_STRATEGY_TYPE_SYSTEM ? tr("system") : tr("custom")),
+                    calledUniqueName);
 }
 
 void BRDBus::SetTimeScan(const uint32_t& timeScan)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
-    RETURN_IF_TRUE(timeScan == uint32_t(this->m_configuration->getTimeScan()))
-
+    if (timeScan == uint32_t(this->m_configuration->getTimeScan()))
+    {
+        SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                        tr("Set time scan to %1").arg(timeScan),
+                        calledUniqueName);
+        return;
+    }
     if (!this->m_configuration->setTimeScan(int(timeScan)))
     {
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_TIME_SCAN_FAILED));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set time scan", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set time scan"),
+                      calledUniqueName);
         return;
     }
-
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set time scan to " + QString::number(timeScan));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Set time scan to %1").arg(timeScan),
+                    calledUniqueName);
 }
 
 void BRDBus::SetNotificationStatus(const uint32_t& notificationStatus)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
     if (notificationStatus >= BRNotificationStatus::BR_NOTIFICATION_STATUS_OTHER)
     {
         sendErrorReply(QDBusError::InvalidArgs,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set notification status", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set notification status"),
+                      calledUniqueName);
         return;
     }
-    RETURN_IF_TRUE(notificationStatus == this->m_configuration->getNotificationStatus())
+    if (notificationStatus == this->m_configuration->getNotificationStatus())
+    {
+        SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                        tr("Set notification status to %1").arg(notificationStatus),
+                        calledUniqueName);
+        return;
+    }
 
     if (!this->m_configuration->setNotificationStatus(BRNotificationStatus(notificationStatus)))
     {
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_NOTIFICATION_STATUS_FAILED));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set notification status", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set notification status"),
+                      calledUniqueName);
         return;
     }
 
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set notification status to " + QString::number(notificationStatus));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Set notification status to %1").arg(notificationStatus),
+                    calledUniqueName);
 }
 
 void BRDBus::SetFallbackStatus(const uint32_t& fallbackStatus)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
     if (fallbackStatus > BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED)
     {
         sendErrorReply(QDBusError::InvalidArgs,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_FALLBACK_STATUS_INVALID));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed set fallback status", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed set fallback status"),
+                      calledUniqueName);
         return;
     }
-    RETURN_IF_TRUE(fallbackStatus == this->m_configuration->getFallbackStatus())
+    if (fallbackStatus == this->m_configuration->getFallbackStatus())
+    {
+        SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                        tr("Set fallback status to %1").arg(fallbackStatus),
+                        calledUniqueName);
+    }
 
     if (!this->m_configuration->setFallbackStatus(BRFallbackStatus(fallbackStatus)))
     {
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_FALLBACK_STATUS_FAILED));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed set fallback status", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed set fallback status"),
+                      calledUniqueName);
         return;
     }
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set fallback status to " + QString::number(fallbackStatus));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Set fallback status to %1").arg(fallbackStatus),
+                    calledUniqueName);
 }
 
 void BRDBus::ImportCustomRA(const QString& encodedStrategy)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     try
     {
         std::ofstream ofs(CUSTOM_RA_STRATEGY_FILEPATH, std::ios_base::out);
@@ -278,7 +325,9 @@ void BRDBus::ImportCustomRA(const QString& encodedStrategy)
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to import custom reinforce strategy.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to import custom reinforce strategy. error msg: ") + e.what(),
+                      calledUniqueName);
         return;
     }
     if (!m_configuration->checkRaStrategy())
@@ -286,10 +335,14 @@ void BRDBus::ImportCustomRA(const QString& encodedStrategy)
         remove(CUSTOM_RA_STRATEGY_FILEPATH);
         // 不知道选选哪个错误码，所以选择了 ERROR_FAILED
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_FAILED));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to import custom reinforce strategy.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to import custom reinforce strategy."),
+                      calledUniqueName);
         return;
     }
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Import custom reinforce strategy.");
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Import custom reinforce strategy."),
+                    calledUniqueName);
 }
 
 void BRDBus::SetCheckBox(const QString& reinforcementName, const bool& checkboxStatus)
@@ -300,34 +353,46 @@ void BRDBus::SetCheckBox(const QString& reinforcementName, const bool& checkboxS
 void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
-
     if (resourceMonitor >= BRResourceMonitor::BR_RESOURCE_MONITOR_OTHER)
     {
         sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set resource monitor switch", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set resource monitor switch"),
+                      calledUniqueName);
         return;
     }
 
-    RETURN_IF_TRUE(resourceMonitor == this->m_configuration->getResourceMonitorStatus())
+    if (resourceMonitor == this->m_configuration->getResourceMonitorStatus())
+    {
+        SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                        tr("Set resource monitor switch to ").arg(resourceMonitor),
+                        calledUniqueName);
+        return;
+    }
 
     if (!this->m_configuration->setResourceMonitorStatus(BRResourceMonitor(resourceMonitor)))
     {
         sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_RESOURCE_MONITOR_FAILED));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set resource monitor switch", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set resource monitor switch"),
+                      calledUniqueName);
         return;
     }
 
     m_resourceMonitorTimer->stop();
-    QObject::disconnect(this->m_resourceMonitorTimer, SIGNAL(timeout()), this, SLOT(BRDBus::setResourceMonitor()));
+    QObject::disconnect(this->m_resourceMonitorTimer, SIGNAL(timeout()),
+                        this, SLOT(BRDBus::setResourceMonitor()));
     if (BRResourceMonitor(resourceMonitor) == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {
         this->m_resourceMonitorTimer = new QTimer(this);
-        QObject::connect(this->m_resourceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
+        QObject::connect(this->m_resourceMonitorTimer, &QTimer::timeout,
+                         this, &BRDBus::setResourceMonitor);
         this->m_resourceMonitorTimer->start(RESOURCEMONITORMS);
     }
 
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set resource monitor switch to " + QString::number(resourceMonitor));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Set resource monitor switch to ").arg(resourceMonitor),
+                    calledUniqueName);
 }
 
 QString BRDBus::GetCategories()
@@ -403,10 +468,11 @@ QString BRDBus::GetReinforcements()
 void BRDBus::ResetReinforcements()
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
     this->m_configuration->delAllCustomRa();
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Reset all reinforcement parameters.");
+    SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                  tr("Reset all reinforcement parameters."),
+                  calledUniqueName);
 }
 
 QString BRDBus::GetReinforcement(const QString& name)
@@ -456,23 +522,25 @@ void BRDBus::SetReinforcement(const QString& reinforcementXML)
 void BRDBus::ResetReinforcement(const QString& name)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
     this->m_configuration->delCustomRa(name);
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Reset reinforcement parameters. name is " + name);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Reset reinforcement parameters. name is ").arg(name),
+                    calledUniqueName);
 }
 
 void BRDBus::Scan(const QStringList& names)
 {
     KLOG_DEBUG() << "Carry out scan progress. range is " << names.join(" ").toLocal8Bit();
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
 
     // 已经在扫描则返回错误
     if (this->m_scanJob && this->m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
     {
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to scan.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to scan."),
+                      calledUniqueName);
         return;
     }
 
@@ -488,7 +556,9 @@ void BRDBus::Scan(const QStringList& names)
             {
                 sendErrorReply(QDBusError::InternalError,
                                BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
-                SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to scan.", false);
+                SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                              tr("Failed to scan."),
+                              calledUniqueName);
                 return;
             }
 
@@ -498,13 +568,16 @@ void BRDBus::Scan(const QStringList& names)
             {
                 sendErrorReply(QDBusError::InternalError,
                                BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND));
-                SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to scan.", false);
+                SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                              tr("Failed to scan."),
+                              calledUniqueName);
                 return;
             }
 
             this->m_scanJob->addOperation(reinforcement->getPluginName(),
                                           reinforcement->getName(),
-                                          [reinforcement_interface]() -> QString {
+                                          [reinforcement_interface]() -> QString
+                                          {
                                               QJsonObject retval;
                                               QString args;
                                               QString error;
@@ -525,7 +598,9 @@ void BRDBus::Scan(const QStringList& names)
         KLOG_WARNING("%s", e.what());
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to scan.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to scan."),
+                      calledUniqueName);
         return;
     }
     QObject::disconnect(this->m_scanJob.get(), &Job::processFinished, 0, 0);
@@ -537,10 +612,14 @@ void BRDBus::Scan(const QStringList& names)
     {
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to scan.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to scan."),
+                      calledUniqueName);
         return;
     }
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Scan " + QString::number(names.size()) + " items");
+    SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                  tr("Scan %1 items").arg(names.size()),
+                  calledUniqueName);
 }
 
 void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
@@ -550,14 +629,16 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
             QDBusConnection::systemBus().send(message.createReply());
         });
     KLOG_DEBUG() << "Carry out reinforcement progress. range is " << names.join(" ").toLocal8Bit();
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     m_isScanFlag = false;
     // 已经在加固则返回错误
     if (this->m_reinforceJob && this->m_reinforceJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
     {
         auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING));
         QDBusConnection::systemBus().send(replyMessage);
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to reinforcement.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to reinforcement."),
+                      calledUniqueName);
         return;
     }
     this->m_reinforceJob = Job::create();
@@ -572,7 +653,9 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         {
             auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
             QDBusConnection::systemBus().send(replyMessage);
-            SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to reinforcement.", false);
+            SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                          tr("Failed to reinforcement."),
+                          calledUniqueName);
             return;
         }
 
@@ -582,14 +665,17 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         {
             auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND));
             QDBusConnection::systemBus().send(replyMessage);
-            SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to reinforcement.", false);
+            SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                          tr("Failed to reinforcement."),
+                          calledUniqueName);
             return;
         }
 
         auto paramStr = getJsonParam(name);
         this->m_reinforceJob->addOperation(reinforcement->getPluginName(),
                                            reinforcement->getName(),
-                                           [reinforcement_interface, paramStr]() -> QString {
+                                           [reinforcement_interface, paramStr]() -> QString
+                                           {
                                                QString error;
                                                QJsonObject retval;
                                                if (!reinforcement_interface->set(paramStr, error))
@@ -613,17 +699,19 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
     {
         auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED));
         QDBusConnection::systemBus().send(replyMessage);
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to reinforcement.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to reinforcement."),
+                      calledUniqueName);
         return;
     }
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Reinforce " + QString::number(names.size()) + " items");
+    SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                  tr("Reinforce %1 items").arg(names.size()),
+                  calledUniqueName);
 }
 
 void BRDBus::Cancel(const qlonglong& jobID)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
-
     BRErrorCode errorCode = BRErrorCode::SUCCESS;
 
     if (this->m_scanJob &&
@@ -652,11 +740,15 @@ void BRDBus::Cancel(const qlonglong& jobID)
     if (errorCode != BRErrorCode::SUCCESS)
     {
         sendErrorReply(QDBusError::Failed, BR_ERROR2STR(errorCode));
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to cancel progress.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to cancel progress."),
+                      calledUniqueName);
         return;
     }
 
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Cancel. job id: " + QString::number(jobID));
+    SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                  tr("Cancel. job id: %1").arg(jobID),
+                  calledUniqueName);
 }
 
 void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotStatus)
@@ -665,7 +757,7 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
         {
             QDBusConnection::systemBus().send(message.createReply());
         });
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
 
     KLOG_INFO("Set fallback. snapshotStatus: %d.", snapshotStatus);
     RETURN_IF_TRUE(snapshotStatus == BRFallbackMethod::BR_FALLBACK_METHOD_OTHER);
@@ -683,7 +775,9 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
         this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
         auto replyMessage = message.createReply();
         QDBusConnection::systemBus().send(replyMessage);
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set fallback.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set fallback."),
+                      calledUniqueName);
         return;
     }
 
@@ -693,14 +787,18 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
         auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING));
         QDBusConnection::systemBus().send(replyMessage);
         this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
-        SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Failed to set fallback.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to set fallback."),
+                      calledUniqueName);
         return;
     }
 
     m_fallbackMethod = BRFallbackMethod(snapshotStatus);
     reinforce(message, names_rh);
     m_fallbackMethod = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
-    SSR_LOG(role, Log::Manager::LogType::BASELINE_REINFORCEMENT, "Set fallback. snapshot status is " + QString::number(snapshotStatus));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Set fallback. snapshot status is %1").arg(snapshotStatus),
+                    calledUniqueName);
 }
 
 void BRDBus::init()
@@ -727,13 +825,14 @@ void BRDBus::init()
     QObject::connect(this->m_resourceMonitor, &ResourceMonitor::memoryRemainingRatio_, this, &BRDBus::memoryRemainingRatio);
 
     // 进程完成后，回退状态置为未开始
-    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]() {
-        RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->m_configuration->getFallbackStatus());
-        if (!this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
-        {
-            KLOG_ERROR() << "set fallback status failed.";
-        }
-    });
+    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]()
+                     {
+                         RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->m_configuration->getFallbackStatus());
+                         if (!this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
+                         {
+                             KLOG_ERROR() << "set fallback status failed.";
+                         }
+                     });
 
     if (m_configuration->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {
@@ -767,7 +866,6 @@ void BRDBus::scanResultHandle(const JobResult& jobResult)
         scanResult.job_id(jobResult.job_id);
         scanResult.job_state(this->m_scanJob->getState());
 
-        int32_t itemCount = 0;
         for (auto iter = jobResult.running_operations.begin(); iter != jobResult.running_operations.end(); ++iter)
         {
             auto operation = this->m_scanJob->getOperation((*iter));
@@ -777,7 +875,6 @@ void BRDBus::scanResultHandle(const JobResult& jobResult)
             reinforcementResult.state(BRReinforcementState::BR_REINFORCEMENT_STATE_SCANNING);
             reinforcementResult.args("");
             scanResult.reinforcement().push_back(std::move(reinforcementResult));
-            ++itemCount;
         }
 
         for (auto iter = jobResult.current_finished_operations.begin(); iter != jobResult.current_finished_operations.end(); ++iter)
@@ -826,7 +923,6 @@ void BRDBus::scanResultHandle(const JobResult& jobResult)
             }
             reinforcementResult.state(int32_t(state));
             scanResult.reinforcement().push_back(std::move(reinforcementResult));
-            ++itemCount;
         }
 
         if (m_isScanFlag)
@@ -852,7 +948,6 @@ void BRDBus::reinforceResultHandle(const JobResult& jobResult)
         reinforceResult.job_id(jobResult.job_id);
         reinforceResult.job_state(this->m_reinforceJob->getState());
 
-        int32_t itemCount = 0;
         for (auto iter = jobResult.running_operations.begin(); iter != jobResult.running_operations.end(); ++iter)
         {
             auto operation = this->m_reinforceJob->getOperation(*iter);
@@ -861,7 +956,6 @@ void BRDBus::reinforceResultHandle(const JobResult& jobResult)
             reinforcementResult.name(operation->reinforcement_name.toStdString());
             reinforcementResult.state(BRReinforcementState::BR_REINFORCEMENT_STATE_REINFORCING);
             reinforceResult.reinforcement().push_back(std::move(reinforcementResult));
-            ++itemCount;
         }
 
         for (auto iter = jobResult.current_finished_operations.begin(); iter != jobResult.current_finished_operations.end(); ++iter)
@@ -889,7 +983,6 @@ void BRDBus::reinforceResultHandle(const JobResult& jobResult)
             }
             reinforcementResult.state(int32_t(state));
             reinforceResult.reinforcement().push_back(std::move(reinforcementResult));
-            ++itemCount;
         }
         // 回退中，不关注进程信息
         if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
