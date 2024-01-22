@@ -219,7 +219,14 @@ void RealTimeAlert::processIPSetData()
     RETURN_IF_TRUE(nmapAttackers.isEmpty());
     KLOG_DEBUG() << "Detect nmap attack, attacker ips: " << nmapAttackers;
     Manager::hazardDetected(ATTACK_DETECT, nmapAttackers.join(','));
-    SSR_LOG(Account::Manager::AccountRole::unknown_account, Log::Manager::LogType::TOOL_BOX, QString("Detected nmap attack! attacker ip:$1").arg(nmapAttackers.join(',')), true);
+    KS::Log::Manager::writeLog({
+        "unkown account",
+        Account::Manager::AccountRole::unknown_account,
+        QDateTime::currentDateTime(),
+        KS::Log::Manager::LogType::TOOL_BOX,
+        true,
+        tr("Detected nmap attack! attacker ip:$1").arg(nmapAttackers.join(','))
+    });
     m_ipsetData.clear();
     m_clearIPSetDataProcess->start();
 }
@@ -248,7 +255,14 @@ void RealTimeAlert::processAuditData(int socket)
     }
     RETURN_IF_TRUE(alertMsgList.isEmpty());
     Manager::hazardDetected(HAZARD_BEHAVIOR, alertMsgList.join(','));
-    SSR_LOG(Account::Manager::AccountRole::unknown_account, Log::Manager::LogType::TOOL_BOX, QString("Detected hazard behavior! msg:$1").arg(alertMsgList.join(',')), true);
+    KS::Log::Manager::writeLog({
+        "unkown account",
+        Account::Manager::AccountRole::unknown_account,
+        QDateTime::currentDateTime(),
+        KS::Log::Manager::LogType::TOOL_BOX,
+        true,
+        tr("Detected hazard behavior! msg:$1").arg(alertMsgList.join(','))
+    });
 }
 };  // namespace ToolBox
 };  // namespace KS

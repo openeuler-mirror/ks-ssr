@@ -35,12 +35,16 @@
 #define UID_REUSE_CONTROL_KEY "UID_REUSE_CONTROL"
 #define USER_INFO_DB_TABLE_NAME "userInfo"
 #define USER_INFO_DB_COLUMN1 "name"
-#define USER_INFO_DB_COLUMN2 "passwd"
+#define USER_INFO_DB_COLUMN2 "role"
+#define USER_INFO_DB_COLUMN3 "passwd"
+#define USER_INFO_DB_COLUMN4 "tryTimes"
+#define USER_INFO_DB_COLUMN5 "lastTryTime"
+#define USER_INFO_DB_POSITION_NAME 0
+#define USER_INFO_DB_POSITION_ROLE 1
+#define USER_INFO_DB_POSITION_PASSWD 2
+#define USER_INFO_DB_POSITION_TRY_TIMES 3
+#define USER_INFO_DB_POSITION_LAST_TRY_TIME 4
 #define USER_INFO_INITIAL_PASSWD "123123"
-#define USER_FREEZE_DB_TABLE_NAME "userFreeze"
-#define USER_FREEZE_DB_COLUMN1 "name"
-#define USER_FREEZE_DB_COLUMN2 "tryTimes"
-#define USER_FREEZE_DB_COLUMN3 "lastTryTime"
 #define RSA_KEY_LENGTH 512
 #define PAM_SYSTEM_PATH "/etc/pam.d/system-auth"
 #define PAM_KIRAN_PATH "/etc/pam.d/kiran-authentication-service"
@@ -53,7 +57,6 @@
 #define REGEXP_PAM_ACCOUNT_REQ_PAMUNIXDOTSO R"((account[ ]+required[ ]+pam_unix.so))"
 #define REGEXP_MULTI_WAY_AUTH R"((.*)(auth[ ]+\[success=done ignore=2 default=bad authinfo_unavail=die\][ ]+pam_kiran_authentication.so[ ]+doauth))"
 #define REGEXP_MULTI_FACTOR_AUTH R"((.*)(auth[ ]+\[success=2 default=bad\][ ]+pam_kiran_authentication.so[ ]+doauth))"
-
 namespace KS
 {
 namespace Account
@@ -126,11 +129,10 @@ void Manager::SetUidReusable(bool enabled)
     auto role = m_accountManager->getRole(calledUniqueName);
     if (role == KS::Account::Manager::AccountRole::unknown_account)
     {
-        KLOG_ERROR() << "Failed to set uid reusable, Permission denied";
-        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Permission Denied", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, "Permission Denied", calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, enabled ? "Enable uid reuse" : "Disable uid reuse");
+    SSR_LOG_SUCCESS(Log::Manager::LogType::ACCOUNT, enabled ? "Enable uid reuse" : "Disable uid reuse", calledUniqueName);
     m_isUidReusable = enabled;
     m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enabled));
     m_uidReuseConfig->sync();
@@ -278,9 +280,6 @@ void Manager::enableMultiFactorAuthState()
         KLOG_ERROR() << "Failed to match Multi-Way authentication";
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
     }
-    KLOG_DEBUG() << multiWayMatch.captured(0);
-    KLOG_DEBUG() << multiWayMatch.captured(1);
-    KLOG_DEBUG() << multiWayMatch.captured(2);
     // ((#)(auth  [success=done ignore=2 default=bad authinfo_unavail=die] pam_kiran_authentication.so doauth))
     kiranAuthContent.replace(multiWayMatch.captured(0), "#" + multiWayMatch.captured(2));
 
@@ -304,10 +303,13 @@ void Manager::SetMultiFactorAuthState(bool enabled)
     if (role == KS::Account::Manager::AccountRole::unknown_account)
     {
         KLOG_ERROR() << "Failed to set Multi-Factor Authentication state, Permission denied";
-        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Permission Denied", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, "Permission Denied", calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, enabled ? "Enable Multi-Factor Authentication" : "Disable Multi-Factor Authentication");
+    SSR_LOG_SUCCESS(
+        Log::Manager::LogType::ACCOUNT,
+        enabled ? "Enable Multi-Factor Authentication" : "Disable Multi-Factor Authentication",
+        calledUniqueName);
     if (enabled)
     {
         enableMultiFactorAuthState();
@@ -401,13 +403,19 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
     {
         KLOG_ERROR() << "Failed to change " << userName << "'s passphrase, unique name: "
                      << calledUniqueName << ", role: " << roleName;
-        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, QString("Failed to change %1's passphrase, unique name: %2, role: %3").arg(userName).arg(calledUniqueName).arg(roleName), false);
+        SSR_LOG_ERROR(
+            Log::Manager::LogType::ACCOUNT,
+            tr("Failed to change %1's passphrase, unique name: %2, actor role: %3")
+                .arg(userName)
+                .arg(calledUniqueName)
+                .arg(roleName),
+            calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     if (!verifyPassword(userName, oldPassphrase))
     {
         KLOG_INFO() << "Password error!, failed to change passphrase";
-        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Change password", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, tr("Change password"), calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
     if (CryptoHelper::rsaDecryptString(m_rsaPrivateKey, oldPassphrase) ==
@@ -417,26 +425,23 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
     }
     auto isSuccess = changePassword(userName, newPassphrase);
     emit PasswordChanged(userName);
-    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Change password");
+    SSR_LOG_SUCCESS(Log::Manager::LogType::ACCOUNT, tr("Change password"), calledUniqueName);
     return isSuccess;
 }
 
 bool Manager::Login(const QString& userName, const QString& passWord)
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
-    bool isSuccess = false;
-    auto role_index = m_metaAccountEnum.keyToValue(userName.toLocal8Bit(), &isSuccess);
-    auto role = static_cast<AccountRole>(role_index);
-
-    if (!isSuccess)
+    auto role = getRoleFromDB(userName);
+    if ( role == AccountRole::unknown_account)
     {
-        KLOG_ERROR() << "Unknown meta user name: " << userName << ", Unique name: " << callerUnique;
+        KLOG_ERROR() << "Unknown user name: " << userName << ", Unique name: " << callerUnique;
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
     }
-    m_dbusServerWatcher->addWatchedService(callerUnique);
 
-    QWriteLocker locker(&m_clientMutex);
+    m_dbusServerWatcher->addWatchedService(callerUnique);
     auto it = m_clients.find(callerUnique);
+
     if (isLogin(it))
     {
         KLOG_WARNING() << "Forward program has login, Current role: "
@@ -448,7 +453,9 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     if (isFreeze(userName))
     {
         KLOG_INFO() << userName << " has been freeze";
-        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Login, but this account has been freeze", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT,
+                      tr("Failed to login, because this account has been freeze"),
+                      callerUnique);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_BE_FREEZE, this->message());
     }
 
@@ -456,12 +463,14 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     {
         KLOG_INFO() << "Passwd error";
         updateFreezeInfo(userName);
-        SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Login, Passwd error", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, tr("Failed to login, Passwd error"), callerUnique);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
+    QWriteLocker locker(&m_clientMutex);
     resetFreezeInfo(userName);
-    m_clients.insert(callerUnique, {true, role, DBusHelper::getCallerPid(this)});
-    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Login");
+    m_clients.insert(callerUnique, {true, role, userName, DBusHelper::getCallerPid(this)});
+    locker.unlock();
+    SSR_LOG_SUCCESS(Log::Manager::LogType::ACCOUNT, tr("Login"), callerUnique);
     return true;
 }
 
@@ -482,8 +491,18 @@ bool Manager::Logout()
         return false;
     }
     it.value().isLogin = false;
-    SSR_LOG(role, Log::Manager::LogType::ACCOUNT, "Logout");
+    SSR_LOG_SUCCESS(Log::Manager::LogType::ACCOUNT, tr("Logout"), callerUnique);
     return true;
+}
+
+void Manager::createUser(const QString& userName, const QString& role, const QString& password)
+{
+    constexpr const char* insertUserInfo = "insert into " USER_INFO_DB_TABLE_NAME
+                                           " values ('%1', '%2', '%3', '%4', '%5');";
+    if (!m_db->exec(QString(insertUserInfo).arg(userName).arg(role).arg(password).arg(0).arg(0)))
+    {
+        KLOG_ERROR() << "Failed to add user: " << userName;
+    }
 }
 
 void Manager::initDatabase()
@@ -492,10 +511,6 @@ void Manager::initDatabase()
                                               "FROM sqlite_master "
                                               "WHERE type='table' "
                                               "AND name ='" USER_INFO_DB_TABLE_NAME "';";
-    constexpr const char* getUserFreezeTables = "SELECT * "
-                                                "FROM sqlite_master "
-                                                "WHERE type='table' "
-                                                "AND name ='" USER_FREEZE_DB_TABLE_NAME "';";
     SqlDataType res{};
     if (!m_db->exec(getUserInfoTables, &res))
     {
@@ -507,23 +522,17 @@ void Manager::initDatabase()
         KLOG_INFO() << "Db table: init table: " USER_INFO_DB_TABLE_NAME;
         initUserInfoTable();
     }
-
-    if (!m_db->exec(getUserFreezeTables, &res))
-    {
-        KLOG_ERROR() << "Failed to get table: " USER_FREEZE_DB_TABLE_NAME;
-        return;
-    }
-    if (res.isEmpty())
-    {
-        KLOG_DEBUG() << "Db table: init table: " USER_FREEZE_DB_TABLE_NAME;
-        initUserFreezeTable();
-    }
 }
 
 void Manager::initUserInfoTable()
 {
-    constexpr const char* createUserInfoTables = "CREATE table " USER_INFO_DB_TABLE_NAME
-                                                 " (" USER_INFO_DB_COLUMN1 " vchar, " USER_INFO_DB_COLUMN2 " vchar);";
+    constexpr const char* createUserInfoTables = "CREATE table " USER_INFO_DB_TABLE_NAME  // clang-format off
+                                                 " ( " USER_INFO_DB_COLUMN1 " vchar, "    // clang-format off
+                                                       USER_INFO_DB_COLUMN2 " vchar, "    // clang-format off
+                                                       USER_INFO_DB_COLUMN3 " vchar, "    // clang-format off
+                                                       USER_INFO_DB_COLUMN4 " int, "      // clang-format off
+                                                       USER_INFO_DB_COLUMN5 " int "       // clang-format off
+                                                 ");";
     if (!m_db->exec(createUserInfoTables))
     {
         KLOG_ERROR() << "Failed to create table: " USER_INFO_DB_TABLE_NAME;
@@ -531,41 +540,15 @@ void Manager::initUserInfoTable()
     }
     for (auto i = 0; i < m_metaAccountEnum.keyCount(); i++)
     {
-        const QString insertUserInfo("insert into " USER_INFO_DB_TABLE_NAME " values ('%1', '%2');");
         auto userName = m_metaAccountEnum.key(i);
-        auto encrypterdPassword = CryptoHelper::aesEncrypt(USER_INFO_INITIAL_PASSWD);
-        if (!m_db->exec(insertUserInfo.arg(userName).arg(encrypterdPassword)))
-        {
-            KLOG_ERROR() << "Failed insert user info: " << userName;
-            return;
-        }
-    }
-}
-
-void Manager::initUserFreezeTable()
-{
-    constexpr const char* createUserFreezeInfoTables = "CREATE table " USER_FREEZE_DB_TABLE_NAME
-                                                       " (" USER_FREEZE_DB_COLUMN1 " vchar, " USER_FREEZE_DB_COLUMN2 " int, " USER_FREEZE_DB_COLUMN3 " int);";
-    if (!m_db->exec(createUserFreezeInfoTables))
-    {
-        KLOG_ERROR() << "Failed to create table: " USER_INFO_DB_TABLE_NAME;
-        return;
-    }
-    for (auto i = 0; i < m_metaAccountEnum.keyCount(); i++)
-    {
-        const QString insertUserFreeze("insert into " USER_FREEZE_DB_TABLE_NAME " values ('%1', %2, %3)");
-        auto userName = m_metaAccountEnum.key(i);
-        if (!m_db->exec(insertUserFreeze.arg(userName).arg(0).arg(0)))
-        {
-            KLOG_ERROR() << "Failed insert user Freeze: " << userName;
-            return;
-        }
+        auto encryptedPassword = CryptoHelper::aesEncrypt(USER_INFO_INITIAL_PASSWD);
+        createUser(userName, userName, encryptedPassword);
     }
 }
 
 bool Manager::verifyPassword(const QString& userName, const QString& passwd) const
 {
-    constexpr const char* rawCmd = " SELECT " USER_INFO_DB_COLUMN2
+    constexpr const char* rawCmd = " SELECT " USER_INFO_DB_COLUMN3
                                    " FROM " USER_INFO_DB_TABLE_NAME
                                    " WHERE " USER_INFO_DB_COLUMN1 " = '%1';";
     QString sqlCmd{rawCmd};
@@ -588,16 +571,37 @@ bool Manager::verifyPassword(const QString& userName, const QString& passwd) con
     return decryptedPassword == currentPassword;
 }
 
+Manager::AccountRole Manager::getRoleFromDB(const QString& userName) const
+{
+    constexpr const char* queryAccountInfo = " SELECT " USER_INFO_DB_COLUMN2
+                                             " FROM " USER_INFO_DB_TABLE_NAME
+                                             " WHERE " USER_INFO_DB_COLUMN1 "='%1';";
+    SqlDataType res{};
+    QReadLocker locker(&m_dbMutex);
+    if (!m_db->exec(QString(queryAccountInfo).arg(userName), &res))
+    {
+        KLOG_ERROR() << "Failed query table: " USER_INFO_DB_TABLE_NAME;
+        return AccountRole::unknown_account;
+    }
+    locker.unlock();
+    if (res.isEmpty())
+    {
+        KLOG_INFO() << QString("User %1 does not exist").arg(userName);
+        return AccountRole::unknown_account;
+    }
+    return static_cast<AccountRole>(m_metaAccountEnum.keyToValue(res[0][0].toString().toLocal8Bit()));
+}
+
 bool Manager::isFreeze(const QString& userName) const
 {
     constexpr const char* queryUserFreeze = " SELECT *"
-                                            " FROM " USER_FREEZE_DB_TABLE_NAME
-                                            " WHERE " USER_FREEZE_DB_COLUMN1 "='%1';";
+                                            " FROM " USER_INFO_DB_TABLE_NAME
+                                            " WHERE " USER_INFO_DB_COLUMN1 "='%1';";
     SqlDataType res{};
     QReadLocker locker(&m_dbMutex);
     if (!m_db->exec(QString(queryUserFreeze).arg(userName), &res))
     {
-        KLOG_ERROR() << "Failed query table: " USER_FREEZE_DB_TABLE_NAME;
+        KLOG_ERROR() << "Failed query table: " USER_INFO_DB_TABLE_NAME;
         return true;
     }
     locker.unlock();
@@ -606,8 +610,8 @@ bool Manager::isFreeze(const QString& userName) const
         KLOG_ERROR() << "Internal error: db";
         return true;
     }
-    auto tryLoginTimes = res[0][1].toInt();
-    auto lastLoginTime = res[0][2].toLongLong();
+    auto tryLoginTimes = res[0][USER_INFO_DB_POSITION_TRY_TIMES].toInt();
+    auto lastLoginTime = res[0][USER_INFO_DB_POSITION_LAST_TRY_TIME].toLongLong();
     auto currentTime = QDateTime::currentDateTime().toSecsSinceEpoch();
     // 当 tryLoginTimes >= 5 且 lastLoginTime + m_freezeLoginTimeSec < currentTime时
     // 表明此帐号曾经被冻结，但是冻结时间已过，所以应该重置登录次数
@@ -621,33 +625,33 @@ bool Manager::isFreeze(const QString& userName) const
 
 void Manager::updateFreezeInfo(const QString& userName) const
 {
-    constexpr const char* updateFreeze = " UPDATE " USER_FREEZE_DB_TABLE_NAME
-                                         " SET " USER_FREEZE_DB_COLUMN2 " = " USER_FREEZE_DB_COLUMN2 " + 1, " USER_FREEZE_DB_COLUMN3 " = %1"
-                                         " WHERE " USER_FREEZE_DB_COLUMN1 " = '%2'";
+    constexpr const char* updateFreeze = " UPDATE " USER_INFO_DB_TABLE_NAME
+                                         " SET " USER_INFO_DB_COLUMN4 " = " USER_INFO_DB_COLUMN4 " + 1, " USER_INFO_DB_COLUMN5 " = %1"
+                                         " WHERE " USER_INFO_DB_COLUMN1 " = '%2'";
 
     QWriteLocker locker(&m_dbMutex);
     if (!m_db->exec(QString(updateFreeze).arg(QDateTime::currentDateTime().toSecsSinceEpoch()).arg(userName)))
     {
-        KLOG_ERROR() << "Failed to Update " USER_FREEZE_DB_TABLE_NAME;
+        KLOG_ERROR() << "Failed to Update FreezeInfo!";
     }
 }
 
 void Manager::resetFreezeInfo(const QString& userName) const
 {
-    constexpr const char* resetFreeze = " UPDATE " USER_FREEZE_DB_TABLE_NAME
-                                        " SET " USER_FREEZE_DB_COLUMN2 " = 0, " USER_FREEZE_DB_COLUMN3 " = 0"
-                                        " WHERE " USER_FREEZE_DB_COLUMN1 " = '%1'";
+    constexpr const char* resetFreeze = " UPDATE " USER_INFO_DB_TABLE_NAME
+                                        " SET " USER_INFO_DB_COLUMN4 " = 0, " USER_INFO_DB_COLUMN5 " = 0"
+                                        " WHERE " USER_INFO_DB_COLUMN1 " = '%1'";
     QWriteLocker locker(&m_dbMutex);
     if (!m_db->exec(QString(resetFreeze).arg(userName)))
     {
-        KLOG_ERROR() << "Failed to reset " USER_FREEZE_DB_TABLE_NAME;
+        KLOG_ERROR() << "Failed to reset " USER_INFO_DB_TABLE_NAME;
     }
 }
 
 bool Manager::changePassword(const QString& userName, const QString& newPasswd) const
 {
     constexpr const char* rawCmd = " UPDATE " USER_INFO_DB_TABLE_NAME
-                                   " SET " USER_INFO_DB_COLUMN2 " = '%1'"
+                                   " SET " USER_INFO_DB_COLUMN3 " = '%1'"
                                    " WHERE " USER_INFO_DB_COLUMN1 " = '%2'";
     QString sqlCmd{rawCmd};
     QWriteLocker locker(&m_dbMutex);

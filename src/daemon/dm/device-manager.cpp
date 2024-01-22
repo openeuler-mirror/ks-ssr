@@ -269,9 +269,9 @@ void DeviceManager::recordDeviceConnection(QSharedPointer<Device> device)
 
     // 以秒为单位的时间戳
     record.time = QDateTime::currentSecsSinceEpoch();
-    SSR_LOG(Account::Manager::AccountRole::sysadm,
-            Log::Manager::LogType::DEVICE, "Device access, name is " + record.name + ", type is " + deviceTypeEnum2Str(record.type),
-            device->getState() == DEVICE_STATE_ENABLE);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::DEVICE,
+                    tr("Device access, name is %1, type is %2").arg(record.name).arg(deviceTypeEnum2Str(record.type)),
+                    device->getState() == DEVICE_STATE_ENABLE);
     m_deviceLog->addDeviceRecord(record);
 }
 
@@ -350,7 +350,31 @@ bool DeviceManager::isSupportHDMIDisable()
     return false;
 }
 
-QString DeviceManager::deviceTypeEnum2Str(int type) const
+QString DeviceManager::interfaceTypeEnum2Str(int type)
+{
+    switch (type)
+    {
+    case INTERFACE_TYPE_UNKNOWN:
+        return "Other";
+    case INTERFACE_TYPE_USB:
+        return "CD";
+    case INTERFACE_TYPE_BLUETOOTH:
+        return "Mouse";
+    case INTERFACE_TYPE_NET:
+        return "Keyboard";
+    case INTERFACE_TYPE_HDMI:
+        return "Network card";
+    case INTERFACE_TYPE_USB_KBD:
+        return "Wireless network card";
+    case INTERFACE_TYPE_USB_MOUSE:
+        return "Video";
+    default:
+        break;
+    }
+    return QString();
+}
+
+QString DeviceManager::deviceTypeEnum2Str(int type)
 {
     switch (type)
     {
