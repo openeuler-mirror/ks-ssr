@@ -134,9 +134,9 @@ QString DBus::GetInterfaces()
     return QString(jsonDoc.toJson(QJsonDocument::Compact));
 }
 
-QString DBus::GetInterface(int type)
+QString DBus::GetInterface(int interfaceType)
 {
-    if (type <= INTERFACE_TYPE_UNKNOWN || type >= INTERFACE_TYPE_LAST)
+    if (interfaceType <= INTERFACE_TYPE_UNKNOWN || interfaceType >= INTERFACE_TYPE_LAST)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, this->message())
     }
@@ -145,8 +145,8 @@ QString DBus::GetInterface(int type)
     auto deviceConfiguration = Configuration::instance();
 
     QJsonObject jsonObj{
-        {SSR_DI_JK_TYPE, type},
-        {SSR_DI_JK_ENABLE, deviceConfiguration->isIFCEnable(type)}};
+        {SSR_DI_JK_TYPE, interfaceType},
+        {SSR_DI_JK_ENABLE, deviceConfiguration->isIFCEnable(interfaceType)}};
     jsonDoc.setObject(jsonObj);
 
     return QString(jsonDoc.toJson(QJsonDocument::Compact));
@@ -156,12 +156,14 @@ void DBus::changePermission(const QDBusMessage &message,
                             const QString &id,
                             const QString &permissions)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto device = m_deviceManager->getDeviceByID(id);
 
     if (!device)
     {
-        SSR_LOG(role, Log::Manager::LogType::DEVICE, "Fail to change permissions. ID is " + id, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
+                      tr("Failed to change permissions. ID is %1").arg(id),
+                      callerUnique);
         KLOG_WARNING() << "Failed to find device with id " << id;
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
@@ -171,14 +173,18 @@ void DBus::changePermission(const QDBusMessage &message,
 
     if (error.error != QJsonParseError::NoError)
     {
-        SSR_LOG(role, Log::Manager::LogType::DEVICE, "Fail to change permissions. ID is " + id, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
+                      tr("Failed to change permissions. ID is ").arg(id),
+                      callerUnique);
         KLOG_WARNING() << "Failed to create QJsonDocument with " << permissions;
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_PERM, message)
     }
 
     if (!jsonDoc.isObject())
     {
-        SSR_LOG(role, Log::Manager::LogType::DEVICE, "Fail to change permissions. ID is " + id, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
+                      tr("Failed to change permissions. ID is ").arg(id),
+                      callerUnique);
         KLOG_WARNING() << "QJsonDocument is not object with " << permissions;
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_PERM, message)
     }
@@ -202,7 +208,9 @@ void DBus::changePermission(const QDBusMessage &message,
 
     // 重放该设备Udev事件
     device->trigger();
-    SSR_LOG(role, Log::Manager::LogType::DEVICE, "Change permissions. ID is " + id + " permissions is " + permissions);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::DEVICE,
+                    tr("Change permissions. ID is $1 permissions is $2").arg(id).arg(permissions),
+                    callerUnique);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
@@ -210,12 +218,14 @@ void DBus::changePermission(const QDBusMessage &message,
 void DBus::enable(const QDBusMessage &message,
                   const QString &id)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto device = m_deviceManager->getDeviceByID(id);
 
     if (!device)
     {
-        SSR_LOG(role, Log::Manager::LogType::DEVICE, "Fail to enable device. ID is " + id, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
+                      tr("Failed to enable device. ID is %1").arg(id),
+                      callerUnique);
         KLOG_WARNING() << "Failed to find device with id " << id;
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
@@ -223,7 +233,9 @@ void DBus::enable(const QDBusMessage &message,
     device->setEnable(true);
     // 重放该设备Udev事件
     device->trigger();
-    SSR_LOG(role, Log::Manager::LogType::DEVICE, "Enable device. ID is " + id);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::DEVICE,
+                    tr("Enable device. ID is !").arg(id),
+                    callerUnique);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
@@ -231,12 +243,14 @@ void DBus::enable(const QDBusMessage &message,
 void DBus::disable(const QDBusMessage &message,
                    const QString &id)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto device = m_deviceManager->getDeviceByID(id);
 
     if (!device)
     {
-        SSR_LOG(role, Log::Manager::LogType::DEVICE, "Fail to disable device. ID is " + id, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
+                      tr("Failed to disable device. ID is $1").arg(id),
+                      callerUnique);
         KLOG_WARNING() << "Failed to find device with id " << id;
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_ID, message)
     }
@@ -244,35 +258,45 @@ void DBus::disable(const QDBusMessage &message,
     device->setEnable(false);
     // 重放该设备Udev事件
     device->trigger();
-    SSR_LOG(role, Log::Manager::LogType::DEVICE, "Disable device. ID is " + id);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::DEVICE,
+                    tr("Disable device. ID is $1").arg(id),
+                    callerUnique);
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::enableInterface(const QDBusMessage &message,
-                           int type,
+                           int interfaceType,
                            bool enabled)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
-    if (type <= INTERFACE_TYPE_UNKNOWN || type >= INTERFACE_TYPE_LAST)
+    auto callerUnique = DBusHelper::getCallerUniqueName(this);
+    if (interfaceType <= INTERFACE_TYPE_UNKNOWN || interfaceType >= INTERFACE_TYPE_LAST)
     {
-        SSR_LOG(role, Log::Manager::LogType::DEVICE, "Fail to enable interface. type is " + QString::number(type), false);
-        KLOG_WARNING() << "Illegal interface type " << type;
+        SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
+                      tr("Failed to enable interface. type is $1")
+                          .arg(DM::DeviceManager::interfaceTypeEnum2Str(interfaceType)),
+                      callerUnique);
+        KLOG_WARNING() << "Illegal interface type " << interfaceType;
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, message)
     }
 
-    if ((type == INTERFACE_TYPE_HDMI) && !m_deviceManager->isSupportHDMIDisable())
+    if ((interfaceType == INTERFACE_TYPE_HDMI) && !m_deviceManager->isSupportHDMIDisable())
     {
-        SSR_LOG(role, Log::Manager::LogType::DEVICE, "Fail to enable interface. type is " + QString::number(type), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
+                      tr("Failed to enable interface. type is $1").arg(QString::number(interfaceType)),
+                      callerUnique);
         KLOG_WARNING() << "Not support disable HDMI interface.";
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_DISABLE_HDMI, message)
     }
 
-    Configuration::instance()->setIFCEnable(type, enabled);
-    m_deviceManager->triggerInterfaceDevices(type);
+    Configuration::instance()->setIFCEnable(interfaceType, enabled);
+    m_deviceManager->triggerInterfaceDevices(interfaceType);
 
-    SSR_LOG(role, Log::Manager::LogType::DEVICE, "Enable interface. type is " + QString::number(type));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::DEVICE,
+                    tr("Enable interface. type is $1")
+                        .arg(DM::DeviceManager::interfaceTypeEnum2Str(interfaceType)),
+                    callerUnique);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }

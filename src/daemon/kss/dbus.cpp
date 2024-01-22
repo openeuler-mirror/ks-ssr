@@ -250,10 +250,12 @@ QJsonDocument DBus::trustedProtectedListToJsonDocument(const QStringList &fileLi
 
 void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (filePath.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Fail to add trusted files.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to add trusted files."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
@@ -265,28 +267,36 @@ void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-        SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Fail to add trusted files.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to add trusted files."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
 
     if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
-        SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Fail to add trusted files.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to add trusted files."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
     emit TrustedFilesChange();
 
-    SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Add trusted files successed. files path is " + filePath);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    tr("Add trusted files successed. files path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (fileList.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Fail to add trusted file list.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to add trusted file list."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     QJsonDocument jsonDataDoc = trustedProtectedListToJsonDocument(fileList);
@@ -297,46 +307,58 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-        SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Fail to add trusted file list.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to add trusted file list."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
 
     if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
-        SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Fail to add trusted file list.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to add trusted file list."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
 
     emit TrustedFilesChange();
 
-    SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Add trusted files successed. Sum is " + QString::number(fileList.size()));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    tr("Add trusted files successed. Sum is %1").arg(fileList.size()),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (filePath.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Fail to remove trusted file.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to remove trusted file."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     Wrapper::getDefault()->removeTrustedFile(filePath);
     emit TrustedFilesChange();
 
-    SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Remove trusted file. files path is " + filePath);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    tr("Remove trusted file. files path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (fileList.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Fail to remove trusted file list.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to remove trusted file list."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     QJsonDocument jsonDoc = trustedProtectedListToJsonDocument(fileList);
@@ -344,38 +366,48 @@ void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QS
 
     emit TrustedFilesChange();
 
-    SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Remove trusted file successed. Sum is " + QString::number(fileList.size()));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    tr("Remove trusted file successed. Sum is %1").arg(fileList.size()),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool prohibited, const QString &filePath)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (filePath.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Fail to prohibit unloading. file path is " + filePath, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to prohibit unloading. file path is %1").arg(filePath),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     Wrapper::getDefault()->prohibitUnloading(prohibited, filePath);
     // emit TrustedFilesChange();
-    SSR_LOG(role, Log::Manager::LogType::TRUSTED_PROTECTION, "Prohibit unloading. file path is " + filePath);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    tr("Prohibit unloading. file path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::addFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (filePath.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Fail to add files protection. file path is " + filePath, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to add files protection. file path is %1").arg(filePath),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     if (!checkFPDuplicateFiles(filePath, message))
     {
-        SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Fail to add files protection. file path is " + filePath, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to add files protection. file path is %1").arg(filePath),
+                      calledUniqueName);
         return;
     }
 
@@ -385,17 +417,21 @@ void DBus::addFPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     Wrapper::getDefault()->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
     emit ProtectedFilesChange();
 
-    SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Add files protection. file path is " + filePath);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Add files protection. file path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (fileList.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Fail to add files protection. file list size is " + QString::number(fileList.size()), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to add files protection. file list size is %1").arg(fileList.size()),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
@@ -403,34 +439,42 @@ void DBus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     Wrapper::getDefault()->addFiles(QString(jsonDoc.toJson()));
 
     emit ProtectedFilesChange();
-    SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Add files protection. file list size is " + QString::number(fileList.size()));
+    SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                  tr("Add files protection. file list size is %1").arg(fileList.size()),
+                  calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::removeFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (filePath.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Fail to remove files protection. file path is " + filePath, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to remove files protection. file path is %1").arg(filePath),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     Wrapper::getDefault()->removeFile(filePath);
     emit ProtectedFilesChange();
 
-    SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Remove files protection. file path is " + filePath);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Remove files protection. file path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (fileList.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Fail to remove files protection. file list size is " + QString::number(fileList.size()), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to remove files protection. file list size is %1").arg(fileList.size()),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
     }
     QJsonDocument jsonDoc = fileProtectedListToJsonDocument(fileList);
@@ -438,17 +482,21 @@ void DBus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const QS
 
     emit ProtectedFilesChange();
 
-    SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Remove files protection. file list size is " + QString::number(fileList.size()));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Remove files protection. file list size is %1").arg(fileList.size()),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint type, const QString &userPin)
 {
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (KSS_DEFAULT_USER_PIN != userPin)
     {
-        SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Fail to set storage mode.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to set storage mode."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_USER_PIN_ERROR, message)
     }
 
@@ -456,10 +504,14 @@ void DBus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint ty
 
     if (!error.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Fail to set storage mode.", false);
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to set storage mode."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED, message)
     }
-    SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Set storage mode. Status is " + QString::number(type));
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Set storage mode. Status is %1").arg(type),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
@@ -467,8 +519,10 @@ void DBus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint ty
 void DBus::setTrustedStatusAfterAuthorization(const QDBusMessage &message, bool status)
 {
     Wrapper::getDefault()->setTrustedStatus(status);
-    auto role = Account::Manager::m_accountManager->getRole(message.service());
-    SSR_LOG(role, Log::Manager::LogType::FILES_PROTECTION, "Set trusted status is " + QString(status ? "open" : "close"));
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Set trusted status is %1").arg(status ? tr("open") : tr("close")),
+                    calledUniqueName);
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
