@@ -71,6 +71,8 @@ void Manager::showLogin()
     auto x = window()->x() + window()->width() / 2 - m_login->width() / 2;
     auto y = window()->y() + window()->height() / 2 - m_login->height() / 2;
     m_login->move(x, y);
+    m_login->raise();
+    m_login->activateWindow();
     m_login->show();
 }
 

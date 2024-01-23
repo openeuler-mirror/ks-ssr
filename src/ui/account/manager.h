@@ -41,12 +41,9 @@ public:
     void showPasswordModification();
     // 显示登录界面
     void showLogin();
-
     // 退出用户
     void logout();
-
     void setLoginUserName(const QString &userName);
-
     QString getCurrentUserName() const;
 
 private:

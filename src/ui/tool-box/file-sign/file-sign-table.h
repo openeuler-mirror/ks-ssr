@@ -16,6 +16,7 @@
 
 #include <QAbstractTableModel>
 #include <QSortFilterProxyModel>
+#include <QStyledItemDelegate>
 #include <QTableView>
 
 class QWidget;
@@ -34,6 +35,7 @@ enum FileSignField
     FILE_SIGN_FIELD_FILE_PATH,
     FILE_SIGN_FIELD_FILE_SE_CONTEXT,
     FILE_SIGN_FIELD_FILE_COMPLETE_LABEL,
+    FILE_SIGN_FIELD_OPERATE,
     FILE_SIGN_FIELD_LAST
 };
 
@@ -45,6 +47,16 @@ struct FileSignRecord
     QString fileCompleteLabel;
 };
 using FileSignRecordMap = QMap<QString, FileSignRecord>;
+
+class FileSignDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+
+public:
+    FileSignDelegate(QObject *parent = 0);
+    virtual ~FileSignDelegate(){};
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+};
 
 class FileSignFilterModel : public QSortFilterProxyModel
 {
@@ -75,10 +87,6 @@ public:
     bool setData(const QModelIndex &index,
                  const QVariant &value,
                  int role = Qt::EditRole) override;
-    //    bool setHeaderData(int section,
-    //                       Qt::Orientation orientation,
-    //                       const QVariant &value,
-    //                       int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     void updateData(const FileSignRecordMap &newData);
     void removeData(const QStringList &newData);
@@ -109,10 +117,10 @@ public slots:
     void cleanSelectedData();
     void searchTextChanged(const QString &text);
 
+protected:
+    void leaveEvent(QEvent *event);
 private slots:
     void mouseEnter(const QModelIndex &index);
-
-private slots:
     void checkedAllItem(Qt::CheckState checkState);
 
 Q_SIGNALS:

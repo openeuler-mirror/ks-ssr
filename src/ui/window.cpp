@@ -443,6 +443,12 @@ void Window::activateMetaObject()
     }
 
     QX11Info::setAppTime(QX11Info::getTimestamp());
+    // 如果没有登录，则弹出登录窗口
+    if (Account::Manager::instance()->getCurrentUserName().isEmpty())
+    {
+        Account::Manager::instance()->showLogin();
+        return;
+    }
     showNormal();
     raise();
     activateWindow();

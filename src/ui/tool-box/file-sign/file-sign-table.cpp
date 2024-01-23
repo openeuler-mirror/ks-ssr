@@ -39,7 +39,9 @@ namespace KS
 namespace ToolBox
 {
 // 文件标记保护列数
-#define FILE_SIGN_TABLE_COL 4
+#define FILE_SIGN_TABLE_COL 5
+// 表格每行线条绘制的的圆角半径
+#define TABLE_LINE_RADIUS 4
 
 FileSignFilterModel::FileSignFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)
@@ -133,11 +135,13 @@ QVariant FileSignModel::headerData(int section, Qt::Orientation orientation, int
         switch (section)
         {
         case FileSignField::FILE_SIGN_FIELD_FILE_PATH:
-            return tr("File Name");
+            return tr("Object Name");
         case FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT:
             return tr("Security Context");
         case FileSignField::FILE_SIGN_FIELD_FILE_COMPLETE_LABEL:
             return tr("Complete Label");
+        case FileSignField::FILE_SIGN_FIELD_OPERATE:
+            return tr("Operate");
         default:
             break;
         }
@@ -169,8 +173,7 @@ bool FileSignModel::setData(const QModelIndex &index,
 
 Qt::ItemFlags FileSignModel::flags(const QModelIndex &index) const
 {
-    RETURN_VAL_IF_TRUE(index.column() == 0 || index.column() == 2, Qt::ItemFlag::ItemIsEnabled);
-
+    RETURN_VAL_IF_TRUE(index.column() == 0, Qt::ItemFlag::ItemIsEnabled);
     return Qt::ItemFlag::NoItemFlags;
 }
 
@@ -259,13 +262,14 @@ FileSignTable::FileSignTable(QWidget *parent)
 
     setShowGrid(false);
     // 设置Delegate
-    setItemDelegate(new KS::TP::Delegate(this));
+    setItemDelegate(new FileSignDelegate(this));
 
     // 设置水平行表头
     m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_CHECKBOX, 50);
     m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_PATH, 150);
-    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT, 300);
+    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT, 250);
     m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_COMPLETE_LABEL, 150);
+    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_OPERATE, 100);
 
     m_headerViewProxy->setStretchLastSection(true);
     m_headerViewProxy->setSectionsMovable(false);
@@ -286,13 +290,21 @@ FileSignTable::FileSignTable(QWidget *parent)
     connect(this, &FileSignTable::clicked, [this](const QModelIndex &index)
             {
                 RETURN_IF_TRUE(index.column() == FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT ||
-                               index.column() == FileSignField::FILE_SIGN_FIELD_CHECKBOX);
+                               index.column() == FileSignField::FILE_SIGN_FIELD_CHECKBOX ||
+                               index.column() == FileSignField::FILE_SIGN_FIELD_OPERATE);
                 auto data = getData();
                 auto targetData = data.begin() + index.row();
                 this->m_model->setData(index, !targetData->isSelected);
             });
 
     connect(this, &FileSignTable::entered, this, &FileSignTable::mouseEnter);
+    // 编辑列设置鼠标手形
+    connect(this, &FileSignTable::entered, this, [this](const QModelIndex &index){
+        RETURN_IF_TRUE(!index.isValid());
+        RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
+        RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_OPERATE);
+        setCursor(index.column() == FileSignField::FILE_SIGN_FIELD_OPERATE ? Qt::PointingHandCursor : Qt::ArrowCursor);
+    });
 }
 
 void FileSignTable::updateData(const FileSignRecordMap &newData)
@@ -326,8 +338,20 @@ void FileSignTable::searchTextChanged(const QString &text)
     m_filterProxy->setFilterFixedString(text);
 }
 
+void FileSignTable::leaveEvent(QEvent *event)
+{
+    auto mouseEvent = static_cast<QMouseEvent *>(event);
+    // 处理鼠标移出表格事件，将鼠标变为箭头
+    if (mouseEvent->type() == QEvent::Leave)
+    {
+        setCursor(Qt::ArrowCursor);
+    }
+}
+
 void FileSignTable::mouseEnter(const QModelIndex &index)
 {
+    RETURN_IF_TRUE(!index.isValid());
+    RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
     // 判断内容是否显示完整
     auto itemRect = this->visualRect(index);
     // 计算文本宽度
@@ -343,9 +367,78 @@ void FileSignTable::checkedAllItem(Qt::CheckState checkState)
     for (int i = 0; i < selectionModel()->model()->rowCount(); i++)
     {
         // 取到该行的序号列
-        // auto number = selectionModel()->model()->data(model()->index(i, 1)).toInt();
-        // auto index = m_model->index(number - 1, 0);
-        m_model->setData(m_model->index(i, 0), checkState == Qt::Checked, Qt::CheckStateRole);
+        auto number = selectionModel()->model()->data(model()->index(i, 1)).toInt();
+        auto index = m_model->index(number - 1, 0);
+        m_model->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
+    }
+}
+
+FileSignDelegate::FileSignDelegate(QObject *parent) : QStyledItemDelegate(parent)
+{
+}
+
+void FileSignDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    painter->save();
+
+    QPainterPath path;
+    painter->setRenderHint(QPainter::RenderHint::Antialiasing);
+    if (index.column() == 0)
+    {
+        auto rect = option.rect.adjusted(0, 2, TABLE_LINE_RADIUS, -2);
+        path.addRoundedRect(rect, TABLE_LINE_RADIUS, TABLE_LINE_RADIUS);
+    }
+    else if (index.column() == index.model()->columnCount(index.parent()) - 1)
+    {
+        auto rect = option.rect.adjusted(-TABLE_LINE_RADIUS, 2, 0, -2);
+        path.addRoundedRect(rect, TABLE_LINE_RADIUS, TABLE_LINE_RADIUS);
+    }
+    else
+    {
+        auto rect = option.rect.adjusted(0, 2, 0, -2);
+        path.addRect(rect);
+    }
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QBrush(QColor(57, 57, 57)));
+    painter->drawPath(path);
+    painter->restore();
+
+    QStyleOptionViewItem viewOption(option);
+    initStyleOption(&viewOption, index);
+    // 绘制的文字向右偏移10px，与整体表格风格统一
+    auto textRect = option.rect.adjusted(10, 0, 0, 0);
+    if (index.column() == FILE_SIGN_FIELD_CHECKBOX)
+    {
+        auto checkboxOption = option;
+        initStyleOption(&checkboxOption, index);
+
+        //        QStyleOptionButton checkboxStyle;
+        QPixmap pixmap;
+        auto value = index.model()->data(index, Qt::EditRole).toBool();
+        pixmap.load(value ? ":/images/checkbox-checked-normal" : ":/images/checkbox-unchecked-normal");
+        auto widget = option.widget;
+        auto style = widget ? widget->style() : QApplication::style();
+        style->drawItemPixmap(painter, option.rect, Qt::AlignCenter, pixmap);
+    }
+    // 绘制编辑列:字体样式,字体颜色
+    else if (index.column() == FILE_SIGN_FIELD_OPERATE)
+    {
+        viewOption.palette.setColor(QPalette::Text, QColor(46, 179, 255));
+
+        QFont font;
+        font.setUnderline(true);
+        painter->setFont(font);
+        QApplication::style()->drawItemText(painter,
+                                            textRect,
+                                            Qt::AlignLeft | Qt::AlignVCenter,
+                                            viewOption.palette,
+                                            true,
+                                            tr("Edit"),
+                                            QPalette::Text);
+    }
+    else
+    {
+        QStyledItemDelegate::paint(painter, option, index);
     }
 }
 

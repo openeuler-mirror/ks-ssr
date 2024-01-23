@@ -55,18 +55,19 @@ FileSign::FileSign(QWidget* parent)
     m_ui->m_refresh->setIconSize(QSize(16, 16));
     m_ui->m_refresh->installEventFilter(this);
 
-    m_ui->m_select->setCursor(Qt::PointingHandCursor);
+    m_ui->m_selectFile->setCursor(Qt::PointingHandCursor);
     m_ui->m_clean->setCursor(Qt::PointingHandCursor);
     QObject::connect(m_ui->m_search, SIGNAL(textChanged(const QString&)), m_ui->m_fileSignTable, SLOT(searchTextChanged(const QString&)));
     QObject::connect(m_ui->m_refresh, &QPushButton::clicked, this, &FileSign::refreshTable);
-    QObject::connect(m_ui->m_select, &QPushButton::clicked, this, &FileSign::openFileDialog);
+    QObject::connect(m_ui->m_selectFile, &QPushButton::clicked, this, &FileSign::openFileDialog);
     QObject::connect(m_ui->m_clean, &QPushButton::clicked, m_ui->m_fileSignTable, &FileSignTable::cleanSelectedData);
     m_ui->m_tips->setText(tr("A total of %1 records").arg((m_ui->m_fileSignTable->getData().size())));
     QObject::connect(m_ui->m_fileSignTable, &FileSignTable::dataSizeChanged, [this]
                      {
                          m_ui->m_tips->setText(tr("A total of %1 records").arg(m_ui->m_fileSignTable->getData().size()));
                      });
-    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::doubleClicked, this, &FileSign::popModifySecurityContext);
+    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::clicked, this, &FileSign::popModifySecurityContext);
+    // TODO 添加用户，传入后台 m_selectUser
 }
 
 FileSign::~FileSign()
@@ -81,7 +82,7 @@ QString FileSign::getNavigationUID()
 
 QString FileSign::getSidebarUID()
 {
-    return tr("File Sign");
+    return tr("Security Sign");
 }
 
 QString FileSign::getSidebarIcon()
@@ -119,17 +120,15 @@ void FileSign::refreshTable(bool)
 
 void FileSign::popModifySecurityContext(const QModelIndex& index)
 {
-    // 目前功能只有双击点击编辑安全上下文
-    RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT);
+    RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_OPERATE);
     auto data = this->m_ui->m_fileSignTable->getData();
     auto oldIterator = data.begin() + index.row();
-    auto oldSecurityContext = oldIterator->fileSeContext;
-    auto filePath = oldIterator->filePath;
 
     m_modifySecurityContext = new ModifySecurityContext(this);
-    m_modifySecurityContext->setSecurityContext(oldSecurityContext);
-    m_modifySecurityContext->setFilePath(filePath);
-    QObject::connect(m_modifySecurityContext, &ModifySecurityContext::accepted, this, &FileSign::acceptedSecurityContext);
+    m_modifySecurityContext->setSecurityContext(oldIterator->fileSeContext);
+    m_modifySecurityContext->setIntegrityLabel(oldIterator->fileCompleteLabel);
+    m_modifySecurityContext->setFilePath(oldIterator->filePath);
+    connect(m_modifySecurityContext, &ModifySecurityContext::accepted, this, &FileSign::acceptedSecurityContext, Qt::UniqueConnection);
 
     auto x = window()->x() + window()->width() / 2 - m_modifySecurityContext->width() / 2;
     auto y = window()->y() + window()->height() / 2 - m_modifySecurityContext->height() / 2;
@@ -140,6 +139,7 @@ void FileSign::popModifySecurityContext(const QModelIndex& index)
 void FileSign::acceptedSecurityContext()
 {
     RETURN_IF_TRUE(m_modifySecurityContext->getFilePath().isEmpty());
+    // TODO 获取完整性标签内容getIntegrityLabel，传入后台
     auto reply = m_dbusProxy->SetSecurityContext(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getSecurityContext());
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
 }
