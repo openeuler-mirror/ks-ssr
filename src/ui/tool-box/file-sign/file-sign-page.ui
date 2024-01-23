@@ -43,7 +43,7 @@
         </size>
        </property>
        <property name="text">
-        <string>View file context information and integrity labels</string>
+        <string>View context information and integrity labels</string>
        </property>
       </widget>
      </item>
@@ -126,7 +126,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="m_select">
+       <widget class="QPushButton" name="m_selectUser">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -140,7 +140,26 @@
          </size>
         </property>
         <property name="text">
-         <string>select</string>
+         <string>select users</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="m_selectFile">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>72</width>
+          <height>36</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>select files</string>
         </property>
        </widget>
       </item>
