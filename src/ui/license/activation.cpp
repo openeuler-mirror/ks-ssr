@@ -43,7 +43,7 @@ Activation::Activation(QWidget *parent)
     m_licenseProxy = KS::LicenseProxy::getDefault();
     update();
 
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, &Activation::closed);
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, &Activation::close);
     connect(m_ui->m_activate, &QPushButton::clicked, this, &Activation::activate);
 
     connect(m_licenseProxy.data(), &KS::LicenseProxy::licenseChanged, this, &Activation::update, Qt::UniqueConnection);
@@ -57,12 +57,6 @@ Activation::~Activation()
         delete m_qrcodeDialog;
         m_qrcodeDialog = nullptr;
     }
-}
-
-void Activation::closeEvent(QCloseEvent *event)
-{
-    Q_UNUSED(event);
-    emit closed();
 }
 
 void Activation::initUI()
@@ -109,8 +103,11 @@ void Activation::activate()
 {
     QString errorMsg;
     auto isActivated = m_licenseProxy->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
-
-    POPUP_MESSAGE_DIALOG(isActivated ? tr("Activate app successful!") : errorMsg);
+    emit activated(isActivated ? tr("Activate app successful!") : errorMsg);
+    if (isActivated)
+    {
+        close();
+    }
 }
 
 void Activation::handleQrcode()

@@ -95,7 +95,7 @@
       <item>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>swich(Reboot after restart)</string>
+         <string>selinux swich(Reboot after restart)</string>
         </property>
        </widget>
       </item>

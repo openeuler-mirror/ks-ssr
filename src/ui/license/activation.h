@@ -40,9 +40,6 @@ public:
      */
     void update();
 
-protected:
-    void closeEvent(QCloseEvent* event);
-
 private:
     void initUI();
     void popupQRcode(const QString& QRcode, const QString& title);
@@ -50,9 +47,9 @@ private:
 private slots:
     void activate();
     void handleQrcode();
-
 signals:
-    void closed();
+    // 发送错误或激活成功消息
+    void activated(const QString& message);
 
 private:
     Ui::Activation* m_ui;

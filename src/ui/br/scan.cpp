@@ -434,6 +434,7 @@ void Scan::startReinforcement()
     clearState();
     m_ui->m_itemTable->clearCheckedStatus(m_categories, BR_REINFORCEMENT_STATE_UNREINFORCE);
     m_ui->m_progress->updateProgressUI(m_progressInfo.method);
+    m_ui->m_progress->updateProgress(m_progressInfo);
     disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     update();
 }
@@ -480,10 +481,12 @@ void Scan::generateReport()
 
 void Scan::cancelProgress()
 {
+    // 进程未开始，不允许忽略，无提示
+    RETURN_IF_TRUE(double(0) == m_progressInfo.progress);
     auto reply = m_dbusProxy->Cancel(m_progressInfo.jobID);
     reply.waitForFinished();
     CHECK_ERROR_FOR_DBUS_REPLY(reply)
-    flushProgressInfo();
+    m_ui->m_progress->stopWorkingProcess();
 }
 
 void Scan::showErrorMessage(const QModelIndex &model)

@@ -314,7 +314,7 @@ KS--Window QPushButton#accountButton::menu-indicator
     subcontrol-origin: padding;
 }
 
-KS--Window QLabel#activateStatus
+QPushButton#activateStatus
 {
     background:rgba(255, 61, 61,255);
     font-family: Noto Sans CJK SC regular;

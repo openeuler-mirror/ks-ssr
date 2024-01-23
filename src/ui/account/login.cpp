@@ -20,6 +20,9 @@
 #include <QList>
 #include <QStyledItemDelegate>
 #include "include/ssr-i.h"
+#include "src/ui/common/ssr-marcos-ui.h"
+#include "lib/license/license-proxy.h"
+#include "src/ui/license/activation.h"
 #include "ui_login.h"
 
 namespace KS
@@ -67,15 +70,31 @@ void Login::closeEvent(QCloseEvent *event)
 
 void Login::initUI()
 {
-    // 页面关闭时销毁
-    setAttribute(Qt::WA_DeleteOnClose);
+    m_licenseProxy = LicenseProxy::getDefault();
     setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    setTitle(tr("Login"));
+    setTitle(tr("Security reinforcement"));
     setMinimumSize(400, 320);
+    setTitlebarCustomLayoutAlignHCenter(false);
+    auto layout = getTitlebarCustomLayout();
+    layout->setContentsMargins(0, 0, 4, 0);
+    // 未激活文本
+    m_activateStatus = new QPushButton(this);
+    m_activateStatus->setObjectName("activateStatus");
+    m_activateStatus->setFixedHeight(18);
+    m_activateStatus->setText(tr("Unactivated"));
+    m_licenseProxy->isActivated() ? m_activateStatus->hide() : m_activateStatus->show();
+    connect(m_activateStatus, &QPushButton::clicked, this, &Login::popupActiveDialog);
+    layout->addWidget(m_activateStatus);
+    layout->setAlignment(Qt::AlignRight);
+
+    connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, [this]{
+        m_activateStatus->setVisible(!m_licenseProxy->isActivated());
+    },
+    Qt::UniqueConnection);
 
     // 给QCombobox设置代理才能设置下拉列表项的高度
     auto delegate = new QStyledItemDelegate(this);
@@ -84,12 +103,29 @@ void Login::initUI()
                                              << SSR_ACCOUNT_NAME_SECADM
                                              << SSR_ACCOUNT_NAME_AUDADM);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &Login::close);
-    connect(m_ui->m_ok, &QPushButton::clicked, this, &Login::accepted);
-    connect(m_ui->m_password, &QLineEdit::returnPressed, this, &Login::accepted);
-
+    connect(m_ui->m_ok, &QPushButton::clicked, this, [this]{
+        m_licenseProxy->isActivated() ? emit accepted() : popupActiveDialog();
+    });
+    connect(m_ui->m_password, &QLineEdit::returnPressed, this, [this]{
+        m_licenseProxy->isActivated() ? emit accepted() : popupActiveDialog();
+    });
     // 限制字符
     m_ui->m_password->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
     m_ui->m_password->setEchoMode(QLineEdit::Password);
 }
+
+void Login::popupActiveDialog()
+{
+    auto activation = new Activation::Activation(this);
+    connect(activation, &Activation::Activation::activated, [this](const QString& message){
+        POPUP_MESSAGE_DIALOG(message);
+    });
+
+    auto x = this->x() + this->width() / 2 - activation->width() / 2;
+    auto y = this->y() + this->height() / 2 - activation->height() / 2;
+    activation->move(x, y);
+    activation->show();
+}
+
 }  // namespace Account
 }  // namespace KS
