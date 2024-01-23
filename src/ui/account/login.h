@@ -20,8 +20,11 @@ namespace Ui
 {
 class Login;
 }
+
+class QPushButton;
 namespace KS
 {
+class LicenseProxy;
 namespace Account
 {
 class Login : public TitlebarWindow
@@ -43,12 +46,17 @@ protected:
 private:
     void initUI();
 
+private slots:
+    void popupActiveDialog();
+
 signals:
     void accepted();
     void rejected();
 
 private:
     Ui::Login *m_ui;
+    QPushButton *m_activateStatus;
+    QSharedPointer<LicenseProxy> m_licenseProxy;
 };
 }  // namespace Account
 }  // namespace KS

@@ -70,9 +70,7 @@ Window::Window()
     : TitlebarWindow(nullptr),
       m_ui(new Ui::Window),
       m_activation(nullptr),
-      m_activateStatus(nullptr),
-      m_loading(nullptr),
-      m_licenseProxy(nullptr)
+      m_loading(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
     m_dbusProxy = new DaemonProxy(SSR_DBUS_NAME,
@@ -82,28 +80,6 @@ Window::Window()
     Account::Manager::globalInit(this);
     initNotification();
     initWindow();
-    initActivation();
-    if (m_licenseProxy->isActivated())
-    {
-        login();
-    }
-    else
-    {
-        connect(
-            m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, [this]
-            {
-                disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, nullptr);
-                connect(
-                    m_dbusProxy, &DaemonProxy::RegisterFinished, this, [this]
-                    {
-                        disconnect(m_dbusProxy, &DaemonProxy::RegisterFinished, this, nullptr);
-                        login();
-                    },
-                    Qt::ConnectionType::UniqueConnection);
-            },
-            Qt::ConnectionType::UniqueConnection);
-    }
-
     connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject, Qt::ConnectionType::UniqueConnection);
 }
 
@@ -152,34 +128,10 @@ void Window::login()
 
 void Window::start()
 {
+    show();
     m_accountButton->setToolTip(Account::Manager::instance()->getCurrentUserName());
     initPageAndNavigation();
     initSettings();
-}
-
-void Window::initActivation()
-{
-    m_activation = new Activation::Activation(this);
-    m_licenseProxy = LicenseProxy::getDefault();
-
-    if (!m_licenseProxy->isActivated())
-    {
-        m_activateStatus->show();
-        auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
-        auto y = this->y() + this->height() / 4 + m_activation->height() / 4;
-        m_activation->move(x, y);
-        m_activation->raise();
-        m_activation->show();
-    }
-    connect(m_activation, &Activation::Activation::closed, [this]
-            {
-                // 未激活状态下获取关闭信号，则退出程序;已激活状态下后获取关闭信号，只是隐藏激活对话框
-                if (!m_licenseProxy->isActivated())
-                    qApp->quit();
-                else
-                    m_activation->hide();
-            });
-    connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Window::updateActivation, Qt::UniqueConnection);
 }
 
 void Window::initNotification()
@@ -223,14 +175,6 @@ void Window::initWindow()
     layout->setContentsMargins(0, 0, 10, 0);
     layout->setSpacing(10);
 
-    // 未激活文本
-    m_activateStatus = new QLabel(this);
-    m_activateStatus->setObjectName("activateStatus");
-    m_activateStatus->setFixedHeight(18);
-    m_activateStatus->setAlignment(Qt::AlignHCenter);
-    m_activateStatus->setText(tr("Unactivated"));
-    m_activateStatus->hide();
-
     // 创建账户管理按钮
     m_accountButton = new QPushButton(this);
     m_accountButton->setObjectName("accountButton");
@@ -270,7 +214,6 @@ void Window::initWindow()
     settingMenu->addAction(tr("About"), this, &Window::popupAboutDialog);
 
     layout->addWidget(m_accountButton);
-    layout->addWidget(m_activateStatus);
     layout->addWidget(btnForMenu);
     layout->setAlignment(Qt::AlignRight);
 }
@@ -454,19 +397,17 @@ void Window::clearSidebar()
 
 void Window::popupActiveDialog()
 {
-    m_activation->update();
+    if (!m_activation)
+    {
+        m_activation = new Activation::Activation(this);
+        connect(m_activation, &Activation::Activation::activated, this, [this](const QString& message){
+            POPUP_MESSAGE_DIALOG(message);
+        }, Qt::UniqueConnection);
+    }
     auto x = this->x() + this->width() / 4 + m_activation->width() / 16;
     auto y = this->y() + this->height() / 4 + m_activation->height() / 16;
     m_activation->move(x, y);
     m_activation->show();
-}
-
-void Window::updateActivation()
-{
-    bool isActivate = m_licenseProxy->isActivated();
-    // 设置激活对话框和激活状态标签是否可见
-    m_activation->setVisible(!isActivate);
-    m_activateStatus->setVisible(!isActivate);
 }
 
 void Window::popupSettingsDialog()
@@ -592,7 +533,7 @@ void Window::logout(const QString &userName)
     }
     m_pages.clear();
     m_ui->m_navigation->clearItems();
-
+    hide();
     Account::Manager::instance()->setLoginUserName(userName);
     Account::Manager::instance()->logout();
 }

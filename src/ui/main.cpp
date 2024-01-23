@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
     KS::Window window;
     // TODO 登入后再显示
-     window.show();
+    window.login();
 
     return app.exec();
 }

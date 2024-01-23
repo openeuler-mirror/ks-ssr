@@ -32,22 +32,20 @@ namespace KS
 class Navigation;
 class SideBar;
 class Loading;
-class LicenseProxy;
 class Window : public TitlebarWindow
 {
     Q_OBJECT
 public:
     Window();
     virtual ~Window();
+    void login();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
 
 private:
-    void login();
     void start();
-    void initActivation();
     void initNotification();
     // 窗口整体初始化
     void initWindow();
@@ -60,7 +58,6 @@ private:
 
 private slots:
     void popupActiveDialog();
-    void updateActivation();
     void popupSettingsDialog();
     void popupAboutDialog();
     // 单例模式激活窗口
@@ -77,10 +74,8 @@ private:
     Ui::Window *m_ui;
     QMap<QString, QList<Page *>> m_pages;
     Activation::Activation *m_activation;
-    QLabel *m_activateStatus;
     QPushButton *m_accountButton;
     Loading *m_loading;
-    QSharedPointer<LicenseProxy> m_licenseProxy;
     DaemonProxy *m_dbusProxy;
     // 设置选项，若无设置页面需隐藏这个按钮
     QAction *m_settings;

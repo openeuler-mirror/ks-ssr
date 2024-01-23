@@ -89,7 +89,7 @@ void Progress::updateProgressUI(ProcessMethod method)
 
     m_ui->m_return->disconnect();
     m_ui->m_return->setText(tr("Cancel"));
-    connect(m_ui->m_return, &QPushButton::clicked, this, &Progress::stopWorkingProcess);
+    connect(m_ui->m_return, &QPushButton::clicked, this, &Progress::cancelClicked);
     m_ui->m_progressBar->show();
 
     m_ui->m_scan->hide();
@@ -157,7 +157,7 @@ void Progress::completeProcess(ProgressInfo info)
         connect(m_ui->m_scan, &QPushButton::clicked, this, &Progress::generateReportClicked);
         connect(m_ui->m_return, &QPushButton::clicked, this, &Progress::returnHomeClicked);
     }
-}  // namespace BR
+}
 
 void Progress::stopWorkingProcess()
 {
@@ -167,7 +167,6 @@ void Progress::stopWorkingProcess()
     m_progressTimer->stop();
     m_waitTimer->setInterval(0);
     m_waitTimer->start(1000);
-    emit cancelClicked();
 }
 
 void Progress::changeProgress()

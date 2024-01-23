@@ -60,7 +60,7 @@ void HeaderButtonDelegate::initUI()
     m_icon->setIconSize(QSize(8, 4));
     m_layout->addWidget(m_icon);
     m_layout->addStretch();
-    m_layout->setContentsMargins(16, 0, 0, 0);
+    m_layout->setContentsMargins(12, 0, 0, 0);
 
     m_menu = new HeaderMenuProxy(this);
     m_menu->setFocusPolicy(Qt::NoFocus);
