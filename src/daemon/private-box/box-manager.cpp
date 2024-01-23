@@ -55,10 +55,11 @@ void BoxManager::globalDeinit()
 QString BoxManager::CreateBox(const QString &name, const QString &password, QString &passphrase)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     if (name.isEmpty() || password.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to create box. name is " + name, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to create box. name is %1").arg(name),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                         SSRErrorCode::ERROR_COMMON_INVALID_ARGS,
                                         message())
@@ -69,7 +70,9 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
         auto box = iterator.value();
         if (box->getUserUid() == getSenderUid() && box->getBoxName() == name)
         {
-            SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to create box. name is " + name, false);
+            SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                          tr("Fail to create box. name is %1").arg(name),
+                          calledUniqueName);
             DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                             SSRErrorCode::ERROR_BM_REPEATED_NAME,
                                             message())
@@ -81,7 +84,9 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
     auto box = Box::create(name, decryptPasswd, getSenderUid(), errorEode, "", this);
     if (errorEode != static_cast<int>(SSRErrorCode::SUCCESS))
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to create box. name is " + name, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to create box. name is %1").arg(name),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                         SSRErrorCode(errorEode),
                                         message())
@@ -89,18 +94,21 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
 
     m_boxs.insert(box->getBoxID(), box);
     passphrase = box->getPassphrase();
-    SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Create box. name is " + name);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::PRIVATE_BOX,
+                    tr("Create box. name is %1").arg(name),
+                    calledUniqueName);
     return box->getBoxID();
 }
 
 void BoxManager::DelBox(const QString &boxID, const QString &password)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     auto box = m_boxs.value(boxID);
     if (!box)
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to delete box. box ID is " + boxID, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to delete box. box ID is %1").arg(boxID),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
     }
 
@@ -108,13 +116,17 @@ void BoxManager::DelBox(const QString &boxID, const QString &password)
     auto errorEode = box->delBox(decryptedPassword);
     if (errorEode != static_cast<int>(SSRErrorCode::SUCCESS))
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to delete box. box name is " + box->getBoxName(), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to delete box. box name is %1").arg(box->getBoxName()),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode(errorEode), message())
     }
 
     m_boxs.remove(boxID);
     emit BoxDeleted(boxID);
-    SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Delete box. box name is " + box->getBoxName());
+    SSR_LOG_SUCCESS(Log::Manager::LogType::PRIVATE_BOX,
+                    tr("Delete box. box name is %1").arg(box->getBoxName()),
+                    calledUniqueName);
 }
 
 QString BoxManager::GetBoxByUID(const QString &boxID)
@@ -182,10 +194,11 @@ void BoxManager::ModifyBoxPassword(const QString &boxID,
                                    const QString &newPassword)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     if (boxID.isEmpty() || currentPassword.isEmpty() || newPassword.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to modfify box password. box ID is " + boxID, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to modfify box password. box ID is %1").arg(boxID),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message())
     }
 
@@ -193,35 +206,44 @@ void BoxManager::ModifyBoxPassword(const QString &boxID,
     auto decryptNewPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, newPassword);
     if (decryptedPassword == decryptNewPassword)
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to modfify box password. box ID is " + boxID, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to modfify box password. box ID is %1").arg(boxID),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_SETTINGS_SAME_PASSWORD, message())
     }
 
     auto box = m_boxs.value(boxID);
     if (!box)
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to modfify box password. box ID is " + boxID, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to modfify box password. box ID is %1").arg(boxID),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
     }
     if (!box->modifyBoxPassword(decryptedPassword, decryptNewPassword))
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to modfify box password. box name is " + box->getBoxName(), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Fail to modfify box password. box name is %1").arg(box->getBoxName()),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_MODIFY_PASSWORD_FAILED, message())
     }
 
-    SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Modfify box password. box name is " + box->getBoxName());
+    SSR_LOG_SUCCESS(Log::Manager::LogType::PRIVATE_BOX,
+                    tr("Modfify box password. box name is %1").arg(box->getBoxName()),
+                    calledUniqueName);
 }
 
 // 解锁
 void BoxManager::Mount(const QString &boxID, const QString &password)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     auto decryptedPassword = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, password);
     auto box = m_boxs.value(boxID);
     if (!box)
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to mount box. box ID is " + boxID, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to mount box. box ID is %1").arg(boxID),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
     }
 
@@ -229,21 +251,26 @@ void BoxManager::Mount(const QString &boxID, const QString &password)
     auto errorEode = box->mount(decryptedPassword);
     if (errorEode != static_cast<int>(SSRErrorCode::SUCCESS))
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to mount box. box name is " + box->getBoxName(), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to mount box. box name is %1").arg(box->getBoxName()),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode(errorEode), message())
     }
     m_serviceWatcher->addWatchedService(message().service());
     emit BoxChanged(boxID);
-    SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Mount box. box name is " + box->getBoxName());
+    SSR_LOG_SUCCESS(Log::Manager::LogType::PRIVATE_BOX,
+                    tr("Mount box. box name is %1").arg(box->getBoxName()),
+                    calledUniqueName);
 }
 
 QString BoxManager::RetrieveBoxPassword(const QString &boxID, const QString &passphrase)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     if (passphrase.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to retrieve box password. box ID is " + boxID, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to retrieve box password. box ID is %1").arg(boxID),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                         SSRErrorCode::ERROR_COMMON_INVALID_ARGS,
                                         message())
@@ -253,7 +280,9 @@ QString BoxManager::RetrieveBoxPassword(const QString &boxID, const QString &pas
     auto box = m_boxs.value(boxID);
     if (!box)
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to retrieve box password. box ID is " + boxID, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to retrieve box password. box ID is %1").arg(boxID),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                         SSRErrorCode::ERROR_BM_NOT_FOUND,
                                         message())
@@ -263,12 +292,16 @@ QString BoxManager::RetrieveBoxPassword(const QString &boxID, const QString &pas
     // 口令错误
     if (password.isEmpty())
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to retrieve box password. box name is " + box->getBoxName(), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to retrieve box password. box name is %1").arg(box->getBoxName()),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                         SSRErrorCode::ERROR_BM_INPUT_PASSPHRASE_ERROR,
                                         message())
     }
-    SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Retrieve box password. box name is " + box->getBoxName());
+    SSR_LOG_SUCCESS(Log::Manager::LogType::PRIVATE_BOX,
+                    tr("Retrieve box password. box name is %1").arg(box->getBoxName()),
+                    calledUniqueName);
     return password;
 }
 
@@ -276,11 +309,12 @@ QString BoxManager::RetrieveBoxPassword(const QString &boxID, const QString &pas
 void BoxManager::UnMount(const QString &boxID)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     auto box = m_boxs.value(boxID);
     if (!box)
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to unmount box. box ID is " + boxID, false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to unmount box. box ID is %1").arg(boxID),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
     }
 
@@ -289,10 +323,14 @@ void BoxManager::UnMount(const QString &boxID)
     auto errorEode = box->umount();
     if (errorEode != static_cast<int>(SSRErrorCode::SUCCESS))
     {
-        SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Fail to unmount box. box name is " + box->getBoxName(), false);
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to unmount box. box name is %1").arg(box->getBoxName()),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode(errorEode), message());
     }
-    SSR_LOG(role, Log::Manager::LogType::PRIVATE_BOX, "Unmount box. box name is " + box->getBoxName());
+    SSR_LOG_SUCCESS(Log::Manager::LogType::PRIVATE_BOX,
+                    tr("Unmount box. box name is %1").arg(box->getBoxName()),
+                    calledUniqueName);
     emit BoxChanged(boxID);
 }
 
