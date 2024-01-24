@@ -126,8 +126,8 @@ void DeviceListPage::popupEditDialog(const QModelIndex &index)
     m_devicePermission->setDeviceStatus(state);
     m_devicePermission->setDevicePermission(type, permissions);
 
-    int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
-    int y = this->y() + this->height() / 4 + m_devicePermission->height() / 4;
+    auto x = window()->x() + window()->width() / 2 - m_devicePermission->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - m_devicePermission->height() / 2;
     m_devicePermission->move(x, y);
     m_devicePermission->show();
 }

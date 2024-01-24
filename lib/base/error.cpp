@@ -70,6 +70,10 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case SSRErrorCode::ERROR_BM_MODIFY_PASSWORD_FAILED:
         errorDesc = QObject::tr("Failed to change the password, please check whether the password is correct.");
         break;
+    case SSRErrorCode::ERROR_ACCOUNT_CHECK_PASSWORD_FAILED:
+    case SSRErrorCode::ERROR_BM_CHECK_PASSWORD_FAILED:
+        errorDesc = QObject::tr("The password complexity does not meet the requirements.");
+        break;
     case SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR:
         errorDesc = QObject::tr("Password error!");
         break;
@@ -126,8 +130,6 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
         errorDesc = QObject::tr("Unknown error.");
         break;
     }
-
-    errorDesc += QString(QObject::tr(" (error code: 0x%1)")).arg(QString::number((int)errorCode, 16));
     return errorDesc;
 }
 

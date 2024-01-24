@@ -296,6 +296,16 @@ void Manager::enableMultiFactorAuthState()
     kiranAuth.flush();
 }
 
+bool Manager::checkPassword(const QString& password, const QString& userName)
+{
+    // 不允许包含用户名 CaseInsensitive : 区分大小写
+    RETURN_VAL_IF_TRUE(password.contains(userName, Qt::CaseInsensitive), false);
+    // 至少包含一个小写字母，一个大写字母，一个数字，一个特殊字符中的两种，最少八位
+    QRegularExpression regex("^(?![\\d]+$)(?![a-z]+$)(?![A-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$");
+    auto match = regex.match(password);
+    return match.hasMatch();
+}
+
 void Manager::SetMultiFactorAuthState(bool enabled)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
@@ -418,6 +428,12 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
         SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, tr("Change password"), calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
+    if (!checkPassword(CryptoHelper::rsaDecryptString(m_rsaPrivateKey, newPassphrase), userName))
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, tr("Change password failed."), calledUniqueName);
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_CHECK_PASSWORD_FAILED, this->message());
+    }
+
     if (CryptoHelper::rsaDecryptString(m_rsaPrivateKey, oldPassphrase) ==
         CryptoHelper::rsaDecryptString(m_rsaPrivateKey, newPassphrase))
     {

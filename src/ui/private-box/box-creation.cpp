@@ -15,6 +15,7 @@
 #include "src/ui/private-box/box-creation.h"
 #include <qt5-log-i.h>
 #include <QRegularExpressionValidator>
+#include <QToolTip>
 #include "include/ssr-i.h"
 #include "src/ui/ui_box-creation.h"
 
@@ -55,6 +56,12 @@ BoxCreation::BoxCreation(QWidget *parent)
                 Q_EMIT rejected();
                 close();
             });
+    connect(m_ui->m_passwordNote, &QPushButton::clicked, [this]{
+        QToolTip::showText(QCursor::pos(), tr("The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16."), this, rect(), 5000);
+    });
+    connect(m_ui->m_confirmPasswordNote, &QPushButton::clicked, [this]{
+        QToolTip::showText(QCursor::pos(), tr("The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16."), this, rect(), 5000);
+    });
 }
 
 QString BoxCreation::getName()

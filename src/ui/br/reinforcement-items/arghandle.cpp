@@ -108,7 +108,7 @@ QHBoxLayout *ArgHandle::buildLabelLayout()
     auto widgetLabel = new QLabel(this);
     widgetLabel->setText(m_label);
 
-    if (m_note == "")
+    if (m_note.isEmpty())
     {
         layout->addWidget(widgetLabel);
     }
@@ -116,16 +116,16 @@ QHBoxLayout *ArgHandle::buildLabelLayout()
     {
         auto noteIcon = new QPushButton(this);
         noteIcon->setObjectName("noteIcon");
-        noteIcon->setFixedSize(QSize(18, 18));
+        noteIcon->setFixedSize(QSize(16, 16));
         // 鼠标手形
         noteIcon->setCursor(QCursor(Qt::PointingHandCursor));
         noteIcon->setIcon(QIcon(":/images/note"));
         noteIcon->setIconSize(QSize(16, 16));
+        noteIcon->setToolTip(m_note);
 
         connect(noteIcon, &QPushButton::clicked, this, [this]
                 {
                     QToolTip::showText(QCursor::pos(), m_note, this, rect(), 5000);
-                    ;
                 });
 
         layout->addWidget(widgetLabel, 0, Qt::AlignCenter);
@@ -164,7 +164,7 @@ void ArgHandle::initSwitch(const QJsonValue &jsonValue)
     connect(m_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changedBoolArgs(int)));
 
     hlayout->addWidget(m_comboBox);
-
+    hlayout->setContentsMargins(0, 0, 0, 0);
     layout->addLayout(labelLayout);
     layout->addWidget(widget);
 
@@ -195,7 +195,7 @@ void ArgHandle::initText(const QJsonValue &jsonValue)
     connect(m_lineEdit, SIGNAL(textChanged(QString)), this, SLOT(changedStringArgs(QString)));
 
     hlayout->addWidget(m_lineEdit);
-
+    hlayout->setContentsMargins(0, 0, 0, 0);
     layout->addLayout(labelLayout);
     layout->addWidget(widget);
 
@@ -248,7 +248,7 @@ void ArgHandle::initInteger(const QJsonValue &jsonValue)
 
         hlayout->addWidget(m_spinBox);
     }
-
+    hlayout->setContentsMargins(0, 0, 0, 0);
     layout->addLayout(labelLayout);
     layout->addWidget(widget);
     this->show();

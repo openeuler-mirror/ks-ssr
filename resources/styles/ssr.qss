@@ -1093,3 +1093,12 @@ KS--Log--LogPage QHeaderView::section:first
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
+
+/******  password note  ******/
+QPushButton#m_confirmPasswordNote,
+QPushButton#m_newPasswordNote,
+QPushButton#m_passwordNote
+{
+    image: url(:/images/note);
+    background-color: transparent;
+}
