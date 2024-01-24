@@ -52,6 +52,7 @@ public:
     void updateProgressUI(ProcessMethod method);
     void updateProgress(ProgressInfo info);
     void resetProgress();
+    void stopWorkingProcess();
 
 private:
     // 初始化进程时间
@@ -68,7 +69,6 @@ signals:
     void cancelClicked();
 
 private slots:
-    void stopWorkingProcess();
     void changeProgress();
     void waitProgress();
 

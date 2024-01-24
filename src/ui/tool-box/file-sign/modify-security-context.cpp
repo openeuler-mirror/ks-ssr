@@ -39,6 +39,16 @@ QString ModifySecurityContext::getSecurityContext() const
     return m_ui->m_securityContext->text();
 }
 
+void ModifySecurityContext::setIntegrityLabel(const QString &text)
+{
+    m_ui->m_integrityLabel->setText(text);
+}
+
+QString ModifySecurityContext::getIntegrityLabel() const
+{
+    return m_ui->m_integrityLabel->text();
+}
+
 void ModifySecurityContext::setFilePath(const QString &path)
 {
     m_filePath = path;
@@ -51,7 +61,7 @@ QString ModifySecurityContext::getFilePath() const
 
 void ModifySecurityContext::setSecurityContext(const QString &text)
 {
-    return m_ui->m_securityContext->setText(text);
+    m_ui->m_securityContext->setText(text);
 }
 
 void ModifySecurityContext::closeEvent(QCloseEvent *event)
@@ -69,7 +79,7 @@ void ModifySecurityContext::initUI()
     setTitle(tr("modify security context"));
     setResizeable(false);
     setTitleBarHeight(36);
-    setFixedSize(319, 259);
+    setFixedSize(450, 400);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
 
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &ModifySecurityContext::close);

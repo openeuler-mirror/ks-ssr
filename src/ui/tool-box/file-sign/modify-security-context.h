@@ -39,9 +39,11 @@ public:
     void setSecurityContext(const QString &text);
     QString getSecurityContext() const;
 
+    void setIntegrityLabel(const QString &text);
+    QString getIntegrityLabel() const;
+
     void setFilePath(const QString &path);
     QString getFilePath() const;
-
 protected:
     void closeEvent(QCloseEvent *event);
 

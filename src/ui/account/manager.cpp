@@ -71,7 +71,8 @@ void Manager::showLogin()
     auto x = window()->x() + window()->width() / 2 - m_login->width() / 2;
     auto y = window()->y() + window()->height() / 2 - m_login->height() / 2;
     m_login->move(x, y);
-    m_login->show();
+    m_login->raise();
+    m_login->activateWindow();
     m_login->show();
 }
 
@@ -118,8 +119,19 @@ void Manager::acceptedLogin()
 {
     auto encryptPassword = CryptoHelper::rsaEncryptString(m_dbusProxy->rSAPublicKey(), m_login->getPassword());
     auto reply = m_dbusProxy->Login(m_login->getAccountName(), encryptPassword);
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
-    RETURN_IF_TRUE(reply.isError());
+    reply.waitForFinished();
+    // 这里不能使用POPUP_MESSAGE_DIALOG，主窗口还未显示，消息窗口为父类为window时，点击关闭会触发window的退出事件，
+    // 使软件退出，这里登入失败了软件不应该退出
+    if (reply.isError())
+    {
+        auto messageDialog = new KS::MessageDialog(m_login);
+        messageDialog->setMessage(reply.error().message());
+        int x = m_login->x() + m_login->width() / 2 - messageDialog->width() / 2;
+        int y = m_login->y() + m_login->height() / 2 - messageDialog->height() / 2;
+        messageDialog->move(x, y);
+        messageDialog->show();
+        return;
+    }
 
     if (m_login->getPassword() == USER_INFO_INITIAL_PASSWD)
     {

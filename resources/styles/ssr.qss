@@ -314,7 +314,7 @@ KS--Window QPushButton#accountButton::menu-indicator
     subcontrol-origin: padding;
 }
 
-KS--Window QLabel#activateStatus
+QPushButton#activateStatus
 {
     background:rgba(255, 61, 61,255);
     font-family: Noto Sans CJK SC regular;
@@ -433,7 +433,8 @@ QPushButton#m_scanButton,
 QPushButton#m_scan,
 QPushButton#m_activate,
 QPushButton#m_confirm,
-QPushButton#m_select,
+QPushButton#m_selectFile,
+QPushButton#m_selectUser,
 QPushButton#m_centigrade,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm
 {
@@ -453,7 +454,8 @@ QPushButton#m_scanButton:hover,
 QPushButton#m_scan:hover,
 QPushButton#m_activate:hover,
 QPushButton#m_confirm:hover,
-QPushButton#m_select:hover,
+QPushButton#m_selectFile:hover,
+QPushButton#m_selectUser:hover,
 QPushButton#m_centigrade:hover,
 KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
 {

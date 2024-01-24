@@ -46,7 +46,7 @@ void MessageDialog::setMessage(const QString &message)
     auto *ok = new QPushButton(tr("ok"), this);
     ok->setFixedSize(72, 36);
     ok->setObjectName("okBtn");
-    connect(ok, &QPushButton::clicked, this, &QWidget::close);
+    connect(ok, &QPushButton::clicked, this, &MessageDialog::close);
 
     m_contentLayout->addWidget(label);
     m_contentLayout->addStretch();
@@ -73,7 +73,6 @@ void MessageDialog::initUI()
     m_contentLayout->setContentsMargins(24, 24, 24, 24);
 
     vlay->addWidget(cusWidget);
-    //    show();
 }
 
 void MessageDialog::paintEvent(QPaintEvent *event)
