@@ -167,7 +167,7 @@ void BoxPage::boxChanged(const QString &boxUID)
 void BoxPage::newBoxClicked(bool checked)
 {
     m_createBox = new BoxCreation(this);
-    m_createBox->setFixedSize(419, 369);
+    m_createBox->setFixedSize(450, 400);
     m_createBox->setTitle(tr("Create box"));
 
     connect(m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
@@ -180,8 +180,8 @@ void BoxPage::newBoxClicked(bool checked)
                 POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
             });
 
-    int x = window()->x() + window()->width() / 4 + m_createBox->width() / 4;
-    int y = window()->y() + window()->height() / 4 + m_createBox->height() / 8;
+    auto x = window()->x() + window()->width() / 2 - m_createBox->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - m_createBox->height() / 2;
     m_createBox->move(x, y);
     m_createBox->show();
 }

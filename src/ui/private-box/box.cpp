@@ -206,8 +206,8 @@ void Box::switchMountedStatus()
         m_inputMountPassword->setTitle(tr("Unlock"));
         connect(m_inputMountPassword, &BoxPasswordChecked::accepted, this, &Box::acceptedInputMountPassword);
 
-        int x = window()->x() / 2 + m_inputMountPassword->width();
-        int y = window()->y() / 2 + m_inputMountPassword->height();
+        auto x = window()->x() + window()->width() / 2 - m_inputMountPassword->width() / 2;
+        auto y = window()->y() + window()->height() / 2 - m_inputMountPassword->height() / 2;
         m_inputMountPassword->move(x, y);
         m_inputMountPassword->show();
     }
@@ -220,8 +220,8 @@ void Box::modifyPassword()
 
     m_modifyPassword->setTitleNameTail(m_name);
 
-    int x = window()->x() + window()->width() / 4 + m_modifyPassword->width() / 4;
-    int y = window()->y() + window()->height() / 4 + m_modifyPassword->height() / 8;
+    auto x = window()->x() + window()->width() / 2 - m_modifyPassword->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - m_modifyPassword->height() / 2;
     m_modifyPassword->move(x, y);
     m_modifyPassword->show();
 }
@@ -246,8 +246,8 @@ void Box::delBox()
     m_inputDelBoxPassword->setTitle(tr("Del box"));
     connect(m_inputDelBoxPassword, &BoxPasswordChecked::accepted, this, &Box::acceptedInputDelBoxPassword);
 
-    int x = window()->x() / 2 + m_inputDelBoxPassword->width();
-    int y = window()->y() / 2 + m_inputDelBoxPassword->height();
+    auto x = window()->x() + window()->width() / 2 - m_inputDelBoxPassword->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - m_inputDelBoxPassword->height() / 2;
     m_inputDelBoxPassword->move(x, y);
     m_inputDelBoxPassword->show();
 }
@@ -262,8 +262,8 @@ void Box::retrievePassword()
         POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
     });
 
-    int x = window()->x() + window()->width() / 4 + m_retrievePassword->width() / 4;
-    int y = window()->y() + window()->height() / 4 + m_retrievePassword->height() / 8;
+    auto x = window()->x() + window()->width() / 2 - m_retrievePassword->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - m_retrievePassword->height() / 2;
     m_retrievePassword->move(x, y);
     m_retrievePassword->show();
 }

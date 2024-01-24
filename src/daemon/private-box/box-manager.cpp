@@ -80,6 +80,15 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
     }
 
     auto decryptPasswd = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, password);
+    if (!checkPassword(decryptPasswd, name))
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to create box. name is %1").arg(name),
+                      calledUniqueName);
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
+                                        SSRErrorCode::ERROR_BM_CHECK_PASSWORD_FAILED,
+                                        message())
+    }
     auto errorEode = 0;
     auto box = Box::create(name, decryptPasswd, getSenderUid(), errorEode, "", this);
     if (errorEode != static_cast<int>(SSRErrorCode::SUCCESS))
@@ -219,6 +228,13 @@ void BoxManager::ModifyBoxPassword(const QString &boxID,
                       tr("Failed to modfify box password. box ID is %1").arg(boxID),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_NOT_FOUND, message())
+    }
+    if (!checkPassword(decryptNewPassword, box->getBoxName()))
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
+                      tr("Failed to modfify box password. box ID is %1").arg(boxID),
+                      calledUniqueName);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BM_CHECK_PASSWORD_FAILED, message())
     }
     if (!box->modifyBoxPassword(decryptedPassword, decryptNewPassword))
     {
@@ -379,6 +395,16 @@ uint BoxManager::getSenderUid()
     QDBusConnection conn = connection();
     QDBusMessage msg = message();
     return uint(conn.interface()->serviceUid(msg.service()).value());
+}
+
+bool BoxManager::checkPassword(const QString &password, const QString &boxName)
+{
+    // 不允许包含用户名 CaseInsensitive : 区分大小写
+    RETURN_VAL_IF_TRUE(password.contains(boxName, Qt::CaseInsensitive), false);
+    // 至少包含一个小写字母，一个大写字母，一个数字，一个特殊字符中的两种，最少八位
+    QRegularExpression regex("^(?![\\d]+$)(?![a-z]+$)(?![A-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$");
+    auto match = regex.match(password);
+    return match.hasMatch();
 }
 
 void BoxManager::unMountAllBoxs(const QString &service)

@@ -56,7 +56,16 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="spacing">
-         <number>16</number>
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
         </property>
         <property name="bottomMargin">
          <number>24</number>

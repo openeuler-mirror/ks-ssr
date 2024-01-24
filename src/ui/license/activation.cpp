@@ -132,9 +132,8 @@ void Activation::popupQRcode(const QString &QRcode, const QString &title)
     }
     m_qrcodeDialog->setText(QRcode);
     m_qrcodeDialog->setSummary(title);
-
-    auto x = this->x() + this->width() / 4 + m_qrcodeDialog->width() / 4;
-    auto y = this->y() + this->height() / 4 + m_qrcodeDialog->height() / 4;
+    auto x = this->x() + this->width() / 2 - m_qrcodeDialog->width() / 2;
+    auto y = this->y() + this->height() / 2 - m_qrcodeDialog->height() / 2;
     m_qrcodeDialog->move(x, y);
     m_qrcodeDialog->raise();
     m_qrcodeDialog->show();
