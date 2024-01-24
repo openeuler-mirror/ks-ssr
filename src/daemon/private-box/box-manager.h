@@ -85,6 +85,8 @@ private:
 private:
     void init();
     uint getSenderUid();
+    // 密码复杂度检测
+    bool checkPassword(const QString &password, const QString &boxName);
 
 private slots:
     void unMountAllBoxs(const QString &service);

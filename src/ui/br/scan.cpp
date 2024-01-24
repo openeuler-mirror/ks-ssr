@@ -501,7 +501,7 @@ void Scan::showErrorMessage(const QModelIndex &model)
     if (textWidth > itemRect.width())
     {
         auto mod = m_ui->m_itemTable->selectionModel()->model()->data(model);
-        QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
+        QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
     }
 
     // 错误消息显示
@@ -511,7 +511,7 @@ void Scan::showErrorMessage(const QModelIndex &model)
     auto reinforcementItem = m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory);
     if (reinforcementItem->getState() == BR_REINFORCEMENT_STATE_REINFORCE_ERROR || reinforcementItem->getState() == BR_REINFORCEMENT_STATE_SCAN_ERROR)
     {
-        QToolTip::showText(QCursor::pos(), reinforcementItem->getErrorMessage(), this, rect(), 2000);
+        QToolTip::showText(QCursor::pos(), reinforcementItem->getErrorMessage(), this, rect(), 5000);
     }
 }
 
