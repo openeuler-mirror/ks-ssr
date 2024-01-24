@@ -359,7 +359,7 @@ void FileSignTable::mouseEnter(const QModelIndex &index)
     auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
     RETURN_IF_TRUE(textWidth <= itemRect.width())
     auto mod = selectionModel()->model()->data(index);
-    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
+    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
 }
 
 void FileSignTable::checkedAllItem(Qt::CheckState checkState)

@@ -480,7 +480,7 @@ void LogTable::mouseEnter(const QModelIndex &index)
 {
     RETURN_IF_TRUE(index.column() != LogTableField::LOG_TABLE_FIELD_MESSAGE);
     auto mod = selectionModel()->model()->data(index);
-    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
+    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
 }
 }  // namespace Log
 }  // namespace KS
