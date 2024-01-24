@@ -225,9 +225,9 @@ QVariant FileShredModel::headerData(int section, Qt::Orientation orientation, in
         case FileShredTableField::FILE_SHRED_TABLE_FIELD_NUMBER:
             return tr("Number");
         case FileShredTableField::FILE_SHRED_TABLE_FIELD_FILE_NAME:
-            return tr("File name");
+            return tr("Name");
         case FileShredTableField::FILE_SHRED_TABLE_FIELD_FILE_PATH:
-            return tr("File path");
+            return tr("Path");
         default:
             break;
         }
