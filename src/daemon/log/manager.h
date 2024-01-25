@@ -28,6 +28,15 @@ class QFile;
 
 class WriteWorker;
 
+#define SSR_LOG(logType, logMsg, result, dbusId)                                 \
+    {                                                                            \
+        auto role = KS::Account::Manager::m_accountManager->getRole(dbusId);     \
+        auto name = KS::Account::Manager::m_accountManager->getUserName(dbusId); \
+        auto timePoint = QDateTime::currentDateTime();                           \
+        KS::Log::Log log{name, role, timePoint, logType, result, logMsg};          \
+        KS::Log::Manager::writeLog(log);                                         \
+    }
+
 #define SSR_LOG_SUCCESS(logType, logMsg, dbusId)                                 \
     {                                                                            \
         auto role = KS::Account::Manager::m_accountManager->getRole(dbusId);     \

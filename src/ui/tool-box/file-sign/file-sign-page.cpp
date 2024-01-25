@@ -58,9 +58,15 @@ FileSign::FileSign(QWidget* parent)
     m_ui->m_selectFile->setCursor(Qt::PointingHandCursor);
     m_ui->m_clean->setCursor(Qt::PointingHandCursor);
     QObject::connect(m_ui->m_search, SIGNAL(textChanged(const QString&)), m_ui->m_fileSignTable, SLOT(searchTextChanged(const QString&)));
-    QObject::connect(m_ui->m_refresh, &QPushButton::clicked, this, &FileSign::refreshTable);
+    QObject::connect(m_ui->m_refresh, &QPushButton::clicked, [this]
+                     {
+                         updateTableData(m_dbusProxy->GetFileListFromFileSign().value());
+                     });
     QObject::connect(m_ui->m_selectFile, &QPushButton::clicked, this, &FileSign::openFileDialog);
-    QObject::connect(m_ui->m_clean, &QPushButton::clicked, m_ui->m_fileSignTable, &FileSignTable::cleanSelectedData);
+    QObject::connect(m_ui->m_clean, &QPushButton::clicked, [this](bool)
+                     {
+                         m_dbusProxy->RemoveFileFromFileSign(m_ui->m_fileSignTable->getSelectData());
+                     });
     m_ui->m_tips->setText(tr("A total of %1 records").arg((m_ui->m_fileSignTable->getData().size())));
     QObject::connect(m_ui->m_fileSignTable, &FileSignTable::dataSizeChanged, [this]
                      {
@@ -68,6 +74,12 @@ FileSign::FileSign(QWidget* parent)
                      });
     QObject::connect(m_ui->m_fileSignTable, &FileSignTable::clicked, this, &FileSign::popModifySecurityContext);
     // TODO 添加用户，传入后台 m_selectUser
+    QObject::connect(m_dbusProxy, &ToolBoxDbusProxy::FileSignListChanged, [this]
+                     {
+                         updateTableData(m_dbusProxy->GetFileListFromFileSign().value());
+                     });
+    // 获取保存在数据库中的标记的文件列表,
+    updateTableData(m_dbusProxy->GetFileListFromFileSign().value());
 }
 
 FileSign::~FileSign()
@@ -94,28 +106,27 @@ void FileSign::openFileDialog(bool)
 {
     auto files = QFileDialog::getOpenFileNames(nullptr, tr("Open files"), QDir::homePath());
     RETURN_IF_TRUE(files.isEmpty());
-    updateTableData(files);
+    // 不在这里更新前台中的数据， 通过监听后台的 FileSignListChanged 信号实现前台数据更新。
+    // updateTableData(files);
+    m_dbusProxy->AddFileToFileSign(files);
 }
 
 QString FileSign::getAccountRoleName()
 {
     return SSR_ACCOUNT_NAME_SECADM;
 }
+
+// 前台不应该主动调用此函数
+// 应该由 调用后台 dbus 接口 插入/删除数据 -> 后台发送 FileSignListChanged 信号 -> 触发 refresh 函数 -> refresh 函数中调用此函数
 void FileSign::updateTableData(const QStringList& fileList)
 {
     FileSignRecordMap newData;
     for (const auto& file : fileList)
     {
-// auto reply =  m_dbusProxy->GetSecurityContext(file);
 #pragma message("完整性标签需要内核支持，内核支持后使用 rbapol 工具即可获取标签")
         newData[file] = {false, file, m_dbusProxy->GetSecurityContext(file).value(), "完整性标签需要内核支持，内核支持后使用 rbapol 工具即可获取标签"};
     }
     m_ui->m_fileSignTable->updateData(newData);
-}
-
-void FileSign::refreshTable(bool)
-{
-    updateTableData(m_ui->m_fileSignTable->getData().keys());
 }
 
 void FileSign::popModifySecurityContext(const QModelIndex& index)

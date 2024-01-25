@@ -28,9 +28,9 @@
 #include <QSpinBox>
 #include <QStandardItemModel>
 #include <QToolTip>
+#include "common/ssr-marcos-ui.h"
 #include "file-sign-table.h"
 #include "include/ssr-i.h"
-#include "common/ssr-marcos-ui.h"
 #include "src/ui/common/table/table-header-proxy.h"
 #include "src/ui/tp/delegate.h"
 
@@ -180,6 +180,9 @@ Qt::ItemFlags FileSignModel::flags(const QModelIndex &index) const
 void FileSignModel::updateData(const FileSignRecordMap &fileRecords)
 {
     beginResetModel();
+    // 全量更新。
+    m_fileRecordMap.clear();
+    m_focusFiles.clear();
     for (const auto &fileRecord : fileRecords)
     {
         const auto &filePath = fileRecord.filePath;
@@ -192,7 +195,7 @@ void FileSignModel::updateData(const FileSignRecordMap &fileRecords)
         }
         it.value() = std::move(fileRecord);
     }
-
+    checkSelectStatus();
     endResetModel();
 }
 
@@ -232,7 +235,11 @@ void FileSignModel::checkSelectStatus()
     auto state = Qt::Unchecked;
     auto selectedData = getSelectedData();
 
-    if (selectedData.size() >= m_focusFiles.size())
+    if (selectedData.size() == 0)
+    {
+        state = Qt::Unchecked;
+    }
+    else if (selectedData.size() >= m_focusFiles.size())
     {
         state = Qt::Checked;
     }
@@ -299,17 +306,17 @@ FileSignTable::FileSignTable(QWidget *parent)
 
     connect(this, &FileSignTable::entered, this, &FileSignTable::mouseEnter);
     // 编辑列设置鼠标手形
-    connect(this, &FileSignTable::entered, this, [this](const QModelIndex &index){
-        RETURN_IF_TRUE(!index.isValid());
-        RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
-        RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_OPERATE);
-        setCursor(index.column() == FileSignField::FILE_SIGN_FIELD_OPERATE ? Qt::PointingHandCursor : Qt::ArrowCursor);
-    });
+    connect(this, &FileSignTable::entered, this, [this](const QModelIndex &index)
+            {
+                RETURN_IF_TRUE(!index.isValid());
+                RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
+                RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_OPERATE);
+                setCursor(index.column() == FileSignField::FILE_SIGN_FIELD_OPERATE ? Qt::PointingHandCursor : Qt::ArrowCursor);
+            });
 }
 
 void FileSignTable::updateData(const FileSignRecordMap &newData)
 {
-    RETURN_IF_TRUE(newData.isEmpty());
     m_model->updateData(newData);
     emit dataSizeChanged();
 }
@@ -319,16 +326,9 @@ FileSignRecordMap FileSignTable::getData() const
     return m_model->getData();
 }
 
-void FileSignTable::cleanSelectedData()
+QList<QString> FileSignTable::getSelectData() const
 {
-    auto keys = m_model->getSelectedData().keys();
-    if (keys.isEmpty())
-    {
-        POPUP_MESSAGE_DIALOG(tr("Please select the content that needs to be removed."));
-        return;
-    }
-    m_model->removeData(m_model->getSelectedData().keys());
-    emit dataSizeChanged();
+    return m_model->getSelectedData().keys();
 }
 
 void FileSignTable::searchTextChanged(const QString &text)
@@ -366,14 +366,12 @@ void FileSignTable::checkedAllItem(Qt::CheckState checkState)
 {
     for (int i = 0; i < selectionModel()->model()->rowCount(); i++)
     {
-        // 取到该行的序号列
-        auto number = selectionModel()->model()->data(model()->index(i, 1)).toInt();
-        auto index = m_model->index(number - 1, 0);
-        m_model->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
+        m_model->setData(m_model->index(i, 0), checkState == Qt::Checked, Qt::CheckStateRole);
     }
 }
 
-FileSignDelegate::FileSignDelegate(QObject *parent) : QStyledItemDelegate(parent)
+FileSignDelegate::FileSignDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
