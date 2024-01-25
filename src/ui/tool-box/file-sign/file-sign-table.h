@@ -112,9 +112,10 @@ public:
     virtual ~FileSignTable(){};
     void updateData(const FileSignRecordMap &);
     FileSignRecordMap getData() const;
+    QList<QString> getSelectData() const;
 
 public slots:
-    void cleanSelectedData();
+    // void cleanSelectedData();
     void searchTextChanged(const QString &text);
 
 protected:

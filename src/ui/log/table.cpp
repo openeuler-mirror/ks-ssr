@@ -29,6 +29,7 @@
 #include <QTableView>
 #include <QToolTip>
 #include "common/ssr-marcos-ui.h"
+#include "src/ui/common/date-picker/date-picker.h"
 #include "src/ui/common/table/header-button-delegate.h"
 #include "src/ui/log/utils.h"
 #include "src/ui/log_proxy.h"
@@ -245,7 +246,8 @@ void LogModel::initGetLogArgs()
     m_args.role = static_cast<AccountRole>(ALL_LOG_ROLE);
     // 一个月前
     m_args.timeStampBegin = QDateTime::currentDateTime().addMonths(-1).toSecsSinceEpoch();
-    m_args.timeStampEnd = LONG_LONG_MAX;
+    m_args.timeStampEnd = QDateTime::currentDateTime().toSecsSinceEpoch();
+    // m_args.timeStampEnd = LONG_LONG_MAX;
     m_args.type = static_cast<LogType>(ALL_LOG_TYPE);
     m_args.result = LOG_RESULT_ALL;
     m_args.currentPage = 1;

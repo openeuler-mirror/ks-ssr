@@ -279,8 +279,11 @@ void FileShredModel::checkSelectStatus()
             ++selectCount;
         }
     }
-
-    if (selectCount >= m_infos.size())
+    if (selectCount == 0)
+    {
+        state = Qt::Unchecked;
+    }
+    else if (selectCount == m_infos.size())
     {
         state = Qt::Checked;
     }
@@ -308,52 +311,21 @@ QStringList FileShredModel::getCheckedPath()
     return list;
 }
 
-void FileShredModel::addFiles(const QStringList &paths)
+void FileShredModel::updateFileList(const QStringList &paths)
 {
     beginResetModel();
     SCOPE_EXIT(
         {
             endResetModel();
         });
-
-    // 取出路径列表，用于判断是否有重复文件
-    QStringList list;
-    for (auto info : m_infos)
-    {
-        list << info.filePath;
-    }
-
+    m_infos.clear();
     for (auto path : paths)
     {
         CONTINUE_IF_TRUE(path.isEmpty());
-        CONTINUE_IF_TRUE(list.contains(path));
         QFileInfo fileInfo(path);
 
-        auto info = FileShredInfo{.selected = false,
-                                  .fileName = fileInfo.fileName(),
-                                  .filePath = path};
-        m_infos << info;
+        m_infos.append({false, fileInfo.fileName(), path});
     }
-
-    emit tableUpdated(m_infos.size());
-}
-
-void FileShredModel::delFiles()
-{
-    beginResetModel();
-    SCOPE_EXIT(
-        {
-            endResetModel();
-        });
-    auto i = -1;
-    for (auto info : m_infos)
-    {
-        i++;
-        CONTINUE_IF_TRUE(!info.selected);
-        m_infos.removeAt(i);
-        i--;
-    }
-
     checkSelectStatus();
     emit tableUpdated(m_infos.size());
 }
@@ -382,34 +354,14 @@ void FileShredTable::setSearchText(const QString &text)
     m_filterProxy->setFilterFixedString(text);
 }
 
-void KS::ToolBox::FileShredTable::addFiles(const QStringList &paths)
+QStringList KS::ToolBox::FileShredTable::getSelectedFiles()
 {
-    RETURN_IF_TRUE(paths.isEmpty());
-    m_model->addFiles(paths);
+    return m_model->getCheckedPath();
 }
 
-void FileShredTable::delFiles()
+void KS::ToolBox::FileShredTable::updateFileList(const QStringList &paths)
 {
-    if (m_model->getCheckedPath().isEmpty())
-    {
-        POPUP_MESSAGE_DIALOG(tr("Please selecte files."))
-        return;
-    }
-    m_model->delFiles();
-}
-
-void FileShredTable::shredFiles()
-{
-    auto checkedPath = m_model->getCheckedPath();
-    if (checkedPath.isEmpty())
-    {
-        POPUP_MESSAGE_DIALOG(tr("Please selecte files."))
-        return;
-    }
-    auto reply = m_dbusProxy->ShredFile(checkedPath);
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
-    RETURN_IF_TRUE(reply.isError());
-    m_model->delFiles();
+    m_model->updateFileList(paths);
 }
 
 void FileShredTable::initTable()

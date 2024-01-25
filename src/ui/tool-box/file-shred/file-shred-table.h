@@ -80,8 +80,7 @@ public:
 
     int getFileShredInfosSize();
     QStringList getCheckedPath();
-    void addFiles(const QStringList &paths);
-    void delFiles();
+    void updateFileList(const QStringList &paths);
 
 signals:
     void tableUpdated(int total);
@@ -108,9 +107,8 @@ public:
     };
     void setSearchText(const QString &text);
     int getFileShredInfosSize();
-    void addFiles(const QStringList &paths);
-    void delFiles();
-    void shredFiles();
+    void updateFileList(const QStringList &paths);
+    QStringList getSelectedFiles();
 
 signals:
     void tableUpdated(int total);

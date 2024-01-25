@@ -134,6 +134,10 @@ public Q_SLOTS:
     // 设置回退状态 退回进行中/回退未开始/回退完成
     virtual void SetFallbackStatus(const uint32_t &fallbackStatus);
 
+    // 通知后端发生导出 加固策略/报表 操作，由后端记录日志。
+    void ExportStrategy(bool);
+    void GenerateReport(bool);
+
 Q_SIGNALS:  // SIGNALS
     void CpuAverageLoadRatioHigher(const QString &ratio);
     void HomeFreeSpaceRatioLower(const QString &ratio);

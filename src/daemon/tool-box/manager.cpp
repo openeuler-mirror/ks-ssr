@@ -27,6 +27,7 @@
 #include <QReadWriteLock>
 #include "include/ssr-error-i.h"
 #include "include/ssr-i.h"
+#include "lib/base/database.h"
 #include "lib/base/error.h"
 #include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/tool-box/manager.h"
@@ -41,6 +42,12 @@
 #define DISABLE_SELINUX "-i -re 's/SELINUX=(enforcing|permissive|disabled)/SELINUX=disabled/' /etc/selinux/config"
 #define ENABLE_SELINUX "-i -re 's/SELINUX=(enforcing|permissive|disabled)/SELINUX=enforcing/' /etc/selinux/config"
 #define PASSWD_FILE "/etc/passwd"
+
+#define FILE_SIGN_TABLE "fileSign"
+#define FILE_SIGN_COLUMN1 "filePath"
+
+#define FILE_SHRED_TABLE "fileShred"
+#define FILE_SHRED_COLUMN1 "filePath"
 
 namespace KS
 {
@@ -64,8 +71,10 @@ void Manager::globalDeinit()
 Manager::Manager()
     : m_osUserNameMutex(new QReadWriteLock()),
       m_userNameWatcher(new QFileSystemWatcher(QStringList(PASSWD_FILE), this)),
-      m_realTimeAlert(new RealTimeAlert())
+      m_realTimeAlert(new RealTimeAlert()),
+      m_db(new Database())
 {
+    initDatabase();
     new ToolBoxAdaptor(this);
     QDBusConnection dbusConnection = QDBusConnection::systemBus();
     if (!dbusConnection.registerObject(SSR_TOOL_BOX_DBUS_OBJECT_PATH, this))
@@ -86,6 +95,54 @@ Manager::Manager()
             });
 }
 
+void Manager::initDatabase()
+{
+    constexpr const char* getFileSignTables = "SELECT * "
+                                              "FROM sqlite_master "
+                                              "WHERE type='table' "
+                                              "AND name ='" FILE_SIGN_TABLE "';";
+
+    constexpr const char* createFileSignTables = "CREATE table " FILE_SIGN_TABLE
+                                                 " ( " FILE_SIGN_COLUMN1 " vchar UNIQUE"
+                                                 ");";
+
+    constexpr const char* getFileShredTables = "SELECT * "
+                                               "FROM sqlite_master "
+                                               "WHERE type='table' "
+                                               "AND name ='" FILE_SHRED_TABLE "';";
+
+    constexpr const char* createFileShredTables = "CREATE table " FILE_SHRED_TABLE
+                                                  " ( " FILE_SHRED_COLUMN1 " vchar UNIQUE"
+                                                  " );";
+
+    SqlDataType res{};
+    if (!m_db->exec(getFileSignTables, &res))
+    {
+        KLOG_ERROR() << "Failed to get table: " FILE_SIGN_TABLE;
+        return;
+    }
+    if (res.isEmpty())
+    {
+        if (!m_db->exec(createFileSignTables, &res))
+        {
+            KLOG_ERROR() << "Failed to create table: " FILE_SIGN_TABLE;
+        }
+    }
+
+    if (!m_db->exec(getFileShredTables, &res))
+    {
+        KLOG_ERROR() << "Failed to get table: " FILE_SHRED_TABLE;
+        return;
+    }
+    if (res.isEmpty())
+    {
+        if (!m_db->exec(createFileShredTables, &res))
+        {
+            KLOG_ERROR() << "Failed to create table: " FILE_SHRED_TABLE;
+        }
+    }
+}
+
 void Manager::SetAccessControlStatus(bool enable)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
@@ -101,7 +158,9 @@ void Manager::SetAccessControlStatus(bool enable)
     process.setProgram(SED_PATH);
     QStringList arg{"-i"};
     arg.append("-re");
-    arg.append(enable ? R"({s#SELINUX=(enforcing|permissive|disabled)#SELINUX=enforcing#})" : R"({s/SELINUX=(enforcing|permissive|disabled)/SELINUX=disabled/})");
+    arg.append(enable
+                   ? R"({s#SELINUX=(enforcing|permissive|disabled)#SELINUX=enforcing#})"
+                   : R"({s/SELINUX=(enforcing|permissive|disabled)/SELINUX=disabled/})");
     arg.append("/etc/selinux/config");
     process.setArguments(arg);
     process.start();
@@ -193,10 +252,12 @@ void Manager::ShredFile(const QStringList& filePath)
                       calledUniqueName)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    Log::Log log = {userName, role, QDateTime::currentDateTime(), Log::Manager::LogType::TOOL_BOX, false, "Shred file"};
+    Log::Log log = {userName, role, QDateTime::currentDateTime(),
+                    Log::Manager::LogType::TOOL_BOX, false, tr("Shred files %1").arg(filePath.join(' '))};
     // TODO : 粉碎文件夹不生效
     auto cmd = getProcess(log, SHRED_PATH, QStringList{SHRED_ARG_1, SHRED_ARG_2} << filePath);
-    cmd->startDetached();
+    cmd->start();
+    RemoveFileFromFileShred(filePath);
 }
 
 void Manager::RemoveUser(const QStringList& userNames)
@@ -211,17 +272,162 @@ void Manager::RemoveUser(const QStringList& userNames)
                       calledUniqueName)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    Log::Log log = {userName, role, QDateTime::currentDateTime(), Log::Manager::LogType::TOOL_BOX, false, "Remove user"};
+    Log::Log log = {userName, role, QDateTime::currentDateTime(),
+                    Log::Manager::LogType::TOOL_BOX, false, tr("Remove users %1").arg(userNames.join(' '))};
     for (const auto& userName : userNames)
     {
         auto cmd = getProcess(log, USERDEL_PATH, QStringList{USERDEL_ARG_1} << userName);
-        cmd->startDetached();
+        cmd->start();
     }
 }
 
 bool Manager::GetAccessStatus()
 {
     return static_cast<bool>(is_selinux_enabled());
+}
+
+QStringList Manager::GetFileListFromFileSign()
+{
+    constexpr const char* getFileFromFileSign = "select " FILE_SIGN_COLUMN1 " from " FILE_SIGN_TABLE;
+
+    SqlDataType res{};
+    QStringList ret{};
+    if (!m_db->exec(getFileFromFileSign, &res))
+    {
+        KLOG_ERROR() << "Failed to get files from " << FILE_SIGN_TABLE;
+    }
+    for (const auto& res_row : res)
+    {
+        ret << res_row[0].toString();
+    }
+    return ret;
+}
+
+void Manager::AddFileToFileSign(const QStringList& fileList)
+{
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
+    if (role != KS::Account::Manager::AccountRole::secadm)
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to add files to SignFile list, permission denied"),
+                      calledUniqueName)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
+    }
+    constexpr const char* insertFileToFileSign = "insert OR IGNORE into " FILE_SIGN_TABLE
+                                                 " values ('%1');";
+    QString insertFileToFileSignDBCmd{insertFileToFileSign};
+    if (!m_db->exec(insertFileToFileSignDBCmd.arg(fileList.join("'), ('"))))
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to add files to SignFile list, database error"),
+                      calledUniqueName)
+        KLOG_ERROR() << "Failed to add files: " << fileList;
+    }
+    emit FileSignListChanged();
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
+                    tr("Add file to SignFile list: %1").arg(fileList.join(' ')),
+                    calledUniqueName);
+}
+
+void Manager::RemoveFileFromFileSign(const QStringList& fileList)
+{
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
+    if (role != KS::Account::Manager::AccountRole::secadm)
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to remove file from SignFile list, permission denied"),
+                      calledUniqueName)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
+    }
+    constexpr const char* removeFileFromFileSign = "delete from " FILE_SIGN_TABLE
+                                                   " where " FILE_SIGN_COLUMN1
+                                                   " in ('%1');";
+    QString removeFileToFileSignDBCmd{removeFileFromFileSign};
+    if (!m_db->exec(removeFileToFileSignDBCmd.arg(fileList.join("', '"))))
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to remove file from SignFile list, database error"),
+                      calledUniqueName)
+        KLOG_ERROR() << "Failed to remove files: " << fileList;
+    }
+    emit FileSignListChanged();
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
+                    tr("Remove file from SignFile list: %1").arg(fileList.join(' ')),
+                    calledUniqueName);
+}
+
+QStringList Manager::GetFileListFromFileShred()
+{
+    constexpr const char* getFileFromFileSign = "select " FILE_SHRED_COLUMN1 " from " FILE_SHRED_TABLE;
+
+    SqlDataType res{};
+    QStringList ret{};
+    if (!m_db->exec(getFileFromFileSign, &res))
+    {
+        KLOG_ERROR() << "Failed to get files from " << FILE_SHRED_TABLE;
+    }
+    for (const auto& res_row : res)
+    {
+        ret << res_row[0].toString();
+    }
+    return ret;
+}
+
+void Manager::AddFileToFileShred(const QStringList& fileList)
+{
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
+    if (role != KS::Account::Manager::AccountRole::secadm)
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to add files to ShredFile list, permission denied"),
+                      calledUniqueName)
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
+    }
+    constexpr const char* insertFileToFileShred = "insert OR IGNORE into " FILE_SHRED_TABLE
+                                                  " values ('%1');";
+    QString insertFileToFileShredDBCmd{insertFileToFileShred};
+    if (!m_db->exec(insertFileToFileShredDBCmd.arg(fileList.join("'), ('"))))
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to add files to ShredFile list, database error"),
+                      calledUniqueName)
+        KLOG_ERROR() << "Failed to add files: " << fileList;
+    }
+    emit FileShredListChanged();
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
+                    tr("Add file to ShredFile list: %1").arg(fileList.join(' ')),
+                    calledUniqueName);
+}
+
+void Manager::RemoveFileFromFileShred(const QStringList& fileList)
+{
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
+    if (role != KS::Account::Manager::AccountRole::secadm)
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to remove file from ShredFile list, permission denied"),
+                      calledUniqueName);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
+    }
+    constexpr const char* removeFileFromFileShred = "delete from " FILE_SHRED_TABLE
+                                                    " where " FILE_SHRED_COLUMN1
+                                                    " in ('%1');";
+    QString removeFileToFileShredDBCmd{removeFileFromFileShred};
+    if (!m_db->exec(removeFileToFileShredDBCmd.arg(fileList.join("', '"))))
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to remove file from ShredFile list, database error"),
+                      calledUniqueName);
+        KLOG_ERROR() << "Failed to remove files: " << fileList;
+    }
+    emit FileShredListChanged();
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
+                    tr("Remove file from ShredFile list: %1").arg(fileList.join(' ')),
+                    calledUniqueName);
 }
 
 QString Manager::GetAllUsers()
@@ -282,7 +488,7 @@ void Manager::getAllUsers(const QString&)
     m_osUserInfoJson = std::move(doc.toJson(QJsonDocument::JsonFormat::Compact));
 }
 
-void Manager::processFinishedHandler(Log::Log& log, const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd)
+void Manager::processFinishedHandler(Log::Log log, const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd)
 {
     if (exitCode == 0)
     {
@@ -292,16 +498,18 @@ void Manager::processFinishedHandler(Log::Log& log, const int exitCode, const QP
     }
     cmd->program();
     cmd->arguments().join(" ");
+    auto errorMsg = cmd->readAll();
     KLOG_ERROR() << "execute cmd: " << cmd->program() << " " << cmd->arguments().join(" ")
-                 << ", exitCode: " << exitCode << ", output: " << cmd->readAll();
+                 << ", exitCode: " << exitCode << ", output: " << errorMsg;
 
     log.result = false;
+    log.logMsg += tr(", exitCode %1, error msg: %2").arg(exitCode).arg(QString(errorMsg));
     KS::Log::Manager::m_logManager->writeLog(log);
 }
 
-void Manager::hazardDetected(uint type, const QString& alert_msg)
+void Manager::hazardDetected(uint type, const QString& alertMsg)
 {
-    emit m_toolBoxManager->HazardDetected(type, alert_msg);
+    emit m_toolBoxManager->HazardDetected(type, alertMsg);
 }
 
 };  // namespace ToolBox

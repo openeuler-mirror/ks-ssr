@@ -21,6 +21,10 @@
 
 class QFileSystemWatcher;
 class QReadWriteLock;
+namespace KS
+{
+class Database;
+}
 
 namespace KS
 {
@@ -72,18 +76,32 @@ public:
 
     QString GetAllUsers();
 
-    static void hazardDetected(uint type, const QString& alert_msg);
+    QStringList GetFileListFromFileSign();
+
+    void AddFileToFileSign(const QStringList&);
+
+    void RemoveFileFromFileSign(const QStringList&);
+
+    QStringList GetFileListFromFileShred();
+
+    void AddFileToFileShred(const QStringList&);
+
+    void RemoveFileFromFileShred(const QStringList&);
+
+    static void hazardDetected(uint, const QString&);
 
 Q_SIGNALS:  // SIGNALS
+    void FileShredListChanged();
+    void FileSignListChanged();
     void UserChanged();
     void HazardDetected(uint type, const QString& alert_msg);
 
 private:
     Manager();
     virtual ~Manager() = default;
-    static void processFinishedHandler(Log::Log& log, const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd);
-
-    inline static QSharedPointer<QProcess> getProcess(Log::Log& log, const QString& program, const QStringList& arg)
+    void initDatabase();
+    static void processFinishedHandler(Log::Log log, const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd);
+    inline static QSharedPointer<QProcess> getProcess(Log::Log log, const QString& program, const QStringList& arg)
     {
         auto cmd = QSharedPointer<QProcess>::create();
         cmd->setProcessChannelMode(QProcess::MergedChannels);
@@ -106,6 +124,7 @@ private:
     QReadWriteLock* m_osUserNameMutex;
     QFileSystemWatcher* m_userNameWatcher;
     RealTimeAlert* m_realTimeAlert;
+    Database* m_db;
 };
 
 };  // namespace ToolBox

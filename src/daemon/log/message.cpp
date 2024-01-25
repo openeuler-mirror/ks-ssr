@@ -41,21 +41,21 @@ Log Message::deserialize(const QString& str)
 {
     auto log = str.split(Message::m_separator);
     // 判断日志中元素数量是否和现在的日志结构相等， 魔法数 6 是日志的属性数量。
-    if (log.size() != 6)
+    if (log.size() != 5)
     {
         KLOG_WARNING() << "Failed to deserialize log: " << str << ", skip this.";
         return Log{};
     }
     auto role = static_cast<Account::Manager::AccountRole>(
-        Account::Manager::m_accountManager->m_metaAccountEnum.keyToValue(log.at(1).toLatin1()));
+        Account::Manager::m_accountManager->m_metaAccountEnum.keyToValue(log.at(0).toLatin1()));
     /// @note 这个版本不对外暴露 name 字段， name 字段的初始化统一用 role 的枚举 key
     return {
-        log.at(1),
+        log.at(0),
         role,
-        QDateTime::fromString(log.at(2), Qt::ISODate),
-        static_cast<Manager::LogType>(m_metaLogType.keyToValue(log.at(3).toLatin1())),
-        log.at(4) == "true",
-        log.at(5)};
+        QDateTime::fromString(log.at(1), Qt::ISODate),
+        static_cast<Manager::LogType>(m_metaLogType.keyToValue(log.at(2).toLatin1())),
+        log.at(3) == "true",
+        log.at(4)};
 }
 };  // namespace Log
 };  // namespace KS
