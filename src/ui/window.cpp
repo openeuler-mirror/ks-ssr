@@ -136,7 +136,7 @@ void Window::start()
 
 void Window::initNotification()
 {
-    Notify::NotificationWrapper::globalInit(tr("Safety reinforcement").toStdString());
+    Notify::NotificationWrapper::globalInit(tr("Security reinforcement").toStdString());
     QDBusConnection::sessionBus().connect(QString(),
                                           KIRAN_SCREENSAVER_DBUS_PATH,
                                           KIRAN_SCREENSAVER_DBUS_INTERFACE,

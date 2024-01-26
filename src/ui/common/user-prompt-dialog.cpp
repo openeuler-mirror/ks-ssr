@@ -18,7 +18,8 @@ namespace KS
 {
 UserPromptDialog::UserPromptDialog(QWidget *parent)
     : TitlebarWindow(parent),
-      m_ui(new Ui::UserPromptDialog)
+      m_ui(new Ui::UserPromptDialog),
+      m_isAccepted(false)
 {
     m_ui->setupUi(getWindowContentWidget());
 
@@ -36,6 +37,19 @@ void UserPromptDialog::setNotifyMessage(const QString &title, const QString &mes
     m_ui->m_notify->setText(message);
 }
 
+void UserPromptDialog::closeEvent(QCloseEvent *event)
+{
+    if (m_isAccepted)
+    {
+        emit accepted();
+    }
+    else
+    {
+        emit rejected();
+    }
+    TitlebarWindow::closeEvent(event);
+}
+
 void UserPromptDialog::init()
 {
     // 页面关闭时销毁
@@ -48,10 +62,13 @@ void UserPromptDialog::init()
     setResizeable(false);
     m_ui->m_notify->setWordWrap(true);
 
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, &UserPromptDialog::close);
-    connect(m_ui->m_ok, &QPushButton::clicked, this, [this] {
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this] {
+        m_isAccepted = false;
         close();
-        emit accepted();
+    });
+    connect(m_ui->m_ok, &QPushButton::clicked, this, [this] {
+        m_isAccepted = true;
+        close();
     });
 }
 }  // namespace KS
