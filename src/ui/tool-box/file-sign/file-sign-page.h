@@ -42,7 +42,6 @@ public:
 
 private slots:
     void openFileDialog(bool);
-    void refreshTable(bool);
     void popModifySecurityContext(const QModelIndex& index);
     void acceptedSecurityContext();
 

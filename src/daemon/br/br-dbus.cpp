@@ -365,7 +365,7 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
     if (resourceMonitor == this->m_configuration->getResourceMonitorStatus())
     {
         SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                        tr("Set resource monitor switch to ").arg(resourceMonitor),
+                        tr("Set resource monitor switch to %1").arg(resourceMonitor),
                         calledUniqueName);
         return;
     }
@@ -391,7 +391,7 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
     }
 
     SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("Set resource monitor switch to ").arg(resourceMonitor),
+                    tr("Set resource monitor switch to %1").arg(resourceMonitor),
                     calledUniqueName);
 }
 
@@ -470,9 +470,9 @@ void BRDBus::ResetReinforcements()
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
 
     this->m_configuration->delAllCustomRa();
-    SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                  tr("Reset all reinforcement parameters."),
-                  calledUniqueName);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Reset all reinforcement parameters."),
+                    calledUniqueName);
 }
 
 QString BRDBus::GetReinforcement(const QString& name)
@@ -525,7 +525,7 @@ void BRDBus::ResetReinforcement(const QString& name)
 
     this->m_configuration->delCustomRa(name);
     SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("Reset reinforcement parameters. name is ").arg(name),
+                    tr("Reset reinforcement parameters. name is %1").arg(name),
                     calledUniqueName);
 }
 
@@ -617,9 +617,9 @@ void BRDBus::Scan(const QStringList& names)
                       calledUniqueName);
         return;
     }
-    SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                  tr("Scan %1 items").arg(names.size()),
-                  calledUniqueName);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Scan %1 items").arg(names.size()),
+                    calledUniqueName);
 }
 
 void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
@@ -629,7 +629,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
             QDBusConnection::systemBus().send(message.createReply());
         });
     KLOG_DEBUG() << "Carry out reinforcement progress. range is " << names.join(" ").toLocal8Bit();
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     m_isScanFlag = false;
     // 已经在加固则返回错误
     if (this->m_reinforceJob && this->m_reinforceJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
@@ -704,9 +704,9 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
                       calledUniqueName);
         return;
     }
-    SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                  tr("Reinforce %1 items").arg(names.size()),
-                  calledUniqueName);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Reinforce %1 items").arg(names.size()),
+                    calledUniqueName);
 }
 
 void BRDBus::Cancel(const qlonglong& jobID)
@@ -746,9 +746,26 @@ void BRDBus::Cancel(const qlonglong& jobID)
         return;
     }
 
-    SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                  tr("Cancel. job id: %1").arg(jobID),
-                  calledUniqueName);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Cancel. job id: %1").arg(jobID),
+                    calledUniqueName);
+}
+
+void BRDBus::ExportStrategy(bool operation_result)
+{
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    SSR_LOG(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("export strategy"),
+                    operation_result,
+                    calledUniqueName);
+}
+void BRDBus::GenerateReport(bool operation_result)
+{
+    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    SSR_LOG(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("export report"),
+                    operation_result,
+                    calledUniqueName);
 }
 
 void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotStatus)
@@ -757,7 +774,7 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
         {
             QDBusConnection::systemBus().send(message.createReply());
         });
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
 
     KLOG_INFO("Set fallback. snapshotStatus: %d.", snapshotStatus);
     RETURN_IF_TRUE(snapshotStatus == BRFallbackMethod::BR_FALLBACK_METHOD_OTHER);

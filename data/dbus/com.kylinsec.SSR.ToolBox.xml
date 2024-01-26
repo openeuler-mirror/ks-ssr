@@ -44,6 +44,48 @@
             <description>remove users.</description>
         </method>
 
+        <method name="GetFileListFromFileSign">
+            <arg type="as" name="file_list" direction="out">
+                <summary>the list of file who will be add.</summary>
+            </arg>
+            <description>get files from fileSign table.</description>
+        </method>
+
+        <method name="AddFileToFileSign">
+            <arg type="as" name="file_list" direction="in">
+                <summary>the list of file who will be add.</summary>
+            </arg>
+            <description>remove file from fileSign table.</description>
+        </method>
+
+        <method name="RemoveFileFromFileSign">
+            <arg type="as" name="file_list" direction="in">
+                <summary>the list of file who will be remove.</summary>
+            </arg>
+            <description>remove file from fileSign table.</description>
+        </method>
+
+        <method name="GetFileListFromFileShred">
+            <arg type="as" name="file_list" direction="out">
+                <summary>the list of file who will be add.</summary>
+            </arg>
+            <description>get files from fileShred table.</description>
+        </method>
+
+        <method name="AddFileToFileShred">
+            <arg type="as" name="file_list" direction="in">
+                <summary>the list of file who will be add.</summary>
+            </arg>
+            <description>remove file from fileShred table.</description>
+        </method>
+
+        <method name="RemoveFileFromFileShred">
+            <arg type="as" name="file_list" direction="in">
+                <summary>the list of file who will be remove.</summary>
+            </arg>
+            <description>remove file from fileShred table.</description>
+        </method>
+
         <method name="GetAccessStatus">
             <arg type="b" name="selinux_status" direction="out">
                 <summary>The status of selinux.</summary>
@@ -58,9 +100,18 @@
             <description>Get all user's information.</description>
         </method>
 
+        <signal name="FileSignListChanged">
+            <description>File Sign's file list has changed, please get new file list.</description>
+        </signal>
+
+        <signal name="FileShredListChanged">
+            <description>File Shred's file list has changed, please get new file list.</description>
+        </signal>
+
         <signal name="UserChanged">
             <description>Os account has changed, please get user list.</description>
         </signal>
+
         <signal name="HazardDetected">
             <arg name="type" type="u">
                 <summary>type of alert.</summary>

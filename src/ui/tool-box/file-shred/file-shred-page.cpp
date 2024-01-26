@@ -13,18 +13,19 @@
  */
 
 #include "file-shred-page.h"
-#include <QDir>
 #include <QDialogButtonBox>
+#include <QDir>
 #include <QFileDialog>
-#include <QTreeView>
 #include <QListView>
+#include <QTreeView>
 #include <QWidgetAction>
 #include "include/ssr-i.h"
-#include "src/ui/ui_file-shred-page.h"
-#include "src/ui/tool-box/file-shred/files-dirs-dilog.h"
+#include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/common/user-prompt-dialog.h"
+#include "src/ui/tool-box/file-shred/files-dirs-dilog.h"
+#include "src/ui/toolbox_dbus_proxy.h"
+#include "src/ui/ui_file-shred-page.h"
 #include "ssr-marcos.h"
-
 
 #define FILE_SHRED_ICON_NAME "/images/file-shred"
 
@@ -32,10 +33,14 @@ namespace KS
 {
 namespace ToolBox
 {
-FileShredPage::FileShredPage(QWidget* parent)
+FileShredPage::FileShredPage(QWidget *parent)
     : Page(parent),
       m_ui(new Ui::FileShredPage)
 {
+    m_dbusProxy = new ToolBoxDbusProxy(SSR_DBUS_NAME,
+                                       SSR_TOOL_BOX_DBUS_OBJECT_PATH,
+                                       QDBusConnection::systemBus(),
+                                       this);
     m_ui->setupUi(this);
     initUI();
 }
@@ -94,7 +99,7 @@ void FileShredPage::addFiles(bool checked)
     }
 
     RETURN_IF_TRUE(names.isEmpty());
-    m_ui->m_table->addFiles(names);
+    m_dbusProxy->AddFileToFileShred(names);
 }
 
 void FileShredPage::initUI()
@@ -112,14 +117,19 @@ void FileShredPage::initUI()
     action->setDefaultWidget(searchButton);
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
-    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString& text)
+    connect(m_ui->m_search, &QLineEdit::textChanged, this, [this](const QString &text)
             {
                 m_ui->m_table->setSearchText(text);
             });
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addFiles(bool)));
-    connect(m_ui->m_remove, &QPushButton::clicked, this, [this]
+    connect(m_ui->m_remove, &QPushButton::clicked, [this]
             {
-                m_ui->m_table->delFiles();
+                if (m_ui->m_table->getSelectedFiles().isEmpty())
+                {
+                    POPUP_MESSAGE_DIALOG(tr("Please selecte files."));
+                    return;
+                }
+                m_dbusProxy->RemoveFileFromFileShred(m_ui->m_table->getSelectedFiles());
             });
     connect(m_ui->m_shred, &QPushButton::clicked, this, [this]
             {
@@ -130,9 +140,10 @@ void FileShredPage::initUI()
                 auto y = window()->y() + window()->height() / 2 - shredNotify->height() / 2;
                 shredNotify->move(x, y);
                 shredNotify->show();
-                connect(shredNotify, &UserPromptDialog::accepted, this, [this]{
-                    m_ui->m_table->shredFiles();
-                });
+                connect(shredNotify, &UserPromptDialog::accepted, this, [this]
+                        {
+                            m_dbusProxy->ShredFile(m_ui->m_table->getSelectedFiles());
+                        });
             });
     connect(m_ui->m_table, &FileShredTable::tableUpdated, this, [this](int total)
             {
@@ -140,6 +151,11 @@ void FileShredPage::initUI()
                 auto text = QString(tr("A total of %1 records")).arg(QString::number(total));
                 m_ui->m_tips->setText(text);
             });
+    connect(m_dbusProxy, &ToolBoxDbusProxy::FileShredListChanged, [this]
+            {
+                m_ui->m_table->updateFileList(m_dbusProxy->GetFileListFromFileShred());
+            });
+    m_ui->m_table->updateFileList(m_dbusProxy->GetFileListFromFileShred());
 }
 
 }  // namespace ToolBox

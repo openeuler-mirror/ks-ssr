@@ -146,6 +146,20 @@
             <description>Set fallback function.</description>
         </method>
 
+        <method name="ExportStrategy">
+            <arg type="b" name="operation_result" direction="in">
+                <summary>The result of operation.</summary>
+            </arg>
+            <description>Record export strategy operation.</description>
+        </method>
+
+        <method name="GenerateReport">
+            <arg type="b" name="operation_result" direction="in">
+                <summary>The result of operation.</summary>
+            </arg>
+            <description>Record generate report operation.</description>
+        </method>
+
         <property name="version" type="s" access="read">
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
             <description>The BR version.</description>
