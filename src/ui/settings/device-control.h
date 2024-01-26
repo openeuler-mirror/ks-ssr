@@ -31,7 +31,6 @@ namespace KS
 {
 namespace Settings
 {
-class RespondDialog;
 class DeviceControl : public QWidget
 {
     Q_OBJECT
@@ -62,7 +61,6 @@ private:
     // 绑定接口控制QCheckbox以及接口类型
     QMap<InterfaceType, QCheckBox *> m_checkboxs;
     QCheckBox *m_clickedCheckbox;
-    RespondDialog *m_respondDlg;
 };
 }  // namespace Settings
 }  // namespace KS

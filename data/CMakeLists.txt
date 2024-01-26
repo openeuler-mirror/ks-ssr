@@ -95,9 +95,13 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/ks-ssr-audit.rules
 # desktop
 configure_file(${PROJECT_SOURCE_DIR}/data/ks-ssr-gui.desktop.in
                ${PROJECT_BINARY_DIR}/data/ks-ssr-gui.desktop)
-
 install(FILES ${PROJECT_BINARY_DIR}/data/ks-ssr-gui.desktop
         DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/applications/)
+
+configure_file(${PROJECT_SOURCE_DIR}/data/ks-ssr-notify.desktop.in
+               ${PROJECT_BINARY_DIR}/data/ks-ssr-notify.desktop)
+install(FILES ${PROJECT_BINARY_DIR}/data/ks-ssr-notify.desktop
+        DESTINATION /etc/xdg/autostart/)
 
 # appdata.xml
 install(FILES ${PROJECT_SOURCE_DIR}/data/ks-ssr-gui.appdata.xml
