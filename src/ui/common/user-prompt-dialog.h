@@ -34,13 +34,19 @@ public:
 
     void setNotifyMessage(const QString &title, const QString &message);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private:
     void init();
 
 signals:
     void accepted();
+    void rejected();
 
 private:
     Ui::UserPromptDialog *m_ui;
+
+    bool m_isAccepted;
 };
 }  // namespace KS
