@@ -36,8 +36,6 @@
 #define LOGFILENAME "ks-ssr.log"
 #define ABSOLUTELOGFILEPATH LOGFILEDIR LOGFILENAME
 
-#pragma message("将用户名类型修改为 QString")
-
 namespace KS
 {
 namespace Log

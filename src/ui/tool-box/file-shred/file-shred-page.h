@@ -16,6 +16,8 @@
 
 #include "src/ui/common/page.h"
 
+class ToolBoxDbusProxy;
+
 namespace Ui
 {
 class FileShredPage;
@@ -44,6 +46,7 @@ private:
 
 private:
     Ui::FileShredPage* m_ui;
+    ToolBoxDbusProxy* m_dbusProxy;
 };
 }  // namespace ToolBox
 }  // namespace KS

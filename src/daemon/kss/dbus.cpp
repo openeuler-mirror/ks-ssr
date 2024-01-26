@@ -250,7 +250,7 @@ QJsonDocument DBus::trustedProtectedListToJsonDocument(const QStringList &fileLi
 
 void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
@@ -291,7 +291,7 @@ void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QStrin
 
 void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
@@ -332,7 +332,7 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
 
 void DBus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
@@ -353,7 +353,7 @@ void DBus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QSt
 
 void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
@@ -375,7 +375,7 @@ void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QS
 
 void DBus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool prohibited, const QString &filePath)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
@@ -395,7 +395,7 @@ void DBus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool
 
 void DBus::addFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
@@ -426,7 +426,7 @@ void DBus::addFPFileAfterAuthorization(const QDBusMessage &message, const QStrin
 
 void DBus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
@@ -448,7 +448,7 @@ void DBus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QStri
 
 void DBus::removeFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
@@ -469,7 +469,7 @@ void DBus::removeFPFileAfterAuthorization(const QDBusMessage &message, const QSt
 
 void DBus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
@@ -491,7 +491,7 @@ void DBus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const QS
 
 void DBus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint type, const QString &userPin)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     if (KSS_DEFAULT_USER_PIN != userPin)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
@@ -519,7 +519,7 @@ void DBus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint ty
 void DBus::setTrustedStatusAfterAuthorization(const QDBusMessage &message, bool status)
 {
     Wrapper::getDefault()->setTrustedStatus(status);
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    auto calledUniqueName = message.service();
     SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
                     tr("Set trusted status is %1").arg(status ? tr("open") : tr("close")),
                     calledUniqueName);

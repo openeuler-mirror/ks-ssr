@@ -449,12 +449,12 @@ bool Manager::Login(const QString& userName, const QString& passWord)
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto role = getRoleFromDB(userName);
-    if ( role == AccountRole::unknown_account)
+    Log::Log log{userName, role, QDateTime::currentDateTime(), Log::Manager::LogType::ACCOUNT, false, ""};
+    if (role == AccountRole::unknown_account)
     {
         KLOG_ERROR() << "Unknown user name: " << userName << ", Unique name: " << callerUnique;
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
     }
-
     m_dbusServerWatcher->addWatchedService(callerUnique);
     auto it = m_clients.find(callerUnique);
 
@@ -469,9 +469,8 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     if (isFreeze(userName))
     {
         KLOG_INFO() << userName << " has been freeze";
-        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT,
-                      tr("Failed to login, because this account has been freeze"),
-                      callerUnique);
+        log.logMsg = tr("Failed to login, because this account has been freeze");
+        Log::Manager::writeLog(log);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_BE_FREEZE, this->message());
     }
 
@@ -479,14 +478,17 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     {
         KLOG_INFO() << "Passwd error";
         updateFreezeInfo(userName);
-        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, tr("Failed to login, Passwd error"), callerUnique);
+        log.logMsg = tr("Failed to login, Passwd error");
+        Log::Manager::writeLog(log);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
     QWriteLocker locker(&m_clientMutex);
     resetFreezeInfo(userName);
     m_clients.insert(callerUnique, {true, role, userName, DBusHelper::getCallerPid(this)});
     locker.unlock();
-    SSR_LOG_SUCCESS(Log::Manager::LogType::ACCOUNT, tr("Login"), callerUnique);
+    log.result = true;
+    log.logMsg = "Login";
+    Log::Manager::writeLog(log);
     return true;
 }
 
