@@ -16,9 +16,9 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QObject>
+#include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/dm/utils.h"
-#include "src/ui/settings/respond-dialog.h"
 
 #define INTERFACE_TYPE_PROPERTY "interface type"
 
@@ -33,8 +33,7 @@ DeviceControl::DeviceControl(QWidget *parent)
       m_usbLayout(nullptr),
       m_kbdMouseLayout(nullptr),
       m_kbdMouseContent(nullptr),
-      m_clickedCheckbox(nullptr),
-      m_respondDlg(nullptr)
+      m_clickedCheckbox(nullptr)
 {
     initUI();
 
@@ -186,17 +185,14 @@ QList<Interface> DeviceControl::getInterfaces()
 
 void DeviceControl::popupMessageDialog(const QString &text)
 {
-    if (!m_respondDlg)
-    {
-        m_respondDlg = new RespondDialog(this);
-        connect(m_respondDlg, &RespondDialog::accepted, this, &DeviceControl::accept);
-        connect(m_respondDlg, &RespondDialog::rejected, this, &DeviceControl::reject);
-    }
-    m_respondDlg->setMessage(text);
-    int x = window()->x() + window()->width() / 4 + m_respondDlg->width() / 4;
-    int y = window()->y() + window()->height() / 4 + m_respondDlg->height() / 8;
-    m_respondDlg->move(x, y);
-    m_respondDlg->show();
+    auto notify = new UserPromptDialog(this);
+    connect(notify, &UserPromptDialog::accepted, this, &DeviceControl::accept);
+    connect(notify, &UserPromptDialog::rejected, this, &DeviceControl::reject);
+    notify->setNotifyMessage(tr("Switch"), text);
+    auto x = window()->x() + window()->width() / 2 - notify->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - notify->height() / 2;
+    notify->move(x, y);
+    notify->show();
 }
 
 void DeviceControl::setInterfaceState(bool checked)

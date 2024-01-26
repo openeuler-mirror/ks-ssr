@@ -339,12 +339,6 @@ FileShredTable::FileShredTable(QWidget *parent)
                                        SSR_TOOL_BOX_DBUS_OBJECT_PATH,
                                        QDBusConnection::systemBus(),
                                        this);
-    connect(m_dbusProxy, &ToolBoxDbusProxy::HazardDetected, this, [](uint type, const QString &alertMessage)
-            {
-                // TODO 区分类型弹窗？
-                Q_UNUSED(type)
-                Notify::NOTIFY_ERROR(alertMessage.toUtf8());
-            });
     initTable();
 }
 
