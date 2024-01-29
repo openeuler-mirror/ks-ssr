@@ -68,7 +68,10 @@ class Proxy:
             return False
 
     def service_restart(self):
-        self.__call_service_noresult('restart')
+        try:
+            self.__call_service_noresult('restart')
+        except Exception as e:
+            br.log.warning(e)
 
     def service_reload(self):
         self.__call_service_noresult('reload')

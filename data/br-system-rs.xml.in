@@ -403,6 +403,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <label>QT_TRANSLATE_NOOP_UTF8("xml", "Turn on composite key reboot")</label>
                 </layout>
+                <note>QT_TRANSLATE_NOOP_UTF8("xml", "The restart function is applied to the non graphical interface, and in the graphical interface, it acts as shutdown, and the function takes effect after logging out of the user.")</note>
             </arg>
         </reinforcement>
         <reinforcement>

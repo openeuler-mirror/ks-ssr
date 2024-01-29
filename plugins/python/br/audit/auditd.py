@@ -101,5 +101,6 @@ class Rules():
             br.utils.subprocess_not_output("auditctl -D")
         # 忽略这个错误，重复执行这条命令也会抛出错误
         br.utils.subprocess_has_output_ignore_error_handling("augenrules --load")
-        self.service.service_restart()
+
+        self.service.service_reload()
         return (True, '')
