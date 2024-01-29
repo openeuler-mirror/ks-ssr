@@ -57,6 +57,8 @@ public:
     QString m_passwd;
     QString m_remotePath;
     QHostAddress m_ip;
+    // a week
+    uint m_bakUpInterval = 7 * 24 * 60 * 60;
 
 private:
     constexpr static const uint m_maxLogFileLineDefaultValue = 1000;
