@@ -251,10 +251,13 @@ QJsonDocument DBus::trustedProtectedListToJsonDocument(const QStringList &fileLi
 void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
     auto calledUniqueName = message.service();
+    // 通过后缀区分执行/内核文件
+    QFileInfo fileInfo(filePath);
+    auto isKernelFile = fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz";
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      tr("Failed to add trusted files."),
+                      isKernelFile ? tr("Failed to add kernel files.") : tr("Failed to add execute files."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -268,7 +271,7 @@ void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      tr("Failed to add trusted files."),
+                      isKernelFile ? tr("Failed to add kernel files.") : tr("Failed to add execute files."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
@@ -276,14 +279,14 @@ void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      tr("Failed to add trusted files."),
+                      isKernelFile ? tr("Failed to add kernel files.") : tr("Failed to add execute files."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
     emit TrustedFilesChange();
 
     SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
-                    tr("Add trusted files successed. files path is %1").arg(filePath),
+                    isKernelFile ? tr("Add kernel files successed. files path is %1").arg(filePath) : tr("Add execute files successed. files path is %1").arg(filePath),
                     calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
@@ -292,10 +295,13 @@ void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QStrin
 void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
     auto calledUniqueName = message.service();
+    // 通过后缀区分执行/内核文件
+    QFileInfo fileInfo(fileList.at(0));
+    auto isKernelFiles = fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz";
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      tr("Failed to add trusted file list."),
+                      isKernelFiles ? tr("Failed to add kernel file list.") : tr("Failed to add execute file list."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -308,7 +314,7 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      tr("Failed to add trusted file list."),
+                      isKernelFiles ? tr("Failed to add kernel file list.") : tr("Failed to add execute file list."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
@@ -316,7 +322,7 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      tr("Failed to add trusted file list."),
+                      isKernelFiles ? tr("Failed to add kernel file list.") : tr("Failed to add execute file list."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
@@ -324,7 +330,7 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     emit TrustedFilesChange();
 
     SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
-                    tr("Add trusted files successed. Sum is %1").arg(fileList.size()),
+                    isKernelFiles ? tr("Add kernel files successed. Sum is %1").arg(fileList.size()) : tr("Add execute files successed. Sum is %1").arg(fileList.size()),
                     calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
@@ -333,10 +339,13 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
 void DBus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
     auto calledUniqueName = message.service();
+    // 通过后缀区分执行/内核文件
+    QFileInfo fileInfo(filePath);
+    auto isKernelFile = fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz";
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      tr("Failed to remove trusted file."),
+                      isKernelFile ? tr("Failed to remove kernel file.") : tr("Failed to remove execute file."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -345,7 +354,7 @@ void DBus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QSt
     emit TrustedFilesChange();
 
     SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
-                    tr("Remove trusted file. files path is %1").arg(filePath),
+                    isKernelFile ? tr("Remove kernel file. files path is %1").arg(filePath) : tr("Remove execute file. files path is %1").arg(filePath),
                     calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
@@ -354,10 +363,13 @@ void DBus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QSt
 void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
     auto calledUniqueName = message.service();
+    // 通过后缀区分执行/内核文件
+    QFileInfo fileInfo(fileList.at(0));
+    auto isKernelFiles = fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz";
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      tr("Failed to remove trusted file list."),
+                      isKernelFiles ? tr("Failed to remove kernel file list.") : tr("Failed to remove execute file list."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -367,7 +379,7 @@ void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QS
     emit TrustedFilesChange();
 
     SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
-                    tr("Remove trusted file successed. Sum is %1").arg(fileList.size()),
+                    isKernelFiles ? tr("Remove kernel file successed. Sum is %1").arg(fileList.size()) : tr("Remove execute file successed. Sum is %1").arg(fileList.size()),
                     calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
