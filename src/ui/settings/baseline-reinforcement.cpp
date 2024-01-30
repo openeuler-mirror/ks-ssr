@@ -89,6 +89,11 @@ void BaselineReinforcement::initConnection()
 
     connect(m_ui->m_fallbackInit, &QPushButton::clicked, this, [this]
             {
+                if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+                {
+                    POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+                    return;
+                }
                 auto userPrompt = new UserPromptDialog(this);
                 userPrompt->setNotifyMessage(tr("Fallback"), tr("Are you sure you want to go back to the initialization state."));
                 auto x = window()->x() + window()->width() / 2 - userPrompt->width() / 2;
@@ -101,6 +106,11 @@ void BaselineReinforcement::initConnection()
             });
     connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this]
             {
+                if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+                {
+                    POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+                    return;
+                }
                 auto userPrompt = new UserPromptDialog(this);
                 userPrompt->setNotifyMessage(tr("Fallback"), tr("Are you sure you want to go back to the previous state."));
                 auto x = window()->x() + window()->width() / 2 - userPrompt->width() / 2;
@@ -298,12 +308,6 @@ void BaselineReinforcement::setMonitorStatus(bool isOpen)
 
 void BaselineReinforcement::fallback(int status)
 {
-    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
-    {
-        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
-        return;
-    }
-
     auto reply = m_dbusProxy->SetFallback(BRFallbackMethod(status));
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     if (reply.isError())

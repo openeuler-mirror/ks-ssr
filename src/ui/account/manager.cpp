@@ -21,7 +21,7 @@
 #include "src/ui/common/password-modification.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 
-#define USER_INFO_INITIAL_PASSWD "123123"
+#define USER_INFO_INITIAL_PASSWD "kylin.123"
 
 namespace KS
 {
@@ -76,14 +76,19 @@ void Manager::showLogin()
     m_login->show();
 }
 
-void Manager::logout()
+bool Manager::logout()
 {
-    RETURN_IF_TRUE(m_currentUserName.isEmpty());
+    if (m_currentUserName.isEmpty())
+    {
+        POPUP_MESSAGE_DIALOG(tr("User is not login."));
+        return false;
+    }
     auto reply = m_dbusProxy->Logout();
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
-    RETURN_IF_TRUE(reply.isError());
+    RETURN_VAL_IF_TRUE(reply.isError(), false);
     m_currentUserName = "";
     showLogin();
+    return true;
 }
 
 void Manager::setLoginUserName(const QString &userName)

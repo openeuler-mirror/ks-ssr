@@ -811,7 +811,7 @@ void BRDBus::writeScanResultLog()
             successCount++;
             continue;
         }
-        if (m_jobResult.value(name) == static_cast<int32_t>(BR_REINFORCEMENT_STATE_SAFE | BR_REINFORCEMENT_STATE_SCAN_ERROR))
+        if (m_jobResult.value(name) == static_cast<int32_t>(BR_REINFORCEMENT_STATE_UNSAFE | BR_REINFORCEMENT_STATE_SCAN_DONE))
         {
             failCount++;
             continue;
@@ -846,21 +846,21 @@ void BRDBus::writeReinforcementResultLog()
     {
         SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                         tr("Reinforcement fail %1")
-                            .arg(failCount),
+                            .arg(QString::number(failCount)),
                         m_reforceUniqueName);
     }
     else if (failCount != 0 && successCount != 0)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                         tr("Reinforcement success %1, fail %2")
-                            .arg(successCount, failCount),
+                            .arg(QString::number(successCount), QString::number(failCount)),
                         m_reforceUniqueName);
     }
     else
     {
         SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                         tr("Reinforcement success %1")
-                            .arg(successCount),
+                            .arg(QString::number(successCount)),
                         m_reforceUniqueName);
     }
 }

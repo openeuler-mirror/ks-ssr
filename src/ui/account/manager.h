@@ -42,7 +42,7 @@ public:
     // 显示登录界面
     void showLogin();
     // 退出用户
-    void logout();
+    bool logout();
     void setLoginUserName(const QString &userName);
     QString getCurrentUserName() const;
 

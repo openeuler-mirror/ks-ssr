@@ -38,7 +38,8 @@ namespace KS
 {
 namespace Log
 {
-#define ALL_LOG_ROLE 0xFFFF
+// 前台不展示ACCOUNT_ROLE_NOACCOUNT的日志，未知属于异常日志
+#define ALL_LOG_ROLE ACCOUNT_ROLE_SYSADMIN | ACCOUNT_ROLE_SECADMIN | ACCOUNT_ROLE_AUDITADMIN
 #define ALL_LOG_TYPE 0xFFFF
 
 enum LogTableField
