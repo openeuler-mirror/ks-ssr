@@ -27,6 +27,7 @@ namespace KS
 namespace ToolBox
 {
 class ModifySecurityContext;
+class AddUserDialog;
 
 class FileSign : public Page
 {
@@ -40,6 +41,9 @@ public:
     virtual QString getAccountRoleName() override;
     void updateTableData(const QStringList& fileList);
 
+private:
+    void initConnection();
+
 private slots:
     void openFileDialog(bool);
     void popModifySecurityContext(const QModelIndex& index);
@@ -49,6 +53,7 @@ private:
     Ui::FileSignPage* m_ui;
     ToolBoxDbusProxy* m_dbusProxy;
     ModifySecurityContext* m_modifySecurityContext;
+    AddUserDialog *m_inputUsers;
 };
 }  // namespace ToolBox
 }  // namespace KS
