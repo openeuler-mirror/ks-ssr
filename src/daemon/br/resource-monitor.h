@@ -23,7 +23,7 @@ class ResourceMonitor : public QObject
 {
     Q_OBJECT
 public:
-    ResourceMonitor();
+    ResourceMonitor(QObject *parent);
     virtual ~ResourceMonitor();
 
     void startMonitor();

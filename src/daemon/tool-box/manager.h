@@ -97,6 +97,12 @@ Q_SIGNALS:  // SIGNALS
     void HazardDetected(uint type, const QString& alert_msg);
 
 private:
+    // 提权通过后执行
+    void setAccessControlStatus(const QDBusMessage& message, bool enable);
+    void removeUser(const QDBusMessage& message, const QStringList& userNames);
+    void setSecurityContext(const QDBusMessage& message, const QString& filePath, const QString& SecurityContext);
+
+private:
     Manager();
     virtual ~Manager() = default;
     void initDatabase();

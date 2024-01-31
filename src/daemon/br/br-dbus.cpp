@@ -878,7 +878,7 @@ void BRDBus::init()
     this->m_categories = Categories::getInstance();
     this->m_plugins = Plugins::getInstance();
 
-    this->m_resourceMonitor = new ResourceMonitor();
+    this->m_resourceMonitor = new ResourceMonitor(this);
     KLOG_DEBUG("init ResourceMonitor.");
     QObject::connect(this->m_resourceMonitor, &ResourceMonitor::homeFreeSpaceRatio_,
                      this, &BRDBus::homeFreeSpaceRatio);
