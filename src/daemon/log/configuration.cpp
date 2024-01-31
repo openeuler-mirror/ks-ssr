@@ -26,7 +26,8 @@ KS::Log::Configurations::Configurations(const QString& configPath)
       //   m_maxLogFileLine(m_config->value("log/max_log_file", m_maxLogFileLineDefaultValue).toUInt())
       m_account(m_config->value("log/account").toString()),
       m_passwd(m_config->value("log/passwd").toString()),
-      m_remotePath(m_config->value("log/remotePath").toString())
+      m_remotePath(m_config->value("log/remotePath").toString()),
+      m_bakUpInterval(m_config->value("log/backUpInterval").toInt())
 {
     auto numLogs = m_config->value("log/numLogs", m_numLogsDefaultValue).toUInt();
     if (numLogs >= LOG_FILE_NUM_MIN_VALUE || numLogs <= LOG_FILE_NUM_MAX_VALUE)
@@ -41,7 +42,8 @@ KS::Log::Configurations::Configurations(const QString& configPath)
     KLOG_INFO() << "MaxLogFileLine value is: " << m_maxLogFileLine
                 << ", NumLogs value is: " << m_numLogs
                 << ", remote ip is: " << m_ip
-                << ", remote path is: " << m_remotePath;
+                << ", remote path is: " << m_remotePath
+                << ", back up time interval is: " << m_bakUpInterval;
 }
 
 KS::Log::Configurations::~Configurations()
@@ -56,4 +58,5 @@ void KS::Log::Configurations::operator=(const Configurations& other)
     m_passwd = other.m_passwd;
     m_remotePath = other.m_remotePath;
     m_ip = other.m_ip;
+    m_bakUpInterval = other.m_bakUpInterval;
 }

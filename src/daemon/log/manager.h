@@ -24,6 +24,7 @@
 class QFileSystemWatcher;
 class QWaitCondition;
 class QProcess;
+class QTimer;
 class QFile;
 
 class WriteWorker;
@@ -33,7 +34,7 @@ class WriteWorker;
         auto role = KS::Account::Manager::m_accountManager->getRole(dbusId);     \
         auto name = KS::Account::Manager::m_accountManager->getUserName(dbusId); \
         auto timePoint = QDateTime::currentDateTime();                           \
-        KS::Log::Log log{name, role, timePoint, logType, result, logMsg};          \
+        KS::Log::Log log{name, role, timePoint, logType, result, logMsg};        \
         KS::Log::Manager::writeLog(log);                                         \
     }
 
@@ -47,12 +48,12 @@ class WriteWorker;
     }
 
 #define SSR_LOG_ERROR(logType, logMsg, dbusId)                                   \
-    {                                                                              \
+    {                                                                            \
         auto role = KS::Account::Manager::m_accountManager->getRole(dbusId);     \
         auto name = KS::Account::Manager::m_accountManager->getUserName(dbusId); \
-        auto timePoint = QDateTime::currentDateTime();                             \
-        KS::Log::Log log{name, role, timePoint, logType, false, logMsg};           \
-        KS::Log::Manager::writeLog(log);                                           \
+        auto timePoint = QDateTime::currentDateTime();                           \
+        KS::Log::Log log{name, role, timePoint, logType, false, logMsg};         \
+        KS::Log::Manager::writeLog(log);                                         \
     }
 
 // Qt 自身的文件读写就有一个大小为 16384 大小的缓冲区，所以在此类中不再做缓冲
@@ -95,6 +96,7 @@ private:
     void backUpLog(const QStringList& targetLogList);
     void getAllLog();
     QStringList getLogFileList(bool isReverse) const;
+    void logFileRotateInTimer();
     void logFileRotate();
 
 Q_SIGNALS:  // SIGNALS
@@ -110,6 +112,7 @@ private:
     QString m_path;
     QFile* m_file;
     QProcess* m_backUpLogProcess;
+    QProcess* m_cleanUpLogProcess;
     const Configurations m_configurations;
     // 日志数据结构选用 List 容器。
     QList<Log> m_logList;
@@ -121,6 +124,7 @@ private:
     // 临界资源日志文件的锁
     QMutex m_fileMutex;
     QThread* m_thread;
+    QTimer* m_bakUpTimer;
 
     friend class WriteWorker;
 };

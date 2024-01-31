@@ -16,6 +16,7 @@
 #include <QDir>
 #include <QHostAddress>
 #include <QStringBuilder>
+#include <QTimer>
 #include "config.h"
 #include "include/ssr-error-i.h"
 #include "include/ssr-i.h"
@@ -25,7 +26,6 @@
 #include "src/daemon/account/manager.h"
 #include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/log/message.h"
-
 #include "src/daemon/log/write-worker.h"
 #include "src/daemon/log_adaptor.h"
 #include "ssr-marcos.h"
@@ -47,9 +47,11 @@ Manager::Manager()
       m_path(QDir::cleanPath(ABSOLUTELOGFILEPATH)),
       m_file(new QFile(m_path, this)),
       m_backUpLogProcess(new QProcess(this)),
+      m_cleanUpLogProcess(new QProcess(this)),
       m_configurations(),
       m_waitCondition(new QWaitCondition()),
-      m_thread(new WriteWorker(this))
+      m_thread(new WriteWorker(this)),
+      m_bakUpTimer(new QTimer(this))
 {
     // 初始化日志文件
     QDir logFilePath;
@@ -95,6 +97,18 @@ Manager::Manager()
                     // SSR_LOG(Account::Manager::AccountRole::unknown_account, LogType::LOG, "Failed to back up overflow log!", false);
                 }
             });
+    connect(m_cleanUpLogProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [this](int, QProcess::ExitStatus)
+            {
+                uint rc = m_cleanUpLogProcess->exitCode();
+                QString errMsg = m_cleanUpLogProcess->readAllStandardOutput() +
+                                 m_cleanUpLogProcess->readAllStandardError();
+                if (rc != 0)
+                {
+                    KLOG_WARNING() << "error code: " << rc
+                                   << ", Failed to clean up back up log! error message: " << errMsg;
+                    // SSR_LOG(Account::Manager::AccountRole::unknown_account, LogType::LOG, "Failed to back up overflow log!", false);
+                }
+            });
 
     // 初始化 DBus 接口
     new LogAdaptor(this);
@@ -104,6 +118,9 @@ Manager::Manager()
         KLOG_ERROR() << "Register Log DBus object error:" << dbusConnection.lastError().message();
     }
     QObject::connect(this, &Manager::needLogRotate, this, &Manager::logFileRotate, Qt::QueuedConnection);
+    connect(m_bakUpTimer, &QTimer::timeout, this, &KS::Log::Manager::logFileRotateInTimer);
+    m_bakUpTimer->setInterval(m_configurations.m_bakUpInterval * 1000);
+    m_bakUpTimer->start();
 }
 
 Manager::~Manager()
@@ -251,6 +268,16 @@ QStringList Manager::GetLog(const int role, const time_t begin_time_stamp, const
 
 void Manager::backUpLog(const QStringList& targetLogList)
 {
+    if (m_configurations.m_ip.isNull())
+    {
+        KLOG_INFO() << "No target ip, skip back up log";
+        return;
+    }
+    if (m_backUpLogProcess->state() != QProcess::ProcessState::NotRunning)
+    {
+        KLOG_INFO() << "Last backup process is running, skip.";
+        return;
+    }
     // 入参是不能修改的，所以构造一个副本。
     QStringList _targetLogList{};
     for (auto& log : targetLogList)
@@ -264,18 +291,24 @@ void Manager::backUpLog(const QStringList& targetLogList)
              << QString("%1@%2:%3").arg(m_configurations.m_account, m_configurations.m_ip.toString(), m_configurations.m_remotePath);
     m_backUpLogProcess->setProgram(bakUpProgram);
     m_backUpLogProcess->setArguments(bakUpArg);
-    if (m_configurations.m_ip.isNull())
+
+    QStringList removeLogList{};
+    for (auto& log : targetLogList)
     {
-        KLOG_INFO() << "No target ip, skip back up log";
-        return;
+        removeLogList.append(m_configurations.m_remotePath + '/' + log);
     }
-    if (m_backUpLogProcess->state() != QProcess::ProcessState::NotRunning)
-    {
-        KLOG_INFO() << "Last backup process is running, skip.";
-        return;
-    }
+
+    QStringList cleanUpArg;
+    cleanUpArg << "-p" << m_configurations.m_passwd << "ssh"
+               << QString("%1@%2").arg(m_configurations.m_account, m_configurations.m_ip.toString())
+               << QString("bash -c 'echo \"rm %1\" | sudo at now + 6 months'").arg(removeLogList.join(' '));
+    m_cleanUpLogProcess->setProgram(bakUpProgram);
+    m_cleanUpLogProcess->setArguments(cleanUpArg);
+
     m_backUpLogProcess->start();
     m_backUpLogProcess->waitForFinished();
+    m_cleanUpLogProcess->start();
+    m_cleanUpLogProcess->waitForFinished();
 }
 
 void Manager::getAllLog()
@@ -337,6 +370,37 @@ void Manager::writeLog(const Log& log)
         return;
     }
     m_logManager->m_waitCondition->notify_one();
+}
+
+void Manager::logFileRotateInTimer()
+{
+    QMutexLocker locker(&m_fileMutex);
+    m_fileLine = 0;
+    delete m_file;
+    m_file = nullptr;
+    auto logList = getLogFileList(true);
+    auto index = logList.size();
+    for (const auto& log : logList)
+    {
+        if (!QFile::rename(LOGFILEDIR + log,
+                           LOGFILEDIR LOGFILENAME "-" + QDateTime::currentDateTime().toString(Qt::ISODate) + "." + QString::number(index)))
+        {
+            KLOG_WARNING() << "Failed to rename log file: " << log;
+        }
+        index--;
+    }
+    logList = getLogFileList(true);
+    backUpLog(logList);
+    QDir logDir(LOGFILEDIR);
+    for (const auto& log : logList)
+    {
+        logDir.remove(log);
+    }
+    m_file = new QFile(m_path);
+    if (!m_file->open(QIODevice::ReadWrite | QIODevice::Append))
+    {
+        KLOG_ERROR() << "failed to open log file !";
+    }
 }
 
 void Manager::logFileRotate()
