@@ -32,6 +32,7 @@
 #include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/tool-box/manager.h"
 #include "src/daemon/tool-box/realtime-alert.h"
+#include "src/daemon/common/polkit-proxy.h"
 
 #define SHRED_PATH "/usr/bin/shred"
 #define SHRED_ARG_1 "-f"
@@ -143,9 +144,17 @@ void Manager::initDatabase()
     }
 }
 
-void Manager::SetAccessControlStatus(bool enable)
+CHECK_AUTH_WITH_1ARGS(Manager, SetAccessControlStatus, setAccessControlStatus, SSR_PERMISSION_AUTHENTICATION, bool);
+CHECK_AUTH_WITH_1ARGS(Manager, RemoveUser, removeUser, SSR_PERMISSION_AUTHENTICATION, const QStringList&);
+CHECK_AUTH_WITH_2ARGS(Manager, SetSecurityContext, setSecurityContext, SSR_PERMISSION_AUTHENTICATION, const QString&, const QString&);
+
+void Manager::setAccessControlStatus(const QDBusMessage& message, bool enable)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    SCOPE_EXIT(
+        {
+            QDBusConnection::systemBus().send(message.createReply());
+        });
+    auto calledUniqueName = message.service();
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
@@ -213,9 +222,13 @@ QString Manager::GetSecurityContext(const QString& filePath)
     return rs;
 }
 
-void Manager::SetSecurityContext(const QString& filePath, const QString& SecurityContext)
+void Manager::setSecurityContext(const QDBusMessage& message, const QString& filePath, const QString& SecurityContext)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    SCOPE_EXIT(
+        {
+            QDBusConnection::systemBus().send(message.createReply());
+        });
+    auto calledUniqueName = message.service();
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
@@ -233,7 +246,6 @@ void Manager::SetSecurityContext(const QString& filePath, const QString& Securit
                       tr("Failed to set %1 selinux context, error msg: %2").arg(filePath).arg(strerror(errno)),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_SECURITY_CONTEXT, this->message());
-        return;
     }
     SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
                     tr("Set %1 selinux context to: %2").arg(filePath).arg(SecurityContext),
@@ -260,9 +272,13 @@ void Manager::ShredFile(const QStringList& filePath)
     RemoveFileFromFileShred(filePath);
 }
 
-void Manager::RemoveUser(const QStringList& userNames)
+void Manager::removeUser(const QDBusMessage& message, const QStringList& userNames)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    SCOPE_EXIT(
+        {
+            QDBusConnection::systemBus().send(message.createReply());
+        });
+    auto calledUniqueName = message.service();
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
     auto userName = Account::Manager::m_accountManager->getUserName(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
@@ -446,10 +462,7 @@ void Manager::getAllUsers(const QString&)
     setgrent();
     while ((groupInfo = getgrent()) != nullptr)
     {
-        if (groupInfo->gr_name != managerGroup)
-        {
-            continue;
-        }
+        CONTINUE_IF_TRUE(groupInfo->gr_name != managerGroup);
         char** members = groupInfo->gr_mem;
         while (*members != nullptr)
         {
@@ -466,20 +479,13 @@ void Manager::getAllUsers(const QString&)
     setpwent();  // 重置密码文件的读取位置到开头
     while ((pw = getpwent()) != nullptr)
     {
-        if (managerUserList.contains(pw->pw_name))
-        {
-            continue;
-        }
+        CONTINUE_IF_TRUE(managerUserList.contains(pw->pw_name));
+        CONTINUE_IF_TRUE(pw->pw_uid < 1000);
+        // linux系统中存在一个nobody的系统用户，权限很低，一般用于运行服务、访问受限资源、处理匿名访问等，这里需要将这个用户过滤掉
+        CONTINUE_IF_TRUE(QString::fromStdString(pw->pw_name) == "nobody");
         QJsonObject obj;
         obj.insert("name", pw->pw_name);
-        if (pw->pw_uid < 1000)
-        {
-            obj.insert("type", OsUserType::USER_TYPE_MANAGER);
-        }
-        else
-        {
-            obj.insert("type", OsUserType::USER_TYPE_NORMAL);
-        }
+        obj.insert("type", OsUserType::USER_TYPE_NORMAL);
         arr.append(obj);
     }
     endpwent();  // 关闭密码文件
