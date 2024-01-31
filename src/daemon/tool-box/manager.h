@@ -37,6 +37,11 @@ class Manager : public QObject, public QDBusContext
 {
     Q_OBJECT
 public:
+    enum class SeLabelType
+    {
+        MLS,
+        KIC
+    };
     static void globalInit();
     static void globalDeinit();
     /**
@@ -51,14 +56,22 @@ public:
      * @param filePath 文件路径
      * @return 安全上下文内容
      */
-    QString GetSecurityContext(const QString& filePath);
+    QString GetFileMLSLabel(const QString& filePath);
 
     /**
      * @brief 设置安全上下文
      * @param filePath 文件路径
      * @param SecurityContext 需要设置的安全上下文
      */
-    void SetSecurityContext(const QString& filePath, const QString& SecurityContext);
+    void SetFileMLSLabel(const QString& filePath, const QString& SecurityContext);
+
+    QString GetFileKICLabel(const QString& filePath);
+
+    void SetFileKICLabel(const QString& filePath, const QString& SecurityContext);
+
+    QString GetUserMLSLabel(const QString& userName);
+
+    void SetUserMLSLabel(const QString& userName, const QString& SecurityContext);
 
     /**
      * @brief 调用 shred 来彻底删除文件的函数
@@ -76,11 +89,11 @@ public:
 
     QString GetAllUsers();
 
-    QStringList GetFileListFromFileSign();
+    QStringList GetObjListFromSecuritySign();
 
-    void AddFileToFileSign(const QStringList& file_list);
+    void AddObjToSecuritySign(const QStringList&);
 
-    void RemoveFileFromFileSign(const QStringList& file_list);
+    void RemoveObjFromSecuritySign(const QStringList&);
 
     QStringList GetFileListFromFileShred();
 
@@ -100,12 +113,18 @@ private:
     // 提权通过后执行
     void setAccessControlStatus(const QDBusMessage& message, bool enable);
     void removeUser(const QDBusMessage& message, const QStringList& userNames);
-    void setSecurityContext(const QDBusMessage& message, const QString& filePath, const QString& SecurityContext);
+    void setFileMLSLabel(const QDBusMessage& message, const QString& filePath, const QString& SecurityContext);
+    void setFileKICLabel(const QDBusMessage& message, const QString& filePath, const QString& SecurityContext);
+    void setUserMLSLabel(const QDBusMessage& message, const QString& userName, const QString& SecurityContext);
 
 private:
     Manager();
     virtual ~Manager() = default;
     void initDatabase();
+    bool setFileSeLabels(const QString& filePath, const QString& seLabel, QString& output, const SeLabelType seLabelType);
+    bool getFileSeLabels(const QString& filePath, QString& output, const SeLabelType SeLabelType);
+    bool setUserSeLabels(const QString& userName, const QString& seLabel, QString& output);
+    bool getUserSeLabels(const QString& userName, QString& output);
     static void processFinishedHandler(Log::Log log, const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd);
     inline static QSharedPointer<QProcess> getProcess(Log::Log log, const QString& program, const QStringList& arg)
     {

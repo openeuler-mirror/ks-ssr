@@ -1,3 +1,1 @@
--w /etc/shadow -p w -k (ks-ssr)account_passwd_change
-
--w /etc/passwd -p w -k (ks-ssr)account_change
+-a always,exit -F path=/etc/passwd -F uid!=0 -k (ks-ssr)account_passwd_change
