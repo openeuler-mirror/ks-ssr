@@ -115,8 +115,8 @@ void TrustedProtected::updateSoftRadio(bool checked)
     connect(m_userPin, &TrustedUserPin::accepted, this, &TrustedProtected::setStorageMode);
     connect(m_userPin, &TrustedUserPin::closed, this, &TrustedProtected::updateStorageMode);
 
-    auto x = this->x() + this->width() / 4 + m_userPin->width() / 2;
-    auto y = this->y() + this->height() / 4 + m_userPin->height() / 2;
+    auto x = window()->x() + window()->width() / 2 - m_userPin->width() / 2;
+    auto y = window()->y() + window()->height() / 2 - m_userPin->height() / 2;
     m_userPin->move(x, y);
     m_userPin->show();
 

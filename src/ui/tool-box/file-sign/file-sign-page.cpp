@@ -21,6 +21,7 @@
 #include "include/ssr-i.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/tool-box/file-sign/file-sign-table.h"
+#include "src/ui/tool-box/file-sign/add-user-dialog.h"
 #include "src/ui/tool-box/file-sign/modify-security-context.h"
 #include "src/ui/toolbox_dbus_proxy.h"
 #include "src/ui/ui_file-sign-page.h"
@@ -33,8 +34,9 @@ namespace ToolBox
 {
 FileSign::FileSign(QWidget* parent)
     : Page(parent),
-      m_ui(new Ui::FileSignPage)
-
+      m_ui(new Ui::FileSignPage),
+      m_modifySecurityContext(nullptr),
+      m_inputUsers(nullptr)
 {
     m_dbusProxy = new ToolBoxDbusProxy(SSR_DBUS_NAME,
                                        SSR_TOOL_BOX_DBUS_OBJECT_PATH,
@@ -57,27 +59,7 @@ FileSign::FileSign(QWidget* parent)
 
     m_ui->m_selectFile->setCursor(Qt::PointingHandCursor);
     m_ui->m_clean->setCursor(Qt::PointingHandCursor);
-    QObject::connect(m_ui->m_search, SIGNAL(textChanged(const QString&)), m_ui->m_fileSignTable, SLOT(searchTextChanged(const QString&)));
-    QObject::connect(m_ui->m_refresh, &QPushButton::clicked, [this]
-                     {
-                         updateTableData(m_dbusProxy->GetFileListFromFileSign().value());
-                     });
-    QObject::connect(m_ui->m_selectFile, &QPushButton::clicked, this, &FileSign::openFileDialog);
-    QObject::connect(m_ui->m_clean, &QPushButton::clicked, [this](bool)
-                     {
-                         m_dbusProxy->RemoveFileFromFileSign(m_ui->m_fileSignTable->getSelectData());
-                     });
-    m_ui->m_tips->setText(tr("A total of %1 records").arg((m_ui->m_fileSignTable->getData().size())));
-    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::dataSizeChanged, [this]
-                     {
-                         m_ui->m_tips->setText(tr("A total of %1 records").arg(m_ui->m_fileSignTable->getData().size()));
-                     });
-    QObject::connect(m_ui->m_fileSignTable, &FileSignTable::clicked, this, &FileSign::popModifySecurityContext);
-    // TODO 添加用户，传入后台 m_selectUser
-    QObject::connect(m_dbusProxy, &ToolBoxDbusProxy::FileSignListChanged, [this]
-                     {
-                         updateTableData(m_dbusProxy->GetFileListFromFileSign().value());
-                     });
+    initConnection();
     // 获取保存在数据库中的标记的文件列表,
     updateTableData(m_dbusProxy->GetFileListFromFileSign().value());
 }
@@ -127,6 +109,49 @@ void FileSign::updateTableData(const QStringList& fileList)
         newData[file] = {false, file, m_dbusProxy->GetSecurityContext(file).value(), "完整性标签需要内核支持，内核支持后使用 rbapol 工具即可获取标签"};
     }
     m_ui->m_fileSignTable->updateData(newData);
+}
+
+void FileSign::initConnection()
+{
+    connect(m_ui->m_search, SIGNAL(textChanged(const QString&)), m_ui->m_fileSignTable, SLOT(searchTextChanged(const QString&)));
+    connect(m_ui->m_refresh, &QPushButton::clicked, [this]
+                     {
+                         auto reply = m_dbusProxy->GetFileListFromFileSign();
+                         CHECK_ERROR_FOR_DBUS_REPLY(reply);
+                         updateTableData(reply.value());
+                     });
+    connect(m_ui->m_selectFile, &QPushButton::clicked, this, &FileSign::openFileDialog);
+    connect(m_ui->m_selectUser, &QPushButton::clicked, [this](bool)
+                     {
+                        m_inputUsers = new AddUserDialog(this);
+                        connect(m_inputUsers, &AddUserDialog::accepted, this, [this]
+                                    {
+                                        // TODO 获取用户，传入后台，更新列表
+                                        auto userList = m_inputUsers->getUserList();
+                                        // m_dbusProxy->AddUserToFileSign(userList);
+                                    });
+                        auto x = window()->x() + window()->width() / 2 - m_inputUsers->width() / 2;
+                        auto y = window()->y() + window()->height() / 2 - m_inputUsers->height() / 2;
+                        m_inputUsers->move(x, y);
+                        m_inputUsers->show();
+                     });
+    connect(m_ui->m_clean, &QPushButton::clicked, [this](bool)
+                     {
+                         auto reply = m_dbusProxy->RemoveFileFromFileSign(m_ui->m_fileSignTable->getSelectData());
+                         CHECK_ERROR_FOR_DBUS_REPLY(reply);
+                     });
+    m_ui->m_tips->setText(tr("A total of %1 records").arg((m_ui->m_fileSignTable->getData().size())));
+    connect(m_ui->m_fileSignTable, &FileSignTable::dataSizeChanged, [this]
+                     {
+                         m_ui->m_tips->setText(tr("A total of %1 records").arg(m_ui->m_fileSignTable->getData().size()));
+                     });
+    connect(m_ui->m_fileSignTable, &FileSignTable::clicked, this, &FileSign::popModifySecurityContext);
+    connect(m_dbusProxy, &ToolBoxDbusProxy::FileSignListChanged, [this]
+                     {
+                         auto reply = m_dbusProxy->GetFileListFromFileSign();
+                         CHECK_ERROR_FOR_DBUS_REPLY(reply);
+                         updateTableData(reply.value());
+                     });
 }
 
 void FileSign::popModifySecurityContext(const QModelIndex& index)

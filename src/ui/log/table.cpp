@@ -38,7 +38,8 @@ namespace KS
 {
 namespace Log
 {
-#define ALL_LOG_ROLE 0xFFFF
+// 前台不展示ACCOUNT_ROLE_NOACCOUNT的日志，未知属于异常日志
+#define ALL_LOG_ROLE ACCOUNT_ROLE_SYSADMIN | ACCOUNT_ROLE_SECADMIN | ACCOUNT_ROLE_AUDITADMIN
 #define ALL_LOG_TYPE 0xFFFF
 
 enum LogTableField
@@ -198,8 +199,6 @@ QVariant LogModel::headerData(int section, Qt::Orientation orientation, int role
             return tr("Number");
         case LogTableField::LOG_TABLE_FIELD_LOG_TYPE:
             return "";
-            //        case LogTableField::LOG_TABLE_FIELD_RESOURCE:
-            //            return tr("App resource");
         case LogTableField::LOG_TABLE_FIELD_USERNAME:
             return "";
         case LogTableField::LOG_TABLE_FIELD_DATATIME:
@@ -244,10 +243,13 @@ void LogModel::updateRecord()
 void LogModel::initGetLogArgs()
 {
     m_args.role = static_cast<AccountRole>(ALL_LOG_ROLE);
+
+    auto currentDateTime = QDateTime::currentDateTime();
+    currentDateTime.setTime(QTime(0, 0, 0));
     // 一个月前
-    m_args.timeStampBegin = QDateTime::currentDateTime().addMonths(-1).toSecsSinceEpoch();
-    m_args.timeStampEnd = QDateTime::currentDateTime().toSecsSinceEpoch();
-    // m_args.timeStampEnd = LONG_LONG_MAX;
+    m_args.timeStampBegin = currentDateTime.addMonths(-1).toSecsSinceEpoch();
+    currentDateTime.setTime(QTime(23, 59, 59));
+    m_args.timeStampEnd = currentDateTime.toSecsSinceEpoch();
     m_args.type = static_cast<LogType>(ALL_LOG_TYPE);
     m_args.result = LOG_RESULT_ALL;
     m_args.currentPage = 1;

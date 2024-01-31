@@ -525,11 +525,15 @@ void Window::setNotifyStatus(bool disabled)
 
 void Window::logout(const QString &userName)
 {
+    RETURN_IF_TRUE(userName.isEmpty());
     if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
     {
         POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
         return;
     }
+    Account::Manager::instance()->setLoginUserName(userName);
+    RETURN_IF_TRUE(!Account::Manager::instance()->logout());
+
     clearSidebar();
     while (m_ui->m_stackedPages->currentWidget() != nullptr)
     {
@@ -540,8 +544,6 @@ void Window::logout(const QString &userName)
     m_pages.clear();
     m_ui->m_navigation->clearItems();
     hide();
-    Account::Manager::instance()->setLoginUserName(userName);
-    Account::Manager::instance()->logout();
 }
 
 void Window::relogin(const QString &userName)

@@ -150,6 +150,8 @@ Q_SIGNALS:  // SIGNALS
 private:
     void reinforce(const QDBusMessage &message, const QStringList &names);
     void setFallback(const QDBusMessage &message, const uint32_t &snapshot);
+    void writeScanResultLog();
+    void writeReinforcementResultLog();
 
 private:
     void init();
@@ -169,6 +171,8 @@ private:
     QString getJsonParam(const QString &reinforceName);
     // 更新rh文件
     void updateRH(const QString &reinforceName, const QJsonObject &resultReturnValue);
+    // 读取加固项状态
+    void readReinforceItemStatus(const QString &jobResult);
 
     void homeFreeSpaceRatio(float spaceRatio);
     void rootFreeSpaceRatio(float spaceRatio);
@@ -198,6 +202,10 @@ private:
 
     BRFallbackMethod m_fallbackMethod = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
     BRAdaptor *m_dbus;
+    QString m_scanUniqueName;
+    QString m_reforceUniqueName;
+    // <QString, int32_t> : <reinforceName, status>
+    QMap<QString, int32_t> m_jobResult;
 };
 }  // namespace BRDaemon
 }  // namespace KS
