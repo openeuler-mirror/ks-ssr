@@ -144,7 +144,8 @@ bool Scan::exportStrategy()
     {
         // 无法打开
         KLOG_WARNING() << "Please check the file name and whether you have write permission!";
-        POPUP_MESSAGE_DIALOG(tr("Please check the file name and whether you have write permission!"))
+        POPUP_MESSAGE_DIALOG(tr("Please check the file name and whether you have write permission!"));
+        m_dbusProxy->ExportStrategy(false);
         return false;
     }
 
@@ -153,14 +154,17 @@ bool Scan::exportStrategy()
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
         KLOG_WARNING() << "Open RA file failed!";
-        POPUP_MESSAGE_DIALOG(tr("Open RA file failed!"))
+        POPUP_MESSAGE_DIALOG(tr("Open RA file failed!"));
+        m_dbusProxy->ExportStrategy(false);
         return false;
     }
 
     // 写入文件
-    POPUP_MESSAGE_DIALOG(fileSave.write(file.readAll()) ? tr("Export successed!") : tr("Export failed!"))
+    auto isSuccess = fileSave.write(file.readAll());
+    POPUP_MESSAGE_DIALOG(isSuccess ? tr("Export successed!") : tr("Export failed!"));
     file.close();
     fileSave.close();
+    m_dbusProxy->ExportStrategy(isSuccess);
     return true;
 }
 
@@ -444,6 +448,7 @@ void Scan::generateReport()
     if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
     {
         POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+        m_dbusProxy->GenerateReport(false);
         return;
     }
     KLOG_DEBUG() << "generate reports !";
@@ -473,6 +478,7 @@ void Scan::generateReport()
                 RETURN_IF_TRUE(!Result::getDefault()->generateReports(m_categories, m_afterReinForcementCategories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
                 POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
                 m_afterReinForcementCategories.clear();
+                m_dbusProxy->GenerateReport(true);
             });
     // 生成报表前扫描
     auto scanItems = BRStrategyType(m_dbusProxy->strategy_type()) == BR_STRATEGY_TYPE_CUSTOM ? m_ui->m_itemTable->getString(m_categories) : m_ui->m_itemTable->getAllString(m_categories);

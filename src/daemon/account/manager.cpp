@@ -44,7 +44,7 @@
 #define USER_INFO_DB_POSITION_PASSWD 2
 #define USER_INFO_DB_POSITION_TRY_TIMES 3
 #define USER_INFO_DB_POSITION_LAST_TRY_TIME 4
-#define USER_INFO_INITIAL_PASSWD "123123"
+#define USER_INFO_INITIAL_PASSWD "kylin.123"
 #define RSA_KEY_LENGTH 512
 #define PAM_SYSTEM_PATH "/etc/pam.d/system-auth"
 #define PAM_KIRAN_PATH "/etc/pam.d/kiran-authentication-service"

@@ -259,7 +259,7 @@ void BRDBus::SetNotificationStatus(const uint32_t& notificationStatus)
     if (notificationStatus == this->m_configuration->getNotificationStatus())
     {
         SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                        tr("Set notification status to %1").arg(notificationStatus),
+                        tr("Set notification status to %1").arg(notificationStatus == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN ? tr("open") : tr("close")),
                         calledUniqueName);
         return;
     }
@@ -275,42 +275,26 @@ void BRDBus::SetNotificationStatus(const uint32_t& notificationStatus)
     }
 
     SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("Set notification status to %1").arg(notificationStatus),
+                    tr("Set notification status to %1").arg(notificationStatus == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN ? tr("open") : tr("close")),
                     calledUniqueName);
 }
 
 void BRDBus::SetFallbackStatus(const uint32_t& fallbackStatus)
 {
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-
     if (fallbackStatus > BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED)
     {
         sendErrorReply(QDBusError::InvalidArgs,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_FALLBACK_STATUS_INVALID));
-        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed set fallback status"),
-                      calledUniqueName);
         return;
     }
-    if (fallbackStatus == this->m_configuration->getFallbackStatus())
-    {
-        SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                        tr("Set fallback status to %1").arg(fallbackStatus),
-                        calledUniqueName);
-    }
+    RETURN_IF_TRUE(fallbackStatus == this->m_configuration->getFallbackStatus());
 
     if (!this->m_configuration->setFallbackStatus(BRFallbackStatus(fallbackStatus)))
     {
         sendErrorReply(QDBusError::InternalError,
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_FALLBACK_STATUS_FAILED));
-        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed set fallback status"),
-                      calledUniqueName);
         return;
     }
-    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("Set fallback status to %1").arg(fallbackStatus),
-                    calledUniqueName);
 }
 
 void BRDBus::ImportCustomRA(const QString& encodedStrategy)
@@ -365,7 +349,7 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
     if (resourceMonitor == this->m_configuration->getResourceMonitorStatus())
     {
         SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                        tr("Set resource monitor switch to %1").arg(resourceMonitor),
+                        tr("Set resource monitor switch to %1").arg(resourceMonitor == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN ? tr("open") : tr("close")),
                         calledUniqueName);
         return;
     }
@@ -391,7 +375,7 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
     }
 
     SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("Set resource monitor switch to %1").arg(resourceMonitor),
+                    tr("Set resource monitor switch to %1").arg(resourceMonitor == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN ? tr("open") : tr("close")),
                     calledUniqueName);
 }
 
@@ -532,7 +516,7 @@ void BRDBus::ResetReinforcement(const QString& name)
 void BRDBus::Scan(const QStringList& names)
 {
     KLOG_DEBUG() << "Carry out scan progress. range is " << names.join(" ").toLocal8Bit();
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
+    m_scanUniqueName = DBusHelper::getCallerUniqueName(this);
 
     // 已经在扫描则返回错误
     if (this->m_scanJob && this->m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
@@ -540,9 +524,10 @@ void BRDBus::Scan(const QStringList& names)
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING));
         SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to scan."),
-                      calledUniqueName);
+                      m_scanUniqueName);
         return;
     }
+    m_jobResult.clear();
 
     try
     {
@@ -558,7 +543,7 @@ void BRDBus::Scan(const QStringList& names)
                                BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
                 SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                               tr("Failed to scan."),
-                              calledUniqueName);
+                              m_scanUniqueName);
                 return;
             }
 
@@ -570,7 +555,7 @@ void BRDBus::Scan(const QStringList& names)
                                BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND));
                 SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                               tr("Failed to scan."),
-                              calledUniqueName);
+                              m_scanUniqueName);
                 return;
             }
 
@@ -600,7 +585,7 @@ void BRDBus::Scan(const QStringList& names)
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID));
         SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to scan."),
-                      calledUniqueName);
+                      m_scanUniqueName);
         return;
     }
     QObject::disconnect(this->m_scanJob.get(), &Job::processFinished, 0, 0);
@@ -614,12 +599,9 @@ void BRDBus::Scan(const QStringList& names)
                        BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED));
         SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to scan."),
-                      calledUniqueName);
+                      m_scanUniqueName);
         return;
     }
-    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("Scan %1 items").arg(names.size()),
-                    calledUniqueName);
 }
 
 void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
@@ -629,7 +611,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
             QDBusConnection::systemBus().send(message.createReply());
         });
     KLOG_DEBUG() << "Carry out reinforcement progress. range is " << names.join(" ").toLocal8Bit();
-    auto calledUniqueName = message.service();
+    m_reforceUniqueName = message.service();
     m_isScanFlag = false;
     // 已经在加固则返回错误
     if (this->m_reinforceJob && this->m_reinforceJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
@@ -638,12 +620,13 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         QDBusConnection::systemBus().send(replyMessage);
         SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to reinforcement."),
-                      calledUniqueName);
+                      m_reforceUniqueName);
         return;
     }
     this->m_reinforceJob = Job::create();
     // 加固前进行一次扫描
     Scan(names);
+    m_jobResult.clear();
 
     for (auto iter = names.begin(); iter != names.end(); ++iter)
     {
@@ -655,7 +638,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
             QDBusConnection::systemBus().send(replyMessage);
             SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                           tr("Failed to reinforcement."),
-                          calledUniqueName);
+                          m_reforceUniqueName);
             return;
         }
 
@@ -667,7 +650,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
             QDBusConnection::systemBus().send(replyMessage);
             SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                           tr("Failed to reinforcement."),
-                          calledUniqueName);
+                          m_reforceUniqueName);
             return;
         }
 
@@ -701,12 +684,9 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         QDBusConnection::systemBus().send(replyMessage);
         SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to reinforcement."),
-                      calledUniqueName);
+                      m_reforceUniqueName);
         return;
     }
-    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("Reinforce %1 items").arg(names.size()),
-                    calledUniqueName);
 }
 
 void BRDBus::Cancel(const qlonglong& jobID)
@@ -812,10 +792,77 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
 
     m_fallbackMethod = BRFallbackMethod(snapshotStatus);
     reinforce(message, names_rh);
-    m_fallbackMethod = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
     SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("Set fallback. snapshot status is %1").arg(snapshotStatus),
+                    tr("Set fallback. snapshot status is %1").arg(snapshotStatus == BR_FALLBACK_METHOD_INITIAL ? tr("init") : tr("pre")),
                     calledUniqueName);
+    m_fallbackMethod = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
+}
+
+void BRDBus::writeScanResultLog()
+{
+    int successCount = 0;
+    int failCount = 0;
+    // 扫描完成时，根据结果写日志
+    for (auto name : m_jobResult.keys())
+    {
+        // 成功
+        if (m_jobResult.value(name) == static_cast<int32_t>(BR_REINFORCEMENT_STATE_SAFE | BR_REINFORCEMENT_STATE_SCAN_DONE))
+        {
+            successCount++;
+            continue;
+        }
+        if (m_jobResult.value(name) == static_cast<int32_t>(BR_REINFORCEMENT_STATE_UNSAFE | BR_REINFORCEMENT_STATE_SCAN_DONE))
+        {
+            failCount++;
+            continue;
+        }
+    }
+    SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                    tr("Scan success %1, safe %2, unsafe %3.")
+                        .arg(QString::number(successCount + failCount), QString::number(successCount), QString::number(failCount)),
+                    m_scanUniqueName);
+}
+
+void BRDBus::writeReinforcementResultLog()
+{
+    int successCount = 0;
+    int failCount = 0;
+    // 加固完成时，根据结果写日志
+    for (auto name : m_jobResult.keys())
+    {
+        // 成功
+        if (static_cast<BRReinforcementState>(m_jobResult.value(name)) == BR_REINFORCEMENT_STATE_REINFORCE_DONE)
+        {
+            successCount++;
+            continue;
+        }
+        if (static_cast<BRReinforcementState>(m_jobResult.value(name)) == BR_REINFORCEMENT_STATE_REINFORCE_ERROR)
+        {
+            failCount++;
+            continue;
+        }
+    }
+    if (successCount == 0)
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                        tr("Reinforcement fail %1")
+                            .arg(QString::number(failCount)),
+                        m_reforceUniqueName);
+    }
+    else if (failCount != 0 && successCount != 0)
+    {
+        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                        tr("Reinforcement success %1, fail %2")
+                            .arg(QString::number(successCount), QString::number(failCount)),
+                        m_reforceUniqueName);
+    }
+    else
+    {
+        SSR_LOG_SUCCESS(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                        tr("Reinforcement success %1")
+                            .arg(QString::number(successCount)),
+                        m_reforceUniqueName);
+    }
 }
 
 void BRDBus::init()
@@ -857,6 +904,9 @@ void BRDBus::init()
         QObject::connect(this->m_resourceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
         m_resourceMonitorTimer->start(RESOURCEMONITORMS);
     }
+    // 读取加固项状态
+    connect(this, &BRDBus::ReinforceProgress, this, &BRDBus::readReinforceItemStatus);
+    connect(this, &BRDBus::ScanProgress, this, &BRDBus::readReinforceItemStatus);
 
     // 服务启动时自动扫描一次，获取系统默认配置存入rh-first文件
     if (!QFile::exists(RH_BR_OPERATE_DATA_FIRST))
@@ -1029,6 +1079,11 @@ bool BRDBus::setResourceMonitor()
 
 void BRDBus::finishedScanProgress()
 {
+    // 根据结果写日志，处于回退中和加固前的扫描不需要写
+    if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus() && m_isScanFlag)
+    {
+        writeScanResultLog();
+    }
     m_isScanFlag = true;
     m_isFinishRHWrite = true;
     // 回退中，不关注扫描完成
@@ -1040,6 +1095,11 @@ void BRDBus::finishedScanProgress()
 
 void BRDBus::finishedReinforceProgress()
 {
+    // 根据结果写日志，回退不需要写
+    if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
+    {
+        writeReinforcementResultLog();
+    }
     this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
     m_isScanFlag = true;
     emit ProgressFinished();
@@ -1116,6 +1176,18 @@ void BRDBus::updateRH(const QString& reinforceName, const QJsonObject& resultRet
             // 首次加固修改保存的历史操作文件
             this->m_configuration->setCustomRh(rhReinforcement, RH_BR_OPERATE_DATA_FIRST);
         }
+    }
+}
+
+void BRDBus::readReinforceItemStatus(const QString &jobResult)
+{
+    RETURN_IF_TRUE(jobResult.isEmpty())
+
+    std::istringstream istringStream(jobResult.toStdString());
+    auto result = KS::Protocol::br_job_result(istringStream, xml_schema::Flags::dont_validate);
+    for (auto reinforcement : result->reinforcement())
+    {
+        m_jobResult.insert(QString::fromStdString(reinforcement.name()), static_cast<int32_t>(reinforcement.state()));
     }
 }
 
