@@ -365,7 +365,7 @@ void PrivacyCleanupTable::cleanCheckedUsers()
     auto checkedUserName = m_model->getCheckedUserName();
     if (checkedUserName.isEmpty())
     {
-        POPUP_MESSAGE_DIALOG(tr("Please select items."))
+        POPUP_MESSAGE_DIALOG(tr("Please select items."));
         return;
     }
     auto reply = m_dbusProxy->RemoveUser(checkedUserName);
@@ -373,6 +373,7 @@ void PrivacyCleanupTable::cleanCheckedUsers()
     RETURN_IF_TRUE(reply.isError());
     m_model->setInfos(getTableInfos());
     m_model->delcheckedInfos();
+    POPUP_MESSAGE_DIALOG(tr("Delete success!"));
 }
 
 void PrivacyCleanupTable::initTable()
