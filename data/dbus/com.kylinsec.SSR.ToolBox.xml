@@ -10,7 +10,7 @@
             <description>control access.</description>
         </method>
 
-        <method name="GetSecurityContext">
+        <method name="GetFileMLSLabel">
             <arg type="s" name="file_paths" direction="in">
                 <summary>the path of destination files.</summary>
             </arg>
@@ -20,7 +20,47 @@
             <description>get file's security context.</description>
         </method>
 
-        <method name="SetSecurityContext">
+        <method name="SetFileMLSLabel">
+            <arg type="s" name="file_path" direction="in">
+                <summary>the path of destination file.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="in">
+                <summary>security context.</summary>
+            </arg>
+            <description>set file's security context.</description>
+        </method>
+
+        <method name="GetUserMLSLabel">
+            <arg type="s" name="user_name" direction="in">
+                <summary>the path of destination user.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="out">
+                <summary>security context.</summary>
+            </arg>
+            <description>get user's security context.</description>
+        </method>
+
+        <method name="SetUserMLSLabel">
+            <arg type="s" name="user_name" direction="in">
+                <summary>the path of destination user.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="in">
+                <summary>security context.</summary>
+            </arg>
+            <description>set user's security context.</description>
+        </method>
+
+        <method name="GetFileKICLabel">
+            <arg type="s" name="file_paths" direction="in">
+                <summary>the path of destination files.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="out">
+                <summary>security context.</summary>
+            </arg>
+            <description>get file's security context.</description>
+        </method>
+
+        <method name="SetFileKICLabel">
             <arg type="s" name="file_path" direction="in">
                 <summary>the path of destination file.</summary>
             </arg>
@@ -44,25 +84,25 @@
             <description>remove users.</description>
         </method>
 
-        <method name="GetFileListFromFileSign">
-            <arg type="as" name="file_list" direction="out">
-                <summary>the list of file who will be add.</summary>
+        <method name="GetObjListFromSecuritySign">
+            <arg type="as" name="obj_list" direction="out">
+                <summary>the list of security obj.</summary>
             </arg>
-            <description>get files from fileSign table.</description>
+            <description>get obj from securitySign table.</description>
         </method>
 
-        <method name="AddFileToFileSign">
-            <arg type="as" name="file_list" direction="in">
-                <summary>the list of file who will be add.</summary>
+        <method name="AddObjToSecuritySign">
+            <arg type="as" name="obj_list" direction="in">
+                <summary>the list of obj will be add.</summary>
             </arg>
-            <description>remove file from fileSign table.</description>
+            <description>add Object to securitySign table.</description>
         </method>
 
-        <method name="RemoveFileFromFileSign">
-            <arg type="as" name="file_list" direction="in">
-                <summary>the list of file who will be remove.</summary>
+        <method name="RemoveObjFromSecuritySign">
+            <arg type="as" name="obj_list" direction="in">
+                <summary>the list of obj who will be remove.</summary>
             </arg>
-            <description>remove file from fileSign table.</description>
+            <description>remove obj from securitySign table.</description>
         </method>
 
         <method name="GetFileListFromFileShred">
