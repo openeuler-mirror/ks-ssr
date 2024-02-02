@@ -20,8 +20,8 @@
 #include "QInputDialog"
 #include "include/ssr-i.h"
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/tool-box/file-sign/file-sign-table.h"
 #include "src/ui/tool-box/file-sign/add-user-dialog.h"
+#include "src/ui/tool-box/file-sign/file-sign-table.h"
 #include "src/ui/tool-box/file-sign/modify-security-context.h"
 #include "src/ui/toolbox_dbus_proxy.h"
 #include "src/ui/ui_file-sign-page.h"
@@ -61,7 +61,7 @@ FileSign::FileSign(QWidget* parent)
     m_ui->m_clean->setCursor(Qt::PointingHandCursor);
     initConnection();
     // 获取保存在数据库中的标记的文件列表,
-    updateTableData(m_dbusProxy->GetFileListFromFileSign().value());
+    updateTableData(m_dbusProxy->GetObjListFromSecuritySign().value());
 }
 
 FileSign::~FileSign()
@@ -90,7 +90,7 @@ void FileSign::openFileDialog(bool)
     RETURN_IF_TRUE(files.isEmpty());
     // 不在这里更新前台中的数据， 通过监听后台的 FileSignListChanged 信号实现前台数据更新。
     // updateTableData(files);
-    m_dbusProxy->AddFileToFileSign(files);
+    m_dbusProxy->AddObjToSecuritySign(files);
 }
 
 QString FileSign::getAccountRoleName()
@@ -105,8 +105,14 @@ void FileSign::updateTableData(const QStringList& fileList)
     FileSignRecordMap newData;
     for (const auto& file : fileList)
     {
-#pragma message("完整性标签需要内核支持，内核支持后使用 rbapol 工具即可获取标签")
-        newData[file] = {false, file, m_dbusProxy->GetSecurityContext(file).value(), "完整性标签需要内核支持，内核支持后使用 rbapol 工具即可获取标签"};
+        if (file.startsWith('/'))
+        {
+            newData[file] = {false, file, m_dbusProxy->GetFileMLSLabel(file).value(), m_dbusProxy->GetFileKICLabel(file).value()};
+        }
+        else
+        {
+            newData[file] = {false, file, m_dbusProxy->GetUserMLSLabel(file).value(), ""};
+        }
     }
     m_ui->m_fileSignTable->updateData(newData);
 }
@@ -115,43 +121,43 @@ void FileSign::initConnection()
 {
     connect(m_ui->m_search, SIGNAL(textChanged(const QString&)), m_ui->m_fileSignTable, SLOT(searchTextChanged(const QString&)));
     connect(m_ui->m_refresh, &QPushButton::clicked, [this]
-                     {
-                         auto reply = m_dbusProxy->GetFileListFromFileSign();
-                         CHECK_ERROR_FOR_DBUS_REPLY(reply);
-                         updateTableData(reply.value());
-                     });
+            {
+                auto reply = m_dbusProxy->GetObjListFromSecuritySign();
+                CHECK_ERROR_FOR_DBUS_REPLY(reply);
+                updateTableData(reply.value());
+            });
     connect(m_ui->m_selectFile, &QPushButton::clicked, this, &FileSign::openFileDialog);
     connect(m_ui->m_selectUser, &QPushButton::clicked, [this](bool)
-                     {
-                        m_inputUsers = new AddUserDialog(this);
-                        connect(m_inputUsers, &AddUserDialog::accepted, this, [this]
-                                    {
-                                        // TODO 获取用户，传入后台，更新列表
-                                        auto userList = m_inputUsers->getUserList();
-                                        // m_dbusProxy->AddUserToFileSign(userList);
-                                    });
-                        auto x = window()->x() + window()->width() / 2 - m_inputUsers->width() / 2;
-                        auto y = window()->y() + window()->height() / 2 - m_inputUsers->height() / 2;
-                        m_inputUsers->move(x, y);
-                        m_inputUsers->show();
-                     });
+            {
+                m_inputUsers = new AddUserDialog(this);
+                connect(m_inputUsers, &AddUserDialog::accepted, this, [this]
+                        {
+                            auto userList = m_inputUsers->getUserList();
+                            auto reply = m_dbusProxy->AddObjToSecuritySign(userList);
+                            CHECK_ERROR_FOR_DBUS_REPLY(reply);
+                        });
+                auto x = window()->x() + window()->width() / 2 - m_inputUsers->width() / 2;
+                auto y = window()->y() + window()->height() / 2 - m_inputUsers->height() / 2;
+                m_inputUsers->move(x, y);
+                m_inputUsers->show();
+            });
     connect(m_ui->m_clean, &QPushButton::clicked, [this](bool)
-                     {
-                         auto reply = m_dbusProxy->RemoveFileFromFileSign(m_ui->m_fileSignTable->getSelectData());
-                         CHECK_ERROR_FOR_DBUS_REPLY(reply);
-                     });
+            {
+                auto reply = m_dbusProxy->RemoveObjFromSecuritySign(m_ui->m_fileSignTable->getSelectData());
+                CHECK_ERROR_FOR_DBUS_REPLY(reply);
+            });
     m_ui->m_tips->setText(tr("A total of %1 records").arg((m_ui->m_fileSignTable->getData().size())));
     connect(m_ui->m_fileSignTable, &FileSignTable::dataSizeChanged, [this]
-                     {
-                         m_ui->m_tips->setText(tr("A total of %1 records").arg(m_ui->m_fileSignTable->getData().size()));
-                     });
+            {
+                m_ui->m_tips->setText(tr("A total of %1 records").arg(m_ui->m_fileSignTable->getData().size()));
+            });
     connect(m_ui->m_fileSignTable, &FileSignTable::clicked, this, &FileSign::popModifySecurityContext);
     connect(m_dbusProxy, &ToolBoxDbusProxy::FileSignListChanged, [this]
-                     {
-                         auto reply = m_dbusProxy->GetFileListFromFileSign();
-                         CHECK_ERROR_FOR_DBUS_REPLY(reply);
-                         updateTableData(reply.value());
-                     });
+            {
+                auto reply = m_dbusProxy->GetObjListFromSecuritySign();
+                CHECK_ERROR_FOR_DBUS_REPLY(reply);
+                updateTableData(reply.value());
+            });
 }
 
 void FileSign::popModifySecurityContext(const QModelIndex& index)
@@ -175,8 +181,15 @@ void FileSign::popModifySecurityContext(const QModelIndex& index)
 void FileSign::acceptedSecurityContext()
 {
     RETURN_IF_TRUE(m_modifySecurityContext->getFilePath().isEmpty());
-    // TODO 获取完整性标签内容getIntegrityLabel，传入后台
-    auto reply = m_dbusProxy->SetSecurityContext(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getSecurityContext());
+    if (m_modifySecurityContext->getFilePath().startsWith('/'))
+    {
+        auto reply = m_dbusProxy->SetFileMLSLabel(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getSecurityContext());
+        CHECK_ERROR_FOR_DBUS_REPLY(reply);
+        reply = m_dbusProxy->SetFileKICLabel(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getIntegrityLabel());
+        CHECK_ERROR_FOR_DBUS_REPLY(reply);
+        return;
+    }
+    auto reply = m_dbusProxy->SetUserMLSLabel(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getSecurityContext());
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
 }
 }  // namespace ToolBox
