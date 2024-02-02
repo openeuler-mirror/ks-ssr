@@ -29,7 +29,6 @@ namespace DM
 {
 struct DeviceInfo
 {
-    DeviceInfo() = default;
     int number;
     QString name;
     DeviceType type;

@@ -34,6 +34,7 @@ public:
     QString getCurrentPassword();
     QString getNewPassword();
     void setTitleNameTail(const QString &tail);
+    void clearLineText();
 
 private:
     void init();

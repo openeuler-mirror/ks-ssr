@@ -2,7 +2,7 @@
 
 try:
     import configparser
-except:
+except Exception:
     import ConfigParser as configparser
 
 import json
@@ -45,7 +45,6 @@ DEAFULT_DELETE_USERS = ("lp", "games", "operator", "adm")
 
 SURPLUS_DELETE_ENABLED = "enabled"
 
-# GET_USER_NAME_CMD = "eval getent passwd {$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)..$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)} | cut -d: -f1"
 GET_MINIMUM_UID = "awk '/^UID_MIN/ {print $2}' /etc/login.defs"
 GET_MAXIMUM_UID = "awk '/^UID_MAX/ {print $2}' /etc/login.defs"
 
@@ -54,7 +53,7 @@ class Accounts:
     def check_user_exists(self, username):
         try:
             # 使用pwd.getpwnam函数获取用户信息
-            user_info = pwd.getpwnam(username)
+            pwd.getpwnam(username)
             # 如果获取到用户信息，则用户存在
             return True
         except Exception as e:
@@ -89,19 +88,25 @@ class Accounts:
         # 兼容python2和python3
         try:
             return (spwdent.sp_pwd == "" or spwdent.sp_pwd == "!!" or spwdent.sp_pwd == "!")
-        except:
+        except Exception:
             return (spwdent.sp_pwdp == "" or spwdent.sp_pwdp == "!!" or spwdent.sp_pwdp == "!")
-
-    # def get_user_name(self, permission_users):
-    #     output = br.utils.subprocess_has_output(GET_USER_NAME_CMD)
-    #     permission_users += output.encode().split('\n')
-    #     br.log.debug(list(permission_users))
 
 
 class LoginLimit(Accounts):
     def __init__(self):
         self.conf = configparser.ConfigParser()
         self.conf.read(ACCOUNTS_INI_FILEPATH)
+
+    def set_permission_user(self, permission_users):
+        # 过检需求，这个名单直接设置为可登录
+        for permission_user in permission_users:
+            if permission_user == "" or permission_user == "\"\"":
+                continue
+            if not self.check_user_exists(permission_user):
+                continue
+            
+            br.utils.subprocess_not_output(
+                "usermod -s /bin/bash {0}".format(permission_user))
 
     def get(self):
         retdata = dict()
@@ -127,29 +132,22 @@ class LoginLimit(Accounts):
                       args[LOGIN_LIMIT_ARG_PERMISSION_USERS])
         try:
             self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
-        except:
+        except Exception:
             self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'w'))
         permission_users = args[LOGIN_LIMIT_ARG_PERMISSION_USERS].split(";")
+        self.set_permission_user(permission_users)
 
-        if args[LOGIN_LIMIT_ARG_ENABLED]:
-            for pwdent in pwd.getpwall():
-                if ((not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or BUILTIN_PERMISSION_USERS.__contains__(pwdent.pw_name)
-                        or permission_users.__contains__(pwdent.pw_name)):
-                    br.log.debug(str(pwdent.pw_name))
-                    continue
-                if not self.is_nologin_shell(pwdent.pw_shell):
-                    br.utils.subprocess_not_output(
-                        "usermod -s /sbin/nologin {0}".format(pwdent.pw_name))
-        # 过检需求，这个名单直接设置为可登录
-        for permission_user in permission_users:
-            if permission_user == "" or permission_user == "\"\"":
+        if not args[LOGIN_LIMIT_ARG_ENABLED]:
+            return (True, '')
+        for pwdent in pwd.getpwall():
+            if ((not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or BUILTIN_PERMISSION_USERS.__contains__(pwdent.pw_name)
+                    or permission_users.__contains__(pwdent.pw_name)):
+                br.log.debug(str(pwdent.pw_name))
                 continue
-            if not self.check_user_exists(permission_user):
-                continue
-            
-            br.utils.subprocess_not_output(
-                "usermod -s /bin/bash {0}".format(permission_user))
-
+            if not self.is_nologin_shell(pwdent.pw_shell):
+                br.utils.subprocess_not_output(
+                    "usermod -s /sbin/nologin {0}".format(pwdent.pw_name))
+        
         return (True, '')
 
 
@@ -215,7 +213,7 @@ class SurplusUser():
                       ALK_MODE_DELETE_USERS, args[SURPLUS_DELETE_USERS])
         try:
             self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
-        except:
+        except Exception:
             self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'w'))
         delete_users = args[SURPLUS_DELETE_USERS].split(";")
 

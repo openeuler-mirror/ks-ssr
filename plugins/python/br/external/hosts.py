@@ -4,7 +4,6 @@ import json
 import os
 import br.configuration
 import br.systemd
-# import br.sshd
 
 HOSTS_ALLOW_CONF_PATH = "/etc/hosts.allow"
 HOSTS_DENY_CONF_PATH = "/etc/hosts.deny"
@@ -41,14 +40,51 @@ class Hosts:
                     SSHD_ALLOWUSERS_KEY + " br", next_line)
             if len(br.utils.subprocess_has_output("cat {0} |grep '{1}' ".format(SSHD_CONF_PATH, SSHD_DENYUSERS_KEY))) == 0:
                 self.conf_deny.set_line(SSHD_DENYUSERS_KEY + " br", next_line)
-            # 注释
-            # if len(self.conf.get_value(SSHD_ALLOWUSERS_KEY)) == 0:
-            #     self.conf_allow.del_line()
-            # if len(self.conf.get_value(SSHD_DENYUSERS_KEY)) == 0:
-            #     self.conf_deny.del_line()
 
 
 class RemoteLogin(Hosts):
+    def set_etc_hosts(self, arg_allow, arg_deny):
+        if len(arg_allow) > 0:
+            self.allow_conf.set_value(
+                "sshd", arg_allow)
+        else:
+            self.allow_conf.del_record("sshd")
+
+        if len(arg_deny) > 0:
+            self.deny_conf.set_value(
+                "sshd", arg_deny)
+        else:
+            self.deny_conf.del_record("sshd")
+
+    def set_ssh_allow(self, arg_allow):
+        # 不能加到sftp配置之后
+        # 需特殊处理，使用PAM类型与KV类型相结合处理
+        if len(arg_allow) > 0:
+            hosts = ""
+            for host in arg_allow.split(","):
+                host = "*@" + host + "*"
+                hosts = hosts + " " + host
+            # 删除这一行再添加，KV类型无法获取以空格隔开的值
+            br.utils.subprocess_not_output(
+                "sed -i '/{0}/d' {1}".format(SSHD_ALLOWUSERS_KEY, SSHD_CONF_PATH))
+            self.check_sftp()
+            self.conf.set_value(SSHD_ALLOWUSERS_KEY, hosts[1:])
+        else:
+            self.conf_allow.del_line()
+            
+    def set_ssh_deny(self, arg_deny):
+        if len(arg_deny) > 0:
+            hosts = ""
+            for host in arg_deny.split(","):
+                host = "*@" + host + "*"
+                hosts = hosts + " " + host
+            br.utils.subprocess_not_output(
+                "sed -i '/{0}/d' {1}".format(SSHD_DENYUSERS_KEY, SSHD_CONF_PATH))
+            self.check_sftp()
+            self.conf.set_value(SSHD_DENYUSERS_KEY, hosts[1:])
+        else:
+            self.conf_deny.del_line()
+
     def get(self):
         retdata = dict()
         if os.path.exists(HOSTS_ALLOW_CONF_PATH):
@@ -66,43 +102,10 @@ class RemoteLogin(Hosts):
     def set(self, args_json):
         args = json.loads(args_json)
         if os.path.exists(HOSTS_ALLOW_CONF_PATH):
-            if len(args[REMOTE_LOGIN_ARG_ALLOW_HOSTS]) > 0:
-                self.allow_conf.set_value(
-                    "sshd", args[REMOTE_LOGIN_ARG_ALLOW_HOSTS])
-            else:
-                self.allow_conf.del_record("sshd")
-
-            if len(args[REMOTE_LOGIN_ARG_DENY_HOSTS]) > 0:
-                self.deny_conf.set_value(
-                    "sshd", args[REMOTE_LOGIN_ARG_DENY_HOSTS])
-            else:
-                self.deny_conf.del_record("sshd")
+            self.set_etc_hosts(args[REMOTE_LOGIN_ARG_ALLOW_HOSTS], args[REMOTE_LOGIN_ARG_DENY_HOSTS])
         else:
-            # 不能加到sftp配置之后
-            # 需特殊处理，使用PAM类型与KV类型相结合处理
-            if len(args[REMOTE_LOGIN_ARG_ALLOW_HOSTS]) > 0:
-                hosts = ""
-                for host in args[REMOTE_LOGIN_ARG_ALLOW_HOSTS].split(","):
-                    host = "*@" + host + "*"
-                    hosts = hosts + " " + host
-                # 删除这一行再添加，KV类型无法获取以空格隔开的值
-                br.utils.subprocess_not_output(
-                    "sed -i '/{0}/d' {1}".format(SSHD_ALLOWUSERS_KEY, SSHD_CONF_PATH))
-                self.check_sftp()
-                self.conf.set_value(SSHD_ALLOWUSERS_KEY, hosts[1:])
-            else:
-                self.conf_allow.del_line()
-            if len(args[REMOTE_LOGIN_ARG_DENY_HOSTS]) > 0:
-                hosts = ""
-                for host in args[REMOTE_LOGIN_ARG_DENY_HOSTS].split(","):
-                    host = "*@" + host + "*"
-                    hosts = hosts + " " + host
-                br.utils.subprocess_not_output(
-                    "sed -i '/{0}/d' {1}".format(SSHD_DENYUSERS_KEY, SSHD_CONF_PATH))
-                self.check_sftp()
-                self.conf.set_value(SSHD_DENYUSERS_KEY, hosts[1:])
-            else:
-                self.conf_deny.del_line()
+            self.set_ssh_allow(args[REMOTE_LOGIN_ARG_ALLOW_HOSTS])
+            self.set_ssh_deny(args[REMOTE_LOGIN_ARG_DENY_HOSTS])
 
             if self.conf.get_value(SSHD_ALLOWUSERS_KEY) == 'br':
                 self.conf_allow.del_line()

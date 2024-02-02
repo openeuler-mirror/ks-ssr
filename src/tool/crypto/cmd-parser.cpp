@@ -27,52 +27,54 @@ namespace Crypto
 {
 #define BR_RSA_LENGTH 1024
 
-CmdParser::CmdParser() /** : option_group_(PROJECT_NAME, "group options") **/
+/** : option_group_(PROJECT_NAME, "group options") **/
+CmdParser::CmdParser() : m_options({}),
+                         m_parser()
 {
 }
 
 void CmdParser::init()
 {
-    this->parser.addHelpOption();
-    this->parser.addVersionOption();
-    this->parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
-    this->parser.addOption({"generate-rsa-key",
+    this->m_parser.addHelpOption();
+    this->m_parser.addVersionOption();
+    this->m_parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
+    this->m_parser.addOption({"generate-rsa-key",
                             QObject::tr("Generate public and private keys for RSA."), "path"});
-    this->parser.addOption({"decrypt-file",
+    this->m_parser.addOption({"decrypt-file",
                             QObject::tr("Decrypt a file."), "path"});
-    this->parser.addOption({"encrypt-file",
+    this->m_parser.addOption({"encrypt-file",
                             QObject::tr("Encrypt a file."), "path"});
-    this->parser.addOption({"public-key",
+    this->m_parser.addOption({"public-key",
                             QObject::tr("RSA public file path."), "path"});
-    this->parser.addOption({"private-key",
+    this->m_parser.addOption({"private-key",
                             QObject::tr("RSA private file path."), "path"});
-    this->parser.addOption({"output-file",
+    this->m_parser.addOption({"output-file",
                             QObject::tr("Output file path."), "path"});
 }
 
 int CmdParser::run(QCoreApplication& a)
 {
-    this->parser.process(a);
+    this->m_parser.process(a);
 
-    this->options_ = {
-        QVariant(this->parser.value("version")).toBool(),
-        QVariant(this->parser.value("generate-rsa-key")).toBool(),
-        this->parser.value("decrypt-file"),
-        this->parser.value("encrypt-file"),
-        this->parser.value("public-key"),
-        this->parser.value("private-key"),
-        this->parser.value("output-file"),
+    this->m_options = {
+        QVariant(this->m_parser.value("version")).toBool(),
+        QVariant(this->m_parser.value("generate-rsa-key")).toBool(),
+        this->m_parser.value("decrypt-file"),
+        this->m_parser.value("encrypt-file"),
+        this->m_parser.value("public-key"),
+        this->m_parser.value("private-key"),
+        this->m_parser.value("output-file"),
     };
 
-    if (this->options_.generate_rsa_key)
+    if (this->m_options.generate_rsa_key)
     {
         KS::CryptoHelper::generate_rsa_key(BR_RSA_LENGTH, "br-public.key", "br-private.key");
     }
-    else if (!this->options_.decrypted_file.isEmpty())
+    else if (!this->m_options.decrypted_file.isEmpty())
     {
         RETURN_VAL_IF_FALSE(this->processDecryptFile(), EXIT_FAILURE);
     }
-    else if (!this->options_.encrypted_file.isEmpty())
+    else if (!this->m_options.encrypted_file.isEmpty())
     {
         RETURN_VAL_IF_FALSE(this->processEncryptFile(), EXIT_FAILURE);
     }
@@ -86,31 +88,31 @@ int CmdParser::run(QCoreApplication& a)
 
 bool CmdParser::processDecryptFile()
 {
-    if (this->options_.public_filename.isEmpty())
+    if (this->m_options.public_filename.isEmpty())
     {
         cerr << "RSA public file isn't provided." << endl;
         // fmt::print(stderr, "RSA public file isn't provided.");
         return false;
     }
 
-    if (this->options_.output_filename.isEmpty())
+    if (this->m_options.output_filename.isEmpty())
     {
         cerr << "Output file isn't provided." << endl;
         // fmt::print(stderr, "Output file isn't provided.");
         return false;
     }
 
-    QFile decrypted_file(this->options_.decrypted_file);
-    QFile output_file(this->options_.output_filename);
+    QFile decrypted_file(this->m_options.decrypted_file);
+    QFile output_file(this->m_options.output_filename);
     if (!decrypted_file.open(QIODevice::OpenModeFlag::ReadOnly) ||
         !output_file.open(QIODevice::OpenModeFlag::WriteOnly | QIODevice::OpenModeFlag::Truncate))
     {
         cerr << "Failed to open decrypted file or output file " << endl;
-        cerr << "decrypted file : " << this->options_.decrypted_file.toStdString() << endl;
-        cerr << "output file : " << this->options_.output_filename.toStdString() << endl;
+        cerr << "decrypted file : " << this->m_options.decrypted_file.toStdString() << endl;
+        cerr << "output file : " << this->m_options.output_filename.toStdString() << endl;
         return false;
     }
-    auto decrypted_message = KS::CryptoHelper::brDecrypt(this->options_.public_filename, decrypted_file.readAll());
+    auto decrypted_message = KS::CryptoHelper::brDecrypt(this->m_options.public_filename, decrypted_file.readAll());
     RETURN_VAL_IF_TRUE(decrypted_message.isEmpty(), false);
     output_file.write(decrypted_message.toUtf8());
     decrypted_file.close();
@@ -120,33 +122,33 @@ bool CmdParser::processDecryptFile()
 
 bool CmdParser::processEncryptFile()
 {
-    if (this->options_.private_filename.isEmpty())
+    if (this->m_options.private_filename.isEmpty())
     {
         cerr << "RSA private file isn't provided." << endl;
         return false;
     }
 
-    if (this->options_.output_filename.isEmpty())
+    if (this->m_options.output_filename.isEmpty())
     {
         cerr << "Output file isn't provided." << endl;
         return false;
     }
 
-    QFile encrypted_file(this->options_.encrypted_file);
-    QFile output_file(this->options_.output_filename);
+    QFile encrypted_file(this->m_options.encrypted_file);
+    QFile output_file(this->m_options.output_filename);
     if (!encrypted_file.open(QIODevice::OpenModeFlag::ReadOnly) ||
         !output_file.open(QIODevice::OpenModeFlag::WriteOnly | QIODevice::OpenModeFlag::Truncate))
     {
         cerr << "Failed to open encrypted file or output file " << endl;
-        cerr << "encrypted file : " << this->options_.encrypted_file.toStdString() << endl;
-        cerr << "output file : " << this->options_.output_filename.toStdString() << endl;
+        cerr << "encrypted file : " << this->m_options.encrypted_file.toStdString() << endl;
+        cerr << "output file : " << this->m_options.output_filename.toStdString() << endl;
         return false;
     }
-    auto encrypted_message = KS::CryptoHelper::brEncrypt(this->options_.private_filename, encrypted_file.readAll());
+    auto encrypted_message = KS::CryptoHelper::brEncrypt(this->m_options.private_filename, encrypted_file.readAll());
     // fmt::print("{0}  message: {1} encrypted_message: {2}", this->encrypt_in_filename_, message, encrypted_message);
     RETURN_VAL_IF_TRUE(encrypted_message.isEmpty(), false);
     output_file.write(encrypted_message.toUtf8());
-    // Glib::file_set_contents(this->options_.output_filename.raw(), encrypted_message);
+    // Glib::file_set_contents(this->m_options.output_filename.raw(), encrypted_message);
     encrypted_file.close();
     output_file.close();
     return true;
