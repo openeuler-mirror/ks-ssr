@@ -31,22 +31,21 @@ struct CategoryArgs
     QString label;
     QString description;
     QString note;
-
+    // 构造函数
     CategoryArgs(const QString &n = "",
                  const QString &l = "",
                  const QString &r = "",
                  const QString &des = "",
                  const QString &e = "",
-                 const QString &t = "")  // 构造函数
+                 const QString &t = "") : name(n),
+                                          jsonValue(""),
+                                          widgetType(KS::Protocol::WidgetType::Value::DEFAULT),
+                                          valueLimits(r),
+                                          inputExample(e),
+                                          label(l),
+                                          description(des),
+                                          note(t)
     {
-        name = n;
-        jsonValue = "";
-        label = l;
-        valueLimits = r;
-        inputExample = e;
-        description = des;
-        widgetType = KS::Protocol::WidgetType::Value::DEFAULT;
-        note = t;
     }
 };
 

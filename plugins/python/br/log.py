@@ -1,7 +1,6 @@
 try:
     import klog
-except:
-
+except Exception:
     class klog:
         @staticmethod
         def debug(msg):

@@ -47,10 +47,17 @@ private:
 };
 
 CalendarWidget::CalendarWidget(QWidget *parent)
-    : QCalendarWidget(parent)
+    : QCalendarWidget(parent),
+      m_leftYearBtn(nullptr),
+      m_leftMonthBtn(nullptr),
+      m_rightYearBtn(nullptr),
+      m_rightMonthBtn(nullptr),
+      m_ensureBtn(nullptr),
+      m_toDayBtn(nullptr),
+      m_dataLabel(nullptr),
+      m_selectableStart(minimumDate()),
+      m_selectableEnd(maximumDate())
 {
-    m_selectableStart = minimumDate();
-    m_selectableEnd = maximumDate();
     initControl();
 }
 
@@ -77,14 +84,14 @@ void CalendarWidget::setSelectableEnd(QDate end)
 
 QDate CalendarWidget::getSelectableStart()
 {
-    return m_selectableStart;
     updateCells();
+    return m_selectableStart;
 }
 
 QDate CalendarWidget::getSelectableEnd()
 {
-    return m_selectableEnd;
     updateCells();
+    return m_selectableEnd;
 }
 
 void CalendarWidget::hideNextButton()

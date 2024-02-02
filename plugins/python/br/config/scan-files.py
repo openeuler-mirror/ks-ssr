@@ -25,8 +25,6 @@ class NouserFiles:
                 if (len(tmp_output)):
                     tmp_output += '\n'
                 scan_output += tmp_output
-                # br.log.debug("scan_onuser_output = ")
-                # br.log.debug(scan_output)
         if scan_output == "":
             retdata["nouser_files"] = "\n"
         else:
@@ -60,9 +58,6 @@ class AuthorityFiles:
                 if (len(tmp_output)):
                     tmp_output += '\n'
                 scan_output += tmp_output
-                # br.log.debug("scan_777_files_output = ")
-                # br.log.debug(scan_output)
-
         if scan_output == "":
             retdata["authority_files"] = "\n"
         else:

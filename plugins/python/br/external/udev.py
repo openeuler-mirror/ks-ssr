@@ -8,12 +8,13 @@ UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-br-external.rules"
 DRIVER_BLACKLIST_PATH = "/etc/modprobe.d/br-blacklist.conf"
 RC_LOCAL_PATH = "/etc/rc.d/rc.local"
 
-# DISABLE_CDROM_RULE = "KERNEL==\\\"sr0\\\", ENV{UDISKS_IGNORE}=\\\"1\\\""
 DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", DRIVERS==\\\"usb-storage|uas\\\", ATTR{authorized}=\\\"0\\\""
 
 TTYPS_CMD_STR = "setserial /dev/ttyS"
 TTYPS_STATUS_CMD = "setserial -g /dev/ttyS"
 TTYPS_SUM_DEV_CMD = "ls /dev/ttyS* |wc -l"
+TTYPS_CHECK_CMD_TAIL = "| grep unknown"
+
 USB_SUM_DEV_CMD = "ls /proc/scsi/ |grep usb-storage"
 
 CDROM_STATUS_CMD = " cat /proc/modules |grep "
@@ -35,11 +36,11 @@ class UDev:
         self.conf = br.configuration.Table(UDEV_CONF_FILEPATH, ",\\s+")
         self.conf_rc = br.configuration.Table(RC_LOCAL_PATH, ",\\s+")
         command = 'chmod +x {0}'.format(RC_LOCAL_PATH)
-        outpur = br.utils.subprocess_has_output(command)
+        br.utils.subprocess_not_output(command)
 
     def reload(self):
         command = 'udevadm control --reload'
-        outpur = br.utils.subprocess_has_output(command)
+        br.utils.subprocess_not_output(command)
 
 
 class DRIVERS:
@@ -65,11 +66,11 @@ class DRIVERS:
         initramfs_name = 'initramfs-' + kernel_version + '.img'
         reload_initramfs = 'cd /boot/ ; {0} {1} ; cd -'.format(
             RELOAD_INITRAMFS, initramfs_name)
-        output = br.utils.subprocess_not_output(reload_initramfs)
+        br.utils.subprocess_not_output(reload_initramfs)
 
     def ignore_drive(self, opt_1='', opt_2='', opt_3=''):
         cmd = '{0}  {1}  {2} {3}'.format(RELOAD_INITRAMFS, opt_1, opt_2, opt_3)
-        output = br.utils.subprocess_not_output(cmd)
+        br.utils.subprocess_not_output(cmd)
 
 
 class CDROM(DRIVERS):
@@ -84,17 +85,16 @@ class CDROM(DRIVERS):
                     INSTALL_DRIVE, self.find_drive(CDROM_DRIVE))
                 cmd_sr_mod = '{0} {1}'.format(
                     INSTALL_DRIVE, self.find_drive(SR_MOD_DRIVE))
-                output_cdrom = br.utils.subprocess_has_output(cmd_cdrom)
-                output_sr_mod = br.utils.subprocess_has_output(cmd_sr_mod)
+                br.utils.subprocess_not_output(cmd_cdrom)
+                br.utils.subprocess_not_output(cmd_sr_mod)
 
                 # change the driver name
+                mv_cmd = "mv"
                 if cdrom_drive_path.find('.bak') > 0:
-                    mv_cdrom = 'mv {0} {1}'.format(
-                        cdrom_drive_path, cdrom_drive_path.replace('.bak', ''))
+                    mv_cdrom = '{0} {1} {2}'.format(mv_cmd, cdrom_drive_path, cdrom_drive_path.replace('.bak', ''))
                     br.utils.subprocess_not_output(mv_cdrom)
                 if sr_mod_drive_path.find('.bak') > 0:
-                    mv_sr_mod = 'mv {0} {1}'.format(
-                        sr_mod_drive_path, sr_mod_drive_path.replace('.bak', ''))
+                    mv_sr_mod = '{0} {1} {2}'.format(mv_cmd, sr_mod_drive_path, sr_mod_drive_path.replace('.bak', ''))
                     br.utils.subprocess_not_output(mv_sr_mod)
 
                 # reload initramfs
@@ -106,42 +106,43 @@ class CDROM(DRIVERS):
 
     def close(self):
         try:
-            if self.cdrom_status():
-                cdrom_drive_path = self.find_drive(CDROM_DRIVE)
-                sr_mod_drive_path = self.find_drive(SR_MOD_DRIVE)
+            if not self.cdrom_status():
+                return
+            cdrom_drive_path = self.find_drive(CDROM_DRIVE)
+            sr_mod_drive_path = self.find_drive(SR_MOD_DRIVE)
 
-                # uninstall the driver
-                cmd_cdrom = '{0} {1}'.format(UNINSTALL_DRIVE, CDROM_DRIVE)
-                cmd_sr_mod = '{0} {1}'.format(UNINSTALL_DRIVE, SR_MOD_DRIVE)
-                if self.sr_mod_status():
-                    br.utils.subprocess_has_output(cmd_sr_mod)
+            # uninstall the driver
+            cmd_cdrom = '{0} {1}'.format(UNINSTALL_DRIVE, CDROM_DRIVE)
+            cmd_sr_mod = '{0} {1}'.format(UNINSTALL_DRIVE, SR_MOD_DRIVE)
+            if self.sr_mod_status():
+                br.utils.subprocess_has_output(cmd_sr_mod)
 
-                other_mod = str(br.utils.subprocess_has_output(
-                    "cat /proc/modules |grep cdrom"))
-                if len(other_mod) != 0:
-                    other_names = other_mod.split(" ")[3].split(",")
-                else:
-                    other_names = list()
-                for other_name in other_names:
-                    if other_name == '' or other_name == '-':
-                        continue
-                    br.utils.subprocess_not_output(
-                        "{0} {1}".format(UNINSTALL_DRIVE, other_name))
+            other_mod = str(br.utils.subprocess_has_output(
+            "cat /proc/modules |grep cdrom"))
+            if len(other_mod) != 0:
+                other_names = other_mod.split(" ")[3].split(",")
+            else:
+                other_names = list()
+            for other_name in other_names:
+                if other_name == '' or other_name == '-':
+                    continue
+                br.utils.subprocess_not_output(
+                    "{0} {1}".format(UNINSTALL_DRIVE, other_name))
 
-                br.utils.subprocess_not_output(cmd_cdrom)
+            br.utils.subprocess_not_output(cmd_cdrom)
 
-                # change the driver name and retain the backup
-                if cdrom_drive_path.find('.bak') < 0:
-                    mv_cdrom = 'mv {0} {1}'.format(
-                        cdrom_drive_path, cdrom_drive_path + '.bak')
-                    br.utils.subprocess_not_output(mv_cdrom)
-                if not sr_mod_drive_path.find('.bak') < 0:
-                    mv_sr_mod = 'mv {0} {1}'.format(
-                        sr_mod_drive_path, sr_mod_drive_path + '.bak')
-                    br.utils.subprocess_not_output(mv_sr_mod)
+            # change the driver name and retain the backup
+            if cdrom_drive_path.find('.bak') < 0:
+                mv_cdrom = 'mv {0} {1}'.format(
+                    cdrom_drive_path, cdrom_drive_path + '.bak')
+                br.utils.subprocess_not_output(mv_cdrom)
+            if not sr_mod_drive_path.find('.bak') < 0:
+                mv_sr_mod = 'mv {0} {1}'.format(
+                    sr_mod_drive_path, sr_mod_drive_path + '.bak')
+                br.utils.subprocess_not_output(mv_sr_mod)
 
-                # reload initramfs
-                # self.reload_drive(self.get_kernel_version())
+            # reload initramfs
+            # self.reload_drive(self.get_kernel_version())
 
         except Exception as e:
             br.log.debug('Exception_close', e)
@@ -205,7 +206,7 @@ class USB(DRIVERS):
                 # install the driver
                 cmd_usb_storage = '{0} {1}'.format(
                     INSTALL_DRIVE, self.find_drive(USB_STORAGE_DRIVE))
-                output_usb_storage = br.utils.subprocess_has_output(
+                br.utils.subprocess_not_output(
                     cmd_usb_storage)
 
                 # change the driver name
@@ -264,7 +265,7 @@ class USB(DRIVERS):
     def set(self, args_json):
         args = json.loads(args_json)
         if not self.flag_usb:
-            output = br.utils.subprocess_has_output_ignore_error_handling(
+            br.utils.subprocess_has_output_ignore_error_handling(
                 "modprobe {0}".format(USB_STORAGE_DRIVE))
             self.ignore_drive("-o {0}".format(USB_STORAGE_DRIVE))
             self.flag_usb = True
@@ -294,7 +295,7 @@ class TTYS(UDev):
         output_nums_get = int(output_get)
         while int(index_get) < output_nums_get:
             flag_cmd = TTYPS_STATUS_CMD + str(index_get)
-            command_status = '{0} | grep unknown'.format(flag_cmd)
+            command_status = '{0} {1}'.format(flag_cmd, TTYPS_CHECK_CMD_TAIL)
             flag = br.utils.subprocess_has_output(command_status)
             if len(flag) != 0:
                 list_get.append("disabled")
@@ -324,8 +325,7 @@ class TTYS(UDev):
         if args[TTYS_ARG_ENABLED]:
             while open_index < output_nums:
                 flag_open_cmd = TTYPS_STATUS_CMD + str(open_index)
-                command_open_status = '{0} | grep unknown'.format(
-                    flag_open_cmd)
+                command_open_status = '{0} {1}'.format(flag_open_cmd, TTYPS_CHECK_CMD_TAIL)
                 flag_open = br.utils.subprocess_has_output(
                     command_open_status)
                 ttys_open_cmd = TTYPS_CMD_STR + \
@@ -340,8 +340,7 @@ class TTYS(UDev):
         else:
             while close_index < output_nums:
                 flag_close_cmd = TTYPS_STATUS_CMD + str(close_index)
-                command_close_status = '{0} | grep unknown'.format(
-                    flag_close_cmd)
+                command_close_status = '{0} {1}'.format(flag_close_cmd, TTYPS_CHECK_CMD_TAIL)
                 flag_close = br.utils.subprocess_has_output(
                     command_close_status)
                 ttys_close_cmd = TTYPS_CMD_STR + \

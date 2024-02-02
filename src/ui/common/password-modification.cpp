@@ -45,6 +45,13 @@ void PasswordModification::setTitleNameTail(const QString &tail)
     setTitle(QString(tr("Modify Password - %1").arg(tail)));
 }
 
+void PasswordModification::clearLineText()
+{
+    m_ui->m_currentPassword->setText("");
+    m_ui->m_newPassword->setText("");
+    m_ui->m_confirmPassword->setText("");
+}
+
 void PasswordModification::init()
 {
     // 页面关闭时销毁
@@ -100,11 +107,7 @@ void PasswordModification::acceptedPasswordModification()
         POPUP_MESSAGE_DIALOG(QString(tr("Please confirm whether the password is consistent.")));
         return;
     }
-
-    emit accepted();
     close();
-    m_ui->m_currentPassword->setText("");
-    m_ui->m_newPassword->setText("");
-    m_ui->m_confirmPassword->setText("");
+    emit accepted();
 }
 }  // namespace KS

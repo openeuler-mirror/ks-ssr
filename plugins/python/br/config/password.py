@@ -8,7 +8,6 @@ import spwd
 PASSWORD_EXPIRED_CONF_PATH = "/etc/login.defs"
 PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS = "PASS_MAX_DAYS"
 PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS = "PASS_MIN_DAYS"
-# PASSWORD_EXPIRED_CONF_KEY_MIN_LEN  = "PASS_MIN_LEN"
 PASSWORD_EXPIRED_CONF_KEY_WARN_AGE = "PASS_WARN_AGE"
 
 PASSWORD_COMPLEXTIY_CONF_PATH = "/etc/security/pwquality.conf"
@@ -51,7 +50,6 @@ class PasswordExpired:
             self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS))
         retdata[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS] = int(
             self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS))
-        # retdata[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN]  = int(self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_MIN_LEN))
         retdata[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE] = int(
             self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_WARN_AGE))
         # br.log.debug(22222)

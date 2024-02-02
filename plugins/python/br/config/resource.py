@@ -19,10 +19,6 @@ RESOURCE_LIMITS_KEY_RSS_HARD = "*                hard    rss"
 RESOURCE_LIMITS_STACK_CMD = "ulimit -s"
 RESOURCE_LIMITS_RSS_CMD = "ulimit -m"
 
-# RESOURCE_LIMITS_KEY_STACK  = "*stack"
-# RESOURCE_LIMITS_KEY_RSS = "*rss"
-
-
 HISTORY_SIZE_LIMIT_CONF_PATH = "/etc/profile.d/br-config.sh"
 HISTORY_SIZE_LIMIT_CONF_PROFILE_PATH = "/etc/profile"
 HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH = "/etc/bashrc"
@@ -54,20 +50,14 @@ class ResourceLimits:
         rss_cmd = "{0}".format(RESOURCE_LIMITS_RSS_CMD)
         rss_output = br.utils.subprocess_has_output(rss_cmd)
 
-        stack = self.conf.get_value(RESOURCE_LIMITS_KEY_STACK_HARD)
-        rss = self.conf.get_value(RESOURCE_LIMITS_KEY_RSS_HARD)
-
         stack_file_output = br.utils.subprocess_has_output(
             'grep -r \"unlimited\" {0} | grep stack'.format(RESOURCE_LIMITS_CONF_PATH))
-        rss_file_ouput = br.utils.subprocess_has_output(
+        rss_file_output = br.utils.subprocess_has_output(
             'grep -r \"unlimited\" {0} | grep rss'.format(RESOURCE_LIMITS_CONF_PATH))
-
-        # stack = self.conf.get_value(RESOURCE_LIMITS_KEY_STACK_HARD)
-        # rss  = self.conf.get_value(RESOURCE_LIMITS_KEY_RSS_HARD)
         br.log.debug(rss_output)
         br.log.debug(stack_output)
 
-        if len(stack_file_output) != 0 or len(rss_file_ouput) != 0:
+        if len(stack_file_output) != 0 or len(rss_file_output) != 0:
             retdata['enabled'] = False
         else:
             retdata['enabled'] = True
@@ -81,8 +71,6 @@ class ResourceLimits:
             'echo \' \' > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
 
         if args['enabled']:
-            # if self.get_selinux_status():
-            #     br.utils.subprocess_not_output("semodule -r br-ulimit &> /dev/null")
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, '8192')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, '10240')

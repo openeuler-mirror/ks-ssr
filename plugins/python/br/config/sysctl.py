@@ -82,7 +82,7 @@ class KeyRebootSwitch:
 
     def reload_schemas(self):
         cmd = '{0}'.format(RELOAD_SCHEMAS_CMD)
-        output = br.utils.subprocess_has_output(cmd)
+        br.utils.subprocess_not_output(cmd)
 
     # 判断文件是否存在
     def status_exist(self):
@@ -105,7 +105,7 @@ class KeyRebootSwitch:
 
     def open(self):
         command = '{0}'.format(COMPOSITE_KEY_REBOOT_ENABLE_CMD)
-        output = br.utils.subprocess_not_output(command)
+        br.utils.subprocess_not_output(command)
         if not os.path.exists('/etc/systemd/system/ctrl-alt-del.target'):
             br.utils.subprocess_not_output(
                 "ln -s /usr/lib/systemd/system/reboot.target /etc/systemd/system/ctrl-alt-del.target")
@@ -115,7 +115,7 @@ class KeyRebootSwitch:
             br.utils.subprocess_not_output(
                 "rm -rf /etc/systemd/system/ctrl-alt-del.target")
         command = '{0}'.format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
-        output = br.utils.subprocess_not_output(command)
+        br.utils.subprocess_not_output(command)
 
     def get(self):
         retdata = dict()
@@ -132,7 +132,7 @@ class KeyRebootSwitch:
                 if args['enabled']:
                     self.open()
                     rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
-                    output = br.utils.subprocess_not_output(rm_cmd)
+                    br.utils.subprocess_not_output(rm_cmd)
                     self.conf.set_value(
                         "1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'\'", MODIFY_RULE_OPEN)
                     self.reload_schemas()
@@ -140,7 +140,7 @@ class KeyRebootSwitch:
                 if not args['enabled']:
                     self.close()
                     rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
-                    output = br.utils.subprocess_not_output(rm_cmd)
+                    br.utils.subprocess_not_output(rm_cmd)
                     self.conf.set_value(
                         "1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'<Control><Alt>Delete\'", MODIFY_RULE_CLOSE)
                     self.reload_schemas()
@@ -148,6 +148,6 @@ class KeyRebootSwitch:
             # 针对3.3-6的处理规则，文件不存在，开关为打开是，将.bak改为ctrl-alt-del.target
             if args['enabled'] and self.status_bak():
                 command = "mv /usr/lib/systemd/system/ctrl-alt-del.target.bak /usr/lib/systemd/system/ctrl-alt-del.target"
-                output = br.utils.subprocess_not_output(command)
+                br.utils.subprocess_not_output(command)
 
         return (True, '')
