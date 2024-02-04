@@ -219,14 +219,12 @@ void RealTimeAlert::processIPSetData()
     RETURN_IF_TRUE(nmapAttackers.isEmpty());
     KLOG_DEBUG() << "Detect nmap attack, attacker ips: " << nmapAttackers;
     Manager::hazardDetected(ATTACK_DETECT, nmapAttackers.join(','));
-    KS::Log::Manager::writeLog({
-        "unkown account",
-        Account::Manager::AccountRole::unknown_account,
-        QDateTime::currentDateTime(),
-        KS::Log::Manager::LogType::TOOL_BOX,
-        true,
-        tr("Detected nmap attack! attacker ip:$1").arg(nmapAttackers.join(','))
-    });
+    KS::Log::Manager::writeLog({"secadm",
+                                Account::Manager::AccountRole::secadm,
+                                QDateTime::currentDateTime(),
+                                KS::Log::Manager::LogType::TOOL_BOX,
+                                true,
+                                tr("Detected nmap attack! attacker ip:%1").arg(nmapAttackers.join(','))});
     m_ipsetData.clear();
     m_clearIPSetDataProcess->start();
 }
@@ -244,25 +242,53 @@ void RealTimeAlert::processAuditData(int socket)
     QStringList alertMsgList;
     for (const auto &logEvent : logEventList)
     {
+        QMap<QString, QMap<QString, QString>> allAuditRecordMap{};
+        QMap<QString, QStringList> allAuditRecordList{};
         for (const auto &logRecord : logEvent)
         {
-            CONTINUE_IF_TRUE(!logRecord.field.contains("key"));
-            CONTINUE_IF_TRUE(!logRecord.field.value("key").contains(KS_SSR_AUDIT_KEYWORD));
-            KLOG_INFO() << "Audit event! type: " << logRecord.field.value("type")
-                        << ", key: " << logRecord.field.value("key");
-            alertMsgList.append(logRecord.field.value("key").mid(sizeof(KS_SSR_AUDIT_KEYWORD)));
+            auto recordType = logRecord.type;
+            allAuditRecordList.insert(recordType, {});
+            for (const auto &record : logRecord.field.keys())
+            {
+                allAuditRecordList[recordType] << QString("%1=%2").arg(record).arg(logRecord.field.value(record));
+            }
+            allAuditRecordMap.insert(recordType, logRecord.field);
+            // 将 系统审计 加入日志
+            if (recordType.contains("AVC"))
+            {
+                QString logMsg("PROCTITLE: %1,SYSCALL: %2,AVC: %3");
+                KS::Log::Manager::writeLog({"audadm",
+                                            Account::Manager::AccountRole::audadm,
+                                            logRecord.timeStamp,
+                                            KS::Log::Manager::LogType::AVC,
+                                            allAuditRecordMap["SYSCALL"]["success"] == "yes",
+                                            allAuditRecordList[recordType].join(',')});
+            }
+            if (recordType == "SYSCALL")
+            {
+                CONTINUE_IF_TRUE(!logRecord.field.contains("key"));
+                CONTINUE_IF_TRUE(!logRecord.field.value("key").contains(KS_SSR_AUDIT_KEYWORD));
+                alertMsgList.append(QString("uid=%1, exe=%2, op=%3")
+                                        .arg(logRecord.field.value("uid"))
+                                        .arg(logRecord.field.value("exe"))
+                                        .arg(logRecord.field.value("syscall")));
+            }
+            // 避免一次审计事件输出多条告警
+            break;
+        }
+        if (!alertMsgList.isEmpty())
+        {
+            break;
         }
     }
     RETURN_IF_TRUE(alertMsgList.isEmpty());
     Manager::hazardDetected(HAZARD_BEHAVIOR, alertMsgList.join(','));
-    KS::Log::Manager::writeLog({
-        "unkown account",
-        Account::Manager::AccountRole::unknown_account,
-        QDateTime::currentDateTime(),
-        KS::Log::Manager::LogType::TOOL_BOX,
-        true,
-        tr("Detected hazard behavior! msg:$1").arg(alertMsgList.join(','))
-    });
+    KS::Log::Manager::writeLog({"secadm",
+                                Account::Manager::AccountRole::secadm,
+                                QDateTime::currentDateTime(),
+                                KS::Log::Manager::LogType::TOOL_BOX,
+                                true,
+                                tr("Detected hazard behavior! msg:%1").arg(alertMsgList.join(','))});
 }
 };  // namespace ToolBox
 };  // namespace KS

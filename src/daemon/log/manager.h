@@ -76,7 +76,8 @@ public:
         TRUSTED_PROTECTION = (1 << 3),
         FILES_PROTECTION = (1 << 4),
         PRIVATE_BOX = (1 << 5),
-        ACCOUNT = (1 << 6)
+        ACCOUNT = (1 << 6),
+        AVC = (1 << 7)
     };
     Q_ENUM(LogType)
 

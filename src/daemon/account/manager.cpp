@@ -145,17 +145,14 @@ bool Manager::GetUidReusable()
 
 void Manager::disableMultiFactorAuthState()
 {
-    auto msg = QDBusMessage::createMethodCall(KAD_MANAGER_DBUS_NAME,
-                                              KAD_MANAGER_DBUS_OBJECT_PATH,
-                                              KAD_MANAGER_DBUS_INTERFACE_NAME,
-                                              "SetAuthTypeEnabled");
-    msg.setArguments({static_cast<int>(KAD_AUTH_APPLICATION_LOGIN), false});
-    auto replyMsg = QDBusConnection::systemBus().call(msg);
-    if (replyMsg.type() != QDBusMessage::ReplyMessage)
-    {
-        KLOG_WARNING() << "Failed to call dbus method SetAuthTypeEnabled: " << replyMsg.errorMessage();
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_FAILED_SET_MULTI_FACTOR_AUTH_STATE, this->message());
-    }
+    // 开启多因子认证时会把 ukey 之外的所有认证方式关闭， 所以关闭多因子认证时需还原设置
+    enableAuthType({
+        static_cast<int>(KAD_AUTH_TYPE_FINGERPRINT),
+        static_cast<int>(KAD_AUTH_TYPE_FACE),
+        static_cast<int>(KAD_AUTH_TYPE_UKEY),
+        static_cast<int>(KAD_AUTH_TYPE_FINGERVEIN),
+        static_cast<int>(KAD_AUTH_TYPE_IRIS)
+    });
     // auth        include        kiran-authentication-service
     QRegExp authIncKiranAuthService(REGEXP_PAM_AUTH_INC_KIRANAUTHSERVICE);
 
@@ -213,11 +210,19 @@ void Manager::disableMultiFactorAuthState()
 
 void Manager::enableMultiFactorAuthState()
 {
+    // 关闭所有认证方式， 然后再启用 ukey 认证方式
+    disableAuthType({
+        static_cast<int>(KAD_AUTH_TYPE_FINGERPRINT),
+        static_cast<int>(KAD_AUTH_TYPE_FACE),
+        static_cast<int>(KAD_AUTH_TYPE_UKEY),
+        static_cast<int>(KAD_AUTH_TYPE_FINGERVEIN),
+        static_cast<int>(KAD_AUTH_TYPE_IRIS)
+    });
     auto msg = QDBusMessage::createMethodCall(KAD_MANAGER_DBUS_NAME,
                                               KAD_MANAGER_DBUS_OBJECT_PATH,
                                               KAD_MANAGER_DBUS_INTERFACE_NAME,
                                               "SetAuthTypeEnabled");
-    msg.setArguments({static_cast<int>(KAD_AUTH_APPLICATION_LOGIN), true});
+    msg.setArguments({static_cast<int>(KAD_AUTH_TYPE_UKEY), true});
     auto replyMsg = QDBusConnection::systemBus().call(msg);
     if (replyMsg.type() != QDBusMessage::ReplyMessage)
     {
@@ -678,6 +683,40 @@ bool Manager::changePassword(const QString& userName, const QString& newPasswd) 
     // raw text -> aes
     auto aesEncryptedPassword = CryptoHelper::aesEncrypt(rsaDecryptedPassword);
     return m_db->exec(sqlCmd.arg(aesEncryptedPassword).arg(userName));
+}
+
+void Manager::disableAuthType(QList<int> authTypes)
+{
+    for (const auto authType : authTypes)
+    {
+        auto msg = QDBusMessage::createMethodCall(KAD_MANAGER_DBUS_NAME,
+                                              KAD_MANAGER_DBUS_OBJECT_PATH,
+                                              KAD_MANAGER_DBUS_INTERFACE_NAME,
+                                              "SetAuthTypeEnabled");
+        msg.setArguments({authType, false});
+        auto replyMsg = QDBusConnection::systemBus().call(msg);
+        if (replyMsg.type() != QDBusMessage::ReplyMessage)
+        {
+            KLOG_WARNING() << "Failed to disable auth, type: " << authType << ", error msg: " << replyMsg.errorMessage();
+        }
+    }
+}
+
+void Manager::enableAuthType(QList<int> authTypes)
+{
+    for (const auto authType : authTypes)
+    {
+        auto msg = QDBusMessage::createMethodCall(KAD_MANAGER_DBUS_NAME,
+                                              KAD_MANAGER_DBUS_OBJECT_PATH,
+                                              KAD_MANAGER_DBUS_INTERFACE_NAME,
+                                              "SetAuthTypeEnabled");
+        msg.setArguments({authType, true});
+        auto replyMsg = QDBusConnection::systemBus().call(msg);
+        if (replyMsg.type() != QDBusMessage::ReplyMessage)
+        {
+            KLOG_WARNING() << "Failed to enable auth, type: " << authType << ", error msg: " << replyMsg.errorMessage();
+        }
+    }
 }
 };  // namespace Account
 };  // namespace KS
