@@ -49,7 +49,8 @@ enum LogType
     // 保险箱
     LOG_TYPE_PRIVATE_BOX = (1 << 5),
     // 账户日志
-    LOG_TYPE_ACCOUNT = (1 << 6)
+    LOG_TYPE_ACCOUNT = (1 << 6),
+    LOG_TYPE_AVC = ( 1 << 7)
 };
 
 struct LogInfo
