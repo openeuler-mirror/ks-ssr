@@ -409,8 +409,13 @@ void LogTable::initLogTypeButton()
     auto filesProtection = new QAction(tr("Files protection log"), m_logTypeButton);
     auto privateBox = new QAction(tr("Private box log"), m_logTypeButton);
     auto account = new QAction(tr("Account log"), m_logTypeButton);
+    auto avc = new QAction(tr("AVC log"), m_logTypeButton);
 
-    m_logTypeButton->addMenuActions(QList<QAction *>() << device << toolBox << baselineReinforcement << trustedProtection << filesProtection << privateBox << account);
+    m_logTypeButton->addMenuActions(QList<QAction *>()
+                                    << device << toolBox
+                                    << baselineReinforcement << trustedProtection
+                                    << filesProtection << privateBox
+                                    << account << avc);
     connect(m_logTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
             {
                 int type = 0;

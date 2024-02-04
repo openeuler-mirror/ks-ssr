@@ -40,6 +40,8 @@ QString Utils::logTypeEnum2Str(uint type)
         return tr("Private box log");
     case LOG_TYPE_ACCOUNT:
         return tr("Account log");
+    case LOG_TYPE_AVC:
+        return tr("AVC log");
     default:
         break;
     }
@@ -55,6 +57,7 @@ int Utils::str2LogTypeEnum(const QString &typeStr)
     RETURN_VAL_IF_TRUE(typeStr == tr("Files protection log"), LOG_TYPE_FILES_PROTECTION);
     RETURN_VAL_IF_TRUE(typeStr == tr("Private box log"), LOG_TYPE_PRIVATE_BOX);
     RETURN_VAL_IF_TRUE(typeStr == tr("Account log"), LOG_TYPE_ACCOUNT);
+    RETURN_VAL_IF_TRUE(typeStr == tr("AVC log"), LOG_TYPE_AVC);
     return -1;
 }
 
@@ -106,6 +109,7 @@ int Utils::logStrType2Enum(const QString &logStr)
     RETURN_VAL_IF_TRUE(logStr == "FILES_PROTECTION", LOG_TYPE_FILES_PROTECTION);
     RETURN_VAL_IF_TRUE(logStr == "PRIVATE_BOX", LOG_TYPE_PRIVATE_BOX);
     RETURN_VAL_IF_TRUE(logStr == "ACCOUNT", LOG_TYPE_ACCOUNT);
+    RETURN_VAL_IF_TRUE(logStr == "AVC", LOG_TYPE_AVC);
     return -1;
 }
 
