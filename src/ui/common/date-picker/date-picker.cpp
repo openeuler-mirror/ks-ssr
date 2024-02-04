@@ -92,6 +92,7 @@ void DatePicker::initUI()
 
     m_stackedWidget = new QStackedWidget(this);
     mainLayout->addWidget(m_stackedWidget);
+    m_stackedWidget->setObjectName("datePickerStack");
 
     m_endDate = QDate::currentDate();
     m_startDate = m_endDate.addMonths(-1);

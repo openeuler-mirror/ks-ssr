@@ -166,7 +166,7 @@ void Manager::setAccessControlStatus(const QDBusMessage& message, bool enable)
         SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
                       tr("Failed to set access control status, permission denied"),
                       calledUniqueName);
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
     }
     QProcess process{};
     process.setProgram(SED_PATH);
@@ -188,8 +188,7 @@ void Manager::setAccessControlStatus(const QDBusMessage& message, bool enable)
         SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
                       tr("Failed to set access control status"),
                       calledUniqueName);
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_ACCESS_CONTROL, this->message());
-        return;
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_ACCESS_CONTROL, message);
     }
     SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
                     tr("set access control status to %1").arg(enable ? "enable" : "disable"),
@@ -314,7 +313,6 @@ void Manager::setFileKICLabel(const QDBusMessage& message, const QString& filePa
                       tr("Failed to set %1 mls label, error msg: %2").arg(filePath).arg(output),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_SECURITY_CONTEXT, message);
-        return;
     }
     SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
                     tr("Set %1 kic label to: %2").arg(filePath).arg(SecurityContext),
@@ -475,7 +473,7 @@ void Manager::removeUser(const QDBusMessage& message, const QStringList& userNam
         SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
                       tr("Failed to remove user, permission denied"),
                       calledUniqueName)
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
     }
     Log::Log log = {userName, role, QDateTime::currentDateTime(),
                     Log::Manager::LogType::TOOL_BOX, false, tr("Remove users %1").arg(userNames.join(' '))};

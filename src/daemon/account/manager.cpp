@@ -492,7 +492,7 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     m_clients.insert(callerUnique, {true, role, userName, DBusHelper::getCallerPid(this)});
     locker.unlock();
     log.result = true;
-    log.logMsg = "Login";
+    log.logMsg = tr("Login");
     Log::Manager::writeLog(log);
     return true;
 }

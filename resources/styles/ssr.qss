@@ -1065,6 +1065,16 @@ KS--DatePickButton QWidget
     background-color: #222222;
 }
 
+KS--CalendarWidget QWidget
+{
+    background-color: #2d2d2d;
+}
+KS--DatePicker
+{
+    background: #222222;
+    border-radius: 6px;
+}
+
 KS--Pagination QPushButton
 {
     color:#FFFFFF;

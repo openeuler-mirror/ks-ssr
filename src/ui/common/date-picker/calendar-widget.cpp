@@ -108,15 +108,12 @@ void CalendarWidget::hidePreButton()
 
 void CalendarWidget::initControl()
 {
-    setObjectName("CalendarWidget");
     layout()->setSizeConstraint(QLayout::SetDefaultConstraint);
     setLocale(QLocale(QLocale::Chinese));
     setNavigationBarVisible(false);
     setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
     setHorizontalHeaderFormat(QCalendarWidget::SingleLetterDayNames);
     setStyle(new QCustomStyle(this));
-    // TODO QSS
-    this->setStyleSheet("background-color: #2d2d2d");
 
     QFont font;
     font.setPixelSize(14);
@@ -195,7 +192,6 @@ void CalendarWidget::paintEvent(QPaintEvent *event)
 void CalendarWidget::initTopWidget()
 {
     auto topWidget = new QWidget(this);
-    topWidget->setObjectName("CalendarTopWidget");
     topWidget->setFixedHeight(40);
     topWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
@@ -240,7 +236,6 @@ void CalendarWidget::initTopWidget()
 void CalendarWidget::initBottomWidget()
 {
     auto bottomWidget = new QWidget(this);
-    bottomWidget->setObjectName("CalendarBottomWidget");
     bottomWidget->setFixedHeight(40);
     bottomWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
@@ -249,12 +244,10 @@ void CalendarWidget::initBottomWidget()
     hboxLayout->setSpacing(6);
 
     m_ensureBtn = new QPushButton(this);
-    m_ensureBtn->setObjectName("CalendarEnsureBtn");
     m_ensureBtn->setFixedSize(40, 22);
     m_ensureBtn->setText(tr("confirm"));
 
     m_toDayBtn = new QPushButton(this);
-    m_toDayBtn->setObjectName("CalendarTodayBtn");
     m_toDayBtn->setFixedSize(40, 22);
     m_toDayBtn->setText(tr("now"));
 
