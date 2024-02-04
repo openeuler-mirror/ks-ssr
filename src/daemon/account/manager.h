@@ -181,6 +181,8 @@ private:
     bool getMultiFactorAuthState();
     void disableMultiFactorAuthState();
     void enableMultiFactorAuthState();
+    void disableAuthType(QList<int>);
+    void enableAuthType(QList<int>);
     // 密码复杂度检测
     bool checkPassword(const QString& password, const QString& userName);
 

@@ -222,7 +222,6 @@ QString Manager::GetFileMLSLabel(const QString& filePath)
                       calledUniqueName);
         return "";
     }
-    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX, tr("Get files %1 mls label").arg(filePath), calledUniqueName);
     return QString(output).split(": ")[1].trimmed();
 }
 
@@ -252,7 +251,6 @@ QString Manager::GetFileKICLabel(const QString& filePath)
                       calledUniqueName);
         return "";
     }
-    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX, tr("Get files %1 kic label").arg(filePath), calledUniqueName);
     return QString(output).split(": ")[1].trimmed();
 }
 
@@ -351,7 +349,6 @@ QString Manager::GetUserMLSLabel(const QString& userName)
                       calledUniqueName);
         return "";
     }
-    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX, tr("Get files %1 kic label").arg(userName), calledUniqueName);
     auto match = regex.match(output);
     return match.captured(1);
 }
