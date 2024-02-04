@@ -2,7 +2,7 @@
 
 try:
     import configparser
-except:
+except Exception:
     import ConfigParser as configparser
 
 import os
@@ -143,8 +143,6 @@ class UmaskLimit:
         args = json.loads(args_json)
         br.log.debug("args['enabled'] = ")
         br.log.debug(args['enabled'])
-        profile_value = self.conf_profile.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
-        bashrc_vale = self.conf_bashrc.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
         if args['enabled'] == 27:
             self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
             self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
@@ -167,6 +165,6 @@ class UmaskLimit:
 
         cmd = "source" + " " + UMASK_LIMIT_BASHRC_PATH + " " + UMASK_LIMIT_PROFILE_PATH
         limit_open_command = '{0}'.format(cmd)
-        open_output = br.utils.subprocess_not_output(limit_open_command)
+        br.utils.subprocess_not_output(limit_open_command)
 
         return (True, '')

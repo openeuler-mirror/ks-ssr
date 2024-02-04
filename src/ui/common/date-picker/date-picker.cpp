@@ -33,7 +33,7 @@ QDateTime DatePicker::getStartDate()
 {
     QDate startDate = m_startCalendar->getSelectDate();
     QDate endDate = m_endCalendar->getSelectDate();
-    QDateTime start = QDateTime(startDate);
+    QDateTime start = static_cast<QDateTime>(startDate);
     if (startDate == endDate)
     {
         start.setTime(QTime(0, 0, 0));
@@ -45,7 +45,7 @@ QDateTime DatePicker::getEndDate()
 {
     QDate startDate = m_startCalendar->getSelectDate();
     QDate endDate = m_endCalendar->getSelectDate();
-    QDateTime end = QDateTime(endDate);
+    QDateTime end = static_cast<QDateTime>(endDate);
     if (startDate == endDate)
     {
         end.setTime(QTime(23, 59, 59));
@@ -67,7 +67,7 @@ void DatePicker::changeStartDate(QDate date)
     m_startCalendar->setSelectableStart(date);
     m_startCalendar->setSelectableEnd(m_endCalendar->selectedDate());
     setDateLimit();
-    emit startDateChanged(date.toString("yyyy-MM-dd"));
+    emit startDateChanged(m_startDate.toString("yyyy-MM-dd"));
 }
 
 void DatePicker::changeEndDate(QDate date)
@@ -78,7 +78,7 @@ void DatePicker::changeEndDate(QDate date)
     m_startCalendar->setSelectableStart(m_startCalendar->selectedDate());
     m_startCalendar->setSelectableEnd(date);
     setDateLimit();
-    emit endDateChanged(date.toString("yyyy-MM-dd"));
+    emit endDateChanged(m_endDate.toString("yyyy-MM-dd"));
 }
 
 void DatePicker::initUI()
@@ -92,6 +92,7 @@ void DatePicker::initUI()
 
     m_stackedWidget = new QStackedWidget(this);
     mainLayout->addWidget(m_stackedWidget);
+    m_stackedWidget->setObjectName("datePickerStack");
 
     m_endDate = QDate::currentDate();
     m_startDate = m_endDate.addMonths(-1);

@@ -42,7 +42,7 @@ class Rules():
         if path[-1] == '/':
             path = path[:-1]
         
-        value = "-w {0} {1}".format(path, AUDIT_RULE_TAIL)
+        value = "-w " + path + " " + AUDIT_RULE_TAIL
         output_result = str(br.utils.subprocess_has_output("auditctl -l"))
         for line in output_result.splitlines():
             if line.strip() == value:

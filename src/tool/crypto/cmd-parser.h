@@ -76,8 +76,8 @@ private:
     // Glib::OptionContext option_context_;
     // Glib::OptionGroup option_group_;
 
-    CommandOptions options_;
-    QCommandLineParser parser;
+    CommandOptions m_options;
+    QCommandLineParser m_parser;
 };
 }  // namespace Crypto
 }  // namespace KS

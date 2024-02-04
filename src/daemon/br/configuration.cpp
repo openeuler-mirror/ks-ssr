@@ -41,7 +41,8 @@ namespace BRDaemon
 using namespace Protocol;
 
 Configuration::Configuration(const QString& config_path)
-    : config_path_(config_path)
+    : config_path_(config_path),
+      configuration_(nullptr)
 {
 }
 
@@ -50,7 +51,7 @@ Configuration::~Configuration()
     delete this->configuration_;
 }
 
-Configuration* Configuration::instance_ = NULL;
+Configuration* Configuration::instance_ = nullptr;
 void Configuration::globalInit(const QString& config_path)
 {
     instance_ = new Configuration(config_path);
