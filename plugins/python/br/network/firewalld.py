@@ -48,6 +48,12 @@ CLEAR_IPTABLES_INPUT = "iptables -F INPUT"
 CLEAR_IPTABLES_OUTPUT = "iptables -F OUTPUT"
 
 FIND_IPTABLES_INPUT = "iptables -L"
+FIND_IPTABLES_TAIL = "-n --line-numbers"
+IPTABLES_REJECT_TAIL = "-j REJECT"
+IPTABLES_DPORTS = "--dport "
+IPTABLES_DPORTS_CHECK_CMD = "dpt: |grep REJECT |grep -v -E"
+IPTABLES_SEGMENT_CHECK = "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999"
+IPTABLES_SEGMENT_REJECT_TAIL = "--dport 1:1023 -j REJECT"
 
 # 禁止主机被Traceroute检测 time-exceeded
 TRACEROUTE_DETAIL = "time-exceeded -j DROP"
@@ -61,6 +67,8 @@ TIMESTAMP_ECHO_REQUEST = "echo-request -j REJECT"
 
 # 开放所有端口
 OPEN_IPTABLES_ALL_PORTS = "iptables -P INPUT ACCEPT; iptables -P OUTPUT ACCEPT; iptables -P FORWARD ACCEPT"
+
+ERROR_NOTIFY = "Unable to stop firewalld service!"
 
 
 class Firewall:
@@ -82,7 +90,7 @@ class Firewall:
     def open_iptables(self):
         if self.firewalld_systemd.exist():
             if self.firewalld_systemd.stop():
-                return (False, "Unable to stop firewalld service!")
+                return (False, ERROR_NOTIFY)
             self.firewalld_systemd.disable()
             self.firewalld_systemd.mask()
 
@@ -99,7 +107,7 @@ class Firewall:
             if len(br.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_PORTS)) == 0:
                 br.utils.subprocess_not_output(CLOSE_IPTABLES_PORTS)
             if self.iptables_systemd.stop():
-                return (False, _('Unable to stop iptables service!\t'))
+                return (False, ERROR_NOTIFY)
             self.iptables_systemd.disable()
             self.iptables_systemd.service_save()
             self.iptables_systemd.mask()
@@ -114,7 +122,7 @@ class Firewall:
             if len(br.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_PORTS)) == 0:
                 br.utils.subprocess_not_output(CLOSE_IPTABLES_PORTS)
             if self.iptables_systemd.stop():
-                return (False, _('Unable to stop iptables service!\t'))
+                return (False, ERROR_NOTIFY)
             self.iptables_systemd.disable()
             self.iptables_systemd.service_save()
             # self.iptables_systemd.mask()
@@ -139,23 +147,23 @@ class Firewall:
 
     def del_iptables_history(self, target, iptablestype="INPUT"):
         count = 0
+        grep_cmd = " |grep " + target + " "
         output_result = str(br.utils.subprocess_has_output(
-            FIND_IPTABLES_INPUT + " {0} -n --line-numbers".format(iptablestype) + " |grep {0} ".format(target)))
+            FIND_IPTABLES_INPUT + " {0} {1}".format(iptablestype, FIND_IPTABLES_TAIL) + grep_cmd))
         for line in output_result.splitlines():
             br.log.debug("output_result.splitlines() = ", line)
             count = count + 1
         for i in range(count):
-            br.log.debug("index = ", str(br.utils.subprocess_has_output(
-                FIND_IPTABLES_INPUT + " {0} -n --line-numbers".format(iptablestype) + " |grep {0} ".format(target))).splitlines()[0].split(' ')[0])
+            br.log.debug("index = ", i, str(br.utils.subprocess_has_output(
+                FIND_IPTABLES_INPUT + " {0} {1}".format(iptablestype, FIND_IPTABLES_TAIL) + grep_cmd)).splitlines()[0].split(' ')[0])
             br.utils.subprocess_not_output('iptables -D {0} {1}'.format(iptablestype, str(br.utils.subprocess_has_output(
-                FIND_IPTABLES_INPUT + " {0} -n --line-numbers".format(iptablestype) + " |grep {0} ".format(target))).splitlines()[0].split(' ')[0]))
+                FIND_IPTABLES_INPUT + " {0} {1}".format(iptablestype, FIND_IPTABLES_TAIL) + grep_cmd).splitlines()[0].split(' ')[0])))
 
 
 # 系统防火墙服务
 class FirewallManager(Firewall):
     def get(self):
         retdata = dict()
-        # retdata['enabled'] = self.iptables_systemd.is_active()
         retdata['threat-port'] = len(br.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_TCP + " --dport 21 -j REJECT")
                                      ) == 0 or len(br.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_UDP + " --dport 21 -j REJECT")) == 0
         # 设置tcp或udp都符合
@@ -170,10 +178,10 @@ class FirewallManager(Firewall):
 
     def set(self, args_json):
         args = json.loads(args_json)
-
+        dpt_str = "|dpt:"
         if self.firewalld_systemd.is_active():
             if self.firewalld_systemd.stop():
-                return (False, "Unable to stop firewalld service!")
+                return (False, ERROR_NOTIFY)
             self.firewalld_systemd.disable()
 
         if self.flag_first:
@@ -193,95 +201,95 @@ class FirewallManager(Firewall):
         else:
             self.del_iptables_history('1:60999')
             self.set_iptables(ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP,
-                              "--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(args['input-ports-connect-nums']), "-j REJECT")
+                              "--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(args['input-ports-connect-nums']), IPTABLES_REJECT_TAIL)
             self.set_iptables(ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP,
-                              "--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(args['input-ports-connect-nums']), "-j REJECT")
+                              "--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(args['input-ports-connect-nums']), IPTABLES_REJECT_TAIL)
 
         # Disable FTP, SMTP and other ports that may threaten the system
         if args['threat-port']:
             for port in IPTABLES_LIMITS_PORTS.split(","):
                 if "tcp" in args['tcp-udp']:
                     self.set_iptables(
-                        ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, "--dport " + port, "-j REJECT")
+                        ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
                     self.set_iptables(
-                        ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, "--dport " + port, "-j REJECT")
+                        ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
                 else:
                     self.set_iptables(
-                        ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, "--dport " + port, "-j REJECT")
+                        ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
                     self.set_iptables(
-                        ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, "--dport " + port, "-j REJECT")
+                        ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
         else:
             for port in IPTABLES_LIMITS_PORTS.split(","):
                 if "tcp" in args['tcp-udp']:
                     self.del_iptables(
-                        DELETE_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, "--dport " + port, "-j REJECT")
+                        DELETE_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
                     self.del_iptables(
-                        DELETE_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, "--dport " + port, "-j REJECT")
+                        DELETE_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
                 else:
                     self.del_iptables(
-                        DELETE_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, "--dport " + port, "-j REJECT")
+                        DELETE_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
                     self.del_iptables(
-                        DELETE_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, "--dport " + port, "-j REJECT")
+                        DELETE_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
 
         # 禁用网段
         if len(args['disable-network-segment'].replace('"', '')) != 0:
             self.del_iptables_history(
-                "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999")
+                IPTABLES_SEGMENT_CHECK)
             for network_segment in args['disable-network-segment'].split(","):
                 if "tcp" in args['tcp-udp']:
                     self.set_iptables(ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP,
-                                      "-s " + network_segment, "--dport 1:1023 -j REJECT")
+                                      "-s " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
                 else:
                     self.set_iptables(ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP,
-                                      "-s " + network_segment, "--dport 1:1023 -j REJECT")
+                                      "-s " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
         else:
             self.del_iptables_history(
-                "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999")
+                IPTABLES_SEGMENT_CHECK)
 
         # 禁用端口
         if len(args['disable-ports'].replace('"', '')) != 0:
-            self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format(
-                "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", "|dpt:")))
+            self.del_iptables_history("{0} '{1}' ".format(
+                IPTABLES_DPORTS_CHECK_CMD, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str)))
             for port in args['disable-ports'].split(";"):
-                if args['tcp-udp'] == "tcp":
+                if "tcp" in args['tcp-udp']:
                     self.set_iptables(
-                        ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, "--dport " + port, "-j REJECT")
+                        ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
                 else:
                     self.set_iptables(
-                        ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, "--dport " + port, "-j REJECT")
+                        ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
         else:
-            self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format(
-                "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", "|dpt:")))
+            self.del_iptables_history("{0} '{1}' ".format(
+                IPTABLES_DPORTS_CHECK_CMD, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str)))
 
         # 禁用网段 output
         if len(args['disable-network-segment-output'].replace('"', '')) != 0:
             self.del_iptables_history(
-                "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
+                IPTABLES_SEGMENT_CHECK, "OUTPUT")
             for network_segment in args['disable-network-segment-output'].split(","):
                 if "tcp" in args['tcp-udp']:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP,
-                                      "-d " + network_segment, "--dport 1:1023 -j REJECT")
+                                      "-d " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
                 else:
                     self.set_iptables(ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP,
-                                      "-d " + network_segment, "--dport 1:1023 -j REJECT")
+                                      "-d " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
         else:
             self.del_iptables_history(
-                "-E '/[1-9][0-2]|/[1-9]' |grep -v 1:60999", "OUTPUT")
+                IPTABLES_SEGMENT_CHECK, "OUTPUT")
 
         # 禁用端口 output
         if len(args['disable-ports-output'].replace('"', '')) != 0:
-            self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format(
-                "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", "|dpt:")), "OUTPUT")
+            self.del_iptables_history("{0} '{1}' ".format(
+                IPTABLES_DPORTS_CHECK_CMD, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str)), "OUTPUT")
             for port in args['disable-ports-output'].split(";"):
                 if "tcp" in args['tcp-udp']:
                     self.set_iptables(
-                        ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, "--dport " + port, "-j REJECT")
+                        ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
                 else:
                     self.set_iptables(
-                        ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, "--dport " + port, "-j REJECT")
+                        ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
         else:
-            self.del_iptables_history("dpt: |grep REJECT |grep -v -E '{0}' ".format(
-                "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", "|dpt:")), "OUTPUT")
+            self.del_iptables_history("{0} '{1}' ".format(
+                IPTABLES_DPORTS_CHECK_CMD, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str)), "OUTPUT")
 
         if args['disable-ping']:
             self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP,
@@ -309,7 +317,6 @@ class IcmpTimestamp(Firewall):
             CHECK_IPTABLES_INPUT_ICMP + " " + TIMESTAMP_REQUEST_DETAIL)
         iptable_output = br.utils.subprocess_has_output_ignore_error_handling(
             CHECK_IPTABLES_INPUT_ICMP + " " + TIMESTAMP_REPLY_DETAIL)
-        # br.log.debug(command_output)
         if len(iptable_output) == 0 and len(iptable_input) == 0:
             retdata['timestamp_request'] = False
         else:
@@ -321,7 +328,7 @@ class IcmpTimestamp(Firewall):
 
         if self.firewalld_systemd.is_active():
             if self.firewalld_systemd.stop():
-                return (False, "Unable to stop firewalld service!")
+                return (False, ERROR_NOTIFY)
             self.firewalld_systemd.disable()
 
         if args['timestamp_request']:
@@ -360,7 +367,7 @@ class Traceroute(Firewall):
 
         if self.firewalld_systemd.is_active():
             if self.firewalld_systemd.stop():
-                return (False, "Unable to stop firewalld service!")
+                return (False, ERROR_NOTIFY)
             self.firewalld_systemd.disable()
 
         if args['enabled']:

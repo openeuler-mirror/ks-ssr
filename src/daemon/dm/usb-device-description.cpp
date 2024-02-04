@@ -40,7 +40,6 @@ USBDeviceDescription *USBDeviceDescription::instance()
 USBDeviceDescription::USBDeviceDescription(QObject *parent)
     : QObject(parent)
 {
-    m_prevVendorID = QString();
     this->init();
 }
 

@@ -56,6 +56,51 @@ class LoginLock:
         self.lightdm_tally2 = br.configuration.PAM(
             LIGHTDM_CONF_PATH, LIGHTDM_CONF_REGEX)
 
+    def set_deny(self, arg):
+        self.system_faillock_preauth.set_value(LOGIN_LOCK_CONF_KEY_FAILURES, "=", arg, "=")
+        self.system_faillock_authfail.set_value(LOGIN_LOCK_CONF_KEY_FAILURES, "=", arg, "=")
+        self.system_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_FAILURES, "=", arg, "=")
+
+        self.password_faillock_preauth.set_value(LOGIN_LOCK_CONF_KEY_FAILURES, "=", arg, "=")
+        self.password_faillock_authfail.set_value(LOGIN_LOCK_CONF_KEY_FAILURES, "=", arg, "=")
+        self.password_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_FAILURES, "=", arg, "=")
+
+    def set_unlock_time(self, arg):
+        self.system_faillock_preauth.set_value(LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", arg, "=")
+        self.system_faillock_authfail.set_value(LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", arg, "=")
+        self.system_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", arg, "=")
+
+        self.password_faillock_preauth.set_value(LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", arg, "=")
+        self.password_faillock_authfail.set_value(LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", arg, "=")
+        self.password_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", arg, "=")
+    
+    def set_even_deny_root(self, arg):
+        if arg:
+            self.system_faillock_preauth.set_value(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", arg, "")
+            self.system_faillock_authfail.set_value(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", arg, "")
+            self.system_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", arg, "")
+
+            self.password_faillock_preauth.set_value(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", arg, "")
+            self.password_faillock_authfail.set_value(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", arg, "")
+            self.password_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", arg, "")
+        else:
+            self.system_faillock_preauth.del_record(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
+            self.system_faillock_authfail.del_record(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
+            self.system_faillock_authsucc.del_record(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
+        
+            self.password_faillock_preauth.del_record(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
+            self.password_faillock_authfail.del_record(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
+            self.password_faillock_authsucc.del_record(LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
+
+    def set_root_unlock_time(self, arg):
+        self.system_faillock_preauth.set_value(LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", arg, "=")
+        self.system_faillock_authfail.set_value(LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", arg, "=")
+        self.system_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", arg, "=")
+
+        self.password_faillock_preauth.set_value(LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", arg, "=")
+        self.password_faillock_authfail.set_value(LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", arg, "=")
+        self.password_faillock_authsucc.set_value(LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", arg, "=")
+
     def get(self):
         retdata = dict()
 
@@ -77,120 +122,32 @@ class LoginLock:
 
     def set(self, args_json):
         args = json.loads(args_json)
-
         # Delete ligthdm tally2.so
         self.lightdm_tally2.del_line()
 
         # system-auth
         if len(self.system_faillock_preauth.get_line()) == 0:
-            self.system_faillock_preauth.set_line(
-                LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH, LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN)
-
-        self.system_faillock_preauth.set_value(
-            LOGIN_LOCK_CONF_KEY_FAILURES, "=", args[LOGIN_LOCK_CONF_KEY_FAILURES], "=")
-        self.system_faillock_preauth.set_value(
-            LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME], "=")
-        if args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK]:
-            self.system_faillock_preauth.set_value(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK], "")
-        else:
-            self.system_faillock_preauth.del_record(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
-        self.system_faillock_preauth.set_value(
-            LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME], "=")
-
+            self.system_faillock_preauth.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH, LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN)
         if len(self.system_faillock_authfail.get_line()) == 0:
-            self.system_faillock_authfail.set_line(
-                LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL, LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN)
-
-        self.system_faillock_authfail.set_value(
-            LOGIN_LOCK_CONF_KEY_FAILURES, "=", args[LOGIN_LOCK_CONF_KEY_FAILURES], "=")
-        self.system_faillock_authfail.set_value(
-            LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME], "=")
-        if args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK]:
-            self.system_faillock_authfail.set_value(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK], "")
-        else:
-            self.system_faillock_authfail.del_record(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
-        self.system_faillock_authfail.set_value(
-            LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME], "=")
-
+            self.system_faillock_authfail.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL, LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN)
         if len(self.system_faillock_authsucc.get_line()) == 0:
-            self.system_faillock_authsucc.set_line(
-                LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC, LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN)
-
-        self.system_faillock_authsucc.set_value(
-            LOGIN_LOCK_CONF_KEY_FAILURES, "=", args[LOGIN_LOCK_CONF_KEY_FAILURES], "=")
-        self.system_faillock_authsucc.set_value(
-            LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME], "=")
-        if args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK]:
-            self.system_faillock_authsucc.set_value(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK], "")
-        else:
-            self.system_faillock_authsucc.del_record(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
-        self.system_faillock_authsucc.set_value(
-            LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME], "=")
-
+            self.system_faillock_authsucc.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC, LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN)
         if len(self.system_faillock_account.get_line()) == 0:
-            self.system_faillock_account.set_line(
-                LOGIN_LOCK_CONF_KEY_FAILLOCK, LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN)
+            self.system_faillock_account.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK, LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN)
 
         # password-auth
         if len(self.password_faillock_preauth.get_line()) == 0:
-            self.password_faillock_preauth.set_line(
-                LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH, LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN)
-
-        self.password_faillock_preauth.set_value(
-            LOGIN_LOCK_CONF_KEY_FAILURES, "=", args[LOGIN_LOCK_CONF_KEY_FAILURES], "=")
-        self.password_faillock_preauth.set_value(
-            LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME], "=")
-        if args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK]:
-            self.password_faillock_preauth.set_value(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK], "")
-        else:
-            self.password_faillock_preauth.del_record(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
-        self.password_faillock_preauth.set_value(
-            LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME], "=")
-
+            self.password_faillock_preauth.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH, LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN)
         if len(self.password_faillock_authfail.get_line()) == 0:
-            self.password_faillock_authfail.set_line(
-                LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL, LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN)
-
-        self.password_faillock_authfail.set_value(
-            LOGIN_LOCK_CONF_KEY_FAILURES, "=", args[LOGIN_LOCK_CONF_KEY_FAILURES], "=")
-        self.password_faillock_authfail.set_value(
-            LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME], "=")
-        if args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK]:
-            self.password_faillock_authfail.set_value(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK], "")
-        else:
-            self.password_faillock_authfail.del_record(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
-        self.password_faillock_authfail.set_value(
-            LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME], "=")
-
+            self.password_faillock_authfail.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL, LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN)
         if len(self.password_faillock_authsucc.get_line()) == 0:
-            self.password_faillock_authsucc.set_line(
-                LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC, LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN)
-
-        self.password_faillock_authsucc.set_value(
-            LOGIN_LOCK_CONF_KEY_FAILURES, "=", args[LOGIN_LOCK_CONF_KEY_FAILURES], "=")
-        self.password_faillock_authsucc.set_value(
-            LOGIN_LOCK_CONF_KEY_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME], "=")
-        if args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK]:
-            self.password_faillock_authsucc.set_value(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "", args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK], "")
-        else:
-            self.password_faillock_authsucc.del_record(
-                LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
-        self.password_faillock_authsucc.set_value(
-            LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=", args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME], "=")
-
+            self.password_faillock_authsucc.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC, LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN)
         if len(self.password_faillock_account.get_line()) == 0:
-            self.password_faillock_account.set_line(
-                LOGIN_LOCK_CONF_KEY_FAILLOCK, LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN)
+            self.password_faillock_account.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK, LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN)
+
+        self.set_deny(args[LOGIN_LOCK_CONF_KEY_FAILURES])
+        self.set_unlock_time(args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME])
+        self.set_even_deny_root(args[LOGIN_LOCK_CONF_KEY_ROOT_LOCK])
+        self.set_root_unlock_time(args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME])
 
         return (True, '')

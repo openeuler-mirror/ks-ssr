@@ -48,14 +48,18 @@ void Manager::globalDeinit()
 void Manager::showPasswordModification()
 {
     // 修改密码界面
-    m_passwordModification = new PasswordModification(this);
-    connect(m_passwordModification, &PasswordModification::accepted, this, &Manager::acceptedPasswordModification);
+    if (!m_passwordModification)
+    {
+        m_passwordModification = new PasswordModification(this);
+        // 不在关闭时销毁
+        m_passwordModification->setAttribute(Qt::WA_DeleteOnClose, false);
+        connect(m_passwordModification, &PasswordModification::accepted, this, &Manager::acceptedPasswordModification);
+    }
 
     m_passwordModification->setTitleNameTail(m_currentUserName);
     auto x = window()->x() + window()->width() / 2 - m_passwordModification->width() / 2;
     auto y = window()->y() + window()->height() / 2 - m_passwordModification->height() / 2;
     m_passwordModification->move(x, y);
-    m_passwordModification->show();
     m_passwordModification->show();
 }
 
@@ -159,7 +163,10 @@ void Manager::acceptedPasswordModification()
     {
         showPasswordModification();
         POPUP_MESSAGE_DIALOG(reply.error().message());
+        return;
     }
+
+    m_passwordModification->clearLineText();
 }
 }  // namespace Account
 }  // namespace KS
