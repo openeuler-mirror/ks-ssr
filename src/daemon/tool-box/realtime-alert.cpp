@@ -47,9 +47,6 @@ add ks-ssr-ip-set 127.0.0.1
 #define IPTABLES_CREATE_SSR_RULE "-A INPUT -p tcp --syn ! --dport 22 -j SET --add-set ks-ssr-ip-set src"
 #define IPTABLES_DELETE_SSR_RULE "-D INPUT -p tcp --syn ! --dport 22 -j SET --add-set ks-ssr-ip-set src"
 
-#pragma message("审计告警功能需要将 /etc/audit/plugins.d/af_unix.conf 中 active 字段设置为 yes 并重启 auditd")
-#pragma message("软件被移除时执行 iptables -D INPUT -p tcp --syn ! --dport 22 -j SET --add-set ks-ssr-ip-set src && ipset destroy ks-ssr-ip-set")
-#pragma message("此功能应该要有开关，方便用户开启或关闭")
 namespace KS
 {
 namespace ToolBox
