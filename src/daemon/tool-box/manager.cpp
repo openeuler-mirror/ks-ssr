@@ -752,7 +752,8 @@ bool Manager::setFileSeLabels(const QString& filePath, const QString& seLabel, Q
     }
     cmd.start();
     cmd.waitForFinished();
-    output = cmd.readAll();
+    cmd.waitForReadyRead();
+    output = cmd.readAllStandardError() + cmd.readAllStandardOutput();
     return !cmd.exitCode();
 }
 
@@ -776,7 +777,8 @@ bool Manager::getFileSeLabels(const QString& filePath, QString& output, const Se
     }
     cmd.start();
     cmd.waitForFinished();
-    output = cmd.readAll();
+    cmd.waitForReadyRead();
+    output = cmd.readAllStandardError() + cmd.readAllStandardOutput();
     return !cmd.exitCode();
 }
 
@@ -788,7 +790,8 @@ bool Manager::setUserSeLabels(const QString& userName, const QString& seLabel, Q
     setUserSeLabel.setArguments({"-s", "-M", seLabel, userName});
     setUserSeLabel.start();
     setUserSeLabel.waitForFinished();
-    output = setUserSeLabel.readAll();
+    setUserSeLabel.waitForReadyRead();
+    output = setUserSeLabel.readAllStandardError() + setUserSeLabel.readAllStandardOutput();
     return !setUserSeLabel.exitCode();
 }
 
@@ -813,7 +816,8 @@ bool Manager::getUserSeLabels(const QString& userName, QString& output)
     getUserSeLabel.setArguments({"-q", userName});
     getUserSeLabel.start();
     getUserSeLabel.waitForFinished();
-    output = getUserSeLabel.readAll();
+    getUserSeLabel.waitForReadyRead();
+    output = getUserSeLabel.readAllStandardError() + getUserSeLabel.readAllStandardOutput();
     return !getUserSeLabel.exitCode();
 }
 

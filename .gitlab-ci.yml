@@ -13,6 +13,6 @@ variables:
   RPM_BUILD_REQUIRES: 'cmake gcc gcc-c++ make qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel cryptopp-devel kiran-log-qt5-devel systemd-devel ks-license-devel qrencode-devel xerces-c-devel audit-devel fmt-devel openssl-devel python3-devel xsd intltool sqlcipher sqlcipher-devel libnotify libnotify-devel ipset ipset-devel ipset-libs kiran-authentication-service-devel'
 
 include:
-  - project: 'os/gitlab-ci'
+  - project: 'os/ks-devops'
     ref: main
     file: '/entrypoint/develop/cmake.yml'
