@@ -31,7 +31,7 @@ public:
                               int inconform,
                               QWidget *parent = nullptr);
     virtual ~RoundProgressBar(){};
-    virtual QSize sizeHint() const override;
+    QSize sizeHint() const override;
 
 protected:
     void paintEvent(QPaintEvent *) override;

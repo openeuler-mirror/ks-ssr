@@ -29,8 +29,6 @@ class DatePicker : public QWidget
 public:
     explicit DatePicker(QWidget *parent = nullptr);
     ~DatePicker();
-    QDateTime getStartDate();
-    QDateTime getEndDate();
     // start:0  end:1
     void showDatePicker(int type);
 

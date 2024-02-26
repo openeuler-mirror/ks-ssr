@@ -146,7 +146,6 @@ FilesFilterModel::FilesFilterModel(QObject *parent)
 
 bool FilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    QString textComb;
     for (auto i = 0; i < FILE_TABLE_FIELD_LAST; ++i)
     {
         auto index = sourceModel()->index(sourceRow, i, sourceParent);

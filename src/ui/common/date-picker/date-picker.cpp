@@ -29,30 +29,6 @@ DatePicker::~DatePicker()
 {
 }
 
-QDateTime DatePicker::getStartDate()
-{
-    QDate startDate = m_startCalendar->getSelectDate();
-    QDate endDate = m_endCalendar->getSelectDate();
-    QDateTime start = static_cast<QDateTime>(startDate);
-    if (startDate == endDate)
-    {
-        start.setTime(QTime(0, 0, 0));
-    }
-    return start;
-}
-
-QDateTime DatePicker::getEndDate()
-{
-    QDate startDate = m_startCalendar->getSelectDate();
-    QDate endDate = m_endCalendar->getSelectDate();
-    QDateTime end = static_cast<QDateTime>(endDate);
-    if (startDate == endDate)
-    {
-        end.setTime(QTime(23, 59, 59));
-    }
-    return end;
-}
-
 void DatePicker::showDatePicker(int type)
 {
     m_stackedWidget->setCurrentIndex(type);

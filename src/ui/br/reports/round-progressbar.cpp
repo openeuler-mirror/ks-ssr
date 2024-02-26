@@ -47,8 +47,7 @@ void RoundProgressBar::paintEvent(QPaintEvent *)
     int width = 160;
     int height = 160;
     int size = qMin(width, height);
-
-    int m_startAngle = 315;
+    
     const QRectF drawingRectF(8.0, 8.0, size, size);
 
     QPen pen;
@@ -69,30 +68,31 @@ void RoundProgressBar::paintEvent(QPaintEvent *)
     if (m_percent != 0)
     {
         int span = 3.6 * m_percent;
-
+        int startAngle = 315;
         painter.save();
         pen.setBrush(QColor("#f2f2f2"));
         painter.setPen(pen);
-        painter.drawArc(drawingRectF, (m_startAngle - 0) * 16, (span + 0) * 16);
+        painter.drawArc(drawingRectF, (startAngle) * 16, (span + 0) * 16);
         painter.restore();
 
         painter.save();
         pen.setWidth(8);
         pen.setBrush(QColor("#f2f2f2"));
         painter.setPen(pen);
-        painter.drawArc(drawingRectF, m_startAngle * 16, span * 16);
+        painter.drawArc(drawingRectF, startAngle * 16, span * 16);
         painter.restore();
     }
 }
 
 void RoundProgressBar::initUI()
 {
-    if (m_total == 0)
-        m_percent = 0;
-    else
+    m_percent = 0;
+    if (m_total > 0)
+    {
         m_percent = m_conform / (float)m_total * 100;
+    }
 
-    sizeHint();
+    this->KS::BR::RoundProgressBar::sizeHint();
     setFixedSize(379, 250);
 
     m_percentLabel = new QLabel(this);

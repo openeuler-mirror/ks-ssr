@@ -253,7 +253,6 @@ void RealTimeAlert::processAuditData(int socket)
             // 将 系统审计 加入日志
             if (recordType.contains("AVC"))
             {
-                QString logMsg("PROCTITLE: %1,SYSCALL: %2,AVC: %3");
                 KS::Log::Manager::writeLog({"audadm",
                                             Account::Manager::AccountRole::audadm,
                                             logRecord.timeStamp,
