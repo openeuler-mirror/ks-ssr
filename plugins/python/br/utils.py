@@ -18,7 +18,7 @@ def subprocess_not_output(args, ignore_exception=False):
         if ignore_exception:
             br.log.debug(error)
         else:
-            raise Exception(error)
+            raise RuntimeError(error)
 
 
 def subprocess_has_output(args):
@@ -30,7 +30,7 @@ def subprocess_has_output(args):
 
     error = child_process.stderr.read().strip().decode('utf-8')
     if exit_code != 0 and len(error) > 0:
-        raise Exception(error)
+        raise RuntimeError(error)
     # TODO:cmd执行get时命令执行结果为0,但输出在stderr上，暂时不清楚内部逻辑，后续要研究一下
     stdout = child_process.stdout.read().strip().decode('utf-8')
     if len(stdout) == 0:

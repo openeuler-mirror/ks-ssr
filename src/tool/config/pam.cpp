@@ -59,7 +59,6 @@ bool PAM::getValue(const QString &key, const QString &kv_split_pattern, QString 
         CONTINUE_IF_TRUE(kv_regex.indexIn(*iter) < 0);
         if (!kv_split_pattern.isEmpty())
         {
-            kv_regex.indexIn(*iter);
             auto fields = kv_regex.cap(0).split(split_field_regex).toVector();
             value = fields[1].toLatin1();
             KLOG_DEBUG("Read Line: key: %s, value: %s.", fields[0].toLocal8Bit().toStdString().c_str(), fields[1].toLocal8Bit().toStdString().c_str());
@@ -234,8 +233,6 @@ PAM::MatchLineInfo PAM::getMatchLine()
     // 寻找匹配行，如果没有匹配的非注释行可用，则使用匹配的注释行（注释将被去掉）
     for (const auto &line : lines)
     {
-        QVector<QString> fields;
-
         // 注释行判断需要包括前面的空白字符
         bool is_comment = StrUtils::startswith(line, "#");
 
@@ -274,8 +271,6 @@ PAM::MatchLineInfo PAM::addBehind(const QString &fallback_line, const QString &n
     // 寻找匹配行，如果没有匹配的非注释行可用，则使用匹配的注释行（注释将被去掉）
     for (const auto &line : lines)
     {
-        QVector<QString> fields;
-
         if (line_match_regex.indexIn(line) != -1 &&
             (retval.match_line.size() == 0))
         {

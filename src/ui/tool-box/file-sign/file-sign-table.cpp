@@ -50,7 +50,6 @@ FileSignFilterModel::FileSignFilterModel(QObject *parent)
 
 bool FileSignFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    QString textComb;
     for (auto i = 0; i < FILE_SIGN_TABLE_COL; ++i)
     {
         auto index = sourceModel()->index(sourceRow, i, sourceParent);

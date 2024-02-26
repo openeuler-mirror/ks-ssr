@@ -162,6 +162,109 @@ class Firewall:
 
 # 系统防火墙服务
 class FirewallManager(Firewall):
+    def disable_firewalld_service(self):
+        if self.firewalld_systemd.is_active():
+            if self.firewalld_systemd.stop():
+                return (False, ERROR_NOTIFY)
+            self.firewalld_systemd.disable()
+    def clean_rule(self):
+        if self.flag_first:
+            br.utils.subprocess_not_output(CLEAR_IPTABLES)
+            br.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
+            self.flag_first = False
+    def set_input_ports_connect_num(self, arg):
+        if arg == 0:
+            self.del_iptables_history('1:60999')
+        else:
+            self.del_iptables_history('1:60999')
+            self.set_iptables(ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP,
+                              "--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(arg), IPTABLES_REJECT_TAIL)
+            self.set_iptables(ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP,
+                              "--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(arg), IPTABLES_REJECT_TAIL)
+    def disable_threat_port(self, network_type):
+        for port in IPTABLES_LIMITS_PORTS.split(","):
+            if "tcp" in network_type:
+                self.set_iptables(
+                    ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+                self.set_iptables(
+                    ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+            else:
+                self.set_iptables(
+                    ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+                self.set_iptables(
+                    ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+    def enable_threat_port(self, network_type):
+        for port in IPTABLES_LIMITS_PORTS.split(","):
+            if "tcp" in network_type:
+                self.del_iptables(
+                    DELETE_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+                self.del_iptables(
+                    DELETE_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+            else:
+                self.del_iptables(
+                    DELETE_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+                self.del_iptables(
+                    DELETE_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+
+    def set_network_segments(self, network_segments, network_type):
+        if len(network_segments.replace('"', '')) != 0:
+            self.del_iptables_history(
+                IPTABLES_SEGMENT_CHECK)
+            for network_segment in network_segments.split(","):
+                if "tcp" in network_type:
+                    self.set_iptables(ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP,
+                                      "-s " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
+                else:
+                    self.set_iptables(ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP,
+                                      "-s " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
+        else:
+            self.del_iptables_history(IPTABLES_SEGMENT_CHECK)
+    def set_network_segments_output(self, network_segments, network_type):
+        if len(network_segments.replace('"', '')) != 0:
+            self.del_iptables_history(
+                IPTABLES_SEGMENT_CHECK, "OUTPUT")
+            for network_segment in network_segments.split(","):
+                if "tcp" in network_type:
+                    self.set_iptables(ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP,
+                                      "-d " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
+                else:
+                    self.set_iptables(ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP,
+                                      "-d " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
+        else:
+            self.del_iptables_history(
+                IPTABLES_SEGMENT_CHECK, "OUTPUT")
+
+    def set_ports(self, ports, dpt_str, network_type):
+        marks = "'"
+        if len(ports.replace('"', '')) != 0:
+            self.del_iptables_history("{0} {1}{2}{3} ".format(
+                IPTABLES_DPORTS_CHECK_CMD, marks, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str), marks))
+            for port in ports.split(";"):
+                if "tcp" in network_type:
+                    self.set_iptables(
+                        ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+                else:
+                    self.set_iptables(
+                        ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+        else:
+            self.del_iptables_history("{0} {1}{2}{3} ".format(
+                IPTABLES_DPORTS_CHECK_CMD, marks, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str), marks))
+    def set_ports_output(self, ports, dpt_str, network_type):
+        marks = "'"
+        if len(ports.replace('"', '')) != 0:
+            self.del_iptables_history("{0} {1}{2}{3} ".format(
+                IPTABLES_DPORTS_CHECK_CMD, marks, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str), marks), "OUTPUT")
+            for port in ports.split(";"):
+                if "tcp" in network_type:
+                    self.set_iptables(
+                        ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+                else:
+                    self.set_iptables(
+                        ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+        else:
+            self.del_iptables_history("{0} {1}{2}{3} ".format(
+                IPTABLES_DPORTS_CHECK_CMD, marks, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str), marks), "OUTPUT")
+
     def get(self):
         retdata = dict()
         retdata['threat-port'] = len(br.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_TCP + " --dport 21 -j REJECT")
@@ -179,124 +282,38 @@ class FirewallManager(Firewall):
     def set(self, args_json):
         args = json.loads(args_json)
         dpt_str = "|dpt:"
-        if self.firewalld_systemd.is_active():
-            if self.firewalld_systemd.stop():
-                return (False, ERROR_NOTIFY)
-            self.firewalld_systemd.disable()
+        network_type = args['tcp-udp']
+        self.disable_firewalld_service()
+        self.clean_rule()
 
-        if self.flag_first:
-            br.utils.subprocess_not_output(CLEAR_IPTABLES)
-            br.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)
-            self.flag_first = False
-
-        if "tcp" in args['tcp-udp']:
+        if "tcp" in network_type:
             self.del_iptables_history('udp', 'INPUT')
             self.del_iptables_history('udp', 'OUTPUT')
         else:
             self.del_iptables_history('tcp', 'INPUT')
             self.del_iptables_history('tcp', 'OUTPUT')
 
-        if args['input-ports-connect-nums'] == 0:
-            self.del_iptables_history('1:60999')
-        else:
-            self.del_iptables_history('1:60999')
-            self.set_iptables(ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP,
-                              "--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(args['input-ports-connect-nums']), IPTABLES_REJECT_TAIL)
-            self.set_iptables(ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP,
-                              "--dport 1:60999 -m connlimit --connlimit-above {0} --connlimit-mask 0".format(args['input-ports-connect-nums']), IPTABLES_REJECT_TAIL)
+        self.set_input_ports_connect_num(args['input-ports-connect-nums'])
 
         # Disable FTP, SMTP and other ports that may threaten the system
         if args['threat-port']:
-            for port in IPTABLES_LIMITS_PORTS.split(","):
-                if "tcp" in args['tcp-udp']:
-                    self.set_iptables(
-                        ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-                    self.set_iptables(
-                        ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-                else:
-                    self.set_iptables(
-                        ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-                    self.set_iptables(
-                        ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+            self.disable_threat_port(network_type)
         else:
-            for port in IPTABLES_LIMITS_PORTS.split(","):
-                if "tcp" in args['tcp-udp']:
-                    self.del_iptables(
-                        DELETE_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-                    self.del_iptables(
-                        DELETE_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-                else:
-                    self.del_iptables(
-                        DELETE_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-                    self.del_iptables(
-                        DELETE_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
+            self.enable_threat_port(network_type)
 
         # 禁用网段
-        if len(args['disable-network-segment'].replace('"', '')) != 0:
-            self.del_iptables_history(
-                IPTABLES_SEGMENT_CHECK)
-            for network_segment in args['disable-network-segment'].split(","):
-                if "tcp" in args['tcp-udp']:
-                    self.set_iptables(ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP,
-                                      "-s " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
-                else:
-                    self.set_iptables(ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP,
-                                      "-s " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
-        else:
-            self.del_iptables_history(
-                IPTABLES_SEGMENT_CHECK)
-
+        self.set_network_segments(args['disable-network-segment'], network_type)
         # 禁用端口
-        if len(args['disable-ports'].replace('"', '')) != 0:
-            self.del_iptables_history("{0} '{1}' ".format(
-                IPTABLES_DPORTS_CHECK_CMD, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str)))
-            for port in args['disable-ports'].split(";"):
-                if "tcp" in args['tcp-udp']:
-                    self.set_iptables(
-                        ADD_IPTABLES_INPUT_TCP, CHECK_IPTABLES_INPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-                else:
-                    self.set_iptables(
-                        ADD_IPTABLES_INPUT_UDP, CHECK_IPTABLES_INPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-        else:
-            self.del_iptables_history("{0} '{1}' ".format(
-                IPTABLES_DPORTS_CHECK_CMD, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str)))
-
+        self.set_ports(args['disable-ports'], dpt_str, network_type)
         # 禁用网段 output
-        if len(args['disable-network-segment-output'].replace('"', '')) != 0:
-            self.del_iptables_history(
-                IPTABLES_SEGMENT_CHECK, "OUTPUT")
-            for network_segment in args['disable-network-segment-output'].split(","):
-                if "tcp" in args['tcp-udp']:
-                    self.set_iptables(ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP,
-                                      "-d " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
-                else:
-                    self.set_iptables(ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP,
-                                      "-d " + network_segment, IPTABLES_SEGMENT_REJECT_TAIL)
-        else:
-            self.del_iptables_history(
-                IPTABLES_SEGMENT_CHECK, "OUTPUT")
-
+        self.set_network_segments_output(args['disable-network-segment-output'], network_type)
         # 禁用端口 output
-        if len(args['disable-ports-output'].replace('"', '')) != 0:
-            self.del_iptables_history("{0} '{1}' ".format(
-                IPTABLES_DPORTS_CHECK_CMD, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str)), "OUTPUT")
-            for port in args['disable-ports-output'].split(";"):
-                if "tcp" in args['tcp-udp']:
-                    self.set_iptables(
-                        ADD_IPTABLES_OUTPUT_TCP, CHECK_IPTABLES_OUTPUT_TCP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-                else:
-                    self.set_iptables(
-                        ADD_IPTABLES_OUTPUT_UDP, CHECK_IPTABLES_OUTPUT_UDP, IPTABLES_DPORTS + port, IPTABLES_REJECT_TAIL)
-        else:
-            self.del_iptables_history("{0} '{1}' ".format(
-                IPTABLES_DPORTS_CHECK_CMD, "dpt:" + IPTABLES_LIMITS_PORTS.replace(",", dpt_str)), "OUTPUT")
+        self.set_ports_output(args['disable-ports-output'], dpt_str, network_type)
 
         if args['disable-ping']:
-            self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP,
-                              CHECK_IPTABLES_INPUT_ICMP, TIMESTAMP_ECHO_REQUEST, "")
+            self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP, CHECK_IPTABLES_INPUT_ICMP, TIMESTAMP_ECHO_REQUEST, "")
         else:
-            self.del_iptables(OPEN_IPTABLES_INPUT_ICMP,
-                              CHECK_IPTABLES_INPUT_ICMP, TIMESTAMP_ECHO_REQUEST, "")
+            self.del_iptables(OPEN_IPTABLES_INPUT_ICMP, CHECK_IPTABLES_INPUT_ICMP, TIMESTAMP_ECHO_REQUEST, "")
 
         if args['clear-configuration']:
             br.utils.subprocess_not_output(OPEN_IPTABLES_ALL_PORTS)

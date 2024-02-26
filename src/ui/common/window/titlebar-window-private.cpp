@@ -189,10 +189,7 @@ void TitlebarWindowPrivate::handlerMouseButtonReleaseEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::LeftButton)
     {
-        if (m_titlebarIsPressed)
-        {
-            m_titlebarIsPressed = false;
-        }
+        m_titlebarIsPressed = false;
     }
 }
 

@@ -256,7 +256,7 @@ bool KV::setAll(const QString &key, const QString &value)
 
         if (fields.size() == 2 &&
             fields[0] == key &&
-            (match_line.size() == 0 || (int32_t(is_comment) <= int32_t(is_match_comment))))
+            (int32_t(is_comment) <= int32_t(is_match_comment)))
         {
             match_pos = new_contents.size();
             match_line = line;

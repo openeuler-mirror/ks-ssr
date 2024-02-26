@@ -26,7 +26,6 @@ namespace DM
 {
 struct RecordInfo
 {
-    RecordInfo() = default;
     QString name;
     DeviceType type;
     time_t time;
