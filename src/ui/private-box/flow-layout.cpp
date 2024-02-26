@@ -32,7 +32,7 @@ FlowLayout::FlowLayout(QWidget *parent, int margin, int hSpacing, int vSpacing)
 FlowLayout::~FlowLayout()
 {
     QLayoutItem *item;
-    while ((item = takeAt(0)))
+    while ((item = this->KS::PrivateBox::FlowLayout::takeAt(0)))
     {
         delete item;
     }

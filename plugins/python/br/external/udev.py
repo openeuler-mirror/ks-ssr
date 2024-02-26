@@ -25,6 +25,7 @@ FIND_DRIVE_CMD = "find /lib/modules/"
 UNINSTALL_DRIVE = "modprobe -r"
 INSTALL_DRIVE = "insmod"
 RELOAD_INITRAMFS = "dracut -f"
+MV_CMD = "mv"
 
 CDROM_ARG_ENABLED = "enabled"
 USB_ARG_ENABLED = "enabled"
@@ -89,12 +90,11 @@ class CDROM(DRIVERS):
                 br.utils.subprocess_not_output(cmd_sr_mod)
 
                 # change the driver name
-                mv_cmd = "mv"
                 if cdrom_drive_path.find('.bak') > 0:
-                    mv_cdrom = '{0} {1} {2}'.format(mv_cmd, cdrom_drive_path, cdrom_drive_path.replace('.bak', ''))
+                    mv_cdrom = '{0} {1} {2}'.format(MV_CMD, cdrom_drive_path, cdrom_drive_path.replace('.bak', ''))
                     br.utils.subprocess_not_output(mv_cdrom)
                 if sr_mod_drive_path.find('.bak') > 0:
-                    mv_sr_mod = '{0} {1} {2}'.format(mv_cmd, sr_mod_drive_path, sr_mod_drive_path.replace('.bak', ''))
+                    mv_sr_mod = '{0} {1} {2}'.format(MV_CMD, sr_mod_drive_path, sr_mod_drive_path.replace('.bak', ''))
                     br.utils.subprocess_not_output(mv_sr_mod)
 
                 # reload initramfs
@@ -133,12 +133,10 @@ class CDROM(DRIVERS):
 
             # change the driver name and retain the backup
             if cdrom_drive_path.find('.bak') < 0:
-                mv_cdrom = 'mv {0} {1}'.format(
-                    cdrom_drive_path, cdrom_drive_path + '.bak')
+                mv_cdrom = '{0} {1} {2}'.format(MV_CMD, cdrom_drive_path, cdrom_drive_path + '.bak')
                 br.utils.subprocess_not_output(mv_cdrom)
             if not sr_mod_drive_path.find('.bak') < 0:
-                mv_sr_mod = 'mv {0} {1}'.format(
-                    sr_mod_drive_path, sr_mod_drive_path + '.bak')
+                mv_sr_mod = '{0} {1} {2}'.format(MV_CMD, sr_mod_drive_path, sr_mod_drive_path + '.bak')
                 br.utils.subprocess_not_output(mv_sr_mod)
 
             # reload initramfs
@@ -211,8 +209,7 @@ class USB(DRIVERS):
 
                 # change the driver name
                 if usb_storage_drive_path.find('.bak') > 0:
-                    mv_usb_storage = 'mv {0} {1}'.format(
-                        usb_storage_drive_path, usb_storage_drive_path.replace('.bak', ''))
+                    mv_usb_storage = '{0} {1} {2}'.format(MV_CMD, usb_storage_drive_path, usb_storage_drive_path.replace('.bak', ''))
                     br.utils.subprocess_not_output(mv_usb_storage)
 
                 # reload initramfs
@@ -240,8 +237,7 @@ class USB(DRIVERS):
 
                 # change the driver name and retain the backup
                 if usb_storage_drive_path.find('.bak') < 0:
-                    mv_usb_storage = 'mv {0} {1}'.format(
-                        usb_storage_drive_path, usb_storage_drive_path + '.bak')
+                    mv_usb_storage = '{0} {1} {2}'.format(MV_CMD, usb_storage_drive_path, usb_storage_drive_path + '.bak')
                     br.utils.subprocess_not_output(mv_usb_storage)
 
                 # reload initramfs

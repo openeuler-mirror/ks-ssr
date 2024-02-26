@@ -193,11 +193,16 @@ void BaselineReinforcement::updateProgressInfo(KS::BR::ProgressInfo &progressInf
         for (auto reinforcementItem : categories->getReinforcementItem())
         {
             auto state = reinforcementItem->getState();
-            if (state == BR_REINFORCEMENT_STATE_SCAN_DONE || state == BR_REINFORCEMENT_STATE_REINFORCE_DONE || (state & BR_REINFORCEMENT_STATE_SAFE) == BR_REINFORCEMENT_STATE_SAFE)
+            if (state == BR_REINFORCEMENT_STATE_SCAN_DONE || 
+                state == BR_REINFORCEMENT_STATE_REINFORCE_DONE || 
+                (state & BR_REINFORCEMENT_STATE_SAFE) == BR_REINFORCEMENT_STATE_SAFE)
             {
                 progressInfo.successCount += 1;
             }
-            else if (state == BR_REINFORCEMENT_STATE_UNKNOWN || state == BR_REINFORCEMENT_STATE_SCAN_ERROR || state == BR_REINFORCEMENT_STATE_REINFORCE_ERROR || (state & BR_REINFORCEMENT_STATE_UNSAFE) == BR_REINFORCEMENT_STATE_UNSAFE)
+            else if (state == BR_REINFORCEMENT_STATE_UNKNOWN || 
+                     state == BR_REINFORCEMENT_STATE_SCAN_ERROR || 
+                     state == BR_REINFORCEMENT_STATE_REINFORCE_ERROR || 
+                     (state & BR_REINFORCEMENT_STATE_UNSAFE) == BR_REINFORCEMENT_STATE_UNSAFE)
             {
                 progressInfo.failureCount += 1;
             }
@@ -274,7 +279,10 @@ void BaselineReinforcement::scan()
                 updateProgressInfo(m_progressInfo);
                 if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
                 {
-                    Notify::NOTIFY_INFO(QString(tr("Timed scan finished, Scaned %1, %2 conform, %3 inconform!")).arg(m_progressInfo.failureCount + m_progressInfo.successCount).arg(m_progressInfo.successCount).arg(m_progressInfo.failureCount).toUtf8());
+                    Notify::NOTIFY_INFO(QString(tr("Timed scan finished, Scaned %1, %2 conform, %3 inconform!"))
+                                        .arg(m_progressInfo.failureCount + m_progressInfo.successCount)
+                                        .arg(m_progressInfo.successCount)
+                                        .arg(m_progressInfo.failureCount).toUtf8());
                 }
                 KLOG_INFO() << "Timed scan finied, Scaned "
                             << m_progressInfo.failureCount + m_progressInfo.successCount

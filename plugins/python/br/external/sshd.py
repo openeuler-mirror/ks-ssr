@@ -50,6 +50,8 @@ ERROR_NOTIFY = "sshd.services is not running!"
 class SSHD:
     def __init__(self):
         self.conf = br.configuration.KV(SSHD_CONF_PATH, join_string=" ")
+        self.conf_profile = br.configuration.KV("/etc/profile", "=", "=")
+        self.conf_bashrc = br.configuration.KV("/etc/bashrc", "=", "=")
         self.conf_ciphers = br.configuration.PAM(
             SSHD_CONF_PATH, "Ciphers\\s+")
         self.conf_protocol = br.configuration.PAM(
@@ -139,7 +141,8 @@ class WeakEncryption(SSHD):
 class BannerInfo(SSHD):
     def get(self):
         retdata = dict()
-        retdata[BANNER_INFO_KEY] = self.conf.get_value("Banner")
+        banner = self.conf.get_value("Banner")
+        retdata[BANNER_INFO_KEY] = "" if not banner else str(banner)
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
@@ -153,9 +156,40 @@ class BannerInfo(SSHD):
 
 
 class SessionTimeout(SSHD):
+    def set_conf_value(self, arg):
+        if (arg <= 0):
+            self.conf.del_record(PROFILE_CLIENT_TMOUT)
+            self.conf.del_record(PROFILE_CLIENT_COUNT)
+        else:
+            if self.conf.get_value(PROFILE_CLIENT_TMOUT) != str(arg):
+                self.conf.set_all_value(PROFILE_CLIENT_TMOUT, arg)
+            if self.conf.get_value(PROFILE_CLIENT_COUNT) != 0:
+                self.conf.set_all_value(PROFILE_CLIENT_COUNT, 0)
+    # 如果/etc/profile /etc/bashrc 中有TMOUT的值，则进行修改
+    def set_conf_profile_value(self, arg):
+        if (arg <= 0):
+            self.conf_profile.set_all_value(PROFILE_TMOUT, "")
+            self.conf_profile.set_all_value(PROFILE_TMOUT_RXPORT, "")
+        else:
+            if self.conf_profile.get_value(PROFILE_TMOUT) or len(br.utils.subprocess_has_output("cat /etc/profile |grep '#{0}'".format(PROFILE_TMOUT))):
+                self.conf_profile.set_all_value(PROFILE_TMOUT, arg)
+            if self.conf_profile.get_value(PROFILE_TMOUT_RXPORT) or len(br.utils.subprocess_has_output("cat /etc/profile |grep '#{0}'".format(PROFILE_TMOUT_RXPORT))):
+                self.conf_profile.set_all_value(PROFILE_TMOUT_RXPORT, arg)
+    def set_conf_bashrc_value(self, arg):
+        if (arg <= 0):
+            self.conf_bashrc.set_all_value(PROFILE_TMOUT, "")
+            self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT, "")
+        else:
+            if self.conf_bashrc.get_value(PROFILE_TMOUT) or len(br.utils.subprocess_has_output("cat /etc/bashrc |grep '#{0}'".format(PROFILE_TMOUT))):
+                self.conf_bashrc.set_all_value(PROFILE_TMOUT, arg)
+            if self.conf_bashrc.get_value(PROFILE_TMOUT_RXPORT) or len(br.utils.subprocess_has_output("cat /etc/bashrc |grep '#{0}'".format(PROFILE_TMOUT_RXPORT))):
+                self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT, arg)
+
     def get(self):
         retdata = dict()
         timeout = self.conf.get_value(PROFILE_CLIENT_TMOUT)
+        if not timeout:
+            timeout='0'
         retdata[PROFILE_CLIENT_TMOUT] = int(timeout)
         return (True, json.dumps(retdata))
 
@@ -163,36 +197,10 @@ class SessionTimeout(SSHD):
         if not self.service.is_active():
             return (False, ERROR_NOTIFY)
         args = json.loads(args_json)
-        self.conf_profile = br.configuration.KV("/etc/profile", "=", "=")
-        self.conf_bashrc = br.configuration.KV("/etc/bashrc", "=", "=")
 
-        if (args[PROFILE_CLIENT_TMOUT] <= 0):
-            self.conf.del_record(PROFILE_CLIENT_TMOUT)
-            self.conf.del_record(PROFILE_CLIENT_COUNT)
-            # 如果/etc/profile /etc/bashrc 中有TMOUT的值，则进行修改
-            self.conf_profile.set_all_value(PROFILE_TMOUT, "")
-            self.conf_profile.set_all_value(PROFILE_TMOUT_RXPORT, "")
-            self.conf_bashrc.set_all_value(PROFILE_TMOUT, "")
-            self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT, "")
-        else:
-            # 如果/etc/profile /etc/bashrc 中有TMOUT的值，则进行修改
-            if self.conf_profile.get_value(PROFILE_TMOUT) or len(br.utils.subprocess_has_output("cat /etc/profile |grep '#{0}'".format(PROFILE_TMOUT))):
-                self.conf_profile.set_all_value(
-                    PROFILE_TMOUT, args[PROFILE_CLIENT_TMOUT])
-            if self.conf_profile.get_value(PROFILE_TMOUT_RXPORT) or len(br.utils.subprocess_has_output("cat /etc/profile |grep '#{0}'".format(PROFILE_TMOUT_RXPORT))):
-                self.conf_profile.set_all_value(
-                    PROFILE_TMOUT_RXPORT, args[PROFILE_CLIENT_TMOUT])
-            if self.conf_bashrc.get_value(PROFILE_TMOUT) or len(br.utils.subprocess_has_output("cat /etc/bashrc |grep '#{0}'".format(PROFILE_TMOUT))):
-                self.conf_bashrc.set_all_value(
-                    PROFILE_TMOUT, args[PROFILE_CLIENT_TMOUT])
-            if self.conf_bashrc.get_value(PROFILE_TMOUT_RXPORT) or len(br.utils.subprocess_has_output("cat /etc/bashrc |grep '#{0}'".format(PROFILE_TMOUT_RXPORT))):
-                self.conf_bashrc.set_all_value(
-                    PROFILE_TMOUT_RXPORT, args[PROFILE_CLIENT_TMOUT])
-            if self.conf.get_value(PROFILE_CLIENT_TMOUT) != str(args[PROFILE_CLIENT_TMOUT]):
-                self.conf.set_all_value(
-                    PROFILE_CLIENT_TMOUT, args[PROFILE_CLIENT_TMOUT])
-            if self.conf.get_value(PROFILE_CLIENT_COUNT) != 0:
-                self.conf.set_all_value(PROFILE_CLIENT_COUNT, 0)
+        self.set_conf_value(args[PROFILE_CLIENT_TMOUT])
+        self.set_conf_profile_value(args[PROFILE_CLIENT_TMOUT])
+        self.set_conf_bashrc_value(args[PROFILE_CLIENT_TMOUT])
 
         # 重启服务生效
         self.service.reload()
@@ -217,7 +225,8 @@ class SshdService(SSHD):
             SSHD_CONF_PERMIT_EMPTY) == "no"
         retdata[SSHD_CONF_PAM_KEY] = (
             not (self.conf.get_value(SSHD_CONF_PAM) == "no"))
-        retdata[SSHD_CONF_PORT_KEY] = self.conf.get_value(SSHD_CONF_PORT)
+        port = self.conf.get_value(SSHD_CONF_PORT)
+        retdata[SSHD_CONF_PORT_KEY] = "" if not port else port
         return (True, json.dumps(retdata))
 
     def set(self, args_json):

@@ -89,9 +89,20 @@ public:
     static void globalInit();
     static void globalDeinit();
     static void writeLog(const Log& log);
-    uint GetLogNum(const int role, const time_t begin_time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText);
-    QStringList GetLog(const int role, const time_t time_stamp, const time_t end_time_stamp, const int type, const uint result, const QString& searchText, const uint per_page, const uint page) const;
-    // bool SetLogRotateConfig(const QString& config);
+    uint GetLogNum(const int role,
+                   const time_t begin_time_stamp,
+                   const time_t end_time_stamp,
+                   const int type,
+                   const uint result,
+                   const QString& searchText);
+    QStringList GetLog(const int role,
+                       const time_t begin_time_stamp,
+                       const time_t end_time_stamp,
+                       const int type,
+                       const uint result,
+                       const QString& searchText,
+                       const uint per_page,
+                       const uint page) const;
 
 private:
     void backUpLog(const QStringList& targetLogList);
