@@ -119,11 +119,11 @@ float ResourceMonitor::getMemoryRemainingRatio()
         KLOG_ERROR("cannot open /proc/meminfo");
         return -1;
     }
-    fscanf(file, "MemTotal: %20s kB\n", memTotal);
-    fscanf(file, "MemFree: %20s kB\n", memFree);
-    fscanf(file, "MemAvailable: %20s kB\n", memAvailable);
-    fscanf(file, "Buffers: %20s kB\n", buffers);
-    fscanf(file, "Cached: %20s kB\n", cached);
+    fscanf(file, "MemTotal: %19s kB\n", memTotal);
+    fscanf(file, "MemFree: %19s kB\n", memFree);
+    fscanf(file, "MemAvailable: %19s kB\n", memAvailable);
+    fscanf(file, "Buffers: %19s kB\n", buffers);
+    fscanf(file, "Cached: %19s kB\n", cached);
     fclose(file);
     return (atof(memFree) + atof(cached) + atof(buffers)) / atof(memTotal);
 }

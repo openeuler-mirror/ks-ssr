@@ -17,6 +17,8 @@ RESOURCE_LIMITS_KEY_RSS_SOFT = "*                soft    rss"
 RESOURCE_LIMITS_KEY_RSS_HARD = "*                hard    rss"
 
 RESOURCE_LIMITS_STACK_CMD = "ulimit -s"
+RESOURCE_LIMITS_SOFT_STACK_CMD = "ulimit -Ss"
+RESOURCE_LIMITS_HARD_STACK_CMD = "ulimit -Hs"
 RESOURCE_LIMITS_RSS_CMD = "ulimit -m"
 
 HISTORY_SIZE_LIMIT_CONF_PATH = "/etc/profile.d/br-config.sh"
@@ -44,8 +46,7 @@ class ResourceLimits:
         retdata = dict()
 
         # 忽略有注释的行
-        stack_cmd = "{0}".format(RESOURCE_LIMITS_STACK_CMD)
-        stack_output = br.utils.subprocess_has_output(stack_cmd)
+        stack_output = br.utils.subprocess_has_output(RESOURCE_LIMITS_STACK_CMD)
 
         rss_cmd = "{0}".format(RESOURCE_LIMITS_RSS_CMD)
         rss_output = br.utils.subprocess_has_output(rss_cmd)
@@ -78,7 +79,8 @@ class ResourceLimits:
             if not os.path.exists(PAM_CHECK_PATH) or self.get_selinux_status():
                 br.utils.subprocess_not_output(
                     "sed -i '/{0}/d' {1}".format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
-                self.conf_stack.set_value(RESOURCE_LIMITS_STACK_CMD, '8192')
+                self.conf_stack.set_value(RESOURCE_LIMITS_SOFT_STACK_CMD, '8192')
+                self.conf_stack.set_value(RESOURCE_LIMITS_HARD_STACK_CMD, '10240')
                 self.conf_stack.set_value(RESOURCE_LIMITS_RSS_CMD, '10240')
         else:
             if self.get_selinux_status() and len(br.utils.subprocess_has_output("semodule -l |grep br-ulimit")) == 0:
@@ -91,8 +93,8 @@ class ResourceLimits:
             if not os.path.exists(PAM_CHECK_PATH) or self.get_selinux_status():
                 br.utils.subprocess_not_output(
                     "sed -i '/{0}/d' {1}".format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
-                self.conf_stack.set_value(
-                    RESOURCE_LIMITS_STACK_CMD, 'unlimited')
+                self.conf_stack.set_value(RESOURCE_LIMITS_SOFT_STACK_CMD, 'unlimited')
+                self.conf_stack.set_value(RESOURCE_LIMITS_HARD_STACK_CMD, 'unlimited')
                 self.conf_stack.set_value(RESOURCE_LIMITS_RSS_CMD, 'unlimited')
 
         return (True, '')
@@ -122,29 +124,23 @@ class HistorySizeLimit:
         get_bashrc_export = self.conf_bashrc.get_value(
             HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE_EXPORT)
 
-        if len(get_profile) == 0:
-            get_profile = '0'
-        if len(get_profile_export) == 0:
-            get_profile_export = '0'
-        if len(get_bashrc) == 0:
-            get_bashrc = '0'
-        if len(get_bashrc_export) == 0:
-            get_bashrc_export = '0'
+        if not get_ssr_config:
+            get_ssr_config='0'
+        if not get_profile:
+            get_profile='0'
+        if not get_profile_export:
+            get_profile_export='0'
+        if not get_bashrc:
+            get_bashrc='0'
+        if not get_bashrc_export:
+            get_bashrc_export='0'
 
-        br.log.debug('get_ssr_config', get_ssr_config, 'get_profile = ', get_profile, 'get_profile_export = ',
-                      get_profile_export, 'get_bashrc = ', get_bashrc, 'get_bashrc_export = ', get_bashrc_export)
-        br.log.debug('int(get_profile)|int(get_profile_export)|int(get_bashrc_export)|int(get_bashrc) = ', int(
-            get_profile) | int(get_profile_export) | int(get_bashrc_export) | int(get_bashrc))
-        if int(get_ssr_config) == int(get_profile) | int(get_profile_export) | int(get_bashrc_export) | int(get_bashrc):
-            retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = int(get_ssr_config)
-            return (True, json.dumps(retdata))
-        else:
-            if int(get_profile) | int(get_profile_export) | int(get_bashrc_export) | int(get_bashrc) == 0:
-                retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = int(
-                    get_ssr_config)
-                return (True, json.dumps(retdata))
-            retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = False
-            return (False, json.dumps(retdata))
+        br.log.debug('get_ssr_config', int(get_ssr_config), 'get_profile = ', int(get_profile), 'get_profile_export = ',
+                      int(get_profile_export), 'get_bashrc = ', int(get_bashrc), 'get_bashrc_export = ', int(get_bashrc_export))
+        value=int(get_ssr_config) | int(get_profile) | int(get_profile_export) | int(get_bashrc_export) | int(get_bashrc)
+        br.log.debug('int(get_profile)|int(get_profile_export)|int(get_bashrc_export)|int(get_bashrc)', value)
+        retdata[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] = value
+        return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)

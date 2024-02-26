@@ -22,7 +22,6 @@
 
 struct Interface
 {
-    Interface() = default;
     InterfaceType type;
     bool enable;
 };

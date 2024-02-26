@@ -22,7 +22,8 @@ namespace KS
 namespace Notify
 {
 Notify::Notify(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+    m_dbusProxy(nullptr)
 {
     ::Notify::NotificationWrapper::globalInit(tr("Security reinforcement").toStdString());
 
@@ -39,6 +40,11 @@ Notify::Notify(QObject *parent)
 
 Notify::~Notify()
 {
+    if (m_dbusProxy)
+    {
+        delete m_dbusProxy;
+        m_dbusProxy = nullptr;
+    }
     ::Notify::NotificationWrapper::globalDeinit();
 }
 
