@@ -129,7 +129,8 @@ void FileShredPage::initUI()
                     POPUP_MESSAGE_DIALOG(tr("Please selecte files."));
                     return;
                 }
-                m_dbusProxy->RemoveFileFromFileShred(m_ui->m_table->getSelectedFiles());
+                auto reply = m_dbusProxy->RemoveFileFromFileShred(m_ui->m_table->getSelectedFiles());
+                CHECK_ERROR_FOR_DBUS_REPLY(reply);
             });
     connect(m_ui->m_shred, &QPushButton::clicked, this, [this]
             {
@@ -142,7 +143,8 @@ void FileShredPage::initUI()
                 shredNotify->show();
                 connect(shredNotify, &UserPromptDialog::accepted, this, [this]
                         {
-                            m_dbusProxy->ShredFile(m_ui->m_table->getSelectedFiles());
+                            auto reply = m_dbusProxy->ShredFile(m_ui->m_table->getSelectedFiles());
+                            CHECK_ERROR_FOR_DBUS_REPLY(reply);
                         });
             });
     connect(m_ui->m_table, &FileShredTable::tableUpdated, this, [this](int total)
@@ -153,7 +155,9 @@ void FileShredPage::initUI()
             });
     connect(m_dbusProxy, &ToolBoxDbusProxy::FileShredListChanged, [this]
             {
-                m_ui->m_table->updateFileList(m_dbusProxy->GetFileListFromFileShred());
+                auto reply = m_dbusProxy->GetFileListFromFileShred();
+                CHECK_ERROR_FOR_DBUS_REPLY(reply);
+                m_ui->m_table->updateFileList(reply.value());
             });
     m_ui->m_table->updateFileList(m_dbusProxy->GetFileListFromFileShred());
 }

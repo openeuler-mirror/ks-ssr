@@ -607,7 +607,7 @@ QStringList Manager::GetFileListFromFileShred()
     return ret;
 }
 
-void Manager::AddFileToFileShred(const QStringList& file_list)
+void Manager::AddFileToFileShred(const QStringList& fileList)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
@@ -621,17 +621,20 @@ void Manager::AddFileToFileShred(const QStringList& file_list)
     constexpr const char* insertFileToFileShred = "insert OR IGNORE into " FILE_SHRED_TABLE
                                                   " values ('%1');";
     QString insertFileToFileShredDBCmd{insertFileToFileShred};
-    if (!m_db->exec(insertFileToFileShredDBCmd.arg(file_list.join("'), ('"))))
+    if (!m_db->exec(insertFileToFileShredDBCmd.arg(fileList.join("'), ('"))))
     {
-        KLOG_ERROR() << "Failed to add files: " << file_list;
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to add files to ShredFile list, database error"),
+                      calledUniqueName)
+        KLOG_ERROR() << "Failed to add files: " << fileList;
     }
     emit FileShredListChanged();
     SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
-                    tr("Add file to ShredFile list: %1").arg(file_list.join(' ')),
+                    tr("Add file to ShredFile list: %1").arg(fileList.join(' ')),
                     calledUniqueName);
 }
 
-void Manager::RemoveFileFromFileShred(const QStringList& file_list)
+void Manager::RemoveFileFromFileShred(const QStringList& fileList)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = Account::Manager::m_accountManager->getRole(calledUniqueName);
@@ -639,20 +642,23 @@ void Manager::RemoveFileFromFileShred(const QStringList& file_list)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
                       tr("Failed to remove file from ShredFile list, permission denied"),
-                      calledUniqueName)
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     constexpr const char* removeFileFromFileShred = "delete from " FILE_SHRED_TABLE
                                                     " where " FILE_SHRED_COLUMN1
                                                     " in ('%1');";
     QString removeFileToFileShredDBCmd{removeFileFromFileShred};
-    if (!m_db->exec(removeFileToFileShredDBCmd.arg(file_list.join("', '"))))
+    if (!m_db->exec(removeFileToFileShredDBCmd.arg(fileList.join("', '"))))
     {
-        KLOG_ERROR() << "Failed to remove files: " << file_list;
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to remove file from ShredFile list, database error"),
+                      calledUniqueName);
+        KLOG_ERROR() << "Failed to remove files: " << fileList;
     }
     emit FileShredListChanged();
     SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
-                    tr("Remove file from ShredFile list: %1").arg(file_list.join(' ')),
+                    tr("Remove file from ShredFile list: %1").arg(fileList.join(' ')),
                     calledUniqueName);
 }
 
@@ -721,9 +727,9 @@ void Manager::processFinishedHandler(Log::Log log, const int exitCode, const QPr
     KS::Log::Manager::m_logManager->writeLog(log);
 }
 
-void Manager::hazardDetected(uint type, const QString& alert_msg)
+void Manager::hazardDetected(uint type, const QString& alertMsg)
 {
-    emit m_toolBoxManager->HazardDetected(type, alert_msg);
+    emit m_toolBoxManager->HazardDetected(type, alertMsg);
 }
 
 bool Manager::setFileSeLabels(const QString& filePath, const QString& seLabel, QString& output, const SeLabelType seLabelType)
