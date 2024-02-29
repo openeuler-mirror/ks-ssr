@@ -97,11 +97,11 @@ public:
 
     QStringList GetFileListFromFileShred();
 
-    void AddFileToFileShred(const QStringList& file_list);
+    void AddFileToFileShred(const QStringList&);
 
-    void RemoveFileFromFileShred(const QStringList& file_list);
+    void RemoveFileFromFileShred(const QStringList&);
 
-    static void hazardDetected(uint type, const QString& alert_msg);
+    static void hazardDetected(uint, const QString&);
 
 Q_SIGNALS:  // SIGNALS
     void FileShredListChanged();

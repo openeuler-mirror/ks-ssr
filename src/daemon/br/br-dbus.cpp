@@ -731,20 +731,20 @@ void BRDBus::Cancel(const qlonglong& jobID)
                     calledUniqueName);
 }
 
-void BRDBus::ExportStrategy(bool operation_result)
+void BRDBus::ExportStrategy(bool operationResult)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     SSR_LOG(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                     tr("export strategy"),
-                    operation_result,
+                    operationResult,
                     calledUniqueName);
 }
-void BRDBus::GenerateReport(bool operation_result)
+void BRDBus::GenerateReport(bool operationResult)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     SSR_LOG(Log::Manager::LogType::BASELINE_REINFORCEMENT,
                     tr("export report"),
-                    operation_result,
+                    operationResult,
                     calledUniqueName);
 }
 
