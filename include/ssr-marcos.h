@@ -94,6 +94,26 @@ private:
         QDBusConnection::systemBus().send(replyMessage);                                            \
         return val;                                                                                 \
     }
+
+#define DBUS_ERROR_REPLY(errorCode, message)                                                        \
+    {                                                                                               \
+        auto replyMessage = message.createErrorReply(QDBusError::Failed, SSR_ERROR2STR(errorCode)); \
+        QDBusConnection::systemBus().send(replyMessage);                                            \
+    }
+
+#define DBUS_REPLY_AND_RETURN(message)                   \
+    {                                                    \
+        auto replyMessage = message.createReply();       \
+        QDBusConnection::systemBus().send(replyMessage); \
+        return;                                          \
+    }
+
+#define DBUS_REPLY(message)                              \
+    {                                                    \
+        auto replyMessage = message.createReply();       \
+        QDBusConnection::systemBus().send(replyMessage); \
+    }
+
 #define BREAK_IF_FALSE(cond) \
     {                        \
         if (!(cond)) break;  \
