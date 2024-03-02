@@ -264,7 +264,7 @@ void RealTimeAlert::processAuditData(int socket)
             {
                 CONTINUE_IF_TRUE(!logRecord.field.contains("key"));
                 CONTINUE_IF_TRUE(!logRecord.field.value("key").contains(KS_SSR_AUDIT_KEYWORD));
-                alertMsgList.append(QString("uid=%1, exe=%2, op=%3")
+                alertMsgList.append(QString("uid=%1, exe=%2, syscall=%3")
                                         .arg(logRecord.field.value("uid"))
                                         .arg(logRecord.field.value("exe"))
                                         .arg(logRecord.field.value("syscall")));

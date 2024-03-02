@@ -119,11 +119,26 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_ACCESS_CONTROL:
         errorDesc = QObject::tr("Failed to set selinux status.");
         break;
-    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_SECURITY_CONTEXT:
-        errorDesc = QObject::tr("Failed to set Security Context.");
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_MLS_CONTEXT:
+        errorDesc = QObject::tr("Failed to set mls Context, see log for more details.");
         break;
-    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_GET_SECURITY_CONTEXT:
-        errorDesc = QObject::tr("Failed to get Security Context.");
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_GET_MLS_CONTEXT:
+        errorDesc = QObject::tr("Failed to get mls Context, see log for more details.");
+        break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_KIC_CONTEXT:
+        errorDesc = QObject::tr("Failed to set kic Context, see log for more details.");
+        break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_GET_KIC_CONTEXT:
+        errorDesc = QObject::tr("Failed to get kic Context, see log for more details.");
+        break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_ADD_OBJ_TO_SECURITY_SIGN:
+        errorDesc = QObject::tr("Failed to add obj to securitySign list, see log for more details.");
+        break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_REMOVE_USERS:
+        errorDesc = QObject::tr("Failed to remove users, see log for more details.");
+        break;
+    case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SHRED_FILES:
+        errorDesc = QObject::tr("Failed to shred files, see log for more details.");
         break;
 
     default:
