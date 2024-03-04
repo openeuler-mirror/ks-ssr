@@ -337,12 +337,12 @@ void DeviceListTable::initTableHeaderButton()
     auto hub = new QAction(tr("Hub"), m_deviceTypeButton);
     auto communications = new QAction(tr("Communications"), m_deviceTypeButton);
     auto bluetooth = new QAction(tr("Bluetooth"), m_deviceTypeButton);
-    auto unknown = new QAction(tr("Unknown"), m_deviceTypeButton);
+    auto other = new QAction(tr("Other"), m_deviceTypeButton);
     m_deviceTypeKeys << tr("Storage") << tr("CD") << tr("Mouse") << tr("Keyboard") << tr("Network card") << tr("Wireless network card") << tr("Video")
                      << tr("Audio") << tr("Printer") << tr("Hub") << tr("Communications")
-                     << tr("Bluetooth") << tr("Unknown");
+                     << tr("Bluetooth") << tr("Other");
     m_filterMap.insert("deviceTypeButton", m_deviceTypeKeys);
-    m_deviceTypeButton->addMenuActions(QList<QAction *>() << storage << cd << mouse << keyboard << network << wireless << video << audio << printer << hub << communications << bluetooth << unknown);
+    m_deviceTypeButton->addMenuActions(QList<QAction *>() << storage << cd << mouse << keyboard << network << wireless << video << audio << printer << hub << communications << bluetooth << other);
     connect(m_deviceTypeButton, &HeaderButtonDelegate::menuTriggered, this, [this]()
             {
                 for (auto action : m_deviceTypeButton->getMenuActions())

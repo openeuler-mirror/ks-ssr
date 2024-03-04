@@ -582,12 +582,12 @@ void Manager::removeUser(const QDBusMessage& message, const QStringList& userNam
     {
         for (const auto& userInfo : m_osUserInfo)
         {
-            if (removedUser != userInfo.pw_name || userInfo.pw_dir.isEmpty())
+            if (removedUser != userInfo.name || userInfo.dir.isEmpty())
             {
                 continue;
             }
             // 获取删除
-            userSpace.append(userInfo.pw_dir);
+            userSpace.append(userInfo.dir);
             break;
         }
     }
@@ -824,8 +824,8 @@ QString Manager::GetAllUsers()
     const QString managerGroup("wheel");
     for (const auto& groupInfo : m_osGroupInfo)
     {
-        CONTINUE_IF_TRUE(groupInfo.gr_name != managerGroup);
-        for (const auto& member : groupInfo.gr_mem)
+        CONTINUE_IF_TRUE(groupInfo.name != managerGroup);
+        for (const auto& member : groupInfo.mem)
         {
             QJsonObject obj;
             managerUserList.append(member);
@@ -837,12 +837,12 @@ QString Manager::GetAllUsers()
     }
     for (const auto& userInfo : m_osUserInfo)
     {
-        CONTINUE_IF_TRUE(managerUserList.contains(userInfo.pw_name));
-        CONTINUE_IF_TRUE(userInfo.pw_uid < 1000);
+        CONTINUE_IF_TRUE(managerUserList.contains(userInfo.name));
+        CONTINUE_IF_TRUE(userInfo.uid < 1000);
         // linux系统中存在一个nobody的系统用户，权限很低，一般用于运行服务、访问受限资源、处理匿名访问等，这里需要将这个用户过滤掉
-        CONTINUE_IF_TRUE(userInfo.pw_name == "nobody");
+        CONTINUE_IF_TRUE(userInfo.name == "nobody");
         QJsonObject obj;
-        obj.insert("name", userInfo.pw_name);
+        obj.insert("name", userInfo.name);
         obj.insert("type", OsUserType::USER_TYPE_NORMAL);
         arr.append(obj);
     }

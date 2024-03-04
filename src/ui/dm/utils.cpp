@@ -46,7 +46,7 @@ QString Utils::deviceTypeEnum2Str(DeviceType type)
     case DEVICE_TYPE_BLUETOOTH:
         return tr("Bluetooth");
     case DEVICE_TYPE_OTHER:
-        return tr("OTHER");
+        return tr("Other");
     default:
         break;
     }
