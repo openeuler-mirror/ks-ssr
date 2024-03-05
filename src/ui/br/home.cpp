@@ -49,7 +49,7 @@ void Home::init()
 {
     m_ui->m_reinforceTime->setText("");
     m_ui->m_icon->setPixmap(QPixmap(":/images/br-banner"));
-    m_ui->m_scanButton->setText(tr("Custom scan"));
+    m_ui->m_scanButton->setText(BRStandardType(m_dbusProxy->strategy_type()) == BR_STANDARD_TYPE_SYSTEM ? tr("Quick scan") : tr("Custom scan"));
     m_ui->m_scanComboBox->setItemDelegate(new QStyledItemDelegate(this));
     m_ui->m_scanComboBox->addItems(QStringList() << tr("System strategy") << tr("Custom strategy"));
     m_ui->m_scanComboBox->setCurrentIndex(BRStandardType(m_dbusProxy->strategy_type()));

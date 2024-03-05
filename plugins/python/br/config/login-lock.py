@@ -103,7 +103,6 @@ class LoginLock:
 
     def get(self):
         retdata = dict()
-
         deny_value = self.system_faillock_authfail.get_value(
             LOGIN_LOCK_CONF_KEY_FAILURES, "=")
         unlock_time = self.system_faillock_authfail.get_value(
@@ -112,17 +111,11 @@ class LoginLock:
             LOGIN_LOCK_CONF_KEY_ROOT_LOCK, "")
         root_unlock_time = self.system_faillock_authfail.get_value(
             LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME, "=")
-        if not deny_value:
-            deny_value=''
-        if not unlock_time:
-            unlock_time=''
-        if not root_unlock_time:
-            root_unlock_time=''
 
-        retdata[LOGIN_LOCK_CONF_KEY_FAILURES] = int(deny_value)
-        retdata[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME] = int(unlock_time)
+        retdata[LOGIN_LOCK_CONF_KEY_FAILURES] = "" if not deny_value else int(deny_value)
+        retdata[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME] = "" if not unlock_time else int(unlock_time)
         retdata[LOGIN_LOCK_CONF_KEY_ROOT_LOCK] = even_deny_root != "false"
-        retdata[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME] = int(root_unlock_time)
+        retdata[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME] = "" if not root_unlock_time else int(root_unlock_time)
 
         return (True, json.dumps(retdata))
 

@@ -206,6 +206,8 @@ private:
     QString m_reforceUniqueName;
     // <QString, int32_t> : <reinforceName, status>
     QMap<QString, int32_t> m_jobResult;
+    // 加固前需要进行一次扫描，定时监听扫描进程完成后再进行加固
+    QTimer *m_reinforceTimer;
 };
 }  // namespace BRDaemon
 }  // namespace KS

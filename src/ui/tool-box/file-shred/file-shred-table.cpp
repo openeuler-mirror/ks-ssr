@@ -368,6 +368,19 @@ void FileShredTable::initTable()
     connect(m_headerViewProxy, &TableHeaderProxy::toggled, this, &FileShredTable::checkedAllItem);
     connect(m_model, &FileShredModel::stateChanged, m_headerViewProxy, &TableHeaderProxy::setCheckState);
     connect(m_model, &FileShredModel::tableUpdated, this, &FileShredTable::tableUpdated);
+    connect(this, &FileShredTable::entered, this, [this](const QModelIndex &index)
+            {
+                RETURN_IF_TRUE(!index.isValid());
+                RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
+                // 判断内容是否显示完整
+                auto itemRect = this->visualRect(index);
+                // 计算文本宽度
+                QFontMetrics metrics(this->font());
+                auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
+                RETURN_IF_TRUE(textWidth <= itemRect.width())
+                auto mod = selectionModel()->model()->data(index);
+                QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
+            });
 
     m_filterProxy = new FileShredFilterModel(this);
     m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
@@ -409,18 +422,5 @@ void FileShredTable::checkedAllItem(Qt::CheckState checkState)
         m_model->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
     }
 }
-
-void FileShredTable::mouseEnter(const QModelIndex &index)
-{
-    // 判断内容是否显示完整
-    auto itemRect = this->visualRect(index);
-    // 计算文本宽度
-    QFontMetrics metrics(this->font());
-    auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
-    RETURN_IF_TRUE(textWidth <= itemRect.width())
-    auto mod = selectionModel()->model()->data(index);
-    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
-}
-
 }  // namespace ToolBox
 }  // namespace KS

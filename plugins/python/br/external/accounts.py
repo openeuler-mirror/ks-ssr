@@ -111,8 +111,8 @@ class LoginLimit(Accounts):
     def get(self):
         retdata = dict()
         retdata[LOGIN_LIMIT_ARG_ENABLED] = True
-        retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS] = self.conf.get(
-            ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS)
+        permission_value = self.conf.get(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS)
+        retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS] = "" if not permission_value else permission_value
         permission_users = retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS].split(";")
 
         for pwdent in pwd.getpwall():
@@ -127,9 +127,8 @@ class LoginLimit(Accounts):
 
     def set(self, args_json):
         args = json.loads(args_json)
-
-        self.conf.set(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS,
-                      args[LOGIN_LIMIT_ARG_PERMISSION_USERS])
+        if args[LOGIN_LIMIT_ARG_PERMISSION_USERS]:
+            self.conf.set(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS, args[LOGIN_LIMIT_ARG_PERMISSION_USERS])
         try:
             self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
         except Exception:

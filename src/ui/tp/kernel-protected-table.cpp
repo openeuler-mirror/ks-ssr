@@ -403,6 +403,19 @@ void KernelProtectedTable::initTable()
     verticalHeader->setDefaultSectionSize(38);
 
     connect(this, &KernelProtectedTable::entered, this, &KernelProtectedTable::itemEntered);
+    connect(this, &KernelProtectedTable::entered, this, [this](const QModelIndex &index)
+        {
+            RETURN_IF_TRUE(!index.isValid());
+            RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
+            // 判断内容是否显示完整
+            auto itemRect = this->visualRect(index);
+            // 计算文本宽度
+            QFontMetrics metrics(this->font());
+            auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
+            RETURN_IF_TRUE(textWidth <= itemRect.width())
+            auto mod = selectionModel()->model()->data(index);
+            QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
+        });
     connect(this, &KernelProtectedTable::clicked, this, &KernelProtectedTable::itemClicked);
 }
 
@@ -453,12 +466,6 @@ void KernelProtectedTable::filterFixedString()
 }
 void KernelProtectedTable::itemEntered(const QModelIndex &index)
 {
-    //    RETURN_IF_TRUE(index.column() != KernelField::KERNEL_FIELD_FILE_PATH)
-    if (index.column() == KernelField::KERNEL_FIELD_FILE_PATH)
-    {
-        auto module = selectionModel()->model()->data(index);
-        QToolTip::showText(QCursor::pos(), QString(tr("%1")).arg(module.toString()), this);
-    }
     if (index.column() == KernelField::KERNEL_FIELD_PROHIBIT_UNLOAD)
     {
         this->setCursor(Qt::PointingHandCursor);
