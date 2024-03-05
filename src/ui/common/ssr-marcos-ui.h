@@ -29,11 +29,21 @@
         messageDialog->show();                                                        \
     }
 
-#define CHECK_ERROR_FOR_DBUS_REPLY(reply)                 \
-    {                                                     \
-        reply.waitForFinished();                          \
-        if (reply.isError())                              \
-        {                                                 \
-            POPUP_MESSAGE_DIALOG(reply.error().message()) \
-        }                                                 \
+#define CHECK_ERROR_FOR_DBUS_REPLY(reply)                   \
+    {                                                       \
+        (reply).waitForFinished();                          \
+        if ((reply).isError())                              \
+        {                                                   \
+            POPUP_MESSAGE_DIALOG((reply).error().message()) \
+        }                                                   \
+    }
+
+#define CHECK_ERROR_FOR_DBUS_REPLY_AND_RETURN(reply)          \
+    {                                                         \
+        (reply).waitForFinished();                            \
+        if ((reply).isError())                                \
+        {                                                     \
+            POPUP_MESSAGE_DIALOG((reply).error().message())   \
+            return;                                           \
+        }                                                     \
     }

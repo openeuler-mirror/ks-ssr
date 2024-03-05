@@ -355,19 +355,19 @@ QString DeviceManager::interfaceTypeEnum2Str(int type)
     switch (type)
     {
     case INTERFACE_TYPE_UNKNOWN:
-        return "Other";
+        return tr("Other");
     case INTERFACE_TYPE_USB:
-        return "CD";
+        return tr("CD");
     case INTERFACE_TYPE_BLUETOOTH:
-        return "Mouse";
+        return tr("Mouse");
     case INTERFACE_TYPE_NET:
-        return "Keyboard";
+        return tr("Keyboard");
     case INTERFACE_TYPE_HDMI:
-        return "Network card";
+        return tr("Network card");
     case INTERFACE_TYPE_USB_KBD:
-        return "Wireless network card";
+        return tr("Wireless network card");
     case INTERFACE_TYPE_USB_MOUSE:
-        return "Video";
+        return tr("Video");
     default:
         break;
     }

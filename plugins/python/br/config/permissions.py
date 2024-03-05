@@ -128,41 +128,40 @@ class UmaskLimit:
 
     def get(self):
         retdata = dict()
-
+        key = 'enabled'
         profile_value = self.conf_profile.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
-        bashrc_vale = self.conf_bashrc.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
-
-        if profile_value == bashrc_vale and profile_value == '022':
-            retdata['enabled'] = int(222)
-        else:
-            retdata['enabled'] = int(profile_value)
+        bashrc_value = self.conf_bashrc.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
+        retdata[key] = "" if not bashrc_value else int(bashrc_value)
+        # 如果profile中有值，则以profile为准
+        if profile_value:
+            retdata[key] = int(profile_value)
+        # 为了使022这个权限为不符合，按照现在的比对标准，22为符合，因此获取值设置为222
+        if str(retdata[key]) and "22" in str(retdata[key]):
+            retdata[key] = int(222)
 
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        br.log.debug("args['enabled'] = ")
-        br.log.debug(args['enabled'])
-        if args['enabled'] == 27:
+        umask_value = args['enabled']
+        if not umask_value:
+            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '')
+            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '')
+            umask_value = "0"
+
+        if int(umask_value) == 27:
             self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
             self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
-        else:
-            if args['enabled'] == 22:
-                self.conf_profile.set_all_value(
-                    UMASK_LIMIT_CONF_KEY_UMASK, '022')
-                self.conf_bashrc.set_all_value(
-                    UMASK_LIMIT_CONF_KEY_UMASK, '022')
-            if args['enabled'] == 222:
-                self.conf_profile.set_all_value(
-                    UMASK_LIMIT_CONF_KEY_UMASK, '022')
-                self.conf_bashrc.set_all_value(
-                    UMASK_LIMIT_CONF_KEY_UMASK, '022')
-            if args['enabled'] == 77:
-                self.conf_profile.set_all_value(
-                    UMASK_LIMIT_CONF_KEY_UMASK, '077')
-                self.conf_bashrc.set_all_value(
-                    UMASK_LIMIT_CONF_KEY_UMASK, '077')
-
+        if int(umask_value) == 22:
+            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+        if int(umask_value) == 222:
+            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+        if int(umask_value) == 77:
+            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
+            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
+        
         cmd = "source" + " " + UMASK_LIMIT_BASHRC_PATH + " " + UMASK_LIMIT_PROFILE_PATH
         limit_open_command = '{0}'.format(cmd)
         br.utils.subprocess_not_output(limit_open_command)

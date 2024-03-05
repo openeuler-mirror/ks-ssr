@@ -56,6 +56,7 @@ private:
         Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop avahi service!"));
         Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop rpcbind service!"));
         Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop smb service!"));
+        Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "sshd.services is not running!"));
         Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Abnormal service! Please check the log information for details."));
     };
     ~PluginsTranslation(){};

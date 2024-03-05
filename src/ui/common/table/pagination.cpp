@@ -26,19 +26,28 @@ namespace KS
 {
 Pagination::Pagination(int totalPage, int maxShowPages, bool jumpEdit, QWidget *parent)
     : QWidget(parent),
-      m_ui(new Ui::Pagination)
+      m_ui(new Ui::Pagination),
+      m_intValidator(nullptr)
 {
     m_ui->setupUi(this);
     m_totalPage = totalPage;
     m_maxShowPages = maxShowPages;
     m_currentPage = 1;
     m_pageSelectMode = PageSelectByButton;
+    m_intValidator = new QIntValidator(1, totalPage, this);
     if (jumpEdit)
     {
         m_jumpLineEdit = new QLineEdit(this);
         m_jumpLineEdit->setFixedSize(QSize(72, 30));
         m_ui->horizontalLayout_jump->addWidget(m_jumpLineEdit);
-        m_jumpLineEdit->setValidator(new QIntValidator(this));
+        m_jumpLineEdit->setValidator(m_intValidator);
+        m_jumpLineEdit->setTextMargins(10, 0, 0, 0);
+        connect(m_jumpLineEdit, &QLineEdit::textChanged, [this](const QString &text){
+            if (text.startsWith("0"))
+            {
+                m_jumpLineEdit->clear();
+            }
+        });
         m_jumpLineEdit->setPlaceholderText(tr("Input page"));
         connect(m_jumpLineEdit, SIGNAL(returnPressed()), this, SLOT(jumpPage()));
     }
@@ -50,7 +59,8 @@ Pagination::Pagination(int totalPage, int maxShowPages, bool jumpEdit, QWidget *
 
 Pagination::Pagination(int totalPage, QWidget *parent)
     : QWidget(parent),
-      m_ui(new Ui::Pagination)
+      m_ui(new Ui::Pagination),
+      m_intValidator(nullptr)
 {
     m_ui->setupUi(this);
     m_totalPage = totalPage;
@@ -71,7 +81,8 @@ Pagination::Pagination(int totalPage, QWidget *parent)
     m_jumpLineEdit->setMinimumSize(QSize(50, 30));
     m_jumpLineEdit->setAlignment(Qt::AlignHCenter);
     m_ui->m_buttonLayout->addWidget(m_jumpLineEdit);
-    m_jumpLineEdit->setValidator(new QIntValidator(this));
+    m_intValidator = new QIntValidator(1, totalPage, this);
+    m_jumpLineEdit->setValidator(m_intValidator);
     m_jumpLineEdit->setPlaceholderText("1");
 
     auto labelLine = new QLabel("-", this);
@@ -275,6 +286,13 @@ void Pagination::forceChangeCurrentPage(int currentPage)
 
 void Pagination::setTotalPage(int totalPage)
 {
+    m_intValidator->setTop(totalPage);
+    // 当前页数超出阀值，设置最后一页
+    if (totalPage < m_currentPage)
+    {
+        m_currentPage = totalPage;
+        emit currentPageChanged(m_currentPage);
+    }
     setTotalPage(totalPage, m_currentPage);
     m_totalPage > 1 ? show() : hide();
 }

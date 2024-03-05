@@ -14,6 +14,7 @@ TTYPS_CMD_STR = "setserial /dev/ttyS"
 TTYPS_STATUS_CMD = "setserial -g /dev/ttyS"
 TTYPS_SUM_DEV_CMD = "ls /dev/ttyS* |wc -l"
 TTYPS_CHECK_CMD_TAIL = "| grep unknown"
+TTYPS_CHECK_OCCUPY_CMD = "fuser /dev/ttyS"
 
 USB_SUM_DEV_CMD = "ls /proc/scsi/ |grep usb-storage"
 
@@ -30,6 +31,8 @@ MV_CMD = "mv"
 CDROM_ARG_ENABLED = "enabled"
 USB_ARG_ENABLED = "enabled"
 TTYS_ARG_ENABLED = "enabled"
+
+DEVICE_BUSY_NOTIFY = "Device busy, please pop up!"
 
 
 class UDev:
@@ -179,7 +182,7 @@ class CDROM(DRIVERS):
             self.conf.set_value("1=blacklist sr_mod", "blacklist sr_mod")
             output = self.close()
             if output:
-                return (False, "Device busy, please pop up!")
+                return (False, DEVICE_BUSY_NOTIFY)
         else:
             self.conf.del_record("1=blacklist cdrom")
             self.conf.del_record("1=blacklist sr_mod")
@@ -271,12 +274,12 @@ class USB(DRIVERS):
                                 "blacklist usb-storage")
             output = self.close()
             if output:
-                return (False, _("Device busy , please pop up!\t"))
+                return (False, DEVICE_BUSY_NOTIFY)
         else:
             self.conf.del_record("1=blacklist usb-storage")
             output = self.open()
             if output:
-                return (False, _("Please contact the admin.\t"))
+                return (False, "Please contact the admin.")
 
         return (True, '')
 
@@ -311,19 +314,17 @@ class TTYS(UDev):
 
     def set(self, args_json):
         args = json.loads(args_json)
-
-        open_index = 0
-        close_index = 0
+        
         nums_command = '{0}'.format(TTYPS_SUM_DEV_CMD)
         output = br.utils.subprocess_has_output(nums_command)
         output_nums = int(output)
 
         if args[TTYS_ARG_ENABLED]:
+            open_index = 0
             while open_index < output_nums:
                 flag_open_cmd = TTYPS_STATUS_CMD + str(open_index)
                 command_open_status = '{0} {1}'.format(flag_open_cmd, TTYPS_CHECK_CMD_TAIL)
-                flag_open = br.utils.subprocess_has_output(
-                    command_open_status)
+                flag_open = br.utils.subprocess_has_output(command_open_status)
                 ttys_open_cmd = TTYPS_CMD_STR + \
                     str(open_index) + "  " + "-a autoconfig"
                 ttys_open_command = '{0}'.format(ttys_open_cmd)
@@ -334,9 +335,12 @@ class TTYS(UDev):
                     br.utils.subprocess_not_output(ttys_open_command)
                 open_index += 1
         else:
+            close_index = 0
             while close_index < output_nums:
                 flag_close_cmd = TTYPS_STATUS_CMD + str(close_index)
                 command_close_status = '{0} {1}'.format(flag_close_cmd, TTYPS_CHECK_CMD_TAIL)
+                if (len(br.utils.subprocess_has_output(TTYPS_CHECK_OCCUPY_CMD + str(close_index))) != 0):
+                    return (False, DEVICE_BUSY_NOTIFY)
                 flag_close = br.utils.subprocess_has_output(
                     command_close_status)
                 ttys_close_cmd = TTYPS_CMD_STR + \

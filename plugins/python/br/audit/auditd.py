@@ -16,6 +16,7 @@ AUDIT_DEL_PATH_KEY = "del-path"
 AUDIT_DEL_ALL_RULE_KEY = "enabled"
 
 AUDIT_RULE_TAIL = "-p rwxa"
+NULL_STR = "null"
 
 # 系统审计服务
 
@@ -64,41 +65,55 @@ class Rules():
         # 写入文件
         with open(AUDIT_RULES_PATH, "w") as file:
             file.writelines(new_lines)
+    def delete_all_lines(self):
+        # 读取文件所有行
+        with open(AUDIT_RULES_PATH, "r") as file:
+            lines = file.readlines()
+        # 遍历行
+        for line in lines:
+            br.utils.subprocess_not_output("{0} {1}".format(AUDIT_DEL_CMD, line.replace("-w ", "")))
+        br.utils.subprocess_not_output("echo '' > {0}".format(AUDIT_RULES_PATH))
 
     def get(self):
         retdata = dict()
         retdata[AUDIT_DEL_ALL_RULE_KEY] = False
+        if os.path.getsize(AUDIT_RULES_PATH) == 0:
+            retdata[AUDIT_ADD_PATH_KEY] = NULL_STR
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        add_rules = "-w {0} {1}".format(args[AUDIT_ADD_PATH_KEY],
+
+        add_rule_key = ""
+        if args[AUDIT_ADD_PATH_KEY] != NULL_STR:
+            add_rule_key = args[AUDIT_ADD_PATH_KEY]
+        else:
+            self.delete_all_lines()
+        add_rules = "-w {0} {1}".format(add_rule_key,
                                         AUDIT_RULE_TAIL)
         del_rules = "-w {0} {1}".format(args[AUDIT_DEL_PATH_KEY],
                                         AUDIT_RULE_TAIL)
 
-        is_arg_empty_add = args[AUDIT_ADD_PATH_KEY] != "" and args[AUDIT_ADD_PATH_KEY] != "\"\""
+        is_arg_empty_add = add_rule_key != "" and add_rule_key != "\"\""
         is_arg_empty_del = args[AUDIT_DEL_PATH_KEY] != "" and args[AUDIT_DEL_PATH_KEY] != "\"\""
         # Need to close selinux for use.
         if ((is_arg_empty_add and self.get_selinux_status()) or
                 (is_arg_empty_del and self.get_selinux_status())):
             return (False, "Please close SELinux and use it!")
         # No such file or directory.
-        if ((is_arg_empty_add and not os.path.exists(args[AUDIT_ADD_PATH_KEY])) or
+        if ((is_arg_empty_add and not os.path.exists(add_rule_key)) or
                 (is_arg_empty_del and not os.path.exists(args[AUDIT_DEL_PATH_KEY]))):
             return (False, "No such file or directory.")
 
-        if is_arg_empty_add and not self.is_rule_exist(args[AUDIT_ADD_PATH_KEY]):
+        if is_arg_empty_add and not self.is_rule_exist(add_rule_key):
             self.conf.set_value(
-                "1=-w\ {0}".format(args[AUDIT_ADD_PATH_KEY]), add_rules)
+                "1=-w\ {0}".format(add_rule_key), add_rules)
             br.utils.subprocess_not_output("auditctl {0}".format(add_rules))
         if is_arg_empty_del:
             self.delete_line(del_rules)
             br.utils.subprocess_not_output("{0} {1}".format(AUDIT_DEL_CMD, del_rules.replace("-w ", "")))
         if args[AUDIT_DEL_ALL_RULE_KEY]:
-            br.utils.subprocess_not_output(
-                "echo '' > {0}".format(AUDIT_RULES_PATH))
-            br.utils.subprocess_not_output("auditctl -D")
+            self.delete_all_lines()
         # 忽略这个错误，重复执行这条命令也会抛出错误
         br.utils.subprocess_has_output_ignore_error_handling("augenrules --load")
 

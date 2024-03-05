@@ -155,7 +155,11 @@ bool ReinforcementPython::set(const QString &args, QString &error)
 bool ReinforcementPython::check_call_result(PyObject *py_retval, const QString &function_name, QString &error)
 {
     error = Utils::pyCatchException();
-    RETURN_VAL_IF_FALSE(error.isEmpty(), false);
+    if (!error.isEmpty())
+    {
+        KLOG_DEBUG() << "check result error, and error message is " << error << " function name is " << function_name;
+        return false;
+    }
 
     if (!py_retval || !PyTuple_Check(py_retval))
     {
