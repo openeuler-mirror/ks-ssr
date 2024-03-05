@@ -34,22 +34,22 @@ namespace ToolBox
 class RealTimeAlert;
 struct Group
 {
-    __gid_t gr_gid;     /* Group ID.	*/
-    QString gr_name;    /* Group name.	*/
-    QString gr_passwd;  /* Password.	*/
-    QStringList gr_mem; /* Member list.	*/
+    __gid_t gid;     /* Group ID.	*/
+    QString name;    /* Group name.	*/
+    QString passwd;  /* Password.	*/
+    QStringList mem; /* Member list.	*/
 };
 
 struct Passwd
 {
-    QString pw_name;   /* Username.  */
-    QString pw_passwd; /* Hashed passphrase, if shadow database
+    QString name;   /* Username.  */
+    QString passwd; /* Hashed passphrase, if shadow database
                         not in use (see shadow.h).  */
-    __uid_t pw_uid;    /* User ID.  */
-    __gid_t pw_gid;    /* Group ID.  */
-    QString pw_gecos;  /* Real name.  */
-    QString pw_dir;    /* Home directory.  */
-    QString pw_shell;  /* Shell program.  */
+    __uid_t uid;    /* User ID.  */
+    __gid_t gid;    /* Group ID.  */
+    QString gecos;  /* Real name.  */
+    QString dir;    /* Home directory.  */
+    QString shell;  /* Shell program.  */
 };
 
 
