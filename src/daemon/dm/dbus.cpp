@@ -274,8 +274,8 @@ void DBus::enableInterface(const QDBusMessage &message,
     if (interfaceType <= INTERFACE_TYPE_UNKNOWN || interfaceType >= INTERFACE_TYPE_LAST)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
-                      tr("Failed to enable interface. type is %1")
-                          .arg(DM::DeviceManager::interfaceTypeEnum2Str(interfaceType)),
+                      tr("Failed to %1 interface. type is %2")
+                          .arg(enabled ? tr("enabled") : tr("disabled"), DM::DeviceManager::interfaceTypeEnum2Str(interfaceType)),
                       callerUnique);
         KLOG_WARNING() << "Illegal interface type " << interfaceType;
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, message)
@@ -284,7 +284,8 @@ void DBus::enableInterface(const QDBusMessage &message,
     if ((interfaceType == INTERFACE_TYPE_HDMI) && !m_deviceManager->isSupportHDMIDisable())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
-                      tr("Failed to enable interface. type is %1").arg(QString::number(interfaceType)),
+                      tr("Failed to %1 interface. type is %2")
+                          .arg(enabled ? tr("enabled") : tr("disabled"), DM::DeviceManager::interfaceTypeEnum2Str(interfaceType)),
                       callerUnique);
         KLOG_WARNING() << "Not support disable HDMI interface.";
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DEVICE_DISABLE_HDMI, message)
@@ -294,8 +295,8 @@ void DBus::enableInterface(const QDBusMessage &message,
     m_deviceManager->triggerInterfaceDevices(interfaceType);
 
     SSR_LOG_SUCCESS(Log::Manager::LogType::DEVICE,
-                    tr("Enable interface. type is %1")
-                        .arg(DM::DeviceManager::interfaceTypeEnum2Str(interfaceType)),
+                    tr("%1 interface. type is %2")
+                        .arg(enabled ? tr("enabled") : tr("disabled"), DM::DeviceManager::interfaceTypeEnum2Str(interfaceType)),
                     callerUnique);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);

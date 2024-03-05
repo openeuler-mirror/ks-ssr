@@ -70,16 +70,15 @@ class SSHD:
 class RootLogin(SSHD):
     def get(self):
         retdata = dict()
-        retdata[ROOT_LOGIN_ARG_ENABLED] = (
-            self.conf.get_value("PermitRootLogin") == "no")
+        root_login_value = self.conf.get_value("PermitRootLogin")
+        retdata[ROOT_LOGIN_ARG_ENABLED] = "" if not root_login_value else bool(root_login_value != "yes")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         if not self.service.is_active():
             return (False, ERROR_NOTIFY)
         args = json.loads(args_json)
-        self.conf.set_all_value(
-            "PermitRootLogin", "no" if args[ROOT_LOGIN_ARG_ENABLED] else "yes")
+        self.conf.set_all_value("PermitRootLogin", "" if args[ROOT_LOGIN_ARG_ENABLED] else "yes")
         # 重启服务生效
         self.service.reload()
         return (True, '')
@@ -88,16 +87,18 @@ class RootLogin(SSHD):
 class PubkeyAuth(SSHD):
     def get(self):
         retdata = dict()
-        retdata[PUBKEY_AUTH_ARG_ENABLED] = (
-            not (self.conf.get_value("PubkeyAuthentication") == "no"))
+        pubkey_value = self.conf.get_value("PubkeyAuthentication")
+        retdata[PUBKEY_AUTH_ARG_ENABLED] = "" if not pubkey_value else bool(pubkey_value == "yes")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         if not self.service.is_active():
             return (False, ERROR_NOTIFY)
         args = json.loads(args_json)
-        self.conf.set_all_value(
-            "PubkeyAuthentication", "yes" if args[PUBKEY_AUTH_ARG_ENABLED] else "no")
+        if not str(args[PUBKEY_AUTH_ARG_ENABLED]):
+            self.conf.set_all_value("PubkeyAuthentication", "")
+        else:        
+            self.conf.set_all_value("PubkeyAuthentication", "yes" if args[PUBKEY_AUTH_ARG_ENABLED] else "no")
         # 重启服务生效
         self.service.reload()
         return (True, '')
@@ -188,9 +189,7 @@ class SessionTimeout(SSHD):
     def get(self):
         retdata = dict()
         timeout = self.conf.get_value(PROFILE_CLIENT_TMOUT)
-        if not timeout:
-            timeout='0'
-        retdata[PROFILE_CLIENT_TMOUT] = int(timeout)
+        retdata[PROFILE_CLIENT_TMOUT] = "" if not timeout else int(timeout)
         return (True, json.dumps(retdata))
 
     def set(self, args_json):

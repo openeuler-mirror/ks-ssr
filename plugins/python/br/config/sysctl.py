@@ -31,16 +31,18 @@ class SAKKey:
 
     def get(self):
         retdata = dict()
-        retdata[SAK_KEY_SWITCH_CONF_KEY_SYSRQ] = bool(
-            self.conf.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ) == "1")
+        value = self.conf.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ)
+        sys_value = self.conf_sys.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ)
+        if sys_value:
+            value = sys_value
+        retdata[SAK_KEY_SWITCH_CONF_KEY_SYSRQ] = "" if not value else value == "1"
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        if args[SAK_KEY_SWITCH_CONF_KEY_SYSRQ]:
-            value = 1
-        else:
-            value = 0
+        value = ""
+        if str(args[SAK_KEY_SWITCH_CONF_KEY_SYSRQ]):
+            value = "1" if bool(args[SAK_KEY_SWITCH_CONF_KEY_SYSRQ]) else "0"
         self.conf.set_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ, value)
         if len(self.conf_sys.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ)) != 0:
             self.conf_sys.set_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ, value)
@@ -52,22 +54,23 @@ class SAKKey:
 class Dmesg:
     def __init__(self):
         self.conf = br.configuration.KV(SAK_KEY_SWITCH_CONF_FILE, "=", "=")
-        self.conf_sys = br.configuration.KV(
-            SAK_KEY_SWITCH_CONF_SYS_FILE, "=", "=")
+        self.conf_sys = br.configuration.KV(SAK_KEY_SWITCH_CONF_SYS_FILE, "=", "=")
 
     def get(self):
         retdata = dict()
-        retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = bool(self.conf.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ) == "1")
-        if len(self.conf_sys.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)) != 0:
-            retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = bool(self.conf_sys.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ) == "1")
+        dmesg_value = self.conf.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)
+        sys_value = self.conf_sys.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)
+        if sys_value:
+            dmesg_value = sys_value
+        retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = "" if not dmesg_value else dmesg_value == "1"
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        if args[DMESG_SWITCH_CONF_KEY_SYSRQ]:
-            value = 1
-        else:
-            value = 0
+        value = ""
+        if str(args[DMESG_SWITCH_CONF_KEY_SYSRQ]):
+            value = "1" if bool(args[DMESG_SWITCH_CONF_KEY_SYSRQ]) else "0"
+        
         self.conf.set_value(DMESG_SWITCH_CONF_KEY_SYSRQ, value)
         if len(self.conf_sys.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)) != 0:
             self.conf_sys.set_value(DMESG_SWITCH_CONF_KEY_SYSRQ, value)
@@ -109,6 +112,10 @@ class KeyRebootSwitch:
         if not os.path.exists('/etc/systemd/system/ctrl-alt-del.target'):
             br.utils.subprocess_not_output(
                 "ln -s /usr/lib/systemd/system/reboot.target /etc/systemd/system/ctrl-alt-del.target")
+        rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
+        br.utils.subprocess_not_output(rm_cmd)
+        self.conf.set_value("1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'\'", MODIFY_RULE_OPEN)
+        self.reload_schemas()
 
     def close(self):
         if os.path.exists('/etc/systemd/system/ctrl-alt-del.target'):
@@ -116,6 +123,10 @@ class KeyRebootSwitch:
                 "rm -rf /etc/systemd/system/ctrl-alt-del.target")
         command = '{0}'.format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
         br.utils.subprocess_not_output(command)
+        rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
+        br.utils.subprocess_not_output(rm_cmd)
+        self.conf.set_value("1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'<Control><Alt>Delete\'", MODIFY_RULE_CLOSE)
+        self.reload_schemas()
 
     def get(self):
         retdata = dict()
@@ -128,22 +139,13 @@ class KeyRebootSwitch:
     def set(self, args_json):
         args = json.loads(args_json)
         if self.status_exist():
-            if not self.status():
+            if not self.status() and args['enabled']:
+                self.open()
+            else:
                 if args['enabled']:
                     self.open()
-                    rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
-                    br.utils.subprocess_not_output(rm_cmd)
-                    self.conf.set_value(
-                        "1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'\'", MODIFY_RULE_OPEN)
-                    self.reload_schemas()
-            else:
-                if not args['enabled']:
+                else:
                     self.close()
-                    rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
-                    br.utils.subprocess_not_output(rm_cmd)
-                    self.conf.set_value(
-                        "1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'<Control><Alt>Delete\'", MODIFY_RULE_CLOSE)
-                    self.reload_schemas()
         else:
             # 针对3.3-6的处理规则，文件不存在，开关为打开是，将.bak改为ctrl-alt-del.target
             if args['enabled'] and self.status_bak():

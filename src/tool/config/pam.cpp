@@ -94,9 +94,10 @@ bool PAM::setValue(const QString &key,
         if (kv_regex.indexIn(match_info.match_line) != -1)
         {
             // 修改键值对
-            if (!kv_split_pattern.isEmpty() && !value.isEmpty())
+            if (!kv_split_pattern.isEmpty())
             {
-                replace_line.replace(kv_regex, "\\1" + value);
+                // value为空则移除关键字
+                replace_line.replace(kv_regex, value.isEmpty() ? value : "\\1" + value);
             }
         }
         else
@@ -104,8 +105,9 @@ bool PAM::setValue(const QString &key,
             // 添加键值对
             if (value.isEmpty())
             {
-                KLOG_WARNING("Unknown situation.");
-                return false;
+                // value为空则不填加
+                KLOG_DEBUG("set value is empty, and not add key.");
+                return true;
             }
             replace_line += (this->isWhitespaceInTail(match_info.match_line) ? "" : " ") + key;
             if (!kv_split_pattern.isEmpty())

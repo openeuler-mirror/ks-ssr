@@ -184,10 +184,9 @@ void FileSign::acceptedSecurityContext()
     if (m_modifySecurityContext->getFilePath().startsWith('/'))
     {
         auto reply = m_dbusProxy->SetFileMLSLabel(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getSecurityContext());
-        CHECK_ERROR_FOR_DBUS_REPLY(reply);
+        CHECK_ERROR_FOR_DBUS_REPLY_AND_RETURN(reply);
         reply = m_dbusProxy->SetFileKICLabel(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getIntegrityLabel());
-        CHECK_ERROR_FOR_DBUS_REPLY(reply);
-        return;
+        CHECK_ERROR_FOR_DBUS_REPLY_AND_RETURN(reply);
     }
     auto reply = m_dbusProxy->SetUserMLSLabel(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getSecurityContext());
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
