@@ -436,29 +436,14 @@ void DeviceListTable::showDetails(const QModelIndex &index)
 {
     RETURN_IF_TRUE(!index.isValid());
     RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
-    RETURN_IF_TRUE(index.column() == ListTableField::LIST_TABLE_FIELD_STATUS ||
-                   index.column() == ListTableField::LIST_TABLE_FIELD_PERMISSION);
-
-    // FIXME:计算字符像素宽度不准确
-    auto itemText = m_filterProxy->data(index).toString();
-    RETURN_IF_TRUE(itemText.isEmpty());
-
-    QFontMetrics fm(fontMetrics());
-    auto textRect = fm.boundingRect(itemText);
-    const int textMargin = this->style()->pixelMetric(QStyle::PM_FocusFrameHMargin) + 1;
-    // 文字矩形宽要加上单元格左边padding的10px
-    auto textWidthInPxs = textRect.width() + 10 + textMargin;
-
-    if (textWidthInPxs > columnWidth(index.column()))
-    {
-        QPoint point = QCursor::pos();
-        QRect rect = QRect(point.x(), point.y(), 30, 10);
-        QToolTip::showText(point, itemText, this, rect);
-    }
-    else
-    {
-        QToolTip::hideText();
-    }
+    // 判断内容是否显示完整
+    auto itemRect = this->visualRect(index);
+    // 计算文本宽度
+    QFontMetrics metrics(this->font());
+    auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
+    RETURN_IF_TRUE(textWidth <= itemRect.width())
+    auto mod = selectionModel()->model()->data(index);
+    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
 }
 
 #define GET_JSON_BOOL_VALUE(obj, key) ((obj).value(key).isBool() ? (obj).value(key).toBool() : false)

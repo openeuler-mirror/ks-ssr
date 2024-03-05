@@ -77,7 +77,8 @@ BRDBus::BRDBus(QObject* parent)
     : QObject(parent),
       m_resourceMonitorTimer(nullptr),
       m_isScanFlag(true),
-      m_isFinishRHWrite(true)
+      m_isFinishRHWrite(true),
+      m_reinforceTimer(nullptr)
 {
     this->m_dbus = new BRAdaptor(this);
     init();
@@ -678,15 +679,21 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
     QObject::disconnect(this->m_reinforceJob.get(), &Job::processFinished, 0, 0);
     QObject::connect(this->m_reinforceJob.get(), &Job::processFinished, this, &BRDBus::finishedReinforceProgress);
 
-    if (!this->m_reinforceJob->runAsync())
-    {
-        auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED));
-        QDBusConnection::systemBus().send(replyMessage);
-        SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to reinforcement."),
-                      m_reforceUniqueName);
-        return;
-    }
+    connect(m_reinforceTimer, &QTimer::timeout, this, [this, message]{
+        RETURN_IF_TRUE(m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
+        m_reinforceTimer->stop();
+        disconnect(m_reinforceTimer, &QTimer::timeout, nullptr, nullptr);
+        if (!this->m_reinforceJob->runAsync())
+        {
+            auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED));
+            QDBusConnection::systemBus().send(replyMessage);
+            SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                        tr("Failed to reinforcement."),
+                        m_reforceUniqueName);
+            KLOG_ERROR() << "Reinforce running failed!";
+        }
+    });
+    m_reinforceTimer->start();
 }
 
 void BRDBus::Cancel(const qlonglong& jobID)
@@ -907,6 +914,8 @@ void BRDBus::init()
     // 读取加固项状态
     connect(this, &BRDBus::ReinforceProgress, this, &BRDBus::readReinforceItemStatus);
     connect(this, &BRDBus::ScanProgress, this, &BRDBus::readReinforceItemStatus);
+    m_reinforceTimer = new QTimer(this);
+    m_reinforceTimer->setInterval(100);
 
     // 服务启动时自动扫描一次，获取系统默认配置存入rh-first文件
     if (!QFile::exists(RH_BR_OPERATE_DATA_FIRST))
@@ -1167,8 +1176,15 @@ void BRDBus::updateRH(const QString& reinforceName, const QJsonObject& resultRet
         auto& iterArgs = rhReinforcement.arg();
         for (auto iterArg = iterArgs.begin(); iterArg != iterArgs.end(); ++iterArg)
         {
-            CONTINUE_IF_TRUE(resultReturnValue[iterArg->name().c_str()].toVariant().toString().isEmpty());
-            iterArg->value(resultReturnValue[iterArg->name().c_str()].toVariant().toString().toStdString());
+            if (resultReturnValue[iterArg->name().c_str()].toVariant().toString().isEmpty())
+            {
+                iterArg->value("");
+                KLOG_DEBUG() << "The iter value is empty";
+            }
+            else
+            {
+                iterArg->value(resultReturnValue[iterArg->name().c_str()].toVariant().toString().toStdString());
+            }
         }
         this->m_configuration->setCustomRh(rhReinforcement, RH_BR_OPERATE_DATA_LAST);
         if (!m_isFinishRHWrite)

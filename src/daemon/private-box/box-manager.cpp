@@ -52,13 +52,13 @@ void BoxManager::globalDeinit()
     }
 }
 
-QString BoxManager::CreateBox(const QString &name, const QString &password, QString &passphrase)
+QString BoxManager::CreateBox(const QString &boxName, const QString &password, QString &passphrase)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    if (name.isEmpty() || password.isEmpty())
+    if (boxName.isEmpty() || password.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
-                      tr("Failed to create box. name is %1").arg(name),
+                      tr("Failed to create box. name is %1").arg(boxName),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                         SSRErrorCode::ERROR_COMMON_INVALID_ARGS,
@@ -68,10 +68,10 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
     for (auto iterator = m_boxs.begin(); iterator != m_boxs.end(); iterator++)
     {
         auto box = iterator.value();
-        if (box->getUserUid() == getSenderUid() && box->getBoxName() == name)
+        if (box->getUserUid() == getSenderUid() && box->getBoxName() == boxName)
         {
             SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
-                          tr("Fail to create box. name is %1").arg(name),
+                          tr("Fail to create box. name is %1").arg(boxName),
                           calledUniqueName);
             DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                             SSRErrorCode::ERROR_BM_REPEATED_NAME,
@@ -80,21 +80,21 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
     }
 
     auto decryptPasswd = CryptoHelper::rsaDecryptString(m_rsaPrivateKey, password);
-    if (!checkPassword(decryptPasswd, name))
+    if (!checkPassword(decryptPasswd, boxName))
     {
         SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
-                      tr("Failed to create box. name is %1").arg(name),
+                      tr("Failed to create box. name is %1").arg(boxName),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                         SSRErrorCode::ERROR_BM_CHECK_PASSWORD_FAILED,
                                         message())
     }
     auto errorEode = 0;
-    auto box = Box::create(name, decryptPasswd, getSenderUid(), errorEode, "", this);
+    auto box = Box::create(boxName, decryptPasswd, getSenderUid(), errorEode, "", this);
     if (errorEode != static_cast<int>(SSRErrorCode::SUCCESS))
     {
         SSR_LOG_ERROR(Log::Manager::LogType::PRIVATE_BOX,
-                      tr("Failed to create box. name is %1").arg(name),
+                      tr("Failed to create box. name is %1").arg(boxName),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(),
                                         SSRErrorCode(errorEode),
@@ -104,7 +104,7 @@ QString BoxManager::CreateBox(const QString &name, const QString &password, QStr
     m_boxs.insert(box->getBoxID(), box);
     passphrase = box->getPassphrase();
     SSR_LOG_SUCCESS(Log::Manager::LogType::PRIVATE_BOX,
-                    tr("Create box. name is %1").arg(name),
+                    tr("Create box. name is %1").arg(boxName),
                     calledUniqueName);
     return box->getBoxID();
 }

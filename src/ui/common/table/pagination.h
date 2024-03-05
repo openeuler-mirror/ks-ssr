@@ -24,6 +24,7 @@ class Pagination;
 class QPushButton;
 class QLineEdit;
 class QLabel;
+class QIntValidator;
 
 namespace KS
 {
@@ -87,5 +88,6 @@ private:
     QLineEdit *m_jumpLineEdit;
     QLabel *m_totalPageLable;
     int m_pageSelectMode;
+    QIntValidator *m_intValidator;
 };
 }  // namespace KS

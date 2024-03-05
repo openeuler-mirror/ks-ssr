@@ -51,7 +51,7 @@ public:  // PROPERTIES
 
 public Q_SLOTS:  // METHODS
     // 创建box
-    QString CreateBox(const QString &name, const QString &password, QString &passphrase);
+    QString CreateBox(const QString &boxName, const QString &password, QString &passphrase);
     // 删除box
     void DelBox(const QString &boxID, const QString &password);
     // 通过box uid获取box

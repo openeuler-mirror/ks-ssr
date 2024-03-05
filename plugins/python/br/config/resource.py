@@ -20,6 +20,8 @@ RESOURCE_LIMITS_STACK_CMD = "ulimit -s"
 RESOURCE_LIMITS_SOFT_STACK_CMD = "ulimit -Ss"
 RESOURCE_LIMITS_HARD_STACK_CMD = "ulimit -Hs"
 RESOURCE_LIMITS_RSS_CMD = "ulimit -m"
+RESOURCE_LIMITS_UNLIMITED = "unlimited"
+RESOURCE_LIMITS_RSS_KEY = "enabled"
 
 HISTORY_SIZE_LIMIT_CONF_PATH = "/etc/profile.d/br-config.sh"
 HISTORY_SIZE_LIMIT_CONF_PROFILE_PATH = "/etc/profile"
@@ -57,21 +59,25 @@ class ResourceLimits:
             'grep -r \"unlimited\" {0} | grep rss'.format(RESOURCE_LIMITS_CONF_PATH))
         br.log.debug(rss_output)
         br.log.debug(stack_output)
+        if os.path.getsize(RESOURCE_LIMITS_CONF_PATH) == 0:
+            retdata[RESOURCE_LIMITS_RSS_KEY] = ""
+            return (True, json.dumps(retdata))
 
         if len(stack_file_output) != 0 or len(rss_file_output) != 0:
-            retdata['enabled'] = False
+            retdata[RESOURCE_LIMITS_RSS_KEY] = False
         else:
-            retdata['enabled'] = True
+            retdata[RESOURCE_LIMITS_RSS_KEY] = True
 
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
+        if not args[RESOURCE_LIMITS_RSS_KEY]:
+            br.utils.subprocess_not_output('echo \' \' > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
+            return (True, '')
 
-        br.utils.subprocess_not_output(
-            'echo \' \' > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
-
-        if args['enabled']:
+        br.utils.subprocess_not_output('echo \' \' > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
+        if args[RESOURCE_LIMITS_RSS_KEY]:
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, '8192')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, '10240')
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, '10240')
@@ -86,16 +92,16 @@ class ResourceLimits:
             if self.get_selinux_status() and len(br.utils.subprocess_has_output("semodule -l |grep br-ulimit")) == 0:
                 br.utils.subprocess_not_output(
                     "semodule -i {0}".format(SELINUX_MODULES_ULIMIT_PATH))
-            self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, 'unlimited')
-            self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, 'unlimited')
-            self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, 'unlimited')
-            self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, 'unlimited')
+            self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, RESOURCE_LIMITS_UNLIMITED)
+            self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, RESOURCE_LIMITS_UNLIMITED)
+            self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_SOFT, RESOURCE_LIMITS_UNLIMITED)
+            self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, RESOURCE_LIMITS_UNLIMITED)
             if not os.path.exists(PAM_CHECK_PATH) or self.get_selinux_status():
                 br.utils.subprocess_not_output(
                     "sed -i '/{0}/d' {1}".format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
-                self.conf_stack.set_value(RESOURCE_LIMITS_SOFT_STACK_CMD, 'unlimited')
-                self.conf_stack.set_value(RESOURCE_LIMITS_HARD_STACK_CMD, 'unlimited')
-                self.conf_stack.set_value(RESOURCE_LIMITS_RSS_CMD, 'unlimited')
+                self.conf_stack.set_value(RESOURCE_LIMITS_SOFT_STACK_CMD, RESOURCE_LIMITS_UNLIMITED)
+                self.conf_stack.set_value(RESOURCE_LIMITS_HARD_STACK_CMD, RESOURCE_LIMITS_UNLIMITED)
+                self.conf_stack.set_value(RESOURCE_LIMITS_RSS_CMD, RESOURCE_LIMITS_UNLIMITED)
 
         return (True, '')
 
