@@ -209,9 +209,6 @@ QString Manager::GetFileMLSLabel(const QString& filePath)
     auto userName = Account::Manager::m_accountManager->getUserName(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
-        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
-                      tr("Failed to get mls label, permission denied"),
-                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
 
@@ -243,9 +240,6 @@ QString Manager::GetFileKICLabel(const QString& filePath)
     auto userName = Account::Manager::m_accountManager->getUserName(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
-        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
-                      tr("Failed to get kic label, permission denied"),
-                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
 
@@ -325,7 +319,7 @@ void Manager::setFileKICLabel(const QDBusMessage& message, const QString& filePa
                      << " security label: " << SecurityContext
                      << "error message: " << output;
         SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
-                      tr("Failed to set %1 mls label, error msg: %2").arg(filePath).arg(output),
+                      tr("Failed to set %1 kic label, error msg: %2").arg(filePath).arg(output),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_KIC_CONTEXT, message);
     }
@@ -348,14 +342,11 @@ QString Manager::GetUserMLSLabel(const QString& userName)
     auto _userName = Account::Manager::m_accountManager->getUserName(calledUniqueName);
     if (role != KS::Account::Manager::AccountRole::secadm)
     {
-        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
-                      tr("Failed to get kic label, permission denied"),
-                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
 
     Log::Log log = {_userName, role, QDateTime::currentDateTime(),
-                    Log::Manager::LogType::TOOL_BOX, false, tr("Get files %1 kic label").arg(userName)};
+                    Log::Manager::LogType::TOOL_BOX, false, tr("Get files %1 mls label").arg(userName)};
     QRegularExpression regex("(s[\\d+])");
     QString output;
     if (!getUserSeLabels(userName, output))
