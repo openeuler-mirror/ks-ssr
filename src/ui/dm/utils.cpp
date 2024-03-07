@@ -69,8 +69,8 @@ QString Utils::interfaceTypeEnum2Str(InterfaceType type)
         return tr("Mouse");
     case INTERFACE_TYPE_USB_KBD:
         return tr("Keyboard");
-    case INTERFACE_TYPE_UNKNOWN:
-        return tr("Unknown");
+    case INTERFACE_TYPE_OTHER:
+        return tr("Other");
     default:
         break;
     }

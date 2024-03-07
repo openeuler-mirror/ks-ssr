@@ -495,6 +495,10 @@ void DeviceListTable::update()
         SET_DEVICE_PERMISSION(data, SSR_DEVICE_JK_WRITE, deviceInfo, PermissionType::PERMISSION_TYPE_WRITE);
         SET_DEVICE_PERMISSION(data, SSR_DEVICE_JK_EXECUTE, deviceInfo, PermissionType::PERMISSION_TYPE_EXEC);
 
+        if (deviceInfo.name.isEmpty())
+        {
+            deviceInfo.name = tr("Unknown device");
+        }
         m_devicesInfo.push_back(deviceInfo);
         count++;
     }

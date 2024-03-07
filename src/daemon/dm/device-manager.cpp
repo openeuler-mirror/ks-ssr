@@ -269,9 +269,12 @@ void DeviceManager::recordDeviceConnection(QSharedPointer<Device> device)
 
     // 以秒为单位的时间戳
     record.time = QDateTime::currentSecsSinceEpoch();
-    SSR_LOG_SUCCESS(Log::Manager::LogType::DEVICE,
-                    tr("Device access, name is %1, type is %2").arg(record.name).arg(deviceTypeEnum2Str(record.type)),
-                    device->getState() == DEVICE_STATE_ENABLE);
+    KS::Log::Log log{"sysadm", Account::Manager::AccountRole::sysadm,
+                     QDateTime::currentDateTime(), Log::Manager::LogType::DEVICE, true,
+                     tr("Device access, name is %1, type is %2")
+                         .arg(record.name.isEmpty() ? tr("Unknown device") : record.name)
+                         .arg(deviceTypeEnum2Str(record.type))};
+    KS::Log::Manager::writeLog(log);
     m_deviceLog->addDeviceRecord(record);
 }
 
@@ -354,20 +357,20 @@ QString DeviceManager::interfaceTypeEnum2Str(int type)
 {
     switch (type)
     {
-    case INTERFACE_TYPE_UNKNOWN:
+    case INTERFACE_TYPE_OTHER:
         return tr("Other");
     case INTERFACE_TYPE_USB:
-        return tr("CD");
+        return tr("USB");
     case INTERFACE_TYPE_BLUETOOTH:
-        return tr("Mouse");
+        return tr("Bluetooth");
     case INTERFACE_TYPE_NET:
-        return tr("Keyboard");
-    case INTERFACE_TYPE_HDMI:
         return tr("Network card");
+    case INTERFACE_TYPE_HDMI:
+        return tr("HDMI");
     case INTERFACE_TYPE_USB_KBD:
-        return tr("Wireless network card");
+        return tr("Keyboard");
     case INTERFACE_TYPE_USB_MOUSE:
-        return tr("Video");
+        return tr("Mouse");
     default:
         break;
     }
