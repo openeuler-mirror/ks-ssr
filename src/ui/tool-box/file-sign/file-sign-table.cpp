@@ -39,7 +39,7 @@ namespace KS
 namespace ToolBox
 {
 // 文件标记保护列数
-#define FILE_SIGN_TABLE_COL 5
+#define FILE_SIGN_TABLE_COL 6
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
@@ -93,6 +93,8 @@ QVariant FileSignModel::data(const QModelIndex &index, int role) const
     {
         switch (index.column())
         {
+        case FileSignField::FILE_SIGN_FIELD_NUMBER:
+            return index.row() + 1;
         case FileSignField::FILE_SIGN_FIELD_FILE_PATH:
             return QFileInfo(m_fileRecordMap[fileSignRecord].filePath).fileName();
         case FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT:
@@ -133,6 +135,8 @@ QVariant FileSignModel::headerData(int section, Qt::Orientation orientation, int
     {
         switch (section)
         {
+        case FileSignField::FILE_SIGN_FIELD_NUMBER:
+            return tr("Number");
         case FileSignField::FILE_SIGN_FIELD_FILE_PATH:
             return tr("Object Name");
         case FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT:
@@ -157,7 +161,13 @@ bool FileSignModel::setData(const QModelIndex &index,
                             int role)
 {
     RETURN_VAL_IF_TRUE(index.column() == FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT, true);
-    auto focusFile = m_focusFiles[index.row()];
+    // auto focusFile = m_focusFiles[index.row()];
+    auto indexNumber = this->index(index.row(), FileSignField::FILE_SIGN_FIELD_NUMBER);
+    auto number = this->data(indexNumber).toInt();
+    auto indexFile = this->index(index.row(), FileSignField::FILE_SIGN_FIELD_FILE_PATH);
+    auto fileName = this->data(indexFile).toString().toStdString();
+
+    auto focusFile = (this->getData().begin() + number - 1)->filePath;
     m_fileRecordMap[focusFile].isSelected = value.toBool();
     auto updateCellIndex = createIndex(index.row(), FileSignField::FILE_SIGN_FIELD_CHECKBOX);
     emit dataChanged(updateCellIndex, updateCellIndex);
@@ -272,8 +282,9 @@ FileSignTable::FileSignTable(QWidget *parent)
 
     // 设置水平行表头
     m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_CHECKBOX, 50);
+    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_NUMBER, 50);
     m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_PATH, 150);
-    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT, 250);
+    m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_SE_CONTEXT, 200);
     m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_FILE_COMPLETE_LABEL, 150);
     m_headerViewProxy->resizeSection(FileSignField::FILE_SIGN_FIELD_OPERATE, 100);
 
@@ -292,15 +303,19 @@ FileSignTable::FileSignTable(QWidget *parent)
     connect(m_model, &FileSignModel::stateChanged, m_headerViewProxy, &TableHeaderProxy::setCheckState);
     connect(m_headerViewProxy, &TableHeaderProxy::toggled, this, &FileSignTable::checkedAllItem);
 
-    connect(this, &FileSignTable::clicked, [this](const QModelIndex &index)
-            {
-                RETURN_IF_TRUE(index.column() == FileSignField::FILE_SIGN_FIELD_OPERATE);
-                auto data = getData();
-                auto targetData = data.begin() + index.row();
-                this->m_model->setData(index, !targetData->isSelected);
-            });
-
     connect(this, &FileSignTable::entered, this, &FileSignTable::mouseEnter);
+    connect(this, &FileSignTable::entered, this, [this](const QModelIndex &index)
+            {
+                RETURN_IF_TRUE(!index.isValid());
+                RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
+                RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_FILE_PATH);
+                // 获取完整路径悬浮显示
+                auto indexNumber = this->model()->index(index.row(), FileSignField::FILE_SIGN_FIELD_NUMBER);
+                auto number = this->model()->data(indexNumber).toInt();
+                auto data = getData();
+                auto filePath = (data.begin() + number - 1)->filePath;
+                QToolTip::showText(QCursor::pos(), filePath, this, rect(), 5000);
+            });
     // 编辑列设置鼠标手形
     connect(this, &FileSignTable::entered, this, [this](const QModelIndex &index)
             {
@@ -348,6 +363,8 @@ void FileSignTable::mouseEnter(const QModelIndex &index)
 {
     RETURN_IF_TRUE(!index.isValid());
     RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
+    // 过滤掉文件名列，不需要悬浮显示完整内容
+    RETURN_IF_TRUE(m_model->columnCount() == FileSignField::FILE_SIGN_FIELD_FILE_PATH);
     // 判断内容是否显示完整
     auto itemRect = this->visualRect(index);
     // 计算文本宽度
@@ -362,13 +379,35 @@ void FileSignTable::checkedAllItem(Qt::CheckState checkState)
 {
     for (int i = 0; i < selectionModel()->model()->rowCount(); i++)
     {
-        m_model->setData(m_model->index(i, 0), checkState == Qt::Checked, Qt::CheckStateRole);
+        // 取到该行的序号列
+        auto number = selectionModel()->model()->data(model()->index(i, 1)).toInt();
+        auto index = m_model->index(number - 1, 0);
+        m_model->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
     }
 }
 
 FileSignDelegate::FileSignDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
+}
+
+bool FileSignDelegate::editorEvent(QEvent *event,
+                                   QAbstractItemModel *model,
+                                   const QStyleOptionViewItem &option,
+                                   const QModelIndex &index)
+{
+    auto docorationRect = option.rect;
+    auto mouseEvent = static_cast<QMouseEvent *>(event);
+
+    if (event->type() == QEvent::MouseButtonPress &&
+        docorationRect.contains(mouseEvent->pos()) &&
+        index.column() == FileSignField::FILE_SIGN_FIELD_CHECKBOX)
+    {
+        auto value = model->data(index, Qt::EditRole).toBool();
+        model->setData(index, !value, Qt::EditRole);
+    }
+
+    return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
 void FileSignDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

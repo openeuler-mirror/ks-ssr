@@ -164,7 +164,10 @@ void FileSign::popModifySecurityContext(const QModelIndex& index)
 {
     RETURN_IF_TRUE(index.column() != FileSignField::FILE_SIGN_FIELD_OPERATE);
     auto data = this->m_ui->m_fileSignTable->getData();
-    auto oldIterator = data.begin() + index.row();
+
+    auto indexNumber = this->m_ui->m_fileSignTable->model()->index(index.row(), FileSignField::FILE_SIGN_FIELD_NUMBER);
+    auto number = this->m_ui->m_fileSignTable->model()->data(indexNumber).toInt();
+    auto oldIterator = data.begin() + number - 1;
 
     m_modifySecurityContext = new ModifySecurityContext(this);
     m_modifySecurityContext->setSecurityContext(oldIterator->fileSeContext);
