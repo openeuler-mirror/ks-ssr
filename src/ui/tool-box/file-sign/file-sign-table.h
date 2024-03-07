@@ -32,6 +32,7 @@ namespace ToolBox
 enum FileSignField
 {
     FILE_SIGN_FIELD_CHECKBOX = 0,
+    FILE_SIGN_FIELD_NUMBER,
     FILE_SIGN_FIELD_FILE_PATH,
     FILE_SIGN_FIELD_FILE_SE_CONTEXT,
     FILE_SIGN_FIELD_FILE_COMPLETE_LABEL,
@@ -56,6 +57,7 @@ public:
     FileSignDelegate(QObject *parent = 0);
     virtual ~FileSignDelegate(){};
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 };
 
 class FileSignFilterModel : public QSortFilterProxyModel
