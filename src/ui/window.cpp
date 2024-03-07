@@ -254,7 +254,8 @@ void Window::initPageAndNavigation()
     addPage(new ToolBox::FileSign(this));
     addPage(new ToolBox::FileShredPage(this));
     addPage(new ToolBox::PrivacyCleanupPage(this));
-    addPage(new ToolBox::AccessControlPage(this));
+    // TODO 需求变更，无需此页面，确认之后是否需要使用
+    // addPage(new ToolBox::AccessControlPage(this));
     addPage(new Log::LogPage(this));
     m_ui->m_stackedPages->addWidget(m_loading);
     m_ui->m_stackedPages->setCurrentIndex(0);
