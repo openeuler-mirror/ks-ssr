@@ -60,6 +60,7 @@ void Manager::showPasswordModification()
     auto x = window()->x() + window()->width() / 2 - m_passwordModification->width() / 2;
     auto y = window()->y() + window()->height() / 2 - m_passwordModification->height() / 2;
     m_passwordModification->move(x, y);
+    m_passwordModification->clearLineText();
     m_passwordModification->show();
 }
 
@@ -165,8 +166,6 @@ void Manager::acceptedPasswordModification()
         POPUP_MESSAGE_DIALOG(reply.error().message());
         return;
     }
-
-    m_passwordModification->clearLineText();
 }
 }  // namespace Account
 }  // namespace KS

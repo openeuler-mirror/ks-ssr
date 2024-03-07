@@ -59,6 +59,13 @@ QString ModifySecurityContext::getFilePath() const
     return m_filePath;
 }
 
+void ModifySecurityContext::setUserInputMask(bool enabled)
+{
+    m_ui->m_integrityLabel->setVisible(enabled);
+    m_ui->m_integrityNote->setVisible(enabled);
+    setFixedHeight(enabled ? 400 : 300);
+}
+
 void ModifySecurityContext::setSecurityContext(const QString &text)
 {
     m_ui->m_securityContext->setText(text);
@@ -76,10 +83,10 @@ void ModifySecurityContext::initUI()
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
-    setTitle(tr("modify security context"));
+    setTitle(tr("modify security sign"));
     setResizeable(false);
     setTitleBarHeight(36);
-    setFixedSize(450, 400);
+    setFixedSize(400, 350);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
 
     connect(m_ui->m_cancel, &QPushButton::clicked, this, &ModifySecurityContext::close);

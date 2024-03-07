@@ -16,6 +16,9 @@
 #include <qt5-log-i.h>
 #include <QRegularExpressionValidator>
 #include <QToolTip>
+#include <QKeyEvent>
+#include "common/password-event-filter.h"
+#include "common/ssr-marcos-ui.h"
 #include "include/ssr-i.h"
 #include "src/ui/ui_box-creation.h"
 
@@ -46,11 +49,15 @@ BoxCreation::BoxCreation(QWidget *parent)
     m_ui->m_name->setMaxLength(SSR_USER_NAME_MAX_LENGTH);
     m_ui->m_password->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
     m_ui->m_confirmPassword->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
+    // 禁用右键菜单
+    m_ui->m_password->setContextMenuPolicy(Qt::NoContextMenu);
+    m_ui->m_confirmPassword->setContextMenuPolicy(Qt::NoContextMenu);
+    m_ui->m_password->installEventFilter(new PasswordEventFilter(m_ui->m_password));
+    m_ui->m_confirmPassword->installEventFilter(new PasswordEventFilter(m_ui->m_confirmPassword));
 
     m_ui->m_password->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
     connect(m_ui->m_ok, &QPushButton::clicked, this, &BoxCreation::onOkClicked);
-
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this](bool)
             {
                 Q_EMIT rejected();

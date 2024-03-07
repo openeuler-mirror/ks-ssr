@@ -170,6 +170,7 @@ void FileSign::popModifySecurityContext(const QModelIndex& index)
     m_modifySecurityContext->setSecurityContext(oldIterator->fileSeContext);
     m_modifySecurityContext->setIntegrityLabel(oldIterator->fileCompleteLabel);
     m_modifySecurityContext->setFilePath(oldIterator->filePath);
+    m_modifySecurityContext->setUserInputMask(oldIterator->filePath.startsWith('/'));
     connect(m_modifySecurityContext, &ModifySecurityContext::accepted, this, &FileSign::acceptedSecurityContext, Qt::UniqueConnection);
 
     auto x = window()->x() + window()->width() / 2 - m_modifySecurityContext->width() / 2;

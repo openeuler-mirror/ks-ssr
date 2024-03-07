@@ -44,7 +44,7 @@ void AddUserDialog::init()
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
-    setWindowTitle(tr("Input user name"));
+    setTitle(tr("Input user names"));
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
