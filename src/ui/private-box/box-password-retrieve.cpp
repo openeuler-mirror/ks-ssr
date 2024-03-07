@@ -13,6 +13,7 @@
  */
 #include "box-password-retrieve.h"
 #include <QRegularExpressionValidator>
+#include "common/password-event-filter.h"
 #include "include/ssr-i.h"
 #include "ui_box-password-retrieve.h"
 
@@ -52,6 +53,8 @@ void BoxPasswordRetrieve::init()
     m_ui->m_passphrase->setValidator(validator);
     m_ui->m_passphrase->setEchoMode(QLineEdit::Password);
     m_ui->m_passphrase->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
+    m_ui->m_passphrase->setContextMenuPolicy(Qt::NoContextMenu);
+    m_ui->m_passphrase->installEventFilter(new PasswordEventFilter(m_ui->m_passphrase));
 
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {

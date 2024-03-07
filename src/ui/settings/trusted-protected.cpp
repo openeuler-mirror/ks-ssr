@@ -105,6 +105,12 @@ void TrustedProtected::setTrustedStatus(bool checked)
 
 void TrustedProtected::updateSoftRadio(bool checked)
 {
+    // 选中状态单击后QPushButton会将按钮状态置为false，当在选中状态点击按钮时不做处理，并将按钮状态改回去
+    if (!m_ui->m_soft->isChecked())
+    {
+        m_ui->m_soft->setChecked(true);
+        return;
+    }
     if (!checkTrustedLoadFinied())
     {
         updateStorageMode();
@@ -119,13 +125,16 @@ void TrustedProtected::updateSoftRadio(bool checked)
     auto y = window()->y() + window()->height() / 2 - m_userPin->height() / 2;
     m_userPin->move(x, y);
     m_userPin->show();
-
-    m_ui->m_soft->setChecked(checked);
-    m_ui->m_hard->setChecked(!checked);
 }
 
 void TrustedProtected::updateHardRadio(bool checked)
 {
+    // 选中状态单击后QPushButton会将按钮状态置为false，当在选中状态点击按钮时不做处理，并将按钮状态改回去
+    if (!m_ui->m_hard->isChecked())
+    {
+        m_ui->m_hard->setChecked(true);
+        return;
+    }
     if (!checkTrustedLoadFinied())
     {
         updateStorageMode();
@@ -140,15 +149,12 @@ void TrustedProtected::updateHardRadio(bool checked)
     auto y = this->y() + this->height() / 4 + m_userPin->height() / 2;
     m_userPin->move(x, y);
     m_userPin->show();
-
-    m_ui->m_hard->setChecked(checked);
-    m_ui->m_soft->setChecked(!checked);
 }
 
 void TrustedProtected::setStorageMode()
 {
     auto reply = m_kssDbusProxy->SetStorageMode(m_userPin->getType(), m_userPin->getUserPin());
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
+    CHECK_ERROR_FOR_DBUS_REPLY_AND_RETURN(reply);
     updateStorageMode();
 }
 }  // namespace Settings

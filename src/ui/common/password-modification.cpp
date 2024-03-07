@@ -17,6 +17,7 @@
 #include <QRegularExpressionValidator>
 #include <QToolTip>
 #include "include/ssr-i.h"
+#include "common/password-event-filter.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/ui_password-modification.h"
 
@@ -67,6 +68,13 @@ void PasswordModification::init()
     m_ui->m_currentPassword->setValidator(validator);
     m_ui->m_newPassword->setValidator(validator);
     m_ui->m_confirmPassword->setValidator(validator);
+
+    m_ui->m_currentPassword->setContextMenuPolicy(Qt::NoContextMenu);
+    m_ui->m_currentPassword->installEventFilter(new PasswordEventFilter(m_ui->m_currentPassword));
+    m_ui->m_newPassword->setContextMenuPolicy(Qt::NoContextMenu);
+    m_ui->m_newPassword->installEventFilter(new PasswordEventFilter(m_ui->m_newPassword));
+    m_ui->m_confirmPassword->setContextMenuPolicy(Qt::NoContextMenu);
+    m_ui->m_confirmPassword->installEventFilter(new PasswordEventFilter(m_ui->m_confirmPassword));
 
     // 限制字符
     m_ui->m_currentPassword->setMaxLength(SSR_USER_NAME_MAX_LENGTH);

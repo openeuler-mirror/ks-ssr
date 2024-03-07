@@ -14,6 +14,7 @@
 #include "box-password-checked.h"
 #include <QRegularExpressionValidator>
 #include "include/ssr-i.h"
+#include "common/password-event-filter.h"
 #include "ui_box-password-checked.h"
 namespace KS
 {
@@ -52,6 +53,8 @@ void BoxPasswordChecked::init()
     m_ui->m_inputPasswd->setValidator(validator);
     m_ui->m_inputPasswd->setEchoMode(QLineEdit::Password);
     m_ui->m_inputPasswd->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
+    m_ui->m_inputPasswd->setContextMenuPolicy(Qt::NoContextMenu);
+    m_ui->m_inputPasswd->installEventFilter(new PasswordEventFilter(m_ui->m_inputPasswd));
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
                 close();
