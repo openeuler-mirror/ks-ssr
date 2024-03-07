@@ -9,6 +9,7 @@ Type=dbus
 BusName=com.kylinsec.SSR
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/ks-ssr-daemon
 Restart=on-failure
+SELinuxContext=unconfined_u:unconfined_r:unconfined_t:s0-s15:c0.c1023
 
 [Install]
 WantedBy=multi-user.target
