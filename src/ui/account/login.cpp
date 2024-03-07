@@ -20,6 +20,7 @@
 #include <QList>
 #include <QStyledItemDelegate>
 #include "include/ssr-i.h"
+#include "common/password-event-filter.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "lib/license/license-proxy.h"
 #include "src/ui/license/activation.h"
@@ -112,6 +113,8 @@ void Login::initUI()
     // 限制字符
     m_ui->m_password->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
     m_ui->m_password->setEchoMode(QLineEdit::Password);
+    m_ui->m_password->setContextMenuPolicy(Qt::NoContextMenu);
+    m_ui->m_password->installEventFilter(new PasswordEventFilter(m_ui->m_password));
 }
 
 void Login::popupActiveDialog()
