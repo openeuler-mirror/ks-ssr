@@ -362,18 +362,17 @@ void PrivacyCleanupTable::setSearchText(const QString &text)
 
 void PrivacyCleanupTable::cleanCheckedUsers()
 {
-    auto checkedUserName = m_model->getCheckedUserName();
-    if (checkedUserName.isEmpty())
-    {
-        POPUP_MESSAGE_DIALOG(tr("Please select items."));
-        return;
-    }
-    auto reply = m_dbusProxy->RemoveUser(checkedUserName);
+    auto reply = m_dbusProxy->RemoveUser(m_model->getCheckedUserName());
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     RETURN_IF_TRUE(reply.isError());
     m_model->setInfos(getTableInfos());
     m_model->delcheckedInfos();
     POPUP_MESSAGE_DIALOG(tr("Delete success!"));
+}
+
+QStringList PrivacyCleanupTable::getCheckedUsers() const
+{
+    return m_model->getCheckedUserName();
 }
 
 void PrivacyCleanupTable::initTable()

@@ -126,7 +126,7 @@ void FileShredPage::initUI()
             {
                 if (m_ui->m_table->getSelectedFiles().isEmpty())
                 {
-                    POPUP_MESSAGE_DIALOG(tr("Please selecte files."));
+                    POPUP_MESSAGE_DIALOG(tr("Please selecte files or dirs."));
                     return;
                 }
                 auto reply = m_dbusProxy->RemoveFileFromFileShred(m_ui->m_table->getSelectedFiles());
@@ -134,6 +134,11 @@ void FileShredPage::initUI()
             });
     connect(m_ui->m_shred, &QPushButton::clicked, this, [this]
             {
+                if (m_ui->m_table->getSelectedFiles().isEmpty())
+                {
+                    POPUP_MESSAGE_DIALOG(tr("Please selecte files or dirs."));
+                    return;
+                }
                 auto shredNotify = new UserPromptDialog(this);
                 shredNotify->setNotifyMessage(tr("File shred"), tr("After crushing, files or folders cannot be recovered."
                                                                    "Are you sure you want to crush them?"));
