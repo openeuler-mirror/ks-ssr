@@ -347,7 +347,7 @@ QString Manager::GetUserMLSLabel(const QString& userName)
 
     Log::Log log = {_userName, role, QDateTime::currentDateTime(),
                     Log::Manager::LogType::TOOL_BOX, false, tr("Get files %1 mls label").arg(userName)};
-    QRegularExpression regex("(s[\\d+])");
+    QRegularExpression regex("(s[\\d+].*)");
     QString output;
     if (!getUserSeLabels(userName, output))
     {
@@ -360,7 +360,7 @@ QString Manager::GetUserMLSLabel(const QString& userName)
         return "";
     }
     auto match = regex.match(output);
-    return match.captured(1);
+    return match.captured(1).trimmed();
 }
 
 void Manager::setUserMLSLabel(const QDBusMessage& message, const QString& userName, const QString& SecurityContext)
@@ -969,7 +969,7 @@ bool Manager::getUserSeLabels(const QString& userName, QString& output)
     bindUser.waitForFinished();
     if (!!bindUser.exitCode())
     {
-        KLOG_INFO() << "Failed to bind " << userName << " to rbarole: user_u"
+        KLOG_DEBUG() << "Failed to bind " << userName << " to rbarole: user_u"
                     << "output: " << bindUser.readAll();
     }
 
