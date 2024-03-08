@@ -20,8 +20,8 @@
 #include "src/ui/br/br-i.h"
 #include "src/ui/br/reinforcement-items/category.h"
 #include "src/ui/br/utils.h"
-#include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/common/user-prompt-dialog.h"
 #include "ui_baseline-reinforcement.h"
 
 namespace KS
@@ -100,9 +100,10 @@ void BaselineReinforcement::initConnection()
                 auto y = window()->y() + window()->height() / 2 - userPrompt->height() / 2;
                 userPrompt->move(x, y);
                 userPrompt->show();
-                connect(userPrompt, &UserPromptDialog::accepted, this, [this]{
-                    fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL);
-                });
+                connect(userPrompt, &UserPromptDialog::accepted, this, [this]
+                        {
+                            fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL);
+                        });
             });
     connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this]
             {
@@ -117,9 +118,10 @@ void BaselineReinforcement::initConnection()
                 auto y = window()->y() + window()->height() / 2 - userPrompt->height() / 2;
                 userPrompt->move(x, y);
                 userPrompt->show();
-                connect(userPrompt, &UserPromptDialog::accepted, this, [this]{
-                    fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST);
-                });
+                connect(userPrompt, &UserPromptDialog::accepted, this, [this]
+                        {
+                            fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST);
+                        });
             });
 
     connect(m_dbusProxy, &BRDbusProxy::HomeFreeSpaceRatioLower, this, [this](const QString &spaceRatio)
@@ -193,15 +195,15 @@ void BaselineReinforcement::updateProgressInfo(KS::BR::ProgressInfo &progressInf
         for (auto reinforcementItem : categories->getReinforcementItem())
         {
             auto state = reinforcementItem->getState();
-            if (state == BR_REINFORCEMENT_STATE_SCAN_DONE || 
-                state == BR_REINFORCEMENT_STATE_REINFORCE_DONE || 
+            if (state == BR_REINFORCEMENT_STATE_SCAN_DONE ||
+                state == BR_REINFORCEMENT_STATE_REINFORCE_DONE ||
                 (state & BR_REINFORCEMENT_STATE_SAFE) == BR_REINFORCEMENT_STATE_SAFE)
             {
                 progressInfo.successCount += 1;
             }
-            else if (state == BR_REINFORCEMENT_STATE_UNKNOWN || 
-                     state == BR_REINFORCEMENT_STATE_SCAN_ERROR || 
-                     state == BR_REINFORCEMENT_STATE_REINFORCE_ERROR || 
+            else if (state == BR_REINFORCEMENT_STATE_UNKNOWN ||
+                     state == BR_REINFORCEMENT_STATE_SCAN_ERROR ||
+                     state == BR_REINFORCEMENT_STATE_REINFORCE_ERROR ||
                      (state & BR_REINFORCEMENT_STATE_UNSAFE) == BR_REINFORCEMENT_STATE_UNSAFE)
             {
                 progressInfo.failureCount += 1;
@@ -280,9 +282,10 @@ void BaselineReinforcement::scan()
                 if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
                 {
                     Notify::NOTIFY_INFO(QString(tr("Timed scan finished, Scaned %1, %2 conform, %3 inconform!"))
-                                        .arg(m_progressInfo.failureCount + m_progressInfo.successCount)
-                                        .arg(m_progressInfo.successCount)
-                                        .arg(m_progressInfo.failureCount).toUtf8());
+                                            .arg(m_progressInfo.failureCount + m_progressInfo.successCount)
+                                            .arg(m_progressInfo.successCount)
+                                            .arg(m_progressInfo.failureCount)
+                                            .toUtf8());
                 }
                 KLOG_INFO() << "Timed scan finied, Scaned "
                             << m_progressInfo.failureCount + m_progressInfo.successCount

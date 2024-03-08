@@ -24,13 +24,17 @@ class FilesDirsDilog : public QFileDialog
 {
     Q_OBJECT
 public:
-    FilesDirsDilog(QWidget *parent) : QFileDialog(parent)
+    FilesDirsDilog(QWidget *parent)
+        : QFileDialog(parent)
     {
     }
     virtual ~FilesDirsDilog(){};
 
 public slots:
-    void selectedAccept(){ QDialog::accept(); };
+    void selectedAccept()
+    {
+        QDialog::accept();
+    };
 };
 }  // namespace ToolBox
 }  // namespace KS

@@ -367,9 +367,7 @@ void Result::createReportContent(QPrinter &printer, const QList<Category *> &aft
         for (auto reinforcementItem : category->getReinforcementItem())
         {
             CONTINUE_IF_TRUE(!reinforcementItem->getCheckStatus());
-            auto afterReinforcementScanState = afterReinforcementList.isEmpty() ? 
-                                                BR_REINFORCEMENT_STATE_UNREINFORCE : 
-                                                afterReinforcementList.value(i - 1)->find(reinforcementItem->getName())->getScanState();
+            auto afterReinforcementScanState = afterReinforcementList.isEmpty() ? BR_REINFORCEMENT_STATE_UNREINFORCE : afterReinforcementList.value(i - 1)->find(reinforcementItem->getName())->getScanState();
             categoryContents << CategoryContent{
                 .itemName = reinforcementItem->getLabel(),
                 .scanStatus = reinforcementItem->getScanState(),

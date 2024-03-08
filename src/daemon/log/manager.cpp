@@ -143,11 +143,11 @@ void Manager::globalDeinit()
     delete m_logManager;
 }
 
-uint Manager::GetLogNum(const int role, 
-                        const time_t begin_time_stamp, 
-                        const time_t end_time_stamp, 
-                        const int type, 
-                        const uint result, 
+uint Manager::GetLogNum(const int role,
+                        const time_t begin_time_stamp,
+                        const time_t end_time_stamp,
+                        const int type,
+                        const uint result,
                         const QString& searchText)
 {
     QReadLocker locker(&m_listMutex);
@@ -193,14 +193,14 @@ uint Manager::GetLogNum(const int role,
     return logSize;
 }
 
-QStringList Manager::GetLog(const int role, 
-                       const time_t begin_time_stamp, 
-                       const time_t end_time_stamp, 
-                       const int type, 
-                       const uint result, 
-                       const QString& searchText, 
-                       const uint per_page, 
-                       const uint page) const
+QStringList Manager::GetLog(const int role,
+                            const time_t begin_time_stamp,
+                            const time_t end_time_stamp,
+                            const int type,
+                            const uint result,
+                            const QString& searchText,
+                            const uint per_page,
+                            const uint page) const
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(m_logManager);
     auto _role = Account::Manager::m_accountManager->getRole(callerUnique);

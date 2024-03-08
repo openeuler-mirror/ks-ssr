@@ -37,14 +37,15 @@ struct CategoryArgs
                  const QString &r = "",
                  const QString &des = "",
                  const QString &e = "",
-                 const QString &t = "") : name(n),
-                                          jsonValue(""),
-                                          widgetType(KS::Protocol::WidgetType::Value::DEFAULT),
-                                          valueLimits(r),
-                                          inputExample(e),
-                                          label(l),
-                                          description(des),
-                                          note(t)
+                 const QString &t = "")
+        : name(n),
+          jsonValue(""),
+          widgetType(KS::Protocol::WidgetType::Value::DEFAULT),
+          valueLimits(r),
+          inputExample(e),
+          label(l),
+          description(des),
+          note(t)
     {
     }
 };

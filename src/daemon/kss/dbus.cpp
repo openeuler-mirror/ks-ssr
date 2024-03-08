@@ -257,7 +257,7 @@ void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      isKernelFile ? tr("Failed to add kernel files.") : tr("Failed to add execute files.") + tr(" file path is %1").arg(filePath),
+                      isKernelFile ? tr("Failed to add kernel files,") : tr("Failed to add execute files,") + tr(" file path is empty."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -271,7 +271,7 @@ void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      isKernelFile ? tr("Failed to add kernel files.") : tr("Failed to add execute files.") + tr(" file path is %1").arg(filePath),
+                      isKernelFile ? tr("Failed to add kernel files,") : tr("Failed to add execute files,") + tr("Internal error!"),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
@@ -279,7 +279,7 @@ void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      isKernelFile ? tr("Failed to add kernel files.") : tr("Failed to add execute files.") + tr(" file path is %1").arg(filePath),
+                      isKernelFile ? tr("Failed to add kernel files,") : tr("Failed to add execute files,") + tr("Internal error!"),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
@@ -301,7 +301,7 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      isKernelFiles ? tr("Failed to add kernel file list.") : tr("Failed to add execute file list.") + tr(" file path is %1").arg(fileList.join(", ")),
+                      isKernelFiles ? tr("Failed to add kernel file list,") : tr("Failed to add execute file list,") + tr("file path is empty."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -314,7 +314,7 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      isKernelFiles ? tr("Failed to add kernel file list.") : tr("Failed to add execute file list.") + tr(" file path is %1").arg(fileList.join(", ")),
+                      isKernelFiles ? tr("Failed to add kernel file list,") : tr("Failed to add execute file list,") + tr("Internal error!"),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
@@ -322,7 +322,7 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      isKernelFiles ? tr("Failed to add kernel file list.") : tr("Failed to add execute file list.") + tr(" file path is %1").arg(fileList.join(", ")),
+                      isKernelFiles ? tr("Failed to add kernel file list.") : tr("Failed to add execute file list.") + tr("Internal error!"),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
@@ -345,7 +345,7 @@ void DBus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QSt
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      isKernelFile ? tr("Failed to remove kernel file.") : tr("Failed to remove execute file.") + tr(" file path is %1").arg(filePath),
+                      isKernelFile ? tr("Failed to remove kernel file,") : tr("Failed to remove execute file,") + tr("file path is empty."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -369,7 +369,7 @@ void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QS
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      isKernelFiles ? tr("Failed to remove kernel file list.") : tr("Failed to remove execute file list.") + tr(" file path is %1").arg(fileList.join(", ")),
+                      isKernelFiles ? tr("Failed to remove kernel file list.") : tr("Failed to remove execute file list.") + tr(" file path is empty."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -391,13 +391,12 @@ void DBus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
-                      tr("Failed to prohibit unloading. file path is %1").arg(filePath),
+                      tr("Failed to prohibit unloading. file path is empty"),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     Wrapper::getDefault()->prohibitUnloading(prohibited, filePath);
-    // emit TrustedFilesChange();
     SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
                     tr("Prohibit unloading. file path is %1").arg(filePath),
                     calledUniqueName);
@@ -411,7 +410,7 @@ void DBus::addFPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
-                      tr("Failed to add files protection. file path is %1").arg(filePath),
+                      tr("Failed to add files protection, file path is empty"),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -442,7 +441,7 @@ void DBus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
-                      tr("Failed to add files protection.") + tr(" file path is %1").arg(fileList.join(", ")),
+                      tr("Failed to add files protection, file path is empty."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -452,8 +451,8 @@ void DBus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QStri
 
     emit ProtectedFilesChange();
     SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
-                  tr("Add files protection.") + tr(" file path is %1").arg(fileList.join(", ")),
-                  calledUniqueName);
+                    tr("Add files protection, file path is %1").arg(fileList.join(", ")),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
@@ -464,7 +463,7 @@ void DBus::removeFPFileAfterAuthorization(const QDBusMessage &message, const QSt
     if (filePath.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
-                      tr("Failed to remove files protection. file path is %1").arg(filePath),
+                      tr("Failed to remove files protection, file path is empty."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
@@ -485,7 +484,7 @@ void DBus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const QS
     if (fileList.isEmpty())
     {
         SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
-                      tr("Failed to remove files protection.") + tr(" file path is %1").arg(fileList.join(", ")),
+                      tr("Failed to remove files protection, file path is empty."),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
     }
@@ -495,7 +494,7 @@ void DBus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const QS
     emit ProtectedFilesChange();
 
     SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
-                    tr("Remove files protection.") + tr(" file path is %1").arg(fileList.join(", ")),
+                    tr("Remove files protection, file path is %1").arg(fileList.join(", ")),
                     calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
