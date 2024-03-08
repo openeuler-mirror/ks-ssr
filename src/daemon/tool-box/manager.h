@@ -30,7 +30,6 @@ namespace KS
 {
 namespace ToolBox
 {
-
 class RealTimeAlert;
 struct Group
 {
@@ -51,7 +50,6 @@ struct Passwd
     QString dir;    /* Home directory.  */
     QString shell;  /* Shell program.  */
 };
-
 
 class Manager : public QObject, public QDBusContext
 {
@@ -161,11 +159,11 @@ private:
         if (!log.logMsg.isEmpty())
         {
             QObject::connect(cmd.data(),
-                            static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-                            [cmd, log](int exitCode, QProcess::ExitStatus exitStatus) mutable
-                            {
-                                processFinishedHandler(log, exitCode, exitStatus, cmd);
-                            });
+                             static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+                             [cmd, log](int exitCode, QProcess::ExitStatus exitStatus) mutable
+                             {
+                                 processFinishedHandler(log, exitCode, exitStatus, cmd);
+                             });
         }
         return cmd;
     }

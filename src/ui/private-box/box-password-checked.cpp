@@ -13,8 +13,8 @@
  */
 #include "box-password-checked.h"
 #include <QRegularExpressionValidator>
-#include "include/ssr-i.h"
 #include "common/password-event-filter.h"
+#include "include/ssr-i.h"
 #include "ui_box-password-checked.h"
 namespace KS
 {

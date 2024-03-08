@@ -19,7 +19,8 @@
 #include <QTranslator>
 namespace KS
 {
-ApplicationPrivate::ApplicationPrivate(Application* ptr) : q_ptr(ptr)
+ApplicationPrivate::ApplicationPrivate(Application* ptr)
+    : q_ptr(ptr)
 {
 }
 

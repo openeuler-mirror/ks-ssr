@@ -13,10 +13,10 @@
  */
 
 #include "table.h"
-#include "ui_table.h"
 #include <QFileInfo>
 #include <QSizePolicy>
 #include <QVBoxLayout>
+#include "ui_table.h"
 
 #define MAX_HEIGHT 1122
 namespace KS

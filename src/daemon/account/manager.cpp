@@ -146,13 +146,11 @@ bool Manager::GetUidReusable()
 void Manager::disableMultiFactorAuthState()
 {
     // 开启多因子认证时会把 ukey 之外的所有认证方式关闭， 所以关闭多因子认证时需还原设置
-    enableAuthType({
-        static_cast<int>(KAD_AUTH_TYPE_FINGERPRINT),
-        static_cast<int>(KAD_AUTH_TYPE_FACE),
-        static_cast<int>(KAD_AUTH_TYPE_UKEY),
-        static_cast<int>(KAD_AUTH_TYPE_FINGERVEIN),
-        static_cast<int>(KAD_AUTH_TYPE_IRIS)
-    });
+    enableAuthType({static_cast<int>(KAD_AUTH_TYPE_FINGERPRINT),
+                    static_cast<int>(KAD_AUTH_TYPE_FACE),
+                    static_cast<int>(KAD_AUTH_TYPE_UKEY),
+                    static_cast<int>(KAD_AUTH_TYPE_FINGERVEIN),
+                    static_cast<int>(KAD_AUTH_TYPE_IRIS)});
     // auth        include        kiran-authentication-service
     QRegExp authIncKiranAuthService(REGEXP_PAM_AUTH_INC_KIRANAUTHSERVICE);
 
@@ -211,13 +209,11 @@ void Manager::disableMultiFactorAuthState()
 void Manager::enableMultiFactorAuthState()
 {
     // 关闭所有认证方式， 然后再启用 ukey 认证方式
-    disableAuthType({
-        static_cast<int>(KAD_AUTH_TYPE_FINGERPRINT),
-        static_cast<int>(KAD_AUTH_TYPE_FACE),
-        static_cast<int>(KAD_AUTH_TYPE_UKEY),
-        static_cast<int>(KAD_AUTH_TYPE_FINGERVEIN),
-        static_cast<int>(KAD_AUTH_TYPE_IRIS)
-    });
+    disableAuthType({static_cast<int>(KAD_AUTH_TYPE_FINGERPRINT),
+                     static_cast<int>(KAD_AUTH_TYPE_FACE),
+                     static_cast<int>(KAD_AUTH_TYPE_UKEY),
+                     static_cast<int>(KAD_AUTH_TYPE_FINGERVEIN),
+                     static_cast<int>(KAD_AUTH_TYPE_IRIS)});
     auto msg = QDBusMessage::createMethodCall(KAD_MANAGER_DBUS_NAME,
                                               KAD_MANAGER_DBUS_OBJECT_PATH,
                                               KAD_MANAGER_DBUS_INTERFACE_NAME,
