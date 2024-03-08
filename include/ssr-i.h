@@ -159,7 +159,7 @@ extern "C"
 
     enum InterfaceType
     {
-        INTERFACE_TYPE_UNKNOWN = 0,
+        INTERFACE_TYPE_OTHER = 0,
         INTERFACE_TYPE_USB,
         INTERFACE_TYPE_BLUETOOTH,
         INTERFACE_TYPE_NET,
