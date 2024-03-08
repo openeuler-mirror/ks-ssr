@@ -19,7 +19,8 @@ namespace KS
 {
 namespace BRDaemon
 {
-ResourceMonitor::ResourceMonitor()
+ResourceMonitor::ResourceMonitor(QObject *parent)
+    : QObject(parent)
 {
 }
 
@@ -64,15 +65,17 @@ QString run_cmd(QString cmd)
     return result;
 }
 
-void ResourceMonitor::getSystemSpace(QString path)
+void ResourceMonitor::getSystemSpace(const QString &path)
 {
     // 用于获取磁盘剩余空间
     struct statfs diskInfo;
     statfs(path.toLatin1(), &diskInfo);
-    unsigned long long blocksize = diskInfo.f_bsize;               // 每个block里包含的字节数
-    unsigned long long totalsize = blocksize * diskInfo.f_blocks;  // 总的字节数，f_blocks为block的数目
-
-    unsigned long long freeDisk = diskInfo.f_bfree * blocksize;  // 剩余空间的大小
+    // 每个block里包含的字节数
+    unsigned long long blocksize = diskInfo.f_bsize;
+    // 总的字节数，f_blocks为block的数目
+    unsigned long long totalsize = blocksize * diskInfo.f_blocks;
+    // 剩余空间的大小
+    unsigned long long freeDisk = diskInfo.f_bfree * blocksize;
 
     if (path == "/home")
     {
@@ -84,9 +87,6 @@ void ResourceMonitor::getSystemSpace(QString path)
         m_rootTotalSpace = totalsize >> 20;
         m_rootFreeSpace = freeDisk >> 20;
     }
-    //    unsigned long long availableDisk            = diskInfo.f_bavail * blocksize; 	//可用空间大小
-    //	printf("Disk_free = %llu MB                 = %llu GB\nDisk_available = %llu MB = %llu GB\n",
-    //
 }
 
 QVector<QString> stringSplit(const QString &s, const QString &delim = " ")
@@ -112,7 +112,7 @@ QVector<QString> stringSplit(const QString &s, const QString &delim = " ")
 
 float ResourceMonitor::getMemoryRemainingRatio()
 {
-    char memTotal[20], memFree[20], memAvailable[20], cached[20], buffers[20];
+    char memTotal[20] = "", memFree[20] = "", memAvailable[20] = "", cached[20] = "", buffers[20] = "";
 
     FILE *file = fopen("/proc/meminfo", "r");
     if (file == nullptr)
@@ -120,11 +120,11 @@ float ResourceMonitor::getMemoryRemainingRatio()
         KLOG_ERROR("cannot open /proc/meminfo");
         return -1;
     }
-    fscanf(file, "MemTotal: %s kB\n", memTotal);
-    fscanf(file, "MemFree: %s kB\n", memFree);
-    fscanf(file, "MemAvailable: %s kB\n", memAvailable);
-    fscanf(file, "Buffers: %s kB\n", buffers);
-    fscanf(file, "Cached: %s kB\n", cached);
+    fscanf(file, "MemTotal: %19s kB\n", memTotal);
+    fscanf(file, "MemFree: %19s kB\n", memFree);
+    fscanf(file, "MemAvailable: %19s kB\n", memAvailable);
+    fscanf(file, "Buffers: %19s kB\n", buffers);
+    fscanf(file, "Cached: %19s kB\n", cached);
     fclose(file);
     return (atof(memFree) + atof(cached) + atof(buffers)) / atof(memTotal);
 }
@@ -155,11 +155,7 @@ bool ResourceMonitor::monitorResource()
     float rootRatio = float(m_rootFreeSpace) / float(m_rootTotalSpace);
     // this->rootFreeSpaceRatio_.emit(rootRatio);
     Q_EMIT this->rootFreeSpaceRatio_(rootRatio);
-
-    // this->cpuAverageLoadRatio_.emit(getCpuAverageLoad());
     Q_EMIT this->cpuAverageLoadRatio_(getCpuAverageLoad());
-
-    // this->vmstatSiso_.emit(getVmStatS());
     Q_EMIT this->memoryRemainingRatio_(getMemoryRemainingRatio());
     return true;
 }

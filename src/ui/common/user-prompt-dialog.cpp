@@ -11,59 +11,66 @@
  *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
-#include "add-user-dialog.h"
-#include <QIcon>
-#include <QRegularExpressionValidator>
-#include "include/ssr-i.h"
-#include "ui_add-user-dialog.h"
+#include "user-prompt-dialog.h"
+#include "ui_user-prompt-dialog.h"
+
 namespace KS
 {
-namespace ToolBox
-{
-AddUserDialog::AddUserDialog(QWidget *parent)
+UserPromptDialog::UserPromptDialog(QWidget *parent)
     : TitlebarWindow(parent),
-      m_ui(new Ui::AddUserDialog)
+      m_ui(new Ui::UserPromptDialog),
+      m_isAccepted(false)
 {
     m_ui->setupUi(getWindowContentWidget());
+
     init();
 }
 
-AddUserDialog::~AddUserDialog()
+UserPromptDialog::~UserPromptDialog()
 {
     delete m_ui;
 }
 
-QStringList AddUserDialog::getUserList() const
+void UserPromptDialog::setNotifyMessage(const QString &title, const QString &message)
 {
-    return m_ui->m_input->text().split(Qt::Key_Semicolon);
+    setTitle(title);
+    m_ui->m_notify->setText(message);
 }
 
-void AddUserDialog::init()
+void UserPromptDialog::closeEvent(QCloseEvent *event)
+{
+    if (m_isAccepted)
+    {
+        emit accepted();
+    }
+    else
+    {
+        emit rejected();
+    }
+    TitlebarWindow::closeEvent(event);
+}
+
+void UserPromptDialog::init()
 {
     // 页面关闭时销毁
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::ApplicationModal);
-    setIcon(QIcon(":/images/logo"));
-    setTitle(tr("Input user names"));
-    setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    setFixedSize(319, 259);
+    setFixedSize(299, 219);
+    setIcon(QIcon(":/images/logo"));
+    setResizeable(false);
+    m_ui->m_notify->setWordWrap(true);
 
-    auto validator = new QRegularExpressionValidator(QRegularExpression("[a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?([;][a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?)*"), this);
-    m_ui->m_input->setValidator(validator);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
+                m_isAccepted = false;
                 close();
-                emit rejected();
             });
-
     connect(m_ui->m_ok, &QPushButton::clicked, this, [this]
             {
+                m_isAccepted = true;
                 close();
-                emit accepted();
-                m_ui->m_input->setText("");
             });
 }
-}  // namespace ToolBox
 }  // namespace KS

@@ -12,26 +12,29 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
-#include "password-event-filter.h"
-#include <QKeyEvent>
-#include "common/ssr-marcos-ui.h"
+#include "header-menu-proxy.h"
+#include <QMouseEvent>
 
 namespace KS
 {
-PasswordEventFilter::PasswordEventFilter(QObject *parent)
-    : QObject(parent)
+HeaderMenuProxy::HeaderMenuProxy(QWidget *parent)
+    : QMenu(parent)
 {
 }
 
-bool PasswordEventFilter::eventFilter(QObject *watched, QEvent *event)
+void HeaderMenuProxy::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->type() == QEvent::KeyPress)
+    // 获取鼠标点击的action
+    auto action = this->actionAt(event->pos());
+    if (action)
     {
-        auto keyEvent = dynamic_cast<QKeyEvent *>(event);
-        RETURN_VAL_IF_TRUE(keyEvent->matches(QKeySequence::Copy) || keyEvent->matches(QKeySequence::Paste) || keyEvent->matches(QKeySequence::Cut), true);
+        // 触发action事件，不进行menu事件
+        action->activate(QAction::Trigger);
     }
-
-    return QObject::eventFilter(watched, event);
+    else
+    {
+        // 若鼠标释放时没有点击action则触发默认menu事件，关闭菜单
+        QMenu::mouseReleaseEvent(event);
+    }
 }
-
 }  // namespace KS

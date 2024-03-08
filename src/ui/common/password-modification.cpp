@@ -16,8 +16,8 @@
 #include <QMessageBox>
 #include <QRegularExpressionValidator>
 #include <QToolTip>
-#include "include/ssr-i.h"
 #include "common/password-event-filter.h"
+#include "include/ssr-i.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/ui_password-modification.h"
 
@@ -91,20 +91,22 @@ void PasswordModification::init()
             });
 
     connect(m_ui->m_ok, &QPushButton::clicked, this, &PasswordModification::acceptedPasswordModification);
-    connect(m_ui->m_newPasswordNote, &QPushButton::clicked, [this]{
-        QToolTip::showText(QCursor::pos(), 
-                           tr("The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16."), 
-                           this, 
-                           rect(), 
-                           5000);
-    });
-    connect(m_ui->m_confirmPasswordNote, &QPushButton::clicked, [this]{
-        QToolTip::showText(QCursor::pos(), 
-                           tr("The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16."), 
-                           this, 
-                           rect(), 
-                           5000);
-    });
+    connect(m_ui->m_newPasswordNote, &QPushButton::clicked, [this]
+            {
+                QToolTip::showText(QCursor::pos(),
+                                   tr("The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16."),
+                                   this,
+                                   rect(),
+                                   5000);
+            });
+    connect(m_ui->m_confirmPasswordNote, &QPushButton::clicked, [this]
+            {
+                QToolTip::showText(QCursor::pos(),
+                                   tr("The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16."),
+                                   this,
+                                   rect(),
+                                   5000);
+            });
 }
 
 void PasswordModification::acceptedPasswordModification()
