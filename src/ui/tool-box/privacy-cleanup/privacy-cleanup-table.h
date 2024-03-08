@@ -109,6 +109,7 @@ public:
     void setSearchText(const QString &text);
     int getPrivacyCleanupInfosSize();
     void cleanCheckedUsers();
+    QStringList getCheckedUsers() const;
 
 signals:
     void tableUpdated(int total);

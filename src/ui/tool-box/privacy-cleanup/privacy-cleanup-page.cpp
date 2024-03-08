@@ -14,6 +14,7 @@
 
 #include "privacy-cleanup-page.h"
 #include <QWidgetAction>
+#include "common/ssr-marcos-ui.h"
 #include "include/ssr-i.h"
 #include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/ui_privacy-cleanup-page.h"
@@ -73,6 +74,12 @@ void PrivacyCleanupPage::initUI()
             });
     connect(m_ui->m_clean, &QPushButton::clicked, this, [this]
             {
+                // 先检测是否有选中行
+                if (m_ui->m_table->getCheckedUsers().isEmpty())
+                {
+                    POPUP_MESSAGE_DIALOG(tr("Please select items."));
+                    return;
+                }
                 auto cleanNotify = new UserPromptDialog(this);
                 cleanNotify->setNotifyMessage(tr("Privacy cleanup"), tr("The user privacy cleaning operation is irreversible. "
                                                                    "Are you sure you want to continue?"));

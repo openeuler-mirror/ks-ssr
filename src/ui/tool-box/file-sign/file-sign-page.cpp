@@ -143,6 +143,13 @@ void FileSign::initConnection()
             });
     connect(m_ui->m_clean, &QPushButton::clicked, [this](bool)
             {
+                // 先检测是否有选中行
+                auto checkedDatas = m_ui->m_fileSignTable->getSelectData();
+                if (checkedDatas.isEmpty())
+                {
+                    POPUP_MESSAGE_DIALOG(tr("Please select items."));
+                    return;
+                }
                 auto reply = m_dbusProxy->RemoveObjFromSecuritySign(m_ui->m_fileSignTable->getSelectData());
                 CHECK_ERROR_FOR_DBUS_REPLY(reply);
             });
