@@ -89,7 +89,7 @@ void DeviceControl::insertInterfaceWidget()
 
     foreach (auto interface, m_interfaces)
     {
-        if (interface.type <= InterfaceType::INTERFACE_TYPE_UNKNOWN ||
+        if (interface.type <= InterfaceType::INTERFACE_TYPE_OTHER ||
             interface.type >= InterfaceType::INTERFACE_TYPE_LAST)
         {
             continue;

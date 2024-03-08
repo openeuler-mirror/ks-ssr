@@ -74,7 +74,7 @@ QString DBus::GetDevicesByInterface(int interfaceType)
     QJsonDocument jsonDoc;
     QJsonArray jsonArray;
 
-    if (interfaceType <= INTERFACE_TYPE_UNKNOWN || interfaceType >= INTERFACE_TYPE_LAST)
+    if (interfaceType <= INTERFACE_TYPE_OTHER || interfaceType >= INTERFACE_TYPE_LAST)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, this->message())
     }
@@ -136,7 +136,7 @@ QString DBus::GetInterfaces()
 
 QString DBus::GetInterface(int interfaceType)
 {
-    if (interfaceType <= INTERFACE_TYPE_UNKNOWN || interfaceType >= INTERFACE_TYPE_LAST)
+    if (interfaceType <= INTERFACE_TYPE_OTHER || interfaceType >= INTERFACE_TYPE_LAST)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_DEVICE_INVALID_IFC_TYPE, this->message())
     }
@@ -271,7 +271,7 @@ void DBus::enableInterface(const QDBusMessage &message,
                            bool enabled)
 {
     auto callerUnique = message.service();
-    if (interfaceType <= INTERFACE_TYPE_UNKNOWN || interfaceType >= INTERFACE_TYPE_LAST)
+    if (interfaceType <= INTERFACE_TYPE_OTHER || interfaceType >= INTERFACE_TYPE_LAST)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::DEVICE,
                       tr("Failed to %1 interface. type is %2")

@@ -198,6 +198,7 @@ void FileSign::acceptedSecurityContext()
         CHECK_ERROR_FOR_DBUS_REPLY_AND_RETURN(reply);
         reply = m_dbusProxy->SetFileKICLabel(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getIntegrityLabel());
         CHECK_ERROR_FOR_DBUS_REPLY_AND_RETURN(reply);
+        return;
     }
     auto reply = m_dbusProxy->SetUserMLSLabel(m_modifySecurityContext->getFilePath(), m_modifySecurityContext->getSecurityContext());
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
