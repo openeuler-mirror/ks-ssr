@@ -1,1 +1,1 @@
--a always,exit -F path=/etc/passwd -F uid>=1000 -k (ks-ssr)account_passwd_change
+-a always,exit -F path=/etc/os-release -F uid>=1000 -k (ks-ssr)account_passwd_change
