@@ -41,6 +41,7 @@
 #define SHRED_PATH "/usr/bin/shred"
 #define SHRED_ARG_1 "-f"
 #define SHRED_ARG_2 "-u"
+#define SHRED_ARG_3 "-x"
 #define USERDEL_PATH "/usr/sbin/userdel"
 #define USERDEL_ARG_1 "-r"
 #define SED_PATH "/usr/bin/sed"
@@ -509,7 +510,7 @@ void Manager::shredFile(const QDBusMessage& message, const QStringList& targetPa
 
 bool Manager::shred(const QStringList& targetPaths)
 {
-    auto cmd = getProcess(SHRED_PATH, QStringList{SHRED_ARG_1, SHRED_ARG_2} << targetPaths);
+    auto cmd = getProcess(SHRED_PATH, QStringList{SHRED_ARG_1, SHRED_ARG_2, SHRED_ARG_3} << targetPaths);
     cmd->start();
     cmd->waitForFinished();
     sync();
@@ -605,7 +606,23 @@ QStringList Manager::GetObjListFromSecuritySign()
     {
         ret << res_row[0].toString();
     }
-    return ret;
+
+    QStringList validObjList{};
+    QStringList invalidObjList{};
+    for (const auto& obj : ret)
+    {
+        if (QFileInfo{obj}.exists() || getpwnam(obj.toLocal8Bit()) != nullptr)
+        {
+            validObjList.append(obj);
+            continue;
+        }
+        invalidObjList.append(obj);
+    }
+    if (!invalidObjList.isEmpty())
+    {
+        removeObjFromSecuritySign(invalidObjList);
+    }
+    return validObjList;
 }
 
 void Manager::AddObjToSecuritySign(const QStringList& objList)
@@ -683,11 +700,8 @@ void Manager::RemoveObjFromSecuritySign(const QStringList& objList)
                       calledUniqueName)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    constexpr const char* removeFileFromFileSign = "delete from " FILE_SIGN_TABLE
-                                                   " where " FILE_SIGN_COLUMN1
-                                                   " in ('%1');";
-    QString removeFileToFileSignDBCmd{removeFileFromFileSign};
-    if (!m_db->exec(removeFileToFileSignDBCmd.arg(objList.join("', '"))))
+
+    if (!removeObjFromSecuritySign(objList))
     {
         SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
                       tr("Failed to remove file from object list, database error"),
@@ -698,6 +712,15 @@ void Manager::RemoveObjFromSecuritySign(const QStringList& objList)
     SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX,
                     tr("Remove file from object list: %1").arg(objList.join(' ')),
                     calledUniqueName);
+}
+
+bool Manager::removeObjFromSecuritySign(const QStringList& objList)
+{
+    constexpr const char* removeFileFromFileSign = "delete from " FILE_SIGN_TABLE
+                                                   " where " FILE_SIGN_COLUMN1
+                                                   " in ('%1');";
+    QString removeFileToFileSignDBCmd{removeFileFromFileSign};
+    return m_db->exec(removeFileToFileSignDBCmd.arg(objList.join("', '")));
 }
 
 QStringList Manager::GetFileListFromFileShred()

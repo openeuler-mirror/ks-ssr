@@ -17,6 +17,7 @@
 #include <libaudit.h>
 #include <linux/un.h>
 #include <qt5-log-i.h>
+#include <signal.h>
 #include <unistd.h>
 #include <QDateTime>
 #include <QDir>
@@ -105,7 +106,7 @@ bool RealTimeAlert::initAuditReceiver()
 
     if (::connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
     {
-        KLOG_WARNING() << "Failed to connect auditd socket";
+        KLOG_WARNING() << "Failed to connect auditd socket, error msg: " << strerror(errno);
         close(sockfd);
         return false;
     }
@@ -215,7 +216,7 @@ void RealTimeAlert::processIPSetData()
     }
     RETURN_IF_TRUE(nmapAttackers.isEmpty());
     KLOG_DEBUG() << "Detect nmap attack, attacker ips: " << nmapAttackers;
-    Manager::hazardDetected(ATTACK_DETECT, nmapAttackers.join(','));
+    Manager::hazardDetected(ATTACK_DETECT, tr("Detect nmap attack, attacker ips: %1").arg(nmapAttackers.join(',')));
     KS::Log::Manager::writeLog({"secadm",
                                 Account::Manager::AccountRole::secadm,
                                 QDateTime::currentDateTime(),
@@ -258,7 +259,9 @@ void RealTimeAlert::processAuditData(int socket)
                                             logRecord.timeStamp,
                                             KS::Log::Manager::LogType::AVC,
                                             allAuditRecordMap["SYSCALL"]["success"] == "yes",
-                                            allAuditRecordList[recordType].join(',')});
+                                            QString("TimeStamp=%1,%2")
+                                                .arg(logRecord.timeStamp.toString(Qt::DateFormat::ISODate))
+                                                .arg(allAuditRecordList[recordType].join(','))});
             }
             if (recordType == "SYSCALL")
             {
@@ -268,6 +271,12 @@ void RealTimeAlert::processAuditData(int socket)
                                         .arg(logRecord.field.value("uid"))
                                         .arg(logRecord.field.value("exe"))
                                         .arg(logRecord.field.value("syscall")));
+                if (kill(logRecord.field.value("pid").toInt(), SIGKILL) != 0)
+                {
+                    KLOG_WARNING() << "Failed to kill illegal process, "
+                                   << "pid: " << logRecord.field.value("pid").toInt()
+                                   << "error msg: " << strerror(errno);
+                }
             }
             // 避免一次审计事件输出多条告警
             break;
