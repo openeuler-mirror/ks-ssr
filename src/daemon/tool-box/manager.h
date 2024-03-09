@@ -113,6 +113,8 @@ public:
 
     void RemoveObjFromSecuritySign(const QStringList&);
 
+    bool removeObjFromSecuritySign(const QStringList&);
+
     QStringList GetFileListFromFileShred();
 
     void AddFileToFileShred(const QStringList&);
