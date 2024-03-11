@@ -56,5 +56,5 @@ private:
     QProcess* m_clearIPSetDataProcess;
 };
 
-};  // namespace Log
+};  // namespace ToolBox
 };  // namespace KS

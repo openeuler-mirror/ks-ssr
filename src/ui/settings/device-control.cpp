@@ -16,8 +16,8 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QObject>
-#include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/common/ssr-marcos-ui.h"
+#include "src/ui/common/user-prompt-dialog.h"
 #include "src/ui/dm/utils.h"
 
 #define INTERFACE_TYPE_PROPERTY "interface type"

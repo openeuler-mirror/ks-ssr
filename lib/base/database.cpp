@@ -26,7 +26,6 @@
 
 namespace KS
 {
-
 Database::Database()
 {
     QDir dir;

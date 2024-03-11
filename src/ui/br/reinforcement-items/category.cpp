@@ -18,7 +18,8 @@ namespace KS
 {
 namespace BR
 {
-Category::Category() : m_row(0)
+Category::Category()
+    : m_row(0)
 {
 }
 

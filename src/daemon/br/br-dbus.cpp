@@ -679,20 +679,21 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
     QObject::disconnect(this->m_reinforceJob.get(), &Job::processFinished, 0, 0);
     QObject::connect(this->m_reinforceJob.get(), &Job::processFinished, this, &BRDBus::finishedReinforceProgress);
 
-    connect(m_reinforceTimer, &QTimer::timeout, this, [this, message]{
-        RETURN_IF_TRUE(m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
-        m_reinforceTimer->stop();
-        disconnect(m_reinforceTimer, &QTimer::timeout, nullptr, nullptr);
-        if (!this->m_reinforceJob->runAsync())
-        {
-            auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED));
-            QDBusConnection::systemBus().send(replyMessage);
-            SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                        tr("Failed to reinforcement."),
-                        m_reforceUniqueName);
-            KLOG_ERROR() << "Reinforce running failed!";
-        }
-    });
+    connect(m_reinforceTimer, &QTimer::timeout, this, [this, message]
+            {
+                RETURN_IF_TRUE(m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
+                m_reinforceTimer->stop();
+                disconnect(m_reinforceTimer, &QTimer::timeout, nullptr, nullptr);
+                if (!this->m_reinforceJob->runAsync())
+                {
+                    auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED));
+                    QDBusConnection::systemBus().send(replyMessage);
+                    SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
+                                  tr("Failed to reinforcement."),
+                                  m_reforceUniqueName);
+                    KLOG_ERROR() << "Reinforce running failed!";
+                }
+            });
     m_reinforceTimer->start();
 }
 
@@ -742,17 +743,17 @@ void BRDBus::ExportStrategy(bool operationResult)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     SSR_LOG(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("export strategy"),
-                    operationResult,
-                    calledUniqueName);
+            tr("export strategy"),
+            operationResult,
+            calledUniqueName);
 }
 void BRDBus::GenerateReport(bool operationResult)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     SSR_LOG(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                    tr("export report"),
-                    operationResult,
-                    calledUniqueName);
+            tr("export report"),
+            operationResult,
+            calledUniqueName);
 }
 
 void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotStatus)
@@ -852,16 +853,16 @@ void BRDBus::writeReinforcementResultLog()
     if (successCount == 0)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                        tr("Reinforcement fail %1")
-                            .arg(QString::number(failCount)),
-                        m_reforceUniqueName);
+                      tr("Reinforcement fail %1")
+                          .arg(QString::number(failCount)),
+                      m_reforceUniqueName);
     }
     else if (failCount != 0 && successCount != 0)
     {
         SSR_LOG_ERROR(Log::Manager::LogType::BASELINE_REINFORCEMENT,
-                        tr("Reinforcement success %1, fail %2")
-                            .arg(QString::number(successCount), QString::number(failCount)),
-                        m_reforceUniqueName);
+                      tr("Reinforcement success %1, fail %2")
+                          .arg(QString::number(successCount), QString::number(failCount)),
+                      m_reforceUniqueName);
     }
     else
     {
@@ -1195,7 +1196,7 @@ void BRDBus::updateRH(const QString& reinforceName, const QJsonObject& resultRet
     }
 }
 
-void BRDBus::readReinforceItemStatus(const QString &jobResult)
+void BRDBus::readReinforceItemStatus(const QString& jobResult)
 {
     RETURN_IF_TRUE(jobResult.isEmpty())
 

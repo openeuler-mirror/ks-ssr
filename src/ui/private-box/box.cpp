@@ -258,9 +258,10 @@ void Box::retrievePassword()
     m_retrievePassword->setFixedSize(319, 239);
     m_retrievePassword->setTitle(tr("Retrieve password"));
     connect(m_retrievePassword, SIGNAL(accepted()), this, SLOT(acceptedRetrievePassword()));
-    connect(m_retrievePassword, &BoxPasswordRetrieve::inputEmpty, this, [this] {
-        POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
-    });
+    connect(m_retrievePassword, &BoxPasswordRetrieve::inputEmpty, this, [this]
+            {
+                POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."));
+            });
 
     auto x = window()->x() + window()->width() / 2 - m_retrievePassword->width() / 2;
     auto y = window()->y() + window()->height() / 2 - m_retrievePassword->height() / 2;

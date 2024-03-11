@@ -28,8 +28,9 @@ namespace Crypto
 #define BR_RSA_LENGTH 1024
 
 /** : option_group_(PROJECT_NAME, "group options") **/
-CmdParser::CmdParser() : m_options({}),
-                         m_parser()
+CmdParser::CmdParser()
+    : m_options({}),
+      m_parser()
 {
 }
 
@@ -39,17 +40,17 @@ void CmdParser::init()
     this->m_parser.addVersionOption();
     this->m_parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     this->m_parser.addOption({"generate-rsa-key",
-                            QObject::tr("Generate public and private keys for RSA."), "path"});
+                              QObject::tr("Generate public and private keys for RSA."), "path"});
     this->m_parser.addOption({"decrypt-file",
-                            QObject::tr("Decrypt a file."), "path"});
+                              QObject::tr("Decrypt a file."), "path"});
     this->m_parser.addOption({"encrypt-file",
-                            QObject::tr("Encrypt a file."), "path"});
+                              QObject::tr("Encrypt a file."), "path"});
     this->m_parser.addOption({"public-key",
-                            QObject::tr("RSA public file path."), "path"});
+                              QObject::tr("RSA public file path."), "path"});
     this->m_parser.addOption({"private-key",
-                            QObject::tr("RSA private file path."), "path"});
+                              QObject::tr("RSA private file path."), "path"});
     this->m_parser.addOption({"output-file",
-                            QObject::tr("Output file path."), "path"});
+                              QObject::tr("Output file path."), "path"});
 }
 
 int CmdParser::run(QCoreApplication& a)

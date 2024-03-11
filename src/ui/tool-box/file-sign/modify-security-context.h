@@ -46,6 +46,7 @@ public:
     QString getFilePath() const;
 
     void setUserInputMask(bool enabled);
+
 protected:
     void closeEvent(QCloseEvent *event);
 

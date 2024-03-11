@@ -47,7 +47,7 @@ void RoundProgressBar::paintEvent(QPaintEvent *)
     int width = 160;
     int height = 160;
     int size = qMin(width, height);
-    
+
     const QRectF drawingRectF(8.0, 8.0, size, size);
 
     QPen pen;
@@ -72,7 +72,7 @@ void RoundProgressBar::paintEvent(QPaintEvent *)
         painter.save();
         pen.setBrush(QColor("#f2f2f2"));
         painter.setPen(pen);
-        painter.drawArc(drawingRectF, (startAngle) * 16, (span + 0) * 16);
+        painter.drawArc(drawingRectF, (startAngle)*16, (span + 0) * 16);
         painter.restore();
 
         painter.save();

@@ -62,13 +62,15 @@ void UserPromptDialog::init()
     setResizeable(false);
     m_ui->m_notify->setWordWrap(true);
 
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this] {
-        m_isAccepted = false;
-        close();
-    });
-    connect(m_ui->m_ok, &QPushButton::clicked, this, [this] {
-        m_isAccepted = true;
-        close();
-    });
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
+            {
+                m_isAccepted = false;
+                close();
+            });
+    connect(m_ui->m_ok, &QPushButton::clicked, this, [this]
+            {
+                m_isAccepted = true;
+                close();
+            });
 }
 }  // namespace KS

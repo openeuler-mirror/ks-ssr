@@ -404,18 +404,18 @@ void KernelProtectedTable::initTable()
 
     connect(this, &KernelProtectedTable::entered, this, &KernelProtectedTable::itemEntered);
     connect(this, &KernelProtectedTable::entered, this, [this](const QModelIndex &index)
-        {
-            RETURN_IF_TRUE(!index.isValid());
-            RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
-            // 判断内容是否显示完整
-            auto itemRect = this->visualRect(index);
-            // 计算文本宽度
-            QFontMetrics metrics(this->font());
-            auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
-            RETURN_IF_TRUE(textWidth <= itemRect.width())
-            auto mod = selectionModel()->model()->data(index);
-            QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
-        });
+            {
+                RETURN_IF_TRUE(!index.isValid());
+                RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
+                // 判断内容是否显示完整
+                auto itemRect = this->visualRect(index);
+                // 计算文本宽度
+                QFontMetrics metrics(this->font());
+                auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
+                RETURN_IF_TRUE(textWidth <= itemRect.width())
+                auto mod = selectionModel()->model()->data(index);
+                QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
+            });
     connect(this, &KernelProtectedTable::clicked, this, &KernelProtectedTable::itemClicked);
 }
 

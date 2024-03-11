@@ -16,12 +16,12 @@
 #include <qt5-log-i.h>
 #include <QCloseEvent>
 #include <QDBusConnection>
+#include <QDesktopServices>
 #include <QFile>
 #include <QMenu>
 #include <QMutex>
 #include <QPushButton>
 #include <QStackedWidget>
-#include <QDesktopServices>
 #include <QX11Info>
 #include "common/ssr-marcos-ui.h"
 #include "include/ssr-i.h"
@@ -204,13 +204,14 @@ void Window::initWindow()
     connect(m_settings, &QAction::triggered, this, &Window::popupSettingsDialog, Qt::UniqueConnection);
     settingMenu->addAction(m_settings);
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
-    settingMenu->addAction(tr("Help"), this, []{
-        if (QFile::exists(HELP_MANUAL_PATH))
-        {
-            KLOG_DEBUG() << "Open help manual PDF.";
-            QDesktopServices::openUrl(QUrl::fromLocalFile(HELP_MANUAL_PATH));
-        }
-    });
+    settingMenu->addAction(tr("Help"), this, []
+                           {
+                               if (QFile::exists(HELP_MANUAL_PATH))
+                               {
+                                   KLOG_DEBUG() << "Open help manual PDF.";
+                                   QDesktopServices::openUrl(QUrl::fromLocalFile(HELP_MANUAL_PATH));
+                               }
+                           });
     settingMenu->addAction(tr("About"), this, &Window::popupAboutDialog);
 
     layout->addWidget(m_accountButton);
@@ -401,9 +402,12 @@ void Window::popupActiveDialog()
     if (!m_activation)
     {
         m_activation = new Activation::Activation(this);
-        connect(m_activation, &Activation::Activation::activated, this, [this](const QString& message){
-            POPUP_MESSAGE_DIALOG(message);
-        }, Qt::UniqueConnection);
+        connect(
+            m_activation, &Activation::Activation::activated, this, [this](const QString &message)
+            {
+                POPUP_MESSAGE_DIALOG(message);
+            },
+            Qt::UniqueConnection);
     }
     auto x = this->x() + this->width() / 4 + m_activation->width() / 16;
     auto y = this->y() + this->height() / 4 + m_activation->height() / 16;

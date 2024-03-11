@@ -13,29 +13,20 @@ qt5_add_dbus_interface(
 
 set(TARGET_NAME ks-ssr-notify)
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt5_create_translation(QM_FILES 
-  ${PROJECT_SOURCE_DIR}/src/notify 
-  ${TS_FILES}
-  OPTIONS
-  -I
-  ${PROJECT_SOURCE_DIR})
+qt5_create_translation(QM_FILES ${PROJECT_SOURCE_DIR}/src/notify ${TS_FILES}
+                       OPTIONS -I ${PROJECT_SOURCE_DIR})
 
 file(GLOB_RECURSE NOTIFY_H_FILES ./*.h)
 file(GLOB_RECURSE NOTIFY_CPP_FILES ./*.cpp)
 
-add_executable(${TARGET_NAME} ${NOTIFY_H_FILES} ${NOTIFY_CPP_FILES} ${TOOL_BOX_DBUS_SRCS} ${QM_FILES})
+add_executable(${TARGET_NAME} ${NOTIFY_H_FILES} ${NOTIFY_CPP_FILES}
+                              ${TOOL_BOX_DBUS_SRCS} ${QM_FILES})
 
 target_include_directories(
-  ${TARGET_NAME}
-  PRIVATE ${PROJECT_SOURCE_DIR} 
-          ${PROJECT_SOURCE_DIR}/include 
-          ${CMAKE_BINARY_DIR})
+  ${TARGET_NAME} PRIVATE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include
+                         ${CMAKE_BINARY_DIR})
 
-target_link_libraries(
-  ${TARGET_NAME}
-  PRIVATE Qt5::Core
-          Qt5::DBus
-          lib-base)
+target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Core Qt5::DBus lib-base)
 
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 

@@ -18,9 +18,9 @@
 
 namespace KS
 {
-PasswordEventFilter::PasswordEventFilter(QObject *parent) : QObject(parent)
+PasswordEventFilter::PasswordEventFilter(QObject *parent)
+    : QObject(parent)
 {
-
 }
 
 bool PasswordEventFilter::eventFilter(QObject *watched, QEvent *event)
