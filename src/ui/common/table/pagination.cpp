@@ -42,12 +42,13 @@ Pagination::Pagination(int totalPage, int maxShowPages, bool jumpEdit, QWidget *
         m_ui->horizontalLayout_jump->addWidget(m_jumpLineEdit);
         m_jumpLineEdit->setValidator(m_intValidator);
         m_jumpLineEdit->setTextMargins(10, 0, 0, 0);
-        connect(m_jumpLineEdit, &QLineEdit::textChanged, [this](const QString &text){
-            if (text.startsWith("0"))
-            {
-                m_jumpLineEdit->clear();
-            }
-        });
+        connect(m_jumpLineEdit, &QLineEdit::textChanged, [this](const QString &text)
+                {
+                    if (text.startsWith("0"))
+                    {
+                        m_jumpLineEdit->clear();
+                    }
+                });
         m_jumpLineEdit->setPlaceholderText(tr("Input page"));
         connect(m_jumpLineEdit, SIGNAL(returnPressed()), this, SLOT(jumpPage()));
     }

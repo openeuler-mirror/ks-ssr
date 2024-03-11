@@ -970,7 +970,7 @@ bool Manager::getUserSeLabels(const QString& userName, QString& output)
     if (!!bindUser.exitCode())
     {
         KLOG_DEBUG() << "Failed to bind " << userName << " to rbarole: user_u"
-                    << "output: " << bindUser.readAll();
+                     << "output: " << bindUser.readAll();
     }
 
     QProcess getUserSeLabel{};

@@ -125,6 +125,8 @@ void TrustedProtected::updateSoftRadio(bool checked)
     auto y = window()->y() + window()->height() / 2 - m_userPin->height() / 2;
     m_userPin->move(x, y);
     m_userPin->show();
+    // 没有设置成功前，不应将按钮选中
+    m_ui->m_soft->setChecked(!checked);
 }
 
 void TrustedProtected::updateHardRadio(bool checked)
@@ -149,6 +151,8 @@ void TrustedProtected::updateHardRadio(bool checked)
     auto y = this->y() + this->height() / 4 + m_userPin->height() / 2;
     m_userPin->move(x, y);
     m_userPin->show();
+    // 没有设置成功前，不应将按钮选中
+    m_ui->m_hard->setChecked(!checked);
 }
 
 void TrustedProtected::setStorageMode()

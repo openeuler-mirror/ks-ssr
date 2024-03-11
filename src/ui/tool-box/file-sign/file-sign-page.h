@@ -53,7 +53,7 @@ private:
     Ui::FileSignPage* m_ui;
     ToolBoxDbusProxy* m_dbusProxy;
     ModifySecurityContext* m_modifySecurityContext;
-    AddUserDialog *m_inputUsers;
+    AddUserDialog* m_inputUsers;
 };
 }  // namespace ToolBox
 }  // namespace KS

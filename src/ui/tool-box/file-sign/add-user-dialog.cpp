@@ -12,8 +12,8 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "add-user-dialog.h"
-#include <QRegularExpressionValidator>
 #include <QIcon>
+#include <QRegularExpressionValidator>
 #include "include/ssr-i.h"
 #include "ui_add-user-dialog.h"
 namespace KS

@@ -56,13 +56,15 @@ void IdentityAuthentication::initConnection()
                     auto y = window()->y() + window()->height() / 2 - notify->height() / 2;
                     notify->move(x, y);
                     notify->show();
-                    connect(notify, &UserPromptDialog::rejected, this, [this]{
-                        m_ui->m_twoFactor->setChecked(false);
-                    });
-                    connect(notify, &UserPromptDialog::accepted, this, [this]{
-                        auto reply = m_accountProxy->SetMultiFactorAuthState(m_ui->m_twoFactor->isChecked());
-                        CHECK_ERROR_FOR_DBUS_REPLY(reply);
-                    });
+                    connect(notify, &UserPromptDialog::rejected, this, [this]
+                            {
+                                m_ui->m_twoFactor->setChecked(false);
+                            });
+                    connect(notify, &UserPromptDialog::accepted, this, [this]
+                            {
+                                auto reply = m_accountProxy->SetMultiFactorAuthState(m_ui->m_twoFactor->isChecked());
+                                CHECK_ERROR_FOR_DBUS_REPLY(reply);
+                            });
                 }
                 else
                 {

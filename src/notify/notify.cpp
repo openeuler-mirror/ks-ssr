@@ -23,7 +23,7 @@ namespace Notify
 {
 Notify::Notify(QObject *parent)
     : QObject(parent),
-    m_dbusProxy(nullptr)
+      m_dbusProxy(nullptr)
 {
     ::Notify::NotificationWrapper::globalInit(tr("Security reinforcement").toStdString());
 
@@ -31,11 +31,14 @@ Notify::Notify(QObject *parent)
                                        SSR_TOOL_BOX_DBUS_OBJECT_PATH,
                                        QDBusConnection::systemBus(),
                                        this);
-    connect(m_dbusProxy, &ToolBoxDbusProxy::HazardDetected, this, [](uint type, const QString &alertMessage) {
-        // TODO 区分类型弹窗？
-        Q_UNUSED(type)
-        ::Notify::NOTIFY_ERROR(alertMessage.toUtf8());
-    }, Qt::UniqueConnection);
+    connect(
+        m_dbusProxy, &ToolBoxDbusProxy::HazardDetected, this, [](uint type, const QString &alertMessage)
+        {
+            // TODO 区分类型弹窗？
+            Q_UNUSED(type)
+            ::Notify::NOTIFY_ERROR(alertMessage.toUtf8());
+        },
+        Qt::UniqueConnection);
 }
 
 Notify::~Notify()

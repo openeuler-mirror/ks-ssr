@@ -206,13 +206,13 @@ void Scan::initUI()
             {
                 POPUP_MESSAGE_DIALOG(error)
             });
-    connect(m_customArgsDialog, 
-            &ReinforcementArgsDialog::valueChanged, 
-            this, 
+    connect(m_customArgsDialog,
+            &ReinforcementArgsDialog::valueChanged,
+            this,
             [this](const QString &reinforcementItem,
-                const QString &argLabel, 
-                const QString &argValue,
-                KS::Protocol::WidgetType::Value type)
+                   const QString &argLabel,
+                   const QString &argValue,
+                   KS::Protocol::WidgetType::Value type)
             {
                 m_argTransfers.append(new ArgTransfer(reinforcementItem, argLabel, argValue, type));
             });
@@ -540,13 +540,13 @@ void Scan::popReinforcecmentDialog(const QModelIndex &model)
             auto args = reinforcementItem->getArgs();
             for (auto arg : args)
             {
-                m_customArgsDialog->addLine(reinforcementItem->getName(), 
-                                            arg->name, 
-                                            arg->label, 
-                                            arg->valueLimits, 
-                                            arg->inputExample, 
-                                            arg->jsonValue, 
-                                            arg->widgetType, 
+                m_customArgsDialog->addLine(reinforcementItem->getName(),
+                                            arg->name,
+                                            arg->label,
+                                            arg->valueLimits,
+                                            arg->inputExample,
+                                            arg->jsonValue,
+                                            arg->widgetType,
                                             arg->note);
             }
         }
@@ -558,13 +558,13 @@ void Scan::popReinforcecmentDialog(const QModelIndex &model)
         auto args = m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory)->getArgs();
         for (auto arg : args)
         {
-            m_customArgsDialog->addLine(m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory)->getName(), 
-                                        arg->name, 
-                                        arg->label, 
-                                        arg->valueLimits, 
-                                        arg->inputExample, 
-                                        arg->jsonValue, 
-                                        arg->widgetType, 
+            m_customArgsDialog->addLine(m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory)->getName(),
+                                        arg->name,
+                                        arg->label,
+                                        arg->valueLimits,
+                                        arg->inputExample,
+                                        arg->jsonValue,
+                                        arg->widgetType,
                                         arg->note);
         }
     }

@@ -17,9 +17,9 @@
 
 namespace KS
 {
-HeaderMenuProxy::HeaderMenuProxy(QWidget *parent) : QMenu(parent)
+HeaderMenuProxy::HeaderMenuProxy(QWidget *parent)
+    : QMenu(parent)
 {
-
 }
 
 void HeaderMenuProxy::mouseReleaseEvent(QMouseEvent *event)

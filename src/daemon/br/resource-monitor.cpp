@@ -19,7 +19,8 @@ namespace KS
 {
 namespace BRDaemon
 {
-ResourceMonitor::ResourceMonitor(QObject *parent) : QObject(parent)
+ResourceMonitor::ResourceMonitor(QObject *parent)
+    : QObject(parent)
 {
 }
 
