@@ -132,7 +132,7 @@ void Manager::SetUidReusable(bool enabled)
         SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, "Permission Denied", calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    SSR_LOG_SUCCESS(Log::Manager::LogType::ACCOUNT, enabled ? "Enable uid reuse" : "Disable uid reuse", calledUniqueName);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::ACCOUNT, enabled ? tr("Enable uid reuse") : tr("Disable uid reuse"), calledUniqueName);
     m_isUidReusable = enabled;
     m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enabled));
     m_uidReuseConfig->sync();
@@ -319,7 +319,7 @@ void Manager::SetMultiFactorAuthState(bool enabled)
     }
     SSR_LOG_SUCCESS(
         Log::Manager::LogType::ACCOUNT,
-        enabled ? "Enable Multi-Factor Authentication" : "Disable Multi-Factor Authentication",
+        enabled ? tr("Enable Multi-Factor Authentication") : tr("Disable Multi-Factor Authentication"),
         calledUniqueName);
     if (enabled)
     {
