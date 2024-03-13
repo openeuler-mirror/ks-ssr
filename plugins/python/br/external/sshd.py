@@ -41,6 +41,7 @@ SSHD_CONF_PROTOCOL = "Protocol"
 SSHD_CONF_PERMIT_EMPTY = "PermitEmptyPasswords"
 SSHD_CONF_PORT = "Port"
 SSHD_CONF_PAM = "UsePAM"
+SSHD_CONF_PERMIT_ROOT_LOGIN = "PermitRootLogin"
 
 SET_SFTP_USER_CMD = "useradd  -d /home/sftpuser -s /sbin/nologin sftpuser;chown root:sftpuser /home/sftpuser;chmod 755 /home/sftpuser;mkdir /home/sftpuser/test;chown sftpuser:sftpuser /home/sftpuser/test"
 SET_SFTP_USER_CONFIG = "Match User sftpuser\n\tChrootDirectory /home/sftpuser\n\tX11Forwarding no\n\tAllowTcpForwarding no\n\tForceCommand internal-sftp"
@@ -70,7 +71,7 @@ class SSHD:
 class RootLogin(SSHD):
     def get(self):
         retdata = dict()
-        root_login_value = self.conf.get_value("PermitRootLogin")
+        root_login_value = self.conf.get_value(SSHD_CONF_PERMIT_ROOT_LOGIN)
         retdata[ROOT_LOGIN_ARG_ENABLED] = "" if not root_login_value else bool(root_login_value != "yes")
         return (True, json.dumps(retdata))
 
@@ -78,7 +79,11 @@ class RootLogin(SSHD):
         if not self.service.is_active():
             return (False, ERROR_NOTIFY)
         args = json.loads(args_json)
-        self.conf.set_all_value("PermitRootLogin", "" if args[ROOT_LOGIN_ARG_ENABLED] else "yes")
+        root_login_arg = args[ROOT_LOGIN_ARG_ENABLED]
+        if not str(root_login_arg):
+            self.conf.set_all_value(SSHD_CONF_PERMIT_ROOT_LOGIN, "")
+        else:
+            self.conf.set_all_value(SSHD_CONF_PERMIT_ROOT_LOGIN, "no" if bool(root_login_arg) else "yes")
         # 重启服务生效
         self.service.reload()
         return (True, '')
