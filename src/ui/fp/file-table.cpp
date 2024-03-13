@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
@@ -27,6 +27,7 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QToolTip>
+#include "src/ui/common/table/header-button-delegate.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
@@ -53,7 +54,8 @@ enum FileTableField
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-FilesDelegate::FilesDelegate(QObject *parent) : QStyledItemDelegate(parent)
+FilesDelegate::FilesDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -137,13 +139,13 @@ bool FilesDelegate::editorEvent(QEvent *event,
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
-FilesFilterModel::FilesFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+FilesFilterModel::FilesFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
 bool FilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    QString textComb;
     for (auto i = 0; i < FILE_TABLE_FIELD_LAST; ++i)
     {
         auto index = sourceModel()->index(sourceRow, i, sourceParent);
@@ -154,7 +156,8 @@ bool FilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &source
     return false;
 }
 
-FilesModel::FilesModel(QObject *parent) : QAbstractTableModel(parent)
+FilesModel::FilesModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
     m_fileProtectedProxy = new KSSDbusProxy(SSR_DBUS_NAME,
                                             SSR_KSS_INIT_DBUS_OBJECT_PATH,
@@ -204,6 +207,7 @@ QVariant FilesModel::data(const QModelIndex &index, int role) const
         default:
             break;
         }
+        break;
     }
     case Qt::EditRole:
     {
@@ -214,6 +218,7 @@ QVariant FilesModel::data(const QModelIndex &index, int role) const
         default:
             break;
         }
+        break;
     }
     default:
         break;
@@ -245,6 +250,7 @@ QVariant FilesModel::headerData(int section, Qt::Orientation orientation, int ro
         default:
             break;
         }
+        break;
     }
     case Qt::EditRole:
     {
@@ -253,6 +259,7 @@ QVariant FilesModel::headerData(int section, Qt::Orientation orientation, int ro
         case FileTableField::FILE_TABLE_FIELD_CHECKBOX:
             return QVariant();
         }
+        break;
     }
     default:
         break;
@@ -289,9 +296,10 @@ Qt::ItemFlags FilesModel::flags(const QModelIndex &index) const
 void FilesModel::updateRecord()
 {
     beginResetModel();
-    SCOPE_EXIT({
-        endResetModel();
-    });
+    SCOPE_EXIT(
+        {
+            endResetModel();
+        });
 
     m_filesInfo.clear();
     // 刷新时checkbox状态清空
@@ -358,8 +366,9 @@ void FilesModel::checkSelectStatus()
     emit stateChanged(state);
 }
 
-FileTable::FileTable(QWidget *parent) : QTableView(parent),
-                                        m_filterProxy(nullptr)
+FileTable::FileTable(QWidget *parent)
+    : QTableView(parent),
+      m_filterProxy(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -391,7 +400,6 @@ FileTable::FileTable(QWidget *parent) : QTableView(parent),
     m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft);
     m_headerViewProxy->setFixedHeight(24);
     m_headerViewProxy->setDefaultAlignment(Qt::AlignVCenter);
-
     // 设置垂直列表头
     auto verticalHeader = this->verticalHeader();
     verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
@@ -414,9 +422,17 @@ QList<FPFileInfo> FileTable::getFPFileInfos()
 
 void FileTable::mouseEnter(const QModelIndex &index)
 {
-    RETURN_IF_TRUE(index.column() != FileTableField::FILE_TABLE_FIELD_FILE_PATH)
+    RETURN_IF_TRUE(!index.isValid());
+    RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
+    // 判断内容是否显示完整
+    auto itemRect = this->visualRect(index);
+    // 计算文本宽度
+    QFontMetrics metrics(this->font());
+    // 目前表格都设置了margin，文本宽度需要加上24px的偏移量
+    auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString()) + 24;
+    RETURN_IF_TRUE(textWidth <= itemRect.width())
     auto mod = selectionModel()->model()->data(index);
-    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 2000);
+    QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
 }
 
 void FileTable::checkedAllItem(Qt::CheckState checkState)

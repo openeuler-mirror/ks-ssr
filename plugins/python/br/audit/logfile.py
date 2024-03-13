@@ -2,7 +2,7 @@
 
 try:
     import configparser
-except:
+except Exception:
     import ConfigParser as configparser
 
 import os
@@ -26,6 +26,11 @@ EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH | stat.
 
 PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
 PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT = "append-permissions-limit"
+
+FORMAT_STR = "{0} \"{1}\" {2}"
+GREP_CMD = 'grep -r'
+MESSAGES_FILE_PATH = '/var/log/messages'
+KS_BR_MANAGER_STR = "### KSBRManager ###"
 
 LOGFILE_ROTETE_CONF = '### KSBRManager ###\n\
 /var/log/messages\n\
@@ -57,13 +62,28 @@ class Permissions:
             self.mode_filelist = list()
             self.append_filelist = list()
             br.log.debug(str(e))
+    # 日志权限
+
+    def set_log_permissions(self, arg1, arg2):
+        if not arg1:
+            return
+        for mode_file in self.mode_filelist:
+            if not os.access(mode_file, os.F_OK):
+                continue
+            mode = os.stat(mode_file).st_mode
+            if mode == (mode & ~EXCLUDE_MODE):
+                continue
+            br.utils.subprocess_not_output(
+                'sudo chattr -a {0}'.format(mode_file))
+            os.chmod(mode_file, mode & ~EXCLUDE_MODE)
+            if arg2:
+                br.utils.subprocess_not_output(
+                    'sudo chattr +a {0}'.format(mode_file))
 
     def get(self):
         retdata = dict()
 
         mode_permissions_limit = True
-        # append_permissions_limit = True
-
         for mode_file in self.mode_filelist:
             if not os.access(mode_file, os.F_OK):
                 continue
@@ -72,26 +92,12 @@ class Permissions:
                 mode_permissions_limit = False
                 break
         retdata[PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT] = mode_permissions_limit
-
         br.log.debug(str(self.mode_filelist))
         br.log.debug(str(self.append_filelist))
 
-        # for append_file in self.append_filelist:
-        #     if not os.access(append_file, os.F_OK):
-        #         continue
-        #     file_attrs = br.utils.subprocess_has_output('lsattr -l {0}'.format(append_file))
-        #     br.log.debug(file_attrs)
-        #     if file_attrs.find("Append_Only") == -1:
-        #         append_permissions_limit = False
-        #         break
-        # br.log.debug(append_permissions_limit)
-        # retdata[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT] = append_permissions_limit
-
-        output = br.utils.subprocess_has_output(
-            'grep -r "{0}" {1}'.format('/var/log/messages', LOGFILE_CONF_FILEPATH))
-        output_kssrmanager = br.utils.subprocess_has_output(
-            'grep -r "{0}" {1}'.format('### KSSRManager ###', LOGFILE_CONF_FILEPATH))
-        if len(output) != 0 and len(output_kssrmanager) != 0:
+        output = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, MESSAGES_FILE_PATH, LOGFILE_CONF_FILEPATH))
+        output_ksbrmanager = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, KS_BR_MANAGER_STR, LOGFILE_CONF_FILEPATH))
+        if len(output) != 0 and len(output_ksbrmanager) != 0:
             retdata[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT] = True
         else:
             retdata[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT] = False
@@ -101,30 +107,11 @@ class Permissions:
     def set(self, args_json):
         args = json.loads(args_json)
 
-        if args[PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT]:
-            for mode_file in self.mode_filelist:
-                if not os.access(mode_file, os.F_OK):
-                    continue
-                mode = os.stat(mode_file).st_mode
-                if mode != (mode & ~EXCLUDE_MODE):
-                    br.utils.subprocess_not_output(
-                        'sudo chattr -a {0}'.format(mode_file))
-                    os.chmod(mode_file, mode & ~EXCLUDE_MODE)
-                    if args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT]:
-                        br.utils.subprocess_not_output(
-                            'sudo chattr +a {0}'.format(mode_file))
-
-        # if args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT]:
-        #     for append_file in self.append_filelist:
-        #         if not os.access(append_file, os.F_OK):
-        #             continue
-        #         br.utils.subprocess_not_output('chattr +a {0}'.format(append_file))
-
+        self.set_log_permissions(args[PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT],
+                               args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT])
         if args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT]:
-            output = br.utils.subprocess_has_output(
-                'grep -r "{0}" {1}'.format('/var/log/messages', LOGFILE_CONF_FILEPATH))
-            output_kssrmanager = br.utils.subprocess_has_output(
-                'grep -r "{0}" {1}'.format('### KSSRManager ###', LOGFILE_CONF_FILEPATH))
+            output = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, MESSAGES_FILE_PATH, LOGFILE_CONF_FILEPATH))
+            output_kssrmanager = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, KS_BR_MANAGER_STR, LOGFILE_CONF_FILEPATH))
             if len(output) == 0 and len(output_kssrmanager) == 0:
                 br.utils.subprocess_not_output('echo \'{0}\'    >> {1}'.format(
                     LOGFILE_ROTETE_CONF, LOGFILE_CONF_FILEPATH))
@@ -135,18 +122,18 @@ class Permissions:
                     LOGFILE_ROTETE_CONF, LOGFILE_CONF_FILEPATH))
 
             br.utils.subprocess_not_output(
-                'sudo chattr +a {0}'.format('/var/log/messages'))
+                'sudo chattr +a {0}'.format(MESSAGES_FILE_PATH))
         else:
             output = br.utils.subprocess_has_output(
-                'grep -rn "{0}" {1} | cut -f1 -d:'.format('### KSSRManager ###', LOGFILE_CONF_FILEPATH))
+                'grep -rn "{0}" {1} | cut -f1 -d:'.format(KS_BR_MANAGER_STR, LOGFILE_CONF_FILEPATH))
             if len(output) != 0:
                 line = output.split()
                 br.utils.subprocess_not_output(
                     'sed -i \'{0},{1}d\' {2}'.format(line[0], line[1], LOGFILE_CONF_FILEPATH))
                 br.utils.subprocess_not_output(
-                    'sed -i "1i{0}" {1}'.format('/var/log/messages', LOGFILE_CONF_FILEPATH))
+                    'sed -i "1i{0}" {1}'.format(MESSAGES_FILE_PATH, LOGFILE_CONF_FILEPATH))
 
             br.utils.subprocess_not_output(
-                'sudo chattr -a {0}'.format('/var/log/messages'))
+                'sudo chattr -a {0}'.format(MESSAGES_FILE_PATH))
 
         return (True, '')

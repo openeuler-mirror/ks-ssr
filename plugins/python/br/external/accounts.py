@@ -2,7 +2,7 @@
 
 try:
     import configparser
-except:
+except Exception:
     import ConfigParser as configparser
 
 import json
@@ -32,7 +32,7 @@ LOGIN_LIMIT_ARG_ENABLED = "enabled"
 LOGIN_LIMIT_ARG_PERMISSION_USERS = "permission-users"
 
 # 禁止存在空密码账号
-NULL_PASSWORD_ARG_ENABLED = "enabled"
+NULL_ARG_ENABLED = "enabled"
 
 # 多余用户
 ACCOUNTS_GROUP_SURPLUS = "SurplusUser"
@@ -45,12 +45,21 @@ DEAFULT_DELETE_USERS = ("lp", "games", "operator", "adm")
 
 SURPLUS_DELETE_ENABLED = "enabled"
 
-# GET_USER_NAME_CMD = "eval getent passwd {$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)..$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)} | cut -d: -f1"
 GET_MINIMUM_UID = "awk '/^UID_MIN/ {print $2}' /etc/login.defs"
 GET_MAXIMUM_UID = "awk '/^UID_MAX/ {print $2}' /etc/login.defs"
 
 
 class Accounts:
+    def check_user_exists(self, username):
+        try:
+            # 使用pwd.getpwnam函数获取用户信息
+            pwd.getpwnam(username)
+            # 如果获取到用户信息，则用户存在
+            return True
+        except Exception as e:
+            br.log.debug(e)
+            return False
+
     def is_nologin_shell(self, shell):
         basename = os.path.basename(shell)
         if len(shell) == 0 or basename == "nologin" or basename == "false":
@@ -79,13 +88,8 @@ class Accounts:
         # 兼容python2和python3
         try:
             return (spwdent.sp_pwd == "" or spwdent.sp_pwd == "!!" or spwdent.sp_pwd == "!")
-        except:
+        except Exception:
             return (spwdent.sp_pwdp == "" or spwdent.sp_pwdp == "!!" or spwdent.sp_pwdp == "!")
-
-    # def get_user_name(self, permission_users):
-    #     output = br.utils.subprocess_has_output(GET_USER_NAME_CMD)
-    #     permission_users += output.encode().split('\n')
-    #     br.log.debug(list(permission_users))
 
 
 class LoginLimit(Accounts):
@@ -93,11 +97,22 @@ class LoginLimit(Accounts):
         self.conf = configparser.ConfigParser()
         self.conf.read(ACCOUNTS_INI_FILEPATH)
 
+    def set_permission_user(self, permission_users):
+        # 过检需求，这个名单直接设置为可登录
+        for permission_user in permission_users:
+            if permission_user == "" or permission_user == "\"\"":
+                continue
+            if not self.check_user_exists(permission_user):
+                continue
+            
+            br.utils.subprocess_not_output(
+                "usermod -s /bin/bash {0}".format(permission_user))
+
     def get(self):
         retdata = dict()
         retdata[LOGIN_LIMIT_ARG_ENABLED] = True
-        retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS] = self.conf.get(
-            ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS)
+        permission_value = self.conf.get(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS)
+        retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS] = "" if not permission_value else permission_value
         permission_users = retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS].split(";")
 
         for pwdent in pwd.getpwall():
@@ -112,41 +127,40 @@ class LoginLimit(Accounts):
 
     def set(self, args_json):
         args = json.loads(args_json)
-
-        self.conf.set(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS,
-                      args[LOGIN_LIMIT_ARG_PERMISSION_USERS])
-        self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
+        if args[LOGIN_LIMIT_ARG_PERMISSION_USERS]:
+            self.conf.set(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS, args[LOGIN_LIMIT_ARG_PERMISSION_USERS])
+        try:
+            self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
+        except Exception:
+            self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'w'))
         permission_users = args[LOGIN_LIMIT_ARG_PERMISSION_USERS].split(";")
+        self.set_permission_user(permission_users)
 
-        if args[LOGIN_LIMIT_ARG_ENABLED]:
-            for pwdent in pwd.getpwall():
-                if ((not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or BUILTIN_PERMISSION_USERS.__contains__(pwdent.pw_name)
-                        or permission_users.__contains__(pwdent.pw_name)):
-                    br.log.debug(str(pwdent.pw_name))
-                    continue
-                if not self.is_nologin_shell(pwdent.pw_shell):
-                    br.utils.subprocess_not_output(
-                        "usermod -s /sbin/nologin {0}".format(pwdent.pw_name))
-        # 过检需求，这个名单直接设置为可登录
-        for permission_user in permission_users:
-            if permission_user != "":
+        if not args[LOGIN_LIMIT_ARG_ENABLED]:
+            return (True, '')
+        for pwdent in pwd.getpwall():
+            if ((not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or BUILTIN_PERMISSION_USERS.__contains__(pwdent.pw_name)
+                    or permission_users.__contains__(pwdent.pw_name)):
+                br.log.debug(str(pwdent.pw_name))
+                continue
+            if not self.is_nologin_shell(pwdent.pw_shell):
                 br.utils.subprocess_not_output(
-                    "usermod -s /bin/bash {0}".format(permission_user))
-
+                    "usermod -s /sbin/nologin {0}".format(pwdent.pw_name))
+        
         return (True, '')
 
 
 class NullPassword(Accounts):
     def get(self):
         retdata = dict()
-        retdata[NULL_PASSWORD_ARG_ENABLED] = True
+        retdata[NULL_ARG_ENABLED] = True
 
         for pwdent in pwd.getpwall():
             if (not self.is_null_pw_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
                 # br.log.debug("pwdent.pw_name = ", pwdent.pw_name, "is_human = ", self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell))
                 continue
             if self.is_null_password(pwdent.pw_name):
-                retdata[NULL_PASSWORD_ARG_ENABLED] = False
+                retdata[NULL_ARG_ENABLED] = False
                 break
 
         return (True, json.dumps(retdata))
@@ -154,7 +168,7 @@ class NullPassword(Accounts):
     def set(self, args_json):
         args = json.loads(args_json)
 
-        if args[NULL_PASSWORD_ARG_ENABLED]:
+        if args[NULL_ARG_ENABLED]:
             for pwdent in pwd.getpwall():
                 if (not self.is_null_pw_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
                     br.log.debug("pop  pwdent.pw_name = ",
@@ -196,7 +210,10 @@ class SurplusUser():
 
         self.conf.set(ACCOUNTS_GROUP_SURPLUS,
                       ALK_MODE_DELETE_USERS, args[SURPLUS_DELETE_USERS])
-        self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
+        try:
+            self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'wb'))
+        except Exception:
+            self.conf.write(open(ACCOUNTS_INI_FILEPATH, 'w'))
         delete_users = args[SURPLUS_DELETE_USERS].split(";")
 
         if args[SURPLUS_DELETE_ENABLED]:
