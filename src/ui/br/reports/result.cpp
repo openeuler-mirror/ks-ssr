@@ -499,18 +499,17 @@ bool Result::createVulnerabilityResults(QPrinter &printer, const InvalidData &in
     return true;
 }
 
-void Result::calculateRatio()
+void Result::calculateRatio(const QList<Category *> &categories)
 {
     int i = 0, j = 0;
     memset(m_total, 0, sizeof(m_total));
     memset(m_conform, 0, sizeof(m_total));
     memset(m_inconform, 0, sizeof(m_total));
-    for (auto categories : m_categories)
+    for (auto category : categories)
     {
-        m_categoryName[i++] = categories->getLabel();
-        for (auto reinforcementItem : categories->getReinforcementItem())
+        m_categoryName[i++] = category->getLabel();
+        for (auto reinforcementItem : category->getReinforcementItem())
         {
-            CONTINUE_IF_TRUE(!reinforcementItem->getCheckStatus())
             if (((reinforcementItem->getScanState() & BR_REINFORCEMENT_STATE_SAFE) == 1))
             {
                 m_conform[j]++;
@@ -530,7 +529,7 @@ void Result::calculateRatio()
 // picture
 bool Result::exportReport(const QList<Category *> &afterReinforcementList, int status, const InvalidData &invalidData)
 {
-    calculateRatio();
+    calculateRatio(afterReinforcementList.isEmpty() ? m_categories : afterReinforcementList);
 
     QFileDialog fileDialog;
     auto file = QString(tr("KylinSecHostReinforcementReport_%1_%2.pdf")).arg(QSysInfo::machineHostName()).arg(getIPPath());

@@ -364,10 +364,10 @@ void LogTable::initTable()
 
     // 设置水平行表头
     m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_NUMBER, 50);
-    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_LOG_TYPE, 200);
+    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_LOG_TYPE, 150);
     m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_USERNAME, 100);
     m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_DATATIME, 150);
-    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_MESSAGE, 300);
+    m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_MESSAGE, 350);
     m_headerViewProxy->resizeSection(LogTableField::LOG_TABLE_FIELD_RESULT, 100);
     m_headerViewProxy->setStretchLastSection(true);
     m_headerViewProxy->setSectionsMovable(false);
@@ -493,7 +493,8 @@ void LogTable::mouseEnter(const QModelIndex &index)
     auto itemRect = this->visualRect(index);
     // 计算文本宽度
     QFontMetrics metrics(this->font());
-    auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
+    // 目前表格都设置了margin，文本宽度需要加上24px的偏移量
+    auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString()) + 24;
     RETURN_IF_TRUE(textWidth <= itemRect.width())
     auto mod = selectionModel()->model()->data(index);
     QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);

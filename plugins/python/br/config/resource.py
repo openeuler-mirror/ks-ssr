@@ -35,6 +35,7 @@ class ResourceLimits:
         self.conf = br.configuration.KV(RESOURCE_LIMITS_CONF_PATH)
         self.conf_stack = br.configuration.KV(
             HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH)
+        self.format_str = "sed -i '/{0}/d' {1}"
 
     def get_selinux_status(self):
         output = br.utils.subprocess_has_output("getenforce")
@@ -43,6 +44,14 @@ class ResourceLimits:
             return True
         else:
             return False
+
+    def reset(self):
+        br.utils.subprocess_not_output('cat /dev/null > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
+        if not os.path.exists(PAM_CHECK_PATH) or self.get_selinux_status():
+            br.utils.subprocess_not_output(self.format_str.format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
+            self.conf_stack.set_value(RESOURCE_LIMITS_SOFT_STACK_CMD, '')
+            self.conf_stack.set_value(RESOURCE_LIMITS_HARD_STACK_CMD, '')
+            self.conf_stack.set_value(RESOURCE_LIMITS_RSS_CMD, '')
 
     def get(self):
         retdata = dict()
@@ -72,11 +81,11 @@ class ResourceLimits:
 
     def set(self, args_json):
         args = json.loads(args_json)
-        if not args[RESOURCE_LIMITS_RSS_KEY]:
-            br.utils.subprocess_not_output('echo \' \' > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
+        if not str(args[RESOURCE_LIMITS_RSS_KEY]):
+            self.reset()
             return (True, '')
 
-        br.utils.subprocess_not_output('echo \' \' > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
+        br.utils.subprocess_not_output('cat /dev/null > {0}'.format(RESOURCE_LIMITS_CONF_PATH))
         if args[RESOURCE_LIMITS_RSS_KEY]:
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_SOFT, '8192')
             self.conf.set_value(RESOURCE_LIMITS_KEY_STACK_HARD, '10240')
@@ -84,7 +93,7 @@ class ResourceLimits:
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, '10240')
             if not os.path.exists(PAM_CHECK_PATH) or self.get_selinux_status():
                 br.utils.subprocess_not_output(
-                    "sed -i '/{0}/d' {1}".format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
+                    self.format_str.format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
                 self.conf_stack.set_value(RESOURCE_LIMITS_SOFT_STACK_CMD, '8192')
                 self.conf_stack.set_value(RESOURCE_LIMITS_HARD_STACK_CMD, '10240')
                 self.conf_stack.set_value(RESOURCE_LIMITS_RSS_CMD, '10240')
@@ -98,7 +107,7 @@ class ResourceLimits:
             self.conf.set_value(RESOURCE_LIMITS_KEY_RSS_HARD, RESOURCE_LIMITS_UNLIMITED)
             if not os.path.exists(PAM_CHECK_PATH) or self.get_selinux_status():
                 br.utils.subprocess_not_output(
-                    "sed -i '/{0}/d' {1}".format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
+                    self.format_str.format('ulimit', HISTORY_SIZE_LIMIT_CONF_BASHRC_PATH))
                 self.conf_stack.set_value(RESOURCE_LIMITS_SOFT_STACK_CMD, RESOURCE_LIMITS_UNLIMITED)
                 self.conf_stack.set_value(RESOURCE_LIMITS_HARD_STACK_CMD, RESOURCE_LIMITS_UNLIMITED)
                 self.conf_stack.set_value(RESOURCE_LIMITS_RSS_CMD, RESOURCE_LIMITS_UNLIMITED)

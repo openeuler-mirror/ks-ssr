@@ -149,7 +149,7 @@ void LogPage::updateTipsAndPagination(int total)
     {
         pageTotal++;
     }
-    m_pagination->setTotalPage(pageTotal);
+    m_pagination->setTotalPage(pageTotal == 0 ? 1 : pageTotal);
 }
 }  // namespace Log
 }  // namespace KS

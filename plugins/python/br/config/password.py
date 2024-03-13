@@ -110,6 +110,26 @@ class PasswordComplexity:
             AUTH_COMPLEXTIY_CONF_PATH, "password\\s+requisite\\s+pam_pwquality.so")
         self.conf = br.configuration.KV(
             COMPLEXTIY_CONF_PATH, "\\s*=\\s*", " = ")
+    
+    def set_system_auth(self, key_minlen, capital, lcredit, number, special, min_class, succession, user_check):
+        self.system_conf.set_value(COMPLEXITY_CONF_KEY_MINLEN, '=', "" if not str(key_minlen) else int(key_minlen), '=')
+        self.system_conf.set_value(COMPLEXITY_CONF_KEY_CAPITAL, '=', "" if not str(capital) else -int(capital), '=')
+        self.system_conf.set_value(COMPLEXITY_CONF_KEY_MINUSCULES, '=', "" if not str(lcredit) else -int(lcredit), '=')
+        self.system_conf.set_value(COMPLEXITY_CONF_KEY_NUMBER, '=', "" if not str(number) else -int(number), '=')
+        self.system_conf.set_value(COMPLEXITY_CONF_KEY_SPECIAL, '=', "" if not str(special) else -int(special), '=')
+        self.system_conf.set_value(COMPLEXITY_CONF_KEY_MINCLASS, '=', "" if not str(min_class) else int(min_class), '=')
+        self.system_conf.set_value(COMPLEXITY_CONF_KEY_SUCCESSION, '=', "" if not str(succession) else int(succession), '=')
+        self.system_conf.set_value(COMPLEXITY_CONF_KEY_USER_CHECK, '=', "" if not str(user_check) else int(not user_check), '=')
+
+    def set_pw_auth(self, key_minlen, capital, lcredit, number, special, min_class, succession, user_check):
+        self.password_conf.set_value(COMPLEXITY_CONF_KEY_MINLEN, '=', "" if not str(key_minlen) else int(key_minlen), '=')
+        self.password_conf.set_value(COMPLEXITY_CONF_KEY_CAPITAL, '=', "" if not str(capital) else -int(capital), '=')
+        self.password_conf.set_value(COMPLEXITY_CONF_KEY_MINUSCULES,'=', "" if not str(lcredit) else -int(lcredit), '=')
+        self.password_conf.set_value(COMPLEXITY_CONF_KEY_NUMBER, '=', "" if not str(number) else -int(number), '=')
+        self.password_conf.set_value(COMPLEXITY_CONF_KEY_SPECIAL, '=', "" if not str(special) else -int(special), '=')
+        self.password_conf.set_value(COMPLEXITY_CONF_KEY_MINCLASS, '=', "" if not str(min_class) else int(min_class), '=')
+        self.password_conf.set_value(COMPLEXITY_CONF_KEY_SUCCESSION, '=', "" if not str(succession) else int(succession), '=')
+        self.password_conf.set_value(COMPLEXITY_CONF_KEY_USER_CHECK, '=', "" if not str(user_check) else int(not user_check), '=')
 
     def get(self):
         retdata = dict()
@@ -157,27 +177,27 @@ class PasswordComplexity:
         if len(self.system_conf.get_line()) == 0:
             self.system_conf.set_line(
                 COMPLEXTIY_CONF_KEY_PWQUALITY, COMPLEXITY_CONF_NEXT_MATCH_LINE_PATTERN)
-
-        self.system_conf.set_value(COMPLEXITY_CONF_KEY_MINLEN, '=', "" if not str(args[COMPLEXITY_CONF_KEY_MINLEN]) else int(args[COMPLEXITY_CONF_KEY_MINLEN]), '=')
-        self.system_conf.set_value(COMPLEXITY_CONF_KEY_CAPITAL, '=', "" if not str(args[COMPLEXITY_CONF_KEY_CAPITAL]) else -int(args[COMPLEXITY_CONF_KEY_CAPITAL]), '=')
-        self.system_conf.set_value(COMPLEXITY_CONF_KEY_MINUSCULES, '=', "" if not str(args[COMPLEXITY_CONF_KEY_MINUSCULES]) else -int(args[COMPLEXITY_CONF_KEY_MINUSCULES]), '=')
-        self.system_conf.set_value(COMPLEXITY_CONF_KEY_NUMBER, '=', "" if not str(args[COMPLEXITY_CONF_KEY_NUMBER]) else -int(args[COMPLEXITY_CONF_KEY_NUMBER]), '=')
-        self.system_conf.set_value(COMPLEXITY_CONF_KEY_SPECIAL, '=', "" if not str(args[COMPLEXITY_CONF_KEY_SPECIAL]) else -int(args[COMPLEXITY_CONF_KEY_SPECIAL]), '=')
-        self.system_conf.set_value(COMPLEXITY_CONF_KEY_MINCLASS, '=', "" if not str(args[COMPLEXITY_CONF_KEY_MINCLASS]) else int(args[COMPLEXITY_CONF_KEY_MINCLASS]), '=')
-        self.system_conf.set_value(COMPLEXITY_CONF_KEY_SUCCESSION, '=', "" if not str(args[COMPLEXITY_CONF_KEY_SUCCESSION]) else int(args[COMPLEXITY_CONF_KEY_SUCCESSION]), '=')
-        self.system_conf.set_value(COMPLEXITY_CONF_KEY_USER_CHECK, '=', "" if not str(args[COMPLEXITY_CONF_KEY_USER_CHECK]) else int(not args[COMPLEXITY_CONF_KEY_USER_CHECK]), '=')
-
+        self.set_system_auth(args[COMPLEXITY_CONF_KEY_MINLEN],
+                            args[COMPLEXITY_CONF_KEY_CAPITAL],
+                            args[COMPLEXITY_CONF_KEY_MINUSCULES],
+                            args[COMPLEXITY_CONF_KEY_NUMBER],
+                            args[COMPLEXITY_CONF_KEY_SPECIAL],
+                            args[COMPLEXITY_CONF_KEY_MINCLASS],
+                            args[COMPLEXITY_CONF_KEY_SUCCESSION],
+                            args[COMPLEXITY_CONF_KEY_USER_CHECK])
+        
         if len(self.password_conf.get_line()) == 0:
             self.password_conf.set_line(
                 COMPLEXTIY_CONF_KEY_PWQUALITY, COMPLEXITY_CONF_NEXT_MATCH_LINE_PATTERN)
 
-        self.password_conf.set_value(COMPLEXITY_CONF_KEY_MINLEN, '=', "" if not str(args[COMPLEXITY_CONF_KEY_MINLEN]) else int(args[COMPLEXITY_CONF_KEY_MINLEN]), '=')
-        self.password_conf.set_value(COMPLEXITY_CONF_KEY_CAPITAL, '=', "" if not str(args[COMPLEXITY_CONF_KEY_CAPITAL]) else -int(args[COMPLEXITY_CONF_KEY_CAPITAL]), '=')
-        self.password_conf.set_value(COMPLEXITY_CONF_KEY_MINUSCULES,'=', "" if not str(args[COMPLEXITY_CONF_KEY_MINUSCULES]) else -int(args[COMPLEXITY_CONF_KEY_MINUSCULES]), '=')
-        self.password_conf.set_value(COMPLEXITY_CONF_KEY_NUMBER, '=', "" if not str(args[COMPLEXITY_CONF_KEY_NUMBER]) else -int(args[COMPLEXITY_CONF_KEY_NUMBER]), '=')
-        self.password_conf.set_value(COMPLEXITY_CONF_KEY_SPECIAL, '=', "" if not str(args[COMPLEXITY_CONF_KEY_SPECIAL]) else -int(args[COMPLEXITY_CONF_KEY_SPECIAL]), '=')
-        self.password_conf.set_value(COMPLEXITY_CONF_KEY_MINCLASS, '=', "" if not str(args[COMPLEXITY_CONF_KEY_MINCLASS]) else int(args[COMPLEXITY_CONF_KEY_MINCLASS]), '=')
-        self.password_conf.set_value(COMPLEXITY_CONF_KEY_SUCCESSION, '=', "" if not str(args[COMPLEXITY_CONF_KEY_SUCCESSION]) else int(args[COMPLEXITY_CONF_KEY_SUCCESSION]), '=')
-        self.password_conf.set_value(COMPLEXITY_CONF_KEY_USER_CHECK, '=', "" if not str(args[COMPLEXITY_CONF_KEY_USER_CHECK]) else int(not args[COMPLEXITY_CONF_KEY_USER_CHECK]), '=')
+        self.set_pw_auth(args[COMPLEXITY_CONF_KEY_MINLEN],
+                        args[COMPLEXITY_CONF_KEY_CAPITAL],
+                        args[COMPLEXITY_CONF_KEY_MINUSCULES],
+                        args[COMPLEXITY_CONF_KEY_NUMBER],
+                        args[COMPLEXITY_CONF_KEY_SPECIAL],
+                        args[COMPLEXITY_CONF_KEY_MINCLASS],
+                        args[COMPLEXITY_CONF_KEY_SUCCESSION],
+                        args[COMPLEXITY_CONF_KEY_USER_CHECK])
+
         self.conf.set_all_value(COMPLEXITY_CONF_KEY_DICT_CHECK, "" if not str(args[COMPLEXITY_CONF_KEY_DICT_CHECK]) else int(args[COMPLEXITY_CONF_KEY_DICT_CHECK]))
         return (True, '')

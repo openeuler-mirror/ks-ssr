@@ -32,7 +32,7 @@ LOGIN_LIMIT_ARG_ENABLED = "enabled"
 LOGIN_LIMIT_ARG_PERMISSION_USERS = "permission-users"
 
 # 禁止存在空密码账号
-NULL_PASSWORD_ARG_ENABLED = "enabled"
+NULL_ARG_ENABLED = "enabled"
 
 # 多余用户
 ACCOUNTS_GROUP_SURPLUS = "SurplusUser"
@@ -153,14 +153,14 @@ class LoginLimit(Accounts):
 class NullPassword(Accounts):
     def get(self):
         retdata = dict()
-        retdata[NULL_PASSWORD_ARG_ENABLED] = True
+        retdata[NULL_ARG_ENABLED] = True
 
         for pwdent in pwd.getpwall():
             if (not self.is_null_pw_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
                 # br.log.debug("pwdent.pw_name = ", pwdent.pw_name, "is_human = ", self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell))
                 continue
             if self.is_null_password(pwdent.pw_name):
-                retdata[NULL_PASSWORD_ARG_ENABLED] = False
+                retdata[NULL_ARG_ENABLED] = False
                 break
 
         return (True, json.dumps(retdata))
@@ -168,7 +168,7 @@ class NullPassword(Accounts):
     def set(self, args_json):
         args = json.loads(args_json)
 
-        if args[NULL_PASSWORD_ARG_ENABLED]:
+        if args[NULL_ARG_ENABLED]:
             for pwdent in pwd.getpwall():
                 if (not self.is_null_pw_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)) or THREE_RIGHTS_USERS.__contains__(pwdent.pw_name):
                     br.log.debug("pop  pwdent.pw_name = ",

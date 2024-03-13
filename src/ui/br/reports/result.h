@@ -64,7 +64,7 @@ private:
     void createReportContent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData);
     bool createFilesScanResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag);
     bool createVulnerabilityResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag);
-    void calculateRatio();
+    void calculateRatio(const QList<Category *> &categories);
     bool scanFilesAnalysis(QStringList &filelist, const InvalidData &invalidData);
     bool scanVulnerability(QStringList &rpmlist, const InvalidData &invalidData);
     void addCategoryResults(QPrinter &printer, const QList<CategoryContent> &categoryContents, bool &showTailFlag);
