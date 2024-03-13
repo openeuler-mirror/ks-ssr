@@ -361,7 +361,8 @@ void ExecuteProtectedTable::showDetails(const QModelIndex &index)
     auto itemRect = this->visualRect(index);
     // 计算文本宽度
     QFontMetrics metrics(this->font());
-    auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString());
+    // 目前表格都设置了margin，文本宽度需要加上24px的偏移量
+    auto textWidth = metrics.horizontalAdvance(m_model->data(index).toString()) + 24;
     RETURN_IF_TRUE(textWidth <= itemRect.width())
     auto mod = selectionModel()->model()->data(index);
     QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);

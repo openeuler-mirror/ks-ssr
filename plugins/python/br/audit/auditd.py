@@ -72,7 +72,21 @@ class Rules():
         # 遍历行
         for line in lines:
             br.utils.subprocess_not_output("{0} {1}".format(AUDIT_DEL_CMD, line.replace("-w ", "")))
-        br.utils.subprocess_not_output("echo '' > {0}".format(AUDIT_RULES_PATH))
+        br.utils.subprocess_not_output("cat /dev/null > {0}".format(AUDIT_RULES_PATH))
+
+    def set_rule(self, is_arg_empty_add, is_arg_empty_del, add_rule_key, add_rules, del_rules, del_all_arg):
+        if is_arg_empty_add and not self.is_rule_exist(add_rule_key):
+            self.conf.set_value(
+                "1=-w\ {0}".format(add_rule_key), add_rules)
+            br.utils.subprocess_not_output("auditctl {0}".format(add_rules))
+        if is_arg_empty_del:
+            self.delete_line(del_rules)
+            br.utils.subprocess_has_output_ignore_error_handling("{0} {1}".format(AUDIT_DEL_CMD, del_rules.replace("-w ", "")))
+        if del_all_arg:
+            self.delete_all_lines()
+        # 忽略这个错误，重复执行这条命令也会抛出错误
+        br.utils.subprocess_has_output_ignore_error_handling("augenrules --load")
+        self.service.service_reload()
 
     def get(self):
         retdata = dict()
@@ -104,18 +118,5 @@ class Rules():
         if ((is_arg_empty_add and not os.path.exists(add_rule_key)) or
                 (is_arg_empty_del and not os.path.exists(args[AUDIT_DEL_PATH_KEY]))):
             return (False, "No such file or directory.")
-
-        if is_arg_empty_add and not self.is_rule_exist(add_rule_key):
-            self.conf.set_value(
-                "1=-w\ {0}".format(add_rule_key), add_rules)
-            br.utils.subprocess_not_output("auditctl {0}".format(add_rules))
-        if is_arg_empty_del:
-            self.delete_line(del_rules)
-            br.utils.subprocess_not_output("{0} {1}".format(AUDIT_DEL_CMD, del_rules.replace("-w ", "")))
-        if args[AUDIT_DEL_ALL_RULE_KEY]:
-            self.delete_all_lines()
-        # 忽略这个错误，重复执行这条命令也会抛出错误
-        br.utils.subprocess_has_output_ignore_error_handling("augenrules --load")
-
-        self.service.service_reload()
+        self.set_rule(is_arg_empty_add, is_arg_empty_del, add_rule_key, add_rules, del_rules, args[AUDIT_DEL_ALL_RULE_KEY])
         return (True, '')
