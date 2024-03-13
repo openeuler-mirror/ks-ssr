@@ -1452,17 +1452,17 @@
         <translation>版本号%1存在漏洞</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="536"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="535"/>
         <source>KylinSecHostReinforcementReport_%1_%2.pdf</source>
         <translation>麒麟信安主机安全加固报告_%1_%2.pdf</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="537"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="536"/>
         <source>Open File</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/br/reports/result.cpp" line="537"/>
+        <location filename="../src/ui/br/reports/result.cpp" line="536"/>
         <source>PDF(*.pdf)</source>
         <translation></translation>
     </message>
@@ -2186,7 +2186,7 @@
         <translation>其它</translation>
     </message>
     <message>
-        <location filename="../src/ui/dm/device-list-table.cpp" line="500"/>
+        <location filename="../src/ui/dm/device-list-table.cpp" line="501"/>
         <source>Unknown device</source>
         <translation>未知设备</translation>
     </message>
@@ -2928,6 +2928,11 @@
         <translation>设置防卸载开关失败，文件路径为空</translation>
     </message>
     <message>
+        <location filename="../src/daemon/kss/dbus.cpp" line="401"/>
+        <source>%1 prohibit unloading. file path is %2</source>
+        <translation>%1防卸载功能，文件路径为%2</translation>
+    </message>
+    <message>
         <location filename="../src/daemon/kss/dbus.cpp" line="444"/>
         <source>Failed to add files protection, file path is empty.</source>
         <translation>添加文件至保护列表失败，文件路径为空。</translation>
@@ -3013,9 +3018,8 @@
         <translation type="vanished">设置防卸载开关失败。文件路径为%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/kss/dbus.cpp" line="401"/>
         <source>Prohibit unloading. file path is %1</source>
-        <translation>设置防卸载开关，路径为%1</translation>
+        <translation type="vanished">设置防卸载开关，路径为%1</translation>
     </message>
     <message>
         <location filename="../src/daemon/kss/dbus.cpp" line="413"/>
@@ -3084,11 +3088,13 @@
         <translation>%1可信开关</translation>
     </message>
     <message>
+        <location filename="../src/daemon/kss/dbus.cpp" line="401"/>
         <location filename="../src/daemon/kss/dbus.cpp" line="535"/>
         <source>open</source>
         <translation>打开</translation>
     </message>
     <message>
+        <location filename="../src/daemon/kss/dbus.cpp" line="401"/>
         <location filename="../src/daemon/kss/dbus.cpp" line="535"/>
         <source>close</source>
         <translation>关闭</translation>
@@ -3978,42 +3984,42 @@
     <name>KS::TP::ExecuteProtectedTable</name>
     <message>
         <location filename="../src/ui/tp/execute-protected-table.cpp" line="348"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="448"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="450"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="449"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="451"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="417"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="418"/>
         <source>Type</source>
         <translation>文件类型</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="419"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="422"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="420"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="423"/>
         <source>Executable file</source>
         <translation>可执行程序</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="420"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="422"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="421"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="423"/>
         <source>Executable script</source>
         <translation>可执行脚本</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="421"/>
         <location filename="../src/ui/tp/execute-protected-table.cpp" line="422"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="423"/>
         <source>Dynamic library</source>
         <translation>动态库</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="446"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="447"/>
         <source>Status</source>
         <translation>当前状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="449"/>
         <location filename="../src/ui/tp/execute-protected-table.cpp" line="450"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="451"/>
         <source>Being tampered with</source>
         <translation>被篡改</translation>
     </message>
@@ -4125,24 +4131,24 @@
     <name>KS::TP::KernelProtectedTable</name>
     <message>
         <location filename="../src/ui/tp/kernel-protected-table.cpp" line="358"/>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="428"/>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="430"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="429"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="431"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="426"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="427"/>
         <source>Status</source>
         <translation>当前状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="429"/>
         <location filename="../src/ui/tp/kernel-protected-table.cpp" line="430"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="431"/>
         <source>Being tampered with</source>
         <translation>被篡改</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="484"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="485"/>
         <source>%1</source>
         <translation></translation>
     </message>
@@ -4387,7 +4393,7 @@
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="115"/>
         <source>NULL</source>
-        <translation>空</translation>
+        <translation>无</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.cpp" line="151"/>
@@ -4431,7 +4437,7 @@
 <context>
     <name>KS::ToolBox::FileSignDelegate</name>
     <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="469"/>
+        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="470"/>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
@@ -4561,7 +4567,7 @@
         <location filename="../src/daemon/tool-box/manager.cpp" line="287"/>
         <location filename="../src/daemon/tool-box/manager.cpp" line="391"/>
         <source>Failed to set %1 mls label, error msg: %2</source>
-        <translation>设置%1的完整性标签失败，错误消息为%2</translation>
+        <translation>设置%1的安全等级失败，错误消息为%2</translation>
     </message>
     <message>
         <location filename="../src/daemon/tool-box/manager.cpp" line="294"/>
@@ -4759,12 +4765,12 @@
         <translation>删除成功！</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="452"/>
+        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="453"/>
         <source>Manager user</source>
         <translation>管理员用户</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="452"/>
+        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="453"/>
         <source>Normal user</source>
         <translation>普通用户</translation>
     </message>

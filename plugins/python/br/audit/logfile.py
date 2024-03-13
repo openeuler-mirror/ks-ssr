@@ -27,8 +27,10 @@ EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH | stat.
 PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
 PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT = "append-permissions-limit"
 
-GREP_CMD = 'grep -r "'
+FORMAT_STR = "{0} \"{1}\" {2}"
+GREP_CMD = 'grep -r'
 MESSAGES_FILE_PATH = '/var/log/messages'
+KS_BR_MANAGER_STR = "### KSBRManager ###"
 
 LOGFILE_ROTETE_CONF = '### KSBRManager ###\n\
 /var/log/messages\n\
@@ -93,10 +95,8 @@ class Permissions:
         br.log.debug(str(self.mode_filelist))
         br.log.debug(str(self.append_filelist))
 
-        output = br.utils.subprocess_has_output(
-            GREP_CMD + MESSAGES_FILE_PATH + '" ' + LOGFILE_CONF_FILEPATH)
-        output_ksbrmanager = br.utils.subprocess_has_output(
-            GREP_CMD + '### KSBRManager ###"' + ' ' + LOGFILE_CONF_FILEPATH)
+        output = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, MESSAGES_FILE_PATH, LOGFILE_CONF_FILEPATH))
+        output_ksbrmanager = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, KS_BR_MANAGER_STR, LOGFILE_CONF_FILEPATH))
         if len(output) != 0 and len(output_ksbrmanager) != 0:
             retdata[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT] = True
         else:
@@ -110,10 +110,8 @@ class Permissions:
         self.set_log_permissions(args[PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT],
                                args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT])
         if args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT]:
-            output = br.utils.subprocess_has_output(
-                GREP_CMD + MESSAGES_FILE_PATH + '" ' + LOGFILE_CONF_FILEPATH)
-            output_kssrmanager = br.utils.subprocess_has_output(
-                GREP_CMD + '### KSBRManager ###"' + ' ' + LOGFILE_CONF_FILEPATH)
+            output = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, MESSAGES_FILE_PATH, LOGFILE_CONF_FILEPATH))
+            output_kssrmanager = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, KS_BR_MANAGER_STR, LOGFILE_CONF_FILEPATH))
             if len(output) == 0 and len(output_kssrmanager) == 0:
                 br.utils.subprocess_not_output('echo \'{0}\'    >> {1}'.format(
                     LOGFILE_ROTETE_CONF, LOGFILE_CONF_FILEPATH))
@@ -127,7 +125,7 @@ class Permissions:
                 'sudo chattr +a {0}'.format(MESSAGES_FILE_PATH))
         else:
             output = br.utils.subprocess_has_output(
-                'grep -rn "{0}" {1} | cut -f1 -d:'.format('### KSSRManager ###', LOGFILE_CONF_FILEPATH))
+                'grep -rn "{0}" {1} | cut -f1 -d:'.format(KS_BR_MANAGER_STR, LOGFILE_CONF_FILEPATH))
             if len(output) != 0:
                 line = output.split()
                 br.utils.subprocess_not_output(
