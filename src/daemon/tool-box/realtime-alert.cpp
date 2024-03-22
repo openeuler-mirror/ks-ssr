@@ -64,7 +64,6 @@ RealTimeAlert::RealTimeAlert()
       m_getIPSetDataProcess(new QProcess()),
       m_clearIPSetDataProcess(new QProcess())
 {
-#pragma message("审计规则应该由接口配置，而不是写死在配置文件中")
     if (!initAuditReceiver())
     {
         KLOG_ERROR() << "Failed to init audit receiver, realtime alert feature is diabled";
