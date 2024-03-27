@@ -121,6 +121,8 @@ class WeakEncryption(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        if not self.service.is_active():
+            return (False, ERROR_NOTIFY)
         args = json.loads(args_json)
         ciphers = self.conf.get_value("Ciphers").split(",")
         # 过滤空元素
@@ -258,13 +260,15 @@ class SshdService(SSHD):
             if self.get_selinux_status():
                 br.utils.subprocess_not_output(
                     "semodule -i {0}".format(SELINUX_MODULES_PORT_PATH))
-                br.utils.subprocess_not_output(
+                # 重复添加已定义的端口会抛出错误，需忽略这个错误，报错并不影响加固结果
+                br.utils.subprocess_has_output_ignore_error_handling(
                     "semanage port -a -t ssh_port_t -p tcp {0}".format(args[SSHD_CONF_PORT_KEY]))
         else:
             self.conf.set_all_value(SSHD_CONF_PORT, "")
             if self.get_selinux_status():
+                # 这里文件名为br-sshd-port，实际添加的se模块为ssr-sshd-port
                 br.utils.subprocess_not_output(
-                    "semodule -r br-sshd-port &> /dev/null")
+                    "semodule -r ssr-sshd-port &> /dev/null")
 
         # 重启服务生效
         self.service.reload()
