@@ -55,6 +55,8 @@
 #define FILE_SHRED_TABLE "fileShred"
 #define FILE_SHRED_COLUMN1 "filePath"
 
+#define USER_EMAIL_PATH "/var/spool/mail/"
+
 // 在文件粉碎功能中可能会需要删除非常大量的文件，考虑到 ARG_MAX 等限制，所以限制一次最多删除一百个文件
 #define FILE_LIST_LIMIT 100
 
@@ -535,27 +537,37 @@ void Manager::removeUser(const QDBusMessage& message, const QStringList& userNam
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
     }
 
+    QStringList userSpace{};
     QStringList failedToRemove{};
     QStringList removed{};
+    // 删除系统用户时可能导致 m_osUserInfo 改变， 所以在这里备份数据
+    auto osUserInfo = m_osUserInfo;
     for (const auto& userName : userNames)
     {
         auto cmd = getProcess(USERDEL_PATH, QStringList(userName));
         cmd->start();
         cmd->waitForFinished();
-        if (cmd->exitCode())
-        {
-            QString output = cmd->readAllStandardError() + cmd->readAllStandardOutput();
-            KLOG_ERROR() << "Failed to remove user " << userName
-                         << "error message: " << output;
-            SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
-                          tr("Failed to remove user %1, error msg: %2").arg(userName).arg(output),
-                          calledUniqueName);
-            failedToRemove.append(userName);
-        }
-        else
+        if (!cmd->exitCode())
         {
             removed.append(userName);
+            // 删除用户的信箱文件
+            userSpace.append(USER_EMAIL_PATH + userName);
+            auto userInfo = osUserInfo.value(userName);
+            if (userInfo.dir.isEmpty())
+            {
+                KLOG_WARNING() << "Failed to find user's dir, userName: " << userName;
+            }
+            userSpace.append(userInfo.dir);
+            continue;
         }
+        QString output = cmd->readAllStandardError() + cmd->readAllStandardOutput();
+        KLOG_ERROR() << "Failed to remove user " << userName
+                     << "error message: " << output;
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
+                      tr("Failed to remove user %1, error msg: %2").arg(userName).arg(output),
+                      calledUniqueName);
+
+        failedToRemove.append(userName);
     }
     QDBusMessage replyMessage;
     if (!failedToRemove.isEmpty())
@@ -569,20 +581,6 @@ void Manager::removeUser(const QDBusMessage& message, const QStringList& userNam
     }
     DBUS_REPLY(message);
     SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX, tr("Remove users: %1").arg(removed.join(',')), calledUniqueName);
-    QStringList userSpace{};
-    for (const auto& removedUser : removed)
-    {
-        for (const auto& userInfo : m_osUserInfo)
-        {
-            if (removedUser != userInfo.name || userInfo.dir.isEmpty())
-            {
-                continue;
-            }
-            // 获取删除
-            userSpace.append(userInfo.dir);
-            break;
-        }
-    }
     std::thread shredUserSpace{&Manager::shredFile, this, message, userSpace};
     shredUserSpace.detach();
 }
@@ -888,8 +886,14 @@ void Manager::updateAccountInfo(const QString&)
     setpwent();  // 重置密码文件的读取位置到开头
     while ((pw = getpwent()) != nullptr)
     {
-        m_osUserInfo.append({pw->pw_name, pw->pw_passwd, pw->pw_uid, pw->pw_gid,
-                             pw->pw_gecos, pw->pw_dir, pw->pw_shell});
+        m_osUserInfo.insert(pw->pw_name,
+                            {pw->pw_name,
+                             pw->pw_passwd,
+                             pw->pw_uid,
+                             pw->pw_gid,
+                             pw->pw_gecos,
+                             pw->pw_dir,
+                             pw->pw_shell});
     }
     // KLOG_DEBUG() << "m_osUserInfo: " << m_osUserInfo;
     endpwent();  // 关闭密码文件
