@@ -48,7 +48,7 @@ private slots:
     void onbtnClicked();
 
 protected:
-    void paintCell(QPainter* painter, const QRect& rect, const QDate& date) const;
+    void paintCell(QPainter* painter, const QRect& rect, const QDate& date) const override;
     void paintEvent(QPaintEvent* event) override;
 
 private:

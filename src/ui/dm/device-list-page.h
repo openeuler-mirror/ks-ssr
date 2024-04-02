@@ -44,7 +44,7 @@ public:
     QString getAccountRoleName() override;
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) override;
 
 private Q_SLOTS:
     void popupEditDialog(const QModelIndex &index);

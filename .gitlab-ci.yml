@@ -18,4 +18,3 @@ include:
     ref: main
     file:
       - '/entrypoint/develop/cmake.yml'
-      - '/entrypoint/develop/rc-src-sync.yml'
