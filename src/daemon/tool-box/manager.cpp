@@ -259,7 +259,9 @@ QString Manager::GetFileKICLabel(const QString& filePath)
                       calledUniqueName);
         return "";
     }
-    return QString(output).split(": ")[1].trimmed();
+    auto retVal = output.split(": ")[1].trimmed();
+    // rbapol 返回的完整性标记 system 会变成 sys， 在此兼容 rbapol 的错误
+    return retVal == "sys" ? "system" : retVal;
 }
 
 void Manager::setFileMLSLabel(const QDBusMessage& message, const QString& filePath, const QString& SecurityContext)
