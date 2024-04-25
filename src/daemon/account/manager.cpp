@@ -506,7 +506,7 @@ bool Manager::Logout()
     auto it = m_clients.find(callerUnique);
     if (!isLogin(it))
     {
-        KLOG_ERROR() << "Maybe its internal error, Please login before logout, Unique name: " << callerUnique;
+        KLOG_ERROR() << "Maybe its internal error, please login before logout, Unique name: " << callerUnique;
         return false;
     }
     it.value().isLogin = false;
