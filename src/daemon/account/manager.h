@@ -28,31 +28,37 @@ namespace KS
 {
 namespace Account
 {
-
 struct Account;
 
 class Manager : public QObject, public QDBusContext
 {
     Q_OBJECT
 public:
-    enum class Role
+    // 此枚举类型为与前台传入参数保持一致，使用小写定义枚举
+    enum class AccountRole
     {
-        SYSADMIN,
-        SECADMIN,
-        SECAUDITOR
+        sysadm = (1 << 0),
+        secadm = (1 << 1),
+        audadm = (1 << 2),
+        unknown_account = (1 << 3)
     };
-    Q_ENUM(Role)
-
+    Q_ENUM(AccountRole)
     struct Account
     {
         /**
          * @brief 当前是否是登录状态
          */
         bool isLogin;
+
         /**
          * @brief 当前用户角色，可考虑细分不同角色用户的权限
          */
-        Manager::Role m_role;
+        AccountRole role;
+
+        /**
+         * @brief 用户名
+         */
+        QString name;
 
         /**
          * @brief 前端程序的 pid
@@ -67,13 +73,6 @@ private:
 public:
     static void globalInit();
     static void globDeinit();
-
-    /**
-     * @brief UID 是否可复用
-     * @param enabled 开关状态
-     * @note 请注意使用 QMutexLocker 来避免多线程的问题。
-     */
-    void SetUidReusable(bool enabled);
 
     /**
      * @brief 修改密码
@@ -103,18 +102,73 @@ public:  // PROPERTIES
         return m_rsaPublicKey;
     };
 
+    AccountRole getRole(QString dbusUniqueName) const
+    {
+        QReadLocker locker(&m_clientMutex);
+        auto it = m_clients.find(dbusUniqueName);
+        if (it == m_clients.end())
+        {
+            KLOG_WARNING() << "Unknown dbus id: " << dbusUniqueName;
+            return AccountRole::unknown_account;
+        }
+        return it->role;
+    }
+
+    AccountRole getRole(pid_t dbusPid) const
+    {
+        QReadLocker locker(&m_clientMutex);
+        for (const auto& client : m_clients)
+        {
+            if (client.pid == dbusPid)
+            {
+                return client.role;
+            }
+        }
+        KLOG_WARNING() << "Unknown dbus id: " << dbusPid;
+        return AccountRole::unknown_account;
+    }
+
+    QString getUserName(QString dbusUniqueName) const
+    {
+        QReadLocker locker(&m_clientMutex);
+        auto it = m_clients.find(dbusUniqueName);
+        if (it == m_clients.end())
+        {
+            KLOG_WARNING() << "Unknown dbus id: " << dbusUniqueName;
+            return "unknown";
+        }
+        return it->name;
+    }
+
+    QString getUserName(pid_t dbusPid) const
+    {
+        QReadLocker locker(&m_clientMutex);
+        for (const auto& client : m_clients)
+        {
+            if (client.pid == dbusPid)
+            {
+                return client.name;
+            }
+        }
+        KLOG_WARNING() << "Unknown dbus id: " << dbusPid;
+        return "unknown";
+    }
+    QMetaEnum m_metaAccountEnum;
 Q_SIGNALS:  // SIGNALS
     void PasswordChanged(const QString& user_name);
 
 private:
+    void createUser(const QString& userName, const QString& role, const QString& password);
     void initDatabase();
     void initUserInfoTable();
-    void initUserFreezeTable();
     bool verifyPassword(const QString& userName, const QString& passwd) const;
     bool changePassword(const QString& userName, const QString& newPasswd) const;
     bool isFreeze(const QString& userName) const;
+    AccountRole getRoleFromDB(const QString& userName) const;
     void updateFreezeInfo(const QString& userName) const;
     void resetFreezeInfo(const QString& userName) const;
+    // 密码复杂度检测
+    bool checkPassword(const QString& password, const QString& userName);
 
     inline bool isLogin(QMap<QString, Account>::iterator& it)
     {
@@ -126,21 +180,9 @@ public:
 
 private:
     /**
-     * @brief uid 是否可复用的配置文件， 路径默认是 UID_REUSE_CONTROL_PATH
-     */
-    QSettings* m_uidReuseConfig;
-
-    /**
-     * @brief UID 是否可复用
-     */
-    bool m_isUidReusable;
-
-    /**
      * @brief 键为前端程序的 pid ，值为前端程序对应账户的实例化结构体
      */
     QMap<QString, Account> m_clients;
-
-    QMetaEnum m_metaAccountEnum;
 
     /**
      * @brief 冻结时间， 3分钟，可以考虑做成配置文件中的配置项
@@ -149,7 +191,7 @@ private:
 
     Database* m_db;
 
-    mutable QMutex m_clientMutex;
+    mutable QReadWriteLock m_clientMutex;
     mutable QReadWriteLock m_dbMutex;
     QDBusServiceWatcher* m_dbusServerWatcher;
     QString m_rsaPublicKey;  // property

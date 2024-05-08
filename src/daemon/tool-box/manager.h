@@ -124,6 +124,17 @@ public:
 
     static void hazardDetected(uint, const QString&);
 
+    /**
+     * @brief UID 是否可复用
+     * @param enabled 开关状态
+     * @note 请注意使用 QMutexLocker 来避免多线程的问题。
+     */
+    void SetUidReusable(bool enabled);
+
+    bool GetUidReusable();
+    void SetMultiFactorAuthState(bool enabled);
+    bool GetMultiFactorAuthState();
+
 Q_SIGNALS:  // SIGNALS
     void FileShredListChanged();
     void FileSignListChanged();
@@ -172,6 +183,12 @@ private:
 
     void updateAccountInfo(const QString& path = "");
 
+    bool getMultiFactorAuthState();
+    void disableMultiFactorAuthState();
+    void enableMultiFactorAuthState();
+    void disableAuthType(QList<int>);
+    void enableAuthType(QList<int>);
+
 private:
     static Manager* m_toolBoxManager;
     QList<Group> m_osGroupInfo;
@@ -181,6 +198,17 @@ private:
     QFileSystemWatcher* m_userNameWatcher;
     RealTimeAlert* m_realTimeAlert;
     Database* m_db;
+
+    /**
+     * @brief uid 是否可复用的配置文件， 路径默认是 UID_REUSE_CONTROL_PATH
+     */
+    QSettings* m_uidReuseConfig;
+
+    /**
+     * @brief UID 是否可复用
+     */
+    bool m_isUidReusable;
+    bool m_multiFactorAuthState;
 };
 
 };  // namespace ToolBox

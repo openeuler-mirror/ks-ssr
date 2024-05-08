@@ -30,8 +30,9 @@ namespace BRDaemon
      (PY_MAJOR_VERSION == (major) && PY_MINOR_VERSION == (minor) && \
       PY_MICRO_VERSION >= (micro)))
 
-Plugins::Plugins(Configuration* configuration) : configuration_(configuration),
-                                                 thread_pool_(this->configuration_->getMaxThreadNum())
+Plugins::Plugins(Configuration* configuration)
+    : configuration_(configuration),
+      thread_pool_(this->configuration_->getMaxThreadNum())
 {
 }
 
@@ -98,7 +99,7 @@ void Plugins::init()
     // 内建模块的名称不支持package.module格式，因此这里不加br前缀了
     PyImport_AppendInittab("klog", PyInit_klog);
 
-    auto import_package_path = fmt::format("sys.path.append('{0}')", SSR_BR_PLUGIN_PYTHON_ROOT_DIR);
+    constexpr const char* import_package_path = "sys.path.append('" SSR_BR_PLUGIN_PYTHON_ROOT_DIR "')";
     /* Python解析器不是线程安全的，Python解析器维护了一个全局锁(GIL)，多线程环境下，线程在执行Python的C API时需要先获取GIL，
        否则会导致数据异常。程序调用PyEval_InitThreads函数初始化时默认获取GIL，因此最开始是主线程拥有GIL，如果主线程未调用Python的C API，
        应该要释放掉GIL，否则其他线程在运行前无法获取到GIL，当主线程再次调用Python的C API时可以再去请求GIL。
@@ -116,7 +117,7 @@ void Plugins::init()
 #endif
     Py_Initialize();
     PyRun_SimpleString("import sys");
-    PyRun_SimpleString(import_package_path.c_str());
+    PyRun_SimpleString(import_package_path);
 
     this->loadPlugins();
     this->loadReinforcements();

@@ -244,16 +244,16 @@ void DeviceManager::checkDeviceMount(const QSharedPointer<Device> device)
 
     Q_FOREACH (auto mount, mounts)
     {
-        auto mountSyspath = this->getMountSyspath(mount.get());
+        auto mountSyspath = this->getMountSyspath(mount.data());
         if (mountSyspath == nullptr)
         {
             continue;
         }
 
         if (mountSyspath.startsWith(syspath) &&
-            this->isDeviceMountPerChanged(device, mount.get()))
+            this->isDeviceMountPerChanged(device, mount.data()))
         {
-            this->remountDevice(device, mount.get());
+            this->remountDevice(device, mount.data());
         }
     }
 }

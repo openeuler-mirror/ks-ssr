@@ -116,7 +116,7 @@ QString DBus::GetInterfaces()
     auto deviceConfiguration = Configuration::instance();
     for (int type = INTERFACE_TYPE_USB; type < INTERFACE_TYPE_LAST; ++type)
     {
-#ifndef _345_GC_
+#ifndef ENABLE_HDMI_SUPPORT
         if (type == INTERFACE_TYPE_HDMI)
         {
             continue;

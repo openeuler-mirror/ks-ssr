@@ -144,8 +144,8 @@ void DeviceMountMonitor::checkMount(const QSharedPointer<DeviceMount> mount)
         (prevMount->write != mount->write) ||
         (prevMount->execute != mount->execute))
     {
-        //设备挂载发生变化
-        Q_EMIT this->mountChanged(mount.get());
+        // 设备挂载发生变化
+        Q_EMIT this->mountChanged(mount.data());
     }
 }
 }  // namespace DM

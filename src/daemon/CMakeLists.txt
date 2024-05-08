@@ -11,67 +11,142 @@ gen_protocol()
 # 打开全局moc
 set(CMAKE_AUTOMOC ON)
 
-file(GLOB_RECURSE SRC_H_FILES ./*.h)
-file(GLOB_RECURSE SRC_CPP_FILES ./*.cpp)
+file(GLOB_RECURSE SRC_H_FILES ./br/*.h ./common/*.h ./daemon.h)
+file(GLOB_RECURSE SRC_CPP_FILES ./br/*.cpp ./common/*.cpp ./daemon.cpp
+     ./main.cpp)
+
+if(ENABLE_ACCOUNT)
+  file(GLOB_RECURSE SRC_ACCOUNT_H_FILES ./account/*.h)
+  list(APPEND SRC_H_FILES ${SRC_ACCOUNT_H_FILES})
+  file(GLOB_RECURSE SRC_ACCOUNT_CPP_FILES ./account/*.cpp)
+  list(APPEND SRC_CPP_FILES ${SRC_ACCOUNT_CPP_FILES})
+
+  qt5_add_dbus_adaptor(
+    ACCOUNT_DBUS_SRCS
+    ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Account.xml
+    ${CMAKE_SOURCE_DIR}/src/daemon/account/manager.h
+    KS::Account::Manager
+    account_adaptor
+    AccountAdaptor)
+
+  add_compile_definitions(ENABLE_ACCOUNT)
+endif()
+
+if(ENABLE_KSS)
+  file(GLOB_RECURSE SRC_KSS_H_FILES ./kss/*.h)
+  list(APPEND SRC_H_FILES ${SRC_KSS_H_FILES})
+  file(GLOB_RECURSE SRC_KSS_CPP_FILES ./kss/*.cpp)
+  list(APPEND SRC_CPP_FILES ${SRC_KSS_CPP_FILES})
+
+  qt5_add_dbus_adaptor(
+    KSS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.KSS.xml
+    ${CMAKE_SOURCE_DIR}/src/daemon/kss/dbus.h KS::KSS::DBus kss_dbus_adaptor
+    KSSDbusAdaptor)
+
+  add_compile_definitions(ENABLE_KSS)
+endif()
+
+if(ENABLE_LOG)
+  file(GLOB_RECURSE SRC_LOG_H_FILES ./log/*.h)
+  list(APPEND SRC_H_FILES ${SRC_LOG_H_FILES})
+  file(GLOB_RECURSE SRC_LOG_CPP_FILES ./log/*.cpp)
+  list(APPEND SRC_CPP_FILES ${SRC_LOG_CPP_FILES})
+
+  qt5_add_dbus_adaptor(
+    LOG_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Log.xml
+    ${CMAKE_SOURCE_DIR}/src/daemon/log/manager.h KS::Log::Manager log_adaptor
+    LogAdaptor)
+
+  add_compile_definitions(ENABLE_LOG)
+endif()
+
+if(ENABLE_PRIVATE_BOX)
+  file(GLOB_RECURSE SRC_PRIVATE_BOX_H_FILES ./private-box/*.h)
+  list(APPEND SRC_H_FILES ${SRC_PRIVATE_BOX_H_FILES})
+  file(GLOB_RECURSE SRC_PRIVATE_BOX_CPP_FILES ./private-box/*.cpp)
+  list(APPEND SRC_CPP_FILES ${SRC_PRIVATE_BOX_CPP_FILES})
+
+  qt5_add_dbus_adaptor(
+    PRIVATE_BOX_MANAGER_SRCS
+    ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.PrivateBox.xml
+    ${CMAKE_SOURCE_DIR}/src/daemon/private-box/box-manager.h
+    KS::PrivateBox::BoxManager
+    private_manager_adaptor
+    BoxManagerAdaptor)
+
+  add_compile_definitions(ENABLE_PRIVATE_BOX)
+endif()
+
+if(ENABLE_TOOL_BOX)
+  file(GLOB_RECURSE SRC_TOOL_BOX_H_FILES ./tool-box/*.h)
+  list(APPEND SRC_H_FILES ${SRC_TOOL_BOX_H_FILES})
+  file(GLOB_RECURSE SRC_TOOL_BOX_CPP_FILES ./tool-box/*.cpp)
+  list(APPEND SRC_CPP_FILES ${SRC_TOOL_BOX_CPP_FILES})
+
+  qt5_add_dbus_adaptor(
+    TOOL_BOX_DBUS_SRCS
+    ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.ToolBox.xml
+    ${CMAKE_SOURCE_DIR}/src/daemon/tool-box/manager.h
+    KS::ToolBox::Manager
+    tool_box_adaptor
+    ToolBoxAdaptor)
+
+  add_compile_definitions(ENABLE_TOOL_BOX)
+endif()
+
+if(ENABLE_DEVICE_MANAGER)
+  file(GLOB_RECURSE SRC_DEVICE_MANAGER_H_FILES ./dm/*.h)
+  list(APPEND SRC_H_FILES ${SRC_DEVICE_MANAGER_H_FILES})
+  file(GLOB_RECURSE SRC_DEVICE_MANAGER_CPP_FILES ./dm/*.cpp)
+  list(APPEND SRC_CPP_FILES ${SRC_DEVICE_MANAGER_CPP_FILES})
+
+  qt5_add_dbus_adaptor(
+    DEVICE_MANAGER_SRCS
+    ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.DeviceManager.xml
+    ${CMAKE_SOURCE_DIR}/src/daemon/dm/dbus.h
+    KS::DM::DBus
+    device_manager_adaptor
+    DeviceManagerAdaptor)
+
+  add_compile_definitions(ENABLE_DEVICE_MANAGER)
+endif()
 
 qt5_add_dbus_adaptor(
-  PRIVATE_BOX_MANAGER_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.PrivateBox.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/private-box/box-manager.h
-  KS::PrivateBox::BoxManager
-  private_manager_adaptor
-  BoxManagerAdaptor)
+  DAEMON_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/daemon.h KS::Daemon daemon_adaptor
+  DaemonAdaptor)
 
 qt5_add_dbus_adaptor(
-  KSS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.KSS.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/kss/dbus.h KS::KSS::DBus kss_dbus_adaptor
-  KSSDbusAdaptor)
-
-qt5_add_dbus_adaptor(
-  SECURITY_DEVICE_MANAGER_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.DeviceManager.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/dm/dbus.h
-  KS::DM::DBus
-  device_manager_adaptor
-  DeviceManagerAdaptor)
-
-qt5_add_dbus_adaptor(
-  BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BR.xml
+  BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/br/br-dbus.h KS::BRDaemon::BRDBus br_adaptor
   BRAdaptor)
-
-qt5_add_dbus_adaptor(
-  LOG_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.Log.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/log/manager.h KS::Log::Manager log_adaptor
-  LogAdaptor)
-
-qt5_add_dbus_adaptor(
-  ACCOUNT_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.Account.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/account/manager.h KS::Account::Manager
-  account_adaptor AccountAdaptor)
-
-qt5_add_dbus_adaptor(
-  TOOL_BOX_DBUS_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.ToolBox.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/tool-box/manager.h
-  KS::ToolBox::Manager
-  tool_box_adaptor
-  ToolBoxAdaptor)
 
 set(TARGET_NAME ks-ssr-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -I
-                       ${PROJECT_SOURCE_DIR})
+qt5_create_translation(
+  QM_FILES
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml.in
+  ${CMAKE_SOURCE_DIR}/data/br-categories.ini.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-audit.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-config.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-external.xml.in
+  ${CMAKE_SOURCE_DIR}/plugins/python/br-plugin-network.xml.in
+  ${TS_FILES}
+  OPTIONS
+  -I
+  ${PROJECT_SOURCE_DIR})
 
 add_executable(
   ${TARGET_NAME}
   ${SRC_H_FILES}
   ${SRC_CPP_FILES}
+  ${DAEMON_SRCS}
   ${PRIVATE_BOX_MANAGER_SRCS}
   ${TRUSTED_MANAGER_SRCS}
   ${FILES_PROTECTED_MANAGER_SRCS}
-  ${SECURITY_DEVICE_MANAGER_SRCS}
+  ${DEVICE_MANAGER_SRCS}
   ${KSS_DBUS_SRCS}
   ${BR_DBUS_SRCS}
   ${LOG_DBUS_SRCS}
@@ -109,7 +184,8 @@ target_link_libraries(
           ${LIBCRYPTO_LIBRARIES}
           ${LIBAUDIT_LIBRARIES}
           ${LIBSYSTEMD_LIBRARIES}
-          ${LIBSELINUX_LIBRARIES})
+          ${LIBSELINUX_LIBRARIES}
+          auparse)
 
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${SSR_BR_INSTALL_LIBEXECDIR})

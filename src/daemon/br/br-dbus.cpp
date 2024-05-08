@@ -416,7 +416,7 @@ QString BRDBus::GetRS()
 
     try
     {
-        Protocol::br_rs(ostringStream, *rs.get());
+        Protocol::br_rs(ostringStream, *rs.data());
     }
     catch (const std::exception& e)
     {
@@ -589,10 +589,10 @@ void BRDBus::Scan(const QStringList& names)
                       m_scanUniqueName);
         return;
     }
-    QObject::disconnect(this->m_scanJob.get(), &Job::processFinished, 0, 0);
-    QObject::connect(this->m_scanJob.get(), &Job::processFinished, this, &BRDBus::finishedScanProgress);
-    QObject::disconnect(this->m_scanJob.get(), &Job::processChanged, 0, 0);
-    QObject::connect(this->m_scanJob.get(), &Job::processChanged, this, &BRDBus::scanResultHandle);
+    QObject::disconnect(this->m_scanJob.data(), &Job::processFinished, 0, 0);
+    QObject::connect(this->m_scanJob.data(), &Job::processFinished, this, &BRDBus::finishedScanProgress);
+    QObject::disconnect(this->m_scanJob.data(), &Job::processChanged, 0, 0);
+    QObject::connect(this->m_scanJob.data(), &Job::processChanged, this, &BRDBus::scanResultHandle);
 
     if (!this->m_scanJob->runAsync())
     {
@@ -674,10 +674,10 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
                                                return StrUtils::json2str(retval);
                                            });
     }
-    QObject::disconnect(this->m_reinforceJob.get(), &Job::processChanged, 0, 0);
-    QObject::connect(this->m_reinforceJob.get(), &Job::processChanged, this, &BRDBus::reinforceResultHandle);
-    QObject::disconnect(this->m_reinforceJob.get(), &Job::processFinished, 0, 0);
-    QObject::connect(this->m_reinforceJob.get(), &Job::processFinished, this, &BRDBus::finishedReinforceProgress);
+    QObject::disconnect(this->m_reinforceJob.data(), &Job::processChanged, 0, 0);
+    QObject::connect(this->m_reinforceJob.data(), &Job::processChanged, this, &BRDBus::reinforceResultHandle);
+    QObject::disconnect(this->m_reinforceJob.data(), &Job::processFinished, 0, 0);
+    QObject::connect(this->m_reinforceJob.data(), &Job::processFinished, this, &BRDBus::finishedReinforceProgress);
 
     connect(m_reinforceTimer, &QTimer::timeout, this, [this, message]
             {

@@ -140,7 +140,7 @@ void Configuration::setIFCEnable(int type, bool enable)
 
     QString group = QString::asprintf("interface%d", type);
 
-#ifdef _345_GC_
+#ifdef ENABLE_HDMI_SUPPORT
     // FIXME: 由于 HDMI 接口的禁用需要修改内核参数导致的特殊处理，下个版本将内核参数修改的操作改成开机和关机时自动运行
     if (type == INTERFACE_TYPE_HDMI)
     {
@@ -157,7 +157,7 @@ void Configuration::setIFCEnable(int type, bool enable)
 
     switch (type)
     {
-#ifdef _345_GC_
+#ifdef ENABLE_HDMI_SUPPORT
     case INTERFACE_TYPE_HDMI:
         this->syncInterfaceToGrubFile();
         break;
@@ -171,11 +171,12 @@ void Configuration::setIFCEnable(int type, bool enable)
     }
 }
 
-Configuration::Configuration(QObject *parent) : QObject(parent),
-                                                m_deviceSettings(nullptr),
-                                                m_interfaceSettings(nullptr),
-                                                m_grubUpdateThread(nullptr),
-                                                m_waitingUpdateGrub(false)
+Configuration::Configuration(QObject *parent)
+    : QObject(parent),
+      m_deviceSettings(nullptr),
+      m_interfaceSettings(nullptr),
+      m_grubUpdateThread(new Worker()),
+      m_waitingUpdateGrub(false)
 {
     this->init();
 }
@@ -203,18 +204,19 @@ void Configuration::init()
     // 当配置文件中 HDMI 配置，优先使用配置文件的配置，没有配置时默认值为 true
     m_interfaceSettings->endGroup();
 
+    connect(m_grubUpdateThread, &QThread::finished, std::bind(&Configuration::finishGrubsUpdate, this));
     // this->syncInterfaceFile();
 }
 
 void Configuration::syncInterfaceFile()
 {
-#ifdef _345_GC_
+#ifdef ENABLE_HDMI_SUPPORT
     this->syncInterfaceToGrubFile();
 #endif
     this->syncToBluetoothService();
     this->syncToNMService();
 }
-#ifdef _345_GC_
+#ifdef ENABLE_HDMI_SUPPORT
 void Configuration::syncInterfaceToGrubFile()
 {
     QString grubValue;
@@ -288,8 +290,6 @@ void Configuration::checkWaitingUpdateGrubs()
     if (m_waitingUpdateGrub)
     {
         m_waitingUpdateGrub = false;
-        m_grubUpdateThread = QThread::create(std::bind(&Configuration::updateGrubsInThread, this));
-        connect(m_grubUpdateThread, &QThread::finished, std::bind(&Configuration::finishGrubsUpdate, this));
         m_grubUpdateThread->start();
     }
 }

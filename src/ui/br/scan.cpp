@@ -509,7 +509,11 @@ void Scan::showErrorMessage(const QModelIndex &model)
     auto itemRect = m_ui->m_itemTable->visualRect(model);
     // 计算文本宽度
     QFontMetrics metrics(this->font());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
     auto textWidth = metrics.horizontalAdvance(m_ui->m_itemTable->model()->data(model).toString());
+#else
+    auto textWidth = metrics.width(m_ui->m_itemTable->model()->data(model).toString());
+#endif
     if (textWidth > itemRect.width())
     {
         auto mod = m_ui->m_itemTable->selectionModel()->model()->data(model);

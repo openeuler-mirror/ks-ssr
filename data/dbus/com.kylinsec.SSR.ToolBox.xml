@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+    <interface name="com.kylinsec.SSR.ToolBox">
+
+        <method name="SetAccessControlStatus">
+            <arg type="b" name="enable" direction="in">
+                <summary>the state of switch.</summary>
+            </arg>
+            <description>control access.</description>
+        </method>
+
+        <method name="GetFileMLSLabel">
+            <arg type="s" name="file_paths" direction="in">
+                <summary>the path of destination files.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="out">
+                <summary>security context.</summary>
+            </arg>
+            <description>get file's security context.</description>
+        </method>
+
+        <method name="SetFileMLSLabel">
+            <arg type="s" name="file_path" direction="in">
+                <summary>the path of destination file.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="in">
+                <summary>security context.</summary>
+            </arg>
+            <description>set file's security context.</description>
+        </method>
+
+        <method name="GetUserMLSLabel">
+            <arg type="s" name="user_name" direction="in">
+                <summary>the path of destination user.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="out">
+                <summary>security context.</summary>
+            </arg>
+            <description>get user's security context.</description>
+        </method>
+
+        <method name="SetUserMLSLabel">
+            <arg type="s" name="user_name" direction="in">
+                <summary>the path of destination user.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="in">
+                <summary>security context.</summary>
+            </arg>
+            <description>set user's security context.</description>
+        </method>
+
+        <method name="GetFileKICLabel">
+            <arg type="s" name="file_paths" direction="in">
+                <summary>the path of destination files.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="out">
+                <summary>security context.</summary>
+            </arg>
+            <description>get file's security context.</description>
+        </method>
+
+        <method name="SetFileKICLabel">
+            <arg type="s" name="file_path" direction="in">
+                <summary>the path of destination file.</summary>
+            </arg>
+            <arg type="s" name="Security_context" direction="in">
+                <summary>security context.</summary>
+            </arg>
+            <description>set file's security context.</description>
+        </method>
+
+        <method name="ShredFile">
+            <arg type="as" name="file_paths" direction="in">
+                <summary>the path of destination files.</summary>
+            </arg>
+            <description>shred destination files.</description>
+        </method>
+
+        <method name="RemoveUser">
+            <arg type="as" name="user_name_list" direction="in">
+                <summary>the list of user name who will be remove.</summary>
+            </arg>
+            <description>remove users.</description>
+        </method>
+
+        <method name="GetObjListFromSecuritySign">
+            <arg type="as" name="obj_list" direction="out">
+                <summary>the list of security obj.</summary>
+            </arg>
+            <description>get obj from securitySign table.</description>
+        </method>
+
+        <method name="AddObjToSecuritySign">
+            <arg type="as" name="obj_list" direction="in">
+                <summary>the list of obj will be add.</summary>
+            </arg>
+            <description>add Object to securitySign table.</description>
+        </method>
+
+        <method name="RemoveObjFromSecuritySign">
+            <arg type="as" name="obj_list" direction="in">
+                <summary>the list of obj who will be remove.</summary>
+            </arg>
+            <description>remove obj from securitySign table.</description>
+        </method>
+
+        <method name="GetFileListFromFileShred">
+            <arg type="as" name="file_list" direction="out">
+                <summary>the list of file who will be add.</summary>
+            </arg>
+            <description>get files from fileShred table.</description>
+        </method>
+
+        <method name="AddFileToFileShred">
+            <arg type="as" name="file_list" direction="in">
+                <summary>the list of file who will be add.</summary>
+            </arg>
+            <description>remove file from fileShred table.</description>
+        </method>
+
+        <method name="RemoveFileFromFileShred">
+            <arg type="as" name="file_list" direction="in">
+                <summary>the list of file who will be remove.</summary>
+            </arg>
+            <description>remove file from fileShred table.</description>
+        </method>
+
+        <method name="GetAccessStatus">
+            <arg type="b" name="selinux_status" direction="out">
+                <summary>The status of selinux.</summary>
+            </arg>
+            <description>Get status of selinux.</description>
+        </method>
+
+        <method name="GetAllUsers">
+            <arg type="s" name="user_information" direction="out">
+                <summary>The user_information is a json string.</summary>
+            </arg>
+            <description>Get all user's information.</description>
+        </method>
+
+        <method name="SetUidReusable">
+            <arg type="b" name="enabled" direction="in">
+                <summary>the state of switch that reuseable</summary>
+            </arg>
+            <description>enable the reuseale uid.</description>
+        </method>
+
+        <method name="GetUidReusable">
+            <arg type="b" name="enabled" direction="out">
+                <summary>the state of switch that reuseable</summary>
+            </arg>
+            <description>Get status of reuseale uid.</description>
+        </method>
+
+        <method name="SetMultiFactorAuthState">
+            <arg type="b" name="enabled" direction="in">
+                <summary>the state of switch that Multi-factor authentication</summary>
+            </arg>
+            <description>enable the Multi-factor authentication.</description>
+        </method>
+
+        <method name="GetMultiFactorAuthState">
+            <arg type="b" name="enabled" direction="out">
+                <summary>the state of switch that Multi-factor authentication</summary>
+            </arg>
+            <description>Get state of Multi-factor authentication.</description>
+        </method>
+
+        <signal name="FileSignListChanged">
+            <description>File Sign's file list has changed, please get new file list.</description>
+        </signal>
+
+        <signal name="FileShredListChanged">
+            <description>File Shred's file list has changed, please get new file list.</description>
+        </signal>
+
+        <signal name="UserChanged">
+            <description>Os account has changed, please get user list.</description>
+        </signal>
+
+        <signal name="HazardDetected">
+            <arg name="type" type="u">
+                <summary>type of alert.</summary>
+            </arg>
+            <arg name="alert_msg" type="s">
+                <summary>Content of the alarm.</summary>
+            </arg>
+            <description>When this signal is emitted, it means that some dangerous behaviour has been detected.</description>
+        </signal>
+    </interface>
+</node>
