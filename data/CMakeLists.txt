@@ -23,7 +23,8 @@ if(USE_SYSTEMD)
 endif()
 
 if(ENABLE_TOOL_BOX)
-  set(SELINUX_CONTEXT "SELinuxContext=unconfined_u:unconfined_r:unconfined_t:s0-s15:c0.c1023")
+  set(SELINUX_CONTEXT
+      "SELinuxContext=unconfined_u:unconfined_r:unconfined_t:s0-s15:c0.c1023")
 endif()
 
 file(GLOB SERVICE_IN_FILES ./services/*.service.in)
