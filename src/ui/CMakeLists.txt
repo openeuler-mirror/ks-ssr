@@ -69,6 +69,13 @@ qt5_add_dbus_interface(
   ACCOUNT_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Account.xml
   account_proxy)
 
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml
+  PROPERTIES CLASSNAME VulnerabilityProxy NO_NAMESPACE true)
+qt5_add_dbus_interface(
+  VULNERABILITY_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml
+  vulnerability_proxy)
+
 qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
 
 set(TARGET_NAME ks-ssr-gui)
@@ -122,6 +129,7 @@ add_executable(
   ${LOG_SRCS}
   ${TOOL_BOX_DBUS_SRCS}
   ${ACCOUNT_SRCS}
+  ${VULNERABILITY_SRCS}
   ${BR_PROTOCOL_OUTPUT}
   ${QM_FILES}
   ${UI_FILES}

@@ -48,6 +48,7 @@
 #include "src/ui/tp/execute-protected-page.h"
 #include "src/ui/tp/kernel-protected-page.h"
 #include "src/ui/ui_window.h"
+#include "src/ui/vulnerability/vulnerability-page.h"
 
 namespace KS
 {
@@ -65,6 +66,8 @@ namespace KS
 #define MATE_SCREENSAVER_DBUS_NAME "org.mate.ScreenSaver"
 #define MATE_SCREENSAVER_DBUS_PATH "/"
 #define MATE_SCREENSAVER_DBUS_INTERFACE "org.mate.ScreenSaver"
+
+#define REINFORCEMENT_BATCH_PATH "/usr/libexec/ssr-distribution-actuator"
 
 Window::Window()
     : TitlebarWindow(nullptr),
@@ -204,6 +207,10 @@ void Window::initWindow()
     connect(m_settings, &QAction::triggered, this, &Window::popupSettingsDialog, Qt::UniqueConnection);
     settingMenu->addAction(m_settings);
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
+    settingMenu->addAction(tr("Batch reinforcement"), this, []
+                           {
+                               QProcess::execute(REINFORCEMENT_BATCH_PATH, QStringList());
+                           });
     settingMenu->addAction(tr("Help"), this, []
                            {
                                if (QFile::exists(HELP_MANUAL_PATH))
@@ -258,6 +265,7 @@ void Window::initPageAndNavigation()
     // TODO 需求变更，无需此页面，确认之后是否需要使用
     // addPage(new ToolBox::AccessControlPage(this));
     addPage(new Log::LogPage(this));
+    addPage(new VulnerabilityPage::VulnerabilityPage(this));
     m_ui->m_stackedPages->addWidget(m_loading);
     m_ui->m_stackedPages->setCurrentIndex(0);
 
@@ -294,6 +302,10 @@ void Window::initPageAndNavigation()
         else if (navigationUID == tr("Log audit"))
         {
             m_ui->m_navigation->addItem(new NavigationItem(":/images/log-audit", tr("Log audit")));
+        }
+        else if (navigationUID == tr("Vulnerability Fix"))
+        {
+            m_ui->m_navigation->addItem(new NavigationItem(":/images/vulnerability-fix", tr("Vulnerability Fix")));
         }
     }
     m_ui->m_navigation->setBtnChecked(0);
@@ -464,9 +476,13 @@ void Window::updatePage()
     // 清空侧边栏
     clearSidebar();
     // 插入侧边栏
-    auto pages = m_pages.find(m_ui->m_navigation->getSelectedUID()).value();
-    RETURN_IF_TRUE(pages.count() == 0)
-    for (auto page : pages)
+    auto pages = m_pages.find(m_ui->m_navigation->getSelectedUID());
+    if (pages == m_pages.end() || pages->count() == 0)
+    {
+        KLOG_WARNING() << "Failed to load page: " << m_ui->m_navigation->getSelectedUID();
+        return;
+    }
+    for (auto page : *pages)
     {
         auto sidebarUID = page->getSidebarUID();
         if (sidebarUID != "")
@@ -479,7 +495,7 @@ void Window::updatePage()
     }
     // 更新页面 切换到第一个侧边栏
     m_ui->m_sidebar->setCurrentRow(0);
-    m_ui->m_stackedPages->setCurrentWidget(pages.first());
+    m_ui->m_stackedPages->setCurrentWidget(pages->first());
 
     // 没有分侧边栏则隐藏
     if (m_ui->m_sidebar->count() == 0)
@@ -492,9 +508,9 @@ void Window::updatePage()
     }
 
     // 可信页面需要检测是否加载成功
-    if (tr("Trusted protected") == pages.first()->getNavigationUID())
+    if (tr("Trusted protected") == pages->first()->getNavigationUID())
     {
-        auto page = qobject_cast<TP::ExecuteProtectedPage *>(pages.first());
+        auto page = qobject_cast<TP::ExecuteProtectedPage *>(pages->first());
         hideLoading(page->getInitialized());
     }
     else
