@@ -439,8 +439,12 @@ void ExecuteProtectedTable::initTableHeaderButton()
                     {
                         m_fileTypeKeys.removeAll(action->text());
                     }
-                    // 去重
+// 去重
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
                     m_fileTypeKeys = QSet<QString>::fromList(m_fileTypeKeys).toList();
+#else
+                m_fileTypeKeys = QSet<QString>(m_fileTypeKeys.begin(), m_fileTypeKeys.end()).values();
+#endif
 
                     m_filterMap.insert("fileTypeButton", m_fileTypeKeys);
                 }
@@ -467,8 +471,12 @@ void ExecuteProtectedTable::initTableHeaderButton()
                     {
                         m_statusKeys.removeAll(action->text());
                     }
-                    // 去重
+            // 去重
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
                     m_statusKeys = QSet<QString>::fromList(m_statusKeys).toList();
+#else
+                m_statusKeys = QSet<QString>(m_statusKeys.begin(), m_statusKeys.end()).values();
+#endif
                     m_filterMap.insert("statusButton", m_statusKeys);
                 }
                 filterFixedString();

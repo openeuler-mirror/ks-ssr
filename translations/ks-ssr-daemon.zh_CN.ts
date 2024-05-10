@@ -915,8 +915,8 @@
     </message>
     <message>
         <location filename="../src/ui/account/login.cpp" line="80"/>
-        <source>Security reinforcement</source>
-        <translation>主机安全加固</translation>
+        <source>Kylinsec Security reinforcement</source>
+        <translation>麒麟信安主机安全加固</translation>
     </message>
     <message>
         <location filename="../src/ui/account/login.cpp" line="89"/>
@@ -4940,8 +4940,8 @@
     <message>
         <location filename="../src/ui/window.cpp" line="139"/>
         <location filename="../src/ui/window.cpp" line="156"/>
-        <source>Security reinforcement</source>
-        <translation>主机安全加固</translation>
+        <source>KylinSec Security reinforcement</source>
+        <translation>麒麟信安主机安全加固</translation>
     </message>
     <message>
         <source>Unactivated</source>

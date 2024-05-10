@@ -73,7 +73,8 @@ set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml
   PROPERTIES CLASSNAME VulnerabilityProxy NO_NAMESPACE true)
 qt5_add_dbus_interface(
-  VULNERABILITY_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml
+  VULNERABILITY_SRCS
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml
   vulnerability_proxy)
 
 qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)

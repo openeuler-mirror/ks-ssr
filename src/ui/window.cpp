@@ -39,6 +39,7 @@
 #include "src/ui/log/log-page.h"
 #include "src/ui/navigation.h"
 #include "src/ui/private-box/box-page.h"
+#include "src/ui/remote/remote-page.h"
 #include "src/ui/settings/dialog.h"
 #include "src/ui/sidebar.h"
 #include "src/ui/tool-box/access-control/access-control-page.h"
@@ -156,7 +157,7 @@ void Window::initNotification()
 
 void Window::initWindow()
 {
-    setTitle(tr("Security reinforcement"));
+    setTitle(tr("KylinSec Security reinforcement"));
     setIcon(QIcon(":/images/logo"));
     setFixedSize(1003, 667);
     setResizeable(false);
@@ -207,10 +208,6 @@ void Window::initWindow()
     connect(m_settings, &QAction::triggered, this, &Window::popupSettingsDialog, Qt::UniqueConnection);
     settingMenu->addAction(m_settings);
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
-    settingMenu->addAction(tr("Batch reinforcement"), this, []
-                           {
-                               QProcess::execute(REINFORCEMENT_BATCH_PATH, QStringList());
-                           });
     settingMenu->addAction(tr("Help"), this, []
                            {
                                if (QFile::exists(HELP_MANUAL_PATH))
@@ -266,20 +263,21 @@ void Window::initPageAndNavigation()
     // addPage(new ToolBox::AccessControlPage(this));
     addPage(new Log::LogPage(this));
     addPage(new VulnerabilityPage::VulnerabilityPage(this));
+    addPage(new RemotePage::RemotePage(this));
+
     m_ui->m_stackedPages->addWidget(m_loading);
     m_ui->m_stackedPages->setCurrentIndex(0);
 
+    m_ui->m_navigation->addItem(new NavigationItem(":/images/remote-manager", tr("Remote Manager")));
+    m_ui->m_navigation->addItem(new NavigationItem(":/images/baseline-reinforcement", tr("Baseline reinforcement")));
+    m_ui->m_navigation->addItem(new NavigationItem(":/images/vulnerability-fix", tr("Vulnerability Fix")));
     // 通过页面获取是否有对应的导航栏
     for (auto pages : m_pages.values())
     {
         auto navigationUID = pages.first()->getNavigationUID();
         CONTINUE_IF_TRUE(navigationUID.isEmpty());
 
-        if (navigationUID == tr("Baseline reinforcement"))
-        {
-            m_ui->m_navigation->addItem(new NavigationItem(":/images/baseline-reinforcement", navigationUID));
-        }
-        else if (navigationUID == tr("Trusted protected"))
+        if (navigationUID == tr("Trusted protected"))
         {
             m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected", tr("Trusted protected")));
         }
@@ -302,10 +300,6 @@ void Window::initPageAndNavigation()
         else if (navigationUID == tr("Log audit"))
         {
             m_ui->m_navigation->addItem(new NavigationItem(":/images/log-audit", tr("Log audit")));
-        }
-        else if (navigationUID == tr("Vulnerability Fix"))
-        {
-            m_ui->m_navigation->addItem(new NavigationItem(":/images/vulnerability-fix", tr("Vulnerability Fix")));
         }
     }
     m_ui->m_navigation->setBtnChecked(0);

@@ -125,3 +125,11 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/br-iptables.rules
 
 install(FILES ${PROJECT_SOURCE_DIR}/data/help.pdf
         DESTINATION ${SSR_INSTALL_DATADIR}/)
+
+# distribution-actuator shell
+file(GLOB_RECURSE DISTRIBUTION_ACTUATOR_FILES
+     "${PROJECT_SOURCE_DIR}/data/distribution-actuator/*")
+install(
+  FILES ${DISTRIBUTION_ACTUATOR_FILES}
+  PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ WORLD_EXECUTE
+  DESTINATION ${SSR_INSTALL_DATADIR}/distribution-actuator/)
