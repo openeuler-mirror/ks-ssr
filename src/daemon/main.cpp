@@ -17,9 +17,7 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QTranslator>
-#include <QtDBus/QDBusConnection>
 #include <QtGlobal>
-#include <iostream>
 #include "config.h"
 #include "src/daemon/daemon.h"
 
@@ -53,11 +51,12 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    // parser.addOption();
 
     parser.process(app);
 
     KS::Daemon::globalInit();
+    KS::Daemon::getInstance()->start();
     auto retval = app.exec();
+    KS::Daemon::globalDeinit();
     return retval;
 }

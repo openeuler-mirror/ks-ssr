@@ -12,56 +12,48 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "src/daemon/log/message.h"
+#include "message.h"
+#include <daemon-accounts-i.h>
 #include <qt5-log-i.h>
+#include "manager.h"
 
 namespace KS
 {
 namespace Log
 {
+// QMetaEnum Message::m_metaLogType = QMetaEnum::fromType<Manager::LogType>();
+const QString& Message::m_separator = "|";
 
-QMetaEnum Message::m_metaLogType = QMetaEnum::fromType<Message::LogType>();
-const QString& Log::Message::m_separator = "|";
-
-Message::Message()
-    : m_isValid(false)
+QString Message::serialize(const LogRecord& log, Qt::DateFormat format)
 {
+    QStringList msg{};
+    // 现版本不对外保暴露 userName 字段， 所以序列化时不序列化 userName
+    // TODO: 枚举类型先存整数字符串，后面要修改
+    msg << g_accountsManager->accountRoleEnum2Str(AccountRole(log.role))
+        << log.timeStamp.toString(format)
+        << QString("%1").arg(log.type)
+        << QString(log.result ? "true" : "false")
+        << log.logMsg;
+    return msg.join(Message::m_separator);
 }
 
-Message::Message(const Message::LogType type, const QString& logMsg, const QDateTime& timeStamp)
-    : m_timeStamp(timeStamp),
-      m_type(type),
-      m_logMsg(logMsg),
-      m_isValid(true)
+LogRecord Message::deserialize(const QString& str)
 {
-}
-
-QString Message::serialize(Qt::DateFormat format) const
-{
-    return QString("%1%2%3%4%5").arg(m_timeStamp.toString(format), Message::m_separator, m_metaLogType.valueToKey(static_cast<int>(m_type)), Message::m_separator, m_logMsg);
-}
-
-inline Message& Message::deserialize(const QString& str)
-{
-    auto firstSp = str.indexOf(Message::m_separator);
-    auto secondSp = str.indexOf(Message::m_separator, firstSp);
-    if (firstSp == -1 || secondSp == -1)
+    auto log = str.split(Message::m_separator);
+    // 判断日志中元素数量是否和现在的日志结构相等， 魔法数 6 是日志的属性数量。
+    if (log.size() != 5)
     {
-        m_isValid = false;
-        KLOG_WARNING() << "failed to deserialize: " << str;
-        return *this;
+        KLOG_WARNING() << "Failed to deserialize log: " << str << ", skip this.";
+        return LogRecord{};
     }
-    m_isValid = true;
-    m_timeStamp = QDateTime::fromString(str.mid(0, firstSp));
-    m_type = static_cast<Message::LogType>(m_metaLogType.keyToValue(str.mid(firstSp, secondSp).toLocal8Bit()));
-    m_logMsg = str.mid(secondSp);
-
-    return *this;
-}
-
-bool Message::isValid() const
-{
-    return m_isValid;
+    /// @note 这个版本不对外暴露 name 字段， name 字段的初始化统一用 role 的枚举 key
+    return LogRecord{
+        .name = log.at(0),
+        .role = int(g_accountsManager->accountRoleStr2Enum(log.at(0))),
+        .timeStamp = QDateTime::fromString(log.at(1), Qt::ISODate),
+        .type = LogType(log.at(2).toInt()),
+        .result = log.at(3) == "true",
+        .logMsg = log.at(4)};
 }
 };  // namespace Log
 };  // namespace KS

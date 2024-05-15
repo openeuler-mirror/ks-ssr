@@ -1,9 +1,3 @@
-cmake_minimum_required(VERSION 3.0)
-
-if(POLICY CMP0071)
-  cmake_policy(SET CMP0071 NEW)
-endif()
-
 set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.ToolBox.xml
   PROPERTIES CLASSNAME ToolBoxDbusProxy NO_NAMESPACE true)
@@ -26,7 +20,7 @@ target_include_directories(
   ${TARGET_NAME} PRIVATE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include
                          ${CMAKE_BINARY_DIR})
 
-target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Core Qt5::DBus lib-base)
+target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Core Qt5::DBus base)
 
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 

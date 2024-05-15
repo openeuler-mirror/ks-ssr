@@ -17,11 +17,11 @@
 #include "br_dbus_proxy.h"
 #include "include/ssr-i.h"
 #include "lib/base/notification-wrapper.h"
+#include "lib/widgets/ssr-marcos-ui.h"
+#include "lib/widgets/user-prompt-dialog.h"
 #include "src/ui/br/br-i.h"
 #include "src/ui/br/reinforcement-items/category.h"
 #include "src/ui/br/utils.h"
-#include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/user-prompt-dialog.h"
 #include "ui_baseline-reinforcement.h"
 
 namespace KS

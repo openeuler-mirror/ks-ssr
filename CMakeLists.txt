@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.2)
 
 project(ks-ssr VERSION 1.2)
 
+if(POLICY CMP0071)
+  cmake_policy(SET CMP0071 NEW)
+endif()
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
@@ -15,13 +19,15 @@ option(EXTRA_COMPILE_CHECK "Enable extra compile check" OFF)
 set(ENABLE_ACCOUNT ON)
 set(ENABLE_LOG ON)
 
+option(ENABLE_BR "Enable base reinforcements module" ON)
 option(ENABLE_HDMI_SUPPORT "Enable HDMI support" OFF)
-option(ENABLE_KSS "Enable KSS support" OFF)
-option(ENABLE_PRIVATE_BOX "Enable private box support" OFF)
-option(ENABLE_TOOL_BOX "Enable tool box support" OFF)
-option(ENABLE_DEVICE_MANAGER "Enable device manager support" OFF)
-option(ENABLE_VULNERABILITY_MANAGER "Enable vulnerability manager support" OFF)
-option(USE_PYTHON3 "Enable tool box support" OFF)
+option(ENABLE_KSS "Enable KSS module" OFF)
+option(ENABLE_PRIVATE_BOX "Enable private box module" OFF)
+option(ENABLE_TOOL_BOX "Enable tool box module" OFF)
+option(ENABLE_DEVICE_MANAGER "Enable device manager module" OFF)
+option(ENABLE_VULNERABILITY_MANAGER "Enable vulnerability manager module" OFF)
+option(ENABLE_REMOTE_MANAGER "Enable remote manager module" OFF)
+option(USE_PYTHON3 "Enable tool box module" OFF)
 
 message(STATUS "EXTRA_COMPILE_CHECK: ${EXTRA_COMPILE_CHECK}")
 message(STATUS "ENABLE_ACCOUNT: ${ENABLE_ACCOUNT}")
@@ -43,12 +49,12 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 if(ENABLE_HDMI_SUPPORT)
   add_definitions(-DENABLE_HDMI_SUPPORT)
 endif()
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# find_package(BR REQUIRED)
 find_package(SSR REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(
@@ -64,17 +70,12 @@ find_package(
 
 pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
 pkg_search_module(CRYPTOPP REQUIRED cryptopp)
-pkg_search_module(XERCES REQUIRED xerces-c)
 pkg_search_module(X11 REQUIRED x11)
 pkg_search_module(LIBSYSTEMD REQUIRED libsystemd)
 pkg_search_module(KS_LICENSE REQUIRED ks-license)
 pkg_search_module(LIBCRYPTO REQUIRED libcrypto)
-pkg_search_module(LIBAUDIT REQUIRED audit)
 pkg_search_module(SQLCIPHER REQUIRED sqlcipher)
 
-if(ENABLE_TOOL_BOX)
-  pkg_search_module(LIBSELINUX REQUIRED libselinux)
-endif()
 pkg_search_module(LIBNOTIFY REQUIRED libnotify)
 
 string(REGEX MATCHALL "[0-9]+" LIBNOTIFY_VERSION_LIST ${LIBNOTIFY_VERSION})
@@ -94,27 +95,6 @@ if(NOT QT_DBUS_XML2CPP)
   endif()
 endif()
 
-if(USE_PYTHON3)
-  pkg_search_module(PYTHON QUIET python3-embed)
-  if(NOT PYTHON_FOUND)
-    pkg_search_module(PYTHON REQUIRED python3)
-  endif()
-else()
-  pkg_search_module(PYTHON QUIET python2)
-  if(NOT PYTHON_FOUND)
-    # 兼容python2.6
-    find_library(
-      PYTHON_LIBRARIES
-      NAMES python2.6
-      PATHS /usr/lib64/)
-    if("${PYTHON_LIBRARIES}" STREQUAL "PYTHON_LIBRARIES-NOTFOUND")
-      message(FATAL_ERROR "Not found python2")
-    else()
-      set(PYTHON_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}/python2.6/")
-    endif()
-  endif()
-endif()
-
 find_program(XSDCXX NAMES "xsdcxx" REQUIRED)
 find_program(INTLTOOL-MERGE NAMES "intltool-merge" REQUIRED)
 find_program(SED NAMES "sed" REQUIRED)
@@ -127,7 +107,7 @@ add_subdirectory(config)
 add_subdirectory(lib)
 add_subdirectory(resources)
 add_subdirectory(src)
-add_subdirectory(plugins/python)
+add_subdirectory(plugins)
 add_subdirectory(data)
 
 if(ENABLE_GTEST)

@@ -1,2 +1,3 @@
 add_subdirectory(base)
-add_subdirectory(license)
+add_subdirectory(dbus)
+add_subdirectory(widgets)

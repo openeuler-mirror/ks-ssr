@@ -172,7 +172,7 @@
   <customwidget>
    <class>KS::DatePickButton</class>
    <extends>QWidget</extends>
-   <header>src/ui/common/date-picker/date-pick-button.h</header>
+   <header>lib/widgets/date-picker/date-pick-button.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

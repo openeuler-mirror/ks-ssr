@@ -12,131 +12,98 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
-#include "src/daemon/daemon.h"
+#include "daemon.h"
 #include <qt5-log-i.h>
+#include <ssr-marcos.h>
 #include <QDBusConnection>
+#include "accounts/manager.h"
+#include "daemon_adaptor.h"
 #include "include/ssr-i.h"
-#include "lib/license/license-proxy.h"
-#include "src/daemon/account/manager.h"
-#include "src/daemon/daemon_adaptor.h"
-#include "src/daemon/dm/device-manager.h"
-#include "src/daemon/kss/dbus.h"
-#include "src/daemon/log/manager.h"
-#include "src/daemon/private-box/box-manager.h"
-#include "src/daemon/tool-box/manager.h"
-#include "src/daemon/vulnerability/manager.h"
+#include "lib/dbus/license-proxy.h"
+#include "log/manager.h"
+#include "plugins-manager.h"
 
 namespace KS
 {
-// kss命令是否存在
-#define KSS_CMD_PATH SSR_INSTALL_BINDIR "/kss"
-
 Daemon *Daemon::m_instance = nullptr;
 
-Daemon::Daemon()
-    : QObject(nullptr)
+IDaemonLog *g_logManager = nullptr;
+IDaemonAccounts *g_accountsManager = nullptr;
+
+void Daemon::globalInit()
 {
-    m_licenseProxy = LicenseProxy::getDefault();
+    m_instance = new Daemon();
+    m_instance->init();
+};
+
+void Daemon::globalDeinit()
+{
+    delete m_instance;
+};
+
+Daemon *Daemon::getInstance()
+{
+    return m_instance;
+};
+
+Daemon::Daemon()
+    : QObject(nullptr),
+      m_started(false)
+{
     m_dbusAdaptor = new DaemonAdaptor(this);
-    if (m_licenseProxy->isActivated())
-    {
-        start();
-    }
-    else
-    {
-        connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
-    }
+    m_licenseProxy = LicenseProxy::getDefault();
+    m_pluginManager = new PluginsManager(this);
+    g_accountsManager = new Accounts::Manager();
+    g_logManager = new Log::Manager(g_accountsManager);
+
+    connect(m_licenseProxy.data(), &LicenseProxy::activated, this, &Daemon::start);
 }
 
 Daemon::~Daemon()
 {
-#ifdef ENABLE_KSS
-    KSS::DBus::globalDeinit();
-#endif
+    if (g_logManager)
+    {
+        delete g_logManager;
+        g_logManager = nullptr;
+    }
 
-#ifdef ENABLE_DEVICE_MANAGER
-    DM::DeviceManager::globalDeinit();
-#endif
-
-#ifdef ENABLE_PRIVATE_BOX
-    PrivateBox::BoxManager::globalDeinit();
-#endif
-
-#ifdef ENABLE_VULNERABILITY_MANAGER
-    VulnerabilityManager::Manager::globalDeinit();
-#endif
-    BRDaemon::Configuration::globalDeinit();
-    BRDaemon::Categories::globalDeinit();
-    BRDaemon::Plugins::globalDeinit();
-    BRDaemon::BRDBus::globalDeinit();
-
-#ifdef ENABLE_LOG
-    Log::Manager::globalDeinit();
-#endif
-
-#ifdef ENABLE_TOOL_BOX
-    ToolBox::Manager::globalDeinit();
-#endif
-
-#ifdef ENABLE_ACCOUNT
-    Account::Manager::globDeinit();
-#endif
+    if (g_accountsManager)
+    {
+        delete g_accountsManager;
+        g_accountsManager = nullptr;
+    }
 }
 
 void Daemon::init()
 {
-    QDBusConnection connection = QDBusConnection::systemBus();
+    m_pluginManager->init();
 
+    // TODO: 这个应该要放到所有插件加载完毕后再调用
+    // 注册后端服务DBUS名称
+    QDBusConnection connection = QDBusConnection::systemBus();
     if (!connection.registerService(SSR_DBUS_NAME))
     {
         KLOG_WARNING() << "Failed to register dbus name: " << SSR_DBUS_NAME;
     }
-
     if (!connection.registerObject(SSR_DBUS_OBJECT_PATH, this))
     {
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }
 }
 
+QStringList Daemon::GetAvailablePlugins()
+{
+    return m_pluginManager->getActivatedPluginIDs();
+}
+
 void Daemon::start()
 {
-    m_licenseProxy->disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
-#ifdef ENABLE_ACCOUNT
-    Account::Manager::globalInit();
-#endif
+    RETURN_IF_TRUE(m_started);
+    RETURN_IF_FALSE(m_licenseProxy->isActivated());
 
-#ifdef ENABLE_LOG
-    Log::Manager::globalInit();
-#endif
+    m_licenseProxy->disconnect(m_licenseProxy.data(), &LicenseProxy::activated, this, &Daemon::start);
+    m_pluginManager->activatePlugins();
 
-#ifdef ENABLE_PRIVATE_BOX
-    PrivateBox::BoxManager::globalInit(this);
-#endif
-
-#ifdef ENABLE_DEVICE_MANAGER
-    DM::DeviceManager::globalInit(this);
-#endif
-
-#ifdef ENABLE_KSS
-    // TODO 暂时通过有无kss命令的方式判断是否支持可信，需考虑更好的方法
-    if (QFile::exists(KSS_CMD_PATH))
-    {
-        KSS::DBus::globalInit(this);
-    }
-#endif
-
-#ifdef ENABLE_VULNERABILITY_MANAGER
-    VulnerabilityManager::Manager::globalInit();
-#endif
-
-    BRDaemon::Configuration::globalInit(SSR_BR_INSTALL_DATADIR "/ssr.ini");
-    BRDaemon::Categories::globalInit();
-    BRDaemon::Plugins::globalInit(BRDaemon::Configuration::getInstance());
-    BRDaemon::BRDBus::globalInit(nullptr);
-
-#ifdef ENABLE_TOOL_BOX
-    ToolBox::Manager::globalInit();
-#endif
-    emit RegisterFinished();
+    m_started = true;
 }
 }  // namespace KS
