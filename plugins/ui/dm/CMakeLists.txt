@@ -13,8 +13,10 @@ qt5_add_dbus_interface(
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.DeviceManager.xml
   device_manager_proxy)
 
+qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+
 add_library(${TARGET_NAME} SHARED ${DM_H_FILES} ${DM_CPP_FILES}
-                                  ${DEVICE_MANAGER_SRCS})
+                                  ${DEVICE_MANAGER_SRCS} ${UI_FILES})
 
 target_include_directories(
   ${TARGET_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}

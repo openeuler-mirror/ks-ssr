@@ -12,6 +12,8 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
+#pragma once
+
 #include <ui-plugin-i.h>
 #include <QMap>
 #include <QObject>
@@ -33,11 +35,13 @@ public:
     TPPlugin();
 
     // 创建页面
-    virtual Page* createPage(const QString& pageUID);
+    virtual WorkPage* createWorkPage(const QString& pageUID);
+    virtual SettingPage* createSettingPage(const QString& pageUID);
 
 private:
     // <pageUID, 创建page对象的函数>
-    QMap<QString, std::function<Page*()>> m_pageBuilder;
+    QMap<QString, std::function<WorkPage*()>> m_workPageBuilder;
+    QMap<QString, std::function<SettingPage*()>> m_settingPageBuilder;
 };
 
 }  // namespace TP

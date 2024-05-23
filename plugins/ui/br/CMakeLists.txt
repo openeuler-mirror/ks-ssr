@@ -12,12 +12,15 @@ gen_protocol()
 set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml
   PROPERTIES CLASSNAME BRDbusProxy NO_NAMESPACE true)
+
 qt5_add_dbus_interface(
   BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml
   br_dbus_proxy)
 
+qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+
 add_library(${TARGET_NAME} SHARED ${BR_H_FILES} ${BR_CPP_FILES} ${BR_DBUS_SRCS}
-                                  ${BR_PROTOCOL_OUTPUT})
+                                  ${UI_FILES} ${BR_PROTOCOL_OUTPUT})
 
 target_include_directories(
   ${TARGET_NAME}

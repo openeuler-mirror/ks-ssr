@@ -14,51 +14,46 @@
 
 #pragma once
 
+#include <QCloseEvent>
 #include <QWidget>
+#include "include/ssr-i.h"
 #include "lib/widgets/window/titlebar-window.h"
 
 namespace Ui
 {
-class Dialog;
+class TPUserPin;
 }
+
 namespace KS
 {
-namespace Settings
+namespace TP
 {
-class Dialog : public TitlebarWindow
+class TPUserPin : public TitlebarWindow
 {
     Q_OBJECT
+
 public:
-    static void globalInit(QWidget *parent);
-    static void globalDeinit();
+    TPUserPin(QWidget *parent = nullptr);
+    ~TPUserPin();
 
-    static Dialog *instance()
-    {
-        return m_instance;
-    };
+    QString getUserPin();
+    SSRKSSTrustedStorageType getType();
+    void setType(uint type);
 
-    void addSidebars(const QStringList &sidebarNames);
-    // 获取回退状态，当退回进行中时，不允许用户退出
-    uint getFallbackStatus();
-
-private:
-    Dialog(QWidget *parent = nullptr);
-    ~Dialog();
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private:
     void initUI();
-    void initSidebar();
-    void initSubPage();
-    void addSubPage(const QString &sidebarName);
 
 signals:
-    void exportStrategyClicked();
-    void resetAllArgsClicked();
+    void accepted();
+    void closed();
 
 private:
-    Ui::Dialog *m_ui;
-    static Dialog *m_instance;
-};
+    Ui::TPUserPin *m_ui;
 
-}  // namespace Settings
+    SSRKSSTrustedStorageType m_type;
+};
+}  // namespace TP
 }  // namespace KS

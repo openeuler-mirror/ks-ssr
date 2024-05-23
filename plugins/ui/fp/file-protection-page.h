@@ -27,7 +27,7 @@ namespace KS
 {
 namespace FP
 {
-class FileProtectionPage : public Page
+class FileProtectionPage : public WorkPage
 {
     Q_OBJECT
 public:

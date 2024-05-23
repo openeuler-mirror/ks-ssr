@@ -29,13 +29,14 @@ class QPushButton;
 
 namespace KS
 {
+class Settings;
 class Navigation;
 class SideBar;
 class Loading;
 class PluginsManager;
-class Page;
+class WorkPage;
 
-namespace Account
+namespace Accounts
 {
 class User;
 }
@@ -58,24 +59,23 @@ private:
     void initNotification();
     // 窗口整体初始化
     void initWindow();
-    // 导航项以及子页面初始化
-    // void initSettings();
-    void addPage(Page *page);
+    void addWorkPage(WorkPage *page);
     void hideLoading(bool ishide);
     void clearSidebar();
 
     // 登录成功后显示窗口内容
     void initWindowContent();
     void initPages();
+    void initWorkPages();
+    void initSettingPages();
     void initNavigation();
-    void clearPages();
     // 根据权重的导航分类和侧边分类切换页面
-    void switchPage();
+    void switchWorkPage();
     void switchSidebars();
 
 private slots:
-    void popupActiveDialog();
     void popupSettingsDialog();
+    void popupActiveDialog();
     void popupAboutDialog();
     // 单例模式激活窗口
     void activateMetaObject();
@@ -87,14 +87,16 @@ private slots:
 
 private:
     Ui::Window *m_ui;
+    // 设置对话框
+    Settings *m_settingsDialog;
     // 二维数组，第一维是NavigationCategory，第二维是Page
-    QVector<QList<Page *>> m_pages;
+    QVector<QList<WorkPage *>> m_workPages;
     Activation::Activation *m_activation;
     QPushButton *m_accountButton;
     // 设置选项，若无设置页面需隐藏这个按钮
-    QAction *m_settings;
+    QAction *m_settingsAction;
 
-    Account::User *m_accountManager;
+    Accounts::User *m_accountManager;
     // 先放到这里，后面可以考虑放到更加合适的地方管理
     PluginsManager *m_pluginManager;
     // 页面加载动画

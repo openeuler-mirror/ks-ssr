@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 
-project(ks-ssr VERSION 1.2)
+project(ks-ssr VERSION 1.3)
 
 if(POLICY CMP0071)
   cmake_policy(SET CMP0071 NEW)

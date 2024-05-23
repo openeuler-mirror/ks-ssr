@@ -11,33 +11,37 @@
  *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
+#pragma once
 
 #include <ui-plugin-i.h>
-#include <QMap>
-#include <QObject>
-#include <QString>
-#include <functional>
+#include "br-page.h"
+#include "br-setting-page.h"
 
 namespace KS
 {
 namespace BR
 {
-class BRPlugin : public QObject,
-                 public IUIPlugin
+class BRPlugin : public UIPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID IUI_IID FILE "br-plugin.json")
     Q_INTERFACES(KS::IUIPlugin)
 
 public:
-    BRPlugin();
+    BRPlugin()
+    {
+        m_workPageBuilder = {
+            {QString("br"), []() -> WorkPage*
+             {
+                 return new BRPage();
+             }}};
 
-    // 创建页面
-    virtual Page* createPage(const QString& pageUID);
-
-private:
-    // <pageUID, 创建page对象的函数>
-    QMap<QString, std::function<Page*()>> m_pageBuilder;
+        m_settingPageBuilder = {
+            {QString("br-setting"), []() -> SettingPage*
+             {
+                 return new BRSettingPage();
+             }}};
+    }
 };
 
 }  // namespace BR

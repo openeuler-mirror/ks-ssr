@@ -11,19 +11,21 @@
  *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
-#include "trusted-protected.h"
-#include "include/ssr-i.h"
+
+#include "tp-setting-page.h"
+#include <ssr-i.h>
+#include "kss_dbus_proxy.h"
 #include "lib/widgets/ssr-marcos-ui.h"
-#include "src/ui/kss_dbus_proxy.h"
-#include "src/ui/settings/trusted-user-pin.h"
-#include "ui_trusted-protected.h"
+#include "tp-user-pin.h"
+#include "ui_tp-setting-page.h"
+
 namespace KS
 {
-namespace Settings
+namespace TP
 {
-TrustedProtected::TrustedProtected(QWidget *parent)
-    : QWidget(parent),
-      m_ui(new Ui::TrustedProtected)
+TPSettingPage::TPSettingPage(QWidget *parent)
+    : SettingPage(parent),
+      m_ui(new Ui::TPSettingPage)
 {
     m_ui->setupUi(this);
 
@@ -35,19 +37,24 @@ TrustedProtected::TrustedProtected(QWidget *parent)
     initUI();
 }
 
-TrustedProtected::~TrustedProtected()
+TPSettingPage::~TPSettingPage()
 {
     delete m_ui;
 }
 
-void TrustedProtected::initUI()
+QString TPSettingPage::getTitle()
+{
+    return tr("Trusted protect");
+}
+
+void TPSettingPage::initUI()
 {
     // switch
     m_ui->m_switch->setCheckable(true);
     m_ui->m_switch->setChecked(m_kssDbusProxy->trustedStatus());
     m_ui->m_switch->setFixedSize(52, 24);
     m_ui->m_switch->setIconSize(QSize(52, 24));
-    connect(m_ui->m_switch, &QPushButton::clicked, this, &TrustedProtected::setTrustedStatus);
+    connect(m_ui->m_switch, &QPushButton::clicked, this, &TPSettingPage::setTrustedStatus);
 
     // radio
     m_ui->m_soft->setCheckable(true);
@@ -59,11 +66,11 @@ void TrustedProtected::initUI()
 
     updateStorageMode();
 
-    connect(m_ui->m_soft, &QPushButton::clicked, this, &TrustedProtected::updateSoftRadio);
-    connect(m_ui->m_hard, &QPushButton::clicked, this, &TrustedProtected::updateHardRadio);
+    connect(m_ui->m_soft, &QPushButton::clicked, this, &TPSettingPage::updateSoftRadio);
+    connect(m_ui->m_hard, &QPushButton::clicked, this, &TPSettingPage::updateHardRadio);
 }
 
-void TrustedProtected::updateStorageMode()
+void TPSettingPage::updateStorageMode()
 {
     // 通过后台是否设置成功修改按钮状态
     auto mode = m_kssDbusProxy->storageMode();
@@ -71,7 +78,7 @@ void TrustedProtected::updateStorageMode()
     m_ui->m_hard->setChecked(mode == SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_SOFT ? false : true);
 }
 
-bool TrustedProtected::checkTrustedLoadFinied()
+bool TPSettingPage::checkTrustedLoadFinied()
 {
     // 可信未初始化完成，不允许操作
     if (!m_kssDbusProxy->initialized())
@@ -83,7 +90,7 @@ bool TrustedProtected::checkTrustedLoadFinied()
     return true;
 }
 
-void TrustedProtected::setTrustedStatus(bool checked)
+void TPSettingPage::setTrustedStatus(bool checked)
 {
     if (!checkTrustedLoadFinied())
     {
@@ -103,7 +110,7 @@ void TrustedProtected::setTrustedStatus(bool checked)
     m_ui->m_switch->setChecked(checked);
 }
 
-void TrustedProtected::updateSoftRadio(bool checked)
+void TPSettingPage::updateSoftRadio(bool checked)
 {
     // 选中状态单击后QPushButton会将按钮状态置为false，当在选中状态点击按钮时不做处理，并将按钮状态改回去
     if (!m_ui->m_soft->isChecked())
@@ -116,10 +123,10 @@ void TrustedProtected::updateSoftRadio(bool checked)
         updateStorageMode();
         return;
     }
-    m_userPin = new TrustedUserPin(this);
+    m_userPin = new TPUserPin(this);
     m_userPin->setType(SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_SOFT);
-    connect(m_userPin, &TrustedUserPin::accepted, this, &TrustedProtected::setStorageMode);
-    connect(m_userPin, &TrustedUserPin::closed, this, &TrustedProtected::updateStorageMode);
+    connect(m_userPin, &TPUserPin::accepted, this, &TPSettingPage::setStorageMode);
+    connect(m_userPin, &TPUserPin::closed, this, &TPSettingPage::updateStorageMode);
 
     auto x = window()->x() + window()->width() / 2 - m_userPin->width() / 2;
     auto y = window()->y() + window()->height() / 2 - m_userPin->height() / 2;
@@ -129,7 +136,7 @@ void TrustedProtected::updateSoftRadio(bool checked)
     m_ui->m_soft->setChecked(!checked);
 }
 
-void TrustedProtected::updateHardRadio(bool checked)
+void TPSettingPage::updateHardRadio(bool checked)
 {
     // 选中状态单击后QPushButton会将按钮状态置为false，当在选中状态点击按钮时不做处理，并将按钮状态改回去
     if (!m_ui->m_hard->isChecked())
@@ -142,10 +149,10 @@ void TrustedProtected::updateHardRadio(bool checked)
         updateStorageMode();
         return;
     }
-    m_userPin = new TrustedUserPin(this);
+    m_userPin = new TPUserPin(this);
     m_userPin->setType(SSRKSSTrustedStorageType::SSR_KSS_TRUSTED_STORAGE_TYPE_HARD);
-    connect(m_userPin, &TrustedUserPin::accepted, this, &TrustedProtected::setStorageMode);
-    connect(m_userPin, &TrustedUserPin::closed, this, &TrustedProtected::updateStorageMode);
+    connect(m_userPin, &TPUserPin::accepted, this, &TPSettingPage::setStorageMode);
+    connect(m_userPin, &TPUserPin::closed, this, &TPSettingPage::updateStorageMode);
 
     auto x = this->x() + this->width() / 4 + m_userPin->width() / 2;
     auto y = this->y() + this->height() / 4 + m_userPin->height() / 2;
@@ -155,11 +162,11 @@ void TrustedProtected::updateHardRadio(bool checked)
     m_ui->m_hard->setChecked(!checked);
 }
 
-void TrustedProtected::setStorageMode()
+void TPSettingPage::setStorageMode()
 {
     auto reply = m_kssDbusProxy->SetStorageMode(m_userPin->getType(), m_userPin->getUserPin());
     CHECK_ERROR_FOR_DBUS_REPLY_AND_RETURN(reply);
     updateStorageMode();
 }
-}  // namespace Settings
+}  // namespace TP
 }  // namespace KS

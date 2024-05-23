@@ -25,7 +25,7 @@ namespace KS
 namespace Remote
 {
 RemotePage::RemotePage(QWidget* parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::RemotePage),
       m_actuator(new ActuatorWrapper(this))
 {

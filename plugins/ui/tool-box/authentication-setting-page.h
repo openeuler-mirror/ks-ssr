@@ -11,49 +11,37 @@
  *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
-
 #pragma once
 
-#include <QCloseEvent>
-#include <QWidget>
-#include "include/ssr-i.h"
-#include "lib/widgets/window/titlebar-window.h"
+#include <page.h>
 
 namespace Ui
 {
-class TrustedUserPin;
+class AuthenticationSettingPage;
 }
+
+class ToolBoxDbusProxy;
 
 namespace KS
 {
-namespace Settings
+namespace ToolBox
 {
-class TrustedUserPin : public TitlebarWindow
+class AuthenticationSettingPage : public SettingPage
 {
     Q_OBJECT
 
 public:
-    TrustedUserPin(QWidget *parent = nullptr);
-    ~TrustedUserPin();
+    explicit AuthenticationSettingPage(QWidget *parent = nullptr);
+    ~AuthenticationSettingPage();
 
-    QString getUserPin();
-    SSRKSSTrustedStorageType getType();
-    void setType(uint type);
-
-protected:
-    void closeEvent(QCloseEvent *event);
+    virtual QString getTitle();
 
 private:
-    void initUI();
-
-signals:
-    void accepted();
-    void closed();
+    void initConnection();
 
 private:
-    Ui::TrustedUserPin *m_ui;
-
-    SSRKSSTrustedStorageType m_type;
+    Ui::AuthenticationSettingPage *m_ui;
+    ToolBoxDbusProxy *m_toolBoxProxy;
 };
-}  // namespace Settings
+}  // namespace ToolBox
 }  // namespace KS

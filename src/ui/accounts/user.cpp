@@ -25,7 +25,7 @@
 
 namespace KS
 {
-namespace Account
+namespace Accounts
 {
 void User::showPasswordModification()
 {
@@ -149,5 +149,5 @@ void User::acceptedPasswordModification()
         return;
     }
 }
-}  // namespace Account
+}  // namespace Accounts
 }  // namespace KS

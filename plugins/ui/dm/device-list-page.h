@@ -29,7 +29,7 @@ namespace KS
 namespace DM
 {
 class DevicePermission;
-class DeviceListPage : public Page
+class DeviceListPage : public WorkPage
 {
     Q_OBJECT
 

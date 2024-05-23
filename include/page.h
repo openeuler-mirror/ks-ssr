@@ -43,14 +43,14 @@ enum NavigationIndex
     COUNT
 };
 
-class Page : public QWidget
+class WorkPage : public QWidget
 {
     Q_OBJECT
 public:
-    Page(QWidget* parent = nullptr)
+    WorkPage(QWidget* parent = nullptr)
         : QWidget(parent){};
 
-    virtual ~Page(){};
+    virtual ~WorkPage(){};
 
     // 判断页面是否已经初始化完毕，如果没初始化完毕应该显示一个加载动画页面
     virtual bool isInitialized()
@@ -66,6 +66,17 @@ public:
 
 Q_SIGNALS:
     void initFinished();
+};
+
+class SettingPage : public QWidget
+{
+    Q_OBJECT
+public:
+    SettingPage(QWidget* parent = nullptr)
+        : QWidget(parent){};
+    virtual ~SettingPage(){};
+
+    virtual QString getTitle() = 0;
 };
 
 }  // namespace KS

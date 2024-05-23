@@ -28,7 +28,7 @@ namespace KS
 namespace DM
 {
 DeviceListPage::DeviceListPage(QWidget *parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::DeviceListPage),
       m_devicePermission(nullptr),
       m_deviceManagerProxy(nullptr)

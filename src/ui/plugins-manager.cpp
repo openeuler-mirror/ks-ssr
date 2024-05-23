@@ -33,7 +33,14 @@ namespace KS
 #define SSR_UI_PLUGIN_CONF SSR_INSTALL_DATADIR "/ssr-ui-plugins.conf"
 #define SSR_UI_PLUGIN_KEY_ENABLED "enabled"
 
-struct PluginPageInfo
+struct PluginWorkPageInfo
+{
+    QString pageUID;
+    QString requireRoleName;
+    QString requireDaemon;
+};
+
+struct PluginSettingPageInfo
 {
     QString pageUID;
     QString requireRoleName;
@@ -43,7 +50,8 @@ struct PluginPageInfo
 struct PluginMetaData
 {
     QString id;
-    QVector<PluginPageInfo> pagesInfo;
+    QVector<PluginWorkPageInfo> workPagesInfo;
+    QVector<PluginSettingPageInfo> settingPagesInfo;
 };
 
 struct PluginInfo
@@ -71,7 +79,6 @@ PluginsManager::PluginsManager(QObject *parent)
 
 PluginsManager::~PluginsManager()
 {
-    // deactivatePlugins();
 }
 
 void PluginsManager::init()
@@ -79,71 +86,90 @@ void PluginsManager::init()
     initPlugins();
 }
 
-// void PluginsManager::activatePlugins()
-// {
-//     QStringList activatedPlugins;
-
-//     for (auto &pluginInfo : m_plugins)
-//     {
-//         pluginInfo->plugin->activate();
-//         activatedPlugins.push_back(pluginInfo->loader->fileName());
-//     }
-
-//     KLOG_INFO() << "Activated plugins: " << activatedPlugins;
-// }
-
-// void PluginsManager::deactivatePlugins()
-// {
-//     QStringList deactivatedPlugins;
-
-//     for (auto &pluginInfo : m_plugins)
-//     {
-//         pluginInfo->plugin->deactivate();
-//         deactivatedPlugins.push_back(pluginInfo->loader->fileName());
-//     }
-
-//     KLOG_INFO() << "Deactivated plugins: " << deactivatedPlugins;
-// }
-
-QVector<Page *> PluginsManager::createAvailablePages()
+QVector<WorkPage *> PluginsManager::createAvailableWorkPages()
 {
     auto role = m_accountProxy->GetLoginRole().value();
     auto roleName = m_accountProxy->GetRoleName(role).value();
     auto availableDaemonPlugins = m_daemonProxy->GetAvailablePlugins().value();
-    QStringList createdPages;
+    QStringList createdWorkPagesUID;
+    QVector<WorkPage *> createdWorkPages;
 
-    QVector<Page *> pages;
     for (auto &pluginInfo : m_plugins)
     {
-        for (auto &pageInfo : pluginInfo->metaData.pagesInfo)
+        for (auto &workPageInfo : pluginInfo->metaData.workPagesInfo)
         {
             // 判断登录角色是否有页面访问权限
-            if (!pageInfo.requireRoleName.isEmpty() && pageInfo.requireRoleName != roleName)
+            if (!workPageInfo.requireRoleName.isEmpty() &&
+                workPageInfo.requireRoleName != roleName)
             {
-                KLOG_INFO() << "Ingore page" << pageInfo.pageUID << ", because of role name dismatch.";
+                KLOG_INFO() << "Ingore work page" << workPageInfo.pageUID << ", because of role name dismatch.";
                 continue;
             }
 
             // 判断后端依赖插件是否加载，否则前端不应该显示
-            if (!availableDaemonPlugins.contains(pageInfo.requireDaemon))
+            if (!workPageInfo.requireDaemon.isEmpty() &&
+                !availableDaemonPlugins.contains(workPageInfo.requireDaemon))
             {
-                KLOG_INFO() << "Ingore page" << pageInfo.pageUID << ", because of required daemon module isn't loaded.";
+                KLOG_INFO() << "Ingore work page" << workPageInfo.pageUID << ", because of required daemon module isn't loaded.";
                 continue;
             }
 
-            auto page = pluginInfo->plugin->createPage(pageInfo.pageUID);
-            if (!page)
+            auto workPage = pluginInfo->plugin->createWorkPage(workPageInfo.pageUID);
+            if (!workPage)
             {
-                KLOG_WARNING() << "Failed to create page for" << pageInfo.pageUID;
+                KLOG_WARNING() << "Failed to create work page for" << workPageInfo.pageUID;
                 continue;
             }
-            pages.push_back(page);
-            createdPages.push_back(pageInfo.pageUID);
+            createdWorkPages.push_back(workPage);
+            createdWorkPagesUID.push_back(workPageInfo.pageUID);
         }
     }
 
-    KLOG_INFO() << "Created pages: " << createdPages;
-    return pages;
+    KLOG_INFO() << "Created work pages: " << createdWorkPagesUID;
+    return createdWorkPages;
+}
+
+QVector<SettingPage *> PluginsManager::createAvailableSettingPages()
+{
+    auto role = m_accountProxy->GetLoginRole().value();
+    auto roleName = m_accountProxy->GetRoleName(role).value();
+    auto availableDaemonPlugins = m_daemonProxy->GetAvailablePlugins().value();
+    QStringList createdSettingPagesUID;
+    QVector<SettingPage *> createdSettingPages;
+
+    for (auto &pluginInfo : m_plugins)
+    {
+        for (auto &settingPageInfo : pluginInfo->metaData.settingPagesInfo)
+        {
+            // 判断登录角色是否有页面访问权限
+            if (!settingPageInfo.requireRoleName.isEmpty() &&
+                settingPageInfo.requireRoleName != roleName)
+            {
+                KLOG_INFO() << "Ingore setting page" << settingPageInfo.pageUID << ", because of role name dismatch.";
+                continue;
+            }
+
+            // 判断后端依赖插件是否加载，否则前端不应该显示
+            if (!settingPageInfo.requireDaemon.isEmpty() &&
+                !availableDaemonPlugins.contains(settingPageInfo.requireDaemon))
+            {
+                KLOG_INFO() << "Ingore setting page" << settingPageInfo.pageUID << ", because of required daemon module isn't loaded.";
+                continue;
+            }
+
+            auto settingPage = pluginInfo->plugin->createSettingPage(settingPageInfo.pageUID);
+            if (!settingPage)
+            {
+                KLOG_WARNING() << "Failed to create setting page for" << settingPageInfo.pageUID;
+                continue;
+            }
+            createdSettingPages.push_back(settingPage);
+            createdSettingPagesUID.push_back(settingPageInfo.pageUID);
+        }
+    }
+
+    KLOG_INFO() << "Created setting pages: " << createdSettingPagesUID;
+    return createdSettingPages;
 }
 
 void PluginsManager::initPlugins()
@@ -175,15 +201,26 @@ void PluginsManager::initPlugins()
         auto object = metaDataJson.value("MetaData").toObject();
         pluginInfo->metaData.id = object.value("id").toString();
 
-        auto pages = object.value("pages").toArray();
-        for (auto page : pages)
+        auto workPages = object.value("workPages").toArray();
+        for (auto workPage : workPages)
         {
-            auto pageObject = page.toObject();
-            PluginPageInfo pageInfo;
-            pageInfo.pageUID = pageObject.value("pageUID").toString();
-            pageInfo.requireRoleName = pageObject.value("requireRoleName").toString();
-            pageInfo.requireDaemon = pageObject.value("requireDaemon").toString();
-            pluginInfo->metaData.pagesInfo.append(pageInfo);
+            auto pageObject = workPage.toObject();
+            PluginWorkPageInfo workPageInfo;
+            workPageInfo.pageUID = pageObject.value("pageUID").toString();
+            workPageInfo.requireRoleName = pageObject.value("requireRoleName").toString();
+            workPageInfo.requireDaemon = pageObject.value("requireDaemon").toString();
+            pluginInfo->metaData.workPagesInfo.append(workPageInfo);
+        }
+
+        auto settingPages = object.value("settingPages").toArray();
+        for (auto settingPage : settingPages)
+        {
+            auto pageObject = settingPage.toObject();
+            PluginSettingPageInfo settingPageInfo;
+            settingPageInfo.pageUID = pageObject.value("pageUID").toString();
+            settingPageInfo.requireRoleName = pageObject.value("requireRoleName").toString();
+            settingPageInfo.requireDaemon = pageObject.value("requireDaemon").toString();
+            pluginInfo->metaData.settingPagesInfo.append(settingPageInfo);
         }
 
         pluginInfo->plugin = qobject_cast<IUIPlugin *>(pluginInfo->loader->instance());

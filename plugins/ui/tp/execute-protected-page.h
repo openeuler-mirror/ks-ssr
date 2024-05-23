@@ -29,7 +29,7 @@ namespace KS
 {
 namespace TP
 {
-class ExecuteProtectedPage : public Page
+class ExecuteProtectedPage : public WorkPage
 {
     Q_OBJECT
 public:

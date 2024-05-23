@@ -26,7 +26,7 @@ namespace KS
 namespace ToolBox
 {
 PrivacyCleanupPage::PrivacyCleanupPage(QWidget* parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::PrivacyCleanupPage)
 {
     m_ui->setupUi(this);

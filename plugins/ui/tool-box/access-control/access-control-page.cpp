@@ -26,7 +26,7 @@ namespace KS
 namespace ToolBox
 {
 AccessControlPage::AccessControlPage(QWidget* parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::AccessControlPage)
 {
     m_ui->setupUi(this);

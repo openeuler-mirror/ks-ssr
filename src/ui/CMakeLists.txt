@@ -2,6 +2,7 @@ file(
   GLOB
   UI_H_FILES
   ${PROJECT_SOURCE_DIR}/include/page.h
+  ${PROJECT_SOURCE_DIR}/include/ui-plugin-i.h
   accounts/*.h
   common/*.h
   common/*/*.h

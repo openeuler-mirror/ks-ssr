@@ -32,7 +32,7 @@ enum BRPageType
     BR_PAGE_TYPE_OTHER
 };
 
-class BRPage : public Page
+class BRPage : public WorkPage
 {
     Q_OBJECT
 public:

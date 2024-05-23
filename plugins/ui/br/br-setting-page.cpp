@@ -11,26 +11,27 @@
  *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
-#include "baseline-reinforcement.h"
+
+#include "br-setting-page.h"
 #include <qt5-log-i.h>
+#include <ssr-i.h>
 #include <QFileDialog>
+#include "br-i.h"
 #include "br_dbus_proxy.h"
-#include "include/ssr-i.h"
 #include "lib/base/notification-wrapper.h"
 #include "lib/widgets/ssr-marcos-ui.h"
 #include "lib/widgets/user-prompt-dialog.h"
-#include "src/ui/br/br-i.h"
-#include "src/ui/br/reinforcement-items/category.h"
-#include "src/ui/br/utils.h"
-#include "ui_baseline-reinforcement.h"
+#include "reinforcement-items/category.h"
+#include "ui_br-setting-page.h"
+#include "utils.h"
 
 namespace KS
 {
-namespace Settings
+namespace BR
 {
-BaselineReinforcement::BaselineReinforcement(QWidget *parent)
-    : QWidget(parent),
-      m_ui(new Ui::BaselineReinforcement)
+BRSettingPage::BRSettingPage(QWidget *parent)
+    : SettingPage(parent),
+      m_ui(new Ui::BRSettingPage)
 {
     m_ui->setupUi(this);
 
@@ -42,19 +43,19 @@ BaselineReinforcement::BaselineReinforcement(QWidget *parent)
     initUI();
 }
 
-BaselineReinforcement::~BaselineReinforcement()
+BRSettingPage::~BRSettingPage()
 {
     delete m_ui;
 }
 
-void BaselineReinforcement::initConnection()
+void BRSettingPage::initConnection()
 {
-    connect(m_ui->m_importStrategy, &QPushButton::clicked, this, &BaselineReinforcement::importStrategy);
-    connect(m_ui->m_exportStrategy, &QPushButton::clicked, this, &BaselineReinforcement::exportStrategyClicked);
-    connect(m_ui->m_resetAllArgs, &QPushButton::clicked, this, &BaselineReinforcement::resetAllArgsClicked);
-    connect(m_ui->m_timeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &BaselineReinforcement::timedScanSettings);
+    connect(m_ui->m_importStrategy, &QPushButton::clicked, this, &BRSettingPage::importStrategy);
+    connect(m_ui->m_exportStrategy, &QPushButton::clicked, this, &BRSettingPage::exportStrategyClicked);
+    connect(m_ui->m_resetAllArgs, &QPushButton::clicked, this, &BRSettingPage::resetAllArgsClicked);
+    connect(m_ui->m_timeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &BRSettingPage::timedScanSettings);
     m_timedScan = new QTimer(this);
-    connect(m_timedScan, &QTimer::timeout, this, &BaselineReinforcement::scan);
+    connect(m_timedScan, &QTimer::timeout, this, &BRSettingPage::scan);
     connect(m_ui->m_openMonitor, &QRadioButton::clicked, [this]
             {
                 m_dbusProxy->SetResourceMonitorSwitch(BR_RESOURCE_MONITOR_OPEN);
@@ -163,7 +164,7 @@ void BaselineReinforcement::initConnection()
             });
 }
 
-void BaselineReinforcement::initUI()
+void BRSettingPage::initUI()
 {
     if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
     {
@@ -188,7 +189,7 @@ void BaselineReinforcement::initUI()
     m_ui->m_timeSpinBox->setValue(m_dbusProxy->time_scan());
 }
 
-void BaselineReinforcement::updateProgressInfo(KS::BR::ProgressInfo &progressInfo)
+void BRSettingPage::updateProgressInfo(KS::BR::ProgressInfo &progressInfo)
 {
     for (auto categories : m_categories)
     {
@@ -212,12 +213,17 @@ void BaselineReinforcement::updateProgressInfo(KS::BR::ProgressInfo &progressInf
     }
 }
 
-uint BaselineReinforcement::getFallbackStatus()
+uint BRSettingPage::getFallbackStatus()
 {
     return m_dbusProxy->fallback_status();
 }
 
-void BaselineReinforcement::importStrategy()
+QString BRSettingPage::getTitle()
+{
+    return tr("Baseline reinforcement");
+}
+
+void BRSettingPage::importStrategy()
 {
     auto fileName = QFileDialog::getOpenFileName(this, tr("Files"), "/", tr("strategy(*.xml)"));
     RETURN_IF_TRUE(fileName.isEmpty())
@@ -234,7 +240,7 @@ void BaselineReinforcement::importStrategy()
     file.close();
 }
 
-void BaselineReinforcement::timedScanSettings(int hours)
+void BRSettingPage::timedScanSettings(int hours)
 {
     m_dbusProxy->SetTimeScan(hours);
     if (hours == 0)
@@ -255,7 +261,7 @@ void BaselineReinforcement::timedScanSettings(int hours)
     m_timedScan->start(hours * 1000 * 3600);
 }
 
-void BaselineReinforcement::scan()
+void BRSettingPage::scan()
 {
     m_categories.clear();
     m_progressInfo = {};
@@ -308,7 +314,7 @@ void BaselineReinforcement::scan()
     CHECK_ERROR_FOR_DBUS_REPLY(replyScan);
 }
 
-void BaselineReinforcement::setMonitorStatus(bool isOpen)
+void BRSettingPage::setMonitorStatus(bool isOpen)
 {
     m_dbusProxy->SetResourceMonitorSwitch(isOpen ? BR_RESOURCE_MONITOR_OPEN : BR_RESOURCE_MONITOR_CLOSE);
 
@@ -317,7 +323,7 @@ void BaselineReinforcement::setMonitorStatus(bool isOpen)
     KLOG_DEBUG() << QString(isOpen ? "Open resource monitoring" : "Close resource monitoring");
 }
 
-void BaselineReinforcement::fallback(int status)
+void BRSettingPage::fallback(int status)
 {
     auto reply = m_dbusProxy->SetFallback(BRFallbackMethod(status));
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
@@ -336,5 +342,5 @@ void BaselineReinforcement::fallback(int status)
             });
     m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS);
 }
-}  // namespace Settings
+}  // namespace BR
 }  // namespace KS

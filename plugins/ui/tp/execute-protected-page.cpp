@@ -28,7 +28,7 @@ namespace KS
 namespace TP
 {
 ExecuteProtectedPage::ExecuteProtectedPage(QWidget *parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::ExecuteProtectedPage),
       m_dbusProxy(nullptr),
       m_refreshTimer(nullptr)

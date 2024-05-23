@@ -3,7 +3,10 @@ set(TARGET_NAME ui-remote)
 file(GLOB_RECURSE REMOTE_H_FILES ./*.h)
 file(GLOB_RECURSE REMOTE_CPP_FILES ./*.cpp)
 
-add_library(${TARGET_NAME} SHARED ${REMOTE_H_FILES} ${REMOTE_CPP_FILES})
+qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+
+add_library(${TARGET_NAME} SHARED ${REMOTE_H_FILES} ${REMOTE_CPP_FILES}
+                                  ${UI_FILES})
 
 target_include_directories(
   ${TARGET_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}

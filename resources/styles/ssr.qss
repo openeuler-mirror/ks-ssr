@@ -335,7 +335,7 @@ KS--Window QPushButton#btnForMenu
 }
 
 /* Settings */
-KS--Settings--Dialog QListWidget
+KS--Settings QListWidget
 {
     background-color:#2d2d2d;
     border-radius: 6px;
@@ -346,7 +346,7 @@ KS--Settings--Dialog QListWidget
     color: white;
     font:NotoSansCJKsc-Regular;
 }
-KS--Settings--Dialog QListWidget::item
+KS--Settings QListWidget::item
 {
     border: 0px;
     background-color: #393939;
@@ -354,45 +354,45 @@ KS--Settings--Dialog QListWidget::item
     border-radius: 6px;
     border: 6px
 }
-KS--Settings--Dialog QListWidget::item:selected
+KS--Settings QListWidget::item:selected
 {
     background-color: #00a2ff;
 }
 
-KS--Settings--BaselineReinforcement
+KS--BR--BRSettingPage
 {
     background-color: transparent;
     color: white;
 }
 
-KS--Settings--BaselineReinforcement QGroupBox
+KS--BR--BRSettingPage QGroupBox
 {
     background-color: transparent;
     border: 0px;
 }
 
-KS--Settings--BaselineReinforcement QPushButton
+KS--BR--BRSettingPage QPushButton
 {
     background-color: transparent;
     border: 0px;
     color: #00a2ff;
 }
 
-KS--Settings--BaselineReinforcement QPushButton:hover
+KS--BR--BRSettingPage QPushButton:hover
 {
     color: #79C3FF;
 }
 
-KS--Settings--BaselineReinforcement QRadioButton
+KS--BR--BRSettingPage QRadioButton
 {
     background-color: transparent;
     color: white;
 }
-KS--Settings--BaselineReinforcement QRadioButton::indicator:checked
+KS--BR--BRSettingPage QRadioButton::indicator:checked
 {
     image: url(:/images/radio-checked);
 }
-KS--Settings--BaselineReinforcement QRadioButton::indicator:unchecked
+KS--BR--BRSettingPage QRadioButton::indicator:unchecked
 {
     image: url(:/images/radio-unchecked);
 }
@@ -436,7 +436,7 @@ QPushButton#m_confirm,
 QPushButton#m_selectFile,
 QPushButton#m_selectUser,
 QPushButton#m_centigrade,
-KS--Settings--DeviceControl #MessageWindow QPushButton#confirm
+KS--DM--DMSettingPage #MessageWindow QPushButton#confirm
 {
     color:#FFFFFF;
     font:NotoSansCJKsc-Regular;
@@ -457,7 +457,7 @@ QPushButton#m_confirm:hover,
 QPushButton#m_selectFile:hover,
 QPushButton#m_selectUser:hover,
 QPushButton#m_centigrade:hover,
-KS--Settings--DeviceControl #MessageWindow QPushButton#confirm:hover
+KS--DM--DMSettingPage #MessageWindow QPushButton#confirm:hover
 {
     background:#79C3FF;
     border:4px;
@@ -470,7 +470,7 @@ QPushButton#m_recertification,
 QPushButton#m_return,
 QPushButton#m_reset,
 QPushButton#m_remove
-KS--Settings--DeviceControl #MessageWindow QPushButton#cancel
+KS--DM--DMSettingPage #MessageWindow QPushButton#cancel
 {
     color:#FFFFFF;
     font:NotoSansCJKsc-Regular;
@@ -485,7 +485,7 @@ QPushButton#m_recertification:hover,
 QPushButton#m_return:hover,
 QPushButton#m_reset:hover,
 QPushButton#m_remove:hover,
-KS--Settings--DeviceControl #MessageWindow QPushButton#cancel:hover
+KS--DM--DMSettingPage #MessageWindow QPushButton#cancel:hover
 {
     background:#464646;
     border:4px;
@@ -697,49 +697,49 @@ KS--DM--DevicePermission QWidget#m_content
 }
 
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked,
-KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked,
+KS--DM--DMSettingPage QCheckBox::indicator:unchecked,
+KS--ToolBox--AuthenticationSettingPage QCheckBox::indicator:unchecked,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked:hover,
-KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked:hover,
+KS--DM--DMSettingPage QCheckBox::indicator:unchecked:hover,
+KS--ToolBox--AuthenticationSettingPage QCheckBox::indicator:unchecked:hover,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:hover
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:unchecked:pressed,
-KS--Settings--IdentityAuthentication QCheckBox::indicator:unchecked:pressed,
+KS--DM--DMSettingPage QCheckBox::indicator:unchecked:pressed,
+KS--ToolBox--AuthenticationSettingPage QCheckBox::indicator:unchecked:pressed,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:unchecked:pressed
 {
     image: url(:/images/switch-close);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked,
-KS--Settings--IdentityAuthentication QCheckBox::indicator:checked,
+KS--DM--DMSettingPage QCheckBox::indicator:checked,
+KS--ToolBox--AuthenticationSettingPage QCheckBox::indicator:checked,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:checked
 {
     image: url(:/images/switch-open);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked:hover,
-KS--Settings--IdentityAuthentication QCheckBox::indicator:checked:hover,
+KS--DM--DMSettingPage QCheckBox::indicator:checked:hover,
+KS--ToolBox--AuthenticationSettingPage QCheckBox::indicator:checked:hover,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:hover
 {
     image: url(:/images/switch-open);
 }
 
-KS--Settings--DeviceControl QCheckBox::indicator:checked:pressed,
-KS--Settings--IdentityAuthentication QCheckBox::indicator:checked:pressed,
+KS--DM--DMSettingPage QCheckBox::indicator:checked:pressed,
+KS--ToolBox--AuthenticationSettingPage QCheckBox::indicator:checked:pressed,
 KS--ToolBox--AccessControlPage QCheckBox::indicator:checked:pressed
 {
     image: url(:/images/switch-open);
 }
 
-KS--Settings--DeviceControl #customWidget
+KS--DM--DMSettingPage #customWidget
 {
     border-radius: 6px;
     background-color:#2d2d2d;
@@ -954,8 +954,8 @@ KS--BR--ReinforcementArgsDialog QListWidget
 
 KS--BR--ArgHandle QComboBox,
 KS--BR--ArgHandle QLineEdit,
-KS--Account--Manager QComboBox,
-KS--Account--Manager QLineEdit
+KS--Accounts--User QComboBox,
+KS--Accounts--User QLineEdit
 {
     height: 36px;
     background-color: #222222;
@@ -970,7 +970,7 @@ KS--Account--Manager QLineEdit
 }
 
 KS--BR--ArgHandle QComboBox QAbstractItemView,
-KS--Account--Manager QComboBox QAbstractItemView
+KS--Accounts--User QComboBox QAbstractItemView
 {
     background-color:#222222;
     color: white;
@@ -983,7 +983,7 @@ KS--Account--Manager QComboBox QAbstractItemView
 }
 
 KS--BR--ArgHandle QComboBox QAbstractItemView::item,
-KS--Account--Manager QComboBox QAbstractItemView::item
+KS--Accounts--User QComboBox QAbstractItemView::item
 {
     height: 36px;
     border-top: 1px solid #454545;
@@ -992,28 +992,28 @@ KS--Account--Manager QComboBox QAbstractItemView::item
 
 KS--BR--ArgHandle QComboBox QAbstractItemView::item:hover,
 KS--BR--ArgHandle QComboBox QAbstractItemView::item:selected,
-KS--Account--Manager QComboBox QAbstractItemView::item:hover,
-KS--Account--Manager QComboBox QAbstractItemView::item:selected
+KS--Accounts--User QComboBox QAbstractItemView::item:hover,
+KS--Accounts--User QComboBox QAbstractItemView::item:selected
 {
     background-color:#00a2ff;
     color: white;
 }
 
 KS--BR--ArgHandle QComboBox::drop-down,
-KS--Account--Manager QComboBox::drop-down
+KS--Accounts--User QComboBox::drop-down
 {
     border:none;
     padding-right:12px;
 }
 
 KS--BR--ArgHandle QComboBox::down-arrow,
-KS--Account--Manager QComboBox::down-arrow
+KS--Accounts--User QComboBox::down-arrow
 {
       image: url(:/images/arrow-down);
 }
 
 KS--BR--ArgHandle QSpinBox,
-KS--Settings--BaselineReinforcement QSpinBox
+KS--BR--BRSettingPage QSpinBox
 {
     height: 36px;
     background-color: #222222;
@@ -1029,8 +1029,8 @@ KS--Settings--BaselineReinforcement QSpinBox
 /* 屏蔽QSpinBox加减 */
 KS--BR--ArgHandle QSpinBox::up-button,
 KS--BR--ArgHandle QSpinBox::down-button,
-KS--Settings--BaselineReinforcement QSpinBox::up-button,
-KS--Settings--BaselineReinforcement QSpinBox::down-button
+KS--BR--BRSettingPage QSpinBox::up-button,
+KS--BR--BRSettingPage QSpinBox::down-button
 {
     width : 0px;
     height : 0px;
@@ -1114,12 +1114,12 @@ QPushButton#m_passwordNote
 }
 
 /******  remote manager  ******/
-KS--RemotePage--RemotePage #check_baseline,#check_repair
+KS--Remote--RemotePage #check_baseline,#check_repair
 {
     color: white;
 }
 
-KS--RemotePage--RemotePage QPushButton#btn_select,QPushButton#btn_excute
+KS--Remote--RemotePage QPushButton#btn_select,QPushButton#btn_excute
 {
     color:#FFFFFF;
     font-size:12px;
@@ -1127,13 +1127,13 @@ KS--RemotePage--RemotePage QPushButton#btn_select,QPushButton#btn_excute
     background:#43A3F2;
 }
 
-KS--RemotePage--RemotePage QWidget#widget_reinforce,QWidget#widget_repair
+KS--Remote--RemotePage QWidget#widget_reinforce,QWidget#widget_repair
 {
     background-color: #393939;
     border-radius: 6px;
 }
 
-KS--RemotePage--RemotePage QPushButton#btn_cancel,QPushButton#btn_return
+KS--Remote--RemotePage QPushButton#btn_cancel,QPushButton#btn_return
 {
     background-color: #393939;
     outline: none;
@@ -1142,7 +1142,7 @@ KS--RemotePage--RemotePage QPushButton#btn_cancel,QPushButton#btn_return
     color:#FFFFFF;
 }
 
-KS--RemotePage--RemotePage QPushButton#btn_cancel:hover,QPushButton#btn_return:hover
+KS--Remote--RemotePage QPushButton#btn_cancel:hover,QPushButton#btn_return:hover
 {
     background-color: #464646;
 }

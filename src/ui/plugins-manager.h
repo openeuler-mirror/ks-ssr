@@ -25,7 +25,8 @@ class AccountProxy;
 namespace KS
 {
 class PluginInfo;
-class Page;
+class WorkPage;
+class SettingPage;
 
 class PluginsManager : public QObject
 {
@@ -36,10 +37,9 @@ public:
     virtual ~PluginsManager();
 
     void init();
-    // void activatePlugins();
-    // void deactivatePlugins();
 
-    QVector<Page *> createAvailablePages();
+    QVector<WorkPage *> createAvailableWorkPages();
+    QVector<SettingPage *> createAvailableSettingPages();
 
 private:
     void initPlugins();

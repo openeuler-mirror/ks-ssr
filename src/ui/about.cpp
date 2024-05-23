@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "about.h"
 #include <QFile>
@@ -18,10 +18,9 @@
 #include "ui_about.h"
 namespace KS
 {
-#define VERSION_FILE_PATH SSR_INSTALL_DATADIR "/ks-ssr.version"
-
-About::About(QWidget *parent) : TitlebarWindow(parent),
-                                m_ui(new Ui::about)
+About::About(QWidget *parent)
+    : TitlebarWindow(parent),
+      m_ui(new Ui::about)
 {
     m_ui->setupUi(getWindowContentWidget());
 
@@ -48,8 +47,8 @@ void About::initUI()
     setWindowModality(Qt::ApplicationModal);
     setResizeable(false);
 
-    m_ui->m_version->setText(tr("Security reinforcement sofware V1.2"));
-    m_ui->m_info->setText(QString("ks-ssr : %1").arg(getVersion(VERSION_FILE_PATH)));
+    m_ui->m_version->setText(tr("KylinSec Security reinforcement sofware V1"));
+    m_ui->m_info->setText(tr("Version : V1.3"));
     m_ui->m_license->setText("Copyright (c) 2023 ~ 2024 KylinSec Co. Ltd. All Rights Reserved.");
 }
 

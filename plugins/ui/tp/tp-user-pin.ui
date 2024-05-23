@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TrustedUserPin</class>
- <widget class="QWidget" name="TrustedUserPin">
+ <class>TPUserPin</class>
+ <widget class="QWidget" name="TPUserPin">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -34,9 +34,9 @@
 #include "lib/widgets/ssr-marcos-ui.h"
 #include "loading.h"
 #include "plugins-manager.h"
+#include "settings.h"
 #include "src/ui/about.h"
 #include "src/ui/navigation.h"
-#include "src/ui/settings/dialog.h"
 #include "src/ui/sidebar.h"
 #include "src/ui/ui_window.h"
 
@@ -67,18 +67,19 @@ Window::Window()
 {
     m_ui->setupUi(getWindowContentWidget());
 
-    m_pages.resize(int(NavigationIndex::COUNT));
-    m_accountManager = new Account::User(this);
+    m_settingsDialog = new Settings(this);
+    m_workPages.resize(int(NavigationIndex::COUNT));
+    m_accountManager = new Accounts::User(this);
     m_pluginManager = new PluginsManager(this);
 
-    connect(m_accountManager, &Account::User::loginFinished, this, &Window::initWindowContent, Qt::ConnectionType::UniqueConnection);
+    connect(m_accountManager, &Accounts::User::loginFinished, this, &Window::initWindowContent, Qt::ConnectionType::UniqueConnection);
     connect(
-        m_accountManager, &Account::User::softExited, this, []
+        m_accountManager, &Accounts::User::softExited, this, []
         {
             qApp->quit();
         },
         Qt::ConnectionType::UniqueConnection);
-    connect(m_accountManager, &Account::User::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
+    connect(m_accountManager, &Accounts::User::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
 
     connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject, Qt::ConnectionType::UniqueConnection);
 
@@ -88,8 +89,6 @@ Window::Window()
 Window::~Window()
 {
     delete m_ui;
-    // TODO:
-    // Settings::Dialog::globalDeinit();
     Notify::NotificationWrapper::globalDeinit();
 }
 
@@ -140,21 +139,22 @@ void Window::initWindowContent()
     show();
 
     connect(m_ui->m_navigation, &Navigation::currentUIDChanged, this, &Window::switchSidebars);
-    connect(m_ui->m_sidebar, &SideBar::itemChanged, this, &Window::switchPage);
-
-    // TODO: 后面删除
-    // initSettings();
+    connect(m_ui->m_sidebar, &SideBar::itemChanged, this, &Window::switchWorkPage);
 }
 
 void Window::initPages()
 {
-    clearPages();
+    initWorkPages();
+    initSettingPages();
+}
 
-    auto availablePages = m_pluginManager->createAvailablePages();
-    for (auto page : availablePages)
+void Window::initWorkPages()
+{
+    auto availableWorkPages = m_pluginManager->createAvailableWorkPages();
+    for (auto workPage : availableWorkPages)
     {
-        page->setParent(this);
-        addPage(page);
+        workPage->setParent(this);
+        addWorkPage(workPage);
     }
 
     m_loading = new Loading(this);
@@ -162,12 +162,48 @@ void Window::initPages()
     m_ui->m_stackedPages->setCurrentIndex(0);
 }
 
+void Window::initSettingPages()
+{
+    auto availableSettingPages = m_pluginManager->createAvailableSettingPages();
+    m_settingsDialog->setSettingPages(availableSettingPages);
+    // 如果没有设置页面，则隐藏设置按钮
+    m_settingsAction->setVisible((availableSettingPages.size() > 0));
+    // TODO: 放到插件实现
+    // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
+    // connect(
+    //     Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this]
+    //     {
+    //         for (auto page : m_pages.value(tr("Baseline reinforcement")))
+    //         {
+    //             if (page->isVisible())
+    //             {
+    //                 auto brPage = static_cast<BR::BRPage *>(page);
+    //                 brPage->exportStrategy();
+    //             }
+    //         }
+    //     },
+    //     Qt::UniqueConnection);
+    // connect(
+    //     Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this]
+    //     {
+    //         for (auto page : m_pages.value(tr("Baseline reinforcement")))
+    //         {
+    //             if (page->isVisible())
+    //             {
+    //                 auto brPage = static_cast<BR::BRPage *>(page);
+    //                 brPage->resetAllReinforcementArgs();
+    //             }
+    //         }
+    //     },
+    //     Qt::UniqueConnection);
+}
+
 void Window::initNavigation()
 {
     QVector<NavigationIndex> showIndexs;
-    for (int i = 0; i < m_pages.size(); ++i)
+    for (int i = 0; i < m_workPages.size(); ++i)
     {
-        if (m_pages[i].size() > 0)
+        if (m_workPages[i].size() > 0)
         {
             showIndexs.push_back(NavigationIndex(i));
         }
@@ -248,9 +284,9 @@ void Window::initWindow()
     auto settingMenu = new QMenu(this);
     btnForMenu->setMenu(settingMenu);
 
-    m_settings = new QAction(tr("Settings"), this);
-    connect(m_settings, &QAction::triggered, this, &Window::popupSettingsDialog, Qt::UniqueConnection);
-    settingMenu->addAction(m_settings);
+    m_settingsAction = new QAction(tr("Settings"), this);
+    connect(m_settingsAction, &QAction::triggered, this, &Window::popupSettingsDialog, Qt::UniqueConnection);
+    settingMenu->addAction(m_settingsAction);
     settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
     settingMenu->addAction(tr("Help"), this, []
                            {
@@ -267,61 +303,10 @@ void Window::initWindow()
     layout->setAlignment(Qt::AlignRight);
 }
 
-/*void Window::initSettings()
+void Window::addWorkPage(WorkPage *workPage)
 {
-    Settings::Dialog::globalInit(this);
-    QStringList settingsSidebars;
-    // 通过登入账户判断需要显示的设置页面
-    auto currentUser = m_accountManager->getCurrentUserName();
-    if (currentUser == SSR_ACCOUNT_NAME_SYSADM)
-    {
-        settingsSidebars << tr("Baseline reinforcement") << tr("Interface Control");
-    }
-    else if (currentUser == SSR_ACCOUNT_NAME_SECADM)
-    {
-        settingsSidebars << tr("Trusted protect") << tr("Identity authentication");
-    }
-    else if (currentUser == SSR_ACCOUNT_NAME_AUDADM)
-    {
-        // TODO audit用户暂无设置
-    }
-
-    // settingsSidebars为空，隐藏设置按钮
-    m_settings->setVisible(!settingsSidebars.isEmpty());
-    Settings::Dialog::instance()->addSidebars(settingsSidebars);
-    // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
-    connect(
-        Settings::Dialog::instance(), &Settings::Dialog::exportStrategyClicked, this, [this]
-        {
-            for (auto page : m_pages.value(tr("Baseline reinforcement")))
-            {
-                if (page->isVisible())
-                {
-                    auto brPage = static_cast<BR::BRPage *>(page);
-                    brPage->exportStrategy();
-                }
-            }
-        },
-        Qt::UniqueConnection);
-    connect(
-        Settings::Dialog::instance(), &Settings::Dialog::resetAllArgsClicked, this, [this]
-        {
-            for (auto page : m_pages.value(tr("Baseline reinforcement")))
-            {
-                if (page->isVisible())
-                {
-                    auto brPage = static_cast<BR::BRPage *>(page);
-                    brPage->resetAllReinforcementArgs();
-                }
-            }
-        },
-        Qt::UniqueConnection);
-}*/
-
-void Window::addPage(Page *page)
-{
-    m_pages[int(page->getNavigationIndex())].append(page);
-    m_ui->m_stackedPages->addWidget(page);
+    m_workPages[int(workPage->getNavigationIndex())].append(workPage);
+    m_ui->m_stackedPages->addWidget(workPage);
 }
 
 void Window::hideLoading(bool ishide)
@@ -347,22 +332,7 @@ void Window::clearSidebar()
     }
 }
 
-void Window::clearPages()
-{
-    // 移除qt designer默认创建的widget
-    while (m_ui->m_stackedPages->currentWidget() != nullptr)
-    {
-        auto currentWidget = m_ui->m_stackedPages->currentWidget();
-        m_ui->m_stackedPages->removeWidget(currentWidget);
-        delete currentWidget;
-    }
-
-    m_pages.clear();
-    m_pages.resize(int(NavigationIndex::COUNT));
-    m_loading = nullptr;
-}
-
-void Window::switchPage()
+void Window::switchWorkPage()
 {
     RETURN_IF_TRUE(m_ui->m_sidebar->count() == 0)
 
@@ -373,34 +343,34 @@ void Window::switchPage()
         return;
     }
 
-    auto pages = m_pages[selectedIndex];
-    RETURN_IF_TRUE(pages.size() == 0)
+    auto workPages = m_workPages[selectedIndex];
+    RETURN_IF_TRUE(workPages.size() == 0)
 
-    Page *matchPage = nullptr;
+    WorkPage *matchWorkPage = nullptr;
 
-    for (auto page : pages)
+    for (auto workPage : workPages)
     {
-        if (page->getSidebarUID() == m_ui->m_sidebar->getSelectedUID())
+        if (workPage->getSidebarUID() == m_ui->m_sidebar->getSelectedUID())
         {
-            matchPage = page;
+            matchWorkPage = workPage;
             break;
         }
     }
 
-    if (!matchPage)
+    if (!matchWorkPage)
     {
         KLOG_WARNING() << "Switch page failed, not found match page for sidebar" << m_ui->m_sidebar->getSelectedUID();
         return;
     }
 
-    if (!matchPage->isInitialized())
+    if (!matchWorkPage->isInitialized())
     {
         m_ui->m_stackedPages->setCurrentWidget(m_loading);
-        connect(matchPage, &Page::initFinished, this, &Window::switchPage);
+        connect(matchWorkPage, &WorkPage::initFinished, this, &Window::switchWorkPage);
     }
     else
     {
-        m_ui->m_stackedPages->setCurrentWidget(matchPage);
+        m_ui->m_stackedPages->setCurrentWidget(matchWorkPage);
     }
 }
 
@@ -417,7 +387,7 @@ void Window::switchSidebars()
         return;
     }
 
-    auto pages = m_pages[selectedIndex];
+    auto pages = m_workPages[selectedIndex];
     if (pages.size() == 0)
     {
         KLOG_WARNING() << "The selected navigation";
@@ -450,7 +420,7 @@ void Window::switchSidebars()
     }
 
     // 因为侧边栏更新了，所以页面也要刷新
-    switchPage();
+    switchWorkPage();
 
     // TODO: 这部分应该放到插件里面处理
     // 可信页面需要检测是否加载成功
@@ -465,6 +435,14 @@ void Window::switchSidebars()
     //     hideLoading(true);
     //     m_ui->m_sidebar->setEnabled(true);
     // }
+}
+
+void Window::popupSettingsDialog()
+{
+    auto x = this->x() / 4 + this->width() / 4 + m_settingsDialog->width() / 16;
+    auto y = this->y() / 4 + this->height() / 4 + m_settingsDialog->height() / 16;
+    m_settingsDialog->move(x, y);
+    m_settingsDialog->show();
 }
 
 void Window::popupActiveDialog()
@@ -483,15 +461,6 @@ void Window::popupActiveDialog()
     auto y = this->y() + this->height() / 4 + m_activation->height() / 16;
     m_activation->move(x, y);
     m_activation->show();
-}
-
-void Window::popupSettingsDialog()
-{
-    // TODO：
-    // auto x = this->x() / 4 + this->width() / 4 + Settings::Dialog::instance()->width() / 16;
-    // auto y = this->y() / 4 + this->height() / 4 + Settings::Dialog::instance()->height() / 16;
-    // Settings::Dialog::instance()->move(x, y);
-    // Settings::Dialog::instance()->show();
 }
 
 void Window::popupAboutDialog()
@@ -530,57 +499,6 @@ void Window::activateMetaObject()
     activateWindow();
 }
 
-// TODO:
-/*void Window::updatePage()
-{
-    // 清空侧边栏
-    clearSidebar();
-    // 插入侧边栏
-    auto pages = m_pages.find(m_ui->m_navigation->getSelectedUID());
-    if (pages == m_pages.end() || pages->count() == 0)
-    {
-        KLOG_WARNING() << "Failed to load page: " << m_ui->m_navigation->getSelectedUID();
-        return;
-    }
-    for (auto page : *pages)
-    {
-        auto sidebarUID = page->getSidebarUID();
-        if (sidebarUID != "")
-        {
-            SidebarItem::ItemInfo itemInfo;
-            itemInfo.name = page->getSidebarUID();
-            itemInfo.icon = page->getSidebarIcon();
-            m_ui->m_sidebar->addSideBarItem(new SidebarItem(itemInfo, m_ui->m_sidebar));
-        }
-    }
-    // 更新页面 切换到第一个侧边栏
-    m_ui->m_sidebar->setCurrentRow(0);
-    m_ui->m_stackedPages->setCurrentWidget(pages->first());
-
-    // 没有分侧边栏则隐藏
-    if (m_ui->m_sidebar->count() == 0)
-    {
-        m_ui->m_sidebar->hide();
-    }
-    else
-    {
-        m_ui->m_sidebar->show();
-    }
-
-    // 可信页面需要检测是否加载成功
-    if (tr("Trusted protected") == pages->first()->getNavigationUID())
-    {
-        auto page = qobject_cast<TP::ExecuteProtectedPage *>(pages->first());
-        hideLoading(page->getInitialized());
-    }
-    else
-    {
-        // 其它侧边栏可用
-        hideLoading(true);
-        m_ui->m_sidebar->setEnabled(true);
-    }
-}*/
-
 void Window::setNotifyStatus(bool disabled)
 {
     Notify::NotificationWrapper::getInstance()->setNofityEnable(!disabled);
@@ -605,7 +523,7 @@ void Window::logout(const QString &userName)
         m_ui->m_stackedPages->removeWidget(currentWidget);
         delete currentWidget;
     }
-    m_pages.clear();
+    m_workPages.clear();
     m_ui->m_navigation->clearItems();
     hide();
 }

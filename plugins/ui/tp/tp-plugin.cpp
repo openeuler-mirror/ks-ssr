@@ -15,6 +15,7 @@
 #include "tp-plugin.h"
 #include "execute-protected-page.h"
 #include "kernel-protected-page.h"
+#include "tp-setting-page.h"
 
 namespace KS
 {
@@ -22,20 +23,36 @@ namespace TP
 {
 TPPlugin::TPPlugin()
 {
-    m_pageBuilder = {
-        {QString("execute-protection"), []() -> Page*
+    m_workPageBuilder = {
+        {QString("execute-protection"), []() -> WorkPage*
          {
              return new ExecuteProtectedPage();
          }},
-        {QString("kernel-protection"), []() -> Page*
+        {QString("kernel-protection"), []() -> WorkPage*
          {
              return new KernelProtectedPage();
          }}};
+
+    m_settingPageBuilder = {
+        {QString("tp-setting"), []() -> SettingPage*
+         {
+             return new TPSettingPage();
+         }}};
 }
 
-Page* TPPlugin::createPage(const QString& pageUID)
+WorkPage* TPPlugin::createWorkPage(const QString& pageUID)
 {
-    auto builder = m_pageBuilder.value(pageUID);
+    auto builder = m_workPageBuilder.value(pageUID);
+    if (builder)
+    {
+        return builder();
+    }
+    return nullptr;
+}
+
+SettingPage* TPPlugin::createSettingPage(const QString& pageUID)
+{
+    auto builder = m_settingPageBuilder.value(pageUID);
     if (builder)
     {
         return builder();
