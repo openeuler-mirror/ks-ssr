@@ -138,14 +138,6 @@ void PluginsManager::initPlugins()
 
         auto object = metaDataJson.value("MetaData").toObject();
         pluginInfo->metaData.id = object.value("id").toString();
-        // TODO:
-        // auto enabledKey = QString("%1/%2").arg(pluginInfo->metaData.id).arg(SSR_DAEMON_PLUGIN_KEY_ENABLED);
-        // auto enabled = m_settings->value(enabledKey).toBool();
-        // if (!enabled)
-        // {
-        //     KLOG_DEBUG() << "Plugin" << entryInfo.absoluteFilePath() << "is disabled.";
-        //     continue;
-        // }
 
         pluginInfo->plugin = qobject_cast<IDaemonPlugin *>(pluginInfo->loader->instance());
         if (!pluginInfo->plugin)

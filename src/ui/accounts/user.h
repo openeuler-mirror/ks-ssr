@@ -25,7 +25,6 @@ namespace Accounts
 {
 class Login;
 
-// TODO: 这个名字不应该叫Manager，应该是user
 class User : public QWidget
 {
     Q_OBJECT

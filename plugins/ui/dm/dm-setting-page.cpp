@@ -51,7 +51,6 @@ DMSettingPage::~DMSettingPage()
 
 QString DMSettingPage::getTitle()
 {
-    // TODO: 这个名称后面要修改，不太通用
     return tr("Interface Control");
 }
 

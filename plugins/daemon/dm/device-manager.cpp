@@ -13,6 +13,7 @@
  */
 
 #include "device-manager.h"
+#include <daemon-log-i.h>
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include <QDateTime>
@@ -266,13 +267,13 @@ void DeviceManager::recordDeviceConnection(QSharedPointer<Device> device)
 
     // 以秒为单位的时间戳
     record.time = QDateTime::currentSecsSinceEpoch();
-    // TODO: 日志逻辑重写
-    // KS::Log::Log log{"sysadm", Account::Manager::AccountRole::sysadm,
-    //                  QDateTime::currentDateTime(), LogType::DEVICE, true,
-    //                  tr("Device access, name is %1, type is %2")
-    //                      .arg(record.name.isEmpty() ? tr("Unknown device") : record.name)
-    //                      .arg(deviceTypeEnum2Str(record.type))};
-    // KS::Log::Manager::writeLog(log);
+    auto logMsg = tr("Device access, name is %1, type is %2").arg(record.name.isEmpty() ? tr("Unknown device") : record.name).arg(deviceTypeEnum2Str(record.type));
+    g_logManager->writeLog("sysadm",
+                           AccountRole::ACCOUNT_ROLE_SYSADMIN,
+                           QDateTime::currentDateTime(),
+                           LogType::DEVICE,
+                           true,
+                           logMsg);
     m_deviceLog->addDeviceRecord(record);
 }
 
