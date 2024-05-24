@@ -2,6 +2,7 @@ set(TARGET_NAME ui-private-box)
 
 file(GLOB_RECURSE PRIVATE_BOX_H_FILES ./*.h)
 file(GLOB_RECURSE PRIVATE_BOX_CPP_FILES ./*.cpp)
+file(GLOB_RECURSE PRIVATE_BOX_UI_FORMS_FILES ./*.ui)
 
 set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.PrivateBox.xml
@@ -12,7 +13,7 @@ qt5_add_dbus_interface(
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.PrivateBox.xml
   box_manager_proxy)
 
-qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+qt5_wrap_ui(UI_FILES ${PRIVATE_BOX_UI_FORMS_FILES})
 
 add_library(
   ${TARGET_NAME} SHARED ${PRIVATE_BOX_H_FILES} ${PRIVATE_BOX_CPP_FILES}

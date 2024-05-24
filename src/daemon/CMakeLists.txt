@@ -31,12 +31,12 @@ qt5_add_dbus_adaptor(
 
 qt5_add_dbus_adaptor(
   ACCOUNTS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Account.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/accounts/manager.h KS::Accounts::Manager
+  ${CMAKE_SOURCE_DIR}/src/daemon/accounts/accounts-manager.h KS::Accounts::Manager
   accounts_adaptor AccountsAdaptor)
 
 qt5_add_dbus_adaptor(
   LOG_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Log.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/log/manager.h KS::Log::Manager log_adaptor
+  ${CMAKE_SOURCE_DIR}/src/daemon/log/log-manager.h KS::Log::Manager log_adaptor
   LogAdaptor)
 
 # TODO: 插件的翻译后面要放到插件里面去

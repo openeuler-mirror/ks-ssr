@@ -3,6 +3,7 @@ set(TARGET_NAME ui-dm)
 #
 file(GLOB_RECURSE DM_H_FILES ./*.h)
 file(GLOB_RECURSE DM_CPP_FILES ./*.cpp)
+file(GLOB_RECURSE DM_UI_FORMS_FILES ./*.ui)
 
 set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.DeviceManager.xml
@@ -13,7 +14,7 @@ qt5_add_dbus_interface(
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.DeviceManager.xml
   device_manager_proxy)
 
-qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+qt5_wrap_ui(UI_FILES ${DM_UI_FORMS_FILES})
 
 add_library(${TARGET_NAME} SHARED ${DM_H_FILES} ${DM_CPP_FILES}
                                   ${DEVICE_MANAGER_SRCS} ${UI_FILES})
