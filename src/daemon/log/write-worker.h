@@ -13,7 +13,7 @@
  */
 
 #include <QThread>
-#include "manager.h"
+#include "log-manager.h"
 
 class QWaitCondition;
 class QReadWriteLock;
