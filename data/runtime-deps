@@ -91,3 +91,5 @@ libz
 libzlog
 libgcrypt
 libsystemd
+libnsl
+libxerces-c
