@@ -9,11 +9,12 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #include "message.h"
 #include <daemon-accounts-i.h>
+#include <daemon-log-i.h>
 #include <qt5-log-i.h>
 #include "log-manager.h"
 
@@ -28,10 +29,9 @@ QString Message::serialize(const LogRecord& log, Qt::DateFormat format)
 {
     QStringList msg{};
     // 现版本不对外保暴露 userName 字段， 所以序列化时不序列化 userName
-    // TODO: 枚举类型先存整数字符串，后面要修改
     msg << g_accountsManager->accountRoleEnum2Str(AccountRole(log.role))
         << log.timeStamp.toString(format)
-        << QString("%1").arg(log.type)
+        << Manager::logTypeEnum2Str(log.type)
         << QString(log.result ? "true" : "false")
         << log.logMsg;
     return msg.join(Message::m_separator);
@@ -51,7 +51,7 @@ LogRecord Message::deserialize(const QString& str)
         .name = log.at(0),
         .role = int(g_accountsManager->accountRoleStr2Enum(log.at(0))),
         .timeStamp = QDateTime::fromString(log.at(1), Qt::ISODate),
-        .type = LogType(log.at(2).toInt()),
+        .type = Manager::logTypeStr2Enum(log.at(2)),
         .result = log.at(3) == "true",
         .logMsg = log.at(4)};
 }

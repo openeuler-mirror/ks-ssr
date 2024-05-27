@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     chendingjian <chendingjian@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinsec.com.cn>
  */
 
 #include "round-progressbar.h"
@@ -72,7 +72,7 @@ void RoundProgressBar::paintEvent(QPaintEvent *)
         painter.save();
         pen.setBrush(QColor("#f2f2f2"));
         painter.setPen(pen);
-        painter.drawArc(drawingRectF, (startAngle)*16, (span + 0) * 16);
+        painter.drawArc(drawingRectF, (startAngle) * 16, (span + 0) * 16);
         painter.restore();
 
         painter.save();

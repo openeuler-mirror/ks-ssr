@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     yuanxing <yuanxing@kylinos.com.cn>
+ * Author:     yuanxing <yuanxing@kylinsec.com.cn>
  */
 
 #include "device-permission.h"

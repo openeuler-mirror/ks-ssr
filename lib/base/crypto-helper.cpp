@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1

@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #include "log-manager.h"
@@ -141,12 +141,11 @@ uint Manager::GetLogNum(const int role,
     while (reverseIt != reverseEnd)
     {
         // 为了可读性，将判断条件取反了
-        // TODO:
-        // if ((static_cast<int>(reverseIt->role) & role) == 0)
-        // {
-        //     reverseIt++;
-        //     continue;
-        // }
+        if ((static_cast<int>(reverseIt->role) & role) == 0)
+        {
+            reverseIt++;
+            continue;
+        }
         if (reverseIt->timeStamp.toSecsSinceEpoch() < begin_time_stamp ||
             reverseIt->timeStamp.toSecsSinceEpoch() >= end_time_stamp)
         {
@@ -215,12 +214,11 @@ QStringList Manager::GetLog(const int role,
     while (reverseIt != reverseEnd && static_cast<uint>(tmpLogList.size()) < per_page)
     {
         // 为了可读性，将判断条件取反了
-        // TODO:
-        // if ((static_cast<int>(reverseIt->role) & role) == 0)
-        // {
-        //     reverseIt++;
-        //     continue;
-        // }
+        if ((static_cast<int>(reverseIt->role) & role) == 0)
+        {
+            reverseIt++;
+            continue;
+        }
         if (reverseIt->timeStamp.toSecsSinceEpoch() < begin_time_stamp ||
             reverseIt->timeStamp.toSecsSinceEpoch() >= end_time_stamp)
         {
@@ -263,6 +261,56 @@ QStringList Manager::GetLog(const int role,
     }
     // SSR_LOG(_role, LogType::LOG, "Get Log");
     return retLogList;
+}
+
+QString Manager::logTypeEnum2Str(LogType logType)
+{
+    switch (logType)
+    {
+    case LogType::DEVICE:
+        return "DEVICE";
+    case LogType::TOOL_BOX:
+        return "TOOL_BOX";
+    case LogType::BASELINE_REINFORCEMENT:
+        return "BASELINE_REINFORCEMENT";
+    case LogType::TRUSTED_PROTECTION:
+        return "TRUSTED_PROTECTION";
+    case LogType::FILES_PROTECTION:
+        return "FILES_PROTECTION";
+    case LogType::PRIVATE_BOX:
+        return "PRIVATE_BOX";
+    case LogType::ACCOUNT:
+        return "ACCOUNT";
+    case LogType::AVC:
+        return "AVC";
+    default:
+        return "ERROR";
+    }
+}
+
+LogType Manager::logTypeStr2Enum(const QString& logTypeStr)
+{
+    switch (shash(logTypeStr.toLatin1().data()))
+    {
+    case CONNECT("DEVICE", _hash):
+        return LogType::DEVICE;
+    case CONNECT("TOOL_BOX", _hash):
+        return LogType::TOOL_BOX;
+    case CONNECT("BASELINE_REINFORCEMENT", _hash):
+        return LogType::BASELINE_REINFORCEMENT;
+    case CONNECT("TRUSTED_PROTECTION", _hash):
+        return LogType::TRUSTED_PROTECTION;
+    case CONNECT("FILES_PROTECTION", _hash):
+        return LogType::FILES_PROTECTION;
+    case CONNECT("PRIVATE_BOX", _hash):
+        return LogType::PRIVATE_BOX;
+    case CONNECT("ACCOUNT", _hash):
+        return LogType::ACCOUNT;
+    case CONNECT("AVC", _hash):
+        return LogType::AVC;
+    default:
+        return LogType::ERROR;
+    }
 }
 
 void Manager::backUpLog(const QStringList& targetLogList)

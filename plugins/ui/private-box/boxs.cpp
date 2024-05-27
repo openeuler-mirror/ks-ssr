@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     tangjie02 <tangjie02@kylinos.com.cn>
+ * Author:     tangjie02 <tangjie02@kylinsec.com.cn>
  */
 
 #include "boxs.h"

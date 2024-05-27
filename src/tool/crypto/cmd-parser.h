@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #include <QCommandLineParser>
@@ -76,8 +76,8 @@ private:
     // Glib::OptionContext option_context_;
     // Glib::OptionGroup option_group_;
 
-    CommandOptions options_;
-    QCommandLineParser parser;
+    CommandOptions m_options;
+    QCommandLineParser m_parser;
 };
 }  // namespace Crypto
 }  // namespace KS

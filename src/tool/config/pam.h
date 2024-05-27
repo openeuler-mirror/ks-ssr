@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #pragma once
@@ -30,7 +30,8 @@ public:
         QString match_line;
         int32_t match_pos;
         bool is_match_comment;
-        MatchLineInfo() : match_pos(0), is_match_comment(false) {}
+        MatchLineInfo()
+            : match_pos(0), is_match_comment(false) {}
     };
 
     /**
