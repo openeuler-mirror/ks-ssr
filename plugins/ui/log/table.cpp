@@ -12,7 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinsec.com.cn>
  */
 
-#include "src/ui/log/table.h"
+#include "table.h"
 #include <qt5-log-i.h>
 #include <stdio.h>
 #include <QAction>
@@ -31,8 +31,8 @@
 #include "lib/widgets/date-picker/date-picker.h"
 #include "lib/widgets/ssr-marcos-ui.h"
 #include "lib/widgets/table/header-button-delegate.h"
-#include "src/ui/log/utils.h"
-#include "src/ui/log_proxy.h"
+#include "log_proxy.h"
+#include "utils.h"
 
 namespace KS
 {

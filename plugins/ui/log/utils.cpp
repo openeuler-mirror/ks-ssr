@@ -16,7 +16,7 @@
 #include <qt5-log-i.h>
 #include <QDateTime>
 #include "lib/widgets/ssr-marcos-ui.h"
-#include "src/ui/log/table.h"
+#include "table.h"
 
 namespace KS
 {
