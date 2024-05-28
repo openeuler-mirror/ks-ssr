@@ -14,14 +14,15 @@
 
 #pragma once
 
-#include <daemon-accounts-i.h>
 #include <daemon-plugin-i.h>
 #include <lib/base/database.h>
 #include <ssr-i.h>
 #include <QDBusContext>
 #include <QMetaEnum>
 #include <QMutex>
+#include <QObject>
 #include <QReadWriteLock>
+#include "accounts.h"
 
 class QSettings;
 class QMutexLocker;
@@ -29,18 +30,13 @@ class QDBusServiceWatcher;
 
 namespace KS
 {
-namespace Accounts
-{
-struct Account;
-
-class Manager : public QObject,
-                public IDaemonAccounts,
-                public QDBusContext
+class AccountsEntity : public Accounts,
+                       public QDBusContext
 {
     Q_OBJECT
 
 public:
-    struct Account
+    struct UserInfo
     {
         /**
          * @brief 当前是否是登录状态
@@ -64,8 +60,8 @@ public:
     };
 
 public:
-    Manager();
-    virtual ~Manager();
+    AccountsEntity(QObject* parent = nullptr);
+    virtual ~AccountsEntity();
 
     bool ChangePassphrase(const QString& userName, const QString& oldPassphrase, const QString& newPassphrase);
     bool Login(const QString& userName, const QString& passWord);
@@ -133,9 +129,6 @@ public:  // PROPERTIES
         return "unknown";
     }
 
-    virtual QString accountRoleEnum2Str(AccountRole role) const;
-    virtual AccountRole accountRoleStr2Enum(const QString& roleStr) const;
-
 Q_SIGNALS:  // SIGNALS
     void PasswordChanged(const QString& user_name);
 
@@ -152,7 +145,7 @@ private:
     // 密码复杂度检测
     bool checkPassword(const QString& password, const QString& userName);
 
-    inline bool isLogin(QMap<QString, Account>::iterator& it)
+    inline bool isLogin(QMap<QString, UserInfo>::iterator& it)
     {
         return (m_clients.end() != it && it.value().isLogin);
     }
@@ -161,7 +154,7 @@ private:
     /**
      * @brief 键为前端程序的 pid ，值为前端程序对应账户的实例化结构体
      */
-    QMap<QString, Account> m_clients;
+    QMap<QString, UserInfo> m_clients;
 
     /**
      * @brief 冻结时间， 3分钟，可以考虑做成配置文件中的配置项
@@ -176,5 +169,4 @@ private:
     QString m_rsaPublicKey;  // property
     QString m_rsaPrivateKey;
 };
-};  // namespace Accounts
 };  // namespace KS

@@ -13,6 +13,7 @@
  */
 #include "dbus.h"
 
+#include <daemon-authentication-i.h>
 #include <daemon-log-i.h>
 #include <qt5-log-i.h>
 #include <QDBusConnection>
@@ -29,7 +30,6 @@
 #include "kss_dbus_adaptor.h"
 #include "lib/base/error.h"
 #include "lib/dbus/dbus-helper.h"
-#include "lib/dbus/polkit-proxy.h"
 #include "wrapper.h"
 
 namespace KS
@@ -93,17 +93,17 @@ bool DBus::trustedStatus() const
     return true;
 }
 
-CHECK_AUTH_WITH_1ARGS(DBus, AddTrustedFile, addTPFileAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(DBus, AddTrustedFiles, addTPFilesAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_1ARGS(DBus, RemoveTrustedFile, removeTPFileAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(DBus, RemoveTrustedFiles, removeTPFilesAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_2ARGS(DBus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, bool, const QString &)
-CHECK_AUTH_WITH_1ARGS(DBus, AddProtectedFile, addFPFileAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(DBus, AddProtectedFiles, addFPFilesAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_1ARGS(DBus, RemoveProtectedFile, removeFPFileAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(DBus, RemoveProtectedFiles, removeFPFilesAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, const QStringList &)
-CHECK_AUTH_WITH_2ARGS(DBus, SetStorageMode, setStorageModeAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, uint, const QString &)
-CHECK_AUTH_WITH_1ARGS(DBus, SetTrustedStatus, setTrustedStatusAfterAuthorization, SSR_PERMISSION_AUTHENTICATION, bool);
+CHECK_AUTH_WITH_1ARGS(DBus, AddTrustedFile, addTPFileAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QString &)
+CHECK_AUTH_WITH_1ARGS(DBus, AddTrustedFiles, addTPFilesAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QStringList &)
+CHECK_AUTH_WITH_1ARGS(DBus, RemoveTrustedFile, removeTPFileAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QString &)
+CHECK_AUTH_WITH_1ARGS(DBus, RemoveTrustedFiles, removeTPFilesAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QStringList &)
+CHECK_AUTH_WITH_2ARGS(DBus, ProhibitUnloading, prohibitUnloadingAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, bool, const QString &)
+CHECK_AUTH_WITH_1ARGS(DBus, AddProtectedFile, addFPFileAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QString &)
+CHECK_AUTH_WITH_1ARGS(DBus, AddProtectedFiles, addFPFilesAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QStringList &)
+CHECK_AUTH_WITH_1ARGS(DBus, RemoveProtectedFile, removeFPFileAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QString &)
+CHECK_AUTH_WITH_1ARGS(DBus, RemoveProtectedFiles, removeFPFilesAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QStringList &)
+CHECK_AUTH_WITH_2ARGS(DBus, SetStorageMode, setStorageModeAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, uint, const QString &)
+CHECK_AUTH_WITH_1ARGS(DBus, SetTrustedStatus, setTrustedStatusAfterAuthorization, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, bool);
 
 QString DBus::GetTrustedFiles(uint type)
 {

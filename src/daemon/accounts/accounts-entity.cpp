@@ -12,7 +12,7 @@
  * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
-#include "accounts-manager.h"
+#include "accounts-entity.h"
 #include <daemon-log-i.h>
 #include <daemon-plugin-i.h>
 #include <qt5-log-i.h>
@@ -22,6 +22,7 @@
 #include <QSettings>
 #include <QtDBus>
 #include <iostream>
+#include "../utils.h"
 #include "accounts_adaptor.h"
 #include "include/ssr-marcos.h"
 #include "lib/base/crypto-helper.h"
@@ -29,8 +30,6 @@
 #include "lib/dbus/dbus-helper.h"
 
 namespace KS
-{
-namespace Accounts
 {
 #define SSR_ACCOUNT_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Account"
 #define PASSWD_PATH "/etc/passwd"
@@ -49,8 +48,9 @@ namespace Accounts
 #define USER_INFO_INITIAL_PASSWD "kylin.123"
 #define RSA_KEY_LENGTH 512
 
-Manager::Manager()
-    : m_db(new Database()),
+AccountsEntity::AccountsEntity(QObject* parent)
+    : Accounts(parent),
+      m_db(new Database()),
       m_dbusServerWatcher(new QDBusServiceWatcher(this))
 
 {
@@ -81,12 +81,12 @@ Manager::Manager()
             });
 }
 
-Manager::~Manager()
+AccountsEntity::~AccountsEntity()
 {
     delete m_db;
 }
 
-bool Manager::checkPassword(const QString& password, const QString& userName)
+bool AccountsEntity::checkPassword(const QString& password, const QString& userName)
 {
     // 不允许包含用户名 CaseInsensitive : 区分大小写
     RETURN_VAL_IF_TRUE(password.contains(userName, Qt::CaseInsensitive), false);
@@ -96,11 +96,11 @@ bool Manager::checkPassword(const QString& password, const QString& userName)
     return match.hasMatch();
 }
 
-bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassphrase, const QString& newPassphrase)
+bool AccountsEntity::ChangePassphrase(const QString& userName, const QString& oldPassphrase, const QString& newPassphrase)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = this->getRole(calledUniqueName);
-    auto roleName = g_accountsManager->accountRoleEnum2Str(role);
+    auto roleName = Utils::accountRoleEnum2Str(role);
     if (role == AccountRole::ACCOUNT_ROLE_NOACCOUNT ||
         userName != roleName)
     {
@@ -138,7 +138,7 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
     return isSuccess;
 }
 
-bool Manager::Login(const QString& userName, const QString& passWord)
+bool AccountsEntity::Login(const QString& userName, const QString& passWord)
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto role = getRoleFromDB(userName);
@@ -153,7 +153,7 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     if (isLogin(it))
     {
         KLOG_WARNING() << "Forward program has login, Current role: "
-                       << g_accountsManager->accountRoleEnum2Str(it.value().role)
+                       << Utils::accountRoleEnum2Str(it.value().role)
                        << ", Unique name: " << callerUnique;
         return false;
     }
@@ -196,7 +196,7 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     return true;
 }
 
-int Manager::GetLoginRole()
+int AccountsEntity::GetLoginRole()
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto iter = m_clients.find(callerUnique);
@@ -205,12 +205,12 @@ int Manager::GetLoginRole()
     return iter->role;
 }
 
-QString Manager::GetRoleName(int role)
+QString AccountsEntity::GetRoleName(int role)
 {
-    return this->accountRoleEnum2Str(AccountRole(role));
+    return Utils::accountRoleEnum2Str(AccountRole(role));
 }
 
-bool Manager::Logout()
+bool AccountsEntity::Logout()
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto role = this->getRole(callerUnique);
@@ -231,37 +231,7 @@ bool Manager::Logout()
     return true;
 }
 
-QString Manager::accountRoleEnum2Str(AccountRole role) const
-{
-    switch (role)
-    {
-    case AccountRole::ACCOUNT_ROLE_SYSADMIN:
-        return "sysadm";
-    case AccountRole::ACCOUNT_ROLE_SECADMIN:
-        return "secadm";
-    case AccountRole::ACCOUNT_ROLE_AUDITADMIN:
-        return "audadm";
-    default:
-        return "unknown";
-    }
-}
-
-AccountRole Manager::accountRoleStr2Enum(const QString& roleStr) const
-{
-    switch (shash(roleStr.toLatin1().data()))
-    {
-    case CONNECT("sysadm", _hash):
-        return AccountRole::ACCOUNT_ROLE_SYSADMIN;
-    case CONNECT("secadm", _hash):
-        return AccountRole::ACCOUNT_ROLE_SECADMIN;
-    case CONNECT("audadm", _hash):
-        return AccountRole::ACCOUNT_ROLE_AUDITADMIN;
-    default:
-        return AccountRole::ACCOUNT_ROLE_NOACCOUNT;
-    }
-}
-
-void Manager::createUser(const QString& userName, const QString& role, const QString& password)
+void AccountsEntity::createUser(const QString& userName, const QString& role, const QString& password)
 {
     constexpr const char* insertUserInfo = "insert into " USER_INFO_DB_TABLE_NAME
                                            " values ('%1', '%2', '%3', '%4', '%5');";
@@ -271,7 +241,7 @@ void Manager::createUser(const QString& userName, const QString& role, const QSt
     }
 }
 
-void Manager::initDatabase()
+void AccountsEntity::initDatabase()
 {
     constexpr const char* getUserInfoTables = "SELECT * "
                                               "FROM sqlite_master "
@@ -290,7 +260,7 @@ void Manager::initDatabase()
     }
 }
 
-void Manager::initUserInfoTable()
+void AccountsEntity::initUserInfoTable()
 {
     constexpr const char* createUserInfoTables = "CREATE table " USER_INFO_DB_TABLE_NAME  // clang-format off
                                                  " ( " USER_INFO_DB_COLUMN1 " vchar, "    // clang-format off
@@ -315,7 +285,7 @@ void Manager::initUserInfoTable()
     }
 }
 
-bool Manager::verifyPassword(const QString& userName, const QString& passwd) const
+bool AccountsEntity::verifyPassword(const QString& userName, const QString& passwd) const
 {
     constexpr const char* rawCmd = " SELECT " USER_INFO_DB_COLUMN3
                                    " FROM " USER_INFO_DB_TABLE_NAME
@@ -340,7 +310,7 @@ bool Manager::verifyPassword(const QString& userName, const QString& passwd) con
     return decryptedPassword == currentPassword;
 }
 
-AccountRole Manager::getRoleFromDB(const QString& userName) const
+AccountRole AccountsEntity::getRoleFromDB(const QString& userName) const
 {
     constexpr const char* queryAccountInfo = " SELECT " USER_INFO_DB_COLUMN2
                                              " FROM " USER_INFO_DB_TABLE_NAME
@@ -358,10 +328,10 @@ AccountRole Manager::getRoleFromDB(const QString& userName) const
         KLOG_INFO() << QString("User %1 does not exist").arg(userName);
         return AccountRole::ACCOUNT_ROLE_NOACCOUNT;
     }
-    return static_cast<AccountRole>(accountRoleStr2Enum(res[0][0].toString()));
+    return static_cast<AccountRole>(Utils::accountRoleStr2Enum(res[0][0].toString()));
 }
 
-bool Manager::isFreeze(const QString& userName) const
+bool AccountsEntity::isFreeze(const QString& userName) const
 {
     constexpr const char* queryUserFreeze = " SELECT *"
                                             " FROM " USER_INFO_DB_TABLE_NAME
@@ -392,7 +362,7 @@ bool Manager::isFreeze(const QString& userName) const
     return (tryLoginTimes >= 5 && lastLoginTime + m_freezeLoginTimeSec > currentTime);
 }
 
-void Manager::updateFreezeInfo(const QString& userName) const
+void AccountsEntity::updateFreezeInfo(const QString& userName) const
 {
     constexpr const char* updateFreeze = " UPDATE " USER_INFO_DB_TABLE_NAME
                                          " SET " USER_INFO_DB_COLUMN4 " = " USER_INFO_DB_COLUMN4 " + 1, " USER_INFO_DB_COLUMN5 " = %1"
@@ -405,7 +375,7 @@ void Manager::updateFreezeInfo(const QString& userName) const
     }
 }
 
-void Manager::resetFreezeInfo(const QString& userName) const
+void AccountsEntity::resetFreezeInfo(const QString& userName) const
 {
     constexpr const char* resetFreeze = " UPDATE " USER_INFO_DB_TABLE_NAME
                                         " SET " USER_INFO_DB_COLUMN4 " = 0, " USER_INFO_DB_COLUMN5 " = 0"
@@ -417,7 +387,7 @@ void Manager::resetFreezeInfo(const QString& userName) const
     }
 }
 
-bool Manager::changePassword(const QString& userName, const QString& newPasswd) const
+bool AccountsEntity::changePassword(const QString& userName, const QString& newPasswd) const
 {
     constexpr const char* rawCmd = " UPDATE " USER_INFO_DB_TABLE_NAME
                                    " SET " USER_INFO_DB_COLUMN3 " = '%1'"
@@ -430,5 +400,4 @@ bool Manager::changePassword(const QString& userName, const QString& newPasswd) 
     auto aesEncryptedPassword = CryptoHelper::aesEncrypt(rsaDecryptedPassword);
     return m_db->exec(sqlCmd.arg(aesEncryptedPassword).arg(userName));
 }
-};  // namespace Account
 };  // namespace KS

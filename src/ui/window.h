@@ -59,6 +59,8 @@ private:
     void initNotification();
     // 窗口整体初始化
     void initWindow();
+    /// 初始化标题栏
+    void initTitlebar();
     void addWorkPage(WorkPage *page);
     void hideLoading(bool ishide);
     void clearSidebar();
@@ -96,7 +98,7 @@ private:
     // 设置选项，若无设置页面需隐藏这个按钮
     QAction *m_settingsAction;
 
-    Accounts::User *m_accountManager;
+    Accounts::User *m_user;
     // 先放到这里，后面可以考虑放到更加合适的地方管理
     PluginsManager *m_pluginManager;
     // 页面加载动画

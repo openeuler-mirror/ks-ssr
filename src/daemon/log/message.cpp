@@ -13,9 +13,9 @@
  */
 
 #include "message.h"
-#include <daemon-accounts-i.h>
 #include <daemon-log-i.h>
 #include <qt5-log-i.h>
+#include "../utils.h"
 #include "log-manager.h"
 
 namespace KS
@@ -29,9 +29,9 @@ QString Message::serialize(const LogRecord& log, Qt::DateFormat format)
 {
     QStringList msg{};
     // 现版本不对外保暴露 userName 字段， 所以序列化时不序列化 userName
-    msg << g_accountsManager->accountRoleEnum2Str(AccountRole(log.role))
+    msg << Utils::accountRoleEnum2Str(AccountRole(log.role))
         << log.timeStamp.toString(format)
-        << Manager::logTypeEnum2Str(log.type)
+        << Utils::logTypeEnum2Str(log.type)
         << QString(log.result ? "true" : "false")
         << log.logMsg;
     return msg.join(Message::m_separator);
@@ -49,9 +49,9 @@ LogRecord Message::deserialize(const QString& str)
     /// @note 这个版本不对外暴露 name 字段， name 字段的初始化统一用 role 的枚举 key
     return LogRecord{
         .name = log.at(0),
-        .role = int(g_accountsManager->accountRoleStr2Enum(log.at(0))),
+        .role = int(Utils::accountRoleStr2Enum(log.at(0))),
         .timeStamp = QDateTime::fromString(log.at(1), Qt::ISODate),
-        .type = Manager::logTypeStr2Enum(log.at(2)),
+        .type = Utils::logTypeStr2Enum(log.at(2)),
         .result = log.at(3) == "true",
         .logMsg = log.at(4)};
 }

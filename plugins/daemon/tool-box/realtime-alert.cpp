@@ -14,7 +14,6 @@
 
 #include "realtime-alert.h"
 #include <auparse.h>
-#include <daemon-accounts-i.h>
 #include <daemon-log-i.h>
 #include <libaudit.h>
 #include <linux/un.h>

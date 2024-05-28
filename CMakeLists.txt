@@ -27,6 +27,7 @@ option(ENABLE_TOOL_BOX "Enable tool box module" OFF)
 option(ENABLE_DEVICE_MANAGER "Enable device manager module" OFF)
 option(ENABLE_VULNERABILITY_MANAGER "Enable vulnerability manager module" OFF)
 option(ENABLE_REMOTE_MANAGER "Enable remote manager module" OFF)
+option(ENABLE_ACCOUNTS_MANAGER "Enable accounts manager support" OFF)
 option(USE_PYTHON3 "Enable tool box module" OFF)
 
 message(STATUS "EXTRA_COMPILE_CHECK: ${EXTRA_COMPILE_CHECK}")

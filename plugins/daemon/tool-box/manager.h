@@ -163,7 +163,6 @@ private:
     bool getFileSeLabels(const QString& filePath, QString& output, const SeLabelType SeLabelType);
     bool setUserSeLabels(const QString& userName, const QString& seLabel, QString& output);
     bool getUserSeLabels(const QString& userName, QString& output);
-    // static void processFinishedHandler(Log::Log log, const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd);
     inline static QSharedPointer<QProcess> getProcess(const QString& program, const QStringList& arg)
     {
         auto cmd = QSharedPointer<QProcess>::create();

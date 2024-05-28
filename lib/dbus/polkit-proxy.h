@@ -24,68 +24,6 @@ class QDBusPendingCallWatcher;
 
 namespace KS
 {
-#define CHECK_AUTH(className, funName, callback, action)                                                             \
-    void className::funName()                                                                                        \
-    {                                                                                                                \
-        this->setDelayedReply(true);                                                                                 \
-        PolkitProxy::getDefault()->checkAuthorization(action,                                                        \
-                                                      true,                                                          \
-                                                      this->message(),                                               \
-                                                      std::bind(&className::callback, this, std::placeholders::_1)); \
-    }
-
-#define CHECK_AUTH_WITH_1ARGS(className, funName, callback, action, arg1Type)                                                \
-    void className::funName(arg1Type value1)                                                                                 \
-    {                                                                                                                        \
-        this->setDelayedReply(true);                                                                                         \
-        PolkitProxy::getDefault()->checkAuthorization(action,                                                                \
-                                                      true,                                                                  \
-                                                      this->message(),                                                       \
-                                                      std::bind(&className::callback, this, std::placeholders::_1, value1)); \
-    }
-
-#define CHECK_AUTH_WITH_2ARGS(className, funName, callback, action, arg1Type, arg2Type)                                              \
-    void className::funName(arg1Type value1, arg2Type value2)                                                                        \
-    {                                                                                                                                \
-        this->setDelayedReply(true);                                                                                                 \
-        PolkitProxy::getDefault()->checkAuthorization(action,                                                                        \
-                                                      true,                                                                          \
-                                                      this->message(),                                                               \
-                                                      std::bind(&className::callback, this, std::placeholders::_1, value1, value2)); \
-    }
-
-#define CHECK_AUTH_WITH_3ARGS(className, funName, callback, action, arg1Type, arg2Type, arg3Type)                                            \
-    void className::funName(arg1Type value1, arg2Type value2, arg3Type value3)                                                               \
-    {                                                                                                                                        \
-        this->setDelayedReply(true);                                                                                                         \
-        PolkitProxy::getDefault()->checkAuthorization(action,                                                                                \
-                                                      true,                                                                                  \
-                                                      this->message(),                                                                       \
-                                                      std::bind(&className::callback, this, std::placeholders::_1, value1, value2, value3)); \
-    }
-
-#define CHECK_AUTH_WITH_1ARGS_AND_RETVAL(className, retType, funName, callback, action, arg1Type)                            \
-    retType className::funName(arg1Type value1)                                                                              \
-    {                                                                                                                        \
-        this->setDelayedReply(true);                                                                                         \
-        PolkitProxy::getDefault()->checkAuthorization(action,                                                                \
-                                                      true,                                                                  \
-                                                      this->message(),                                                       \
-                                                      std::bind(&className::callback, this, std::placeholders::_1, value1)); \
-        return retType();                                                                                                    \
-    }
-
-#define CHECK_AUTH_WITH_3ARGS_AND_RETVAL(className, retType, funName, callback, action, arg1Type, arg2Type, arg3Type)                        \
-    retType className::funName(arg1Type value1, arg2Type value2, arg3Type value3)                                                            \
-    {                                                                                                                                        \
-        this->setDelayedReply(true);                                                                                                         \
-        PolkitProxy::getDefault()->checkAuthorization(action,                                                                                \
-                                                      true,                                                                                  \
-                                                      this->message(),                                                                       \
-                                                      std::bind(&className::callback, this, std::placeholders::_1, value1, value2, value3)); \
-        return retType();                                                                                                                    \
-    }
-
 class PolkitProxy : public QObject
 {
     Q_OBJECT
