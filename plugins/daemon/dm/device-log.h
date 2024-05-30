@@ -16,7 +16,8 @@
 
 #include <QJsonObject>
 #include <QObject>
-#include <QSettings>
+
+class QSettings;
 
 namespace KS
 {
@@ -25,11 +26,10 @@ namespace DM
 struct DeviceRecord
 {
 public:
-    DeviceRecord() = default;
-    QString name;
     int type;
-    qint64 time;
     int state;
+    QString name;
+    qint64 time;
 };
 
 class DeviceLog : public QObject

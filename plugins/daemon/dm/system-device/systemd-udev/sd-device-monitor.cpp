@@ -15,6 +15,7 @@
 #include "sd-device-monitor.h"
 #include <qt5-log-i.h>
 #include <systemd/sd-device.h>
+#include "include/ssr-i.h"
 #include "sd-device-enumerator.h"
 
 namespace KS
@@ -59,17 +60,17 @@ void SDDeviceMonitor::handleDeviceChange(sd_device *device)
     {
         if (!m_devices.value(syspath))
         {
-            m_devices.insert(syspath, QSharedPointer<SDDevice>(new SDDevice(syspath)));
-            Q_EMIT this->deviceChanged(&sdDevice, SD_DEVICE_ACTION_ADD);
+            m_devices.insert(syspath, QSharedPointer<SDDevice>(new SDDevice(syspath, sdDevice.getSubsystem())));
+            Q_EMIT this->deviceChanged(&sdDevice, DEVICE_ACTION_ADD);
         }
         else
         {
-            Q_EMIT this->deviceChanged(&sdDevice, SD_DEVICE_ACTION_CHANGE);
+            Q_EMIT this->deviceChanged(&sdDevice, DEVICE_ACTION_CHANGE);
         }
     }
     else
     {
-        Q_EMIT this->deviceChanged(&sdDevice, SD_DEVICE_ACTION_REMOVE);
+        Q_EMIT this->deviceChanged(&sdDevice, DEVICE_ACTION_REMOVE);
         m_devices.remove(syspath);
     }
 }
@@ -163,7 +164,7 @@ void SDDeviceMonitor::initDevices()
             continue;
         }
 
-        m_devices.insert(syspath, QSharedPointer<SDDevice>(new SDDevice(syspath)));
+        m_devices.insert(syspath, QSharedPointer<SDDevice>(new SDDevice(syspath, device->getSubsystem())));
     }
 }
 }  // namespace DM

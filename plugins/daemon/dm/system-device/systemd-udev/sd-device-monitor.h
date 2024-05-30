@@ -25,13 +25,6 @@ namespace KS
 {
 namespace DM
 {
-enum SDDeviceAction
-{
-    SD_DEVICE_ACTION_INVALID = 0,
-    SD_DEVICE_ACTION_ADD,
-    SD_DEVICE_ACTION_REMOVE,
-    SD_DEVICE_ACTION_CHANGE
-};
 
 class SDDeviceMonitor : public QObject
 {

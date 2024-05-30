@@ -34,7 +34,7 @@ Device::Device(const QString& syspath, QObject* parent)
         .execute = false,
     });
 
-    m_device = QSharedPointer<SDDevice>(new SDDevice(syspath));
+    m_device = QSharedPointer<SystemDevice>(new SystemDevice(syspath));
     m_syspath = syspath;
 
     m_connectedTime = QDateTime::currentMSecsSinceEpoch();
@@ -121,7 +121,7 @@ void Device::trigger()
     m_device->trigger();
 }
 
-QSharedPointer<SDDevice> Device::getSDDevcie()
+QSharedPointer<SystemDevice> Device::getDevcie()
 {
     return m_device;
 }

@@ -17,28 +17,18 @@
 #include <QJsonObject>
 #include <QObject>
 #include <QSharedPointer>
-#include "sd/sd-device.h"
+#include "system-device/system-device.h"
 
 namespace KS
 {
 namespace DM
 {
+
 struct Permission
 {
-public:
-    Permission() = default;
     bool read;
     bool write;
     bool execute;
-
-    Permission &operator=(const Permission &arg)
-    {
-        this->read = arg.read;
-        this->write = arg.write;
-        this->execute = arg.execute;
-
-        return *this;
-    }
 };
 
 class Device : public QObject
@@ -61,11 +51,10 @@ public:
     int getState() const;
     QString getSyspath() const;
     QSharedPointer<Permission> getPermission() const;
-    QSharedPointer<SDDevice> getSDDevcie();
+    QSharedPointer<SystemDevice> getDevcie();
     qint64 getConnectedTime();
 
-    void
-    setID(QString &id);
+    void setID(QString &id);
     void setName(QString &name);
     void setType(int type);
     void setInterfaceType(int type);
@@ -84,7 +73,7 @@ private:
     int m_interfaceType;
     int m_state;
     QSharedPointer<Permission> m_permission;
-    QSharedPointer<SDDevice> m_device;
+    QSharedPointer<SystemDevice> m_device;
 
     qint64 m_connectedTime;
 };

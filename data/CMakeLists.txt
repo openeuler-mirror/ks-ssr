@@ -25,6 +25,8 @@ endif()
 if(ENABLE_TOOL_BOX)
   set(SELINUX_CONTEXT
       "SELinuxContext=unconfined_u:unconfined_r:unconfined_t:s0-s15:c0.c1023")
+  set(IS_REFUSE_MANUAL_STOP "RefuseManualStop=yes")
+
 endif()
 
 file(GLOB SERVICE_IN_FILES ./services/*.service.in)

@@ -24,6 +24,9 @@
 #include "lib/dbus/systemd-proxy.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
+#include <QSharedPointer>
+#include <QSettings>
+#include <QDir>
 
 namespace KS
 {
@@ -87,12 +90,11 @@ void Configuration::addSetting(const DeviceSetting &setting)
 
 QSharedPointer<DeviceSetting> Configuration::getDeviceSetting(const QString &uid)
 {
-    RETURN_VAL_IF_FALSE(m_deviceSettings->childGroups().contains(uid), nullptr)
+    RETURN_VAL_IF_FALSE(m_deviceSettings->childGroups().contains(uid), nullptr);
 
     auto setting = QSharedPointer<DeviceSetting>(new DeviceSetting());
 
     m_deviceSettings->beginGroup(uid);
-
     setting->uid = uid;
     setting->id = m_deviceSettings->value(DEVICE_SK_ID).toString();
     setting->name = m_deviceSettings->value(DEVICE_SK_NAME).toString();

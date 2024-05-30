@@ -14,11 +14,10 @@
 
 #pragma once
 
-#include <QDir>
 #include <QObject>
-#include <QSettings>
-#include <QSharedPointer>
 #include <QThread>
+
+class QSettings;
 
 namespace KS
 {
@@ -28,8 +27,6 @@ class Worker;
 
 struct DeviceSetting
 {
-public:
-    DeviceSetting() = default;
     QString uid;
     QString id;
     QString name;
@@ -44,7 +41,6 @@ public:
 };
 
 using DeviceSettingList = QList<QSharedPointer<DeviceSetting>>;
-
 class Configuration : public QObject
 {
     Q_OBJECT

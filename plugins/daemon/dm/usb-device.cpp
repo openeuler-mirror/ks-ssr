@@ -71,9 +71,10 @@ USBDevice::~USBDevice() {}
 
 void USBDevice::init()
 {
-    auto device = this->getSDDevcie();
+    auto device = this->getDevcie();
     auto desc = USBDeviceDescription::instance();
 
+    KLOG_INFO() << "sys name: " << device->getSysname();
     m_idVendor = device->getSysattrValue("idVendor");
     m_idProduct = device->getSysattrValue("idProduct");
 
@@ -110,7 +111,7 @@ int USBDevice::parseDeviceType()
 
 int USBDevice::deviceClass2DeviceType()
 {
-    auto bDeviceClass = this->getSDDevcie()->getSysattrValue("bDeviceClass").toInt(nullptr, 16);
+    auto bDeviceClass = this->getDevcie()->getSysattrValue("bDeviceClass").toInt(nullptr, 16);
 
     RETURN_VAL_IF_TRUE(bDeviceClass == USB_DEVICE_CLASS_HUB, DEVICE_TYPE_HUB)
 
@@ -121,7 +122,7 @@ int USBDevice::parseDeviceInterfaceClassType()
 {
     InterfaceClass interfaceClass;
     auto syspath = this->getSyspath();
-    auto sysname = this->getSDDevcie()->getSysname();
+    auto sysname = this->getDevcie()->getSysname();
 
     RETURN_VAL_IF_TRUE(syspath.isNull() || sysname.isNull(), DEVICE_TYPE_OTHER)
 
@@ -129,7 +130,7 @@ int USBDevice::parseDeviceInterfaceClassType()
 
     RETURN_VAL_IF_FALSE(QFile::exists(childDeviceSyspath), DEVICE_TYPE_OTHER)
 
-    SDDevice childDevice(childDeviceSyspath);
+    SystemDevice childDevice(childDeviceSyspath);
 
     interfaceClass.bInterfaceClass = childDevice.getSysattrValue("bInterfaceClass").toInt(nullptr, 16);
     interfaceClass.bInterfaceSubClass = childDevice.getSysattrValue("bInterfaceSubClass").toInt(nullptr, 16);
@@ -216,7 +217,7 @@ void USBDevice::initPermission()
 
     if (setting == nullptr)
     {
-        this->setState(DEVICE_STATE_UNAUTHORIED);
+        this->setState(DEVICE_STATE_ENABLE);
         this->setDeviceAuthorized();
         return;
     }
@@ -271,7 +272,7 @@ void USBDevice::setDeviceAuthorized()
 {
     auto filePath = QString("%1/authorized").arg(this->getSyspath());
     QFile file(filePath);
-
+    KLOG_INFO() << "Set device: " << this->getSyspath() << this->isEnable();
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         KLOG_WARNING() << "Cannot open file " << filePath;

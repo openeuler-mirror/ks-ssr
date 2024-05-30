@@ -186,7 +186,8 @@ extern "C"
     {
         DEVICE_ACTION_ADD = 0,
         DEVICE_ACTION_REMOVE,
-        DEVICE_ACTION_CHANGE
+        DEVICE_ACTION_CHANGE,
+        DEVICE_ACTION_INVALID
     };
 
     enum DeviceConnectState

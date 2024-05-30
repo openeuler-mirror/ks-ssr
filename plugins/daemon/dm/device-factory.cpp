@@ -18,6 +18,7 @@
 #include "drm-device.h"
 #include "ssr-marcos.h"
 #include "usb-device.h"
+#include "system-device/system-device.h"
 
 namespace KS
 {
@@ -28,7 +29,7 @@ DeviceFactory::DeviceFactory(QObject* parent)
 {
 }
 
-QSharedPointer<Device> DeviceFactory::createDevice(SDDevice* device)
+QSharedPointer<Device> DeviceFactory::createDevice(SystemDevice* device)
 {
     auto subsystem = device->getSubsystem();
     auto devtype = device->getDevtype();

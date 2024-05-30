@@ -77,7 +77,8 @@ QString SDDevice::getDevname() const
 {
     const char* devname = NULL;
 
-    RETURN_VAL_IF_TRUE(sd_device_get_devname(m_device, &devname) < 0, QString())
+    RETURN_VAL_IF_TRUE(sd_device_get_devname(m_device, &devname) < 0, QString());
+    KLOG_INFO() << "devname: " << devname;
 
     return QString(devname);
 }
