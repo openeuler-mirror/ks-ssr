@@ -13,7 +13,9 @@
  */
 
 #include "lib/base/misc-utils.h"
+#include <QCoreApplication>
 #include <QProcess>
+#include <QTranslator>
 #include "lib/base/base.h"
 
 namespace KS
@@ -45,5 +47,30 @@ bool MiscUtils::spawnSync(const QList<QString>& argv,
     standardError.clear();
     standardOutput.append(process.readAllStandardError());
     return true;
+}
+
+QTranslator* MiscUtils::installTranslator(const QString& filename)
+{
+    auto translator = new QTranslator();
+    if (!translator->load(QLocale(), filename, ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
+    {
+        KLOG_WARNING() << "Load translation file" << filename << "failed.";
+        delete translator;
+        translator = nullptr;
+    }
+    else
+    {
+        QCoreApplication::installTranslator(translator);
+    }
+    return translator;
+}
+
+void MiscUtils::removeTranslator(QTranslator*& translator)
+{
+    if (translator)
+    {
+        QCoreApplication::removeTranslator(translator);
+        translator = nullptr;
+    }
 }
 }  // namespace KS

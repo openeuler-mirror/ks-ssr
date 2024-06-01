@@ -1,4 +1,4 @@
-set(TARGET_NAME ks-ssr-daemon)
+set(TARGET_NAME ${PROJECT_NAME}-daemon)
 
 if(USE_PYTHON3)
   pkg_search_module(PYTHON QUIET python3-embed)
@@ -39,21 +39,14 @@ qt5_add_dbus_adaptor(
   ${CMAKE_SOURCE_DIR}/src/daemon/log/log-manager.h KS::Log::Manager log_adaptor
   LogAdaptor)
 
-# TODO: 插件的翻译后面要放到插件里面去
-set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
-qt5_create_translation(
-  QM_FILES
-  ${CMAKE_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml.in
-  ${CMAKE_SOURCE_DIR}/data/br-categories.ini.in
-  ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-audit.xml.in
-  ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-config.xml.in
-  ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-external.xml.in
-  ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-network.xml.in
-  ${TS_FILES}
-  OPTIONS
-  -I
-  ${PROJECT_SOURCE_DIR})
+# 更新ts文件
+set(TS_FILES
+    "${PROJECT_SOURCE_DIR}/translations/daemon/${TARGET_NAME}.zh_CN.ts")
+execute_process(COMMAND lupdate-qt5 -no-obsolete ${PROJECT_SOURCE_DIR}/lib
+                        ${SRC_H_FILES} ${SRC_CPP_FILES} -ts ${TS_FILES})
+
+# 生成qm文件，qt_create_translation会导致cmake clean把ts文件删掉
+qt5_add_translation(QM_FILES ${TS_FILES})
 
 add_executable(
   ${TARGET_NAME} ${SRC_H_FILES} ${SRC_CPP_FILES} ${DAEMON_SRCS}

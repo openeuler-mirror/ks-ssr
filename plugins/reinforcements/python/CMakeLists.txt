@@ -52,8 +52,3 @@ install(
   FILES ${CMAKE_CURRENT_SOURCE_DIR}/br-audit.rules
   RENAME "br-audit.rules"
   DESTINATION /etc/audit/rules.d/)
-
-gen_and_install_plugin_python_xml(br-plugin-audit.xml.in)
-gen_and_install_plugin_python_xml(br-plugin-config.xml.in)
-gen_and_install_plugin_python_xml(br-plugin-external.xml.in)
-gen_and_install_plugin_python_xml(br-plugin-network.xml.in)

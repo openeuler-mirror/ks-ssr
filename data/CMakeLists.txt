@@ -9,7 +9,7 @@ foreach(INI_IN_FILE IN LISTS INI_IN_FILES)
                           ${INI_IN_FILE} ${PROJECT_BINARY_DIR}/data/${INI_FILE})
 endforeach()
 
-install(FILES ${PROJECT_BINARY_DIR}/data/br-categories.ini
+install(FILES ${PROJECT_SOURCE_DIR}/data/br-categories.ini
               ${PROJECT_SOURCE_DIR}/data/br-public.key
         DESTINATION ${SSR_INSTALL_DATADIR}/)
 
@@ -47,11 +47,9 @@ endforeach()
 
 add_custom_target(
   br-system-rs.encrypted ALL
-  COMMAND sed -i -e 's/xml:lang/lang/g'
-          ${PROJECT_BINARY_DIR}/data/br-system-rs.xml
   COMMAND
     ${PROJECT_BINARY_DIR}/src/tool/crypto/ks-br-crypto
-    --encrypt-file=${PROJECT_BINARY_DIR}/data/br-system-rs.xml
+    --encrypt-file=${PROJECT_SOURCE_DIR}/data/br-system-rs.xml
     --private-key=${PROJECT_SOURCE_DIR}/data/br-private.key
     --output-file=${PROJECT_BINARY_DIR}/data/br-system-rs.encrypted
   DEPENDS ks-br-crypto)

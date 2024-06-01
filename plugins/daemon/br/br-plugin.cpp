@@ -13,15 +13,22 @@
  */
 
 #include "br-plugin.h"
+#include <QCoreApplication>
 #include "categories.h"
 #include "configuration.h"
 #include "dbus.h"
+#include "lib/base/misc-utils.h"
 #include "plugins.h"
 
 namespace KS
 {
 namespace BR
 {
+BRPlugin::BRPlugin()
+    : m_translator(nullptr)
+{
+}
+
 bool BRPlugin::isAvailable()
 {
     return true;
@@ -29,6 +36,7 @@ bool BRPlugin::isAvailable()
 
 void BRPlugin::activate()
 {
+    m_translator = MiscUtils::installTranslator(QString("%1-%2").arg(QCoreApplication::applicationName()).arg("br"));
     Configuration::globalInit(SSR_INSTALL_DATADIR "/ssr.ini");
     Categories::globalInit();
     Plugins::globalInit(Configuration::getInstance());
@@ -41,6 +49,7 @@ void BRPlugin::deactivate()
     Plugins::globalDeinit();
     Categories::globalDeinit();
     Configuration::globalDeinit();
+    MiscUtils::removeTranslator(m_translator);
 }
 }  // namespace BR
 

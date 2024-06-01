@@ -14,11 +14,11 @@
 
 #pragma once
 
-// #include <giomm.h>
-#include <vector>
-// #include <string>
 #include <QList>
 #include <QString>
+#include <vector>
+
+class QTranslator;
 
 namespace KS
 {
@@ -31,6 +31,10 @@ public:
     static bool spawnSync(const QList<QString>& argv,
                           QString& standardOutput,
                           QString& standardError);
+
+    // 安装和卸载翻译
+    static QTranslator* installTranslator(const QString& filename);
+    static void removeTranslator(QTranslator*& translator);
 };  // namespace KS
 
 }  // namespace KS

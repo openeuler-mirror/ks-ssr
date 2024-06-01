@@ -17,6 +17,8 @@
 #include <daemon-plugin-i.h>
 #include <QObject>
 
+class QTranslator;
+
 namespace KS
 {
 namespace BR
@@ -29,12 +31,18 @@ class BRPlugin : public QObject,
     Q_INTERFACES(KS::IDaemonPlugin)
 
 public:
+    BRPlugin();
+
+public:
     // 插件是否可用，例如运行环境中依赖是否齐全，操作系统版本是否支持
     virtual bool isAvailable();
     // 激活插件
     virtual void activate();
     // 取消激活插件
     virtual void deactivate();
+
+private:
+    QTranslator *m_translator;
 };
 }  // namespace BR
 }  // namespace KS
