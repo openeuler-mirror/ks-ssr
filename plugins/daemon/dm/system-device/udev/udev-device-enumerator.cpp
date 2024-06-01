@@ -1,8 +1,8 @@
 #include "udev-device-enumerator.h"
 #include <libudev.h>
+#include <qt5-log-i.h>
 #include <QList>
 #include "udev-device.h"
-#include <qt5-log-i.h>
 
 struct udev* udev = udev_new();
 
@@ -10,7 +10,6 @@ namespace KS
 {
 namespace DM
 {
-
 UdevDeviceEnumerator::UdevDeviceEnumerator()
 {
     m_deviceEnum = udev_enumerate_new(udev);

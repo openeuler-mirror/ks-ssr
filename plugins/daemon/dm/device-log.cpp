@@ -14,9 +14,9 @@
 
 #include "device-log.h"
 #include <config.h>
+#include <QSettings>
 #include "ssr-i.h"
 #include "ssr-marcos.h"
-#include <QSettings>
 
 namespace KS
 {

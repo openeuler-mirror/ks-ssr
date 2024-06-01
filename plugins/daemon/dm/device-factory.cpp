@@ -17,8 +17,8 @@
 #include <QMutex>
 #include "drm-device.h"
 #include "ssr-marcos.h"
-#include "usb-device.h"
 #include "system-device/system-device.h"
+#include "usb-device.h"
 
 namespace KS
 {

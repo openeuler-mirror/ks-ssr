@@ -14,9 +14,12 @@
 
 #include "configuration.h"
 #include <qt5-log-i.h>
+#include <QDir>
 #include <QFile>
 #include <QMutex>
 #include <QProcess>
+#include <QSettings>
+#include <QSharedPointer>
 #include <QTextStream>
 #include <QThread>
 #include "config.h"
@@ -24,9 +27,6 @@
 #include "lib/dbus/systemd-proxy.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
-#include <QSharedPointer>
-#include <QSettings>
-#include <QDir>
 
 namespace KS
 {

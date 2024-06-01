@@ -12,7 +12,6 @@ namespace KS
 {
 namespace DM
 {
-
 class UdevDevice;
 
 class UdevDeviceEnumerator : public QObject

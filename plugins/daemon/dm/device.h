@@ -23,7 +23,6 @@ namespace KS
 {
 namespace DM
 {
-
 struct Permission
 {
     bool read;

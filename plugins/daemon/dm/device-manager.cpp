@@ -23,10 +23,10 @@
 #include "lib/dbus/dbus-helper.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
-#include "udev-rule-manager.h"
-#include "system-device/system-device-monitor.h"
 #include "system-device/system-device-enumerator.h"
+#include "system-device/system-device-monitor.h"
 #include "system-device/system-device.h"
+#include "udev-rule-manager.h"
 
 namespace KS
 {
