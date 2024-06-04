@@ -64,6 +64,7 @@ signals:
     void reinforcementClicked();
     void returnHomeClicked();
     void generateReportClicked();
+    void exportStrategyClicked();
     // TODO : 等待超时信号，暂未使用
     void waitTimeOut();
     void cancelClicked();

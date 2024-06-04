@@ -203,9 +203,7 @@ void Scan::initUI()
 
     connect(m_customArgsDialog, &ReinforcementArgsDialog::okClicked, this, &Scan::setReinforcement);
     connect(m_customArgsDialog, &ReinforcementArgsDialog::argError, this, [this](const QString &error)
-            {
-                POPUP_MESSAGE_DIALOG(error)
-            });
+            { POPUP_MESSAGE_DIALOG(error) });
     connect(m_customArgsDialog,
             &ReinforcementArgsDialog::valueChanged,
             this,
@@ -217,9 +215,7 @@ void Scan::initUI()
                 m_argTransfers.append(new ArgTransfer(reinforcementItem, argLabel, argValue, type));
             });
     connect(m_customArgsDialog, &ReinforcementArgsDialog::closed, this, [this]
-            {
-                m_argTransfers.clear();
-            });
+            { m_argTransfers.clear(); });
     connect(m_customArgsDialog, &ReinforcementArgsDialog::reseted, this, &Scan::argReset);
 }
 
@@ -229,6 +225,7 @@ void Scan::initConnection()
     connect(m_ui->m_progress, &Progress::reinforcementClicked, this, &Scan::startReinforcement);
     connect(m_ui->m_progress, &Progress::returnHomeClicked, this, &Scan::returnHomeClicked);
     connect(m_ui->m_progress, &Progress::generateReportClicked, this, &Scan::generateReport);
+    connect(m_ui->m_progress, &Progress::exportStrategyClicked, this, &Scan::exportStrategy);
     connect(m_ui->m_progress, &Progress::cancelClicked, this, &Scan::cancelProgress);
 
     connect(m_ui->m_itemTable, SIGNAL(modelEntered(QModelIndex)), this, SLOT(showErrorMessage(QModelIndex)));

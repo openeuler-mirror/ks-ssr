@@ -48,16 +48,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="m_exportStrategy">
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="text">
-          <string>Export strategy</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="m_resetAllArgs">
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
