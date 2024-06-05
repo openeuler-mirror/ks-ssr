@@ -44,6 +44,8 @@ class UIPlugin : public QObject,
     Q_OBJECT
 
 public:
+    virtual ~UIPlugin() {}
+
     virtual WorkPage* createWorkPage(const QString& pageUID)
     {
         auto builder = m_workPageBuilder.value(pageUID);

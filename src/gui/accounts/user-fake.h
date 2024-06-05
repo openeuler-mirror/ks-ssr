@@ -12,13 +12,37 @@
  * Author:     tangjie02 <tangjie02@kylinsec.com.cn>
  */
 
+#pragma once
+
 #include "user.h"
 
 namespace KS
 {
-User::User(QWidget *parent)
-    : QWidget(parent)
+class UserFake : public User
 {
-}
+    Q_OBJECT
+
+public:
+    UserFake(QWidget *parent = nullptr);
+    virtual ~UserFake(){};
+
+    virtual void init(){};
+    // 显示修改密码界面
+    virtual void showPasswordModification(){};
+    // 显示登录界面
+    virtual void showLogin();
+    // 退出用户
+    virtual bool logout()
+    {
+        return true;
+    };
+    // 获取登录用户
+    virtual QString getCurrentUserName() const;
+
+signals:
+    void softExited();
+    void loginFinished();
+    void passwordChanged(const QString &userName);
+};
 
 }  // namespace KS

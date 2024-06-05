@@ -20,7 +20,7 @@ file(
   log/*.cpp
   ./*.cpp)
 
-file(GLOB UI_FORMS_FILES ./*.ui)
+file(GLOB_RECURSE UI_FORMS_FILES ./*.ui)
 
 configure_file(config-ui.h.in ${PROJECT_BINARY_DIR}/config-ui.h)
 

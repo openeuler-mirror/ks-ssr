@@ -14,9 +14,9 @@
 
 #pragma once
 
+#include <br-plugin-i.h>
 #include <QMap>
 #include <QSharedPointer>
-#include "include/br-plugin-i.h"
 #include "lib/base/base.h"
 
 struct _object;

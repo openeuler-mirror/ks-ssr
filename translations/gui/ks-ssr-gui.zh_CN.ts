@@ -2,6 +2,39 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>Activation</name>
+    <message>
+        <location filename="../../src/gui/license/activation.ui" line="26"/>
+        <source>Form</source>
+        <translation>表格</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/license/activation.ui" line="74"/>
+        <source>Expired time</source>
+        <translation>质保期</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/license/activation.ui" line="105"/>
+        <source>Machine code</source>
+        <translation>机器码</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/license/activation.ui" line="135"/>
+        <source>Activation code</source>
+        <translation>激活码</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/license/activation.ui" line="206"/>
+        <source>Activate</source>
+        <translation>激活</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/license/activation.ui" line="225"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+</context>
+<context>
     <name>KS::About</name>
     <message>
         <location filename="../../src/gui/about.cpp" line="44"/>
@@ -17,32 +50,6 @@
         <location filename="../../src/gui/about.cpp" line="51"/>
         <source>Version : V1.3</source>
         <translation>版本号：V1.3</translation>
-    </message>
-</context>
-<context>
-    <name>KS::Accounts::Login</name>
-    <message>
-        <location filename="../../src/gui/accounts/login.cpp" line="80"/>
-        <source>Kylinsec Security reinforcement</source>
-        <translation>麒麟信安主机安全加固</translation>
-    </message>
-    <message>
-        <location filename="../../src/gui/accounts/login.cpp" line="89"/>
-        <source>Unactivated</source>
-        <translation>未激活</translation>
-    </message>
-</context>
-<context>
-    <name>KS::Accounts::User</name>
-    <message>
-        <location filename="../../src/gui/accounts/user.cpp" line="75"/>
-        <source>User is not login.</source>
-        <translation>用户未登录。</translation>
-    </message>
-    <message>
-        <location filename="../../src/gui/accounts/user.cpp" line="135"/>
-        <source>Currently using the initial password to login, please change it as soon as possible!</source>
-        <translation>当前使用初始密码登录，请尽快修改密码！</translation>
     </message>
 </context>
 <context>
@@ -95,6 +102,19 @@
         <location filename="../../src/gui/loading.cpp" line="54"/>
         <source>The data is being initialized, please wait a moment...</source>
         <translation>数据正在初始化，请稍等...</translation>
+    </message>
+</context>
+<context>
+    <name>KS::Login</name>
+    <message>
+        <location filename="../../src/gui/accounts/login.cpp" line="78"/>
+        <source>Kylinsec Security reinforcement</source>
+        <translation>麒麟信安主机安全加固</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/accounts/login.cpp" line="87"/>
+        <source>Unactivated</source>
+        <translation>未激活</translation>
     </message>
 </context>
 <context>
@@ -193,52 +213,93 @@
 <context>
     <name>KS::Settings</name>
     <message>
-        <location filename="../../src/gui/settings.cpp" line="81"/>
+        <location filename="../../src/gui/settings.cpp" line="85"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
 </context>
 <context>
+    <name>KS::UserEntity</name>
+    <message>
+        <location filename="../../src/gui/accounts/user-entity.cpp" line="96"/>
+        <source>User is not login.</source>
+        <translation>用户未登录。</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/accounts/user-entity.cpp" line="132"/>
+        <source>Currently using the initial password to login, please change it as soon as possible!</source>
+        <translation>当前使用初始密码登录，请尽快修改密码！</translation>
+    </message>
+</context>
+<context>
     <name>KS::Window</name>
     <message>
-        <location filename="../../src/gui/window.cpp" line="241"/>
+        <location filename="../../src/gui/window.cpp" line="244"/>
         <source>KylinSec Security reinforcement</source>
         <translation>麒麟信安主机安全加固</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="224"/>
+        <location filename="../../src/gui/window.cpp" line="227"/>
         <source>Security reinforcement</source>
         <translation>主机安全加固</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="277"/>
+        <location filename="../../src/gui/window.cpp" line="280"/>
         <source>Modify password</source>
         <translation>修改密码</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="281"/>
+        <location filename="../../src/gui/window.cpp" line="284"/>
         <source>Logout</source>
         <translation>注销</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="298"/>
+        <location filename="../../src/gui/window.cpp" line="302"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="301"/>
+        <location filename="../../src/gui/window.cpp" line="305"/>
         <source>Activation</source>
         <translation>软件激活</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="302"/>
+        <location filename="../../src/gui/window.cpp" line="306"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="310"/>
+        <location filename="../../src/gui/window.cpp" line="314"/>
         <source>About</source>
         <translation>关于</translation>
+    </message>
+</context>
+<context>
+    <name>Login</name>
+    <message>
+        <location filename="../../src/gui/accounts/login.ui" line="14"/>
+        <source>Form</source>
+        <translation>表格</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/accounts/login.ui" line="58"/>
+        <source>User name:</source>
+        <translation>用户名：</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/accounts/login.ui" line="79"/>
+        <source>Password:</source>
+        <translation>密码：</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/accounts/login.ui" line="125"/>
+        <source>login</source>
+        <translation>登录</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/accounts/login.ui" line="144"/>
+        <source>cancel</source>
+        <translation>取消</translation>
     </message>
 </context>
 <context>
@@ -608,6 +669,14 @@
         <location filename="../../lib/widgets/table/pagination.cpp" line="77"/>
         <source>NEXT</source>
         <translation>下一页</translation>
+    </message>
+</context>
+<context>
+    <name>QRCodeDialog</name>
+    <message>
+        <location filename="../../src/gui/license/qrcode-dialog.ui" line="20"/>
+        <source>Form</source>
+        <translation>表格</translation>
     </message>
 </context>
 <context>
