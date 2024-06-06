@@ -42,6 +42,10 @@ void Authentication::checkAuthorization(const QString &action,
         {
             DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
         }
+        else
+        {
+            handler(message);
+        }
     }
     else
     {
