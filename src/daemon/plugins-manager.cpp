@@ -52,6 +52,7 @@ PluginsManager::PluginsManager(QObject *parent)
 PluginsManager::~PluginsManager()
 {
     deactivatePlugins();
+    deinitPlugins();
 }
 
 void PluginsManager::init()
@@ -152,6 +153,15 @@ void PluginsManager::initPlugins()
     }
 
     KLOG_INFO() << "Loaded plugins:" << loadedPlugins;
+}
+
+void PluginsManager::deinitPlugins()
+{
+    for (auto plugin : m_plugins)
+    {
+        plugin->loader->unload();
+    }
+    m_plugins.clear();
 }
 
 }  // namespace KS

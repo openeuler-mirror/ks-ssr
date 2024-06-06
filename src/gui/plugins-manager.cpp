@@ -79,6 +79,8 @@ PluginsManager::PluginsManager(QObject *parent)
 
 PluginsManager::~PluginsManager()
 {
+    // 这里需要释放插件对象，否则插件和zlog释放顺序不对导致程序崩溃
+    deinitPlugins();
 }
 
 void PluginsManager::init()
@@ -238,6 +240,16 @@ void PluginsManager::initPlugins()
     }
 
     KLOG_INFO() << "Loaded plugins:" << loadedPlugins;
+}
+
+void PluginsManager::deinitPlugins()
+{
+    for (auto plugin : m_plugins)
+    {
+        plugin->loader->unload();
+    }
+
+    m_plugins.clear();
 }
 
 }  // namespace KS
