@@ -32,6 +32,8 @@ Login::Login(QWidget *parent)
     : TitlebarWindow(parent),
       m_ui(new Ui::Login)
 {
+    m_activation = new Activation::Activation(this);
+
     m_ui->setupUi(getWindowContentWidget());
     initUI();
 }
@@ -70,7 +72,6 @@ void Login::closeEvent(QCloseEvent *event)
 void Login::initUI()
 {
     m_licenseProxy = LicenseProxy::getDefault();
-    setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
     setResizeable(false);
     setTitleBarHeight(36);
@@ -121,16 +122,10 @@ void Login::initUI()
 
 void Login::popupActiveDialog()
 {
-    auto activation = new Activation::Activation(this);
-    connect(activation, &Activation::Activation::activated, [this](const QString &message)
-            {
-                POPUP_MESSAGE_DIALOG(message);
-            });
-
-    auto x = this->x() + this->width() / 2 - activation->width() / 2;
-    auto y = this->y() + this->height() / 2 - activation->height() / 2;
-    activation->move(x, y);
-    activation->show();
+    auto x = this->x() + this->width() / 2 - m_activation->width() / 2;
+    auto y = this->y() + this->height() / 2 - m_activation->height() / 2;
+    m_activation->move(x, y);
+    m_activation->show();
 }
 
 }  // namespace KS

@@ -51,7 +51,7 @@ if(WITH_LIBDNF)
   add_compile_options(-DWITH_LIBDNF)
 endif()
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   # add_compile_options(-Wextra -Wconversion -Wuninitialized)
   # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address
   # -fno-omit-frame-pointer -static-libasan") set(LINK_FLAGS

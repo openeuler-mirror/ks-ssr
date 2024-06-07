@@ -36,6 +36,7 @@ class Loading;
 class PluginsManager;
 class WorkPage;
 class User;
+class LicenseProxy;
 
 class Window : public TitlebarWindow
 {
@@ -74,10 +75,12 @@ private:
     void clearNavigation();
     void clearPage();
     void clearWorkPage();
+    // 检查是否激活，未激活弹框
+    void processActivation();
 
 private slots:
     void popupSettingsDialog();
-    void popupActiveDialog();
+    void popupActivationDialog();
     void popupAboutDialog();
     // 单例模式激活窗口
     void activateMetaObject();
@@ -101,5 +104,6 @@ private:
     PluginsManager *m_pluginManager;
     // 页面加载动画
     Loading *m_loading;
+    QSharedPointer<LicenseProxy> m_licenseProxy;
 };
 }  // namespace KS

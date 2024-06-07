@@ -47,9 +47,6 @@ private:
 private slots:
     void activate();
     void handleQrcode();
-signals:
-    // 发送错误或激活成功消息
-    void activated(const QString& message);
 
 private:
     Ui::Activation* m_ui;
