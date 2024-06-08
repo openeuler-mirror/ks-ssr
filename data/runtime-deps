@@ -95,3 +95,8 @@ libsystemd
 libnsl
 libxerces-c
 libQt5Svg
+libdnf
+librepo
+librpm
+librpmio
+libpopt
