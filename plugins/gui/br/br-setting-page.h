@@ -53,12 +53,6 @@ private slots:
     void setMonitorStatus(bool isOpen);
     void fallback(int status);
 
-signals:
-    // 需要通过勾选项进行导出，设置界面无法获取到表格勾选信息，需要在page中获取
-    void exportStrategyClicked();
-    // 重置所有加固项需要与表格界面交互
-    void resetAllArgsClicked();
-
 private:
     Ui::BRSettingPage *m_ui;
 

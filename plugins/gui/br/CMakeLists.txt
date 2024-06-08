@@ -38,8 +38,15 @@ execute_process(
 # 生成qm文件，qt_create_translation会导致cmake clean把ts文件删掉
 qt5_add_translation(QM_FILES ${TS_FILES})
 
-add_library(${TARGET_NAME} SHARED ${BR_H_FILES} ${BR_CPP_FILES} ${BR_DBUS_SRCS}
-                                  ${UI_FILES} ${BR_PROTOCOL_OUTPUT} ${QM_FILES})
+add_library(
+  ${TARGET_NAME} SHARED
+  ${BR_H_FILES}
+  ${BR_CPP_FILES}
+  ${BR_DBUS_SRCS}
+  ${UI_FILES}
+  ${BR_PROTOCOL_OUTPUT}
+  ${QM_FILES}
+  res.qrc)
 
 target_include_directories(
   ${TARGET_NAME}

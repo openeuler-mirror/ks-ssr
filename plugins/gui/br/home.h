@@ -13,6 +13,7 @@
  */
 #pragma once
 
+#include <QTimer>
 #include <QWidget>
 
 namespace Ui
@@ -48,6 +49,8 @@ public slots:
 private:
     Ui::Home *m_ui;
     BRDbusProxy *m_dbusProxy;
+
+    QTimer m_logoTimer;
 };
 }  // namespace BR
 }  // namespace KS

@@ -50,11 +50,6 @@ QString BRPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SYSADM;
 }
 
-bool BRPage::exportStrategy()
-{
-    return m_scan->exportStrategy();
-}
-
 void BRPage::resetAllReinforcementArgs()
 {
     m_scan->resetAllReinforcementItem();
