@@ -809,35 +809,6 @@
                 <note>QT_TRANSLATE_NOOP_UTF8("xml", "Scan files with SUID SGID permissions in the/bin,/usr/bin,/sbin, and/usr/sbin directories of the system")</note>
             </arg>
         </reinforcement>
-        <reinforcement>
-            <name>config-vulnerability-scanning</name>
-            <arg>
-                <name>enabled</name>
-                <value>false</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Built in common vulnerability version version number scanning")</label>
-                </layout>
-            </arg>
-            <!-- <arg>
-                <name>invalid_rpms</name>
-                <value>"openssh;openssl;"</value>
-                <value_limits>[^\\\/\^]*</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>"openssh;openssl;"</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "contents")</label>
-                </layout>
-            </arg> -->
-        </reinforcement>
         <!-- 审计类 -->
         <reinforcement>
             <name>audit-auditd-switch</name>
