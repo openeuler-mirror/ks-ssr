@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     QCoreApplication::setApplicationVersion(PROJECT_VERSION);
     QCommandLineParser parser;
 
-    klog_qt5_init(QString(), "kylinsec-session", PROJECT_NAME, a.applicationName().toLatin1());
+    klog_qt5_init(SSR_ZLOG_CONFIG_FILE, "kylinsec-session", PROJECT_NAME, a.applicationName().toLatin1());
 
     QTranslator translator;
     if (!translator.load(QLocale(), "ks-ssr-daemon", ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
