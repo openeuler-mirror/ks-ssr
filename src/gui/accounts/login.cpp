@@ -33,8 +33,14 @@ Login::Login(QWidget *parent)
       m_ui(new Ui::Login)
 {
     m_activation = new Activation::Activation(this);
-
     m_ui->setupUi(getWindowContentWidget());
+
+    // 只能放到这里来弹框，因为激活成功后激活窗口会隐藏，如果消息框作为激活窗口的子窗口，则会导致整个程序退出
+    connect(m_activation, &Activation::Activation::activated, [this](const QString &message)
+            {
+                POPUP_MESSAGE_DIALOG(message);
+            });
+
     initUI();
 }
 

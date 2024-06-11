@@ -103,7 +103,7 @@ void Activation::activate()
     QString errorMsg;
     auto isActivated = m_licenseProxy->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
     auto message = isActivated ? tr("Activate app successful!") : errorMsg;
-    POPUP_MESSAGE_DIALOG(message);
+    Q_EMIT activated(message);
     if (isActivated)
     {
         hide();
