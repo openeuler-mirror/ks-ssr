@@ -104,6 +104,181 @@
     </message>
 </context>
 <context>
+    <name>KS::Report</name>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="62"/>
+        <location filename="../../lib/report/report.cpp" line="100"/>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="65"/>
+        <location filename="../../lib/report/report.cpp" line="96"/>
+        <source>Conformity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="68"/>
+        <location filename="../../lib/report/report.cpp" line="98"/>
+        <source>Inconformity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="71"/>
+        <source>Not Scanned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="74"/>
+        <source>Scannig...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="77"/>
+        <source>Scan Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="80"/>
+        <source>Scan Complete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="83"/>
+        <source>Unreinforcement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="86"/>
+        <source>Reinforcing...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="89"/>
+        <source>Reinforcement Failure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="92"/>
+        <source>Reinforced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="247"/>
+        <source>KylinSecReport_%1_%2.pdf</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="272"/>
+        <source>KylinSecVulnerabilityReport_%1_%2.pdf</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="273"/>
+        <source>export report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="273"/>
+        <source>PDF(*.pdf)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="299"/>
+        <source>Activated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="376"/>
+        <source>fatal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="379"/>
+        <source>hight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="382"/>
+        <source>middle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/report.cpp" line="385"/>
+        <source>low</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::RoundProgressBar</name>
+    <message>
+        <location filename="../../lib/report/round-progressbar.cpp" line="103"/>
+        <source>Total: %1 conform: %2 inconform: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::Table</name>
+    <message>
+        <location filename="../../lib/report/table.cpp" line="31"/>
+        <source>bug id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/table.cpp" line="32"/>
+        <source>level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/table.cpp" line="34"/>
+        <source>score</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/table.cpp" line="35"/>
+        <source>release date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/table.cpp" line="37"/>
+        <source>Technical support：Hunan KylinSec Technology Co. Ltd.,  Telephone：400-012-6606</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PDF</name>
+    <message>
+        <location filename="../../lib/report/pdf.ui" line="72"/>
+        <source>Operating system:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/pdf.ui" line="85"/>
+        <source>IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/pdf.ui" line="98"/>
+        <source>MAC:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/pdf.ui" line="111"/>
+        <source>System kernel version:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/pdf.ui" line="124"/>
+        <source>Software activation status:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/report/pdf.ui" line="320"/>
+        <source>Information overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Pagination</name>
     <message>
         <location filename="../../lib/widgets/table/pagination.ui" line="26"/>
