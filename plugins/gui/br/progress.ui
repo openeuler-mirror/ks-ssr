@@ -22,7 +22,7 @@
      <item>
       <widget class="QLabel" name="m_definition">
        <property name="text">
-        <string>Security reinforcement is protecting your computer</string>
+        <string>Security Reinforcement is protecting your computer</string>
        </property>
       </widget>
      </item>

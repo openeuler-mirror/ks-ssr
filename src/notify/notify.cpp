@@ -25,7 +25,7 @@ Notify::Notify(QObject *parent)
     : QObject(parent),
       m_dbusProxy(nullptr)
 {
-    ::Notify::NotificationWrapper::globalInit(tr("Security reinforcement").toStdString());
+    ::Notify::NotificationWrapper::globalInit(tr("Security Reinforcement").toStdString());
 
     m_dbusProxy = new ToolBoxDbusProxy(SSR_DBUS_NAME,
                                        SSR_TOOL_BOX_DBUS_OBJECT_PATH,

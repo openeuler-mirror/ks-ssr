@@ -16,6 +16,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QFileInfo>
+#include <QScreen>
 #include <QTranslator>
 #include <QtGlobal>
 #include "config-ui.h"
@@ -60,6 +61,23 @@ int main(int argc, char *argv[])
     }
 
     KS::Window window;
+
+    QRect rect = app.primaryScreen()->geometry();
+    auto screens = app.screens();
+    if (screens.count() > 1)
+    {
+        QPoint pos = QCursor::pos();
+        for (auto &screen : screens)
+        {
+            if (screen->geometry().contains(pos))
+            {
+                rect = screen->geometry();
+                break;
+            }
+        }
+    }
+    window.move((rect.width() - window.width()) / 2, ((rect.height() - window.height()) / 2));
+
     window.start();
 
     return app.exec();

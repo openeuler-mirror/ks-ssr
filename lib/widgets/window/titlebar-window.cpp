@@ -16,6 +16,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QScreen>
 #include <QWindow>
 #include "global-define.h"
 #include "titlebar-window-private.h"

@@ -15,7 +15,6 @@
 #include "br-setting-page.h"
 #include <qt5-log-i.h>
 #include <ssr-i.h>
-#include <QFileDialog>
 #include "br-i.h"
 #include "br_dbus_proxy.h"
 #include "lib/base/notification-wrapper.h"
@@ -50,8 +49,6 @@ BRSettingPage::~BRSettingPage()
 
 void BRSettingPage::initConnection()
 {
-    //    connect(m_ui->m_importStrategy, &QPushButton::clicked, this, &BRSettingPage::importStrategy);
-    //    connect(m_ui->m_resetAllArgs, &QPushButton::clicked, this, &BRSettingPage::resetAllArgsClicked);
     connect(m_ui->m_timeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &BRSettingPage::timedScanSettings);
     m_timedScan = new QTimer(this);
     connect(m_timedScan, &QTimer::timeout, this, &BRSettingPage::scan);
@@ -220,23 +217,6 @@ uint BRSettingPage::getFallbackStatus()
 QString BRSettingPage::getTitle()
 {
     return tr("Baseline reinforcement");
-}
-
-void BRSettingPage::importStrategy()
-{
-    auto fileName = QFileDialog::getOpenFileName(this, tr("Files"), "/", tr("strategy(*.xml)"));
-    RETURN_IF_TRUE(fileName.isEmpty())
-
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text))
-    {
-        KLOG_WARNING() << "Open files failed!";
-        POPUP_MESSAGE_DIALOG(tr("Open files failed!"))
-    }
-    auto reply = m_dbusProxy->ImportCustomRA(QString::fromUtf8(file.readAll()));
-    reply.waitForFinished();
-    POPUP_MESSAGE_DIALOG(reply.isError() ? tr("Failed to import strategy file. Please whether the file is valid!") : tr("Import succeeded!"));
-    file.close();
 }
 
 void BRSettingPage::timedScanSettings(int hours)

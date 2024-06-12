@@ -106,6 +106,7 @@ QHBoxLayout *ArgHandle::buildLabelLayout()
     layout->setContentsMargins(0, 0, 0, 0);
 
     auto widgetLabel = new QLabel(this);
+    widgetLabel->setWordWrap(true);
     widgetLabel->setText(m_label);
 
     if (m_note.isEmpty())
@@ -128,9 +129,10 @@ QHBoxLayout *ArgHandle::buildLabelLayout()
                     QToolTip::showText(QCursor::pos(), m_note, this, rect(), 5000);
                 });
 
-        layout->addWidget(widgetLabel, 0, Qt::AlignCenter);
-        layout->addWidget(noteIcon, 0, Qt::AlignCenter);
-        layout->addStretch();
+        layout->addWidget(widgetLabel);
+        layout->addWidget(noteIcon);
+        layout->setStretch(0, 1);
+        layout->setStretch(1, 0);
     }
 
     return layout;
