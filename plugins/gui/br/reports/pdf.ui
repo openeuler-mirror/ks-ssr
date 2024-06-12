@@ -342,7 +342,8 @@ font:NotoSansCJKsc-Regular;</string>
        <property name="styleSheet">
         <string notr="true">font:NotoSansCJKsc-Regular;
 font-size:17px;
-background-color: transparent;</string>
+background-color: transparent;
+color:white;</string>
        </property>
        <property name="text">
         <string>Pie chart of test results</string>
