@@ -9,7 +9,7 @@ endif()
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-add_compile_options(-Wall)
+add_definitions(-Wall)
 
 # 由于禁用日志和账户模块后编译无法通过，所以只能启用。
 set(ENABLE_LOG ON)
@@ -41,14 +41,14 @@ message(STATUS "ENABLE_ACCOUNTS_MANAGER: ${ENABLE_ACCOUNTS_MANAGER}")
 message(STATUS "USE_PYTHON3: ${USE_PYTHON3}")
 if(WITH_SYSTEMD_UDEV)
   message(STATUS "Device Manager: with systemd-udev")
-  add_compile_options(-DWITH_SYSTEMD_UDEV)
+  add_definitions(-DWITH_SYSTEMD_UDEV)
 else()
   message(STATUS "Device Manager: with libudev")
 endif()
 
 if(WITH_LIBDNF)
   message(STATUS "Device Manager: with systemd-udev")
-  add_compile_options(-DWITH_LIBDNF)
+  add_definitions(-DWITH_LIBDNF)
 endif()
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")

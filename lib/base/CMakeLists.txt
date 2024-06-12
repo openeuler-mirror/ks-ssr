@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 set(TARGET_NAME base)
 
-add_compile_options("-DSQLITE_HAS_CODEC")
+add_definitions("-DSQLITE_HAS_CODEC")
 
 file(GLOB_RECURSE BASE_H_FILES ./*.h)
 file(GLOB_RECURSE BASE_CPP_FILES ./*.cpp)
