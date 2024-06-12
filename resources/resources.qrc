@@ -89,7 +89,6 @@
     </qresource>
     <qresource prefix="/styles">
         <file alias="ssr">styles/ssr.qss</file>
-        <file alias="br-reports">styles/br-reports.qss</file>
         <file alias="titlebar-window">styles/titlebar-window.qss</file>
     </qresource>
 </RCC>
