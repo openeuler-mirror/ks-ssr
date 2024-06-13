@@ -139,6 +139,7 @@ Q_SIGNALS:  // SIGNALS
     void HomeFreeSpaceRatioLower(const QString &ratio);
     void ProgressFinished();
     void ReinforceProgress(const QString &progress);
+    void ReinforcementsChanged();
     void RootFreeSpaceRatioLower(const QString &ratio);
     void ScanProgress(const QString &progress);
     void MemoryAbnormal(const QString &ratio);
