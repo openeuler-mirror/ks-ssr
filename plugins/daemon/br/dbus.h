@@ -100,9 +100,6 @@ public Q_SLOTS:
     // 获取分类
     virtual QString GetCategories();
 
-    // 获取加固标准配置
-    virtual QString GetRS();
-
     // 获取所有加固项的基本信息和加固参数
     virtual QString GetReinforcements();
 
