@@ -179,8 +179,6 @@ class SessionTimeout(SSHD):
         args = json.loads(args_json)
 
         self.set_conf_value(args[PROFILE_CLIENT_TMOUT])
-        self.set_conf_profile_value(args[PROFILE_CLIENT_TMOUT])
-        self.set_conf_bashrc_value(args[PROFILE_CLIENT_TMOUT])
 
         # 重启服务生效
         self.service.reload()
