@@ -311,10 +311,15 @@ void Configuration::setRaCheckbox(const QString& name, const bool& status)
         if (name.toStdString() == iter->name())
             iter->checkbox().set(status);
     }
-    writeRaToFile(ra);
+    writeRAToFile(ra);
 }
 
-bool Configuration::setCustomRs(const QString& encrypted_rs, BRErrorCode& error_code)
+QSharedPointer<Protocol::RS> Configuration::getRS()
+{
+    return this->getFixedRS();
+}
+
+bool Configuration::setCustomRS(const QString& encrypted_rs, BRErrorCode& error_code)
 {
     // 判断自定义加固标准
     auto decrypted_rs = CryptoHelper::brDecrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_rs);
