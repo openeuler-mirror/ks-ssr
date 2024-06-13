@@ -77,6 +77,9 @@ public:
     QSharedPointer<BRReinforcementInterface> getReinforcementInterface(const QString& plugin_name,
                                                                        const QString& reinforcement_name);
 
+Q_SIGNALS:
+    void reinforcementsChanged();
+
 private:
     // 初始化
     void init();
