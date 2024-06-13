@@ -49,7 +49,7 @@ add_custom_target(
   br-system-rs.encrypted ALL
   COMMAND
     ${PROJECT_BINARY_DIR}/src/tool/crypto/ks-br-crypto
-    --encrypt-file=${PROJECT_SOURCE_DIR}/data/br-system-rs.xml
+    --encrypt-file=${PROJECT_SOURCE_DIR}/data/${BR_RS_CONFIG}
     --private-key=${PROJECT_SOURCE_DIR}/data/br-private.key
     --output-file=${PROJECT_BINARY_DIR}/data/br-system-rs.encrypted
   DEPENDS ks-br-crypto)
