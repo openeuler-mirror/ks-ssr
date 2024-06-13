@@ -119,20 +119,21 @@ private:
     void setInteger(const QString& group_name, const QString& key, int32_t value);
     void setString(const QString& group_name, const QString& key, const QString& value);
 
+Q_SIGNALS:
+    // 加固标准发生变化
+    void RSChanged();
+    // 加固策略发生变化
+    void StrategyChanged();
+    // 自定义加固参数变化
+    void customRAChanged();
+
 private:
-    static Configuration* instance_;
+    static Configuration* m_instance;
 
     // 配置文件路径
-    QString config_path_;
+    QString m_configPath;
     // 配置文件内容
-    QSettings* configuration_;
-
-    // 加固标准和自定义加固参数的混合
-    QSharedPointer<Protocol::RS> rs_;
-
-    // sigc::signal<void> rs_changed_;
-signals:
-    void rs_changed_();
+    QSettings* m_settings;
 };
 }  // namespace BR
 }  // namespace KS
