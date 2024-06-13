@@ -16,6 +16,8 @@
 
 #include "plugin.h"
 
+class QTimer;
+
 namespace KS
 {
 namespace BR
