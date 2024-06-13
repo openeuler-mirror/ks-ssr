@@ -542,12 +542,12 @@ QString Configuration::decryptFile(const QString& filename)
 
 int32_t Configuration::getInteger(const QString& group_name, const QString& key, int32_t default_value)
 {
-    return this->configuration_->value(group_name + '/' + key, default_value).toInt();
+    return this->m_settings->value(group_name + '/' + key, default_value).toInt();
 }
 
 QString Configuration::getString(const QString& group_name, const QString& key)
 {
-    return this->configuration_->value(group_name + '/' + key).toString();
+    return this->m_settings->value(group_name + '/' + key).toString();
 }
 
 QString Configuration::getDatadirFilename(const QString& group_name, const QString& key)
