@@ -37,14 +37,14 @@ public:
 
     static Configuration* getInstance()
     {
-        return instance_;
+        return m_instance;
     };
 
     static void globalInit(const QString& config_path);
 
     static void globalDeinit()
     {
-        delete instance_;
+        delete m_instance;
     };
 
     // 获取最大线程数
