@@ -178,14 +178,14 @@ bool Plugins::addPlugin(QSharedPointer<Plugin> plugin)
     auto pluginId = plugin->getId();
     KLOG_DEBUG() << "plugin id: " << pluginId.toLatin1();
 
-    if (this->plugins_.find(pluginId) != this->plugins_.end())
+    if (this->m_plugins.find(pluginId) != this->m_plugins.end())
     {
         KLOG_WARNING() << "The plugin is already exist. id: %s." << pluginId;
         return false;
     }
     else
     {
-        this->plugins_[pluginId] = plugin;
+        this->m_plugins[pluginId] = plugin;
     }
 
     auto reinforcement_names = plugin->getReinforcementNames();
