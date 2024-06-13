@@ -47,8 +47,6 @@ ERROR_NOTIFY = "sshd.services is not running!"
 class SSHD:
     def __init__(self):
         self.conf = br.configuration.KV(SSHD_CONF_PATH, join_string=" ")
-        self.conf_profile = br.configuration.KV("/etc/profile", "=", "=")
-        self.conf_bashrc = br.configuration.KV("/etc/bashrc", "=", "=")
         self.conf_ciphers = br.configuration.PAM(
             SSHD_CONF_PATH, "Ciphers\\s+")
         self.conf_protocol = br.configuration.PAM(
