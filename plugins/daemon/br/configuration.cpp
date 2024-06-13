@@ -410,7 +410,7 @@ QSharedPointer<Protocol::RA> Configuration::readRaFromFile()
     return QSharedPointer<Protocol::RA>(new Protocol::RA());
 }
 
-bool Configuration::writeRaToFile(QSharedPointer<Protocol::RA> ra)
+bool Configuration::writeRAToFile(QSharedPointer<Protocol::RA> ra)
 {
     try
     {
