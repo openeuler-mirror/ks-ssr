@@ -46,18 +46,18 @@ public:
 
     ThreadPool& getThreadPool()
     {
-        return this->thread_pool_;
+        return this->m_threadPool;
     }
 
     // 获取所有插件信息
     BRPluginVec getPlugins()
     {
-        return MapHelper::getValues(this->plugins_);
+        return MapHelper::getValues(this->m_plugins);
     };
     // 获取插件信息，如果不存在则返回空指针
     QSharedPointer<Plugin> getPlugin(const QString& id)
     {
-        return MapHelper::getValue(this->plugins_, id);
+        return MapHelper::getValue(this->m_plugins, id);
     };
     // 通过加固项名称获取插件
     QSharedPointer<Plugin> getPluginByReinforcement(const QString& name);
