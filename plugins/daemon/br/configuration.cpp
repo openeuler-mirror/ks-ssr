@@ -84,7 +84,7 @@ bool Configuration::setStandardType(BRStandardType standard_type)
     RETURN_VAL_IF_TRUE(standard_type == this->getStandardType(), true);
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_STANDARD_TYPE, int32_t(standard_type));
-    this->reloadRs();
+    Q_EMIT RSChanged();
     return true;
 }
 
