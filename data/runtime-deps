@@ -102,3 +102,17 @@ librpmio
 libpopt
 libsolv
 libsolvext
+libnss3.so
+libnssckbi.so
+libnss_compat.so
+libnssdbm3.so
+libnss_db.so
+libnss_hesiod.so
+libnsssysinit.so
+libnssutil3.so
+libnss_dns
+libnss_files
+libnss_myhostname
+libnss_mymachines
+libnss_sss
+libnss_systemd
