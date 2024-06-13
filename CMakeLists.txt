@@ -15,6 +15,7 @@ add_definitions(-Wall)
 set(ENABLE_LOG ON)
 
 option(ENABLE_BR "Enable base reinforcements module" ON)
+set(BR_RS_CONFIG br-system-rs.xml CACHE STRING "System reinforcement standard config")
 option(ENABLE_HDMI_SUPPORT "Enable HDMI support" OFF)
 option(ENABLE_KSS "Enable KSS module" OFF)
 option(ENABLE_LOG_AUDIT "Enable log audit module" OFF)
