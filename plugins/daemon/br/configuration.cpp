@@ -559,12 +559,12 @@ QString Configuration::getDatadirFilename(const QString& group_name, const QStri
 
 void Configuration::setInteger(const QString& group_name, const QString& key, int32_t value)
 {
-    this->configuration_->setValue(group_name + '/' + key, value);
+    this->m_settings->setValue(group_name + '/' + key, value);
 }
 
 void Configuration::setString(const QString& group_name, const QString& key, const QString& value)
 {
-    this->configuration_->setValue(group_name + '/' + key, value);
+    this->m_settings->setValue(group_name + '/' + key, value);
 }
 
 }  // namespace BR
