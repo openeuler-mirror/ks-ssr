@@ -102,6 +102,7 @@ BRDBus* BRDBus::m_instance = nullptr;
 void BRDBus::globalInit(QObject* parent)
 {
     m_instance = new BRDBus(parent);
+    m_instance->init();
 }
 
 uint BRDBus::notificationStatus() const
