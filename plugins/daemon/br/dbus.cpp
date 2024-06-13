@@ -861,33 +861,9 @@ void BRDBus::init()
     QDBusConnection dbusConnection = QDBusConnection::systemBus();
     if (!dbusConnection.registerObject(BR_DBUS_OBJECT_PATH, this))
     {
-        KLOG_ERROR() << "register Service error:" << dbusConnection.lastError().message();
+        KLOG_ERROR() << "Register Service error:" << dbusConnection.lastError().message();
         return;
     }
-
-    this->m_configuration = Configuration::getInstance();
-    this->m_categories = Categories::getInstance();
-    this->m_plugins = Plugins::getInstance();
-
-    this->m_resourceMonitor = new ResourceMonitor(this);
-    KLOG_DEBUG("init ResourceMonitor.");
-    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::homeFreeSpaceRatio_,
-                     this, &BRDBus::homeFreeSpaceRatio);
-    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::rootFreeSpaceRatio_,
-                     this, &BRDBus::rootFreeSpaceRatio);
-    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::cpuAverageLoadRatio_,
-                     this, &BRDBus::cpuAverageLoadRatio);
-    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::memoryRemainingRatio_, this, &BRDBus::memoryRemainingRatio);
-
-    // 进程完成后，回退状态置为未开始
-    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]()
-                     {
-                         RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->m_configuration->getFallbackStatus());
-                         if (!this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
-                         {
-                             KLOG_ERROR() << "set fallback status failed.";
-                         }
-                     });
 
     if (m_configuration->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
     {
@@ -895,11 +871,6 @@ void BRDBus::init()
         QObject::connect(this->m_resourceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
         m_resourceMonitorTimer->start(RESOURCEMONITORMS);
     }
-    // 读取加固项状态
-    connect(this, &BRDBus::ReinforceProgress, this, &BRDBus::readReinforceItemStatus);
-    connect(this, &BRDBus::ScanProgress, this, &BRDBus::readReinforceItemStatus);
-    m_reinforceTimer = new QTimer(this);
-    m_reinforceTimer->setInterval(100);
 
     // 服务启动时自动扫描一次，获取系统默认配置存入rh-first文件
     if (!QFile::exists(RH_BR_OPERATE_DATA_FIRST))
