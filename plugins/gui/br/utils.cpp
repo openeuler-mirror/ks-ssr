@@ -267,6 +267,7 @@ bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categ
             break;
         }
     }
+
     return true;
 }
 
