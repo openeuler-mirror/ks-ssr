@@ -423,7 +423,8 @@ bool Configuration::writeRAToFile(QSharedPointer<Protocol::RA> ra)
         KLOG_WARNING("%s", e.what());
         return false;
     }
-    this->reloadRs();
+
+    Q_EMIT customRAChanged();
     return true;
 }
 
