@@ -1020,7 +1020,7 @@ void BRDBus::sendScanResult(const JobResult& jobResult)
     }
 }
 
-void BRDBus::reinforceResultHandle(const JobResult& jobResult)
+void BRDBus::processReinforceProgress(const JobResult& jobResult)
 {
     Protocol::JobResult reinforceResult(0, 0, 0);
     try
