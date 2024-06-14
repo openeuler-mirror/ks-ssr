@@ -589,6 +589,11 @@ void BRDBus::Scan(const QStringList& names)
     }
 }
 
+uint BRDBus::GetScanStatus()
+{
+    return m_scanJob->getState();
+}
+
 void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
 {
     SCOPE_EXIT(
