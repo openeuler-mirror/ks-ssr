@@ -89,8 +89,7 @@ bool KV::get(const QString &key, QString &value)
         if (fields[0] == key)
         {
             value = fields[1];
-#pragma message("临时")
-            // return true;
+            return true;
         }
     }
 
