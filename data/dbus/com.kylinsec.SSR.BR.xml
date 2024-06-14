@@ -139,6 +139,20 @@
             <description>Reinforce these items specified by reinforcements.</description>
         </method>
 
+        <method name="GetReinforceResult">
+            <arg name="result" type="s">
+                <summary>The result is a json string.</summary>
+            </arg>
+            <description>The result contains current reinforcing info.</description>
+        </method>
+
+        <method name="GetReinforceStatus">
+            <arg type="u" name="status" direction="out">
+                <summary>The reinforce status.</summary>
+            </arg>
+            <description>Get the reinforce status which is BRJobState enum type refer to ssr-i.h.</description>
+        </method>
+
         <method name="Cancel">
             <arg type="x" name="job_id" direction="in">
                 <summary>The job id.</summary>
