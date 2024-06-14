@@ -576,7 +576,7 @@ void BRDBus::Scan(const QStringList& names)
     QObject::disconnect(this->m_scanJob.data(), &Job::processFinished, 0, 0);
     QObject::connect(this->m_scanJob.data(), &Job::processFinished, this, &BRDBus::finishedScanProgress);
     QObject::disconnect(this->m_scanJob.data(), &Job::processChanged, 0, 0);
-    QObject::connect(this->m_scanJob.data(), &Job::processChanged, this, &BRDBus::scanResultHandle);
+    QObject::connect(this->m_scanJob.data(), &Job::processChanged, this, &BRDBus::processScanProgress);
 
     if (!this->m_scanJob->runAsync())
     {
