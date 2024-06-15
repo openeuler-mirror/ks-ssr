@@ -38,60 +38,70 @@ int main(int argc, char* argv[])
         app.installTranslator(&translator);
     }
 
-   QCommandLineParser parser;
-   parser.setApplicationDescription(QObject::tr("This tool is mainly used in non-graphical system scenarios as a command line alternative to ks-ssr-gui."));
-   parser.addHelpOption();
-   QCommandLineOption moduleOption("module", QObject::tr("Specify the operation module, br - baseline hardening, vulnerability - vulnerability fixing."), QString("br|vulnerability"));
-   parser.addOption(moduleOption);
-   QCommandLineOption scanOption("scan", QObject::tr("One-click scanning"));
-   parser.addOption(scanOption);
-   QCommandLineOption reinforceOption("reinforce", QObject::tr("One-click reinforcement, separate by commas. (Default: All)"), "name", "All");
-   parser.addOption(reinforceOption);
-   QCommandLineOption repairOption("repair", QObject::tr("One-click repair"));
-   parser.addOption(repairOption);
-   QCommandLineOption outputOption("output", QObject::tr("Output results to file"));
-   parser.addOption(outputOption);
-   parser.process(app);
-   QString module = parser.value(moduleOption);
-   if (module.isEmpty())
-   {
-       std::cout << QObject::tr("Error: Module not provided.").toStdString() << std::endl;
-       parser.showHelp(0);
-       return 1;
-   }
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QObject::tr("This tool is mainly used in non-graphical system scenarios as a command line alternative to ks-ssr-gui."));
+    parser.addHelpOption();
+    QCommandLineOption moduleOption("module", QObject::tr("Specify the operation module, br - baseline hardening, vulnerability - vulnerability fixing."), QString("br|vulnerability"));
+    parser.addOption(moduleOption);
+    QCommandLineOption scanOption("scan", QObject::tr("One-click scanning"));
+    parser.addOption(scanOption);
+    QCommandLineOption reinforceOption("reinforce", QObject::tr("One-click reinforcement, for br only. use comma separations. (Default: all)"), "name", "All");
+    parser.addOption(reinforceOption);
+    QCommandLineOption repairOption("repair", QObject::tr("One-click repair, for vulnerability only. use comma separations. (Default: all)"), "cve", "All");
+    parser.addOption(repairOption);
+    QCommandLineOption outputOption("output", QObject::tr("Output results to file"));
+    parser.addOption(outputOption);
+    parser.process(app);
+    QString module = parser.value(moduleOption);
+    if (module.isEmpty())
+    {
+        std::cout << QObject::tr("Error: Module not provided.").toStdString() << std::endl;
+        parser.showHelp(0);
+        return 1;
+    }
 
-   bool scanEnabled = parser.isSet(scanOption);
-   bool reinforceEnabled = parser.isSet(reinforceOption);
-   bool repairEnabled = parser.isSet(repairOption);
-   bool outputEnabled = parser.isSet(outputOption);
-   KS::Command::Command cmd_parser;
-   cmd_parser.setFileOutput(outputEnabled);
-   if ("br" == module && (scanEnabled || reinforceEnabled))
-   {
-       if (scanEnabled)
-       {
-           cmd_parser.scan();
-       }
-       else
-       {
-           QString param = parser.value(reinforceOption);
-           QStringList names;
-           if ("All" != param)
-               names = param.split(',', QString::SkipEmptyParts);
-           cmd_parser.reinforce(names);
-       }
-   }
-   else if ("vulnerability" == module && repairEnabled)
-   {
-       cmd_parser.repair();
-   }
-   else
-   {
-       std::cout << QObject::tr("Module parameter provided error.").toStdString() << std::endl;
-       parser.showHelp(0);
-       return 1;
-   }
+    bool scanEnabled = parser.isSet(scanOption);
+    bool reinforceEnabled = parser.isSet(reinforceOption);
+    bool repairEnabled = parser.isSet(repairOption);
+    bool outputEnabled = parser.isSet(outputOption);
+    KS::Command::Command cmd_parser;
+    cmd_parser.setFileOutput(outputEnabled);
+    if ("br" == module && (scanEnabled || reinforceEnabled))
+    {
+        if (scanEnabled)
+        {
+            cmd_parser.brScan();
+        }
+        else
+        {
+            QString param = parser.value(reinforceOption);
+            QStringList names;
+            if ("All" != param)
+                names = param.split(',', QString::SkipEmptyParts);
+            cmd_parser.reinforce(names);
+        }
+    }
+    else if ("vulnerability" == module && (scanEnabled || repairEnabled))
+    {
+        if (scanEnabled)
+        {
+            cmd_parser.vulnerabilityScan();
+        }
+        else
+        {
+            QString param = parser.value(repairOption);
+            QStringList cves;
+            if ("All" != param)
+                cves = param.split(',', QString::SkipEmptyParts);
+            cmd_parser.repair(cves);
+        }
+    }
+    else
+    {
+        std::cout << QObject::tr("Module parameter provided error.").toStdString() << std::endl;
+        parser.showHelp(0);
+        return 1;
+    }
 
-   return app.exec();
+    return app.exec();
 }
-
