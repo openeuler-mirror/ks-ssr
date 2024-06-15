@@ -1,4 +1,3 @@
-
 set(TARGET_NAME widgets)
 
 file(GLOB_RECURSE WIDGETS_H_FILES ./*.h)
