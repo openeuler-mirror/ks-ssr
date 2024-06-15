@@ -19,6 +19,7 @@
 #include <libaudit.h>
 #include <qt5-log-i.h>
 #include <unistd.h>
+#include <QPair>
 #include <QTimer>
 #include <fstream>
 #include <iostream>
