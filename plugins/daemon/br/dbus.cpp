@@ -759,6 +759,33 @@ void BRDBus::GenerateReport(bool operationResult)
             calledUniqueName);
 }
 
+void KS::BR::BRDBus::ExportReport(const QString& savePath)
+{
+    KLOG_INFO() << savePath;
+    QStringList names;
+    auto reinforcements = this->m_plugins->getReinforcements();
+    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
+    {
+        auto& rsReinforcement = (*iter)->getRs();
+        names.push_back(QString::fromStdString(rsReinforcement.name()));
+    }
+
+    if (this->m_scanJob && this->m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
+    {
+        sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING));
+        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to scan."),
+                      m_scanUniqueName);
+    }
+    else
+    {
+        KLOG_INFO() << "ExportReport Scan";
+
+        m_reportSavePath = savePath;
+        Scan(names);
+    }
+}
+
 void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotStatus)
 {
     SCOPE_EXIT(
