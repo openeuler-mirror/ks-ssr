@@ -193,12 +193,17 @@
         <translation>输出结果到文件</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="101"/>
+        <location filename="../src/tool/command/main.cpp" line="54"/>
+        <source>Export the report. Input pdf file path</source>
+        <translation>导出报表。传入 pdf 文件路径</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/main.cpp" line="113"/>
         <source>Module parameter provided error.</source>
         <translation>指定操作模块参数提供错误。</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="58"/>
+        <location filename="../src/tool/command/main.cpp" line="60"/>
         <source>Error: Module not provided.</source>
         <translation>未提供操作模块。</translation>
     </message>
