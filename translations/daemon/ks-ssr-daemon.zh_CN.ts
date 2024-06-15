@@ -463,14 +463,6 @@
     </message>
 </context>
 <context>
-    <name>Table</name>
-    <message>
-        <location filename="../../lib/report/table.ui" line="98"/>
-        <source>Vulnerability information</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>UserPromptDialog</name>
     <message>
         <location filename="../../lib/widgets/user-prompt-dialog.ui" line="14"/>
