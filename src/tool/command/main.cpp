@@ -45,12 +45,14 @@ int main(int argc, char* argv[])
     parser.addOption(moduleOption);
     QCommandLineOption scanOption("scan", QObject::tr("One-click scanning"));
     parser.addOption(scanOption);
-    QCommandLineOption reinforceOption("reinforce", QObject::tr("One-click reinforcement, for br only. use comma separations. (Default: all)"), "name", "All");
+    QCommandLineOption reinforceOption("reinforce", QObject::tr("name - Specify reinforcement items to be reinforced, multiple reinforcement items are separated by comma; All - One-click reinforcement"), "name", "All");
     parser.addOption(reinforceOption);
-    QCommandLineOption repairOption("repair", QObject::tr("One-click repair, for vulnerability only. use comma separations. (Default: all)"), "cve", "All");
+    QCommandLineOption repairOption("repair", QObject::tr("name - specify the vulnerability to fix, multiple vulnerabilities are separated by commas; All - One-click repair"), "name", "All");
     parser.addOption(repairOption);
     QCommandLineOption outputOption("output", QObject::tr("Output results to file"));
     parser.addOption(outputOption);
+    QCommandLineOption exportOption("export", QObject::tr("Export the report. Input pdf file path"), QString("save_path"));
+    parser.addOption(exportOption);
     parser.process(app);
     QString module = parser.value(moduleOption);
     if (module.isEmpty())
