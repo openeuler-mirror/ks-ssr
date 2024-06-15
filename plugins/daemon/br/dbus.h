@@ -165,10 +165,6 @@ private:
     void init();
     // 扫描进度信号处理
     void processScanProgress(const JobResult &jobResult);
-    // 将结果合并到缓存中
-    void joinScanResult(const JobResult &jobResult);
-    // 通过信号发送本次扫描结果，加固项只包含两次信号之间的数据
-    void sendScanResult(const JobResult &jobResult);
     // 加固进度信号处理
     void processReinforceProgress(const JobResult &jobResult);
     // 资源监控开启/关闭
