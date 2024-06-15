@@ -10,7 +10,7 @@
 #include <QVBoxLayout>
 #include <QtMath>
 #include "include/ssr-marcos.h"
-//#include "reinforcement-items/category.h"
+// #include "reinforcement-items/category.h"
 #include "pdf.h"
 #include "ssr-i.h"
 #include "table.h"
