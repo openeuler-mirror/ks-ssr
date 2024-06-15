@@ -116,3 +116,4 @@ libnss_mymachines
 libnss_sss
 libnss_systemd
 libsmime3
+libcurl
