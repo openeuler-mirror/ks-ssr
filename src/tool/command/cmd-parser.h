@@ -55,6 +55,7 @@ public:
     int vulnerabilityScan();
     int reinforce(const QStringList &name = QStringList());
     void repair(const QStringList &name = QStringList());
+    int exportReport(QString which, QString path);
 
 private:
     void checkLicenseActive();
