@@ -143,6 +143,8 @@ public Q_SLOTS:
     void ExportStrategy(bool);
     void GenerateReport(bool);
 
+    void ExportReport(const QString &savePath);
+
 Q_SIGNALS:  // SIGNALS
     void CpuAverageLoadRatioHigher(const QString &ratio);
     void HomeFreeSpaceRatioLower(const QString &ratio);
