@@ -1152,6 +1152,70 @@ void BRDBus::finishedReinforceProgress()
     emit ProgressFinished();
 }
 
+void BRDBus::exportReport()
+{
+    QString savePath = m_reportSavePath;
+    m_reportSavePath.clear();
+
+    CategoryVec categoryVec = m_categories->getCategories();
+    QMap<QString, QPair<int, int>> categoryMap;
+    // 动态翻译
+    static const QMap<QString, const char*> categoryTR = {
+        {"config", QT_TR_NOOP("config")},
+        {"network", QT_TR_NOOP("network")},
+        {"audit", QT_TR_NOOP("audit")},
+        {"external", QT_TR_NOOP("external")}};
+
+    for (auto& category : categoryVec)
+    {
+        categoryMap[category->name] = qMakePair(0, 0);
+    }
+
+    QList<QStringList> tabelData;
+    tabelData.push_back({tr("Test Item"), tr("Result")});
+
+    for (auto& reinforcementResult : m_scanJobResult.reinforcement())
+    {
+        QString name = QString::fromStdString(reinforcementResult.name());
+        QString label = this->m_plugins->getReinforcement(name)->getLabel();
+
+        auto state = reinforcementResult.state();
+        QString stateStr;
+        if ((state & BR_REINFORCEMENT_STATE_SAFE) == 1)
+        {
+            stateStr = QString(tr("Conformity"));
+        }
+        else
+        {
+            stateStr = QString(tr("Inconformity"));
+        }
+
+        //        tabelData.push_back({name, stateStr});
+        tabelData.push_back({noop2Translate(label), stateStr});
+
+        auto category = this->m_plugins->getReinforcement(name)->getCategoryName();
+
+        if (categoryMap.contains(category))
+        {
+            (state & BR_REINFORCEMENT_STATE_SAFE) == 1 ? categoryMap[category].first++ : categoryMap[category].second++;
+        }
+    }
+
+    QList<QPair<QString, QString>> homeExtraData;
+    auto iter = categoryMap.begin();
+    while (iter != categoryMap.end())
+    {
+        QString key = categoryTR.contains(iter.key()) ? tr(categoryTR[iter.key()]) : iter.key();
+
+        homeExtraData.push_back({key + ":", tr("total:%1 conformity:%2 conformity:%3").arg(iter.value().first + iter.value().second).arg(iter.value().first).arg(iter.value().second)});
+        iter++;
+    }
+
+    Report::genReport(savePath, homeExtraData, tr("test information"), tabelData);
+
+    sendErrorReply(QDBusError::NoError, "Export report successed");
+}
+
 void BRDBus::parseJsonParam(const Protocol::Reinforcement::ArgSequence& argSequence, QJsonObject& param)
 {
     for (auto argIter = argSequence.begin(); argIter != argSequence.end(); ++argIter)
