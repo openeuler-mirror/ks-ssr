@@ -65,7 +65,7 @@
         <translation>成功激活应用程序！</translation>
     </message>
     <message>
-        <location filename="../../src/gui/license/activation.cpp" line="117"/>
+        <location filename="../../src/gui/license/activation.cpp" line="119"/>
         <source>Scan QR code to get %1</source>
         <translation>扫描获取%1</translation>
     </message>
