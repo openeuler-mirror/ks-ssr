@@ -477,14 +477,19 @@ void Command::scanProgress(const QString &progress)
         {
             continue;
         }
-        m_cveIds << QString(cve.value("name").toString());
+        if (!m_specifyCVE)
+            m_cveIds << QString(cve.value("name").toString());
         QString level = getCveLevel(cve.value("threat_severity").toInt());
         VulnerabilityInfo *pVu = new VulnerabilityInfo(level, cve.value("score").toString());
         m_repairResult[cve.value("name").toString()] = pVu;
     }
 
     int percent = progressJson.value("progress").toDouble() * 100;
-    std::cout << tr("Scan progress ").toStdString() << std::to_string(percent) << std::endl;
+    if (m_lastPercent != percent)
+    {
+        m_lastPercent = percent;
+        std::cout << tr("Scan progress ").toStdString() << std::to_string(percent) << std::endl;
+    }
     if (100 == percent)
     {
         if (m_cveIds.isEmpty())
