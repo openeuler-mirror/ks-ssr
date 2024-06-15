@@ -962,16 +962,6 @@ void BRDBus::init()
 
 void BRDBus::processScanProgress(const JobResult& jobResult)
 {
-    joinScanResult(jobResult);
-    sendScanResult(jobResult);
-}
-
-void BRDBus::joinScanResult(const JobResult& jobResult)
-{
-}
-
-void BRDBus::sendScanResult(const JobResult& jobResult)
-{
     Protocol::JobResult scanResult(0, 0, 0);
     try
     {
