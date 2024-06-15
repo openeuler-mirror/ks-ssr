@@ -163,8 +163,13 @@
     </message>
     <message>
         <location filename="../src/tool/command/main.cpp" line="48"/>
-        <source>One-click reinforcement, separate by commas. (Default: All)</source>
-        <translation>单击加固，用逗号分隔。(默认：All）</translation>
+        <source>One-click reinforcement, for br only. use comma separations. (Default: all)</source>
+        <translation>一键加固，仅针对br。使用逗号分隔。(默认：All）</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/main.cpp" line="50"/>
+        <source>One-click repair, for vulnerability only. use comma separations. (Default: all)</source>
+        <translation>一键修复，仅针对vulnerability。使用逗号分隔。(默认：All）</translation>
     </message>
     <message>
         <location filename="../src/tool/command/main.cpp" line="52"/>
