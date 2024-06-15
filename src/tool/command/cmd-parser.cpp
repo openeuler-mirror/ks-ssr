@@ -524,19 +524,28 @@ void Command::repairProgress(const QString &progress)
         }
 
         int state = QString(cve.value("state").toString()).compare("Success", Qt::CaseInsensitive) ? 2 : 1;
-        m_repairResult.value(cve.value("cveId").toString())->state = getCveState(state);
+        QString id = cve.value("cveId").toString();
+        if (!m_repairResult.contains(id))
+        {
+            VulnerabilityInfo *pVu = new VulnerabilityInfo(getCveLevel(-1), QString("0"));
+            m_repairResult[id] = pVu;
+        }
+        m_repairResult.value(id)->state = getCveState(state);
     }
 
     // 进度
     int percent = progressJson.value("progress").toDouble() * 100;
-    std::cout << tr("Repair progress ").toStdString() << std::to_string(percent) << std::endl;
+    if (m_lastPercent != percent)
+    {
+        m_lastPercent = percent;
+        std::cout << tr("Repair progress ").toStdString() << std::to_string(percent) << std::endl;
+    }
     if (100 == percent)
     {
-        outputRepairResult("./repair_output.txt");
+        outputRepairResult("./vulnerability_repair_output.txt");
         exit(0);
     }
 }
 
 }  // namespace Command
 }  // namespace KS
-
