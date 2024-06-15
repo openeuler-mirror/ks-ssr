@@ -127,6 +127,9 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/br-iptables.rules
 install(FILES ${PROJECT_SOURCE_DIR}/data/help.pdf
         DESTINATION ${SSR_INSTALL_DATADIR}/)
 
+install(FILES ${PROJECT_SOURCE_DIR}/data/AlibabaPuHuiTi-3-55-Regular.ttf
+        DESTINATION ${SSR_INSTALL_DATADIR}/)
+
 # distribution-actuator shell
 file(GLOB_RECURSE DISTRIBUTION_ACTUATOR_FILES
      "${PROJECT_SOURCE_DIR}/data/distribution-actuator/*")
