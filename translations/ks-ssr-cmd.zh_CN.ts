@@ -179,13 +179,13 @@
     </message>
     <message>
         <location filename="../src/tool/command/main.cpp" line="48"/>
-        <source>One-click reinforcement, for br only. use comma separations. (Default: all)</source>
-        <translation>一键加固，仅针对br。使用逗号分隔。(默认：All）</translation>
+        <source>name - Specify reinforcement items to be reinforced, multiple reinforcement items are separated by comma; All - One-click reinforcement</source>
+        <translation>name - 指定加固项加固，多个加固项用逗号分隔；All - 一键加固</translation>
     </message>
     <message>
         <location filename="../src/tool/command/main.cpp" line="50"/>
-        <source>One-click repair, for vulnerability only. use comma separations. (Default: all)</source>
-        <translation>一键修复，仅针对vulnerability。使用逗号分隔。(默认：All）</translation>
+        <source>name - specify the vulnerability to fix, multiple vulnerabilities are separated by commas; All - One-click repair</source>
+        <translation>name - 指定漏洞修复，多个漏洞用逗号分隔；All - 一键修复</translation>
     </message>
     <message>
         <location filename="../src/tool/command/main.cpp" line="52"/>
