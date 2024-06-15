@@ -190,6 +190,10 @@ private:
     void cpuAverageLoadRatio(float loadRatio);
     void memoryRemainingRatio(float memoryRatio);
 
+    // 翻译
+    QString python2Translate(const QString &souceTxt);
+    QString noop2Translate(const QString &souceTxt);
+
 private:
     static BRDBus *m_instance;
     QTimer *m_resourceMonitorTimer;
