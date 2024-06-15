@@ -225,6 +225,9 @@ private:
     QMap<QString, int32_t> m_jobResult;
     // 加固前需要进行一次扫描，定时监听扫描进程完成后再进行加固
     QTimer *m_reinforceTimer;
+
+    // 报表保存路径
+    QString m_reportSavePath;
 };
 }  // namespace BR
 }  // namespace KS
