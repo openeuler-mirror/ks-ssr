@@ -514,6 +514,8 @@ void BRDBus::Scan(const QStringList& names)
                       m_scanUniqueName);
         return;
     }
+
+    m_scanJobResult = std::move(Protocol::JobResult(0, 0, 0));
     m_jobResult.clear();
 
     try
