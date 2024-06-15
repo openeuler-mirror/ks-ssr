@@ -271,7 +271,8 @@ void Command::outputBrResult(QString fileName)
             QString state = m_brItemInfo.value(key)->state;
             if (state.isEmpty())
                 continue;
-            std::cout << leftJustify(key, 50).toStdString() << leftJustify(label, 50).toStdString() << leftJustify(state, 20).toStdString() << std::endl;
+            std::string color = state == QString(tr("Conformity")) || state == QString(tr("Reinforced")) ? "\033[0m" : "\033[31m";
+            std::cout << leftJustify(key, 50).toStdString() << leftJustify(label, 50).toStdString() << color << leftJustify(state, 20).toStdString() << "\033[0m" << std::endl;
         }
 
         exit(0);
