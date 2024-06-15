@@ -107,6 +107,8 @@ void Activation::activate()
     if (isActivated)
     {
         hide();
+        m_licenseProxy->updateLicense();
+        update();
     }
 }
 
