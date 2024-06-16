@@ -223,5 +223,45 @@
         <source> (error code: 0x%1)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Information overview</source>
+        <translation>信息总览</translation>
+    </message>
+    <message>
+        <source>OS:</source>
+        <translation>操作系统:</translation>
+    </message>
+    <message>
+        <source>kernel version:</source>
+        <translation>系统内核版本:</translation>
+    </message>
+    <message>
+        <source>Software active state:</source>
+        <translation>软件激活状态:</translation>
+    </message>
+    <message>
+        <source>activated</source>
+        <translation>已激活</translation>
+    </message>
+    <message>
+        <source>Export time:</source>
+        <translation>导出时间:</translation>
+    </message>
+    <message>
+        <source>KylinSec Host Security Reinforcement V1 report</source>
+        <translation>麒麟信安主机安全加固V1报告</translation>
+    </message>
+    <message>
+        <source>No problems were found in this test</source>
+        <translation>本次检测没有发现问题</translation>
+    </message>
+    <message>
+        <source>KylinSec Co., Ltd. Contact:400-012-6606</source>
+        <translation>湖南麒麟信安科技股份有限公司，联系电话：400-012-6606</translation>
+    </message>
+    <message>
+        <source>KylinSec Co., Ltd.</source>
+        <translation>湖南麒麟信安科技股份有限公司</translation>
+    </message>
 </context>
 </TS>
