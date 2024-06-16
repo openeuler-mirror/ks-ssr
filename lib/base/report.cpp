@@ -131,25 +131,26 @@ static void makeHomePage(HPDF_Doc pdf, HPDF_Font font, const QList<QPair<QString
     HPDF_Page_BeginText(page);
     {
         HPDF_Page_SetFontAndSize(page, font, TITLE_FONT_SIZE);
-        QString text = "麒麟信安主机安全加固软件V1报告";
+        QString text = QObject::tr("KylinSec Host Security Reinforcement V1 report");  //麒麟信安主机安全加固软件V1报告
         HPDF_REAL tw = HPDF_Page_TextWidth(page, text.toLocal8Bit());
         HPDF_Page_TextOut(page, pageWidth / 2 - tw / 2, TITLE_POS_Y, text.toLocal8Bit());
     }
     {
         HPDF_Page_SetFontAndSize(page, font, TITLE_SECOND_FONT_SIZE);
-        QString text = "信息总览";
+        QString text = QObject::tr("Information overview");  //信息总览
         HPDF_REAL tw = HPDF_Page_TextWidth(page, text.toLocal8Bit());
         HPDF_Page_TextOut(page, pageWidth / 2 - tw / 2, TITLE_POS_Y - CONTENT_MARGIN, text.toLocal8Bit());
     }
 
     QList<QPair<QString, QString>> homeData;
-    homeData.append(qMakePair(QString("操作系统:"), QSysInfo::prettyProductName()));
+    homeData.append(qMakePair(QObject::tr("OS:"), QSysInfo::prettyProductName()));  //操作系统:
     homeData.append(qMakePair(QString("IP:"), getIPPath()));
     homeData.append(qMakePair(QString("MAC:"), getMacPath()));
-    homeData.append(qMakePair(QString("系统内核版本:"), QSysInfo::kernelType() + QSysInfo::kernelVersion()));
-    homeData.append(qMakePair(QString("软件激活状态:"), QString("已激活")));
+    homeData.append(qMakePair(QObject::tr("kernel version:"), QSysInfo::kernelType() + QSysInfo::kernelVersion()));         //系统内核版本
+    homeData.append(qMakePair(QObject::tr("Software active state:"), QObject::tr("activated")));                            //软件激活状态 //已激活
+    homeData.append(qMakePair(QObject::tr("Export time:"), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")));  //导出时间
+
     homeData.append(homeExtraData);
-    homeData.append(qMakePair(QString("导出时间:"), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")));
 
     HPDF_Page_SetFontAndSize(page, font, CONTENT_FONT_SIZE);
     int startYPos = TITLE_POS_Y - CONTENT_MARGIN * 2;
