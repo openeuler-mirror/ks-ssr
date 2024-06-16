@@ -82,8 +82,8 @@ void addTail(HPDF_Page page, HPDF_Font font)
 
 void addWatermark(HPDF_Page page, HPDF_Font font)
 {
-    QString text = "湖南麒麟信安科技股份有限公司";
-    float angle = 45.0 * M_PI / 180.0;  // 45 degree rotation, 30% opacity
+    QString text = QObject::tr("KylinSec Co., Ltd.");  // 湖南麒麟信安科技股份有限公司
+    float angle = 45.0 * M_PI / 180.0;                 // 45 degree rotation, 30% opacity
 
     // Save the current graphic state
     HPDF_Page_GSave(page);
