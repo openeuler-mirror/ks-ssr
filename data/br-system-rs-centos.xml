@@ -397,21 +397,5 @@
                 </layout>
             </arg>
         </reinforcement>
-        <reinforcement>
-            <name>external-sftp-user</name>
-            <arg>
-                <name>enabled</name>
-                <value>true</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Whether to configure sftpuser special account")</label>
-                </layout>
-            </arg>
-        </reinforcement>
     </body>
 </br_rs>
