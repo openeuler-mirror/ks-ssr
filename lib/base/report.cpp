@@ -148,6 +148,7 @@ static void makeHomePage(HPDF_Doc pdf, HPDF_Font font, const QList<QPair<QString
     homeData.append(qMakePair(QString("系统内核版本:"), QSysInfo::kernelType() + QSysInfo::kernelVersion()));
     homeData.append(qMakePair(QString("软件激活状态:"), QString("已激活")));
     homeData.append(homeExtraData);
+    homeData.append(qMakePair(QString("导出时间:"), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")));
 
     HPDF_Page_SetFontAndSize(page, font, CONTENT_FONT_SIZE);
     int startYPos = TITLE_POS_Y - CONTENT_MARGIN * 2;
