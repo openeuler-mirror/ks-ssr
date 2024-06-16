@@ -118,3 +118,4 @@ libnss_systemd
 libsmime3
 libcurl
 libhpdf
+libgtk-3
