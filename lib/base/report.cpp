@@ -4,6 +4,7 @@
 #include <qt5-log-i.h>
 #include <QDateTime>
 #include <QNetworkInterface>
+#include <QObject>
 #include "config.h"
 #include "include/ssr-marcos.h"
 
