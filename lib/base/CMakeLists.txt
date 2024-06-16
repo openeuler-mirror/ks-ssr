@@ -56,3 +56,5 @@ target_link_libraries(
          ${KLOG_QT5_LIBRARIES} ${LIBHPDF_LIBRARY})
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${CRYPTOPP_LIBRARIES})
+
+install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
