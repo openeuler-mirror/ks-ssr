@@ -50,7 +50,7 @@ else()
 endif()
 
 if(WITH_LIBDNF)
-  message(STATUS "Device Manager: with systemd-udev")
+  message(STATUS "vulerability manager: with libdnf")
   add_definitions(-DWITH_LIBDNF)
 endif()
 
