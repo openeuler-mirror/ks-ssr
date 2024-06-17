@@ -60,7 +60,7 @@ void SDDeviceMonitor::handleDeviceChange(sd_device *device)
     {
         if (!m_devices.value(syspath))
         {
-            m_devices.insert(syspath, QSharedPointer<SDDevice>(new SDDevice(syspath, sdDevice.getSubsystem())));
+            m_devices.insert(syspath, QSharedPointer<SDDevice>(new SDDevice(syspath)));
             Q_EMIT this->deviceChanged(&sdDevice, DEVICE_ACTION_ADD);
         }
         else
