@@ -24,7 +24,6 @@ else()
   message(STATUS "Found libharu headers: ${LIBHPDF_INCLUDE_DIR}")
 endif()
 
-
 # 更新ts文件
 set(TS_FILES
     "${PROJECT_SOURCE_DIR}/translations/lib/${PROJECT_NAME}-${TARGET_NAME}.zh_CN.ts"
