@@ -4,152 +4,152 @@
 <context>
     <name>KS::Command::Command</name>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="299"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="341"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="300"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="347"/>
         <source>open file failed</source>
         <translation>打开文件失败</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="512"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="518"/>
         <source>No system vulnerabilities were found in this scan</source>
         <translation>本次扫描未发现系统漏洞</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="397"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="435"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="403"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="441"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="77"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="78"/>
         <source>The software is not activated.</source>
         <translation>软件未激活。</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="167"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="168"/>
         <source>Failed to export report</source>
         <translation>导出报表失败</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="364"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="370"/>
         <source>fatal</source>
         <translation>致命</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="366"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="372"/>
         <source>hight</source>
         <translation>高危</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="368"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="374"/>
         <source>middle</source>
         <translation>中危</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="370"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="373"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="376"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="379"/>
         <source>low</source>
         <translation>低危</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="331"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="381"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="337"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="387"/>
         <source>succeed</source>
         <translation>修复成功</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="383"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="389"/>
         <source>failed</source>
         <translation>修复失败</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="385"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="388"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="391"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="394"/>
         <source>not repair</source>
         <translation>未修复</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="289"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="400"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="431"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="290"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="406"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="437"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="171"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="172"/>
         <source>Export Report Success</source>
         <translation>导出报表成功</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="403"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="433"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="409"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="439"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="406"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="412"/>
         <source>Not Scanned</source>
         <translation>未扫描</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="556"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="562"/>
         <source>Repair progress </source>
         <translation>修复进度 </translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="89"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="112"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="149"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="409"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="90"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="113"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="150"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="415"/>
         <source>Scannig...</source>
         <translation>正在扫描...</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="313"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="356"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="314"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="362"/>
         <source>Results output to file </source>
         <translation>输出结果到文件 </translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="506"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="512"/>
         <source>Scan progress </source>
         <translation>扫描进度 </translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="523"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="529"/>
         <source>Repairing...</source>
         <translation>正在修复...</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="412"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="418"/>
         <source>Scan Failed</source>
         <translation>扫描失败</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="415"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="421"/>
         <source>Scan Complete</source>
         <translation>扫描完成</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="418"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="424"/>
         <source>Unreinforcement</source>
         <translation>未加固</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="122"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="421"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="123"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="427"/>
         <source>Reinforcing...</source>
         <translation>正在加固...</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="141"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="424"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="142"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="430"/>
         <source>Reinforcement Failure</source>
         <translation>加固失败</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="289"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="427"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="290"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="433"/>
         <source>Reinforced</source>
         <translation>加固成功</translation>
     </message>
