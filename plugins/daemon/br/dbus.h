@@ -219,6 +219,8 @@ private:
     Protocol::JobResult m_scanJobResult;
     // 加固任务
     QSharedPointer<Job> m_reinforceJob;
+    // 记录当前加固过程中完整的结果，而不是发送信号这一次的结果
+    Protocol::JobResult m_reinforceJobResult;
 
     // 激活信息
     QJsonValue m_licenseValues;
