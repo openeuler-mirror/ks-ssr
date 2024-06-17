@@ -1123,7 +1123,8 @@ void BRDBus::processReinforceProgress(const JobResult& jobResult)
 
             reinforcementResult.name(operation->reinforcement_name.toStdString());
             reinforcementResult.state(BRReinforcementState::BR_REINFORCEMENT_STATE_REINFORCING);
-            reinforceResult.reinforcement().push_back(std::move(reinforcementResult));
+            reinforceResult.reinforcement().push_back(reinforcementResult);
+            cacheReinforceResult(reinforcementResult);
         }
 
         for (auto iter = jobResult.current_finished_operations.begin(); iter != jobResult.current_finished_operations.end(); ++iter)
