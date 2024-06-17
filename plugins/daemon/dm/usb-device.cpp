@@ -217,7 +217,7 @@ void USBDevice::initPermission()
 
     if (setting == nullptr)
     {
-        this->setState(DEVICE_STATE_ENABLE);
+        this->setState(DEVICE_STATE_UNAUTHORIED);
         this->setDeviceAuthorized();
         return;
     }
