@@ -600,6 +600,13 @@ uint BRDBus::GetScanStatus()
     return m_scanJob->getState();
 }
 
+QString BRDBus::GetScanResult()
+{
+    std::ostringstream ostringStream;
+    Protocol::br_job_result(ostringStream, m_scanJobResult);
+    return QString(ostringStream.str().c_str());
+}
+
 void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
 {
     SCOPE_EXIT(
