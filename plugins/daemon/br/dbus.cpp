@@ -628,7 +628,9 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
     }
     this->m_reinforceJob = Job::create();
     // 加固前进行一次扫描
+    // FIXME：这里为什么要去扫描？而且m_jobResult还是跟Scan复用的
     Scan(names);
+    initReinforceResult(names);
     m_jobResult.clear();
 
     for (auto iter = names.begin(); iter != names.end(); ++iter)
