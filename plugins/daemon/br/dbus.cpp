@@ -701,13 +701,16 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
     m_reinforceTimer->start();
 }
 
-void BRDBus::GetReinforceResult(const QString& result)
-{
-}
-
 uint BRDBus::GetReinforceStatus()
 {
     return m_reinforceJob->getState();
+}
+
+QString BRDBus::GetReinforceResult()
+{
+    std::ostringstream ostringStream;
+    Protocol::br_job_result(ostringStream, m_reinforceJobResult);
+    return QString(ostringStream.str().c_str());
 }
 
 void BRDBus::Cancel(const qlonglong& jobID)
