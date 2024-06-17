@@ -69,6 +69,7 @@ int main(int argc, char* argv[])
     bool outputEnabled = parser.isSet(outputOption);
     bool exportEnabled = parser.isSet(exportOption);
     QString exportPath = parser.value(exportOption);
+    exportPath = QDir(QDir::currentPath()).absoluteFilePath(exportPath);
     KS::Command::Command cmd_parser;
     cmd_parser.setFileOutput(outputEnabled);
     if ("br" == module && (scanEnabled || reinforceEnabled || exportEnabled))
