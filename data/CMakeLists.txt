@@ -79,9 +79,11 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/data/box
         DESTINATION ${SSR_INSTALL_DATADIR})
 
 # configuration files
-install(FILES ${PROJECT_SOURCE_DIR}/data/ssr.ini
-              ${PROJECT_SOURCE_DIR}/data/zlog.conf
-        DESTINATION ${SSR_INSTALL_DATADIR})
+install(
+  FILES ${PROJECT_SOURCE_DIR}/data/ssr.ini ${PROJECT_SOURCE_DIR}/data/zlog.conf
+  PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ GROUP_WRITE WORLD_READ
+              WORLD_WRITE
+  DESTINATION ${SSR_INSTALL_DATADIR})
 
 # device cfg file
 install(
