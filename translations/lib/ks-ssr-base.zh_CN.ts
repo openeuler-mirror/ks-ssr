@@ -263,5 +263,9 @@
         <source>KylinSec Co., Ltd.</source>
         <translation>湖南麒麟信安科技股份有限公司</translation>
     </message>
+    <message>
+        <source>Scan or Repair is running, please wait moment.</source>
+        <translation>扫描或者修复正在运行，请稍候。</translation>
+    </message>
 </context>
 </TS>
