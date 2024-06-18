@@ -469,12 +469,12 @@
     <message>
         <location filename="../../lib/base/report.cpp" line="72"/>
         <source>KylinSec Co., Ltd. Contact:400-012-6606</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../lib/base/report.cpp" line="85"/>
         <source>KylinSec Co., Ltd.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../lib/base/report.cpp" line="134"/>
