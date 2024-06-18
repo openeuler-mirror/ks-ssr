@@ -157,6 +157,7 @@ Q_SIGNALS:  // SIGNALS
     void RootFreeSpaceRatioLower(const QString &ratio);
     void ScanProgress(const QString &progress);
     void MemoryAbnormal(const QString &ratio);
+    void ExportReportFinished(const QString &failedReason);
 
 private:
     void reinforce(const QDBusMessage &message, const QStringList &names);
