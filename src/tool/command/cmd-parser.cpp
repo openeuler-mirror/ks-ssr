@@ -126,7 +126,7 @@ int Command::reinforce(const QStringList &name)
             });
     connect(m_dbusBRProxy, &BRDbusProxy::ProgressFinished, this, [this]
             {
-                KLOG_WARNING() << "ProgressFinished";
+                KLOG_INFO() << "ProgressFinished";
                 outputBrResult("./br_reinforce_output.txt");
             });
     QStringList items = getBrInfo();
