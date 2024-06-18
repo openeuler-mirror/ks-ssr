@@ -140,6 +140,9 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case SSRErrorCode::ERROR_TOOL_BOX_FAILED_SHRED_FILES:
         errorDesc = QObject::tr("Failed to shred files, see log for more details.");
         break;
+    case SSRErrorCode::ERROR_VULNERABILITY_TASK_RUNNING:
+        errorDesc = QObject::tr("Scan or Repair is running, please wait moment.");
+        break;
 
     default:
         errorDesc = QObject::tr("Unknown error.");
