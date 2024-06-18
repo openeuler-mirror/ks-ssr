@@ -77,6 +77,7 @@ private:
 private slots:
     void scanProgress(const QString &progress);
     void repairProgress(const QString &progress);
+    void exportReportFinished(const QString &failed_reason);
 
 private:
     BRDbusProxy *m_dbusBRProxy;
