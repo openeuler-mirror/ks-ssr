@@ -146,19 +146,33 @@ int Command::reinforce(const QStringList &name)
 
 void Command::repair(const QStringList &cves)
 {
-    std::cout << tr("Scannig...").toStdString() << std::endl;
     m_onlyScan = false;
     m_lastPercent = 0;
-    m_specifyCVE = cves.isEmpty() ? false : true;
     m_cveIds = cves;
-    connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ScanProgress, this, &Command::scanProgress, Qt::QueuedConnection);
     connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::RepairProgress, this, &Command::repairProgress);
-    m_dbusVulnerabilityProxy->Scan();
+    if (cves.isEmpty())
+    {
+        std::cout << tr("Scannig...").toStdString() << std::endl;
+        connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ScanProgress, this, &Command::scanProgress, Qt::QueuedConnection);
+        m_dbusVulnerabilityProxy->Scan();
+    }
+    else
+    {
+        getCVEsInfo();
+        KLOG_DEBUG() << "CVE Ids:" << m_cveIds;
+        std::cout << tr("Repairing...").toStdString() << std::endl;
+        m_dbusVulnerabilityProxy->Repair(m_cveIds);
+    }
 }
 
 int Command::exportReport(QString which, QString path)
 {
-    KLOG_DEBUG() << which << "exportPath:" << path;
+    KLOG_INFO() << which << "exportPath:" << path;
+    if (!path.endsWith(".pdf"))
+    {
+        std::cout << tr("File name suffix error, please end with .pdf").toStdString() << std::endl;
+        exit(-1);
+    }
     //    auto reply = "br" == which ? m_dbusBRProxy->ExportReport(path) : m_dbusVulnerabilityProxy->ExportReport(path);
     //    reply.waitForFinished();
     //    if (reply.isError())
