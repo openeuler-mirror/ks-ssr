@@ -119,7 +119,6 @@ set(SSR_DEVICE_UDEV_RULES_FILE "/etc/udev/rules.d/99-ssr-device.rules")
 set(SSR_DEVICE_USB_DESC_FILE "/usr/share/hwdata/usb.ids")
 configure_file(config.h.in ${PROJECT_BINARY_DIR}/config.h)
 
-add_subdirectory(config)
 add_subdirectory(lib)
 add_subdirectory(resources)
 add_subdirectory(src)
