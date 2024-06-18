@@ -272,5 +272,12 @@
             <description>Scan or reinforce finished.</description>
         </signal>
 
+        <signal name="ExportReportFinished">
+            <arg name="failed_reason" type="s">
+                <summary>Empty failed reason represents success</summary>
+            </arg>
+            <description>Export report finished.</description>
+        </signal>
+
     </interface>
 </node>
