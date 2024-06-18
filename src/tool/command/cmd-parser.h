@@ -17,6 +17,7 @@
 #include <QMap>
 #include <QObject>
 #include <QSharedPointer>
+#include <QTextStream>
 #include "lib/dbus/license-proxy.h"
 
 class BRDbusProxy;
