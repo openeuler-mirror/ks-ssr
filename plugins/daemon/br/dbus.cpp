@@ -465,7 +465,7 @@ QString BRDBus::GetReinforcement(const QString& name)
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED));
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED));
     }
     return QString::fromStdString(ostringStream.str());
 }
