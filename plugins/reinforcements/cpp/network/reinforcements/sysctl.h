@@ -53,8 +53,8 @@ public:
     SysctlSourceRoute();
     virtual ~SysctlSourceRoute(){};
 
-    virtual bool get(std::string &args, BRErrorCode &error_code);
-    virtual bool set(const std::string &args, BRErrorCode &error_code);
+    virtual bool get(std::string &args, SSRErrorCode &error_code);
+    virtual bool set(const std::string &args, SSRErrorCode &error_code);
 };
 
 }  // namespace Network
