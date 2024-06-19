@@ -383,12 +383,13 @@ void Command::outputRepairResult(QTextStream &output)
         stateMap[state]++;
         if (m_fileOutput)
         {
-            output << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << leftJustify(state, 20) << endl;
+            output << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << leftJustify(state, 20) << "\n";
         }
         else
         {
             QString color = state.isEmpty() || state == QString(tr("succeed")) ? "\033[0m" : "\033[31m";
-            output << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << color << leftJustify(state, 20) << "\033[0m" << endl;
+            output << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << color << leftJustify(state, 20) << "\033[0m"
+                   << "\n";
         }
     }
     output << tr("Total number of vulnerabilities: ") << QString::number(all) << tr(" ");
