@@ -590,13 +590,6 @@
         <translation>扫描类型</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="41"/>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="51"/>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="61"/>
-        <source>Remarks</source>
-        <translation>备注</translation>
-    </message>
-    <message>
         <location filename="../../plugins/gui/br/reports/table.cpp" line="47"/>
         <source>Scan rpm name</source>
         <translation>rpm包名</translation>
