@@ -82,7 +82,7 @@ bool PasswordExpired::set(const std::string &args, SSRErrorCode &error_code)
                                values[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS].isInt() ||
                                values[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN].isInt() ||
                                values[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE].isInt()),
-                              BRErrorCode::ERROR_FAILED);
+                              SSRErrorCode::ERROR_FAILED);
 
         auto max_days = fmt::format("{0}", values[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS].asInt());
         auto min_days = fmt::format("{0}", values[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS].asInt());
