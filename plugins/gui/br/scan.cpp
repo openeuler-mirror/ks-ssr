@@ -511,20 +511,25 @@ void Scan::generateReport()
         Utils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_afterReinForcementCategories);
     }
     // 断开scan进程连接
-    disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
+    //    disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
     // 进行一次扫描 仅获取扫描结果，不对UI进行调整
     connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult)
             {
                 ProgressInfo progressInfo;
                 // 获取加固后扫描结果
                 Utils::getDefault()->ssrJobResult(jobResult, progressInfo, m_afterReinForcementCategories, m_invalidData);
+                if (double(100) == progressInfo.progress)
+                {
+                    // 扫描完成,断开信号
+                    disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
+                }
             });
     // 监听进程完成后 导出报表
-    disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
+    //    disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
             {
-                disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
-                connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
+                // disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
+                // connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
                 disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
                 RETURN_IF_TRUE(!Result::getDefault()->generateReports(m_categories, m_afterReinForcementCategories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
                 POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
