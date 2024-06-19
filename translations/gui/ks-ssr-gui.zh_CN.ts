@@ -375,285 +375,274 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../lib/base/error.cpp" line="32"/>
+        <location filename="../../lib/base/error.cpp" line="34"/>
         <source>Success.</source>
         <translation>成功。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="35"/>
+        <location filename="../../lib/base/error.cpp" line="37"/>
         <source>Invalid args.</source>
         <translation>非法参数。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="38"/>
+        <location filename="../../lib/base/error.cpp" line="89"/>
         <source>Added file types are not supported.</source>
         <translation>不允许添加不支持的文件类型。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="41"/>
+        <location filename="../../lib/base/error.cpp" line="92"/>
         <source>The file is already in the list, and there is no need to add it repeatedly.</source>
         <translation>文件已在列表中，无需重复添加。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="44"/>
+        <location filename="../../lib/base/error.cpp" line="95"/>
         <source>There is no trusted card or the trusted card is not supported.</source>
         <translation>可信卡未接入或不支持可信卡。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="47"/>
+        <location filename="../../lib/base/error.cpp" line="98"/>
         <source>The pin code is wrong!</source>
         <translation>pin码错误！</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="50"/>
+        <location filename="../../lib/base/error.cpp" line="101"/>
         <source>Failed to delete box.</source>
         <translation>删除保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="53"/>
+        <location filename="../../lib/base/error.cpp" line="104"/>
         <source>Failed to create box.</source>
         <translation>创建保险箱失败。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="56"/>
+        <location filename="../../lib/base/error.cpp" line="107"/>
         <source>Insufficient free space or unknown error, box creation failed.</source>
         <translation>可用空间不足或未知错误，保险箱创建失败。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="59"/>
+        <location filename="../../lib/base/error.cpp" line="110"/>
         <source>PrivateBox not found!</source>
         <translation>保险箱未找到！</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="62"/>
+        <location filename="../../lib/base/error.cpp" line="113"/>
         <source>The box is exist!</source>
         <translation>保险箱已存在！</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="65"/>
+        <location filename="../../lib/base/error.cpp" line="116"/>
         <source>The password set to the same as the current password is not supported.</source>
         <translation>新密码不能与当前密码相同。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="68"/>
+        <location filename="../../lib/base/error.cpp" line="119"/>
         <source>Busy resources!</source>
         <translation>资源忙碌！</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="71"/>
+        <location filename="../../lib/base/error.cpp" line="122"/>
         <source>Failed to change the password, please check whether the password is correct.</source>
         <translation>修改密码失败，请检查密码是否正确。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="75"/>
+        <location filename="../../lib/base/error.cpp" line="126"/>
         <source>The password complexity does not meet the requirements.</source>
         <translation>不满足密码复杂度的要求。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="78"/>
+        <location filename="../../lib/base/error.cpp" line="129"/>
         <source>Password error!</source>
         <translation>密码错误！</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="81"/>
+        <location filename="../../lib/base/error.cpp" line="132"/>
         <source>Passphrase error!</source>
         <translation>口令错误！</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="84"/>
+        <location filename="../../lib/base/error.cpp" line="215"/>
         <source>Internal error!</source>
         <translation>内部错误！</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="87"/>
+        <location filename="../../lib/base/error.cpp" line="135"/>
         <source>Invalid device.</source>
         <translation>无效的设备。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="90"/>
+        <location filename="../../lib/base/error.cpp" line="138"/>
         <source>Invalid device permissions.</source>
         <translation>无效的设备权限。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="93"/>
+        <location filename="../../lib/base/error.cpp" line="141"/>
         <source>Invalid device interface type.</source>
         <translation>无效的设备接口类型。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="96"/>
+        <location filename="../../lib/base/error.cpp" line="144"/>
         <source>The graphics card does not support HDMI interface shutdown.</source>
         <translation>显卡不支持关闭HDMI接口。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="99"/>
+        <location filename="../../lib/base/error.cpp" line="147"/>
         <source>Password error.</source>
         <translation>密码错误。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="102"/>
+        <location filename="../../lib/base/error.cpp" line="150"/>
         <source>This account has been freeze.</source>
         <translation>此用户已被冻结。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="105"/>
+        <location filename="../../lib/base/error.cpp" line="153"/>
         <source>New password must be different from old password.</source>
         <translation>新密码必须不同于当前密码。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="108"/>
+        <location filename="../../lib/base/error.cpp" line="156"/>
         <source>Permission denied.</source>
         <translation>权限拒绝。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="111"/>
+        <location filename="../../lib/base/error.cpp" line="159"/>
         <source>Unknown account.</source>
         <translation>未知用户。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="114"/>
+        <location filename="../../lib/base/error.cpp" line="162"/>
         <source>Failed to Change Multi-Factor authentication state.</source>
         <translation>修改多因子认证状态失败。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="117"/>
+        <location filename="../../lib/base/error.cpp" line="165"/>
         <source>per page limit must less than 100 and page index must greater than 0.</source>
         <translation>每页数量必须小于 100 且页码必须大于 0 。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="120"/>
+        <location filename="../../lib/base/error.cpp" line="168"/>
         <source>Failed to set selinux status.</source>
         <translation>设置 selinux 失败。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="123"/>
+        <location filename="../../lib/base/error.cpp" line="171"/>
         <source>Failed to set mls Context, see log for more details.</source>
         <translation>设置安全上下文失败，详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="126"/>
+        <location filename="../../lib/base/error.cpp" line="174"/>
         <source>Failed to get mls Context, see log for more details.</source>
         <translation>获取安全上下文失败，详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="129"/>
+        <location filename="../../lib/base/error.cpp" line="177"/>
         <source>Failed to set kic Context, see log for more details.</source>
         <translation>设置完整性标签失败，详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="132"/>
+        <location filename="../../lib/base/error.cpp" line="180"/>
         <source>Failed to get kic Context, see log for more details.</source>
         <translation>获取完整性标签失败，详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="135"/>
+        <location filename="../../lib/base/error.cpp" line="183"/>
         <source>Failed to add obj to securitySign list, see log for more details.</source>
         <translation>添加对象至安全标记列表失败，详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="138"/>
+        <location filename="../../lib/base/error.cpp" line="186"/>
         <source>Failed to remove users, see log for more details.</source>
         <translation>删除用户失败，详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="141"/>
+        <location filename="../../lib/base/error.cpp" line="189"/>
         <source>Failed to shred files, see log for more details.</source>
         <translation>粉碎文件失败，详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="144"/>
+        <location filename="../../lib/base/error.cpp" line="192"/>
         <source>Scan or Repair is running, please wait moment.</source>
         <translation>扫描或者修复正在运行， 请稍候。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="148"/>
-        <location filename="../../lib/base/error.cpp" line="238"/>
+        <location filename="../../lib/base/error.cpp" line="218"/>
         <source>Unknown error.</source>
         <translation>未知错误。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="167"/>
+        <location filename="../../lib/base/error.cpp" line="40"/>
         <source>The standard type is invalid.</source>
         <translation>标准类型不合法。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="170"/>
+        <location filename="../../lib/base/error.cpp" line="43"/>
         <source>The strategy type is invalid.</source>
         <translation>策略类型不合法。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="173"/>
+        <location filename="../../lib/base/error.cpp" line="46"/>
         <source>The notification status is invalid.</source>
         <translation>通知状态不合法。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="176"/>
+        <location filename="../../lib/base/error.cpp" line="49"/>
         <source>The resource monitor is invalid.</source>
         <translation>资源监控不合法。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="181"/>
+        <location filename="../../lib/base/error.cpp" line="54"/>
         <source>Error format for reinforcement standard.</source>
         <translation>加固标准格式错误。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="184"/>
+        <location filename="../../lib/base/error.cpp" line="57"/>
         <source>Reinforcement item &apos;{0}&apos; is not found.</source>
         <translation>加固项&apos;{0}&apos;未找到。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="188"/>
+        <location filename="../../lib/base/error.cpp" line="61"/>
         <source>The job is running, please don&apos;t repeat the operation.</source>
         <translation>任务正在运行，请不要重复操作。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="191"/>
+        <location filename="../../lib/base/error.cpp" line="64"/>
         <source>The fallback is can&apos;t running, please wait for the reinforcement to be completed.</source>
         <translation>回退暂无法运行，请在进行加固完成后操作。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="194"/>
+        <location filename="../../lib/base/error.cpp" line="67"/>
         <source>The standard reinforcement configuration is not found.</source>
         <translation>加固标准配置未找到。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="197"/>
+        <location filename="../../lib/base/error.cpp" line="70"/>
         <source>Machine code error.</source>
         <translation>机器码错误。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="200"/>
+        <location filename="../../lib/base/error.cpp" line="73"/>
         <source>Activation code error.</source>
         <translation>激活码错误。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="203"/>
+        <location filename="../../lib/base/error.cpp" line="76"/>
         <source>There is no historical state, please reinforce it and operation.</source>
         <translation>历史状态不存在，请在加固后进行操作。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="206"/>
+        <location filename="../../lib/base/error.cpp" line="79"/>
         <source>The subsequest configuration item scan progress has been cancelled.</source>
         <translation>已取消后续配置项扫描进程。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="210"/>
+        <location filename="../../lib/base/error.cpp" line="83"/>
         <source>The subsequest configuration item reinforcement progress has been cancelled.</source>
         <translation>已取消后续配置项加固进程。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="232"/>
-        <source>Internel error.</source>
-        <translation>内部错误。</translation>
-    </message>
-    <message>
-        <location filename="../../lib/base/error.cpp" line="235"/>
+        <location filename="../../lib/base/error.cpp" line="86"/>
         <source>The software is not activated.</source>
         <translation>软件未激活。</translation>
-    </message>
-    <message>
-        <location filename="../../lib/base/error.cpp" line="242"/>
-        <source> (error code: 0x%1)</source>
-        <translation> （错误码：0x%1）</translation>
     </message>
     <message>
         <location filename="../../src/gui/license/activation.cpp" line="27"/>
