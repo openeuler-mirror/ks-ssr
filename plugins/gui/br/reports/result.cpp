@@ -521,7 +521,9 @@ bool Result::generateReports(const QList<Category *> &scanList, int status, cons
     // 报表首页
     createReportHomePage(status, printerPixmap.pageLayout().fullRectPixels(printerPixmap.resolution()));
     printerPixmap.newPage();
-    createReportContent(printerPixmap, afterReinforcementList, invalidData);
+    createReportContent(printerPixmap, scanList, invalidData);
+
+    m_painter->end();
 
     return true;
 }
