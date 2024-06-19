@@ -438,52 +438,52 @@
         <translation>加固成功</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="188"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="180"/>
         <source>No master file</source>
         <translation>无属主文件</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="194"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="186"/>
         <source>Files with 777 permissions</source>
         <translation>文件具有777权限</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="205"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="197"/>
         <source>Files with sgid permission</source>
         <translation>文件具有sgid权限</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="207"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="199"/>
         <source>Files with suid permission</source>
         <translation>文件具有suid权限</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="350"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="291"/>
         <source>Unactivated</source>
         <translation>未激活</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="350"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="291"/>
         <source>Activated</source>
         <translation>已激活</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="479"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="402"/>
         <source>Vulnerability exists in version %1</source>
         <translation>版本号%1存在漏洞</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="542"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="465"/>
         <source>KylinSecHostReinforcementReport_%1_%2.pdf</source>
         <translation>麒麟信安主机安全加固报告_%1_%2.pdf</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="545"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="466"/>
         <source>export report</source>
         <translation>导出报告</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="545"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="466"/>
         <source>PDF(*.pdf)</source>
         <translation></translation>
     </message>
