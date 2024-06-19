@@ -78,7 +78,7 @@ bool AuditdSwitch::set(const std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s.", e.what());
-        error_code = BRErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR;
+        error_code = SSRErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR;
         return false;
     }
 }
