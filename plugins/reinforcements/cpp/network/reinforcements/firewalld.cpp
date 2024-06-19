@@ -31,7 +31,7 @@ FirewalldSwitch::FirewalldSwitch()
     this->systemd_proxy_ = std::make_shared<DBusSystemdProxy>();
 }
 
-bool FirewalldSwitch::get(std::string &args, BRErrorCode &error_code)
+bool FirewalldSwitch::get(std::string &args, SSRErrorCode &error_code)
 {
     Json::Value values;
 
