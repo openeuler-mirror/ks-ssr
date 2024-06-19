@@ -87,50 +87,33 @@ void Table::addLine(const QString &name,
     // 背景颜色需要判断，不在qss中设置
     auto style = QString("QWidget{background-color: %1;}").arg(backgroundColor);
     line->setStyleSheet(style);
-    line->setContentsMargins(16, 0, 0, 0);
 
     auto sizePolicy = line->sizePolicy();
     sizePolicy.setVerticalPolicy(QSizePolicy::Maximum);
     line->setSizePolicy(sizePolicy);
     line->setMaximumHeight(36);
+    line->setMinimumHeight(36);
 
     auto layout = new QHBoxLayout(line);
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(16, 0, 16, 0);
+    layout->setSpacing(0);
 
     auto nameLabel = new QLabel(line);
-    nameLabel->setObjectName("nameLabel");
     auto scanLabel = new QLabel(line);
-    auto reinforceLabel = new QLabel(line);
-    auto remarksLabel = new QLabel(line);
-    remarksLabel->setObjectName("remarksLabel");
+    nameLabel->setObjectName("nameLabel");
+
+    nameLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    scanLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
 
     QPalette scanPe;
     scanPe.setColor(QPalette::WindowText, scanColor);
-
-    QPalette reinforcePe;
-    reinforcePe.setColor(QPalette::WindowText, reinforceColor);
-
     scanLabel->setPalette(scanPe);
-    reinforceLabel->setPalette(reinforcePe);
-
-    nameLabel->setFixedSize(224, 35);
-    scanLabel->setFixedSize(240, 35);
-    reinforceLabel->setFixedSize(240, 35);
-    remarksLabel->setFixedSize(150, 35);
-
-    scanLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-    reinforceLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-    remarksLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
 
     nameLabel->setText(name);
     scanLabel->setText(scanResult);
-    reinforceLabel->setText(reinforceResult);
-    remarksLabel->setText(remarks);
 
     layout->addWidget(nameLabel);
     layout->addWidget(scanLabel);
-    layout->addWidget(reinforceLabel);
-    layout->addWidget(remarksLabel);
 
     line->setLayout(layout);
 
