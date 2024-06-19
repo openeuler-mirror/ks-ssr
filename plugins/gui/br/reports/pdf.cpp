@@ -33,6 +33,7 @@ PDF::PDF(const QString &systemName,
     m_ui->setupUi(this);
 
     m_ui->m_systemName->setText(systemName);
+    m_ui->m_host->setText(QSysInfo::machineHostName());
     m_ui->m_IP->setText(IP);
     m_ui->m_MAC->setText(MAC);
     m_ui->m_kernel->setText(kernel);
