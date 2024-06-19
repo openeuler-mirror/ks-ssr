@@ -290,7 +290,7 @@ void Result::createReportHomePage(int status, const QRect &rect)
 {
     auto activeStatus = status == LicenseActivationStatus::LAS_UNACTIVATED ? QString(tr("Unactivated")) : QString(tr("Activated"));
 
-    m_pdf = new PDF(QSysInfo::prettyProductName(), getIPPath(), getMacPath(), QSysInfo::kernelType() + QSysInfo::kernelVersion(), activeStatus, this);
+    m_pdf = new PDF(QSysInfo::prettyProductName(), getIPPath(), getMacPath(), getKernelInfo(), activeStatus, this);
     m_pdf->setPieChartText(m_categoryName, m_total, m_conform, m_inconform);
     auto pixmap = m_pdf->grab(m_pdf->rect());
     // 计算painter视口区域与抓取图片区域的尺寸比例因子
