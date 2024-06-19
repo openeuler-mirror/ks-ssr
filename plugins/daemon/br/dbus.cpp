@@ -295,7 +295,7 @@ void BRDBus::SetFallbackStatus(const uint32_t& fallbackStatus)
     if (fallbackStatus > BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED)
     {
         sendErrorReply(QDBusError::InvalidArgs,
-                       BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_FALLBACK_STATUS_INVALID));
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_FALLBACK_STATUS_INVALID));
         return;
     }
     RETURN_IF_TRUE(fallbackStatus == this->m_configuration->getFallbackStatus());
