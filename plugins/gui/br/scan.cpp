@@ -437,7 +437,7 @@ void Scan::startScan()
         return;
     }
     // 设置页面定时扫描时会操作这个信号，为保证不起冲突，每次扫描时断开后重新连接
-    disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), nullptr, nullptr);
+    //    disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), nullptr, nullptr);
     connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
     m_progressInfo.method = PROCESS_METHOD_SCAN;
     clearState();
