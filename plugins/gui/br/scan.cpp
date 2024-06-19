@@ -57,8 +57,7 @@ void Scan::usingSystemStrategy()
     m_strategyType = BR_STRATEGY_TYPE_SYSTEM;
     KLOG_DEBUG() << "use system strategy.";
     resetAllReinforcementItem();
-    m_ui->m_itemTable->setAllCheckBoxEditStatus(false);
-    m_ui->m_itemTable->hideCheckBox(true);
+    m_ui->m_itemTable->setStrategy(BR_STRATEGY_TYPE_SYSTEM);
     disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     m_ui->m_progress->hideStrategy();
 }
