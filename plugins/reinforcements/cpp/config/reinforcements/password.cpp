@@ -62,16 +62,16 @@ bool PasswordExpired::get(const std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 }
 
-bool PasswordExpired::set(const std::string &args, BRErrorCode &error_code)
+bool PasswordExpired::set(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->password_expired_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
