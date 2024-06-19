@@ -315,7 +315,7 @@
     <message>
         <location filename="../../plugins/gui/br/progress.cpp" line="101"/>
         <source>Start time: %1 elapsed time: 00:00:00 progress: 0%</source>
-        <translation>开始扫描时间：%1 用时：00:00:00 进度： 0%</translation>
+        <translation>开始时间：%1 用时：00:00:00 进度： 0%</translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/progress.cpp" line="105"/>
