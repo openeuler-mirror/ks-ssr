@@ -34,11 +34,11 @@ PasswordExpired::PasswordExpired()
     this->password_expired_config_ = ConfigPlain::create(PASSWORD_EXPIRED_CONF_PATH);
 }
 
-bool PasswordExpired::get(const std::string &args, BRErrorCode &error_code)
+bool PasswordExpired::get(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->password_complextiy_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
