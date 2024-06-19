@@ -35,22 +35,15 @@ public:
 
     static QSharedPointer<Result> getDefault();
 
-    bool generateReports(const QList<Category *> &beforeReinforcementList,
-                         const QList<Category *> &afterReinforcementList,
-                         int status,
-                         const InvalidData &invalidData);
-    int getHeight();
+    bool generateReports(const QList<Category *> &scanList, int status, const InvalidData &invalidData);
 
-private slots:
-    bool exportReport(const QList<Category *> &afterReinforcementList, int status, const InvalidData &invalidData);
+    int getHeight();
 
 private:
     struct CategoryContent
     {
         QString itemName;
         int scanStatus;
-        int afterReinforceScanStatus;
-        QString remarks;
     };
 
 private:
