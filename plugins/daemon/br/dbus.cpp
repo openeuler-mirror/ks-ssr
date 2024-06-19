@@ -303,7 +303,7 @@ void BRDBus::SetFallbackStatus(const uint32_t& fallbackStatus)
     if (!this->m_configuration->setFallbackStatus(BRFallbackStatus(fallbackStatus)))
     {
         sendErrorReply(QDBusError::InternalError,
-                       BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_FALLBACK_STATUS_FAILED));
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_FALLBACK_STATUS_FAILED));
         return;
     }
 }
