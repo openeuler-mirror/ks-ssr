@@ -86,11 +86,11 @@ LoginTimeout::LoginTimeout()
     this->login_timeout_config_ = ConfigPlain::create(LOGIN_TIMEOUT_CONF_PATH, "=");
 }
 
-bool LoginTimeout::get(const std::string &args, BRErrorCode &error_code)
+bool LoginTimeout::get(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->login_timeout_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
