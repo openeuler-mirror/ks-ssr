@@ -590,27 +590,23 @@
         <translation>扫描类型</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="47"/>
+        <location filename="../../plugins/gui/br/reports/table.cpp" line="45"/>
         <source>Scan rpm name</source>
         <translation>rpm包名</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="49"/>
+        <location filename="../../plugins/gui/br/reports/table.cpp" line="47"/>
+        <location filename="../../plugins/gui/br/reports/table.cpp" line="54"/>
         <source>Scan results</source>
         <translation>扫描结果</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="57"/>
+        <location filename="../../plugins/gui/br/reports/table.cpp" line="53"/>
         <source>Test Item</source>
         <translation>检测项</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="58"/>
-        <source>Before reinforcement result</source>
-        <translation>加固前</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="64"/>
+        <location filename="../../plugins/gui/br/reports/table.cpp" line="59"/>
         <source>Technical support：Hunan KylinSec Technology Co. Ltd.,  Telephone：400-012-6606</source>
         <translation>技术支持：湖南麒麟信安科技股份有限公司，联系电话：400-012-6606</translation>
     </message>
