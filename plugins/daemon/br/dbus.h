@@ -110,7 +110,10 @@ public Q_SLOTS:
     virtual QString GetReinforcement(const QString &name);
 
     // 设置自定义加固参数
-    virtual void SetReinforcement(const QString &reinforcementXML);
+    virtual void SetReinforcement(const QString &reinforcement);
+
+    // 设置自定义加固参数
+    virtual void SetReinforcements(const QString &reinforcements);
 
     // 重置指定的加固项
     virtual void ResetReinforcement(const QString &name);
