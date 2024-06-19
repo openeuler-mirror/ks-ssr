@@ -69,7 +69,7 @@ bool HistorySizeLimit::set(const std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        RETURN_ERROR_IF_FALSE(false, BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
     }
 }
 
