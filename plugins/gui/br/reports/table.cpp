@@ -38,8 +38,6 @@ Table::Table(QWidget *parent,
         m_ui->m_columnName1->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
         m_ui->m_columnName2->setText(tr("Scan Type"));
         m_ui->m_columnName2->setMinimumWidth(480);
-        m_ui->m_columnName3->setText(tr("Remarks"));
-        m_ui->m_columnName4->deleteLater();
         m_ui->m_tableHeader->layout()->itemAt(3)->widget()->setVisible(false);
     }
     else if (isScanVulnerability)
