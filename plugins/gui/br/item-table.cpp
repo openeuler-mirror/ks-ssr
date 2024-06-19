@@ -468,6 +468,32 @@ void ItemTable::setAllChecked(Qt::CheckState isChecked)
     emit m_headerProxy->toggled(isChecked);
 }
 
+void ItemTable::setStrategy(int type)
+{
+    switch (type)
+    {
+    case BR_STRATEGY_TYPE_SYSTEM:
+    {
+        setAllCheckBoxEditStatus(false);
+        hideCheckBox(true);
+
+        m_model->horizontalHeaderItem(1)->setText(tr("Info"));
+
+        break;
+    }
+    case BR_STRATEGY_TYPE_CUSTOM:
+    {
+        setAllCheckBoxEditStatus(true);
+        hideCheckBox(false);
+        setAllChecked(Qt::Unchecked);
+
+        m_model->horizontalHeaderItem(1)->setText(tr("Info(Double click this column to modify the reinforcement parameters)"));
+
+        break;
+    }
+    }
+}
+
 void ItemTable::hideCheckBox(bool isHide)
 {
     m_headerProxy->hideCheckBox(isHide);
