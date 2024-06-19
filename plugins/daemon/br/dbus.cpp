@@ -512,7 +512,7 @@ void BRDBus::SetReinforcements(const QString& reinforcements)
     {
         KLOG_WARNING("%s", e.what());
         sendErrorReply(QDBusError::InternalError,
-                       BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
     }
 }
 
