@@ -106,23 +106,23 @@ bool LoginTimeout::get(const std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 }
 
-bool LoginTimeout::set(const std::string &args, BRErrorCode &error_code)
+bool LoginTimeout::set(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->login_timeout_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
     try
     {
         Json::Value values = StrUtils::str2json(args);
-        RETURN_ERROR_IF_FALSE(values[LOGIN_RESTRICTIONS_CONF_KEY_ROOTLOGIN].isInt(), BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_FALSE(values[LOGIN_RESTRICTIONS_CONF_KEY_ROOTLOGIN].isInt(), SSRErrorCode::ERROR_FAILED);
 
         auto timeout = fmt::format("{0}", values[LOGIN_RESTRICTIONS_CONF_KEY_ROOTLOGIN].asInt());
         this->login_timeout_config_->set_value(LOGIN_RESTRICTIONS_CONF_KEY_ROOTLOGIN, timeout);
