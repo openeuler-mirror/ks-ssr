@@ -325,9 +325,9 @@ color:white;</string>
   <widget class="QWidget" name="widget_3" native="true">
    <property name="geometry">
     <rect>
-     <x>36</x>
+     <x>40</x>
      <y>520</y>
-     <width>758</width>
+     <width>751</width>
      <height>640</height>
     </rect>
    </property>
