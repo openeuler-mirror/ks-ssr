@@ -145,284 +145,273 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../lib/base/error.cpp" line="32"/>
+        <location filename="../../lib/base/error.cpp" line="34"/>
         <source>Success.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="35"/>
+        <location filename="../../lib/base/error.cpp" line="37"/>
         <source>Invalid args.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="38"/>
+        <location filename="../../lib/base/error.cpp" line="89"/>
         <source>Added file types are not supported.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="41"/>
+        <location filename="../../lib/base/error.cpp" line="92"/>
         <source>The file is already in the list, and there is no need to add it repeatedly.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="44"/>
+        <location filename="../../lib/base/error.cpp" line="95"/>
         <source>There is no trusted card or the trusted card is not supported.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="47"/>
+        <location filename="../../lib/base/error.cpp" line="98"/>
         <source>The pin code is wrong!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="50"/>
+        <location filename="../../lib/base/error.cpp" line="101"/>
         <source>Failed to delete box.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="53"/>
+        <location filename="../../lib/base/error.cpp" line="104"/>
         <source>Failed to create box.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="56"/>
+        <location filename="../../lib/base/error.cpp" line="107"/>
         <source>Insufficient free space or unknown error, box creation failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="59"/>
+        <location filename="../../lib/base/error.cpp" line="110"/>
         <source>PrivateBox not found!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="62"/>
+        <location filename="../../lib/base/error.cpp" line="113"/>
         <source>The box is exist!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="65"/>
+        <location filename="../../lib/base/error.cpp" line="116"/>
         <source>The password set to the same as the current password is not supported.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="68"/>
+        <location filename="../../lib/base/error.cpp" line="119"/>
         <source>Busy resources!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="71"/>
+        <location filename="../../lib/base/error.cpp" line="122"/>
         <source>Failed to change the password, please check whether the password is correct.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="75"/>
+        <location filename="../../lib/base/error.cpp" line="126"/>
         <source>The password complexity does not meet the requirements.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="78"/>
+        <location filename="../../lib/base/error.cpp" line="129"/>
         <source>Password error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="81"/>
+        <location filename="../../lib/base/error.cpp" line="132"/>
         <source>Passphrase error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="84"/>
+        <location filename="../../lib/base/error.cpp" line="215"/>
         <source>Internal error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="87"/>
+        <location filename="../../lib/base/error.cpp" line="135"/>
         <source>Invalid device.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="90"/>
+        <location filename="../../lib/base/error.cpp" line="138"/>
         <source>Invalid device permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="93"/>
+        <location filename="../../lib/base/error.cpp" line="141"/>
         <source>Invalid device interface type.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="96"/>
+        <location filename="../../lib/base/error.cpp" line="144"/>
         <source>The graphics card does not support HDMI interface shutdown.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="99"/>
+        <location filename="../../lib/base/error.cpp" line="147"/>
         <source>Password error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="102"/>
+        <location filename="../../lib/base/error.cpp" line="150"/>
         <source>This account has been freeze.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="105"/>
+        <location filename="../../lib/base/error.cpp" line="153"/>
         <source>New password must be different from old password.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="108"/>
+        <location filename="../../lib/base/error.cpp" line="156"/>
         <source>Permission denied.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="111"/>
+        <location filename="../../lib/base/error.cpp" line="159"/>
         <source>Unknown account.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="114"/>
+        <location filename="../../lib/base/error.cpp" line="162"/>
         <source>Failed to Change Multi-Factor authentication state.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="117"/>
+        <location filename="../../lib/base/error.cpp" line="165"/>
         <source>per page limit must less than 100 and page index must greater than 0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="120"/>
+        <location filename="../../lib/base/error.cpp" line="168"/>
         <source>Failed to set selinux status.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="123"/>
+        <location filename="../../lib/base/error.cpp" line="171"/>
         <source>Failed to set mls Context, see log for more details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="126"/>
+        <location filename="../../lib/base/error.cpp" line="174"/>
         <source>Failed to get mls Context, see log for more details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="129"/>
+        <location filename="../../lib/base/error.cpp" line="177"/>
         <source>Failed to set kic Context, see log for more details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="132"/>
+        <location filename="../../lib/base/error.cpp" line="180"/>
         <source>Failed to get kic Context, see log for more details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="135"/>
+        <location filename="../../lib/base/error.cpp" line="183"/>
         <source>Failed to add obj to securitySign list, see log for more details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="138"/>
+        <location filename="../../lib/base/error.cpp" line="186"/>
         <source>Failed to remove users, see log for more details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="141"/>
+        <location filename="../../lib/base/error.cpp" line="189"/>
         <source>Failed to shred files, see log for more details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="144"/>
+        <location filename="../../lib/base/error.cpp" line="192"/>
         <source>Scan or Repair is running, please wait moment.</source>
         <translation>扫描或者修复正在运行，请稍候。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="148"/>
-        <location filename="../../lib/base/error.cpp" line="238"/>
+        <location filename="../../lib/base/error.cpp" line="218"/>
         <source>Unknown error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="167"/>
+        <location filename="../../lib/base/error.cpp" line="40"/>
         <source>The standard type is invalid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="170"/>
+        <location filename="../../lib/base/error.cpp" line="43"/>
         <source>The strategy type is invalid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="173"/>
+        <location filename="../../lib/base/error.cpp" line="46"/>
         <source>The notification status is invalid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="176"/>
+        <location filename="../../lib/base/error.cpp" line="49"/>
         <source>The resource monitor is invalid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="181"/>
+        <location filename="../../lib/base/error.cpp" line="54"/>
         <source>Error format for reinforcement standard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="184"/>
+        <location filename="../../lib/base/error.cpp" line="57"/>
         <source>Reinforcement item &apos;{0}&apos; is not found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="188"/>
+        <location filename="../../lib/base/error.cpp" line="61"/>
         <source>The job is running, please don&apos;t repeat the operation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="191"/>
+        <location filename="../../lib/base/error.cpp" line="64"/>
         <source>The fallback is can&apos;t running, please wait for the reinforcement to be completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="194"/>
+        <location filename="../../lib/base/error.cpp" line="67"/>
         <source>The standard reinforcement configuration is not found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="197"/>
+        <location filename="../../lib/base/error.cpp" line="70"/>
         <source>Machine code error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="200"/>
+        <location filename="../../lib/base/error.cpp" line="73"/>
         <source>Activation code error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="203"/>
+        <location filename="../../lib/base/error.cpp" line="76"/>
         <source>There is no historical state, please reinforce it and operation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="206"/>
+        <location filename="../../lib/base/error.cpp" line="79"/>
         <source>The subsequest configuration item scan progress has been cancelled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="210"/>
+        <location filename="../../lib/base/error.cpp" line="83"/>
         <source>The subsequest configuration item reinforcement progress has been cancelled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="232"/>
-        <source>Internel error.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/base/error.cpp" line="235"/>
+        <location filename="../../lib/base/error.cpp" line="86"/>
         <source>The software is not activated.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/base/error.cpp" line="242"/>
-        <source> (error code: 0x%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
