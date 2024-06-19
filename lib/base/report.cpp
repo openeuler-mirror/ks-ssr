@@ -7,6 +7,7 @@
 #include <QObject>
 #include "config.h"
 #include "include/ssr-marcos.h"
+#include "sys-info.h"
 
 #define TTF_PATH SSR_INSTALL_DATADIR "/AlibabaPuHuiTi-3-55-Regular.ttf"
 
