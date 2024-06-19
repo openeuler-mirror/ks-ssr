@@ -74,6 +74,19 @@ font-size: 17px;
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="label_7">
+         <property name="styleSheet">
+          <string notr="true">font: NotoSansCJKsc-Regular;
+font-size: 17px;
+ color: #1200ff;
+</string>
+         </property>
+         <property name="text">
+          <string>Host:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label">
          <property name="styleSheet">
           <string notr="true">font: NotoSansCJKsc-Regular;
