@@ -139,9 +139,9 @@ bool Configuration::setCustomRA(const Protocol::Reinforcement& reinforcement)
     auto& reinforcements = ra->reinforcement();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        CONTINUE_IF_TRUE(iter->name() != rs_reinforcement.name());
+        CONTINUE_IF_TRUE(iter->name() != reinforcement.name());
         match_reinforcement = true;
-        auto& new_args = rs_reinforcement.arg();
+        auto& new_args = reinforcement.arg();
         for (auto new_arg_iter = new_args.begin(); new_arg_iter != new_args.end(); ++new_arg_iter)
         {
             auto& old_args = iter->arg();
