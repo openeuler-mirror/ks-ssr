@@ -86,6 +86,7 @@ private slots:
 private:
     BRDbusProxy *m_dbusBRProxy;
     VulnerabilityDbusProxy *m_dbusVulnerabilityProxy;
+    QDBusServiceWatcher *m_dbusServerWatcher;
     QSharedPointer<LicenseProxy> m_licenseProxy;
     bool m_fileOutput;
     bool m_getBrJob;
