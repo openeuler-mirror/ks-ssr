@@ -644,7 +644,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
     // 已经在加固则返回错误
     if (this->m_reinforceJob && this->m_reinforceJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
     {
-        auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING));
+        auto replyMessage = message.createErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING));
         QDBusConnection::systemBus().send(replyMessage);
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to reinforcement."),
