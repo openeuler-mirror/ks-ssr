@@ -31,9 +31,9 @@ font:NotoSansCJKsc-Regular;</string>
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>57</y>
+      <y>70</y>
       <width>571</width>
-      <height>201</height>
+      <height>231</height>
      </rect>
     </property>
     <property name="styleSheet">
