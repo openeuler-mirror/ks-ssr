@@ -43,8 +43,8 @@ public:
     SysctlRedirect();
     virtual ~SysctlRedirect(){};
 
-    virtual bool get(std::string &args, BRErrorCode &error_code);
-    virtual bool set(const std::string &args, BRErrorCode &error_code);
+    virtual bool get(std::string &args, SSRErrorCode &error_code);
+    virtual bool set(const std::string &args, SSRErrorCode &error_code);
 };
 
 class SysctlSourceRoute : public Sysctl, public BRReinforcementInterface
