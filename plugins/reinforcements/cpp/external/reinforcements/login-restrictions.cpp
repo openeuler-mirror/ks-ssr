@@ -31,11 +31,11 @@ LoginRestrictions::LoginRestrictions()
     this->login_restrictions_config_ = ConfigPlain::create(LOGIN_RESTRICTIONS_CONF_PATH);
 }
 
-bool LoginRestrictions::get(const std::string &args, BRErrorCode &error_code)
+bool LoginRestrictions::get(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->login_restrictions_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
