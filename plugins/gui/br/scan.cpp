@@ -644,6 +644,9 @@ void Scan::runProgress(const QString &jobResult)
         {
             emit reinforcementFinished();
         }
+
+        disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
+        disconnect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
     }
     else
     {
