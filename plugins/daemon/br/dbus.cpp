@@ -612,7 +612,7 @@ void BRDBus::Scan(const QStringList& names)
     if (!this->m_scanJob->runAsync())
     {
         sendErrorReply(QDBusError::InternalError,
-                       BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED));
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to scan."),
                       m_scanUniqueName);
