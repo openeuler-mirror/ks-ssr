@@ -572,7 +572,7 @@
         <translation>请勾选要加固的项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="530"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="535"/>
         <source>Export succeeded!</source>
         <translation>导出成功！</translation>
     </message>
