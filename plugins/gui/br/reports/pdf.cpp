@@ -53,13 +53,13 @@ void PDF::setPieChartText(const QString name[],
     m_pieChart1 = new RoundProgressBar(name[0], total[0], conform[0], inconform[0], this);
     m_pieChart2 = new RoundProgressBar(name[1], total[1], conform[1], inconform[1], this);
     m_pieChart3 = new RoundProgressBar(name[2], total[2], conform[2], inconform[2], this);
-    m_pieChart4 = new RoundProgressBar(name[3], total[3], conform[3], inconform[3], this);
+    //    m_pieChart4 = new RoundProgressBar(name[3], total[3], conform[3], inconform[3], this);
 
     m_ui->m_pieChartLayout->addWidget(m_pieChart1);
     m_ui->m_pieChartLayout->addWidget(m_pieChart2);
 
     m_ui->m_pieChartLayout2->addWidget(m_pieChart3);
-    m_ui->m_pieChartLayout2->addWidget(m_pieChart4);
+    //    m_ui->m_pieChartLayout2->addWidget(m_pieChart4);
     update();
 }
 }  // namespace BR
