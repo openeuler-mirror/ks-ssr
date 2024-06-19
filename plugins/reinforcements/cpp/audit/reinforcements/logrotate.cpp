@@ -63,7 +63,7 @@ bool LogrotateRotate::set(const std::string &args, SSRErrorCode &error_code)
         Json::Value values = StrUtils::str2json(args);
         if (!values[LOGROTATE_CONF_KEY_ROTATE].isInt())
         {
-            error_code = BRErrorCode::ERROR_FAILED;
+            error_code = SSRErrorCode::ERROR_FAILED;
             return false;
         }
         auto value = fmt::format("{0}", values[LOGROTATE_CONF_KEY_ROTATE].asInt());
