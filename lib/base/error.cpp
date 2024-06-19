@@ -19,6 +19,8 @@
 
 namespace KS
 {
+// 由于传递给DBus::Error的参数必须是不能被立即销毁的，因此将数据放入一个全局变量中，当然也可以放到成员变量中维护
+std::string dbus_error_message;
 Error::Error()
 {
 }
