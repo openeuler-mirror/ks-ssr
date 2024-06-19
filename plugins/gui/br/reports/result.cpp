@@ -342,54 +342,35 @@ void Result::createReportHomePage(int status, const QRect &rect)
     m_painter->drawPixmap(0, 0, pixmap);
 }
 
-void Result::createReportContent(QPrinter &printer, const QList<Category *> &afterReinforcementList, const InvalidData &invalidData)
+void Result::createReportContent(QPrinter &printer, const QList<Category *> &scanList, const InvalidData &invalidData)
 {
     bool flag = false;
-    int i = 0;
-    // 用于排序，不符合项需放在最前面
-    QList<CategoryContent> categoryContents;
     m_table = new Table(this);
-    // 扫描结果
-    for (auto category : m_categories)
+
+    QList<CategoryContent> categoryContents;
+    for (auto category : scanList)
     {
-        i++;
-        for (auto reinforcementItem : category->getReinforcementItem())
+        for (auto item : category->getReinforcementItem())
         {
-            CONTINUE_IF_TRUE(!reinforcementItem->getCheckStatus());
-            auto afterReinforcementScanState = afterReinforcementList.isEmpty() ? BR_REINFORCEMENT_STATE_UNREINFORCE : afterReinforcementList.value(i - 1)->find(reinforcementItem->getName())->getScanState();
             categoryContents << CategoryContent{
-                .itemName = reinforcementItem->getLabel(),
-                .scanStatus = reinforcementItem->getScanState(),
-                .afterReinforceScanStatus = afterReinforcementScanState,
-                .remarks = "-"};
+                .itemName = item->getLabel(),
+                .scanStatus = item->getScanState()};
         }
     }
 
     addCategoryResults(printer, categoryContents, flag);
 
     // 扫描文件结果
-    auto isScan = createFilesScanResults(printer, invalidData, flag);
+    createFilesScanResults(printer, invalidData, flag);
 
     // 漏洞扫描结果
-    auto isVulnerability = createVulnerabilityResults(printer, invalidData, flag);
-
-    if (flag)
-    {
-        m_table->addSpacer();
-        QPixmap page = m_table->grab(m_table->rect());
-        m_painter->drawPixmap(0, 0, page);
-        printer.newPage();
-        delete m_table;
-        m_table = new Table(this, isScan, isVulnerability);
-    }
+    //    auto isVulnerability = createVulnerabilityResults(printer, invalidData, flag);
 
     m_table->addSpacer();
     m_table->showTailBar();
 
     auto pagePixmap = m_table->grab(m_table->rect());
     m_painter->drawPixmap(0, 0, pagePixmap);
-
-    m_painter->end();
 }
 
 bool Result::createFilesScanResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag)
