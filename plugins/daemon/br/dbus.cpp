@@ -749,7 +749,7 @@ void BRDBus::Cancel(const qlonglong& jobID)
     {
         if (!this->m_scanJob->cancel())
         {
-            errorCode = BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1;
+            errorCode = SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1;
         }
     }
     else if (this->m_reinforceJob &&
