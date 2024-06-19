@@ -610,11 +610,6 @@
         <translation>加固前</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="60"/>
-        <source>After reinforcement result</source>
-        <translation>加固后</translation>
-    </message>
-    <message>
         <location filename="../../plugins/gui/br/reports/table.cpp" line="64"/>
         <source>Technical support：Hunan KylinSec Technology Co. Ltd.,  Telephone：400-012-6606</source>
         <translation>技术支持：湖南麒麟信安科技股份有限公司，联系电话：400-012-6606</translation>
