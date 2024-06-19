@@ -758,17 +758,17 @@ void BRDBus::Cancel(const qlonglong& jobID)
     {
         if (!this->m_reinforceJob->cancel())
         {
-            errorCode = BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2;
+            errorCode = SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2;
         }
     }
     else
     {
-        errorCode = BRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB;
+        errorCode = SSRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB;
     }
 
-    if (errorCode != BRErrorCode::SUCCESS)
+    if (errorCode != SSRErrorCode::SUCCESS)
     {
-        sendErrorReply(QDBusError::Failed, BR_ERROR2STR(errorCode));
+        sendErrorReply(QDBusError::Failed, SSR_ERROR2STR(errorCode));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to cancel progress."),
                       calledUniqueName);
