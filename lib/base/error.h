@@ -33,21 +33,6 @@ public:
 };
 
 extern std::string dbus_error_message;
-
-#define BR_ERROR2STR(error_code) BRError::getErrorDesc(error_code)
-#define DBUS_ERROR_REPLY_AND_RET(error_code, ...) \
-    DBUS_ERROR_REPLY(error_code, ##__VA_ARGS__);  \
-    return;
-
-class BRError
-{
-public:
-    BRError();
-    virtual ~BRError(){};
-
-    static QString getErrorDesc(BRErrorCode error_code);
-};
-
 }  // namespace KS
 
 #endif  // ERROR_H
