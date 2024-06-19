@@ -416,6 +416,7 @@ bool Result::createFilesScanResults(QPrinter &printer, const InvalidData &invali
         else
             m_table->addScanLine(scanFilesList.at(count), scanTypeList.at(count), "-", "#ffffff");
     }
+
     return true;
 }
 
