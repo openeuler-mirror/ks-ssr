@@ -28,7 +28,7 @@ AuditdSwitch::AuditdSwitch()
     this->systemd_proxy_ = std::make_shared<DBusSystemdProxy>();
 }
 
-bool AuditdSwitch::get(std::string &args, BRErrorCode &error_code)
+bool AuditdSwitch::get(std::string &args, SSRErrorCode &error_code)
 {
     Json::Value values;
 
