@@ -470,15 +470,15 @@ QString BRDBus::GetReinforcement(const QString& name)
     return QString::fromStdString(ostringStream.str());
 }
 
-void BRDBus::SetReinforcement(const QString& reinforcementXML)
+void BRDBus::SetReinforcement(const QString& reinforcement)
 {
-    KLOG_DEBUG() << "Set reinforcement parameters, reinforcementXML : " << reinforcementXML;
+    KLOG_DEBUG() << "Set reinforcement parameters, reinforcementXML : " << reinforcement;
 
     try
     {
-        std::istringstream istringStream(reinforcementXML.toStdString());
-        auto rsReinforcement = Protocol::br_reinforcement(istringStream, xml_schema::Flags::dont_validate);
-        if (!this->m_configuration->setCustomRA(*rsReinforcement.get()))
+        std::istringstream istringStream(reinforcement.toStdString());
+        auto brReinforcement = Protocol::br_reinforcement(istringStream, xml_schema::Flags::dont_validate);
+        if (!this->m_configuration->setCustomRA(*brReinforcement.get()))
         {
             sendErrorReply(QDBusError::InternalError,
                            BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
