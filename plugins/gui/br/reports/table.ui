@@ -173,6 +173,9 @@ border-radius:0px;</string>
         <property name="topMargin">
          <number>0</number>
         </property>
+        <property name="rightMargin">
+         <number>16</number>
+        </property>
         <property name="bottomMargin">
          <number>0</number>
         </property>
