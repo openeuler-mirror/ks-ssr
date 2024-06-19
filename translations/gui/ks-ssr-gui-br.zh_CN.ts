@@ -620,41 +620,47 @@
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf.ui" line="85"/>
+        <source>Host:</source>
+        <translation>主机:</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="98"/>
         <source>IP:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="98"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="111"/>
         <source>MAC:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="111"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="124"/>
         <source>System kernel version:</source>
         <translation>系统内核版本：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="124"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="137"/>
         <source>Software activation status:</source>
         <translation>软件激活状态：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="137"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="150"/>
         <source>Export time:</source>
         <translation>导出时间:</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="237"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="186"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="266"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="289"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="318"/>
         <source>Device Information</source>
         <translation>设备信息</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="378"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="407"/>
         <source>Pie chart of test results</source>
         <translation>检测结果饼图</translation>
     </message>
