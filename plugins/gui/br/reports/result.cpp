@@ -253,10 +253,7 @@ void Result::addLineToTable(QPrinter &printer, const Result::CategoryContent &ca
     showTailFlag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
     m_table->addLine(categoryContent.itemName,
                      state2Str(categoryContent.scanStatus),
-                     state2Str(categoryContent.afterReinforceScanStatus),
-                     categoryContent.remarks,
                      state2Color(categoryContent.scanStatus),
-                     state2Color(categoryContent.afterReinforceScanStatus),
                      count % 2 == 1 ? "#f2f2f2" : "#ffffff");
 }
 
