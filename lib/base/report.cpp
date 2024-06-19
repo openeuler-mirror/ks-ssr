@@ -105,9 +105,10 @@ static void makeHomePage(HPDF_Doc pdf, HPDF_Font font, const QList<QPair<QString
 
     QList<QPair<QString, QString>> homeData;
     homeData.append(qMakePair(QObject::tr("OS:"), QSysInfo::prettyProductName()));  // 操作系统:
+    homeData.append(qMakePair(QObject::tr("Host:"), QSysInfo::machineHostName()));
     homeData.append(qMakePair(QString("IP:"), getIPPath()));
     homeData.append(qMakePair(QString("MAC:"), getMacPath()));
-    homeData.append(qMakePair(QObject::tr("kernel version:"), QSysInfo::kernelType() + QSysInfo::kernelVersion()));         // 系统内核版本
+    homeData.append(qMakePair(QObject::tr("kernel version:"), getKernelInfo()));                                            // 系统内核版本
     homeData.append(qMakePair(QObject::tr("Software active state:"), QObject::tr("activated")));                            // 软件激活状态 //已激活
     homeData.append(qMakePair(QObject::tr("Export time:"), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")));  // 导出时间
 
