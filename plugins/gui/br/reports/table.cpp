@@ -72,10 +72,7 @@ Table::~Table()
 
 void Table::addLine(const QString &name,
                     const QString &scanResult,
-                    const QString &reinforceResult,
-                    const QString &remarks,
                     const QColor &scanColor,
-                    const QColor &reinforceColor,
                     const QString &backgroundColor)
 {
     m_rowHeight += 36;
