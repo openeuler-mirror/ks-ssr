@@ -225,13 +225,13 @@ void Result::addCategoryResults(QPrinter &printer, const QList<Result::CategoryC
     // 先遍历添加不符合的项后添加符合项
     for (auto &categoryContent : categoryContents)
     {
-        CONTINUE_IF_TRUE((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_SAFE) == 1 || categoryContent.scanStatus == INI_SCAN_STATUS);
+        CONTINUE_IF_TRUE((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_SAFE) == 1);
         addLineToTable(printer, categoryContent, showTailFlag, count);
     }
     // 符合项
     for (auto &categoryContent : categoryContents)
     {
-        CONTINUE_IF_TRUE((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_UNSAFE) == 2 || categoryContent.scanStatus == INI_SCAN_STATUS);
+        CONTINUE_IF_TRUE((categoryContent.scanStatus & BR_REINFORCEMENT_STATE_UNSAFE) == 2);
         addLineToTable(printer, categoryContent, showTailFlag, count);
     }
     // TODO ： 取消扫描，但是加固项是勾选的，确认取消扫描后未扫描项是否需要在报表中展示 #25701
