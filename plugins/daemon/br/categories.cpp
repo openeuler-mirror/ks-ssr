@@ -66,13 +66,13 @@ bool Categories::addCategory(QSharedPointer<Category> category)
 {
     RETURN_VAL_IF_FALSE(category, false);
 
-    if (this->categories_.find(category->name) != this->categories_.end())
+    if (this->m_categories.find(category->name) != this->m_categories.end())
     {
         KLOG_WARNING() << "The category is already exist. name: " << category->name.toLatin1();
         return false;
     }
 
-    this->categories_[category->name] = category;
+    this->m_categories[category->name] = category;
     return true;
 }
 }  // namespace BR
