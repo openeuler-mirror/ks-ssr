@@ -79,22 +79,22 @@ bool Plugin::loadPluginModule()
 {
     KLOG_DEBUG("Plugin::loadPluginModule");
 
-    auto dirname = QFileInfo(this->conf_path_).fileName();
-    switch (this->plugin_config_->language_type())
+    auto dirname = QFileInfo(this->m_confPath).fileName();
+    switch (this->m_pluginConfig->language_type())
     {
     case Protocol::LanguageType::Value::cpp:
     {
-        auto so_path = QDir::cleanPath(dirname + '/' + "lib" + QString::fromStdString(this->plugin_config_->name()) + ".so");
-        this->loader_ = std::make_shared<PluginCPPLoader>(so_path);
-        return this->loader_->load();
+        auto so_path = QDir::cleanPath(dirname + '/' + "lib" + QString::fromStdString(this->m_pluginConfig->name()) + ".so");
+        this->m_loader = std::make_shared<PluginCPPLoader>(so_path);
+        return this->m_loader->load();
     }
     case Protocol::LanguageType::Value::python:
     {
-        this->loader_ = std::make_shared<PluginPythonLoader>(QString::fromStdString("br." + this->plugin_config_->name()));
-        return this->loader_->load();
+        this->m_loader = std::make_shared<PluginPythonLoader>(QString::fromStdString("br." + this->m_pluginConfig->name()));
+        return this->m_loader->load();
     }
     default:
-        KLOG_WARNING() << "Unsupported language type: " << this->plugin_config_->language_type();
+        KLOG_WARNING() << "Unsupported language type: " << this->m_pluginConfig->language_type();
         return false;
     }
 }
