@@ -27,15 +27,15 @@ namespace BR
 
 Categories::Categories()
 {
-    this->conf_path_ = QDir::cleanPath(SSR_INSTALL_DATADIR "/" BR_CATEGORIES_BASENAME);
+    this->m_confPath = QDir::cleanPath(SSR_INSTALL_DATADIR "/" BR_CATEGORIES_BASENAME);
     // this->conf_path_ = Glib::build_filename(SSR_INSTALL_DATADIR, BR_CATEGORIES_BASENAME);
 }
 
-Categories* Categories::instance_ = NULL;
+Categories* Categories::m_instance = NULL;
 void Categories::globalInit()
 {
-    instance_ = new Categories();
-    instance_->init();
+    m_instance = new Categories();
+    m_instance->init();
 }
 
 void Categories::init()
