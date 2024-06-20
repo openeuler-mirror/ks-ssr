@@ -40,7 +40,7 @@ public:
         return m_instance;
     };
 
-    static void globalInit(const QString& config_path);
+    static void globalInit(const QString& configPath);
 
     static void globalDeinit()
     {
