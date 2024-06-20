@@ -156,7 +156,7 @@ bool Configuration::setCustomRA(const Protocol::Reinforcement& reinforcement)
     }
 
     // 如果配置中不存在加固项的自定义配置，则添加该加固项的自定义配置
-    if (!match_reinforcement)
+    if (!matchReinforcement)
     {
         Protocol::Reinforcement used_reinforcement(reinforcement.name());
 
