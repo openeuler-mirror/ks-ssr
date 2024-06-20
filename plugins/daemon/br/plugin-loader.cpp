@@ -89,25 +89,25 @@ bool PluginCPPLoader::load_module()
 }
 
 PluginPythonLoader::PluginPythonLoader(const QString &package_name)
-    : package_name_(package_name),
-      is_activate_(false)
+    : m_packageName(package_name),
+      m_isActivate(false)
 {
 }
 
 bool PluginPythonLoader::load()
 {
-    auto module = PyImport_ImportModule(this->package_name_.toLatin1());
+    auto module = PyImport_ImportModule(this->m_packageName.toLatin1());
     bool retval = true;
 
     do
     {
         if (!module)
         {
-            KLOG_WARNING() << "Failed to load module: " << this->package_name_.toLatin1() << " , error: " << Utils::pyCatchException().toLatin1();
+            KLOG_WARNING() << "Failed to load module: " << this->m_packageName.toLatin1() << " , error: " << Utils::pyCatchException().toLatin1();
             retval = false;
             break;
         }
-        this->interface_ = QSharedPointer<PluginPython>(new PluginPython(module));
+        this->m_interface = QSharedPointer<PluginPython>(new PluginPython(module));
     } while (0);
 
     Py_XDECREF(module);
