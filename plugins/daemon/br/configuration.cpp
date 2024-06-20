@@ -183,19 +183,19 @@ void Configuration::delCustomRA(const QString& name)
     }
 
     auto ra = this->readRaFromFile();
-    bool is_del = false;
+    bool isDeleted = false;
 
     for (auto iter = ra->reinforcement().begin(); iter != ra->reinforcement().end(); ++iter)
     {
         if (iter->name() == name.toStdString())
         {
             ra->reinforcement().erase(iter);
-            is_del = true;
+            isDeleted = true;
             break;
         }
     }
 
-    if (is_del)
+    if (isDeleted)
     {
         this->writeRAToFile(ra);
     }
