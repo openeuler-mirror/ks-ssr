@@ -32,11 +32,11 @@ public:
 
     QString getName()
     {
-        return QString::fromStdString(this->config_.name());
+        return QString::fromStdString(this->m_config.name());
     };
     QString getPluginName()
     {
-        return this->plugin_id_;
+        return this->m_pluginID;
     };
     QString getCategoryName();
     QString getLabel();
