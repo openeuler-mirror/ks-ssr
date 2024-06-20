@@ -67,7 +67,7 @@ std::vector<std::string> Plugin::getReinforcementNames()
 
 const Protocol::Reinforcement* Plugin::getReinforcementConfig(const std::string& name)
 {
-    const auto& reinforcements = this->plugin_config_->reinforcement();
+    const auto& reinforcements = this->m_pluginConfig->reinforcement();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
         RETURN_VAL_IF_TRUE((*iter).name() == name, &(*iter));
