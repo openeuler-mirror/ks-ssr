@@ -38,22 +38,21 @@ public:
 
     bool isValid()
     {
-        return valid_;
+        return m_valid;
     };
 
 private:
-    bool check_call_result(PyObject *py_retval, const QString &function_name, QString &error);
+    bool checkCallResult(PyObject *pyRetval, const QString &functionName, QString &error);
 
 private:
-    PyObject *module_;
-    QString module_fullname_;
-    QString class_name_;
+    PyObject *m_module;
+    QString m_moduleFullname;
+    QString m_className;
     // python类
-    PyObject *class_;
+    PyObject *m_class;
     // python对象
-    PyObject *class_instance_;
-
-    bool valid_;
+    PyObject *m_classInstance;
+    bool m_valid;
 };
 
 class PluginPython : public BRPluginInterface
