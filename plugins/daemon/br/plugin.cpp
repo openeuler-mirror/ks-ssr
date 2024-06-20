@@ -29,22 +29,22 @@ Plugin::~Plugin()
 
 bool Plugin::init()
 {
-    KLOG_DEBUG() << "plugin config path: " << this->conf_path_.toLocal8Bit();
+    KLOG_DEBUG() << "plugin config path: " << this->m_confPath.toLocal8Bit();
 
     try
     {
-        this->plugin_config_ = Protocol::br_plugin(this->conf_path_.toStdString(), xml_schema::Flags::dont_validate);
+        this->m_pluginConfig = Protocol::br_plugin(this->m_confPath.toStdString(), xml_schema::Flags::dont_validate);
 
         // 判断插件是否启用
-        if (!this->plugin_config_->available())
+        if (!this->m_pluginConfig->available())
         {
-            KLOG_DEBUG("Plugin %s is unavailable.", this->plugin_config_->name().c_str());
+            KLOG_DEBUG("Plugin %s is unavailable.", this->m_pluginConfig->name().c_str());
             return false;
         }
     }
     catch (const xml_schema::Exception& e)
     {
-        KLOG_WARNING() << "Failed to load file: %s" << this->conf_path_.toLatin1() << ": " << e.what();
+        KLOG_WARNING() << "Failed to load file: %s" << this->m_confPath.toLatin1() << ": " << e.what();
         return false;
     }
 
