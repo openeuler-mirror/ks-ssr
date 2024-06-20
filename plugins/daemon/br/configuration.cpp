@@ -40,8 +40,8 @@ namespace BR
 
 using namespace Protocol;
 
-Configuration::Configuration(const QString& config_path)
-    : m_configPath(config_path),
+Configuration::Configuration(const QString& configPath)
+    : m_configPath(configPath),
       m_settings(nullptr)
 {
 }
