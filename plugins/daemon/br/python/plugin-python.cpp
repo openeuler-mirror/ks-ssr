@@ -295,45 +295,45 @@ void PluginPython::deactivate()
 
 void PluginPython::clean()
 {
-    for (auto iter = this->reinforcements_modules_.begin(); iter != this->reinforcements_modules_.end(); ++iter)
+    for (auto iter = this->m_reinforcementsModules.begin(); iter != this->m_reinforcementsModules.end(); ++iter)
     {
         Py_XDECREF(iter.value());
     }
-    this->reinforcements_.clear();
-    this->reinforcements_modules_.clear();
+    this->m_reinforcements.clear();
+    this->m_reinforcementsModules.clear();
 }
 
-void PluginPython::add_reinforcement(const QString &package_name,
-                                     const QString &module_name,
-                                     const QString &reinforcement_name,
-                                     const QString &function_prefix)
+void PluginPython::addReinforcement(const QString &packageName,
+                                    const QString &moduleName,
+                                    const QString &reinforcementName,
+                                    const QString &functionPrefix)
 {
     // auto module_fullname = fmt::format("{0}.{1}", package_name, module_name);
-    auto module_fullname = QString("%1.%2").arg(package_name, module_name);
+    auto moduleFullname = QString("%1.%2").arg(packageName, moduleName);
 
-    auto py_module = this->get_reinforcement_module(module_fullname);
-    if (!py_module)
+    auto pyModule = this->getReinforcementModule(moduleFullname);
+    if (!pyModule)
     {
-        py_module = PyImport_ImportModule(module_fullname.toLatin1());
-        if (!py_module)
+        pyModule = PyImport_ImportModule(moduleFullname.toLatin1());
+        if (!pyModule)
         {
-            KLOG_WARNING() << "Failed to load module: " << module_fullname.toLatin1() << ", error: " << Utils::pyCatchException().toLatin1() << ".";
+            KLOG_WARNING() << "Failed to load module: " << moduleFullname.toLatin1() << ", error: " << Utils::pyCatchException().toLatin1() << ".";
             return;
         }
-        this->reinforcements_modules_[module_fullname] = py_module;
+        this->m_reinforcementsModules[moduleFullname] = pyModule;
     }
 
-    auto reinforcement = QSharedPointer<ReinforcementPython>(new ReinforcementPython(py_module, function_prefix));
+    auto reinforcement = QSharedPointer<ReinforcementPython>(new ReinforcementPython(pyModule, functionPrefix));
     RETURN_IF_FALSE(reinforcement->isValid());
 
-    if (this->reinforcements_.find(reinforcement_name) != this->reinforcements_.end())
+    if (this->m_reinforcements.find(reinforcementName) != this->m_reinforcements.end())
     {
-        KLOG_WARNING() << "The reinforcement " << reinforcement_name.toLatin1() << " is repeated.";
+        KLOG_WARNING() << "The reinforcement " << reinforcementName.toLatin1() << " is repeated.";
         return;
     }
     else
     {
-        this->reinforcements_[reinforcement_name] = reinforcement;
+        this->m_reinforcements[reinforcementName] = reinforcement;
     }
 }
 
