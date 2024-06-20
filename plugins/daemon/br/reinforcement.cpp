@@ -22,36 +22,36 @@ namespace BR
 {
 Reinforcement::Reinforcement(const QString &plugin_id,
                              const Protocol::Reinforcement &rs)
-    : plugin_id_(plugin_id),
-      config_(rs)
+    : m_pluginID(plugin_id),
+      m_config(rs)
 {
     this->reload();
 }
 
 QString Reinforcement::getCategoryName()
 {
-    if (this->config_.category().present())
+    if (this->m_config.category().present())
     {
-        return QString::fromStdString(this->config_.category().get());
+        return QString::fromStdString(this->m_config.category().get());
     }
     return QString();
 }
 
 QString Reinforcement::getLabel()
 {
-    return Utils::getXsdLocalValue(this->config_.label());
+    return Utils::getXsdLocalValue(this->m_config.label());
 }
 
 void Reinforcement::setRs(const Protocol::Reinforcement &rs)
 {
-    this->config_ = rs;
+    this->m_config = rs;
     this->reload();
 }
 
 bool Reinforcement::matchRules(const QJsonObject &values)
 {
     // std::map<std::string, std::shared_ptr<Rule>>::iterator iter;
-    for (auto iter = this->rules_.begin(); iter != this->rules_.end(); iter++)
+    for (auto iter = this->m_rules.begin(); iter != this->m_rules.end(); iter++)
     {
         RETURN_VAL_IF_TRUE(!values.contains(iter.key()), false);
         RETURN_VAL_IF_TRUE(!iter.value()->match(values[iter.key()]), false);
