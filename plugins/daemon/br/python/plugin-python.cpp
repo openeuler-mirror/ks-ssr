@@ -152,33 +152,33 @@ bool ReinforcementPython::set(const QString &args, QString &error)
     return retval;
 }
 
-bool ReinforcementPython::check_call_result(PyObject *py_retval, const QString &function_name, QString &error)
+bool ReinforcementPython::checkCallResult(PyObject *pyRetval, const QString &functionName, QString &error)
 {
     error = Utils::pyCatchException();
     if (!error.isEmpty())
     {
-        KLOG_DEBUG() << "check result error, and error message is " << error << " function name is " << function_name;
+        KLOG_DEBUG() << "check result error, and error message is " << error << " function name is " << functionName;
         return false;
     }
 
-    if (!py_retval || !PyTuple_Check(py_retval))
+    if (!pyRetval || !PyTuple_Check(pyRetval))
     {
-        error = QString(QObject::tr("The return value of %1 isn't tuple type.")).arg(function_name);
+        error = QString(QObject::tr("The return value of %1 isn't tuple type.")).arg(functionName);
         // error = fmt::format(_("The return value of {0} isn't tuple type"), function_name);
         return false;
     }
 
-    auto retval_num = PyTuple_Size(py_retval);
-    if (int32_t(retval_num) < 2)
+    auto retvalNum = PyTuple_Size(pyRetval);
+    if (int32_t(retvalNum) < 2)
     {
-        error = QString(QObject::tr("The number of tuple returned by %1 is less than 2.")).arg(function_name);
+        error = QString(QObject::tr("The number of tuple returned by %1 is less than 2.")).arg(functionName);
         // error = fmt::format(_("The number of tuple returned by {0} is less than 2."), function_name);
         return false;
     }
 
     // 参数1代表执行是否成功，如果成功，则参数2表示执行成功的结果，否则参数2表示执行失败的错误信息
-    auto py_arg1 = PyTuple_GetItem(py_retval, 0);
-    auto py_arg2 = PyTuple_GetItem(py_retval, 1);
+    auto pyArg1 = PyTuple_GetItem(pyRetval, 0);
+    auto pyArg2 = PyTuple_GetItem(pyRetval, 1);
 
     bool is_string = false;
 
