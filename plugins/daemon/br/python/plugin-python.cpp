@@ -115,13 +115,13 @@ bool ReinforcementPython::get(QString &args, QString &error)
 bool ReinforcementPython::set(const QString &args, QString &error)
 {
     auto args_toLocal8Bit = args.toLocal8Bit();
-    KLOG_DEBUG("Call set method in class %s.", this->class_name_.toLocal8Bit().data());
+    KLOG_DEBUG("Call set method in class %s.", this->m_className.toLocal8Bit().data());
     KLOG_DEBUG("args is %s.", args_toLocal8Bit.data());
 
     auto gstate = PyGILState_Ensure();
 
 #if PY_MAJOR_VERSION >= 3
-    auto py_retval = PyObject_CallMethod(this->class_instance_, "set", "(s)", args_toLocal8Bit.data());
+    auto py_retval = PyObject_CallMethod(this->m_classInstance, "set", "(s)", args_toLocal8Bit.data());
 #else
     char method[] = "set";
     char format[] = "(s)";
