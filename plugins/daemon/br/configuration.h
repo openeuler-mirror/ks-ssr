@@ -32,7 +32,7 @@ class Configuration : public QObject
 {
     Q_OBJECT
 public:
-    Configuration(const QString& config_path);
+    Configuration(const QString& configPath);
     virtual ~Configuration();
 
     static Configuration* getInstance()
