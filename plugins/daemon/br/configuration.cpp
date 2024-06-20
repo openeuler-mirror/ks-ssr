@@ -255,12 +255,12 @@ BRNotificationStatus Configuration::getNotificationStatus()
     return BRNotificationStatus(retval);
 }
 
-bool Configuration::setNotificationStatus(BRNotificationStatus notification_status)
+bool Configuration::setNotificationStatus(BRNotificationStatus notificationStatus)
 {
-    RETURN_VAL_IF_FALSE(notification_status < BRNotificationStatus::BR_NOTIFICATION_STATUS_OTHER, false);
-    RETURN_VAL_IF_TRUE(notification_status == this->getNotificationStatus(), true);
+    RETURN_VAL_IF_FALSE(notificationStatus < BRNotificationStatus::BR_NOTIFICATION_STATUS_OTHER, false);
+    RETURN_VAL_IF_TRUE(notificationStatus == this->getNotificationStatus(), true);
 
-    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_NOTIFICATION_STATUS, int32_t(notification_status));
+    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_NOTIFICATION_STATUS, int32_t(notificationStatus));
     return true;
 }
 
