@@ -375,14 +375,14 @@ QSharedPointer<Protocol::RS> Configuration::getFixedRS()
 {
     KLOG_DEBUG("Configuration::getFixedRs");
 
-    QString rs_file_path = (this->getStandardType() == BRStandardType::BR_STANDARD_TYPE_CUSTOM) ? CUSTOM_RS_FILEPATH : SYSTEM_RS_FILEPATH;
+    QString rsFilePath = (this->getStandardType() == BRStandardType::BR_STANDARD_TYPE_CUSTOM) ? CUSTOM_RS_FILEPATH : SYSTEM_RS_FILEPATH;
 
     // 加载加固标准
     try
     {
-        auto rs_decrypted = this->decryptFile(rs_file_path);
-        KLOG_DEBUG() << "rs file decrypted: " << rs_decrypted.toLocal8Bit();
-        std::istringstream rs_istream(rs_decrypted.toStdString());
+        auto rsDecrypted = this->decryptFile(rsFilePath);
+        KLOG_DEBUG() << "rs file decrypted: " << rsDecrypted.toLocal8Bit();
+        std::istringstream rs_istream(rsDecrypted.toStdString());
         return QSharedPointer<Protocol::RS>(new Protocol::RS(*br_rs(rs_istream, xml_schema::Flags::dont_validate)));
     }
     catch (const std::exception& e)
