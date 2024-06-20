@@ -34,14 +34,14 @@ public:
 
     static Plugins* getInstance()
     {
-        return instance_;
+        return m_instance;
     };
 
     static void globalInit(Configuration* configuration);
 
     static void globalDeinit()
     {
-        delete instance_;
+        delete m_instance;
     };
 
     ThreadPool& getThreadPool()
