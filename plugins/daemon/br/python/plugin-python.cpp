@@ -197,70 +197,70 @@ bool ReinforcementPython::checkCallResult(PyObject *pyRetval, const QString &fun
 }
 
 PluginPython::PluginPython(PyObject *module)
-    : module_(module)
+    : m_module(module)
 {
-    Py_XINCREF(this->module_);
+    Py_XINCREF(this->m_module);
 }
 
 PluginPython::~PluginPython()
 {
     // 在运行时多态的场景下，this->deactivate 会调用到基类的 deactivate ，而不是子类的重载后的 deactivate ，导致出现问题。
     this->clean();
-    Py_XDECREF(this->module_);
+    Py_XDECREF(this->m_module);
 }
 
 void PluginPython::activate()
 {
-    PyObject *py_reinforcements = NULL;
+    PyObject *pyReinforcements = NULL;
 
     do
     {
-        py_reinforcements = PyObject_GetAttrString(this->module_, PYTHON_PLUGIN_VAR_REINFORCEMENTS);
-        if (!py_reinforcements || !PyTuple_Check(py_reinforcements))
+        pyReinforcements = PyObject_GetAttrString(this->m_module, PYTHON_PLUGIN_VAR_REINFORCEMENTS);
+        if (!pyReinforcements || !PyTuple_Check(pyReinforcements))
         {
             KLOG_WARNING("Cannot find variable: %s.", PYTHON_PLUGIN_VAR_REINFORCEMENTS);
             break;
         }
 
-        auto package_name = PyModule_GetName(this->module_);
-        auto reinforcement_num = PyTuple_Size(py_reinforcements);
+        auto packageName = PyModule_GetName(this->m_module);
+        auto reinforcementNum = PyTuple_Size(pyReinforcements);
 
-        KLOG_DEBUG() << "Package name: " << package_name << ", reinforcement number: " << reinforcement_num;
+        KLOG_DEBUG() << "Package name: " << packageName << ", reinforcement number: " << reinforcementNum;
 
-        for (int32_t i = 0; i < int32_t(reinforcement_num); ++i)
+        for (int32_t i = 0; i < int32_t(reinforcementNum); ++i)
         {
-            auto py_reinforcement = PyTuple_GetItem(py_reinforcements, i);
-            if (!py_reinforcement || !PyDict_Check(py_reinforcement))
+            auto pyReinforcement = PyTuple_GetItem(pyReinforcements, i);
+            if (!pyReinforcement || !PyDict_Check(pyReinforcement))
             {
                 KLOG_WARNING("The %d-th item of reinforcements isn't dict type.", i);
                 continue;
             }
 
-            QString reinforcement_name;
-            QString module_name;
-            QString class_name;
-            PyObject *py_key = NULL;
-            PyObject *py_value = NULL;
-            Py_ssize_t py_pos = 0;
+            QString reinforcementName;
+            QString moduleName;
+            QString className;
+            PyObject *pyKey = NULL;
+            PyObject *pyValue = NULL;
+            Py_ssize_t pyPos = 0;
 
-            while (PyDict_Next(py_reinforcement, &py_pos, &py_key, &py_value))
+            while (PyDict_Next(pyReinforcement, &pyPos, &pyKey, &pyValue))
             {
-                auto key = Utils::pyobjectAsString(py_key);
-                auto value = Utils::pyobjectAsString(py_value);
+                auto key = Utils::pyobjectAsString(pyKey);
+                auto value = Utils::pyobjectAsString(pyValue);
 
                 KLOG_DEBUG("key: %s, value: %s.", key.toLocal8Bit().data(), value.toLocal8Bit().data());
 
                 if (key == "name")
                 {
-                    reinforcement_name = value;
+                    reinforcementName = value;
                 }
                 else if (key == "module")
                 {
-                    module_name = value;
+                    moduleName = value;
                 }
                 else if (key == "class")
                 {
-                    class_name = value;
+                    className = value;
                 }
                 else
                 {
