@@ -103,12 +103,12 @@ BRStrategyType Configuration::getStrategyType()
     return BRStrategyType(retval);
 }
 
-bool Configuration::setStrategyType(BRStrategyType strategy_type)
+bool Configuration::setStrategyType(BRStrategyType strategyType)
 {
-    RETURN_VAL_IF_FALSE(strategy_type < BRStrategyType::BR_STRATEGY_TYPE_LAST, false);
-    RETURN_VAL_IF_TRUE(strategy_type == this->getStrategyType(), true);
+    RETURN_VAL_IF_FALSE(strategyType < BRStrategyType::BR_STRATEGY_TYPE_LAST, false);
+    RETURN_VAL_IF_TRUE(strategyType == this->getStrategyType(), true);
 
-    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_STRATEGY_TYPE, int32_t(strategy_type));
+    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_STRATEGY_TYPE, int32_t(strategyType));
 
     Q_EMIT StrategyChanged();
     return true;
