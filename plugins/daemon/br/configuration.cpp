@@ -134,21 +134,21 @@ bool Configuration::setCustomRA(const Protocol::Reinforcement& reinforcement)
 
     auto ra = this->readRaFromFile();
 
-    bool match_reinforcement = false;
+    bool matchReinforcement = false;
 
     auto& reinforcements = ra->reinforcement();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
         CONTINUE_IF_TRUE(iter->name() != reinforcement.name());
-        match_reinforcement = true;
-        auto& new_args = reinforcement.arg();
-        for (auto new_arg_iter = new_args.begin(); new_arg_iter != new_args.end(); ++new_arg_iter)
+        matchReinforcement = true;
+        auto& newArgs = reinforcement.arg();
+        for (auto newArgIter = newArgs.begin(); newArgIter != newArgs.end(); ++newArgIter)
         {
-            auto& old_args = iter->arg();
-            for (auto old_arg_iter = old_args.begin(); old_arg_iter != old_args.end(); ++old_arg_iter)
+            auto& oldArgs = iter->arg();
+            for (auto oldArgIter = oldArgs.begin(); oldArgIter != oldArgs.end(); ++oldArgIter)
             {
-                CONTINUE_IF_TRUE(old_arg_iter->name() != new_arg_iter->name());
-                old_arg_iter->value(new_arg_iter->value());
+                CONTINUE_IF_TRUE(oldArgIter->name() != newArgIter->name());
+                oldArgIter->value(newArgIter->value());
                 break;
             }
         }
