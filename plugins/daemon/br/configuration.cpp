@@ -319,20 +319,20 @@ QSharedPointer<Protocol::RS> Configuration::getRS()
     return this->getFixedRS();
 }
 
-bool Configuration::setCustomRS(const QString& encrypted_rs, SSRErrorCode& error_code)
+bool Configuration::setCustomRS(const QString& encryptedRS, SSRErrorCode& errorCode)
 {
     // 判断自定义加固标准
-    auto decrypted_rs = CryptoHelper::brDecrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_rs);
-    if (decrypted_rs.isEmpty())
+    auto decryptedRS = CryptoHelper::brDecrypt(RSA_PUBLIC_KEY_FILEPATH, encryptedRS);
+    if (decryptedRS.isEmpty())
     {
-        error_code = SSRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED;
+        errorCode = SSRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED;
         return false;
     }
 
     QFile file(CUSTOM_RS_FILEPATH);
     // 文件打开成功才会继续写内容,如果都成功则是不进入 if , 继续执行
     if (!(file.open(QIODevice::OpenModeFlag::ReadWrite | QIODevice::OpenModeFlag::Truncate) != false &&
-          file.write(encrypted_rs.toLatin1()) != -1))
+          file.write(encryptedRS.toLatin1()) != -1))
     {
         return false;
     }
