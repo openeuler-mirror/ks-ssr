@@ -540,31 +540,31 @@ QString Configuration::decryptFile(const QString& filename)
     return CryptoHelper::brDecrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_contents);
 }
 
-int32_t Configuration::getInteger(const QString& group_name, const QString& key, int32_t default_value)
+int32_t Configuration::getInteger(const QString& groupName, const QString& key, int32_t defaultValue)
 {
-    return this->m_settings->value(group_name + '/' + key, default_value).toInt();
+    return this->m_settings->value(groupName + '/' + key, defaultValue).toInt();
 }
 
-QString Configuration::getString(const QString& group_name, const QString& key)
+QString Configuration::getString(const QString& groupName, const QString& key)
 {
-    return this->m_settings->value(group_name + '/' + key).toString();
+    return this->m_settings->value(groupName + '/' + key).toString();
 }
 
-QString Configuration::getDatadirFilename(const QString& group_name, const QString& key)
+QString Configuration::getDatadirFilename(const QString& groupName, const QString& key)
 {
-    auto basename = this->getString(group_name, key);
+    auto basename = this->getString(groupName, key);
     RETURN_VAL_IF_TRUE(basename.isEmpty(), QString());
     return QDir::cleanPath(SSR_INSTALL_DATADIR + basename);
 }
 
-void Configuration::setInteger(const QString& group_name, const QString& key, int32_t value)
+void Configuration::setInteger(const QString& groupName, const QString& key, int32_t value)
 {
-    this->m_settings->setValue(group_name + '/' + key, value);
+    this->m_settings->setValue(groupName + '/' + key, value);
 }
 
-void Configuration::setString(const QString& group_name, const QString& key, const QString& value)
+void Configuration::setString(const QString& groupName, const QString& key, const QString& value)
 {
-    this->m_settings->setValue(group_name + '/' + key, value);
+    this->m_settings->setValue(groupName + '/' + key, value);
 }
 
 }  // namespace BR
