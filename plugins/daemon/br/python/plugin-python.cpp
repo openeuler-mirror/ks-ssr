@@ -275,17 +275,17 @@ void PluginPython::activate()
         continue;                                   \
     }
 
-            CHECK_KEY_NOT_EMPTY(reinforcement_name, name)
-            CHECK_KEY_NOT_EMPTY(module_name, module)
-            CHECK_KEY_NOT_EMPTY(class_name, class)
+            CHECK_KEY_NOT_EMPTY(reinforcementName, name)
+            CHECK_KEY_NOT_EMPTY(moduleName, module)
+            CHECK_KEY_NOT_EMPTY(className, class)
 
 #undef CHECK_KEY_NOT_EMPTY
 
-            this->add_reinforcement(package_name, module_name, reinforcement_name, class_name);
+            this->addReinforcement(packageName, moduleName, reinforcementName, className);
         }
     } while (0);
 
-    Py_XDECREF(py_reinforcements);
+    Py_XDECREF(pyReinforcements);
 }
 
 void PluginPython::deactivate()
