@@ -131,7 +131,7 @@ bool ReinforcementPython::set(const QString &args, QString &error)
     bool retval = true;
     do
     {
-        if (!this->check_call_result(py_retval, this->class_name_ + ".set", error))
+        if (!this->checkCallResult(py_retval, this->m_className + ".set", error))
         {
             retval = false;
             break;
