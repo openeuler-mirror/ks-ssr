@@ -57,7 +57,7 @@ bool Plugin::init()
 std::vector<std::string> Plugin::getReinforcementNames()
 {
     std::vector<std::string> names;
-    const auto& reinforcements = this->plugin_config_->reinforcement();
+    const auto& reinforcements = this->m_pluginConfig->reinforcement();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
         names.push_back((*iter).name());
