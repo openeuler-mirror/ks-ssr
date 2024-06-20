@@ -96,7 +96,7 @@ private:
                            const Protocol::Reinforcement& sourceReinforcement);
 
 private:
-    static Plugins* instance_;
+    static Plugins* m_instance;
 
     Configuration* m_configuration;
     // 线程池
