@@ -104,7 +104,7 @@
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="682"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="692"/>
         <source>Export Report Success</source>
         <translation>导出报表成功</translation>
     </message>
