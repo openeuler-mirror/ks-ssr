@@ -440,7 +440,7 @@ QString Command::getCveLevel(int level)
     case 0:
         return tr("fatal");
     case 1:
-        return tr("hight");
+        return tr("high");
     case 2:
         return tr("middle");
     default:
