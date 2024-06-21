@@ -17,21 +17,21 @@
 
 namespace Ui
 {
-class Table;
+class PDFDetails;
 }
 namespace KS
 {
 namespace BR
 {
-class Table : public QWidget
+class PDFDetails : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Table(QWidget *parent,
+    explicit PDFDetails(QWidget *parent,
                    bool isOpenFilesScan = false,
                    bool isScanVulnerability = false);
-    virtual ~Table();
+    virtual ~PDFDetails();
 
     void addSpacer();
     void showTailBar();
