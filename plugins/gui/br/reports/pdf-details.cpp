@@ -122,9 +122,9 @@ void PDFDetails::addLine(const QString &name,
 }
 
 void PDFDetails::addScanLine(const QString &filesName,
-                        const QString &scanType,
-                        const QString &remarks,
-                        const QString &backgroundColor)
+                             const QString &scanType,
+                             const QString &remarks,
+                             const QString &backgroundColor)
 {
     m_rowHeight += 40;
     m_ui->m_line->setFixedHeight(m_rowHeight);
