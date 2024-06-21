@@ -368,7 +368,7 @@ bool Report::createFilesScanResults(QPrinter &printer, const InvalidData &invali
             printer.newPage();
 
             delete m_table;
-            m_table = new Table(this, is_scan);
+            m_table = new PDFDetails(this, is_scan);
         }
         showTailFlag = (i >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
         if (i % 2 == 1)
