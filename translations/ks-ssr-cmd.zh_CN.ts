@@ -54,11 +54,6 @@
         <translation>致命</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="443"/>
-        <source>hight</source>
-        <translation>高危</translation>
-    </message>
-    <message>
         <location filename="../src/tool/command/cmd-parser.cpp" line="445"/>
         <source>middle</source>
         <translation>中危</translation>
