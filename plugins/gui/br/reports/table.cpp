@@ -65,12 +65,12 @@ PDFDetails::PDFDetails(QWidget *parent,
     m_ui->m_tailPic->hide();
 }
 
-Table::~Table()
+PDFDetails::~PDFDetails()
 {
     delete m_ui;
 }
 
-void Table::addLine(const QString &name,
+void PDFDetails::addLine(const QString &name,
                     const QString &scanResult,
                     const QColor &scanColor,
                     const QString &backgroundColor)
