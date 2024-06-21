@@ -110,6 +110,11 @@
         <translation>后台daemon服务退出。 dbus 服务的唯一名称： </translation>
     </message>
     <message>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="443"/>
+        <source>high</source>
+        <translation>高危</translation>
+    </message>
+    <message>
         <location filename="../src/tool/command/cmd-parser.cpp" line="483"/>
         <source>Not Scanned</source>
         <translation>未扫描</translation>
