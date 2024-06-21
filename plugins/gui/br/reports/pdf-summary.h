@@ -31,11 +31,11 @@ class PDFSummary : public QWidget
 
 public:
     explicit PDFSummary(const QString &systemName,
-                 const QString &IP,
-                 const QString &MAC,
-                 const QString &kernel,
-                 const QString &activeStatus,
-                 QWidget *parent = 0);
+                        const QString &IP,
+                        const QString &MAC,
+                        const QString &kernel,
+                        const QString &activeStatus,
+                        QWidget *parent = 0);
     virtual ~PDFSummary();
 
     void setPieChartText(const QString name[],
