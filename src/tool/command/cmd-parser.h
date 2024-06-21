@@ -95,6 +95,7 @@ private:
     QStringList m_cveIds;
     QMap<QString, BrInfo *> m_brItemInfo;
     QMap<QString, VulnerabilityInfo *> m_repairResult;
+    QStringList m_notExistCVE;
 };
 }  // namespace Command
 }  // namespace KS
