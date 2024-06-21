@@ -52,7 +52,7 @@ public:
     };
 
 private:
-    bool load_module();
+    bool loadModule();
 
 private:
     // so文件路径
