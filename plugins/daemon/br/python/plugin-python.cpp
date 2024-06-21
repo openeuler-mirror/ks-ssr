@@ -266,6 +266,10 @@ void PluginPython::activate()
                 }
             }
 
+            KLOG_DEBUG().nospace() << "The " << i << "-th Reinforcement is " << reinforcementName
+                                   << ", module name is " << moduleName
+                                   << ", class name is " << className;
+
 #define CHECK_KEY_NOT_EMPTY(var, key)               \
     if (var.isEmpty())                              \
     {                                               \
