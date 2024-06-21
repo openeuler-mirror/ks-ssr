@@ -41,15 +41,15 @@ PDFSummary::PDFSummary(const QString &systemName,
     m_ui->m_exportTime->setText(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 }
 
-PDF::~PDF()
+PDFSummary::~PDFSummary()
 {
     delete m_ui;
 }
 
-void PDF::setPieChartText(const QString name[],
-                          int total[],
-                          int conform[],
-                          int inconform[])
+void PDFSummary::setPieChartText(const QString name[],
+                                 int total[],
+                                 int conform[],
+                                 int inconform[])
 {
     m_pieChart1 = new RoundProgressBar(name[0], total[0], conform[0], inconform[0], this);
     m_pieChart2 = new RoundProgressBar(name[1], total[1], conform[1], inconform[1], this);
