@@ -4,5 +4,5 @@ add_subdirectory(daemon)
 add_subdirectory(gui)
 
 if(ENABLE_BR)
-  add_subdirectory(reinforcements/python)
+  add_subdirectory(reinforcements)
 endif()
