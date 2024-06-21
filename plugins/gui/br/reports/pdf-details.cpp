@@ -71,9 +71,9 @@ PDFDetails::~PDFDetails()
 }
 
 void PDFDetails::addLine(const QString &name,
-                    const QString &scanResult,
-                    const QColor &scanColor,
-                    const QString &backgroundColor)
+                         const QString &scanResult,
+                         const QColor &scanColor,
+                         const QString &backgroundColor)
 {
     m_rowHeight += 36;
     m_ui->m_line->setMinimumHeight(m_rowHeight);
