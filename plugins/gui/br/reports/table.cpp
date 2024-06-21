@@ -190,7 +190,7 @@ void PDFDetails::addSpacer()
     m_ui->m_line->layout()->addWidget(spacerWidget);
 }
 
-void Table::showTailBar()
+void PDFDetails::showTailBar()
 {
     m_ui->m_tailBar->show();
     m_ui->m_tailPic->show();
