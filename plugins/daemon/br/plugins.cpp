@@ -139,17 +139,18 @@ void Plugins::loadPlugins()
     KLOG_DEBUG("Plugins::loadPlugins");
     this->loadPluginsFromDir(SSR_BR_PLUGIN_CPP_ROOT_DIR);
     this->loadPluginsFromDir(SSR_BR_PLUGIN_PYTHON_ROOT_DIR);
+    this->loadPluginsFromDir(SSR_BR_PLUGIN_BASH_ROOT_DIR);
 }
 
 void Plugins::loadPluginsFromDir(const QString& dirname)
 {
-    QDir plugin_dir(dirname);
+    QDir pluginDir(dirname);
 
-    for (auto iter : plugin_dir.entryList(QDir::NoDotAndDotDot |
-                                          QDir::Dirs |
-                                          QDir::AllDirs |
-                                          QDir::Files |
-                                          QDir::Hidden))
+    for (auto iter : pluginDir.entryList(QDir::NoDotAndDotDot |
+                                         QDir::Dirs |
+                                         QDir::AllDirs |
+                                         QDir::Files |
+                                         QDir::Hidden))
     {
         auto basename = iter;
         auto filename = QDir::cleanPath(dirname + '/' + basename);
