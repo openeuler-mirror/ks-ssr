@@ -265,10 +265,10 @@ void Report::addNewPainterPage(QPrinter &printer)
     printer.newPage();
 
     delete m_table;
-    m_table = new Table(this);
+    m_table = new PDFDetails(this);
 }
 
-void Result::createPainter(QPrinter &printer)
+void Report::createPainter(QPrinter &printer)
 {
     m_painter = QSharedPointer<QPainter>::create();
     m_painter->begin(&printer);
