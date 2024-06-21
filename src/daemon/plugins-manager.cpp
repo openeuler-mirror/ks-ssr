@@ -143,8 +143,8 @@ void PluginsManager::initPlugins()
         pluginInfo->plugin = qobject_cast<IDaemonPlugin *>(pluginInfo->loader->instance());
         if (!pluginInfo->plugin)
         {
-            KLOG_WARNING() << "Failed to create instance for plugin" << entryInfo.absoluteFilePath()
-                           << ", reason is" << pluginInfo->loader->errorString();
+            KLOG_ERROR() << "Failed to create instance for plugin" << entryInfo.absoluteFilePath()
+                         << ", reason is" << pluginInfo->loader->errorString();
             continue;
         }
 
