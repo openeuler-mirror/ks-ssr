@@ -218,7 +218,7 @@ bool Report::scanVulnerability(QStringList &rpmlist, const InvalidData &invalidD
     return true;
 }
 
-void Result::addCategoryResults(QPrinter &printer, const QList<Result::CategoryContent> &categoryContents, bool &showTailFlag)
+void Report::addCategoryResults(QPrinter &printer, const QList<Report::CategoryContent> &categoryContents, bool &showTailFlag)
 {
     auto count = 0;
     // 由于会有三种状态，符合/不符合/未扫描，需要遍历三次进行添加
