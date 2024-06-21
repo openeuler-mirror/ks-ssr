@@ -80,6 +80,8 @@
         <file alias="checkbox-indeterminate-hover">images/checkbox-indeterminate-active.svg</file>
         <file alias="checkbox-indeterminate-disabled">images/checkbox-indeterminate-disabled.svg</file>
         <file alias="checkbox-indeterminate-hover">images/checkbox-indeterminate-hover.svg</file>
+        <file alias="filter-nomal">images/filter-nomal.svg</file>
+        <file alias="filter-active">images/filter-active.svg</file>
     </qresource>
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>
