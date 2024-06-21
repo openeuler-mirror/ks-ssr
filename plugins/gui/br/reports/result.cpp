@@ -25,8 +25,8 @@
 #include "include/ssr-marcos.h"
 #include "lib/base/sys-info.h"
 #include "reinforcement-items/category.h"
-#include "reports/pdf.h"
-#include "reports/table.h"
+#include "reports/pdf-details.h"
+#include "reports/pdf-summary.h"
 
 #define TABLE_MAX_LINE 28
 #define TABLE_SHOW_TAIL_MAX_LINE 20
