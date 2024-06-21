@@ -12,7 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinsec.com.cn>
  */
 
-#include "result.h"
+#include "report.h"
 #include <kylin-license/license-i.h>
 #include <QDataStream>
 #include <QFile>
