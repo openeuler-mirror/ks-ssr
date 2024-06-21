@@ -29,8 +29,8 @@ class PDFDetails : public QWidget
 
 public:
     explicit PDFDetails(QWidget *parent,
-                   bool isOpenFilesScan = false,
-                   bool isScanVulnerability = false);
+                        bool isOpenFilesScan = false,
+                        bool isScanVulnerability = false);
     virtual ~PDFDetails();
 
     void addSpacer();
