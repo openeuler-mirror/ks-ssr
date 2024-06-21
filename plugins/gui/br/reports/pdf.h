@@ -44,7 +44,7 @@ public:
                          int inconform[]);
 
 private:
-    Ui::PDF *m_ui;
+    Ui::PDFSummary *m_ui;
 
     RoundProgressBar *m_pieChart1;
     RoundProgressBar *m_pieChart2;
