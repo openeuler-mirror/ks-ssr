@@ -79,7 +79,7 @@ bool ReinforcementPython::get(QString &args, QString &error)
 #else
     char method[] = "get";
     char *format = NULL;
-    auto py_retval = PyObject_CallMethod(this->class_instance_, method, format);
+    auto py_retval = PyObject_CallMethod(this->m_classInstance, method, format);
 #endif
 
     bool retval = true;
