@@ -180,13 +180,13 @@ bool ReinforcementPython::checkCallResult(PyObject *pyRetval, const QString &fun
     auto pyArg1 = PyTuple_GetItem(pyRetval, 0);
     auto pyArg2 = PyTuple_GetItem(pyRetval, 1);
 
-    bool is_string = false;
+    bool isString = false;
 
 #if PY_MAJOR_VERSION < 3
-    is_string = PyString_Check(py_arg2);
+    isString = PyString_Check(pyArg2);
 #endif
 
-    if (!PyBool_Check(pyArg1) || (!PyUnicode_Check(pyArg2) && !is_string))
+    if (!PyBool_Check(pyArg1) || (!PyUnicode_Check(pyArg2) && !isString))
     {
         error = QString(QObject::tr("The type of tuple item returned by %1 is invalid.")).arg(functionName);
         // error = fmt::format(_("The type of tuple item returned by {0} is invalid."), function_name);
