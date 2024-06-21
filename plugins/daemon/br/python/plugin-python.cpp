@@ -223,7 +223,6 @@ void PluginPython::activate()
             break;
         }
 
-        auto packageName = PyModule_GetName(this->m_module);
         auto reinforcementNum = PyTuple_Size(pyReinforcements);
 
         KLOG_DEBUG() << "Package name: " << packageName << ", reinforcement number: " << reinforcementNum;
