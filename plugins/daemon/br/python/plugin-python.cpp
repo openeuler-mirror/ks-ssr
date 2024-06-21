@@ -212,6 +212,7 @@ PluginPython::~PluginPython()
 void PluginPython::activate()
 {
     PyObject *pyReinforcements = NULL;
+    auto packageName = PyModule_GetName(this->m_module);
 
     do
     {
