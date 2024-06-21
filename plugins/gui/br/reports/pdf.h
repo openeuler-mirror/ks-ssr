@@ -17,7 +17,7 @@
 
 namespace Ui
 {
-class PDF;
+class PDFSummary;
 }
 namespace KS
 {
