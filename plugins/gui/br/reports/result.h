@@ -73,7 +73,7 @@ private:
     int m_conform[4] = {0};
     int m_inconform[4] = {0};
     int m_allcategories = 0;
-    static QSharedPointer<Result> m_instance;
+    static QSharedPointer<Report> m_instance;
 };
 }  // namespace BR
 }  // namespace KS
