@@ -344,7 +344,7 @@ bool Report::createFilesScanResults(QPrinter &printer, const InvalidData &invali
     m_painter->drawPixmap(0, 0, page);
     printer.newPage();
     delete m_table;
-    m_table = new Table(this, true);
+    m_table = new PDFDetails(this, true);
     // 解析文件名与扫描类型
     QStringList scanFilesList;
     QStringList scanTypeList;
