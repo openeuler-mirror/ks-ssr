@@ -88,13 +88,13 @@ class KeyRebootSwitch:
         br.utils.subprocess_not_output(cmd)
 
     # 判断文件是否存在
-    def status_exist(self):
+    def service_exists(self):
         command = "ls /usr/lib/systemd/system/ |grep -wx ctrl-alt-del.target"
         cmd = '{0}'.format(command)
         output = br.utils.subprocess_has_output(cmd)
         return len(output) != 0
 
-    def status(self):
+    def service_status(self):
         command = '{0} | grep masked'.format(COMPOSITE_KEY_REBOOT_STATUS_CMD)
         output = br.utils.subprocess_has_output(command)
         return len(output) == 0
