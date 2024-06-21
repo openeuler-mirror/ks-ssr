@@ -93,6 +93,12 @@ bool Plugin::loadPluginModule()
         this->m_loader = std::make_shared<PluginPythonLoader>(QString::fromStdString("br." + this->m_pluginConfig->name()));
         return this->m_loader->load();
     }
+    case Protocol::LanguageType::Value::bash:
+    {
+        auto bashRootPath = QDir::cleanPath(dirname + '/' + QString::fromStdString(this->m_pluginConfig->name()));
+        this->m_loader = std::make_shared<PluginBashLoader>(bashRootPath);
+        return this->m_loader->load();
+    }
     default:
         KLOG_WARNING() << "Unsupported language type: " << this->m_pluginConfig->language_type();
         return false;
