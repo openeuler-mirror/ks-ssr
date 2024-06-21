@@ -618,91 +618,65 @@
     </message>
 </context>
 <context>
-    <name>KS::BR::Table</name>
+    <name>PDFDetails</name>
     <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="37"/>
-        <source>Scan Item</source>
-        <translation>扫描项</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="39"/>
-        <source>Scan Type</source>
-        <translation>扫描类型</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="45"/>
-        <source>Scan rpm name</source>
-        <translation>rpm包名</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="47"/>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="54"/>
-        <source>Scan results</source>
-        <translation>扫描结果</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="53"/>
-        <source>Test Item</source>
-        <translation>检测项</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/gui/br/reports/table.cpp" line="59"/>
-        <source>Technical support：Hunan KylinSec Technology Co. Ltd.,  Telephone：400-012-6606</source>
-        <translation>技术支持：湖南麒麟信安科技股份有限公司，联系电话：400-012-6606</translation>
+        <location filename="../../plugins/gui/br/reports/pdf-details.ui" line="98"/>
+        <source>Safety Reinforcement Chart</source>
+        <translation type="unfinished">安全加固图表</translation>
     </message>
 </context>
 <context>
-    <name>PDF</name>
+    <name>PDFSummary</name>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="72"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="72"/>
         <source>Operating system:</source>
-        <translation>操作系统：</translation>
+        <translation type="unfinished">操作系统：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="85"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="85"/>
         <source>Host:</source>
-        <translation>主机:</translation>
+        <translation type="unfinished">主机:</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="98"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="98"/>
         <source>IP:</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="111"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="111"/>
         <source>MAC:</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="124"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="124"/>
         <source>System kernel version:</source>
-        <translation>系统内核版本：</translation>
+        <translation type="unfinished">系统内核版本：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="137"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="137"/>
         <source>Software activation status:</source>
-        <translation>软件激活状态：</translation>
+        <translation type="unfinished">软件激活状态：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="150"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="150"/>
         <source>Export time:</source>
-        <translation>导出时间:</translation>
+        <translation type="unfinished">导出时间:</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="186"/>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="266"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="186"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="266"/>
         <source>TextLabel</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="318"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="318"/>
         <source>Device Information</source>
-        <translation>设备信息</translation>
+        <translation type="unfinished">设备信息</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="407"/>
+        <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="407"/>
         <source>Pie chart of test results</source>
-        <translation>检测结果饼图</translation>
+        <translation type="unfinished">检测结果饼图</translation>
     </message>
 </context>
 <context>
