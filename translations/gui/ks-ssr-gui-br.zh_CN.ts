@@ -810,14 +810,6 @@
     </message>
 </context>
 <context>
-    <name>Table</name>
-    <message>
-        <location filename="../../plugins/gui/br/reports/table.ui" line="98"/>
-        <source>Safety Reinforcement Chart</source>
-        <translation>安全加固图表</translation>
-    </message>
-</context>
-<context>
     <name>ini</name>
     <message>
         <location filename="../../plugins/gui/br/utils.cpp" line="33"/>
