@@ -64,8 +64,8 @@ private:
     void addNewPainterPage(QPrinter &printer);
 
 private:
-    PDF *m_pdf;
-    Table *m_table;
+    PDFSummary *m_pdf;
+    PDFDetails *m_table;
     QSharedPointer<QPainter> m_painter;
 
     QString m_categoryName[128];
