@@ -257,7 +257,7 @@ void Report::addLineToTable(QPrinter &printer, const Report::CategoryContent &ca
                      count % 2 == 1 ? "#f2f2f2" : "#ffffff");
 }
 
-void Result::addNewPainterPage(QPrinter &printer)
+void Report::addNewPainterPage(QPrinter &printer)
 {
     m_table->addSpacer();
     auto page = m_table->grab(m_table->rect());
