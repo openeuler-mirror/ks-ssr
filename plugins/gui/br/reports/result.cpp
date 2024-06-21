@@ -380,7 +380,7 @@ bool Report::createFilesScanResults(QPrinter &printer, const InvalidData &invali
     return true;
 }
 
-bool Result::createVulnerabilityResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag)
+bool Report::createVulnerabilityResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag)
 {
     QStringList vulnerabilityList;
     bool is_vulnerability = scanVulnerability(vulnerabilityList, invalidData);
