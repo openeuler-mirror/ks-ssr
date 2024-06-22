@@ -47,8 +47,14 @@ int main(int argc, char *argv[])
     SingleApplication::setApplicationName(programName);
     SingleApplication::setApplicationVersion(PROJECT_VERSION);
     app.setStyle("Fusion");
-    QTranslator translator;
 
+    int fontId = QFontDatabase::addApplicationFont(TTF_PATH);
+    QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
+    // 设置字体
+    QFont customFont(fontFamily);
+    app.setFont(customFont);
+
+    QTranslator translator;
     if (!translator.load(QLocale(), qAppName(), ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
     {
         KLOG_WARNING() << "Load translator failed!";
