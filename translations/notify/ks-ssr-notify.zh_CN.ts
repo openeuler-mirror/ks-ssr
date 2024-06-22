@@ -100,46 +100,38 @@
     <message>
         <location filename="../../lib/widgets/password-modification.ui" line="14"/>
         <source>Modify password</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑密码</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/password-modification.ui" line="74"/>
         <source>Current password:</source>
-        <translation type="unfinished"></translation>
+        <translation>当前密码</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/password-modification.ui" line="100"/>
         <source>New password:</source>
-        <translation type="unfinished"></translation>
+        <translation>新密码</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/password-modification.ui" line="113"/>
         <location filename="../../lib/widgets/password-modification.ui" line="170"/>
         <source>The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16.</source>
-        <translation type="unfinished"></translation>
+        <translation>密码必须包含以下两种：小谢字母、 大写字母、 特殊字符， 长度必须是 8 - 16 之间。</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/password-modification.ui" line="157"/>
         <source>Confirm password:</source>
-        <translation type="unfinished"></translation>
+        <translation>确认密码：</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/password-modification.ui" line="234"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>确认</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/password-modification.ui" line="253"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PolkitProxy</name>
-    <message>
-        <location filename="../../lib/dbus/polkit-proxy.cpp" line="218"/>
-        <source>Authorization failed.</source>
-        <translation type="unfinished"></translation>
+        <translation>取消</translation>
     </message>
 </context>
 <context>
