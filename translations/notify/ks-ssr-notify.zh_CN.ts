@@ -45,7 +45,7 @@
     <message>
         <location filename="../../lib/widgets/table/pagination.cpp" line="52"/>
         <source>Input page</source>
-        <translation type="unfinished"></translation>
+        <translation>输入界面</translation>
     </message>
 </context>
 <context>
