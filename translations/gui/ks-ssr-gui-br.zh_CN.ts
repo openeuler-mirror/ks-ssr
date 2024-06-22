@@ -590,29 +590,36 @@
         <translation>导入成功！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="383"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="343"/>
+        <source>Failed to reset arg!
+Error message:%1
+return value:%2</source>
+        <translation>重置参数失败!\n错误信息:%1\n返回值:%2</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/scan.cpp" line="391"/>
         <source>Please select the item to export!</source>
         <translation>请选择要导出的加固项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="433"/>
-        <location filename="../../plugins/gui/br/scan.cpp" line="472"/>
-        <location filename="../../plugins/gui/br/scan.cpp" line="498"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="441"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="480"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="506"/>
         <source>Fallback is in progress, please wait.</source>
         <translation>回退正在进行中，请等待。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="451"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="459"/>
         <source>Please check the reinforcement items to be scanned or reinforcement classification for scanning.</source>
         <translation>请勾选需要扫描的加固项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="466"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="474"/>
         <source>Please check the content to be reinforced.</source>
         <translation>请勾选要加固的项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="531"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="539"/>
         <source>Export succeeded!</source>
         <translation>导出成功！</translation>
     </message>
