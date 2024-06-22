@@ -24,12 +24,12 @@
     <message>
         <location filename="../../lib/widgets/message-dialog.cpp" line="38"/>
         <source>Notify</source>
-        <translation type="unfinished"></translation>
+        <translation>通知</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/message-dialog.cpp" line="46"/>
         <source>ok</source>
-        <translation type="unfinished"></translation>
+        <translation>ok</translation>
     </message>
 </context>
 <context>
