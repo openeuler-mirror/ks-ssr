@@ -492,7 +492,7 @@
     <message>
         <location filename="../../lib/widgets/user-prompt-dialog.ui" line="114"/>
         <source>ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ok</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/user-prompt-dialog.ui" line="133"/>
