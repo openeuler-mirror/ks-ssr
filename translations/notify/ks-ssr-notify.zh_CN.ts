@@ -53,23 +53,23 @@
     <message>
         <location filename="../../lib/widgets/password-modification.cpp" line="46"/>
         <source>Modify Password - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑密码 - %1</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/password-modification.cpp" line="97"/>
         <location filename="../../lib/widgets/password-modification.cpp" line="105"/>
         <source>The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16.</source>
-        <translation type="unfinished"></translation>
+        <translation>密码必须包含以下两种：小谢字母、 大写字母、 特殊字符， 长度必须是 8 - 16 之间。</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/password-modification.cpp" line="119"/>
         <source>The input cannot be empty, please improve the information.</source>
-        <translation type="unfinished"></translation>
+        <translation>输入不能为空， 请提供信息。</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/password-modification.cpp" line="125"/>
         <source>Please confirm whether the password is consistent.</source>
-        <translation type="unfinished"></translation>
+        <translation>请确认两次密码是否一直。</translation>
     </message>
 </context>
 <context>
