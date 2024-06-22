@@ -711,6 +711,11 @@
         <source>No problems were found in this test</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../lib/dbus/polkit-proxy.cpp" line="218"/>
+        <source>Authorization failed.</source>
+        <translation type="unfinished">认证失败。</translation>
+    </message>
 </context>
 <context>
     <name>QRCodeDialog</name>
