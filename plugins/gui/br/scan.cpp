@@ -335,7 +335,15 @@ void Scan::flushProgressInfo()
 
 void Scan::argReset(const QString &categoryName, const QString &argName)
 {
-    m_dbusProxy->ResetReinforcement(categoryName);
+    auto reply = m_dbusProxy->ResetReinforcement(categoryName);
+    reply.waitForFinished();
+    auto retValue = reply.value();
+    if (reply.isError() || !retValue)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Failed to reset arg!\nError message:%1\nreturn value:%2").arg(reply.error().message()).arg(retValue));
+        return;
+    }
+
     auto resetStr = m_dbusProxy->GetReinforcements();
     auto value = Utils::getDefault()->ssrResetReinforcement(resetStr, categoryName, argName);
     m_customArgsDialog->setValue(StrUtils::str2jsonValue(value));
