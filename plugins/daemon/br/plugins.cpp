@@ -128,9 +128,9 @@ void Plugins::init()
     // 这里对锁进行释放，确保其他线程可以获取到锁，如果主线程还需要操作Python解析器，则需要重新获取锁
     Utils::pyGiUnlock();
 
-    connect(m_configuration, &Configuration::RSChanged, this, &Plugins::idleLoadReinforcements);
-    connect(m_configuration, &Configuration::StrategyChanged, this, &Plugins::idleLoadReinforcements);
-    connect(m_configuration, &Configuration::customRAChanged, this, &Plugins::idleLoadReinforcements);
+    connect(m_configuration, &Configuration::RSChanged, this, /*&Plugins::idleLoadReinforcements*/ &Plugins::loadReinforcements);
+    connect(m_configuration, &Configuration::StrategyChanged, this, /*&Plugins::idleLoadReinforcements*/ &Plugins::loadReinforcements);
+    connect(m_configuration, &Configuration::customRAChanged, this, /*&Plugins::idleLoadReinforcements*/ &Plugins::loadReinforcements);
     connect(m_loadReinforcementTimer, &QTimer::timeout, this, &Plugins::loadReinforcements);
 }
 
