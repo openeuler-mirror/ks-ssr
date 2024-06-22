@@ -139,12 +139,12 @@
     <message>
         <location filename="../../lib/base/error.cpp" line="34"/>
         <source>Success.</source>
-        <translation type="unfinished"></translation>
+        <translation>成功。</translation>
     </message>
     <message>
         <location filename="../../lib/base/error.cpp" line="37"/>
         <source>Invalid args.</source>
-        <translation type="unfinished"></translation>
+        <translation>非法参数。</translation>
     </message>
     <message>
         <location filename="../../lib/base/error.cpp" line="89"/>
