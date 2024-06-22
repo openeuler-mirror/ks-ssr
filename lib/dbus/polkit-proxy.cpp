@@ -215,7 +215,7 @@ void PolkitProxy::onFinishCheckAuth(QDBusPendingCallWatcher *watcher, QSharedPoi
     }
     else
     {
-        auto replyMessage = checkAuthData->message.createErrorReply(QDBusError::AccessDenied, tr("Authorization failed."));
+        auto replyMessage = checkAuthData->message.createErrorReply(QDBusError::AccessDenied, QObject::tr("Authorization failed."));
         QDBusConnection::systemBus().send(replyMessage);
     }
     checkAuthData->timer.stop();
