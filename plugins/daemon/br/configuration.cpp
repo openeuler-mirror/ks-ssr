@@ -197,8 +197,10 @@ bool Configuration::delCustomRA(const QString& name)
 
     if (isDeleted)
     {
-        this->writeRAToFile(ra);
+        return this->writeRAToFile(ra);
     }
+
+    return false;
 }
 
 void Configuration::delAllCustomRA()
