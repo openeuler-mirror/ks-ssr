@@ -471,6 +471,11 @@
         <source>No problems were found in this test</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../lib/dbus/polkit-proxy.cpp" line="218"/>
+        <source>Authorization failed.</source>
+        <translation type="unfinished">授权失败。</translation>
+    </message>
 </context>
 <context>
     <name>UserPromptDialog</name>
