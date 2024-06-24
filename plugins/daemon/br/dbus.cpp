@@ -528,256 +528,102 @@ bool BRDBus::ResetReinforcement(const QString& name)
 
 void BRDBus::Scan(const QStringList& names)
 {
-    KLOG_DEBUG() << "Carry out scan progress. range is " << names.join(" ").toLocal8Bit();
-    m_scanUniqueName = DBusHelper::getCallerUniqueName(this);
+    if (!validateReinforcementNames(names))
+    {
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_COMMON_INVALID_ARGS));
+        return;
+    }
 
     // 已经在扫描则返回错误
-    if (this->m_scanJob && this->m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
+    if (m_jobManager->getScanStatus() == BRJobState::BR_JOB_STATE_RUNNING)
     {
         sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING));
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to scan."),
-                      m_scanUniqueName);
         return;
     }
 
-    initScanResult(names);
-    m_jobResult.clear();
-
-    try
+    m_scanUniqueName = message().service();
+    if (!m_jobManager->scan(names))
     {
-        this->m_scanJob = Job::create();
-        for (auto iter = names.begin(); iter != names.end(); ++iter)
-        {
-            auto& name = (*iter);
-            auto reinforcement = this->m_plugins->getReinforcement(name);
-
-            if (!reinforcement)
-            {
-                sendErrorReply(QDBusError::InternalError,
-                               SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
-                SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                              tr("Failed to scan."),
-                              m_scanUniqueName);
-                return;
-            }
-
-            auto reinforcement_interface = this->m_plugins->getReinforcementInterface(reinforcement->getPluginName(),
-                                                                                      reinforcement->getName());
-            if (!reinforcement_interface)
-            {
-                sendErrorReply(QDBusError::InternalError,
-                               SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND));
-                SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                              tr("Failed to scan."),
-                              m_scanUniqueName);
-                return;
-            }
-
-            this->m_scanJob->addOperation(reinforcement->getPluginName(),
-                                          reinforcement->getName(),
-                                          [reinforcement_interface]() -> QString
-                                          {
-                                              QJsonObject retval;
-                                              QString args;
-                                              QString error;
-                                              if (reinforcement_interface->get(args, error))
-                                              {
-                                                  retval[JOB_RETURN_VALUE] = StrUtils::str2jsonObject(args);
-                                              }
-                                              else
-                                              {
-                                                  retval[JOB_ERROR_STR] = error;
-                                              }
-                                              return StrUtils::json2str(retval);
-                                          });
-        }
-    }
-    catch (const std::exception& e)
-    {
-        KLOG_WARNING("%s", e.what());
-        sendErrorReply(QDBusError::InternalError,
-                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID));
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to scan."),
-                      m_scanUniqueName);
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_FAILED));
         return;
     }
 
-    QObject::disconnect(this->m_scanJob.data(), &Job::processFinished, 0, 0);
-    QObject::connect(this->m_scanJob.data(), &Job::processFinished, this, &BRDBus::finishedScanProgress);
-    QObject::disconnect(this->m_scanJob.data(), &Job::processChanged, 0, 0);
-    QObject::connect(this->m_scanJob.data(), &Job::processChanged, this, &BRDBus::processScanProgress);
-
-    if (!this->m_scanJob->runAsync())
-    {
-        sendErrorReply(QDBusError::InternalError,
-                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED));
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to scan."),
-                      m_scanUniqueName);
-        return;
-    }
+    connect(m_jobManager, &JobManager::scanProgress, this, &BRDBus::processScanProgress);
+    connect(m_jobManager, &JobManager::scanFinished, this, &BRDBus::processScanFinished);
 }
 
 uint BRDBus::GetScanStatus()
 {
-    return m_scanJob->getState();
+    return m_jobManager->getScanStatus();
 }
 
 QString BRDBus::GetScanResult()
 {
+    auto scanResult = m_jobManager->getScanResult();
     std::ostringstream ostringStream;
-    Protocol::br_job_result(ostringStream, m_scanJobResult);
+    Protocol::br_job_result(ostringStream, scanResult);
     return QString(ostringStream.str().c_str());
 }
 
 void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
 {
-    SCOPE_EXIT(
-        {
-            QDBusConnection::systemBus().send(message.createReply());
-        });
-    KLOG_DEBUG() << "Carry out reinforcement progress. range is " << names.join(" ").toLocal8Bit();
+    if (!validateReinforcementNames(names))
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
+    }
+
+    // 已经在扫描则返回错误
+    if (m_jobManager->getScanStatus() == BRJobState::BR_JOB_STATE_RUNNING)
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING, message);
+    }
+
     m_reforceUniqueName = message.service();
-    m_isScanFlag = false;
-    // 已经在加固则返回错误
-    if (this->m_reinforceJob && this->m_reinforceJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
+    if (!m_jobManager->reinforce(names))
     {
-        auto replyMessage = message.createErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING));
-        QDBusConnection::systemBus().send(replyMessage);
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to reinforcement."),
-                      m_reforceUniqueName);
-        return;
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message);
     }
-    this->m_reinforceJob = Job::create();
-    // 加固前进行一次扫描
-    // FIXME：这里为什么要去扫描？而且m_jobResult还是跟Scan复用的
-    Scan(names);
-    initReinforceResult(names);
-    m_jobResult.clear();
 
-    for (auto iter = names.begin(); iter != names.end(); ++iter)
-    {
-        auto& name = (*iter);
-        auto reinforcement = this->m_plugins->getReinforcement(name);
-        if (!reinforcement)
-        {
-            auto replyMessage = message.createErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
-            QDBusConnection::systemBus().send(replyMessage);
-            SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                          tr("Failed to reinforcement."),
-                          m_reforceUniqueName);
-            return;
-        }
-
-        auto reinforcement_interface = this->m_plugins->getReinforcementInterface(reinforcement->getPluginName(),
-                                                                                  reinforcement->getName());
-        if (!reinforcement_interface)
-        {
-            auto replyMessage = message.createErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND));
-            QDBusConnection::systemBus().send(replyMessage);
-            SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                          tr("Failed to reinforcement."),
-                          m_reforceUniqueName);
-            return;
-        }
-
-        auto paramStr = getJsonParam(name);
-        this->m_reinforceJob->addOperation(reinforcement->getPluginName(),
-                                           reinforcement->getName(),
-                                           [reinforcement_interface, paramStr]() -> QString
-                                           {
-                                               QString error;
-                                               QJsonObject retval;
-                                               if (!reinforcement_interface->set(paramStr, error))
-                                               {
-                                                   retval[JOB_ERROR_STR] = error;
-                                               }
-                                               else
-                                               {
-                                                   // 设置为空字符串，这里主要是为了区分加固成功和取消加固两种状态，后续可能会调整改逻辑
-                                                   retval[JOB_RETURN_VALUE] = QString();
-                                               }
-                                               return StrUtils::json2str(retval);
-                                           });
-    }
-    QObject::disconnect(this->m_reinforceJob.data(), &Job::processChanged, 0, 0);
-    QObject::connect(this->m_reinforceJob.data(), &Job::processChanged, this, &BRDBus::processReinforceProgress);
-    QObject::disconnect(this->m_reinforceJob.data(), &Job::processFinished, 0, 0);
-    QObject::connect(this->m_reinforceJob.data(), &Job::processFinished, this, &BRDBus::finishedReinforceProgress);
-
-    connect(m_reinforceTimer, &QTimer::timeout, this, [this, message]
-            {
-                RETURN_IF_TRUE(m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
-                m_reinforceTimer->stop();
-                disconnect(m_reinforceTimer, &QTimer::timeout, nullptr, nullptr);
-                if (!this->m_reinforceJob->runAsync())
-                {
-                    auto replyMessage = message.createErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED));
-                    QDBusConnection::systemBus().send(replyMessage);
-                    SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                                  tr("Failed to reinforcement."),
-                                  m_reforceUniqueName);
-                    KLOG_ERROR() << "Reinforce running failed!";
-                }
-            });
-    m_reinforceTimer->start();
+    connect(m_jobManager, &JobManager::reinforceProgress, this, &BRDBus::processReinforceProgress);
+    connect(m_jobManager, &JobManager::reinforceFinished, this, &BRDBus::processReinforceFinished);
+    QDBusConnection::systemBus().send(message.createReply());
 }
 
 uint BRDBus::GetReinforceStatus()
 {
-    return m_reinforceJob->getState();
+    return m_jobManager->getReinforceStatus();
 }
 
 QString BRDBus::GetReinforceResult()
 {
+    auto reinforceResult = m_jobManager->getReinforceResult();
     std::ostringstream ostringStream;
-    Protocol::br_job_result(ostringStream, m_reinforceJobResult);
+    Protocol::br_job_result(ostringStream, reinforceResult);
     return QString(ostringStream.str().c_str());
+}
+
+uint BRDBus::GetFallbackStatus()
+{
+    return m_jobManager->getFallbackStatus();
 }
 
 void BRDBus::Cancel(const qlonglong& jobID)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    SSRErrorCode errorCode = SSRErrorCode::SUCCESS;
 
-    if (this->m_scanJob &&
-        jobID == this->m_scanJob->getId() &&
-        this->m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
+    if (!m_jobManager->cancel(jobID))
     {
-        if (!this->m_scanJob->cancel())
-        {
-            errorCode = SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1;
-        }
-    }
-    else if (this->m_reinforceJob &&
-             jobID == this->m_reinforceJob->getId() &&
-             this->m_reinforceJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
-    {
-        if (!this->m_reinforceJob->cancel())
-        {
-            errorCode = SSRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2;
-        }
-    }
-    else
-    {
-        errorCode = SSRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB;
-    }
-
-    if (errorCode != SSRErrorCode::SUCCESS)
-    {
-        sendErrorReply(QDBusError::Failed, SSR_ERROR2STR(errorCode));
+        sendErrorReply(QDBusError::Failed, SSR_ERROR2STR(SSRErrorCode::ERROR_FAILED));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to cancel progress."),
                       calledUniqueName);
-        return;
     }
-
-    SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
-                    tr("Cancel. job id: %1.").arg(jobID),
-                    calledUniqueName);
+    else
+    {
+        SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
+                        tr("Cancel. job id: %1.").arg(jobID),
+                        calledUniqueName);
+    }
 }
 
 void BRDBus::ExportStrategy(bool operationResult)
