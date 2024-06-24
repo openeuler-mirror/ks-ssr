@@ -21,9 +21,9 @@ namespace KS
 {
 namespace BR
 {
-Reinforcement::Reinforcement(const QString &plugin_id,
+Reinforcement::Reinforcement(const QString &pluginID,
                              const Protocol::Reinforcement &rs)
-    : m_pluginID(plugin_id),
+    : m_pluginID(pluginID),
       m_config(rs)
 {
     this->reload();
