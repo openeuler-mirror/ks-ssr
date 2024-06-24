@@ -37,7 +37,6 @@ class BRSettingPage : public SettingPage
 public:
     explicit BRSettingPage(QWidget *parent = nullptr);
     virtual ~BRSettingPage();
-    uint getFallbackStatus();
 
     virtual QString getTitle();
 
