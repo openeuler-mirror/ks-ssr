@@ -65,9 +65,6 @@ public:  // PROPERTIES
     Q_PROPERTY(QString version READ version)
     QString version() const;
 
-    Q_PROPERTY(uint fallback_status READ fallbackStatus)
-    uint fallbackStatus() const;
-
 public Q_SLOTS:
     // 设置标准类型
     virtual void SetStandardType(const uint32_t &standardType);
