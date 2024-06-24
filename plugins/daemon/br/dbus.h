@@ -148,6 +148,9 @@ Q_SIGNALS:  // SIGNALS
     void CpuAverageLoadRatioHigher(const QString &ratio);
     void HomeFreeSpaceRatioLower(const QString &ratio);
     void ProgressFinished();
+    void ScanFinished();
+    void ReinforceFinished();
+    void FallbackFinished();
     void ReinforceProgress(const QString &progress);
     void ReinforcementsChanged();
     void RootFreeSpaceRatioLower(const QString &ratio);
