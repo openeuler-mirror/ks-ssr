@@ -25,7 +25,6 @@ extern "C"
         SUCCESS,
         ERROR_FAILED,
         ERROR_COMMON_INVALID_ARGS,
-        // Common
 
         // Main
         ERROR_PLUGIN_NOT_EXIST_1 = 0x0100,
