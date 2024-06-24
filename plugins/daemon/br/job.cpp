@@ -113,13 +113,13 @@ bool Job::runAsync()
     m_monitorTimer->setInterval(100);
     connect(this->m_monitorTimer, &QTimer::timeout, this, &Job::idleCheckOperation);
     this->m_monitorTimer->start();
-    auto &thread_pool = Plugins::getInstance()->getThreadPool();
+    auto thread_pool = Context::getInstance()->getThreadPool();
     {
         QMutexLocker guard(&(this->m_operationsMutex));
         for (auto iter = this->m_operations.begin(); iter != this->m_operations.end(); ++iter)
         {
-            thread_pool.enqueueByIdx(std::hash<std::string>()(iter.value()->reinforcement_name.toStdString()),
-                                     std::bind(&Job::runOperation, this, iter.value()));
+            thread_pool->enqueueByIdx(std::hash<std::string>()(iter.value()->reinforcement_name.toStdString()),
+                                      std::bind(&Job::runOperation, this, iter.value()));
         }
     }
     return true;
