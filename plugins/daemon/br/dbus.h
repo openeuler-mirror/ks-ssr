@@ -30,24 +30,21 @@ class Categories;
 class Plugins;
 class Job;
 class LicenseObject;
+class JobManager;
 
-class BRDBus : public QObject, public QDBusContext
+class BRDBus : public QObject,
+               public QDBusContext
 {
     Q_OBJECT
 public:
-    BRDBus(QObject *parent);
-    // BRDBus(QObject *parent);
+    BRDBus(Configuration *configuration,
+           Categories *categories,
+           Plugins *plugins,
+           JobManager *jobManager,
+           QObject *parent);
     virtual ~BRDBus();
 
-    static BRDBus *getInstance()
-    {
-        return m_instance;
-    };
-    static void globalInit(QObject *parent);
-    static void globalDeinit()
-    {
-        delete m_instance;
-    };
+    void init();
 
 public:  // PROPERTIES
     Q_PROPERTY(uint notification_status READ notificationStatus)
