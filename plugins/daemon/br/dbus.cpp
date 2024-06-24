@@ -841,7 +841,16 @@ void BRDBus::memoryRemainingRatio(float memoryRatio)
     RETURN_IF_TRUE(memoryRatio >= 0.1)
     KLOG_WARNING("Memory space remaining %f, below 10 percent", memoryRatio);
     _audit_log(1101, -1, "Memory space less than 10%");
-    this->MemoryAbnormal(QString(std::to_string(memoryRatio).c_str()));
+    MemoryAbnormal(QString(std::to_string(memoryRatio).c_str()));
+}
+
+bool BRDBus::validateReinforcementNames(const QStringList& reinforcementNames)
+{
+    for (const auto& reinforcementName : reinforcementNames)
+    {
+        RETURN_VAL_IF_FALSE(m_plugins->getReinforcement(reinforcementName), false);
+    }
+    return true;
 }
 
 QString BRDBus::python2Translate(const QString& souceTxt)
