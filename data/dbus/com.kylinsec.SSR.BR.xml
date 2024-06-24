@@ -156,6 +156,20 @@
             <description>Get the reinforce status which is BRJobState enum type refer to ssr-i.h.</description>
         </method>
 
+        <method name="Fallback">
+            <arg type="u" name="snapshot_status" direction="in">
+                <summary>The security reinforcement snapshot status.</summary>
+            </arg>
+            <description>Set fallback function.</description>
+        </method>
+
+        <method name="GetFallbackStatus">
+            <arg type="u" name="status" direction="out">
+                <summary>The fallback status.</summary>
+            </arg>
+            <description>Get the fallback status which is BRJobState enum type refer to ssr-i.h.</description>
+        </method>
+
         <method name="Cancel">
             <arg type="x" name="job_id" direction="in">
                 <summary>The job id.</summary>
