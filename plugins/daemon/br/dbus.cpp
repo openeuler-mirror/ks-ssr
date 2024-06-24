@@ -41,11 +41,7 @@ namespace BR
 // 一分钟
 #define RESOURCEMONITORMS 1000 * 60 * 1
 
-#define JOB_ERROR_STR "error"
-#define JOB_RETURN_VALUE "return_value"
 #define CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
-#define RH_BR_OPERATE_DATA_FIRST SSR_INSTALL_DATADIR "/br-rh-first.xml"
-#define RH_BR_OPERATE_DATA_LAST SSR_INSTALL_DATADIR "/br-rh-last.xml"
 
 static int _audit_log(int type, int rc, const char* op)
 {
