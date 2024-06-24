@@ -51,11 +51,9 @@ Configuration::~Configuration()
     delete this->m_settings;
 }
 
-Configuration* Configuration::m_instance = nullptr;
-void Configuration::globalInit(const QString& config_path)
+void Configuration::init()
 {
-    m_instance = new Configuration(config_path);
-    m_instance->init();
+    this->m_settings = new QSettings(this->m_configPath, QSettings::NativeFormat);
 }
 
 uint32_t Configuration::getMaxThreadNum()
