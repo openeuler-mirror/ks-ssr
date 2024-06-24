@@ -4,256 +4,218 @@
 <context>
     <name>KS::BR::BRDBus</name>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="158"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="170"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="177"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="214"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="229"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="175"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="187"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="194"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="231"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="246"/>
         <source>system</source>
         <translation>系统</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="158"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="170"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="177"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="214"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="229"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="175"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="187"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="194"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="231"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="246"/>
         <source>custom</source>
         <translation>自定义</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="273"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="289"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="363"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="389"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="290"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="306"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="362"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="388"/>
         <source>open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="273"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="289"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="363"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="389"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="290"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="306"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="362"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="388"/>
         <source>close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="157"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="169"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="174"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="186"/>
         <source>Failed to set standard type to %1.</source>
         <translation>设置加固标准为%1标准失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="176"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="193"/>
         <source>Success to set standard type to %1.</source>
         <translation>成功设置加固标准为%1标准。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="190"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="207"/>
         <source>Failed to import custom reinforcement standard.</source>
         <translation>导入自定义加固标准失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="195"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="212"/>
         <source>Success to import custom reinforcement standard.</source>
         <translation>导入自定义加固标准成功。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="206"/>
         <location filename="../../plugins/daemon/br/dbus.cpp" line="223"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="240"/>
         <source>Failed to set strategy type.</source>
         <translation>设置加固策略失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="213"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="228"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="230"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="245"/>
         <source>Set strategy type to %1.</source>
         <translation>设置加固策略为%1.策略。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="240"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="253"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="257"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="270"/>
         <source>Set time scan to %1.</source>
         <translation>设置定时扫描时间为%1小时。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="248"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="265"/>
         <source>Failed to set time scan.</source>
         <translation>设置定时扫描时间失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="266"/>
         <location filename="../../plugins/daemon/br/dbus.cpp" line="283"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="300"/>
         <source>Failed to set notification status.</source>
         <translation>设置通知状态失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="273"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="289"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="290"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="306"/>
         <source>Set notification status to %1.</source>
         <translation>%1气泡通知。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="324"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="334"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="323"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="333"/>
         <source>Failed to import custom reinforcement strategy.</source>
         <translation>导入自定义加固策略失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="339"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="338"/>
         <source>Import custom reinforcement strategy.</source>
         <translation>导入自定义加固策略成功。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="355"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="372"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="354"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="371"/>
         <source>Failed to set resource monitor switch.</source>
         <translation>设置资源监控开关失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="363"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="389"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="362"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="388"/>
         <source>Set resource monitor switch to %1.</source>
         <translation>设置资源监控开关为%1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="447"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="446"/>
         <source>Reset all reinforcement parameters.</source>
         <translation>重置所有加固参数。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="524"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="523"/>
         <source>Reset reinforcement parameters. name is %1.</source>
         <translation>重置加固参数，名称为%1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="540"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="561"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="573"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="603"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="652"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="661"/>
+        <source>Failed to export report.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="714"/>
+        <source>Scan finished.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="724"/>
+        <source>Reinforcement finished.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="732"/>
+        <source>Fallback finished.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../plugins/daemon/br/dbus.cpp" line="618"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="816"/>
-        <source>Failed to scan.</source>
-        <translation>启动扫描任务失败。</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="651"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="671"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="683"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="722"/>
-        <source>Failed to reinforcement.</source>
-        <translation>启动加固任务失败。</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="774"/>
         <source>Failed to cancel progress.</source>
         <translation>取消加固失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="780"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="624"/>
         <source>Cancel. job id: %1.</source>
         <translation>取消加固，任务id为%1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="788"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="633"/>
         <source>Export strategy.</source>
         <translation>导出策略。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="796"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="641"/>
         <source>Export report.</source>
         <translation>导出报表。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="925"/>
-        <source>%1 reinforcements fail.</source>
-        <translation>加固失败%1项。</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="932"/>
-        <source>%1 reinforcements success, %2 fail.</source>
-        <translation>加固成功 %1项，失败 %2项。</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="939"/>
-        <source>%1 reinforcement success.</source>
-        <translation>加固成功%1项。</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1251"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="744"/>
         <source>config</source>
         <translation>配置类</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1252"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="745"/>
         <source>network</source>
         <translation>网络类</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1253"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="746"/>
         <source>audit</source>
         <translation>审计类</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1254"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="747"/>
         <source>external</source>
         <translation>接入类</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1262"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="755"/>
         <source>Test Item</source>
         <translation>检测项</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1262"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="755"/>
         <source>Result</source>
         <translation>结果</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1276"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="770"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1281"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="775"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1302"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="796"/>
         <source>total:%1 conformity:%2 conformity:%3</source>
         <translation>总计:%1 符合:%2 不符合:%3</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1306"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="800"/>
         <source>test information</source>
         <translation>扫描信息</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="853"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="865"/>
-        <source>Failed to set fallback.</source>
-        <translation>回退失败。</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="873"/>
-        <source>init</source>
-        <translation>初始状态</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="873"/>
-        <source>pre</source>
-        <translation>加固前状态</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="873"/>
-        <source>Set fallback. snapshot status is %1.</source>
-        <translation>回退至%1。</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="898"/>
-        <source>Scan success %1, safe %2, unsafe %3.</source>
-        <translation>扫描完成%1项，%2项符合，%3项不符合。</translation>
     </message>
 </context>
 <context>
