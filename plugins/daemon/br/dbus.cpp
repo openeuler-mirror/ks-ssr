@@ -72,19 +72,21 @@ static int _audit_log(int type, int rc, const char* op)
     return rc < 0 ? -1 : 0;
 }
 
-BRDBus::BRDBus(QObject* parent)
+BRDBus::BRDBus(Configuration* configuration,
+               Categories* categories,
+               Plugins* plugins,
+               JobManager* jobManager,
+               QObject* parent)
     : QObject(parent),
       m_resourceMonitorTimer(nullptr),
-      m_scanJobResult(0, 0, 0),
-      m_reinforceJobResult(0, 0, 0),
+      m_configuration(configuration),
+      m_categories(categories),
+      m_plugins(plugins),
+      m_jobManager(jobManager),
       m_isScanFlag(true),
-      m_isFinishRHWrite(true),
       m_reinforceTimer(nullptr)
 {
     m_dbus = new BRAdaptor(this);
-    m_configuration = Configuration::getInstance();
-    m_categories = Categories::getInstance();
-    m_plugins = Plugins::getInstance();
     m_resourceMonitor = new ResourceMonitor(this);
     m_reinforceTimer = new QTimer(this);
     m_reinforceTimer->setInterval(100);
