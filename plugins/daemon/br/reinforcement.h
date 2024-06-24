@@ -63,7 +63,7 @@ private:
     QMap<QString, QSharedPointer<Rule>> m_rules;
 };
 
-typedef QVector<QSharedPointer<Reinforcement>> BRReinforcementVec;
+typedef QList<QSharedPointer<Reinforcement>> BRReinforcementVec;
 
 }  // namespace BR
 }  // namespace KS
