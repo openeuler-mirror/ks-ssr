@@ -88,8 +88,6 @@ private:
     static Plugins* m_instance;
 
     Configuration* m_configuration;
-    // 线程池
-    ThreadPool m_threadPool;
 
     // 所有插件信息：<插件ID，插件>
     QMap<QString, QSharedPointer<Plugin>> m_plugins;
