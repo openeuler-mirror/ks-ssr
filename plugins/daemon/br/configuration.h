@@ -111,8 +111,6 @@ Q_SIGNALS:
     void customRAChanged();
 
 private:
-    static Configuration* m_instance;
-
     // 配置文件路径
     QString m_configPath;
     // 配置文件内容
