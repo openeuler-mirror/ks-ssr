@@ -26,7 +26,6 @@ namespace BR
 #define BR_BASE_KEY_RESOURCE_MONITOR "resource_monitor"
 #define BR_BASE_KEY_TIME_SCAN "time_scan"
 #define BR_BASE_KEY_NOTIFICATION_STATUS "notification_status"
-#define BR_BASE_KEY_FALLBACK_STATUS "fallback_status"
 
 #define MAX_THREAD_NUM_DEFAULT 1
 
