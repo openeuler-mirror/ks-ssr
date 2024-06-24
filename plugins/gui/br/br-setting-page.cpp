@@ -209,11 +209,6 @@ void BRSettingPage::updateProgressInfo(KS::BR::ProgressInfo &progressInfo)
     }
 }
 
-uint BRSettingPage::getFallbackStatus()
-{
-    return m_dbusProxy->fallback_status();
-}
-
 QString BRSettingPage::getTitle()
 {
     return tr("Baseline reinforcement");
