@@ -491,12 +491,6 @@ void Scan::generateReport()
     //    m_dbusProxy->ExportReport("/root/Desktop/br.pdf");
     //    return;
 
-    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
-    {
-        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
-        m_dbusProxy->GenerateReport(false);
-        return;
-    }
     KLOG_DEBUG() << "generate reports !";
 
     static QList<Category *> categories;
