@@ -177,13 +177,6 @@
             <description>Cancel a job.</description>
         </method>
 
-        <method name="SetFallback">
-            <arg type="u" name="snapshot_status" direction="in">
-                <summary>The security reinforcement snapshot status.</summary>
-            </arg>
-            <description>Set fallback function.</description>
-        </method>
-
         <method name="ExportStrategy">
             <arg type="b" name="operation_result" direction="in">
                 <summary>The result of operation.</summary>
