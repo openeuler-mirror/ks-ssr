@@ -27,6 +27,7 @@
 #include "categories.h"
 #include "configuration.h"
 #include "include/ssr-marcos.h"
+#include "job-manager.h"
 #include "lib/base/error.h"
 #include "lib/base/report.h"
 #include "lib/dbus/dbus-helper.h"
