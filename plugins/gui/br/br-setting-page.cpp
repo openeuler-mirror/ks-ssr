@@ -299,22 +299,14 @@ void BRSettingPage::setMonitorStatus(bool isOpen)
 
 void BRSettingPage::fallback(int status)
 {
-    auto reply = m_dbusProxy->SetFallback(BRFallbackMethod(status));
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
-    if (reply.isError())
-    {
-        m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_NOT_STARTED);
-        return;
-    }
+    auto reply = m_dbusProxy->Fallback(BRFallbackMethod(status));
+    CHECK_ERROR_FOR_DBUS_REPLY_AND_RETURN(reply);
 
-    disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-    connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
+    connect(m_dbusProxy, &BRDbusProxy::FallbackFinished, this, [this]
             {
                 POPUP_MESSAGE_DIALOG(tr("Fallback finished!"));
-                disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-                m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED);
+                disconnect(m_dbusProxy, &BRDbusProxy::FallbackFinished, 0, 0);
             });
-    m_dbusProxy->SetFallbackStatus(BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS);
 }
 }  // namespace BR
 }  // namespace KS
