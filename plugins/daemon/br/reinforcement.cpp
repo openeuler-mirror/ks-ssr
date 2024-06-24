@@ -13,6 +13,7 @@
  */
 
 #include "reinforcement.h"
+#include "context.h"
 #include "plugins.h"
 #include "utils.h"
 
