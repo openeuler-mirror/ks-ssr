@@ -65,9 +65,6 @@ public:
     };
 
 private:
-    // 初始化
-    void init();
-
     // 加载分类配置
     void load();
 
