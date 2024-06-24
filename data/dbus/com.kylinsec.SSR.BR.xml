@@ -228,10 +228,6 @@
             <description>The resource monitor switch.</description>
         </property>
 
-        <property name="fallback_status" type="u" access="read">
-            <description>The fallback status.</description>
-        </property>
-
         <signal name="ScanProgress">
             <arg name="progress" type="s">
                 <summary>The progress is a json string.</summary>
