@@ -470,11 +470,6 @@ void Scan::startReinforcement()
         return;
     }
 
-    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
-    {
-        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
-        return;
-    }
     auto reply = m_dbusProxy->Reinforce(reinforcementItem);
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     RETURN_IF_TRUE(reply.isError());
