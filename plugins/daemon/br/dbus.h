@@ -16,7 +16,6 @@
 
 #include <QDBusContext>
 #include "br-protocol.hxx"
-#include "job.h"
 #include "resource-monitor.h"
 
 class BRAdaptor;
