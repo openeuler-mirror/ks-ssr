@@ -31,9 +31,9 @@ namespace BR
      (PY_MAJOR_VERSION == (major) && PY_MINOR_VERSION == (minor) && \
       PY_MICRO_VERSION >= (micro)))
 
-Plugins::Plugins(Configuration* configuration)
-    : m_configuration(configuration),
-      m_threadPool(this->m_configuration->getMaxThreadNum())
+Plugins::Plugins(Configuration* configuration, QObject* parent)
+    : QObject(parent),
+      m_configuration(configuration)
 {
     m_loadReinforcementTimer = new QTimer(this);
     m_loadReinforcementTimer->setInterval(100);
