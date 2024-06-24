@@ -44,11 +44,42 @@ Plugins::~Plugins()
     Py_Finalize();
 }
 
-Plugins* Plugins::m_instance = NULL;
-void Plugins::globalInit(Configuration* configuration)
+void Plugins::init()
 {
-    m_instance = new Plugins(configuration);
-    m_instance->init();
+    // 内建模块的名称不支持package.module格式，因此这里不加br前缀了
+    PyImport_AppendInittab("klog", PyInit_klog);
+
+    constexpr const char* import_package_path = "sys.path.append('" SSR_BR_PLUGIN_PYTHON_ROOT_DIR "')";
+    /* Python解析器不是线程安全的，Python解析器维护了一个全局锁(GIL)，多线程环境下，线程在执行Python的C API时需要先获取GIL，
+       否则会导致数据异常。程序调用PyEval_InitThreads函数初始化时默认获取GIL，因此最开始是主线程拥有GIL，如果主线程未调用Python的C API，
+       应该要释放掉GIL，否则其他线程在运行前无法获取到GIL，当主线程再次调用Python的C API时可以再去请求GIL。
+
+       特别说明：当线程/主线程获取到GIL后，如果此时正在python脚本中执行IO/sleep等操作，Python解析器会负责对锁进行释放，等IO操作完成后重新请求GIL，
+       相当于Python会自动执行如下代码：
+       Py_BEGIN_ALLOW_THREADS // 释放锁
+        ... Do some blocking I/O operation ...
+       Py_END_ALLOW_THREADS   // 请求锁
+
+       因此，虽然Python解析器同时只能有一个线程在运行，但不用担心线程获取到GIL后其他线程无法执行，Python解析器会根据实际情况进行优化，
+       保证多个线程运行时可以进行切换。*/
+#if !PYTHON_CHECK_VERSION(3, 9, 0)
+    PyEval_InitThreads();
+#endif
+    Py_Initialize();
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString(import_package_path);
+
+    this->loadPlugins();
+    this->loadReinforcements();
+
+    // 这里对锁进行释放，确保其他线程可以获取到锁，如果主线程还需要操作Python解析器，则需要重新获取锁
+    Utils::pyGiUnlock();
+
+    connect(m_configuration, &Configuration::RSChanged, this, &Plugins::loadReinforcements);
+    connect(m_configuration, &Configuration::StrategyChanged, this, &Plugins::loadReinforcements);
+    connect(m_configuration, &Configuration::customRAChanged, this, &Plugins::loadReinforcements);
+    // 前端设置加固参数后会立即获取新的，如果延时执行会导致前端界面显示不正确，因此这里先不用延时执行
+    // connect(m_loadReinforcementTimer, &QTimer::timeout, this, &Plugins::loadReinforcements);
 }
 
 QSharedPointer<Plugin> Plugins::getPluginByReinforcement(const QString& name)
