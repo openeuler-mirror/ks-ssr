@@ -142,25 +142,18 @@
             <description>The result contains current reinforcing info.</description>
         </method>
 
-        <method name="GetReinforceStatus">
-            <arg type="u" name="status" direction="out">
-                <summary>The reinforce status.</summary>
-            </arg>
-            <description>Get the reinforce status which is BRJobState enum type refer to ssr-i.h.</description>
-        </method>
-
-        <method name="Fallback">
+        <method name="Rollback">
             <arg type="u" name="snapshot_status" direction="in">
                 <summary>The security reinforcement snapshot status.</summary>
             </arg>
-            <description>Set fallback function.</description>
+            <description>Rollback reinforcement item.</description>
         </method>
 
-        <method name="GetFallbackStatus">
+        <method name="GetDispatchStatus">
             <arg type="u" name="status" direction="out">
-                <summary>The fallback status.</summary>
+                <summary>The dispatch status.</summary>
             </arg>
-            <description>Get the fallback status which is BRJobState enum type refer to ssr-i.h.</description>
+            <description>Get the dispatch status which is BRDispatchState enum type refer to ssr-i.h.</description>
         </method>
 
         <method name="Cancel">
