@@ -646,25 +646,25 @@ void BRDBus::ExportReport(const QString& savePath)
         return;
     }
 
-    m_exportReportConnection = connect(m_jobManager, &JobManager::scanFinished,
+    m_exportReportConnection = connect(m_jobDispatcher, &JobDispatcher::scanFinished,
                                        std::bind(&BRDBus::exportReport, this, savePath));
 }
 
-void BRDBus::fallback(const QDBusMessage& message, const uint32_t& snapshotStatus)
+void BRDBus::rollback(const QDBusMessage& message, const uint32_t& snapshotStatus)
 {
     // 已经在加固则返回错误
-    if (m_jobManager->getFallbackStatus() == BRJobState::BR_JOB_STATE_RUNNING)
+    if (m_jobDispatcher->getState() != BRDispatchState::BR_DISPATCH_STATE_IDLE)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BR_FALLBACK_IS_RUNNING, message);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BR_JOB_IS_RUNNING, message);
     }
 
-    m_fallbackUniqueName = message.service();
-    if (!m_jobManager->fallback(snapshotStatus))
+    m_rollbackUniqueName = message.service();
+    if (!m_jobDispatcher->rollback(snapshotStatus))
     {
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message);
     }
 
-    connect(m_jobManager, &JobManager::fallbackFinished, this, &BRDBus::processFallbackFinished);
+    connect(m_jobDispatcher, &JobDispatcher::rollbackFinished, this, &BRDBus::processRollbackFinished);
     QDBusConnection::systemBus().send(message.createReply());
 }
 
