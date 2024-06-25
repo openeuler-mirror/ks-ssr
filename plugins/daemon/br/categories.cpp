@@ -28,8 +28,7 @@ namespace BR
 Categories::Categories(QObject* parent)
     : QObject(parent)
 {
-    this->m_confPath = QDir::cleanPath(SSR_INSTALL_DATADIR "/" BR_CATEGORIES_BASENAME);
-    // this->conf_path_ = Glib::build_filename(SSR_INSTALL_DATADIR, BR_CATEGORIES_BASENAME);
+    this->m_confPath = QDir::cleanPath(SSR_BR_INSTALL_DATADIR "/" BR_CATEGORIES_BASENAME);
 }
 
 void Categories::init()
