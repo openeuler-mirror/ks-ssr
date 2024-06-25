@@ -66,6 +66,22 @@ public:
      * @return {*} 返回加固结果
      */
     virtual bool set(const QString &args, QString &error) = 0;
+
+    /**
+     * @brief 备份系统配置，备份的数据用于回退
+     * @param {string} args 系统配置参数
+     * @param {string} error 如果出错则返回错误字符串
+     * @return {*} 返回备份结果
+     */
+    virtual bool backup(QString &args, QString &error) = 0;
+
+    /**
+     * @brief 回滚配置
+     * @param {string} args 系统配置参数
+     * @param {string} error 如果出错则返回错误字符串
+     * @return {*} 返回备份结果
+     */
+    virtual bool rollback(const QString &args, QString &error) = 0;
 };
 
 class DLLEXPORT BRPluginInterface
