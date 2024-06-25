@@ -149,6 +149,11 @@ class WeakEncryption(SSHD):
             self.service.reload()
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 
 class BannerInfo(SSHD):
     def get(self):
