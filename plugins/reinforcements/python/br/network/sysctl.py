@@ -99,6 +99,11 @@ class SourceRoute(Sysctl):
         self.load_from_system()
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 
 # Syn flood攻击
 class SynFlood(Sysctl):
