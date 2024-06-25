@@ -125,25 +125,12 @@ class LoginLock:
         # Delete ligthdm tally2.so
         self.lightdm_tally2.del_line()
 
-        # system-auth
-        if len(self.system_faillock_preauth.get_line()) == 0:
-            self.system_faillock_preauth.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH, LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN)
-        if len(self.system_faillock_authfail.get_line()) == 0:
-            self.system_faillock_authfail.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL, LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN)
-        if len(self.system_faillock_authsucc.get_line()) == 0:
-            self.system_faillock_authsucc.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC, LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN)
-        if len(self.system_faillock_account.get_line()) == 0:
-            self.system_faillock_account.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK, LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN)
-
-        # password-auth
-        if len(self.password_faillock_preauth.get_line()) == 0:
-            self.password_faillock_preauth.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_PREAUTH, LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN)
-        if len(self.password_faillock_authfail.get_line()) == 0:
-            self.password_faillock_authfail.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHFAIL, LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN)
-        if len(self.password_faillock_authsucc.get_line()) == 0:
-            self.password_faillock_authsucc.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC, LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN)
-        if len(self.password_faillock_account.get_line()) == 0:
-            self.password_faillock_account.set_line(LOGIN_LOCK_CONF_KEY_FAILLOCK, LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN)
+        if len(self.system_faillock_preauth.get_line()) == 0 or\
+            len(self.system_faillock_preauth.get_line()) == 0 or\
+            len(self.system_faillock_authfail.get_line()) == 0 or\
+            len(self.system_faillock_authsucc.get_line()) == 0 or\
+            len(self.system_faillock_account.get_line()) == 0:
+            return (False, 'Pam is not configured with a faillock, please manually configure it')
 
         self.set_deny(args[LOGIN_LOCK_CONF_KEY_FAILURES])
         self.set_unlock_time(args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME])
