@@ -633,48 +633,19 @@ KS--User QComboBox QAbstractItemView::item:selected
     color: white;
 }
 
-KS--BR--ArgHandle QComboBox::drop-down,
 KS--User QComboBox::drop-down
 {
     border:none;
     padding-right:12px;
 }
 
-KS--BR--ArgHandle QComboBox::down-arrow,
 KS--User QComboBox::down-arrow
 {
       image: url(:/images/arrow-down);
 }
 
-KS--BR--ArgHandle QSpinBox,
-KS--BR--BRSettingPage QSpinBox
-{
-    height: 36px;
-    background-color: #222222;
-    border: 1px solid #454545;
-    border-radius: 6px;
-    padding-left:12px;
-    padding-right:12px;
-    combobox-popup:0;
-    font-size: 12px;
-    color: white;
-    font:NotoSansCJKsc-Regular;
-}
-/* 屏蔽QSpinBox加减 */
-KS--BR--ArgHandle QSpinBox::up-button,
-KS--BR--ArgHandle QSpinBox::down-button,
-KS--BR--BRSettingPage QSpinBox::up-button,
-KS--BR--BRSettingPage QSpinBox::down-button
-{
-    width : 0px;
-    height : 0px;
-    border : 0px;
-}
 
-KS--BR--ArgHandle QPushButton#noteIcon
-{
-    background-color: transparent;
-}
+
 
 /*********License*****************/
 QWidget#m_content
