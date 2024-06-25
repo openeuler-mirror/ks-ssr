@@ -114,9 +114,6 @@ bool ReinforcementPython::get(QString &args, QString &error)
 bool ReinforcementPython::set(const QString &args, QString &error)
 {
     auto args_toLocal8Bit = args.toLocal8Bit();
-    KLOG_DEBUG("Call set method in class %s.", this->m_className.toLocal8Bit().data());
-    KLOG_DEBUG("args is %s.", args_toLocal8Bit.data());
-
     auto gstate = PyGILState_Ensure();
 
 #if PY_MAJOR_VERSION >= 3
