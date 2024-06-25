@@ -206,3 +206,8 @@ class PasswordComplexity:
 
         self.conf.set_all_value(COMPLEXITY_CONF_KEY_DICT_CHECK, "" if not str(args[COMPLEXITY_CONF_KEY_DICT_CHECK]) else int(args[COMPLEXITY_CONF_KEY_DICT_CHECK]))
         return (True, '')
+
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
