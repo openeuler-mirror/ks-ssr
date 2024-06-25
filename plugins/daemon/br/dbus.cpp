@@ -691,8 +691,8 @@ bool BRDBus::setResourceMonitor()
 
 void BRDBus::processScanFinished()
 {
-    disconnect(m_jobManager, &JobManager::scanProgress, this, &BRDBus::processScanProgress);
-    disconnect(m_jobManager, &JobManager::scanFinished, this, &BRDBus::processScanFinished);
+    disconnect(m_jobDispatcher, &JobDispatcher::scanProgress, this, &BRDBus::processScanProgress);
+    disconnect(m_jobDispatcher, &JobDispatcher::scanFinished, this, &BRDBus::processScanFinished);
     // 记录扫描日志
     SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT, tr("Scan finished."), m_scanUniqueName);
     emit ProgressFinished();
