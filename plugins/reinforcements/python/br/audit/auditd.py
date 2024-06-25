@@ -120,3 +120,7 @@ class Rules():
             return (False, "No such file or directory.")
         self.set_rule(is_arg_empty_add, is_arg_empty_del, add_rule_key, add_rules, del_rules, args[AUDIT_DEL_ALL_RULE_KEY])
         return (True, '')
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
