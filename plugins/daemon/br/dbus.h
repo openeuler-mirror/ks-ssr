@@ -168,7 +168,7 @@ private:
     // 加固完成处理函数
     void processReinforceFinished();
     // 回退完成处理函数
-    void processFallbackFinished();
+    void processRollbackFinished();
     // 扫描完成后,导出结果
     void exportReport(const QString &savePath);
     void homeFreeSpaceRatio(float spaceRatio);
