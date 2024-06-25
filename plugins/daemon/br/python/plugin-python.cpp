@@ -148,6 +148,84 @@ bool ReinforcementPython::set(const QString &args, QString &error)
     return retval;
 }
 
+bool ReinforcementPython::backup(QString &args, QString &error)
+{
+    auto gstate = PyGILState_Ensure();
+#if PY_MAJOR_VERSION >= 3
+    auto py_retval = PyObject_CallMethod(this->m_classInstance, "backup", NULL);
+#else
+    char method[] = "backup";
+    char *format = NULL;
+    auto py_retval = PyObject_CallMethod(this->m_classInstance, method, format);
+#endif
+
+    bool retval = true;
+
+    do
+    {
+        if (!this->checkCallResult(py_retval, this->m_className + ".backup", error))
+        {
+            retval = false;
+            break;
+        }
+
+        auto successed = PyTuple_GetItem(py_retval, 0);
+        if (successed == Py_True)
+        {
+            args = Utils::pyobjectAsString(PyTuple_GetItem(py_retval, 1));
+        }
+        else
+        {
+            error = Utils::pyobjectAsString(PyTuple_GetItem(py_retval, 1));
+        }
+        KLOG_DEBUG() << "args = " << args << "error = " << error;
+        retval = (successed == Py_True);
+        break;
+    } while (0);
+
+    Py_XDECREF(py_retval);
+    PyGILState_Release(gstate);
+
+    return retval;
+}
+
+bool ReinforcementPython::rollback(const QString &args, QString &error)
+{
+    auto args_toLocal8Bit = args.toLocal8Bit();
+    auto gstate = PyGILState_Ensure();
+
+#if PY_MAJOR_VERSION >= 3
+    auto py_retval = PyObject_CallMethod(this->m_classInstance, "rollback", "(s)", args_toLocal8Bit.data());
+#else
+    char method[] = "rollback";
+    char format[] = "(s)";
+    auto py_retval = PyObject_CallMethod(this->m_classInstance, method, format, args_toLocal8Bit.data());
+#endif
+
+    bool retval = true;
+    do
+    {
+        if (!this->checkCallResult(py_retval, this->m_className + ".rollback", error))
+        {
+            retval = false;
+            break;
+        }
+
+        auto successed = PyTuple_GetItem(py_retval, 0);
+        if (successed == Py_False)
+        {
+            error = Utils::pyobjectAsString(PyTuple_GetItem(py_retval, 1));
+        }
+        retval = (successed == Py_True);
+        break;
+    } while (0);
+
+    Py_XDECREF(py_retval);
+    PyGILState_Release(gstate);
+
+    return retval;
+}
+
 bool ReinforcementPython::checkCallResult(PyObject *pyRetval, const QString &functionName, QString &error)
 {
     error = Utils::pyCatchException();
