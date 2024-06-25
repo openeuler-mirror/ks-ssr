@@ -56,7 +56,7 @@ void Context::init()
     m_categories->init();
     m_plugins->init();
     m_dbus->init();
-    m_jobManager->init();
+    m_jobDispatcher->init();
 
     m_threadPool = new ThreadPool(m_configuration->getMaxThreadNum());
 }
