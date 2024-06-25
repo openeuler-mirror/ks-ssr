@@ -87,35 +87,32 @@ private:
     void processScanProgress(const JobResult &jobResult);
     // 加固进度信号处理
     void processReinforceProgress(const JobResult &jobResult);
+    // 备份进度信号处理
+    void processBackupProgress(const JobResult &jobResult);
     // 回退进度信号处理
-    void processFallbackProgress(const QString &progress);
+    void processRollbackProgress(const JobResult &jobResult);
     // 进程完成处理函数
     void processScanFinished();
     // 加固完成处理函数
     void processReinforceFinished();
+    // 备份完成处理函数
+    void processBackupFinished(const QStringList &reinforcementNames);
     // 回退完成处理函数
-    void processFallbackFinished();
+    void processRollbackFinished();
     // 将加固参数xml转json字符串
     QString reinforcementArgXml2Str(const KS::Protocol::Reinforcement::ArgSequence &args);
+    QString stateEnum2Str(BRDispatchState state);
 
 private:
-    static JobManager *m_instance;
+    static JobDispatcher *m_instance;
     Configuration *m_configuration;
     Plugins *m_plugins;
-    // 扫描任务
-    QSharedPointer<Job> m_scanJob;
-    // 记录当前扫描过程中完整的扫描结果，而不是发送信号这一次的结果
-    Protocol::JobResult m_scanJobResult;
-    // 加固任务
-    QSharedPointer<Job> m_reinforceJob;
-    // 记录当前加固过程中完整的结果，而不是发送信号这一次的结果
-    Protocol::JobResult m_reinforceJobResult;
-    // 是否处于加固中
-    bool isReinforce;
-    // 是否处于回退操作中，因为回退也是调用的加固函数，所以需要这里需要用标记位区分是否是回退
-    bool isFallback;
-    //
-    QMetaObject::Connection m_scanBeforeReinforceConnection;
+    // 执行中的任务
+    QSharedPointer<Job> m_job;
+    // 任务结果缓存
+    Protocol::JobResult m_jobResult;
+    // 调度状态
+    BRDispatchState m_state;
 };
 }  // namespace BR
 }  // namespace KS
