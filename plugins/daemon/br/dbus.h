@@ -187,7 +187,7 @@ private:
     Configuration *m_configuration;
     Categories *m_categories;
     Plugins *m_plugins;
-    JobManager *m_jobManager;
+    JobDispatcher *m_jobDispatcher;
     ResourceMonitor *m_resourceMonitor;
     // 激活信息
     QJsonValue m_licenseValues;
