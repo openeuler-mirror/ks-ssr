@@ -271,6 +271,11 @@ class SshdService(SSHD):
         self.service.reload()
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 
 class SftpUser(SSHD):
     def user_exist(self, username):
