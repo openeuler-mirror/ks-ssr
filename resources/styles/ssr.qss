@@ -660,9 +660,6 @@ KS--DatePickButton
     background-color: #222222;
     border: 1px solid #454545;
     border-radius: 6px;
-    font-size: 12px;
-    color: white;
-    font:NotoSansCJKsc-Regular;
 }
 
 KS--DatePickButton QWidget
