@@ -124,3 +124,8 @@ class SynFlood(Sysctl):
         # 从文件中刷新
         self.load_from_system()
         return (True, '')
+
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
