@@ -228,7 +228,7 @@
             <description>Emit when the reinforcement progress is changed.</description>
         </signal>
 
-        <signal name="FallbackProgress">
+        <signal name="RollbackProgress">
             <arg name="progress" type="s">
                 <summary>The progress is a json string.</summary>
             </arg>
