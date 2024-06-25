@@ -94,3 +94,8 @@ class SudoLimits:
             self.conf.set_line(SUDO_LIMIT_FALLBACK_LINE,
                                "## Same thing without a password")
         return (True, '')
+
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
