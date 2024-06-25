@@ -243,12 +243,12 @@
             <description>Reinforce finished.</description>
         </signal>
 
-        <signal name="FallbackFinished">
-            <description>Fallback finished.</description>
+        <signal name="RollbackFinished">
+            <description>Rollback finished.</description>
         </signal>
 
         <signal name="ProgressFinished">
-            <description>Scan or reinforce finished. the signal is deprecated, use ScanFinished, ReinforceFinished and FallbackFinished instead.</description>
+            <description>Scan or reinforce finished. the signal is deprecated, use ScanFinished, ReinforceFinished and RollbackFinished instead.</description>
         </signal>
 
         <signal name="ReinforcementsChanged">
