@@ -65,7 +65,7 @@ private:
     Categories *m_categories;
     Plugins *m_plugins;
     BRDBus *m_dbus;
-    JobManager *m_jobManager;
+    JobDispatcher *m_jobDispatcher;
     // 线程池
     ThreadPool *m_threadPool;
 };
