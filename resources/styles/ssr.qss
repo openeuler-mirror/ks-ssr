@@ -618,7 +618,6 @@ KS--User QComboBox QAbstractItemView
     selection-background-color: #222222;
 }
 
-KS--BR--ArgHandle QComboBox QAbstractItemView::item,
 KS--User QComboBox QAbstractItemView::item
 {
     height: 36px;
