@@ -16,7 +16,7 @@
 #include "categories.h"
 #include "configuration.h"
 #include "dbus.h"
-#include "job-manager.h"
+#include "job-dispatcher.h"
 #include "lib/base/thread-pool.h"
 #include "plugins.h"
 
