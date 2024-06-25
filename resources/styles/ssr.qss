@@ -490,7 +490,6 @@ KS--DM--DevicePermission QComboBox QAbstractItemView {
 
 KS--DM--DevicePermission QComboBox QAbstractItemView::item
 {
-    color:#ffffff;
     min-height: 36px;
     border-top: 1px solid #454545;
     padding-left:12px;
