@@ -25,15 +25,15 @@ namespace BR
 class Configuration;
 class Plugins;
 
-class JobManager : public QObject
+class JobDispatcher : public QObject
 {
     Q_OBJECT
 
 public:
-    JobManager(Configuration *configuration,
-               Plugins *plugins,
-               QObject *parent = nullptr);
-    virtual ~JobManager(){};
+    JobDispatcher(Configuration *configuration,
+                  Plugins *plugins,
+                  QObject *parent = nullptr);
+    virtual ~JobDispatcher(){};
 
     void init();
 
