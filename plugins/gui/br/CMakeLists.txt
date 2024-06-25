@@ -46,7 +46,7 @@ add_library(
   ${UI_FILES}
   ${BR_PROTOCOL_OUTPUT}
   ${QM_FILES}
-  res.qrc)
+  res/res.qrc)
 
 target_include_directories(
   ${TARGET_NAME}
