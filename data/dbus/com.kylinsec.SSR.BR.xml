@@ -128,13 +128,6 @@
             <description>The result contains current sanning info.</description>
         </method>
 
-        <method name="GetScanStatus">
-            <arg type="u" name="status" direction="out">
-                <summary>The scan status.</summary>
-            </arg>
-            <description>Get the scan status which is BRJobState enum type refer to ssr-i.h.</description>
-        </method>
-
         <method name="Reinforce">
             <arg type="as" name="names" direction="in">
                 <summary>The reinforced reinforcent names..</summary>
