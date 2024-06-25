@@ -31,6 +31,8 @@ public:
 
     virtual bool get(QString &args, QString &error);
     virtual bool set(const QString &args, QString &error);
+    virtual bool backup(QString &args, QString &error);
+    virtual bool rollback(const QString &args, QString &error);
 
 private:
     QString m_bashFilePath;
