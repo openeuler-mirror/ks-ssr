@@ -78,7 +78,7 @@ void Home::init()
     connect(&m_logoTimer, &QTimer::timeout, this, [this]()
             {
                 static uint pixIndex = 0;
-                QString res = QString(":/br/res/logo-%1").arg(pixIndex++);
+                QString res = QString(":/br/image/logo/%1").arg(pixIndex++);
                 if (pixIndex > LOGO_PIXMAP_COUNTS)
                 {
                     pixIndex = 0;
