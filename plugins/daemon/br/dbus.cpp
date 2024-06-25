@@ -41,7 +41,7 @@ namespace BR
 // 一分钟
 #define RESOURCEMONITORMS 1000 * 60 * 1
 
-#define CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
+#define CUSTOM_RA_STRATEGY_FILEPATH SSR_BR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
 
 static int _audit_log(int type, int rc, const char* op)
 {
