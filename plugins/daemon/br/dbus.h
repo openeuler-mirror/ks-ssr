@@ -144,7 +144,7 @@ Q_SIGNALS:  // SIGNALS
     void ProgressFinished();
     void ScanFinished();
     void ReinforceFinished();
-    void FallbackFinished();
+    void RollbackFinished();
     void ReinforceProgress(const QString &progress);
     void ReinforcementsChanged();
     void RootFreeSpaceRatioLower(const QString &ratio);
