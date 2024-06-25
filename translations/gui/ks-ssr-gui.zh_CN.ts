@@ -297,7 +297,7 @@
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../../src/gui/accounts/login.ui" line="144"/>
+        <location filename="../../src/gui/accounts/login.ui" line="147"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
