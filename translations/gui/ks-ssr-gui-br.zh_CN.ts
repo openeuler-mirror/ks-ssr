@@ -172,38 +172,38 @@
         <translation>内存空间不足10%。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="233"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="228"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="244"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="239"/>
         <source>Scheduled scanning task has been closed!</source>
         <translation>定时扫描已关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="252"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="247"/>
         <source>Scheduled scanning task has been started, every interval %1 scan once every hour.</source>
         <translation>定时扫描任务开启，每间隔%1小时扫描一次。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="283"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="278"/>
         <source>Timed scan finished, Scaned %1, %2 conform, %3 inconform!</source>
         <translation>定时扫描任务完成，已扫描 %1项， %2项符合, %3项不符合！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="315"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="310"/>
         <source>Open resource monitoring.</source>
         <translation>资源监控已打开。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="315"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="310"/>
         <source>Close resource monitoring.</source>
         <translation>资源监控已关闭。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="332"/>
-        <source>Fallback finished!</source>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="321"/>
+        <source>Rollback finished!</source>
         <translation>回退完成！</translation>
     </message>
 </context>
