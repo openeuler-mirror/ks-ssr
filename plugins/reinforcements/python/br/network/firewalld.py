@@ -325,6 +325,11 @@ class FirewallManager(Firewall):
 
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 
 # ICMP时间戳请求
 class IcmpTimestamp(Firewall):
