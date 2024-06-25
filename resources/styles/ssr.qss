@@ -679,7 +679,6 @@ KS--DatePicker
 
 KS--Pagination QPushButton
 {
-    color:#FFFFFF;
     background-color: #393939;
     outline: none;
     border:0px;
