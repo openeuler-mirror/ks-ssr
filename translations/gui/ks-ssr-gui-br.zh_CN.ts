@@ -714,12 +714,12 @@ return value:%2</source>
         <translation>开始扫描</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.ui" line="123"/>
+        <location filename="../../plugins/gui/br/progress.ui" line="126"/>
         <source>strategy</source>
         <translation>策略设置</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.ui" line="136"/>
+        <location filename="../../plugins/gui/br/progress.ui" line="139"/>
         <source>return</source>
         <translation>返回</translation>
     </message>
