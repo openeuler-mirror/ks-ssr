@@ -61,6 +61,18 @@ void BRPage::resetAllReinforcementArgs()
 
 void BRPage::initUI()
 {
+    // 样式
+    QFile file(STYLE_PATH);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QString windowStyle = file.readAll();
+        setStyleSheet(windowStyle);
+    }
+    else
+    {
+        KLOG_WARNING() << "Failed to open file " << STYLE_PATH;
+    }
+
     auto layout = new QVBoxLayout(this);
     m_stacked = new QStackedWidget(this);
     m_home = new Home(m_stacked);
