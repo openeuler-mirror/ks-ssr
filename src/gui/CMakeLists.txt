@@ -49,28 +49,6 @@ execute_process(
 # 生成qm文件，qt_create_translation会导致cmake clean把ts文件删掉
 qt5_add_translation(QM_FILES ${TS_FILES})
 
-set(RESOURCE_LOGO_PNG_PATH
-    "${PROJECT_SOURCE_DIR}/resources/images/kylinsec-logo.png")
-set(RESOURCE_REPORTS_END_PNG_PATH
-    "${PROJECT_SOURCE_DIR}/resources/images/PDF/end.png")
-
-# 判断private目录是否拉取，替换logo图片
-if(EXISTS "${PROJECT_SOURCE_DIR}/private/check-project-exist")
-  execute_process(
-    COMMAND
-      ln -s ${PROJECT_SOURCE_DIR}/private/resources/images/kylinsec-logo.png
-      ${RESOURCE_LOGO_PNG_PATH}
-    COMMAND ln -s ${PROJECT_SOURCE_DIR}/private/resources/images/PDF/end.png
-            ${RESOURCE_REPORTS_END_PNG_PATH})
-else()
-  execute_process(
-    COMMAND
-      ln -s ${PROJECT_SOURCE_DIR}/resources/images/kylinsec-logo-fallbak.png
-      ${RESOURCE_LOGO_PNG_PATH}
-    COMMAND ln -s ${PROJECT_SOURCE_DIR}/resources/images/PDF/end-fallbak.png
-            ${RESOURCE_REPORTS_END_PNG_PATH})
-endif()
-
 add_executable(
   ${TARGET_NAME}
   ${UI_H_FILES}
