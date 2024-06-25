@@ -45,7 +45,7 @@ void MessageDialog::setMessage(const QString &message)
 
     auto *ok = new QPushButton(tr("ok"), this);
     ok->setFixedSize(72, 36);
-    ok->setObjectName("okBtn");
+    ok->setProperty("okStyle", QVariant(true));
     connect(ok, &QPushButton::clicked, this, &MessageDialog::close);
 
     m_contentLayout->addWidget(label);
