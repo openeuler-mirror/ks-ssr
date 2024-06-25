@@ -534,32 +534,26 @@ void BRDBus::Scan(const QStringList& names)
         return;
     }
 
-    // 已经在扫描则返回错误
-    if (m_jobManager->getScanStatus() == BRJobState::BR_JOB_STATE_RUNNING)
+    if (m_jobDispatcher->getState() != BRDispatchState::BR_DISPATCH_STATE_IDLE)
     {
-        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING));
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_BR_JOB_IS_RUNNING));
         return;
     }
 
     m_scanUniqueName = message().service();
-    if (!m_jobManager->scan(names))
+    if (!m_jobDispatcher->scan(names))
     {
         sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_FAILED));
         return;
     }
 
-    connect(m_jobManager, &JobManager::scanProgress, this, &BRDBus::processScanProgress);
-    connect(m_jobManager, &JobManager::scanFinished, this, &BRDBus::processScanFinished);
-}
-
-uint BRDBus::GetScanStatus()
-{
-    return m_jobManager->getScanStatus();
+    connect(m_jobDispatcher, &JobDispatcher::scanProgress, this, &BRDBus::processScanProgress);
+    connect(m_jobDispatcher, &JobDispatcher::scanFinished, this, &BRDBus::processScanFinished);
 }
 
 QString BRDBus::GetScanResult()
 {
-    auto scanResult = m_jobManager->getScanResult();
+    auto scanResult = m_jobDispatcher->getScanResult();
     std::ostringstream ostringStream;
     Protocol::br_job_result(ostringStream, scanResult);
     return QString(ostringStream.str().c_str());
