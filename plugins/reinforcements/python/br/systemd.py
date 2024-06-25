@@ -143,3 +143,8 @@ class SwitchBase(object):
         except Exception as e:
             br.log.error(str(e))
             return (False, "Abnormal service!")
+
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
