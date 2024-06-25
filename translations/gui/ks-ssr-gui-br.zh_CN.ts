@@ -132,8 +132,8 @@
     <message>
         <location filename="../../plugins/gui/br/br-setting-page.cpp" line="93"/>
         <location filename="../../plugins/gui/br/br-setting-page.cpp" line="111"/>
-        <source>Fallback is in progress, please wait.</source>
-        <translation>回退正在进行中，请等待。</translation>
+        <source>A job is in progress, please wait.</source>
+        <translation>一个任务正在进行中，请等待。</translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/br-setting-page.cpp" line="97"/>
