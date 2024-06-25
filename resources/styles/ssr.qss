@@ -1,22 +1,12 @@
-/* common */
+*{
+    color:white;
+    font-size:13px;
+}
 
 KS--Window
 {
-    font-size: 12px;
     border-radius: 4px;
     background-color:#2d2d2d;
-    color: white;
-    font:NotoSansCJKsc-Regular;
-}
-
-QPushButton
-{
-    color: #FFFFFF;
-    background-color: #393939;
-    border: none;
-    border-radius: 4px;
-    font-size: 12px;
-    font:NotoSansCJKsc-Regular;
 }
 
 QPushButton:checked
@@ -24,11 +14,26 @@ QPushButton:checked
     background-color: #00a2ff;
 }
 
-QLabel
+QPushButton
 {
-    color: #FFFFFF;
-    font-size: 12px;
-    font:NotoSansCJKsc-Regular;
+    border-radius:4px;
+    background:#393939;
+    border: none;
+}
+
+QPushButton:hover
+{
+    background:#464646;
+}
+
+QPushButton[okStyle="true"]
+{
+    background:#43A3F2;
+}
+
+QPushButton[okStyle="true"]:hover
+{
+    background:#79C3FF;
 }
 
 QLineEdit
