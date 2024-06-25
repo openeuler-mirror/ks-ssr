@@ -362,47 +362,47 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="61"/>
+        <location filename="../../lib/base/error.cpp" line="60"/>
         <source>The job is running, please don&apos;t repeat the operation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="64"/>
+        <location filename="../../lib/base/error.cpp" line="63"/>
         <source>The fallback is can&apos;t running, please wait for the reinforcement to be completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="67"/>
+        <location filename="../../lib/base/error.cpp" line="66"/>
         <source>The standard reinforcement configuration is not found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="70"/>
+        <location filename="../../lib/base/error.cpp" line="69"/>
         <source>Machine code error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="73"/>
+        <location filename="../../lib/base/error.cpp" line="72"/>
         <source>Activation code error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="76"/>
+        <location filename="../../lib/base/error.cpp" line="75"/>
         <source>There is no historical state, please reinforce it and operation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="79"/>
+        <location filename="../../lib/base/error.cpp" line="78"/>
         <source>The subsequest configuration item scan progress has been cancelled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="83"/>
+        <location filename="../../lib/base/error.cpp" line="82"/>
         <source>The subsequest configuration item reinforcement progress has been cancelled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="86"/>
+        <location filename="../../lib/base/error.cpp" line="85"/>
         <source>The software is not activated.</source>
         <translation type="unfinished"></translation>
     </message>
