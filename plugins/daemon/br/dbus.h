@@ -154,7 +154,7 @@ Q_SIGNALS:  // SIGNALS
 
 private:
     void reinforce(const QDBusMessage &message, const QStringList &names);
-    void fallback(const QDBusMessage &message, const uint32_t &snapshot);
+    void rollback(const QDBusMessage &message, const uint32_t &snapshot);
 
 private:
     // 扫描进度信号处理
