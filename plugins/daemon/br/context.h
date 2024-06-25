@@ -26,7 +26,7 @@ class Configuration;
 class Categories;
 class Plugins;
 class BRDBus;
-class JobManager;
+class JobDispatcher;
 
 class Context : public QObject
 {
