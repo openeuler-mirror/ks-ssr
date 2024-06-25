@@ -67,21 +67,18 @@ Q_SIGNALS:
     // 加固完成
     void reinforceFinished();
     // 回退进度
-    void fallbackProgress(const QString &progress);
+    void rollbackProgress(const QString &progress);
     // 回退完成
-    void fallbackFinished();
+    void rollbackFinished();
 
 private:
-    // 初始化扫描结果信息
-    void initScanResult(const QStringList &names);
-    // 初始化加固结果信息
-    void initReinforceResult(const QStringList &names);
-    // 扫描结果更新到缓存
-    void cacheScanResult(const Protocol::ReinforcementResult &reinforcementResult);
-    // 加固结果更新到缓存
-    void cacheReinforceResult(const Protocol::ReinforcementResult &reinforcementResult);
-    // 处理加固前的扫描结果
-    void processScanResultBeforeReinforce(const QStringList &reinforcementNames);
+    // 备份指定加固项
+    bool backup(const QStringList &names);
+
+private:
+    void initJobResult(const QStringList &names);
+    // 结果更新到缓存
+    void cacheResult(const Protocol::ReinforcementResult &reinforcementResult);
     // 在加固前保存系统历史记录便于回退
     void saveHistoryBeforeReinforce(const QStringList &reinforcementNames, const QString &savePath);
     // 启动加固
