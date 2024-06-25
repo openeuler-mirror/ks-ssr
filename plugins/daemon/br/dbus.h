@@ -30,7 +30,7 @@ class Categories;
 class Plugins;
 class Job;
 class LicenseObject;
-class JobManager;
+class JobDispatcher;
 
 class BRDBus : public QObject,
                public QDBusContext
