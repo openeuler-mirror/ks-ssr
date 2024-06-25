@@ -163,7 +163,7 @@ QString BRDBus::version() const
 }
 
 CHECK_AUTH_WITH_1ARGS(BRDBus, Reinforce, reinforce, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SYSADMIN}, const QStringList&);
-CHECK_AUTH_WITH_1ARGS(BRDBus, Fallback, fallback, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SYSADMIN}, const uint32_t&);
+CHECK_AUTH_WITH_1ARGS(BRDBus, Rollback, rollback, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SYSADMIN}, const uint32_t&);
 
 void BRDBus::SetStandardType(const uint32_t& standardType)
 {
