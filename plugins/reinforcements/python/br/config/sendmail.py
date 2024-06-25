@@ -107,3 +107,8 @@ class Switch(SendMailProxy):
         except Exception as e:
             br.log.error(str(e))
             return (False, "Failed to execute command. Please check the log information for details.")
+
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
