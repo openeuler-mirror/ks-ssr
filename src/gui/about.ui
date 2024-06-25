@@ -53,7 +53,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="../../resources/resources.qrc">:/images/kylinsec-logo</pixmap>
+         <pixmap resource="../../resources/resources.qrc">:/images/logo</pixmap>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
