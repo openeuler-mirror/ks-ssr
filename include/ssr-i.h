@@ -300,6 +300,20 @@ extern "C"
         BR_JOB_STATE_CANCEL_DONE
     };
 
+    // 基线加固调度状态
+    enum BRDispatchState
+    {
+        BR_DISPATCH_STATE_IDLE,
+        // 扫描中
+        BR_DISPATCH_STATE_SCAN,
+        // 加固中
+        BR_DISPATCH_STATE_REINFORCE,
+        // 备份中，暂未使用该状态，跟加固中合并
+        BR_DISPATCH_STATE_BACKUP,
+        // 回滚中
+        BR_DISPATCH_STATE_ROLLBACK,
+    };
+
     // 资源监控
     enum BRResourceMonitor
     {
