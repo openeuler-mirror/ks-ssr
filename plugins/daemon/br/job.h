@@ -104,6 +104,10 @@ public:
     bool runAsync();
     // 取消任务，只对run_async有效
     bool cancel();
+    // 清理任务
+    void clear();
+    // 重置任务，重置会先清理任务，然后重新设置任务ID
+    void reset();
 
 private:
     Job(int64_t job_id);
