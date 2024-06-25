@@ -398,47 +398,47 @@
         <translation>加固项&apos;{0}&apos;未找到。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="61"/>
+        <location filename="../../lib/base/error.cpp" line="60"/>
         <source>The job is running, please don&apos;t repeat the operation.</source>
         <translation>任务正在运行，请不要重复操作。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="64"/>
+        <location filename="../../lib/base/error.cpp" line="63"/>
         <source>The fallback is can&apos;t running, please wait for the reinforcement to be completed.</source>
         <translation>回退暂无法运行，请在进行加固完成后操作。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="67"/>
+        <location filename="../../lib/base/error.cpp" line="66"/>
         <source>The standard reinforcement configuration is not found.</source>
         <translation>加固标准配置未找到。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="70"/>
+        <location filename="../../lib/base/error.cpp" line="69"/>
         <source>Machine code error.</source>
         <translation>机器码错误。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="73"/>
+        <location filename="../../lib/base/error.cpp" line="72"/>
         <source>Activation code error.</source>
         <translation>激活码错误。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="76"/>
+        <location filename="../../lib/base/error.cpp" line="75"/>
         <source>There is no historical state, please reinforce it and operation.</source>
         <translation>历史状态不存在，请在加固后进行操作。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="79"/>
+        <location filename="../../lib/base/error.cpp" line="78"/>
         <source>The subsequest configuration item scan progress has been cancelled.</source>
         <translation>已取消后续配置项扫描进程。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="83"/>
+        <location filename="../../lib/base/error.cpp" line="82"/>
         <source>The subsequest configuration item reinforcement progress has been cancelled.</source>
         <translation>已取消后续配置项加固进程。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="86"/>
+        <location filename="../../lib/base/error.cpp" line="85"/>
         <source>The software is not activated.</source>
         <translation>软件未激活。</translation>
     </message>
