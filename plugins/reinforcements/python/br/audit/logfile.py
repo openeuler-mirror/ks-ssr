@@ -137,3 +137,8 @@ class Permissions:
                 'sudo chattr -a {0}'.format(MESSAGES_FILE_PATH))
 
         return (True, '')
+
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
