@@ -701,19 +701,19 @@ void BRDBus::processScanFinished()
 
 void BRDBus::processReinforceFinished()
 {
-    disconnect(m_jobManager, &JobManager::reinforceProgress, this, &BRDBus::processReinforceProgress);
-    disconnect(m_jobManager, &JobManager::reinforceFinished, this, &BRDBus::processReinforceFinished);
+    disconnect(m_jobDispatcher, &JobDispatcher::reinforceProgress, this, &BRDBus::processReinforceProgress);
+    disconnect(m_jobDispatcher, &JobDispatcher::reinforceFinished, this, &BRDBus::processReinforceFinished);
     // 记录加固完成日志
     SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT, tr("Reinforcement finished."), m_reforceUniqueName);
     emit ProgressFinished();
     emit ReinforceFinished();
 }
 
-void BRDBus::processFallbackFinished()
+void BRDBus::processRollbackFinished()
 {
-    disconnect(m_jobManager, &JobManager::fallbackFinished, this, &BRDBus::processFallbackFinished);
-    SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT, tr("Fallback finished."), m_fallbackUniqueName);
-    emit FallbackFinished();
+    disconnect(m_jobDispatcher, &JobDispatcher::rollbackFinished, this, &BRDBus::processRollbackFinished);
+    SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT, tr("Rollback finished."), m_rollbackUniqueName);
+    emit RollbackFinished();
 }
 
 void BRDBus::exportReport(const QString& savePath)
