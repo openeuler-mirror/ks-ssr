@@ -125,6 +125,11 @@ class DirectoryPermissionSetting:
 
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 
 class UmaskLimit:
     def __init__(self):
