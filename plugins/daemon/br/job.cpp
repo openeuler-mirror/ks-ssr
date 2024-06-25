@@ -133,6 +133,24 @@ bool Job::cancel()
     return true;
 }
 
+void Job::clear()
+{
+    m_state = BRJobState::BR_JOB_STATE_IDLE;
+    if (m_monitorTimer)
+    {
+        delete m_monitorTimer;
+        m_monitorTimer = nullptr;
+    }
+    m_operations.clear();
+    m_isNeedCancel = false;
+}
+
+void Job::reset()
+{
+    clear();
+    m_jobID = (++Job::m_jobCount);
+}
+
 void Job::runInit()
 {
     this->m_jobResult.job_id = this->m_jobID;
