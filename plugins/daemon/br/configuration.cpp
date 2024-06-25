@@ -411,7 +411,7 @@ bool Configuration::writeRhToFile(QSharedPointer<Protocol::ReinforcementHistory>
     try
     {
         std::ofstream ofs(path.toStdString(), std::ios_base::out);
-        br_rh(ofs, *rh.get());
+        br_rh(ofs, *rh.data());
         ofs.close();
     }
     catch (const std::exception& e)
