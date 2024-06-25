@@ -20,6 +20,8 @@
 #include "lib/widgets/ssr-marcos-ui.h"
 #include "scan.h"
 
+#define STYLE_PATH ":/br/style/res.qss"
+
 namespace KS
 {
 namespace BR
