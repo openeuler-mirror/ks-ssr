@@ -164,6 +164,18 @@ void BRSettingPage::initConnection()
 
 void BRSettingPage::initUI()
 {
+    // 样式
+    QFile file(STYLE_PATH);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QString windowStyle = file.readAll();
+        setStyleSheet(windowStyle);
+    }
+    else
+    {
+        KLOG_WARNING() << "Failed to open file " << STYLE_PATH;
+    }
+
     if (m_dbusProxy->notification_status() == BRNotificationStatus::BR_NOTIFICATION_STATUS_OPEN)
     {
         m_ui->m_openNotify->setChecked(true);
