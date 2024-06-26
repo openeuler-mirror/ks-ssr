@@ -590,6 +590,11 @@ QString BRDBus::GetReinforceResult()
     return QString(ostringStream.str().c_str());
 }
 
+uint BRDBus::GetDispatchStatus()
+{
+    return m_jobDispatcher->getState();
+}
+
 void BRDBus::Cancel(const qlonglong& jobID)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
