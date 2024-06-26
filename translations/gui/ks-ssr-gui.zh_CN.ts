@@ -282,29 +282,6 @@
     </message>
 </context>
 <context>
-    <name>UserPromptDialog</name>
-    <message>
-        <location filename="../../lib/widgets/user-prompt-dialog.ui" line="14"/>
-        <source>Form</source>
-        <translation>表格</translation>
-    </message>
-    <message>
-        <location filename="../../lib/widgets/user-prompt-dialog.ui" line="65"/>
-        <source>text</source>
-        <translation>text</translation>
-    </message>
-    <message>
-        <location filename="../../lib/widgets/user-prompt-dialog.ui" line="114"/>
-        <source>ok</source>
-        <translation>确认</translation>
-    </message>
-    <message>
-        <location filename="../../lib/widgets/user-prompt-dialog.ui" line="136"/>
-        <source>cancel</source>
-        <translation>取消</translation>
-    </message>
-</context>
-<context>
     <name>Window</name>
     <message>
         <location filename="../../src/gui/window.ui" line="20"/>
