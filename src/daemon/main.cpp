@@ -37,15 +37,16 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName(programName);
     QCoreApplication::setApplicationVersion(PROJECT_VERSION);
 
-    QTranslator translator;
-
-    if (!translator.load(QLocale(), qAppName(), ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
+    // 加载翻译
+    QList<QTranslator *> translatorList;
+    QStringList translatorFileNames{qAppName(), "ks-ssr-base", "ks-ssr-dbus"};
+    for (auto fileName : translatorFileNames)
     {
-        KLOG_WARNING() << "Load translator failed!";
-    }
-    else
-    {
-        app.installTranslator(&translator);
+        auto translator = MiscUtils::installTranslator(fileName);
+        if (translator)
+        {
+            translatorList.append(translator);
+        }
     }
 
     QCommandLineParser parser;
