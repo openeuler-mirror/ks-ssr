@@ -24,3 +24,5 @@ target_include_directories(
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${KLOG_QT5_LIBRARIES}
                                              ${X11_LIBRARIES} Qt5::DBus)
+
+install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
