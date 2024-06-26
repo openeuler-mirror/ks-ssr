@@ -22,14 +22,19 @@
 <context>
     <name>KS::MessageDialog</name>
     <message>
-        <location filename="../../lib/widgets/message-dialog.cpp" line="38"/>
+        <location filename="../../lib/widgets/message-dialog.cpp" line="74"/>
         <source>Notify</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../lib/widgets/message-dialog.cpp" line="46"/>
+        <location filename="../../lib/widgets/message-dialog.cpp" line="85"/>
         <source>ok</source>
         <translation>确认</translation>
+    </message>
+    <message>
+        <location filename="../../lib/widgets/message-dialog.cpp" line="98"/>
+        <source>cancel</source>
+        <translation>取消</translation>
     </message>
 </context>
 <context>
