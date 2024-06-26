@@ -67,8 +67,8 @@ void Scan::usingCustomStrategy()
 {
     KLOG_DEBUG() << "use custom strategy.";
     m_strategyType = BR_STRATEGY_TYPE_CUSTOM;
-    disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
-    connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
+    disconnect(m_ui->m_itemTable, &ItemTable::modifyItemArgsClicked, this, &Scan::popReinforcecmentDialog);
+    connect(m_ui->m_itemTable, &ItemTable::modifyItemArgsClicked, this, &Scan::popReinforcecmentDialog);
     // 修改UI界面参数以及复选框状态
     m_ui->m_itemTable->setStrategy(BR_STRATEGY_TYPE_CUSTOM);
     // 更新加固项和相关参数
