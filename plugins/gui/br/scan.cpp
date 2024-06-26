@@ -445,11 +445,45 @@ bool Scan::checkAndSetCheckbox()
     return true;
 }
 
+void Scan::serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner)
+{
+    // Note that this signal is also emitted whenever the serviceName service was registered or unregistered.
+    // If it was registered, oldOwner will contain an empty string,
+    // whereas if it was unregistered, newOwner will contain an empty string
+    if (newOwner.isEmpty())
+    {
+        KLOG_ERROR() << "QDBusServiceWatcher got" << service << " was exit";
+
+        if (isVisible())
+        {
+            auto messageDialog = new KS::MessageDialog(this);
+            messageDialog->setMessage(tr("Listening service stop, return to initial page"));
+
+            adjustWidgetPosition(messageDialog);
+            messageDialog->show();
+        }
+
+        emit returnHomeClicked();
+    }
+}
+
+void Scan::adjustWidgetPosition(QWidget *widget)
+{
+    QObject *p = this;
+    while (p->parent())
+    {
+        p = p->parent();
+    }
+    QWidget *topParentWidget = (QWidget *)p;
+    QRect rect = topParentWidget->geometry();
+    widget->move(rect.x() + (rect.width() - widget->width()) / 2,
+                 rect.y() + ((rect.height() - widget->height()) / 2));
+}
+
 void Scan::startScan()
 {
     // 设置页面定时扫描时会操作这个信号，为保证不起冲突，每次扫描时断开后重新连接
-    //    disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), nullptr, nullptr);
-    connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
+    connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, &Scan::runProgress);
     m_progressInfo.method = PROCESS_METHOD_SCAN;
     clearState();
     // 清空扫描文件数据
