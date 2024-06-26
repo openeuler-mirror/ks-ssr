@@ -654,26 +654,26 @@ void Command::repairProgress(const QString &progress)
 {
     QJsonObject progressJson = str2jsonObject(progress);
     QJsonArray cveArray = progressJson.value("RepairInfo").toArray();
-    for (auto item : cveArray)
-    {
-        auto cve = item.toObject();
-        if (!cve.contains("cveId"))
-        {
-            continue;
-        }
+    // for (auto item : cveArray)
+    // {
+    //     auto cve = item.toObject();
+    //     if (!cve.contains("cveId"))
+    //     {
+    //         continue;
+    //     }
 
-        int state = QString(cve.value("state").toString()).compare("Success", Qt::CaseInsensitive) ? 2 : 1;
-        QString id = cve.value("cveId").toString();
-        if (!m_repairResult.contains(id))
-        {
-            m_notExistCVE << id;
-            continue;
-        }
-        m_repairResult.value(id)->state = getCveState(state);
-    }
+    //     int state = QString(cve.value("state").toString()).compare("Success", Qt::CaseInsensitive) ? 2 : 1;
+    //     QString id = cve.value("cveId").toString();
+    //     if (!m_repairResult.contains(id))
+    //     {
+    //         m_notExistCVE << id;
+    //         continue;
+    //     }
+    //     m_repairResult.value(id)->state = getCveState(state);
+    // }
 
     // 进度
-    int percent = progressJson.value("progress").toDouble() * 100;
+    int percent = progressJson.value("progress").toInt();
     if (m_lastPercent != percent)
     {
         m_lastPercent = percent;
