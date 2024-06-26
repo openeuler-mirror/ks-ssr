@@ -581,9 +581,7 @@ void Window::popupAboutDialog()
 {
     auto aboutDialog = new About(this);
 
-    auto x = this->x() + this->width() / 2 - aboutDialog->width() / 2;
-    auto y = this->y() + this->height() / 2 - aboutDialog->height() / 2;
-    aboutDialog->move(x, y);
+    adjustWidgetPosition(m_settingsDialog);
     aboutDialog->show();
 }
 
