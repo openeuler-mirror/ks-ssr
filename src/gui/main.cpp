@@ -91,5 +91,13 @@ int main(int argc, char *argv[])
 
     window.start();
 
-    return app.exec();
+    bool ret = app.exec();
+
+    // 卸载翻译
+    for (auto translator : translatorList)
+    {
+        MiscUtils::removeTranslator(translator);
+    }
+
+    return ret;
 }
