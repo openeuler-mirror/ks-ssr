@@ -18,9 +18,9 @@
 #include <QFileInfo>
 #include <QFontDatabase>
 #include <QScreen>
-#include <QTranslator>
 #include <QtGlobal>
 #include "config-ui.h"
+#include "lib/base/misc-utils.h"
 #include "lib/widgets/single-application/single-application.h"
 #include "window.h"
 
