@@ -14,8 +14,8 @@
 
 #include <QCoreApplication>
 #include <QLocale>
-#include <QTranslator>
 #include "include/ssr-i.h"
+#include "lib/base/misc-utils.h"
 #include "notify.h"
 
 using namespace KS;
