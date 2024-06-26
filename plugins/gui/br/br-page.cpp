@@ -53,6 +53,16 @@ QString BRPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SYSADM;
 }
 
+bool BRPage::checkCanExit()
+{
+    return m_scan->checkCanExit();
+}
+
+bool BRPage::stopTask()
+{
+    return m_scan->cancelProgress();
+}
+
 void BRPage::resetAllReinforcementArgs()
 {
     m_scan->resetAllReinforcementItem();
