@@ -24,17 +24,27 @@ int main(int argc, char* argv[])
 {
     QCoreApplication app(argc, argv);
 
-    QTranslator translator;
-    if (!translator.load(QLocale(), qAppName(), ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
+    // 加载翻译
+    QList<QTranslator*> translatorList;
+    QStringList translatorFileNames{qAppName(), "ks-ssr-base"};
+    for (auto fileName : translatorFileNames)
     {
-        fprintf(stderr, "Load translator failed!");
-    }
-    else
-    {
-        app.installTranslator(&translator);
+        auto translator = MiscUtils::installTranslator(fileName);
+        if (translator)
+        {
+            translatorList.append(translator);
+        }
     }
 
     Notify::Notify notify;
 
-    return app.exec();
+    bool ret = app.exec();
+
+    // 卸载翻译
+    for (auto translator : translatorList)
+    {
+        MiscUtils::removeTranslator(translator);
+    }
+
+    return ret;
 }
