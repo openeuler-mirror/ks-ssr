@@ -57,5 +57,6 @@ install(
   FILES ${CMAKE_CURRENT_SOURCE_DIR}/br-plugin-audit.xml
         ${CMAKE_CURRENT_SOURCE_DIR}/br-plugin-config.xml
         ${CMAKE_CURRENT_SOURCE_DIR}/br-plugin-external.xml
-        ${CMAKE_CURRENT_SOURCE_DIR}/br-plugin-network.xml
+        # 由于 iptables 加固项初始化时会清楚当前所有 iptables 规则， 所以先禁用网络相关插件。
+        # ${CMAKE_CURRENT_SOURCE_DIR}/br-plugin-network.xml
   DESTINATION ${SSR_BR_PLUGIN_PYTHON_ROOT_DIR})
