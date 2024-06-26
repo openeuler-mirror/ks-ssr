@@ -113,6 +113,8 @@ private:
     Ui::Scan *m_ui;
 
     BRDbusProxy *m_dbusProxy;
+    QDBusServiceWatcher *m_serviceWatcher;
+
     InvalidData m_invalidData = {};
     QList<Category *> m_categories = {};
     QList<Category *> m_afterReinForcementCategories = {};
