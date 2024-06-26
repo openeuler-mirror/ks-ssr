@@ -130,7 +130,7 @@ class LoginLock:
             len(self.system_faillock_authfail.get_line()) == 0 or\
             len(self.system_faillock_authsucc.get_line()) == 0 or\
             len(self.system_faillock_account.get_line()) == 0:
-            return (False, 'Pam is not configured with a faillock, please manually configure it')
+            return (False, 'PAM is not configured with a faillock, please manually configure it')
 
         self.set_deny(args[LOGIN_LOCK_CONF_KEY_FAILURES])
         self.set_unlock_time(args[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME])
