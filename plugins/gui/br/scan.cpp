@@ -530,17 +530,27 @@ void Scan::generateReport()
             });
     // 生成报表前扫描,全量
     auto scanItems = m_ui->m_itemTable->getAllString(m_categories);
+    m_progressInfo.method = PROCESS_METHOD_SCAN;
     m_dbusProxy->Scan(scanItems);
 }
 
-void Scan::cancelProgress()
+bool Scan::cancelProgress()
 {
     // 进程未开始，不允许忽略，无提示
-    RETURN_IF_TRUE(double(0) == m_progressInfo.progress);
+    RETURN_VAL_IF_TRUE(double(0) == m_progressInfo.progress, true);
     auto reply = m_dbusProxy->Cancel(m_progressInfo.jobID);
     reply.waitForFinished();
-    CHECK_ERROR_FOR_DBUS_REPLY(reply)
+    if (reply.isError())
+    {
+        POPUP_MESSAGE_DIALOG((reply).error().message());
+        return false;
+    }
+
     m_ui->m_progress->stopWorkingProcess();
+
+    m_progressInfo.method = PROCESS_METHOD_STANDBY;
+
+    return true;
 }
 
 void Scan::showErrorMessage(const QModelIndex &model)
