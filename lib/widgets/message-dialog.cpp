@@ -38,28 +38,22 @@ MessageDialog::~MessageDialog()
 
 void MessageDialog::setMessage(const QString &message)
 {
-    setTitle(tr("Notify"));
-    auto label = new QLabel(message, this);
-    label->setMinimumWidth(180);
-    // 自动换行
-    label->setWordWrap(true);
-    // 可复制
-    label->setTextInteractionFlags(Qt::TextSelectableByMouse);
-
-    auto *ok = new QPushButton(tr("ok"), this);
-    ok->setFixedSize(72, 36);
-    ok->setProperty("okStyle", QVariant(true));
-    connect(ok, &QPushButton::clicked, this, &MessageDialog::close);
-
-    m_contentLayout->addWidget(label);
-    m_contentLayout->addStretch();
-    m_contentLayout->addWidget(ok, 0, Qt::AlignHCenter);
+    m_messageLabel->setText(message);
 }
 
-void MessageDialog::initUI()
+bool MessageDialog::exec()
 {
-    // 页面关闭时销毁
-    setAttribute(Qt::WA_DeleteOnClose);
+    show();
+
+    QEventLoop loop;
+    connect(this, &MessageDialog::finished, &loop, &QEventLoop::quit);
+    loop.exec();  // Start the event loop
+
+    return m_result;
+}
+
+void MessageDialog::initUI(bool canGetResult)
+{
     setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
     setResizeable(false);
