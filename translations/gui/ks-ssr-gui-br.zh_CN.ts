@@ -102,7 +102,7 @@
 <context>
     <name>KS::BR::BRPage</name>
     <message>
-        <location filename="../../plugins/gui/br/br-page.cpp" line="59"/>
+        <location filename="../../plugins/gui/br/br-page.cpp" line="69"/>
         <source>Reset success!</source>
         <translation>重置成功！</translation>
     </message>
