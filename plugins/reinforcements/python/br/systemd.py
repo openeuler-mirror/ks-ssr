@@ -9,8 +9,8 @@ class Proxy:
 
     # 判断服务是否存在
     def exist(self):
-        command = 'systemctl list-unit-files {0}.service | grep {1} | wc -l'.format(
-            self.service, self.service)
+        command = 'systemctl list-unit-files | grep {0}\.service | wc -l'.format(
+            self.service)
         num = br.utils.subprocess_has_output(command)
         return (num == '1')
 
