@@ -54,19 +54,21 @@ int main(int argc, char *argv[])
     QFont customFont(fontFamily);
     app.setFont(customFont);
 
-    QTranslator translator;
-    if (!translator.load(QLocale(), qAppName(), ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
-    {
-        KLOG_WARNING() << "Load translator failed!";
-    }
-    else
-    {
-        app.installTranslator(&translator);
-    }
-
     if (!app.isPrimary())
     {
         exit(EXIT_SUCCESS);
+    }
+
+    // 加载翻译
+    QList<QTranslator *> translatorList;
+    QStringList translatorFileNames{qAppName(), "ks-ssr-base", "ks-ssr-dbus", "ks-ssr-widgets"};
+    for (auto fileName : translatorFileNames)
+    {
+        auto translator = MiscUtils::installTranslator(fileName);
+        if (translator)
+        {
+            translatorList.append(translator);
+        }
     }
 
     KS::Window window;
