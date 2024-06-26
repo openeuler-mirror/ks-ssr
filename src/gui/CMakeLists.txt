@@ -43,7 +43,7 @@ set(TARGET_NAME ${PROJECT_NAME}-gui)
 # 更新ts文件
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/gui/${TARGET_NAME}.zh_CN.ts")
 execute_process(
-  COMMAND lupdate-qt5 -no-obsolete ${PROJECT_SOURCE_DIR}/lib ${UI_H_FILES}
+  COMMAND lupdate-qt5 -no-obsolete ${UI_H_FILES}
           ${UI_CPP_FILES} ${UI_FORMS_FILES} -ts ${TS_FILES})
 
 # 生成qm文件，qt_create_translation会导致cmake clean把ts文件删掉
