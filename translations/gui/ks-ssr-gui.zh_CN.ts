@@ -171,42 +171,42 @@
 <context>
     <name>KS::Window</name>
     <message>
-        <location filename="../../src/gui/window.cpp" line="236"/>
+        <location filename="../../src/gui/window.cpp" line="252"/>
         <source>Security Reinforcement</source>
         <translation>主机安全加固</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="253"/>
+        <location filename="../../src/gui/window.cpp" line="269"/>
         <source>KylinSec Security Reinforcement</source>
         <translation>麒麟信安主机安全加固</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="289"/>
+        <location filename="../../src/gui/window.cpp" line="305"/>
         <source>Modify password</source>
         <translation>修改密码</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="293"/>
+        <location filename="../../src/gui/window.cpp" line="309"/>
         <source>Logout</source>
         <translation>注销</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="311"/>
+        <location filename="../../src/gui/window.cpp" line="327"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="314"/>
+        <location filename="../../src/gui/window.cpp" line="330"/>
         <source>Activation</source>
         <translation>软件激活</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="315"/>
+        <location filename="../../src/gui/window.cpp" line="331"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="323"/>
+        <location filename="../../src/gui/window.cpp" line="339"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
