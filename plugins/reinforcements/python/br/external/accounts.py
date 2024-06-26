@@ -183,7 +183,7 @@ class NullPassword(Accounts):
                     br.log.debug("del  pwdent.pw_name = ",
                                   pwdent.pw_name, "pw_uid = ", pwdent.pw_uid)
                     br.utils.subprocess_not_output(
-                        "userdel -r {0} &> /dev/null ||: ".format(pwdent.pw_name))
+                        "userdel {0} &> /dev/null ||: ".format(pwdent.pw_name))
 
         return (True, '')
 
