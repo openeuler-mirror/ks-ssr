@@ -13,19 +13,22 @@
  */
 #include "message-dialog.h"
 #include <qt5-log-i.h>
+#include <QEventLoop>
 #include <QIcon>
 #include <QLabel>
 #include <QPainter>
 #include <QPushButton>
 #include <QStyleOption>
+#include <QVBoxLayout>
 
 namespace KS
 {
-MessageDialog::MessageDialog(QWidget *parent)
+MessageDialog::MessageDialog(QWidget *parent, bool canGetResult)
     : TitlebarWindow(parent),
-      m_contentLayout(nullptr)
+      m_messageLabel(nullptr),
+      m_result(false)
 {
-    initUI();
+    initUI(canGetResult);
 }
 
 MessageDialog::~MessageDialog()
