@@ -93,6 +93,10 @@ private:
     void setReinforcement();
     bool checkAndSetCheckbox();
 
+    void serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner);
+
+    void adjustWidgetPosition(QWidget *widget);
+
 private slots:
     // progress
     void startScan();
