@@ -923,6 +923,11 @@ which will cause many problems!</source>
         <source>No related services found</source>
         <translation>未发现相关服务</translation>
     </message>
+    <message>
+        <location filename="../../plugins/gui/br/reinforcement-items/plugins-translation.h" line="62"/>
+        <source>PAM is not configured with a faillock, please manually configure it</source>
+        <translation>PAM未配置faillock，请手动配置</translation>
+    </message>
 </context>
 <context>
     <name>xml</name>
