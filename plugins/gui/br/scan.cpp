@@ -201,6 +201,9 @@ bool Scan::importStrategy()
 
 void Scan::parsingCategories()
 {
+    m_serviceWatcher = new QDBusServiceWatcher(SSR_DBUS_NAME, QDBusConnection::systemBus(), QDBusServiceWatcher::WatchForOwnerChange, this);
+    connect(m_serviceWatcher, &QDBusServiceWatcher::serviceOwnerChanged, this, &Scan::serviceOwnerChanged);
+
     m_dbusProxy = new BRDbusProxy(SSR_DBUS_NAME,
                                   BR_DBUS_OBJECT_PATH,
                                   QDBusConnection::systemBus(),
