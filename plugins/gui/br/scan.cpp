@@ -239,7 +239,7 @@ void Scan::initUI()
     else
     {
         m_strategyType = BR_STRATEGY_TYPE_CUSTOM;
-        connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
+        connect(m_ui->m_itemTable, &ItemTable::modifyItemArgsClicked, this, &Scan::popReinforcecmentDialog);
     }
 
     m_customArgsDialog = new ReinforcementArgsDialog(this);
