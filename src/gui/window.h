@@ -78,6 +78,10 @@ private:
     // 检查是否激活，未激活弹框
     void processActivation();
 
+    bool stopPageTask();
+
+    void adjustWidgetPosition(QWidget *widget);
+
 private slots:
     void popupSettingsDialog();
     void popupActivationDialog();
