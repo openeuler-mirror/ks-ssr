@@ -39,14 +39,14 @@ public:
         return QString::fromStdString(this->m_pluginConfig->name() + "_" + this->m_pluginConfig->language_type());
     };
     // 获取插件名称
-    std::string getName()
+    QString getName()
     {
-        return this->m_pluginConfig->name();
+        return m_pluginConfig->name().c_str();
     };
     // 插件所属分类
-    std::string getCategoryName()
+    QString getCategoryName()
     {
-        return this->m_pluginConfig->category();
+        return m_pluginConfig->category().c_str();
     };
     // 获取插件加载器
     std::shared_ptr<PluginLoader> getLoader()
