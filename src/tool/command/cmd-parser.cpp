@@ -201,6 +201,13 @@ int Command::exportReport(QString which, QString path)
         std::cout << tr("File name suffix error, please end with .pdf").toStdString() << std::endl;
         exit(-1);
     }
+    QFileInfo fileInfo(path);
+    QDir dir(fileInfo.absolutePath());
+    if (!dir.exists())
+    {
+        std::cout << tr("The specified directory does not exist").toStdString() << std::endl;
+        exit(-1);
+    }
     //    auto reply = "br" == which ? m_dbusBRProxy->ExportReport(path) : m_dbusVulnerabilityProxy->ExportReport(path);
     //    reply.waitForFinished();
     //    if (reply.isError())
