@@ -531,6 +531,13 @@ bool BRDBus::ResetReinforcement(const QString& name)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
 
+    if (m_configuration->getStrategyType() == BRStrategyType::BR_STRATEGY_TYPE_SYSTEM)
+    {
+        sendErrorReply(QDBusError::NotSupported,
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_BR_NEED_CUSTOM_STRATEGY_TYPE));
+        return false;
+    }
+
     SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
                     tr("Reset reinforcement parameters. name is %1.").arg(name),
                     calledUniqueName);
