@@ -235,7 +235,7 @@ void BRDBus::SetStrategyType(const uint32_t& strategyType)
 
     if (!this->m_configuration->setStrategyType(BRStrategyType(strategyType)))
     {
-        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_STRATEGY_TYPE_FAILED));
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_PLUGIN_BR_SET_STRATEGY_TYPE_FAILED));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to set strategy type."),
                       calledUniqueName);
