@@ -295,7 +295,7 @@ void BRDBus::SetNotificationStatus(const uint32_t& notificationStatus)
     if (!this->m_configuration->setNotificationStatus(BRNotificationStatus(notificationStatus)))
     {
         sendErrorReply(QDBusError::InternalError,
-                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_NOTIFICATION_STATUS_FAILED));
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_PLUGIN_BR_SET_NOTIFICATION_STATUS_FAILED));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to set notification status."),
                       calledUniqueName);
