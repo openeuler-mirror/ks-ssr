@@ -20,6 +20,7 @@
 #include "br_dbus_proxy.h"
 #include "include/ssr-i.h"
 #include "lib/base/str-utils.h"
+#include "lib/base/sys-info.h"
 #include "qt5-log-i.h"
 #include "vulnerability_dbus_proxy.h"
 
