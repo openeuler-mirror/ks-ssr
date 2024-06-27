@@ -69,16 +69,16 @@ bool ReinforcementPython::init()
                        << this->m_className.toLocal8Bit()
                        << ", error: "
                        << Utils::pyCatchException().toLocal8Bit();
-        return;
+        return false;
     }
 
-    this->m_valid = true;
+    m_isInited = true;
+    return true;
 }
 
-ReinforcementPython::~ReinforcementPython()
+bool ReinforcementPython::isInit()
 {
-    Py_XDECREF(this->m_module);
-    Py_XDECREF(this->m_class);
+    return m_isInited;
 }
 
 bool ReinforcementPython::get(QString &args, QString &error)
