@@ -51,7 +51,7 @@ private:
     PyObject *m_class;
     // python对象
     PyObject *m_classInstance;
-    bool m_valid;
+    bool m_isInited;
 };
 
 class PluginPython : public BRPluginInterface
