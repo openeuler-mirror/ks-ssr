@@ -30,6 +30,16 @@ ReinforcementBash::ReinforcementBash(const QString &bashFilePath)
 {
 }
 
+bool ReinforcementBash::init()
+{
+    return true;
+}
+
+bool ReinforcementBash::isInit()
+{
+    return true;
+}
+
 bool ReinforcementBash::get(QString &args, QString &error)
 {
     auto retval = QProcess::execute(m_bashFilePath, QStringList{"get"});
