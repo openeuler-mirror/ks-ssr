@@ -66,9 +66,9 @@ private:
     bool ssrJobResult(const QString &xmlString);
     int displayWidth(const QString &str);
     QString leftJustify(const QString &str, int width, QChar fillChar = ' ');
-    void outputBrResult(QString fileName);
+    void outputBrResult();
     void outputRepairResult(QTextStream &output);
-    void outputRepairResult(QString fileName);
+    void outputRepairResult();
     QString getCveLevel(int level);
     QString getCveState(int state);
     QString state2Str(int state);
