@@ -679,7 +679,7 @@ void BRDBus::rollback(const QDBusMessage& message, const uint32_t& snapshotStatu
     // 已经在加固则返回错误
     if (m_jobDispatcher->getState() != BRDispatchState::BR_DISPATCH_STATE_IDLE)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BR_JOB_IS_RUNNING, message);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_PLUGIN_BR_JOB_IS_RUNNING, message);
     }
 
     m_rollbackUniqueName = message.service();
