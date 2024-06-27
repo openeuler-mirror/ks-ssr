@@ -54,13 +54,13 @@ bool Plugin::init()
     return true;
 }
 
-std::vector<std::string> Plugin::getReinforcementNames()
+QStringList Plugin::getReinforcementNames()
 {
-    std::vector<std::string> names;
+    QStringList names;
     const auto& reinforcements = this->m_pluginConfig->reinforcement();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        names.push_back((*iter).name());
+        names.push_back((*iter).name().c_str());
     }
     return names;
 }
