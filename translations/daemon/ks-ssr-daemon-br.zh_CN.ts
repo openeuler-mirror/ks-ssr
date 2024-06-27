@@ -122,98 +122,98 @@
         <translation>重置所有加固参数。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="523"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="542"/>
         <source>Reset reinforcement parameters. name is %1.</source>
         <translation>重置加固参数，名称为%1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="640"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="649"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="659"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="668"/>
         <source>Failed to export report.</source>
         <translation>导出报表失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="702"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="721"/>
         <source>Scan finished.</source>
         <translation>扫描完成。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="712"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="731"/>
         <source>Reinforcement finished.</source>
         <translation>加固完成。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="606"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="625"/>
         <source>Failed to cancel progress.</source>
         <translation>取消加固失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="612"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="631"/>
         <source>Cancel. job id: %1.</source>
         <translation>取消加固，任务id为%1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="621"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="640"/>
         <source>Export strategy.</source>
         <translation>导出策略。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="629"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="648"/>
         <source>Export report.</source>
         <translation>导出报表。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="720"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="739"/>
         <source>Rollback finished.</source>
         <translation>回退完成.</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="732"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="751"/>
         <source>config</source>
         <translation>配置类</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="733"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="752"/>
         <source>network</source>
         <translation>网络类</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="734"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="753"/>
         <source>audit</source>
         <translation>审计类</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="735"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="754"/>
         <source>external</source>
         <translation>接入类</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="743"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="762"/>
         <source>Test Item</source>
         <translation>检测项</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="743"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="762"/>
         <source>Result</source>
         <translation>结果</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="758"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="777"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="763"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="782"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="784"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="803"/>
         <source>total:%1 conformity:%2 conformity:%3</source>
         <translation>总计:%1 符合:%2 不符合:%3</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="788"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="807"/>
         <source>test information</source>
         <translation>扫描信息</translation>
     </message>
