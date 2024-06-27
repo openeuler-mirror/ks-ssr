@@ -413,8 +413,6 @@ void PluginPython::addReinforcement(const QString &packageName,
     }
 
     auto reinforcement = QSharedPointer<ReinforcementPython>(new ReinforcementPython(pyModule, functionPrefix));
-    RETURN_IF_FALSE(reinforcement->isValid());
-
     if (this->m_reinforcements.find(reinforcementName) != this->m_reinforcements.end())
     {
         KLOG_WARNING() << "The reinforcement " << reinforcementName.toLatin1() << " is repeated.";
