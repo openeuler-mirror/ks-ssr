@@ -36,56 +36,29 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case ERROR_COMMON_INVALID_ARGS:
         errorDesc = QObject::tr("Invalid args.");
         break;
-    case ERROR_DAEMON_STANDARD_TYPE_INVALID:
+    case ERROR_PLUGIN_BR_STANDARD_TYPE_INVALID:
         errorDesc = QObject::tr("The standard type is invalid.");
         break;
-    case ERROR_DAEMON_STRATEGY_TYPE_INVALID:
+    case ERROR_PLUGIN_BR_STRATEGY_TYPE_INVALID:
         errorDesc = QObject::tr("The strategy type is invalid.");
         break;
-    case ERROR_DAEMON_NOTIFICATION_STATUS_INVALID:
+    case ERROR_PLUGIN_BR_NOTIFICATION_STATUS_INVALID:
         errorDesc = QObject::tr("The notification status is invalid.");
         break;
-    case ERROR_DAEMON_RESOURCE_MONITOR_INVALID:
+    case ERROR_PLUGIN_BR_RESOURCE_MONITOR_INVALID:
         errorDesc = QObject::tr("The resource monitor is invalid.");
         break;
     case ERROR_CUSTOM_RS_DECRYPT_FAILED:
-    case ERROR_DAEMON_JSON2RS_FAILED:
-    case ERROR_DAEMON_RS_CONTENT_INVALID:
         errorDesc = QObject::tr("Error format for reinforcement standard.");
         break;
-    case ERROR_DAEMON_REINFORCEMENT_NOTFOUND:
+    case ERROR_PLUGIN_BR_REINFORCEMENT_NOTFOUND:
         errorDesc = QObject::tr("Reinforcement item '{0}' is not found.");
         break;
-    case ERROR_BR_JOB_IS_RUNNING:
+    case ERROR_PLUGIN_BR_JOB_IS_RUNNING:
         errorDesc = QObject::tr("The job is running, please don't repeat the operation.");
         break;
-    case ERROR_BR_NEED_CUSTOM_STRATEGY_TYPE:
+    case ERROR_PLUGIN_BR_NEED_CUSTOM_STRATEGY_TYPE:
         errorDesc = QObject::tr("Only custom strategy can modify reinforcement arguments.");
-        break;
-    case ERROR_DAEMON_FALLBACK_CANNOT_RUNNING:
-        errorDesc = QObject::tr("The fallback is can't running, please wait for the reinforcement to be completed.");
-        break;
-    case ERROR_DAEMON_GET_RS_FAILED:
-        errorDesc = QObject::tr("The standard reinforcement configuration is not found.");
-        break;
-    case ERROR_DAEMON_MACHINE_CODE_TRANS_FAILED:
-        errorDesc = QObject::tr("Machine code error.");
-        break;
-    case ERROR_DAEMON_ACTIVATION_CODE_INVALID:
-        errorDesc = QObject::tr("Activation code error.");
-        break;
-    case ERROR_DAEMON_SET_FALLBACK_RH_EMPTY:
-        errorDesc = QObject::tr("There is no historical state, please reinforce it and operation.");
-        break;
-    case ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1:
-        errorDesc = QObject::tr("The subsequest configuration item scan progress has been cancelled.");
-        break;
-    case ERROR_DAEMON_CANCEL_NOTFOUND_JOB:
-    case ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2:
-        errorDesc = QObject::tr("The subsequest configuration item reinforcement progress has been cancelled.");
-        break;
-    case ERROR_DAEMON_SOFTWARE_UNACTIVATED:
-        errorDesc = QObject::tr("The software is not activated.");
         break;
     case ERROR_TP_ADD_INVALID_FILE:
         errorDesc = QObject::tr("Added file types are not supported.");
