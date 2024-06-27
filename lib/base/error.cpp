@@ -59,6 +59,9 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case ERROR_BR_JOB_IS_RUNNING:
         errorDesc = QObject::tr("The job is running, please don't repeat the operation.");
         break;
+    case ERROR_BR_NEED_CUSTOM_STRATEGY_TYPE:
+        errorDesc = QObject::tr("Only custom strategy can modify reinforcement arguments.");
+        break;
     case ERROR_DAEMON_FALLBACK_CANNOT_RUNNING:
         errorDesc = QObject::tr("The fallback is can't running, please wait for the reinforcement to be completed.");
         break;
