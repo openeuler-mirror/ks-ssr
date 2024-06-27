@@ -328,7 +328,7 @@ QString Command::leftJustify(const QString &str, int width, QChar fillChar)
     return str + QString(width - strWidth, fillChar);
 }
 
-void Command::outputBrResult(QString fileName)
+void Command::outputBrResult()
 {
     if (!m_getBrJob)
         return;
