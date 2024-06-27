@@ -471,7 +471,12 @@ QString BRDBus::GetReinforcement(const QString& name)
 
 void BRDBus::SetReinforcement(const QString& reinforcement)
 {
-    KLOG_DEBUG() << "Set reinforcement parameters, reinforcementXML : " << reinforcement;
+    if (m_configuration->getStrategyType() == BRStrategyType::BR_STRATEGY_TYPE_SYSTEM)
+    {
+        sendErrorReply(QDBusError::NotSupported,
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_BR_NEED_CUSTOM_STRATEGY_TYPE));
+        return;
+    }
 
     try
     {
