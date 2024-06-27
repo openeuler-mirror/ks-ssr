@@ -587,7 +587,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
 
     if (m_jobDispatcher->getState() != BRDispatchState::BR_DISPATCH_STATE_IDLE)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BR_JOB_IS_RUNNING, message);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_PLUGIN_BR_JOB_IS_RUNNING, message);
     }
 
     m_reforceUniqueName = message.service();
