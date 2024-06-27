@@ -260,7 +260,7 @@ void BRDBus::SetTimeScan(const uint32_t& timeScan)
     }
     if (!this->m_configuration->setTimeScan(int(timeScan)))
     {
-        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_TIME_SCAN_FAILED));
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_PLUGIN_BR_SET_TIME_SCAN_FAILED));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to set time scan."),
                       calledUniqueName);
