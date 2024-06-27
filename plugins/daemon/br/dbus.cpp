@@ -555,7 +555,7 @@ void BRDBus::Scan(const QStringList& names)
 
     if (m_jobDispatcher->getState() != BRDispatchState::BR_DISPATCH_STATE_IDLE)
     {
-        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_BR_JOB_IS_RUNNING));
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_PLUGIN_BR_JOB_IS_RUNNING));
         return;
     }
 
