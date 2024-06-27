@@ -474,7 +474,7 @@ void BRDBus::SetReinforcement(const QString& reinforcement)
     if (m_configuration->getStrategyType() == BRStrategyType::BR_STRATEGY_TYPE_SYSTEM)
     {
         sendErrorReply(QDBusError::NotSupported,
-                       SSR_ERROR2STR(SSRErrorCode::ERROR_BR_NEED_CUSTOM_STRATEGY_TYPE));
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_PLUGIN_BR_NEED_CUSTOM_STRATEGY_TYPE));
         return;
     }
 
