@@ -222,23 +222,126 @@ static void makeTableTitle(HPDF_Page page, HPDF_Font font, const QString &tableT
     }
 }
 
-static void makeTablePage(HPDF_Doc pdf, HPDF_Font font, const QString &tableTitle, const QList<QStringList> &tabelData)
+// 将给定宽度的文本进行换行处理，并返回换行后的文本
+typedef struct
+{
+    QStringList lines;
+    int total_height;
+} WrappedTextResult;
+
+WrappedTextResult wrap_text(HPDF_Page page, QString text, HPDF_Font font, HPDF_REAL font_size, HPDF_REAL max_width)
+{
+    HPDF_REAL line_height = HPDF_Font_GetCapHeight(font) * font_size / 1000 + 2;  // 行高
+    HPDF_REAL total_height = 0;
+
+    // 保存每行文本
+    QStringList lines;
+
+    QByteArray ba = text.toLocal8Bit();
+    HPDF_UINT text_length = ba.size();
+    uint curIndex = 0;
+
+    while (curIndex < text_length)
+    {
+        HPDF_UINT break_index = HPDF_Page_MeasureText(page, text.mid(curIndex).toLocal8Bit().data(), max_width, HPDF_FALSE, NULL);
+        if (break_index == 0)
+        {
+            break;
+        }
+
+        // 保存当前行
+        lines.append(QString::fromLocal8Bit(ba.mid(curIndex, break_index)));
+        curIndex += break_index;
+
+        total_height += line_height;
+    }
+
+    total_height += line_height;
+
+    WrappedTextResult result;
+    result.lines = lines;
+    result.total_height = total_height + 1;  // 计算的是浮点,此处加1
+    return result;
+}
+
+// 绘制单元格内的文本
+void draw_text_in_cell(HPDF_Page page, const char *text, HPDF_Font font, HPDF_REAL font_size, HPDF_REAL x, HPDF_REAL y, HPDF_REAL cell_width, HPDF_REAL cell_height)
+{
+    WrappedTextResult wrapped_text = wrap_text(page, text, font, font_size, cell_width - 4);  // 留出一些内边距
+    HPDF_REAL line_height = HPDF_Font_GetCapHeight(font) * font_size / 1000 + 4;              // 行高
+    //    HPDF_REAL text_y = y - 1 - font_size;                                                     // 从单元格顶部留出一些内边距
+    HPDF_REAL text_y = y - line_height;
+
+    for (int i = 0; i < wrapped_text.lines.size(); i++)
+    {
+        HPDF_Page_BeginText(page);
+        HPDF_Page_MoveTextPos(page, x + 2, text_y);  // 从单元格左边留出一些内边距
+        HPDF_Page_ShowText(page, wrapped_text.lines[i].toLocal8Bit().data());
+        HPDF_Page_EndText(page);
+        text_y -= line_height;
+    }
+}
+
+// 绘制表格
+void draw_table(HPDF_Page page, HPDF_Font font, HPDF_REAL font_size, HPDF_REAL start_x, HPDF_REAL start_y, QStringList data, const QList<uint> &colWidth)
+{
+    HPDF_Page_SetFontAndSize(page, font, font_size);
+    HPDF_Page_SetLineWidth(page, 0.5);
+
+    // 计算每行的高度
+    HPDF_REAL row_height = 0;
+
+    HPDF_REAL max_height = 0;
+    for (int col = 0; col < data.size(); col++)
+    {
+        WrappedTextResult wrapped_text = wrap_text(page, data[col], font, TABLE_CONTENT_FONT_SIZE, colWidth[col] - 4);
+        if (wrapped_text.total_height > max_height)
+        {
+            max_height = wrapped_text.total_height;
+        }
+    }
+    row_height = max_height;
+
+    // 绘制表格
+    HPDF_REAL x = start_x;
+    for (int col = 0; col < data.size(); col++)
+    {
+        HPDF_REAL y = start_y - row_height;
+
+        // 绘制单元格边框
+        HPDF_Page_Rectangle(page, x, y, colWidth[col], row_height);
+        HPDF_Page_Stroke(page);
+
+        // 绘制单元格内的文本
+        draw_text_in_cell(page, data[col].toLocal8Bit().data(), font, TABLE_CONTENT_FONT_SIZE, x, start_y, colWidth[col], row_height);
+
+        x += colWidth[col];
+    }
+}
+
+static void makeTablePage(HPDF_Doc pdf, HPDF_Font font, const QString &tableTitle, const QList<QStringList> &tabelData, const QList<uint> &colWidth)
 {
     int totalRows = tabelData.size();
     int curRowIndex = 0;
-    float table_x = CONTENT_MARGIN;
-    float table_y = TITLE_POS_Y - CONTENT_MARGIN / 2;
+    float tableX = CONTENT_MARGIN;
+    float tableY = TITLE_POS_Y - CONTENT_MARGIN / 2;
 
-    bool hasFirstRow = true;
+    //    bool hasFirstRow = true;
     do
     {
+        // 新建一页
         HPDF_Page page = HPDF_AddPage(pdf);
         HPDF_Page_SetSize(page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT);  // A4,横向纵向
+        // 水印
         addWatermark(page, font);
+
+        // 页脚
         addTail(page, font);
 
         // 获取页面宽度和高度
-        float pageWidth = HPDF_Page_GetWidth(page);
+        //        float pageWidth = HPDF_Page_GetWidth(page);
+        //        float page_height = HPDF_Page_GetHeight(page);
+        //        float table_width = pageWidth - CONTENT_MARGIN * 2;
 
         if (tabelData.isEmpty())
         {
