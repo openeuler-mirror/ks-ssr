@@ -183,23 +183,23 @@ bool Plugins::addPlugin(QSharedPointer<Plugin> plugin)
         this->m_plugins[pluginId] = plugin;
     }
 
-    auto reinforcement_names = plugin->getReinforcementNames();
-    for (auto iter = reinforcement_names.begin(); iter != reinforcement_names.end(); ++iter)
+    auto reinforcementNames = plugin->getReinforcementNames();
+    for (auto iter = reinforcementNames.begin(); iter != reinforcementNames.end(); ++iter)
     {
-        auto& reinforcement_name = (*iter);
-        auto old_plugin = this->getPluginByReinforcement(QString::fromStdString(reinforcement_name));
-        if (old_plugin)
+        auto& reinforcementName = (*iter);
+        auto oldPlugin = this->getPluginByReinforcement(reinforcementName);
+        if (oldPlugin)
         {
             KLOG_WARNING() << "The reinforcement "
-                           << reinforcement_name.c_str()
+                           << reinforcementName
                            << " is conflicted with other plugin. old plugin: "
-                           << old_plugin->getId().toLocal8Bit()
+                           << oldPlugin->getId().toLocal8Bit()
                            << ", cur plugin: "
                            << pluginId.toLocal8Bit();
         }
         else
         {
-            this->m_reinforcementsPlugins[QString::fromStdString(reinforcement_name)] = plugin;
+            this->m_reinforcementsPlugins[reinforcementName] = plugin;
         }
     }
     return true;
