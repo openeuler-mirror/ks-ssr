@@ -33,15 +33,12 @@ public:
                         const QString &class_name);
     virtual ~ReinforcementPython();
 
+    virtual bool init();
+    virtual bool isInit();
     virtual bool get(QString &args, QString &error);
     virtual bool set(const QString &args, QString &error);
     virtual bool backup(QString &args, QString &error);
     virtual bool rollback(const QString &args, QString &error);
-
-    bool isValid()
-    {
-        return m_valid;
-    };
 
 private:
     bool checkCallResult(PyObject *pyRetval, const QString &functionName, QString &error);
