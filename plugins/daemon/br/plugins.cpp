@@ -261,6 +261,21 @@ void Plugins::loadReinforcements()
             continue;
         }
 
+        auto reinforcementInterface = getReinforcementInterface(plugin->getId(), reinforcementName.c_str());
+        if (!reinforcementInterface)
+        {
+            KLOG_WARNING() << "The reinforcement interface of" << reinforcementName.c_str() << "is empty.";
+            continue;
+        }
+
+        /* python加固项会在__init__函数中执行一些逻辑，如果标准配置中没有添加此加固项，就不应该执行__init__，所以延迟到这里初始化的原因
+           是希望只有在加固标准中的加固项才执行__init__函数。否则有些加固项都没使用，但在初始化时对系统也造成了影响，例如iptable会在__init__
+           中清空iptable规则。*/
+        if (!reinforcementInterface->isInit())
+        {
+            reinforcementInterface->init();
+        }
+
         // 添加加固项的基本信息（分类和标签）
         if (reinforcementNoArg->category().present())
         {
