@@ -364,6 +364,12 @@ QWidget#messageDialog
     border-radius: 6px;
 }
 
+KS--MessageDialog QTextBrowser
+{
+    background-color: transparent;
+    color:white;
+}
+
 
 /* security box */
 QMenu#m_popupMenu
