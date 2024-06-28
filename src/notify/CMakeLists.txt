@@ -28,6 +28,10 @@ target_include_directories(
 
 target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Core Qt5::DBus base)
 
+set_target_properties(
+  ${TARGET_NAME}
+  PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/${PROJECT_NAME}/lib64")
+
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 
 install(TARGETS ${TARGET_NAME} DESTINATION ${SSR_INSTALL_LIBEXECDIR})
