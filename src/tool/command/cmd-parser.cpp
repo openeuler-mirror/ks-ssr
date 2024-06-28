@@ -623,7 +623,7 @@ void Command::scanProgress(const QString &progress)
         m_repairResult[cve.value("name").toString()] = pVu;
     }
 
-    int percent = progressJson.value("progress").toDouble() * 100;
+    int percent = progressJson.value("progress").toInt();
     if (m_lastPercent != percent)
     {
         m_lastPercent = percent;
