@@ -231,7 +231,7 @@ typedef struct
 
 WrappedTextResult wrap_text(HPDF_Page page, QString text, HPDF_Font font, HPDF_REAL font_size, HPDF_REAL max_width)
 {
-    HPDF_REAL line_height = HPDF_Font_GetCapHeight(font) * font_size / 1000 + 2;  // 行高
+    HPDF_REAL line_height = HPDF_Font_GetCapHeight(font) * font_size / 1000 + 4;  // 行高
     HPDF_REAL total_height = 0;
 
     // 保存每行文本
