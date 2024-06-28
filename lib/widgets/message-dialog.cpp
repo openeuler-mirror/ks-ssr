@@ -52,14 +52,14 @@ bool MessageDialog::exec()
     return m_result;
 }
 
-void MessageDialog::initUI(bool canGetResult)
+void MessageDialog::initUI(bool canGetResult, const int &width, const int &height)
 {
     setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    setFixedSize(259, 229);
+    setFixedSize(width, height);
 
     auto vlay = new QVBoxLayout(getWindowContentWidget());
     vlay->setContentsMargins(4, 4, 4, 4);
