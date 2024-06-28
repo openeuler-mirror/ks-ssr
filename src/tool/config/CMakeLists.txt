@@ -9,6 +9,10 @@ add_executable(${TARGET_NAME} ${CONFIG_H_FILES} ${CONFIG_CPP_FILES})
 
 target_link_libraries(${TARGET_NAME} PRIVATE base)
 
+set_target_properties(
+  ${TARGET_NAME}
+  PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/${PROJECT_NAME}/lib64")
+
 install(TARGETS ${TARGET_NAME} DESTINATION ${SSR_INSTALL_LIBEXECDIR}/)
 install(
   PROGRAMS "${CMAKE_CURRENT_SOURCE_DIR}/ks-br-config.sh"
