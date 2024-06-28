@@ -38,7 +38,7 @@ MessageDialog::~MessageDialog()
 
 void MessageDialog::setMessage(const QString &message)
 {
-    m_messageLabel->setText(message);
+    m_messageBrowser->setText(message);
 }
 
 bool MessageDialog::exec()
