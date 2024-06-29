@@ -127,7 +127,7 @@ extern "C"
 #define DNF_CACHE_DIR "/var/cache/ks-ssr/metadata"
 #define DNF_SOLV_DIR "/var/cache/ks-ssr/hawkey"
 // #define DNF_REPO_DIR "/etc/yum.repos.d"
-#define DNF_REPO_DIR SSR_INSTALL_DATADIR "/yum.repos.d"
+#define DNF_REPO_DIR SSR_VULNERABILITY_INSTALL_DATADIR "/yum.repos.d"
 #define DNF_LOCK_DIR "/var/run"
 #define CVE_INFO_CACHE_DIR SSR_INSTALL_DATADIR "/cve-infos"
 
