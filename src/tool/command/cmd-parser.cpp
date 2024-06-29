@@ -56,7 +56,7 @@ Command::Command(QObject *parent)
             m_dbusServerWatcher->setConnection(connection);
             m_dbusServerWatcher->setWatchMode(QDBusServiceWatcher::WatchForOwnerChange);
             m_dbusServerWatcher->addWatchedService(reply.value());
-            connect(m_dbusServerWatcher, &QDBusServiceWatcher::serviceUnregistered, [this](const QString &service)
+            connect(m_dbusServerWatcher, &QDBusServiceWatcher::serviceUnregistered, [](const QString &service)
                     {
                         std::cout << tr("The background daemon service exits. The unique name of the dbus service: ").toStdString() << service.toStdString() << std::endl;
                         exit(-1);
