@@ -103,26 +103,16 @@ bool Scan::exportStrategy()
         // 无法打开
         KLOG_WARNING() << "Please check the file name and whether you have write permission!";
         POPUP_MESSAGE_DIALOG(tr("Please check the file name and whether you have write permission!"));
-        m_dbusProxy->ExportStrategy(false);
         return false;
     }
 
-    // 打开ra文件
-    QFile file(SSR_BR_CUSTOM_RA_FILEPATH);
-    if (!file.open(QFile::ReadOnly | QFile::Text))
-    {
-        KLOG_WARNING() << "Open RA file failed!";
-        POPUP_MESSAGE_DIALOG(tr("Open RA file failed!"));
-        m_dbusProxy->ExportStrategy(false);
-        return false;
-    }
+    // m_categories 已经包含了勾选,将m_categories 直接导出为xml
+    auto reinforcementXML = Utils::getDefault()->ssrGetReinforcements(m_dbusProxy->GetReinforcements(), m_categories);
 
     // 写入文件
-    auto isSuccess = fileSave.write(file.readAll());
+    auto isSuccess = fileSave.write(reinforcementXML.toLocal8Bit().data());
     POPUP_MESSAGE_DIALOG(isSuccess ? tr("Export successed!") : tr("Export failed!"));
-    file.close();
     fileSave.close();
-    m_dbusProxy->ExportStrategy(isSuccess);
     return true;
 }
 
