@@ -306,43 +306,6 @@ void BRDBus::SetNotificationStatus(const uint32_t& notificationStatus)
                     calledUniqueName);
 }
 
-void BRDBus::ImportCustomRA(const QString& encodedStrategy)
-{
-    auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    try
-    {
-        std::ofstream ofs(CUSTOM_RA_STRATEGY_FILEPATH, std::ios_base::out);
-        ofs << encodedStrategy.toStdString();
-        ofs.close();
-    }
-    catch (const std::exception& e)
-    {
-        KLOG_WARNING("%s", e.what());
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to import custom reinforcement strategy."),
-                      calledUniqueName);
-        return;
-    }
-    if (!m_configuration->checkRaStrategy())
-    {
-        remove(CUSTOM_RA_STRATEGY_FILEPATH);
-        // 不知道选选哪个错误码，所以选择了 ERROR_FAILED
-        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_FAILED));
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to import custom reinforcement strategy."),
-                      calledUniqueName);
-        return;
-    }
-    SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
-                    tr("Import custom reinforcement strategy."),
-                    calledUniqueName);
-}
-
-void BRDBus::SetCheckBox(const QString& reinforcementName, const bool& checkboxStatus)
-{
-    m_configuration->setRaCheckbox(reinforcementName, checkboxStatus);
-}
-
 void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
