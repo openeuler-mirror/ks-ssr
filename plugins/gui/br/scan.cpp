@@ -362,51 +362,22 @@ void Scan::setReinforcement()
 bool Scan::checkAndSetCheckbox()
 {
     auto checkedList = m_ui->m_itemTable->checkedAllStatus();
-    if (checkedList.count() == 0)
+    for (auto &iter : m_categories)
     {
-        POPUP_MESSAGE_DIALOG(tr("Please select the item to export!"))
-        return false;
-    }
-
-    std::istringstream istringStream(m_dbusProxy->GetReinforcements().value().toStdString());
-    auto rsReinforcements = KS::Protocol::br_reinforcements(istringStream, xml_schema::Flags::dont_validate);
-    auto rsReinforcement = rsReinforcements.get()->reinforcement();
-
-    for (auto iter : m_categories)
-    {
-        // 勾选item等同于修改值，向后台发送修改请求，实际上不修改加固项的值，将勾选的项添加到RA文件
-        for (auto checkedItem : checkedList)
+        auto reinforcementItems = iter->getReinforcementItem();
+        for (auto &reinforcementItem : reinforcementItems)
         {
-            for (auto reinforcementItem : iter->getReinforcementItem())
+            if (checkedList.contains(reinforcementItem->getLabel()))
             {
-                CONTINUE_IF_TRUE(reinforcementItem->getLabel() != checkedItem)
-                for (auto rsIter : rsReinforcement)
-                {
-                    CONTINUE_IF_TRUE(reinforcementItem->getName() != rsIter.name().c_str())
-                    reinforcementItem->changeFlag = true;
-                }
-
-                auto reinforcementXML = Utils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categories);
-                for (auto xml : reinforcementXML)
-                {
-                    CONTINUE_IF_TRUE(xml.isEmpty())
-                    m_dbusProxy->SetReinforcement(xml);
-                }
+                reinforcementItem->setCheckStatus(true);
+            }
+            else
+            {
+                reinforcementItem->setCheckStatus(false);
             }
         }
     }
 
-    // 读ra文件，设置复选框
-    auto raReinforcements = Utils::getDefault()->raAnalysis(SSR_BR_CUSTOM_RA_FILEPATH);
-    for (auto iter : m_categories)
-    {
-        for (auto raReinforcement = raReinforcements.begin(); raReinforcement != raReinforcements.end(); ++raReinforcement)
-        {
-            auto reinforcementItem = iter->find(raReinforcement->name().c_str());
-            CONTINUE_IF_TRUE(reinforcementItem == NULL)
-            m_dbusProxy->SetCheckBox(raReinforcement->name().c_str(), m_ui->m_itemTable->checkedArgStatus(reinforcementItem->getLabel()));
-        }
-    }
     return true;
 }
 
