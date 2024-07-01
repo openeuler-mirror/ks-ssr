@@ -74,59 +74,7 @@ void Scan::usingCustomStrategy()
     // 更新加固项和相关参数
     Utils::getDefault()->ssrResetReinforcements(m_dbusProxy->GetReinforcements().value(), m_categories);
 
-    // TODO：策略设置有问题，暂时关闭
-    // m_ui->m_progress->showStrategy();
-    m_ui->m_progress->hideStrategy();
-
-    // TODO：这部分代码应该放到导入策略函数中去
-    // auto raReinforcements = Utils::getDefault()->raAnalysis(SSR_BR_CUSTOM_RA_STRATEGY_FILEPATH);
-    // if (raReinforcements.empty())
-    // {
-    //     m_ui->m_itemTable->setAllChecked(Qt::Checked);
-    // }
-    // else
-    // {
-    //     for (auto &iter : m_categories)
-    //     {
-    //         for (auto raReinforcement = raReinforcements.begin(); raReinforcement != raReinforcements.end(); ++raReinforcement)
-    //         {
-    //             auto reinforcementItem = iter->find(raReinforcement->name().c_str());
-    //             CONTINUE_IF_TRUE(reinforcementItem == NULL)
-    //             bool raCheckbox = false;
-    //             // TODO 尝试不用try 这里的checkbox（）可能不存在
-    //             try
-    //             {
-    //                 raCheckbox = raReinforcement->checkbox().get();
-    //             }
-    //             catch (const std::exception &e)
-    //             {
-    //                 KLOG_WARNING("%s", e.what());
-    //             }
-
-    //             m_ui->m_itemTable->setArgChecked(reinforcementItem->getLabel(), raCheckbox);
-
-    //             reinforcementItem->changeFlag = true;
-    //             // 未勾选不修改值 #14216
-    //             CONTINUE_IF_TRUE(!raCheckbox)
-    //             for (auto raArg = raReinforcement->arg().begin(); raArg != raReinforcement->arg().end(); ++raArg)
-    //             {
-    //                 auto arg = reinforcementItem->find(raArg->name().c_str());
-    //                 CONTINUE_IF_TRUE(arg == nullptr);
-    //                 // str2jsonValue中的类型转换没法区分line输入纯数字和数字输入框spin输入的纯数字，都会被转为double类型，这里需要进行判断
-    //                 arg->jsonValue = arg->jsonValue.isString() ? QJsonValue::fromVariant(raArg->value().c_str())
-    //                                                            : StrUtils::str2jsonValue(raArg->value());
-    //             }
-    //         }
-    //     }
-
-    //     auto reinforcementXML = Utils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categories);
-    //     for (auto xml : reinforcementXML)
-    //     {
-    //         CONTINUE_IF_TRUE(xml == nullptr)
-    //         auto reply = m_dbusProxy->SetReinforcement(xml);
-    //         CHECK_ERROR_FOR_DBUS_REPLY(reply)
-    //     }
-    // }
+    m_ui->m_progress->showStrategy();
 }
 
 void Scan::reset()
