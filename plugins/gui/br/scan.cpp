@@ -128,11 +128,38 @@ bool Scan::importStrategy()
     {
         KLOG_WARNING() << "Open files failed!";
         POPUP_MESSAGE_DIALOG(tr("Open files failed!"))
+        return false;
     }
-    auto reply = m_dbusProxy->ImportCustomRA(QString::fromUtf8(file.readAll()));
-    reply.waitForFinished();
-    POPUP_MESSAGE_DIALOG(reply.isError() ? tr("Failed to import strategy file. Please whether the file is valid!") : tr("Import succeeded!"));
+
+    QString customStrategy = QString::fromUtf8(file.readAll());
     file.close();
+
+    // m_categories 应用读取的数据
+    bool ret = Utils::getDefault()->ssrReinforcements(customStrategy, m_categories, true);
+    if (!ret)
+    {
+        POPUP_MESSAGE_DIALOG(tr("Read reinforcements failed"))
+        return false;
+    }
+
+    // 发送数据到服务端
+    auto reinforcementXML = Utils::getDefault()->ssrSetReinforcement(m_dbusProxy->GetReinforcements(), m_categories);
+    for (auto xml : reinforcementXML)
+    {
+        CONTINUE_IF_TRUE(xml == nullptr)
+        auto reply = m_dbusProxy->SetReinforcement(xml);
+        CHECK_ERROR_FOR_DBUS_REPLY(reply)
+    }
+
+    // 界面勾选
+    for (auto &iter : m_categories)
+    {
+        for (auto &reinforcementItem : iter->getReinforcementItem())
+        {
+            bool raCheckbox = reinforcementItem->getCheckStatus();
+            m_ui->m_itemTable->setArgChecked(reinforcementItem->getLabel(), raCheckbox);
+        }
+    }
 
     return true;
 }
