@@ -37,24 +37,7 @@
             </arg>
             <description>Method of setting foreground notification prompt.</description>
         </method>
-
-        <method name="ImportCustomRA">
-            <arg type="s" name="encoded_strategy" direction="in">
-                <summary>The encoded reinforcement strategy.</summary>
-            </arg>
-            <description>Import the encoded custom reinforcement strategy.</description>
-        </method>
-
-        <method name="SetCheckBox">
-            <arg type="s" name="reinforcement_name" direction="in">
-                <summary>Name of reinforcement item.</summary>
-            </arg>
-            <arg type="b" name="checkbox_status" direction="in">
-                <summary>Check whether the check box is checked.</summary>
-            </arg>
-            <description>Set check box selection status.</description>
-        </method>
-
+        
         <method name="SetResourceMonitorSwitch">
             <arg type="u" name="resource_monitor" direction="in">
                 <summary>The security reinforcement resource monitor switch.</summary>
