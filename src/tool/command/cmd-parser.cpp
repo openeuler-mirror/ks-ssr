@@ -389,6 +389,8 @@ void Command::outputRepairResult(QTextStream &output)
     int all = 0;
     for (const auto &cve : cveList)
     {
+        if (cve->id.isEmpty())
+            continue;
         QString threat_severity = cve->threat_severity;
         QString score = cve->score;
         QString state = m_onlyScan ? "" : cve->state;
