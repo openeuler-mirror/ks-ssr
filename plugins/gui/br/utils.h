@@ -38,8 +38,12 @@ public:
     void jsonParsing(const QByteArray &categoriesJson, QList<Category *> &categoriesList);
     // 设置加固项，返回设置完成的xml格式加固项参数
     QStringList ssrSetReinforcement(const QString &xmlString, QList<Category *> &categoriesList);
+
+    // 返回xml格式全部加固项
+    QString ssrGetReinforcements(const QString &xmlString, QList<Category *> &categoriesList);
+
     // 从xml字符串解析加固项，存入Categories
-    bool ssrReinforcements(const QString &xmlString, QList<Category *> &categoriesList);
+    bool ssrReinforcements(const QString &xmlString, QList<Category *> &categoriesList, bool withCheckBox = false);
     // 从xml字符串解析加固项，获取重置加固项后的值并返回
     QString ssrResetReinforcement(const QString &xmlString,
                                   const QString &categoryName,
