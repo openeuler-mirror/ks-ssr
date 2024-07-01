@@ -133,6 +133,7 @@ void Window::closeEvent(QCloseEvent *event)
                 messageDialog->setMessage(tr("Closing the software will interrupt the ongoing task. Are you sure to shut down?"));
                 adjustWidgetPosition(messageDialog);
                 bool ret = messageDialog->exec();
+                delete messageDialog;
                 if (ret)
                 {
                     // 终止任务
