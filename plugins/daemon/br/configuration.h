@@ -62,10 +62,6 @@ public:
     BRNotificationStatus getNotificationStatus();
     // 设置通知状态
     bool setNotificationStatus(BRNotificationStatus notificationStatus);
-    // 检测导入ra文件是否正确
-    bool checkRaStrategy();
-    // 前台复选框勾选调用，checkbox后台默认为false
-    void setRaCheckbox(const QString& name, const bool& status);
     // 获取加固标准
     QSharedPointer<Protocol::RS> getRS();
     // 设置自定义加固标准
