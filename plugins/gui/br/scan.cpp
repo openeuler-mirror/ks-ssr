@@ -324,6 +324,16 @@ void Scan::argReset(const QString &categoryName, const QString &argName)
     auto resetStr = m_dbusProxy->GetReinforcements();
     auto value = Utils::getDefault()->ssrResetReinforcement(resetStr, categoryName, argName);
     m_customArgsDialog->setValue(StrUtils::str2jsonValue(value));
+
+    for (auto iter : m_categories)
+    {
+        auto label = iter->getLabel();
+        auto reinforcementItem = iter->find(categoryName);
+        CONTINUE_IF_TRUE(reinforcementItem == NULL)
+        auto arg = reinforcementItem->find(argName);
+        CONTINUE_IF_TRUE(arg == NULL)
+        arg->jsonValue = StrUtils::str2jsonValue(value);
+    }
 }
 
 void Scan::setReinforcement()
