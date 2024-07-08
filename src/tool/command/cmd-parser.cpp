@@ -270,7 +270,7 @@ QStringList Command::getBrInfo(const QStringList &category)
                 defaultLabel = QString(label.c_str());
             }
         }
-        BrInfo *pBr = new BrInfo(iter.category().get().c_str(), noop2Translate(defaultLabel));
+        BrInfo *pBr = new BrInfo(iter.category().get().c_str(), defaultLabel);
         m_brItemInfo[iter.name().c_str()] = pBr;
         if (category.isEmpty() || category.indexOf(iter.category().get().c_str()) == 0)
         {
