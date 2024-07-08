@@ -22,7 +22,6 @@ execute_process(
   COMMAND
     lupdate-qt5 -no-obsolete ${BR_H_FILES} ${BR_CPP_FILES}
     ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml
-    ${CMAKE_SOURCE_DIR}/data/br-categories.ini
     ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-audit.xml
     ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-config.xml
     ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-external.xml
