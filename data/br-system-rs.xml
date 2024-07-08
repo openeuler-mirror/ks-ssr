@@ -829,36 +829,13 @@
         <reinforcement>
             <name>audit-auditd-rules</name>
             <arg>
-                <name>add-path</name>
+                <name>watch-path</name>
                 <value>""</value>
-                <value_limits>^\/(\w+\/?)+$</value_limits>
-                <input_example>/etc/passwd</input_example>
+                <value_limits>^\/([\w-.]+\/?)+[$]?(;\/([\w-.]+\/?)+)*</value_limits>
+                <input_example>/etc/passwd;/etc/shadow</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <label>QT_TRANSLATE_NOOP_UTF8("xml", "Add audit rules to path.")</label>
-                </layout>
-            </arg>
-            <arg>
-                <name>del-path</name>
-                <value>""</value>
-                <value_limits>^\/(\w+\/?)+$</value_limits>
-                <input_example>/etc/passwd</input_example>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Delete audit rules to path.")</label>
-                </layout>
-            </arg>
-            <arg>
-                <name>enabled</name>
-                <value>false</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Delete all audit rules")</label>
                 </layout>
             </arg>
         </reinforcement>
