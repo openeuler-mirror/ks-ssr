@@ -306,6 +306,11 @@ bool ReinforcementPython::checkCallResult(PyObject *pyRetval, const QString &fun
     return true;
 }
 
+QString ReinforcementPython::python2Translate(const QString &souceTxt)
+{
+    return qApp->translate("python", souceTxt.toUtf8());
+}
+
 PluginPython::PluginPython(PyObject *module)
     : m_module(module)
 {
