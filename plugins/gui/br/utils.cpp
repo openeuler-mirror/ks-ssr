@@ -30,10 +30,6 @@ namespace BR
 Utils::Utils()
 {
     PluginsTranslation::globalInit();
-    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "configuration class"));
-    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "network class"));
-    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "audit class"));
-    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "external class"));
 }
 
 Utils::~Utils()
