@@ -754,7 +754,14 @@ void BRDBus::exportReport(const QString& savePath)
     auto iter = categoryMap.begin();
     while (iter != categoryMap.end())
     {
-        QString key = categoryTR.contains(iter.key()) ? tr(categoryTR[iter.key()]) : iter.key();
+        QString key;
+        for (auto& category : categoryVec)
+        {
+            if (category->name == iter.key())
+            {
+                key = category->label;
+            }
+        }
 
         homeExtraData.push_back({key + ":", tr("total:%1 conformity:%2 conformity:%3").arg(iter.value().first + iter.value().second).arg(iter.value().first).arg(iter.value().second)});
         iter++;
