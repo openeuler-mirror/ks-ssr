@@ -72,9 +72,6 @@ private:
     QString getCveLevel(int level);
     QString getCveState(int state);
     QString state2Str(int state);
-    QString python2Translate(const QString &souceTxt);
-    QString noop2Translate(const QString &souceTxt);
-    QString categoriesLabel2Translate(const QString &souceTxt);
     QJsonObject str2jsonObject(const QString &str);
     int getCVEsInfo();
 
