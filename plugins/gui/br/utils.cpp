@@ -408,7 +408,7 @@ bool Utils::ssrJobResult(const QString &xmlString,
             CONTINUE_IF_TRUE(reinforcementItem == nullptr)
             if (reinforcement.error() != nullptr)
             {
-                reinforcementItem->setErrorMessage(python2Translate(reinforcement.error().get().c_str()));
+                reinforcementItem->setErrorMessage(reinforcement.error().get().c_str());
             }
 
             reinforcementItem->setState(reinforcement.state());
