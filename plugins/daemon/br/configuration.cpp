@@ -162,17 +162,17 @@ bool Configuration::setCustomRA(const Protocol::Reinforcement& reinforcement)
     // 如果配置中不存在加固项的自定义配置，则添加该加固项的自定义配置
     if (!matchReinforcement)
     {
-        Protocol::Reinforcement used_reinforcement(reinforcement.name());
+        Protocol::Reinforcement usedReinforcement(reinforcement.name());
 
         const auto& args = reinforcement.arg();
 
         for (auto iter = args.begin(); iter != args.end(); ++iter)
         {
             auto& arg = (*iter);
-            Protocol::ReinforcementArg used_arg(arg.name(), arg.value());
-            used_reinforcement.arg().push_back(used_arg);
+            Protocol::ReinforcementArg usedArg(arg.name(), arg.value());
+            usedReinforcement.arg().push_back(usedArg);
         }
-        ra->reinforcement().push_back(used_reinforcement);
+        ra->reinforcement().push_back(usedReinforcement);
     }
 
     return this->writeRAToFile(ra);
