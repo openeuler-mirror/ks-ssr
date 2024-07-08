@@ -262,7 +262,7 @@ bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categ
                 defaultDescription = QString(description.c_str());
             }
         }
-        reinforcementItem->setDescription(noop2Translate(defaultDescription));
+        reinforcementItem->setDescription(defaultDescription);
         reinforcementItem->setCategoryName(iter.category().get().c_str());
         if (withCheckBox)
         {
