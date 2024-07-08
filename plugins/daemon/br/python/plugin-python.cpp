@@ -210,6 +210,7 @@ bool ReinforcementPython::backup(QString &args, QString &error)
         else
         {
             error = Utils::pyobjectAsString(PyTuple_GetItem(py_retval, 1));
+            error = python2Translate(error);
         }
         KLOG_DEBUG() << "args = " << args << "error = " << error;
         retval = (successed == Py_True);
