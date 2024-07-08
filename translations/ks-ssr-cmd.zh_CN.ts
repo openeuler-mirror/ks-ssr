@@ -76,12 +76,12 @@
         <translation>低危</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="691"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="663"/>
         <source>Repair stop by manually cancel!</source>
         <translation>手动取消，修复停止！</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="729"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="701"/>
         <source>Export Report failed:</source>
         <translation>导出报表失败：</translation>
     </message>
