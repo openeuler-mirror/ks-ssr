@@ -30,6 +30,10 @@ Categories::Categories(QObject* parent)
     : QObject(parent)
 {
     this->m_confPath = QDir::cleanPath(SSR_BR_INSTALL_DATADIR "/" BR_CATEGORIES_BASENAME);
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "configuration class"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "network class"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "audit class"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("ini", "external class"));
 }
 
 void Categories::init()
