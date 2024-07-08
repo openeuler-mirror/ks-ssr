@@ -161,7 +161,7 @@ void Utils::jsonParsing(const QByteArray &categoriesJson, QList<Category *> &cat
         auto name = arrayObj.at(i).toObject().value("name");
         auto category = new Category;
         category->setIconName(iconName.toString());
-        category->setLabel(categoriesLabel2Translate(label.toString()));
+        category->setLabel(label.toString());
         category->setName(name.toString());
         categoriesList.append(category);
     }
