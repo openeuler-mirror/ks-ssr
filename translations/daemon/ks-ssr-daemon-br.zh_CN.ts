@@ -190,19 +190,136 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="251"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="276"/>
         <source>The return value of %1 isn&apos;t tuple type.</source>
         <translation>返回值%1不是个 tuple 类型。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="259"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="284"/>
         <source>The number of tuple returned by %1 is less than 2.</source>
         <translation>%1 返回的 tuple 编号小于2。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="276"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="301"/>
         <source>The type of tuple item returned by %1 is invalid.</source>
         <translation>%1 所返回的 tuple 类型是非法的。</translation>
+    </message>
+</context>
+<context>
+    <name>ini</name>
+    <message>
+        <location filename="../../plugins/daemon/br/categories.cpp" line="33"/>
+        <source>configuration class</source>
+        <translation>配置类</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/categories.cpp" line="34"/>
+        <source>network class</source>
+        <translation>网络类</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/categories.cpp" line="35"/>
+        <source>audit class</source>
+        <translation>审计类</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/categories.cpp" line="36"/>
+        <source>external class</source>
+        <translation>接入类</translation>
+    </message>
+</context>
+<context>
+    <name>python</name>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="54"/>
+        <source>Device busy, please pop up!</source>
+        <translation>设备忙碌，请弹出设备！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="55"/>
+        <source>Please contact the admin.</source>
+        <translation>请联系管理员。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="56"/>
+        <source>Unable to stop service!</source>
+        <translation>服务无法停止！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="57"/>
+        <source>Abnormal service!</source>
+        <translation>服务异常！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="58"/>
+        <source>Please close SELinux and use it!</source>
+        <translation>请关闭selinux使用！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="59"/>
+        <source>No such file or directory.</source>
+        <translation>文件或目录未找到。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="60"/>
+        <source>Failed to execute command. Please check the log information for details.</source>
+        <translation>执行命令失败，详情请查看日志信息。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="61"/>
+        <source>UsePAM is not recommended to be closed,
+which will cause many problems!</source>
+        <translation>不建议关闭UsePAM，这将导致许多问题！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="62"/>
+        <source>Unable to stop firewalld service!</source>
+        <translation>firewalld服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="63"/>
+        <source>Unable to stop bluetooth service!</source>
+        <translation>蓝牙服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="64"/>
+        <source>Unable to stop cups service!</source>
+        <translation>cups服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="65"/>
+        <source>Unable to stop avahi service!</source>
+        <translation>avahi服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="66"/>
+        <source>Unable to stop rpcbind service!</source>
+        <translation>rpcbind服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="67"/>
+        <source>Unable to stop smb service!</source>
+        <translation>smb服务无法关闭！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="68"/>
+        <source>sshd.services is not running!</source>
+        <translation>sshd 后台服务没有运行!</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="69"/>
+        <source>Abnormal service! Please check the log information for details.</source>
+        <translation>服务异常！详情请查看日志信息。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="70"/>
+        <source>No related services found</source>
+        <translation>未发现相关服务</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="71"/>
+        <source>PAM is not configured with a faillock, please manually configure it</source>
+        <translation>PAM未配置faillock，请手动配置</translation>
     </message>
 </context>
 <context>
