@@ -141,12 +141,19 @@ bool Configuration::setCustomRA(const Protocol::Reinforcement& reinforcement)
         auto& newArgs = reinforcement.arg();
         for (auto newArgIter = newArgs.begin(); newArgIter != newArgs.end(); ++newArgIter)
         {
+            bool matchArg = false;
             auto& oldArgs = iter->arg();
             for (auto oldArgIter = oldArgs.begin(); oldArgIter != oldArgs.end(); ++oldArgIter)
             {
                 CONTINUE_IF_TRUE(oldArgIter->name() != newArgIter->name());
                 oldArgIter->value(newArgIter->value());
+                matchArg = true;
                 break;
+            }
+            // 没有匹配到加固参数则新增，这里可能是因为版本变化导致加固项参数进行了调整导致
+            if (!matchArg)
+            {
+                iter->arg().push_back(Protocol::ReinforcementArg(newArgIter->name(), newArgIter->value()));
             }
         }
         break;
