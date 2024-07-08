@@ -27,13 +27,7 @@ set(TS_FILES
 execute_process(
   COMMAND
     lupdate-qt5 -no-obsolete ${BR_H_FILES} ${BR_CPP_FILES} ${BR_UI_FORMS_FILES}
-    ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml
-    ${CMAKE_SOURCE_DIR}/data/br-categories.ini
-    ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-audit.xml
-    ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-config.xml
-    ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-external.xml
-    ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-network.xml -ts
-    ${TS_FILES})
+    -ts　${TS_FILES})
 
 # 生成qm文件，qt_create_translation会导致cmake clean把ts文件删掉
 qt5_add_translation(QM_FILES ${TS_FILES})
