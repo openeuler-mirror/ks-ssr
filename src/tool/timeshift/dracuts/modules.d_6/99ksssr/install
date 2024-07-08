@@ -1,0 +1,32 @@
+#!/bin/bash
+# -*- mode: shell-script; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+# ex: ts=8 sw=4 sts=4 et filetype=sh
+check() {
+    if [ ! -f "/opt/ks-ssr/.ks-ssr_dracut_flag" ];then
+        return 1
+    fi
+    return 0
+}
+
+depends() {
+    return 0
+}
+
+install_fn() {
+    dracut_install rsync sync mount umount ip ifconfig chmod dos2unix date basename dirname expr touch sed setcap awk readlink chroot shutdown tr find lsblk
+    if [ -f /usr/sbin/efibootmgr ];then
+        dracut_install efibootmgr
+    fi
+
+    mkdir -m 0500 -p "$initdir/opt/ks-ssr/ks-ssr"
+
+    inst "$moddir/log.sh" "/opt/ks-ssr/ks-ssr/log.sh"
+    inst "$moddir/global_env_variable.sh" "/opt/ks-ssr/ks-ssr/global_env_variable.sh"
+    inst "$moddir/ssr-rollback.sh" "/bin/ssr-rollback"
+
+    command -v lvm 2>/dev/null 1>/dev/null
+    if [ $? -eq 0 ]; then
+        dracut_install lvm vgchange thin_check thin_repair
+    fi
+}
+install_fn
