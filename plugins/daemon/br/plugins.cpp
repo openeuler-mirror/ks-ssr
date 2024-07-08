@@ -282,8 +282,49 @@ void Plugins::loadReinforcements()
         {
             reinforcementArg.category(reinforcementNoArg->category().get());
         }
-        reinforcementArg.label(reinforcementNoArg->label());
-        reinforcementArg.description(reinforcementNoArg->description());
+
+        // 显示文本翻译
+        ::xsd::cxx::tree::sequence<::KS::Protocol::Label> labels;
+        for (auto label : reinforcementNoArg->label())
+        {
+            // 加固项名称
+            auto oldStr = label.c_str();
+            auto newStr = noop2Translate(oldStr).toStdString();
+            labels.push_back(::KS::Protocol::Label(newStr));
+        }
+        reinforcementArg.label(labels);
+
+        ::xsd::cxx::tree::sequence<::KS::Protocol::Description> descriptions;
+        for (auto& description : reinforcementNoArg->description())
+        {
+            // 加固项描述
+            auto oldStr = description.c_str();
+            auto newStr = noop2Translate(oldStr).toStdString();
+            descriptions.push_back(::KS::Protocol::Label(newStr));
+        }
+        reinforcementArg.description(descriptions);
+
+        for (auto& arg : reinforcementArg.arg())
+        {
+            // 加固项参数
+            ::xsd::cxx::tree::sequence<::KS::Protocol::Label> labels;
+            for (auto label : arg.layout().get().label())
+            {
+                auto oldStr = label.c_str();
+                auto newStr = noop2Translate(oldStr).toStdString();
+                labels.push_back(::KS::Protocol::Label(newStr));
+            }
+            arg.layout().get().label(labels);
+
+            ::xsd::cxx::tree::sequence<::KS::Protocol::Note> notes;
+            for (auto note : arg.note())
+            {
+                auto oldStr = note.c_str();
+                auto newStr = noop2Translate(oldStr).toStdString();
+                notes.push_back(::KS::Protocol::Label(newStr));
+            }
+            arg.note(notes);
+        }
 
         auto reinforcement = QSharedPointer<Reinforcement>(new Reinforcement(plugin->getId(), reinforcementArg));
 
