@@ -42,6 +42,7 @@ public:
 
 private:
     bool checkCallResult(PyObject *pyRetval, const QString &functionName, QString &error);
+    QString python2Translate(const QString &souceTxt);
 
 private:
     PyObject *m_module;
