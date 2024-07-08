@@ -71,6 +71,8 @@ private:
     // 添加分类
     bool addCategory(QSharedPointer<Category> category);
 
+    QString categoriesLabel2Translate(const QString& souceTxt);
+
 private:
     static Categories* m_instance;
     // 配置文件路径
