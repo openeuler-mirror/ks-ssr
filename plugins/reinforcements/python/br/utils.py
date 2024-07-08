@@ -49,7 +49,7 @@ def subprocess_has_output_ignore_error_handling(args):
 
     error = child_process.stderr.read().strip().decode('utf-8')
     if exit_code != 0 and len(error) > 0:
-        br.log.debug(error)
+        br.log.warning(error)
         return error
 
     return child_process.stdout.read().strip().decode('utf-8')
