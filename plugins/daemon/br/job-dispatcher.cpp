@@ -365,6 +365,7 @@ bool JobDispatcher::startReinforce(const QStringList& names)
         }
 
         auto paramStr = reinforcementArgXml2Str(reinforcement->getRs().arg());
+
         this->m_job->addOperation(reinforcement->getPluginName(),
                                   reinforcement->getName(),
                                   [reinforcementInterface, paramStr]() -> QString
