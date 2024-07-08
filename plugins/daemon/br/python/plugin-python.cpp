@@ -169,6 +169,7 @@ bool ReinforcementPython::set(const QString &args, QString &error)
         if (successed == Py_False)
         {
             error = Utils::pyobjectAsString(PyTuple_GetItem(py_retval, 1));
+            error = python2Translate(error);
         }
         retval = (successed == Py_True);
         break;
