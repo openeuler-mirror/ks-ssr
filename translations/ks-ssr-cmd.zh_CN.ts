@@ -141,17 +141,17 @@
         <translation>未扫描</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="581"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="553"/>
         <source>Failed to get CVE information</source>
         <translation>获取CVE信息失败</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="588"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="560"/>
         <source>The return data is not a JSON array</source>
         <translation>返回数据不是一个JSON数组</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="697"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="669"/>
         <source>Repair progress </source>
         <translation>修复进度 </translation>
     </message>
