@@ -84,6 +84,8 @@ private:
     void joinReinforcement(Protocol::Reinforcement& destReinforcement,
                            const Protocol::Reinforcement& sourceReinforcement);
 
+    QString noop2Translate(const QString& souceTxt);
+
 private:
     static Plugins* m_instance;
 
