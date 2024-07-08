@@ -295,7 +295,7 @@ void ArgHandle::changedStringArgs(const QString &str)
     }
 
     m_widgetType = KS::Protocol::WidgetType::TEXT;
-    emit valueChanged(m_itemKey, m_argName, str, m_widgetType);
+    emit valueChanged(m_itemKey, m_argName, QString("\"%1\"").arg(str), m_widgetType);
 }
 
 void ArgHandle::argReset()
