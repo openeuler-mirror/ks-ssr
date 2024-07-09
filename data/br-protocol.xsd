@@ -8,6 +8,7 @@
             <xsd:enumeration value="FIXED" />
             <xsd:enumeration value="RANGE" />
             <xsd:enumeration value="ENUM" />
+            <xsd:enumeration value="MASK" />
         </xsd:restriction>
     </xsd:simpleType>
 
