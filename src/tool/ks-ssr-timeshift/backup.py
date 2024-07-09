@@ -38,10 +38,13 @@ class Backup(object):
         self.exclude_dir_list = []
         self.store_path = None
         self.backup_exclude_map = {}
+        # 记录系统上安装的rpm包文件列表(排除掉已经备份的文件)
         self.backup_rpm_file_path = '/opt/ks-ssr/rpm_backup_file.txt'
+        # 用于剩余空间计算时记录系统上安装的rpm包文件列表
         self.backup_check_rpm_file_path = '/opt/ks-ssr/rpm_backup_check_file.txt'
         self.back_done_flag = None
         self.back_done_list = []
+        # 备份进度记录文件
         self.progress_file = '/tmp/ks-ssr-backup-progress'
         if not os.path.exists(os.path.dirname(self.backup_rpm_file_path)):
             os.makedirs(os.path.dirname(self.backup_rpm_file_path))
