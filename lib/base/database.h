@@ -14,11 +14,10 @@
 
 #pragma once
 
-#include <qt5-log-i.h>
-#include <sqlcipher/sqlite3.h>
-
 class QVariant;
 template <typename T> class QVector;
+class sqlite3;
+class QString;
 
 namespace KS
 {
