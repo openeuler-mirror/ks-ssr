@@ -167,5 +167,36 @@ bool RuleEnum::match(const QJsonValue &value)
     }
     return false;
 }
+
+RuleMask::RuleMask(const QJsonValue &value)
+    : m_maskValue(value)
+{
+}
+
+bool RuleMask::match(const QJsonValue &value)
+{
+    auto maskValue = jsonValue2Int(m_maskValue);
+    auto curValue = jsonValue2Int(value);
+
+    return ((maskValue & curValue) == maskValue);
+}
+
+int RuleMask::jsonValue2Int(const QJsonValue &value)
+{
+    switch (value.type())
+    {
+    case QJsonValue::Type::Double:
+        return value.toInt();
+    case QJsonValue::Type::String:
+        return value.toString().toInt(nullptr, 0);
+    case QJsonValue::Type::Bool:
+        return value.toBool();
+    case QJsonValue::Type::Null:
+        return 0;
+    default:
+        return 0;
+    }
+}
+
 }  // namespace BR
 }  // namespace KS
