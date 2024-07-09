@@ -12,8 +12,9 @@ import json
 import br.vars
 import br.configuration
 
-PERMISSIONS_INI_FILEPATH = br.vars.SSR_BR_PLUGIN_PYTHON_ROOT_DIR + \
-    "/br/config/permissions.ini"
+PERMISSIONS_INI_FILEPATH = (
+    br.vars.SSR_BR_PLUGIN_PYTHON_ROOT_DIR + "/br/config/permissions.ini"
+)
 FILE_GROUP_PERMISSIONS = "Permissions"
 # FPK: File Permissions Key
 FPK_MODE_FILE_LIST = "ModeFileList"
