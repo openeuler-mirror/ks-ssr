@@ -102,19 +102,19 @@ class RollBack(object):
                 os.remove(self.ssr_tag_service)
             exit(2)
 
-    def _generate_vmlinux(self):
+    def _generate_vmlinuz(self):
         uname_r, err = runcmd("uname -r")
         logger.info("Generate rollback vmlinuz!")
-        vmlinux_org = "/boot/vmlinuz-" + uname_r
+        vmlinuz_org = "/boot/vmlinuz-" + uname_r
 
-        if not os.path.exists(vmlinux_org):
+        if not os.path.exists(vmlinuz_org):
             cmd = "cat /proc/cmdline |awk '{print $1}'|awk -F '/' '{print $2}'"
-            vmlinux_ret, err = runcmd(cmd)
-            vmlinux_org = "/boot/" + vmlinux_ret
+            vmlinuz_ret, err = runcmd(cmd)
+            vmlinuz_org = "/boot/" + vmlinuz_ret
 
-        if os.path.exists(vmlinux_org):
+        if os.path.exists(vmlinuz_org):
             try:
-                shutil.copy(vmlinux_org, self.vmlinux)
+                shutil.copy(vmlinuz_org, self.vmlinuz)
             except Exception as e:
                 logger.info(e)
         else:
