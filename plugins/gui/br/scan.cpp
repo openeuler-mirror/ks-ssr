@@ -17,7 +17,6 @@
 #include <QFileDialog>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QToolTip>
 #include "br-i.h"
 #include "br_dbus_proxy.h"
 #include "include/ssr-i.h"
