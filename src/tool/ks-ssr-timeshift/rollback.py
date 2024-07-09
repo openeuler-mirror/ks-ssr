@@ -136,11 +136,11 @@ class RollBack(object):
             logger.warning(err)
 
     def _add_rollback_grub(self):
-        if os.path.exists(self.vmlinux) and os.path.exists(self.initrd):
-            rm_cmd = "grubby --remove-kernel=%s" % self.vmlinux
+        if os.path.exists(self.vmlinuz) and os.path.exists(self.initrd):
+            rm_cmd = "grubby --remove-kernel=%s" % self.vmlinuz
             runcmd(rm_cmd)
             cmd = 'grubby --add-kernel={vmlinuz} --initrd={initrd} --title="{title}" --copy-default --make-default ' \
-                  '--args=rollback'.format(vmlinuz=self.vmlinux, initrd=self.initrd, title="KylinSec Rollback")
+                  '--args=rollback'.format(vmlinuz=self.vmlinuz, initrd=self.initrd, title="KylinSec Rollback")
             grbret, errgrb = runcmd(cmd)
             if errgrb:
                 logger.warning(errgrb)
