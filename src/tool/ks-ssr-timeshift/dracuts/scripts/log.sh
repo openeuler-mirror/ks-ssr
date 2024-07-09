@@ -1,8 +1,4 @@
 #!/bin/bash
-# Copyright (c) Huawei Technologies Co., Ltd. 2019-2019. All rights reserved.
-# Description: This script contains the MiniOS Log interfaces and generic
-#              utility functions.
-# 
 
 #const value of different loglevel
 CON_DEBUG="1"
