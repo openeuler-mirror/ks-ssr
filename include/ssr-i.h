@@ -131,6 +131,11 @@ extern "C"
 #define DNF_LOCK_DIR "/var/run"
 #define CVE_INFO_CACHE_DIR SSR_INSTALL_DATADIR "/cve-infos"
 
+// 离线安装
+#define SSR_OFFLINE_INSTALL_TRIGGER "/.ssr_offline_install_trigger"
+#define SSR_OFFLINE_INSTALL_PACKAGE_LIST SSR_VULNERABILITY_INSTALL_DATADIR "/offline-install-packages.txt"
+
+
     enum OsUserType
     {
         USER_TYPE_MANAGER = 0,
