@@ -24,10 +24,8 @@ qt5_add_dbus_interface(
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
 
-execute_process(
-  COMMAND
-    lupdate-qt5 -no-obsolete ${CMD_H_FILES} ${CMD_CPP_FILES}
-    -ts ${TS_FILES})
+execute_process(COMMAND lupdate-qt5 -no-obsolete ${CMD_H_FILES}
+                        ${CMD_CPP_FILES} -ts ${TS_FILES})
 
 qt5_add_translation(QM_FILES ${TS_FILES})
 
