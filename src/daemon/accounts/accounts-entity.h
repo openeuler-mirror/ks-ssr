@@ -16,6 +16,7 @@
 
 #include <daemon-plugin-i.h>
 #include <lib/base/database.h>
+#include <qt5-log-i.h>
 #include <ssr-i.h>
 #include <QDBusContext>
 #include <QMetaEnum>
