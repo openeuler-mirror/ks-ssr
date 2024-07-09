@@ -450,7 +450,7 @@ which will cause many problems!</source>
         <translation>用户登录限制</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="973"/>
+        <location filename="../../data/br-system-rs.xml" line="948"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-external.xml" line="26"/>
         <source>Restrict system independent user login</source>
         <translation>限制系统无关用户的登录</translation>
