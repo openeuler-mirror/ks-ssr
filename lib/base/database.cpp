@@ -14,7 +14,9 @@
 
 #include "lib/base/database.h"
 #include <sqlcipher/sqlite3.h>
+#include <qt5-log-i.h>
 #include <QDir>
+#include <QString>
 #include <QTextStream>
 #include <QVariant>
 #include <QVector>
