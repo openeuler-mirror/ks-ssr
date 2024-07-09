@@ -84,14 +84,12 @@ protected:
 
 signals:
     void itemChanged(QStandardItem *);
-    void modelEntered(const QModelIndex &model);
     void modelClicked(const QModelIndex &model);
     void modifyItemArgsClicked(const QModelIndex &model);
 
 private slots:
     void selectAllItem(Qt::CheckState state);
     void setHeaderState(QStandardItem *x);
-    void showTail(const QModelIndex &model);
     void setExpandItem(const QModelIndex &model);
     void doubleClickItem(const QModelIndex &model);
 
