@@ -537,36 +537,6 @@ bool Scan::cancelProgress()
     return true;
 }
 
-void Scan::showErrorMessage(const QModelIndex &model)
-{
-    RETURN_IF_TRUE(model.parent().row() < 0);
-
-    // 判断内容是否显示完整
-    auto itemRect = m_ui->m_itemTable->visualRect(model);
-    // 计算文本宽度
-    QFontMetrics metrics(this->font());
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
-    auto textWidth = metrics.horizontalAdvance(m_ui->m_itemTable->model()->data(model).toString());
-#else
-    auto textWidth = metrics.width(m_ui->m_itemTable->model()->data(model).toString());
-#endif
-    if (textWidth > itemRect.width())
-    {
-        auto mod = m_ui->m_itemTable->selectionModel()->model()->data(model);
-        QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
-    }
-
-    // 错误消息显示
-    RETURN_IF_TRUE(model.column() != 2);
-    auto indexCategories = model.parent().row();
-    auto indexCategory = model.row();
-    auto reinforcementItem = m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory);
-    if (reinforcementItem->getState() == BR_REINFORCEMENT_STATE_REINFORCE_ERROR || reinforcementItem->getState() == BR_REINFORCEMENT_STATE_SCAN_ERROR)
-    {
-        QToolTip::showText(QCursor::pos(), reinforcementItem->getErrorMessage(), this, rect(), 5000);
-    }
-}
-
 void Scan::popReinforcecmentDialog(const QModelIndex &model)
 {
     m_customArgsDialog->clear();
