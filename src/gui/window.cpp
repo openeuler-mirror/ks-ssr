@@ -574,7 +574,7 @@ void Window::popupSettingsDialog()
 
 void Window::popupActivationDialog()
 {
-    adjustWidgetPosition(m_settingsDialog);
+    adjustWidgetPosition(m_activation);
     m_activation->show();
 }
 
