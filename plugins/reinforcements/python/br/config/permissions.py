@@ -109,7 +109,9 @@ class DirectoryPermissionSetting:
             if (mode & EXCLUDE_DIRECTORY_MODE) != EXCLUDE_DIRECTORY_MODE:
                 mode_permissions_limit = False
                 break
-        retdata[PERMISSIONS_ARG_MODE_DIRECTORY_PERMISSIONS_LIMIT] = mode_permissions_limit
+        retdata[PERMISSIONS_ARG_MODE_DIRECTORY_PERMISSIONS_LIMIT] = (
+            mode_permissions_limit
+        )
 
         br.log.debug(str(self.mode_filelist))
 
