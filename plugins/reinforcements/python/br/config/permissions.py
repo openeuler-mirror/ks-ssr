@@ -23,15 +23,15 @@ FPK_MODE_DIRECTORY_LIST = "ModeDirectoryList"
 
 EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH | stat.S_IXUSR
 
-EXCLUDE_DIRECTORY_MODE = stat.S_IRWXU | stat.S_IXGRP | stat.S_IRGRP | stat.S_IROTH | stat.S_IXOTH
+EXCLUDE_DIRECTORY_MODE = (
+    stat.S_IRWXU | stat.S_IXGRP | stat.S_IRGRP | stat.S_IROTH | stat.S_IXOTH
+)
 
 PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
 PERMISSIONS_ARG_MODE_DIRECTORY_PERMISSIONS_LIMIT = "directory-permissions-limit"
 
-UMASK_LIMIT_PROFILE_PATH = '/etc/profile'
-UMASK_LIMIT_BASHRC_PATH = '/etc/bashrc'
-
-UMASK_LIMIT_CONF_KEY_UMASK = 'umask'
+UMASK_PROFILE_SH_PATH = "/etc/profile.d/br-config-umask.sh"
+UMASK_PROFILE_CSH_PATH = "/etc/profile.d/br-config-umask.csh"
 
 
 class PermissionSetting:
