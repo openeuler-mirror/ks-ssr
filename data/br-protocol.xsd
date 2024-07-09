@@ -72,6 +72,8 @@
             <xsd:element name="value_range" type="RuleRange" minOccurs="0" />
             <!-- 限定数值在一个枚举集合中的规则，如果数值在values集合中，则该数值满足规则 -->
             <xsd:element name="value_enum" type="RuleEnum" minOccurs="0" />
+            <!-- 如果value_mask & 数值 == value_mask，则该数值满足规则 -->
+            <xsd:element name="value_mask" type="xsd:string" minOccurs="0" />
         </xsd:sequence>
     </xsd:complexType>
 
