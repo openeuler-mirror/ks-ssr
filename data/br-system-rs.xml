@@ -833,7 +833,7 @@
                 <input_example>/etc/passwd;/etc/shadow</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Add audit rules to path.")</label>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Add audit rules to path")</label>
                 </layout>
             </arg>
         </reinforcement>
