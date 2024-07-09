@@ -69,6 +69,8 @@ ReinforcementPython::ReinforcementPython(PyObject *module,
     Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Abnormal service! Please check the log information for details."));
     Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "No related services found"));
     Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "PAM is not configured with a faillock, please manually configure it"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "umask is already defined in /etc/profile, please delete it first."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "umask is already defined in /etc/bashrc, please delete it first."));
 }
 
 ReinforcementPython::~ReinforcementPython()
