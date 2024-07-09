@@ -261,23 +261,7 @@ void ArgHandle::confirmType(const QJsonValue &jsonValue)
     switch (jsonValue.type())
     {
     case QJsonValue::Type::Double:
-        if (m_itemKey == "config-umask-limit")
-        {
-            if (jsonValue.toInt() == m_comboBox->itemText(0).toInt())
-            {
-                m_comboBox->setCurrentIndex(0);
-            }
-            else if (jsonValue.toInt() == m_comboBox->itemText(1).toInt())
-            {
-                m_comboBox->setCurrentIndex(1);
-            }
-            else if (jsonValue.toInt() == m_comboBox->itemText(2).toInt())
-            {
-                m_comboBox->setCurrentIndex(2);
-            }
-        }
-        else
-            m_spinBox->setValue(jsonValue.toInt());
+        m_spinBox->setValue(jsonValue.toInt());
         break;
     case QJsonValue::Type::String:
     {
