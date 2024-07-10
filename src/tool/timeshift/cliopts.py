@@ -12,10 +12,12 @@ class CommandLineArgs:
     def add_arguments(self):
         # 创建互斥参数组
         group = self.parser.add_mutually_exclusive_group()
+        group.add_argument("--check", action='store_true',
+                           help="Perform system check process")
         group.add_argument("--backup", action='store_true',
-                                 help="Perform system backup process")
+                           help="Perform system backup process")
         group.add_argument("--rollback", action='store_true',
-                                 help="Perform system rollback process")
+                           help="Perform system rollback process")
 
     def parse_args(self, args):
         return self.parser.parse_args(args)
