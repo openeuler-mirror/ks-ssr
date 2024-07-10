@@ -415,11 +415,12 @@ def main(config):
         logger.warning("There is a ks-ssr-timeshift process running,exit!")
         exit(1)
 
+    setup_logger_r(current_log, 'KSSSRLogger_BACKUP')
+
     ssr_backup = Backup(conf_path=config)
     ssr_backup.run()
 
     # 执行生成rollback内核的动作
-    setup_logger_r(current_log)
     ssr_rollback = RollBack(conf_path=config)
     ssr_rollback.run(gen_grub=False)
     ssr_backup.write_progress('generate_boot')
