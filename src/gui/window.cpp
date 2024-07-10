@@ -59,8 +59,6 @@ namespace KS
 #define MATE_SCREENSAVER_DBUS_PATH "/"
 #define MATE_SCREENSAVER_DBUS_INTERFACE "org.mate.ScreenSaver"
 
-#define REINFORCEMENT_BATCH_PATH "/usr/libexec/ssr-distribution-actuator"
-
 Window::Window()
     : TitlebarWindow(nullptr),
       m_ui(new Ui::Window),
