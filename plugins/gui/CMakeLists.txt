@@ -19,10 +19,6 @@ if(ENABLE_PRIVATE_BOX)
   add_subdirectory(private-box)
 endif()
 
-if(ENABLE_REMOTE_MANAGER)
-  add_subdirectory(remote)
-endif()
-
 if(ENABLE_TOOL_BOX)
   add_subdirectory(tool-box)
 endif()
