@@ -30,7 +30,11 @@ def get_logging_config(level, console, log_file):
         'version': 1,
         'loggers': {
             'KSSSRLogger': {
-                'handlers': ['file1', 'file2', 'console'] if console else ['file', 'file2'],
+                'handlers': ['file1', 'console'] if console else ['file1'],
+                'level': level,
+            },
+            'KSSSRLogger_BACKUP': {
+                'handlers': ['file1', 'file2', 'console'] if console else ['file1', 'file2'],
                 'level': level,
             },
         },
