@@ -34,7 +34,7 @@ class RollBack(object):
         # 用于系统还原的initramfs
         self.initrd = "/boot/initramfs-rollback.img"
         # 存放rollback时所需脚本文件
-        self.ssr_env_dir = "/usr/share/ks-ssr/timeshift"
+        self.ssr_env_dir = "/usr/lib64/ks-ssr/timeshift/dracuts/scripts/"
         # 存放需打包进initrd中的脚本文件
         self.opt_ssr_dir = "/opt/ks-ssr/ks-ssr"
         # rollback模块是否打包进initrd的标志文件
