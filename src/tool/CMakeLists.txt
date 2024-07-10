@@ -1,3 +1,7 @@
 add_subdirectory(config)
 add_subdirectory(crypto)
-add_subdirectory(command)
+
+if(ENABLE_VULNERABILITY_MANAGER)
+  add_subdirectory(command)
+  add_subdirectory(timeshift)
+endif()
