@@ -68,10 +68,10 @@ def get_logging_config(level, console, log_file):
     }
 
 
-def change_log_config(level, console, log_file):
+def change_log_config(level, console, log_file, name='KSSSRLogger'):
     """根据新的配置信息，重新加载日志配置"""
     logging.config.dictConfig(get_logging_config(level, console, log_file))
-    return logging.getLogger('KSSSRLogger')
+    return logging.getLogger(name)
 
 
 def execute_cmd(cmd, logger, print_log=True):
