@@ -1,5 +1,6 @@
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/tool/timeshift/dracuts/scripts/
-        DESTINATION ${SSR_INSTALL_LIBDIR}/${PROJECT_NAME}/timeshift/dracuts/scripts/)
+install(
+  DIRECTORY ${PROJECT_SOURCE_DIR}/src/tool/timeshift/dracuts/scripts/
+  DESTINATION ${SSR_INSTALL_LIBDIR}/${PROJECT_NAME}/timeshift/dracuts/scripts/)
 
 install(
   DIRECTORY
