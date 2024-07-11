@@ -81,18 +81,13 @@ private slots:
     void exportReportFinished(const QString &failed_reason);
 
 private:
-    BRDbusProxy *m_dbusBRProxy;
-    VulnerabilityDbusProxy *m_dbusVulnerabilityProxy;
-    QDBusServiceWatcher *m_dbusServerWatcher;
-    QSharedPointer<LicenseProxy> m_licenseProxy;
     bool m_fileOutput;
-    bool m_getBrJob;
     bool m_onlyScan;
     int m_lastPercent;
-    QStringList m_cveIds;
-    QMap<QString, BrInfo *> m_brItemInfo;
-    QMap<QString, VulnerabilityInfo *> m_repairResult;
-    QStringList m_notExistCVE;
+    QDBusServiceWatcher *m_dbusServerWatcher;
+    BRDbusProxy *m_dbusBRProxy;
+    VulnerabilityDbusProxy *m_dbusVulnerabilityProxy;
+    QMap<QString, OutputInfo *> m_outputInfo;
 };
 }  // namespace Command
 }  // namespace KS
