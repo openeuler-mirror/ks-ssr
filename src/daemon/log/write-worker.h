@@ -30,7 +30,8 @@ class WriteWorker : public QThread
 public:
     explicit WriteWorker(Manager* logManager)
         : QThread(logManager),
-          m_logManager(logManager)
+          m_logManager(logManager),
+          m_condition(nullptr)
     {
     }
     void run() override;
