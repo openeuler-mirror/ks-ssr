@@ -59,4 +59,5 @@ void KS::Log::Configurations::operator=(const Configurations& other)
     m_remotePath = other.m_remotePath;
     m_ip = other.m_ip;
     m_bakUpInterval = other.m_bakUpInterval;
+    m_config = nullptr;
 }
