@@ -74,316 +74,279 @@ void Command::setFileOutput(bool fileOutput)
 
 int Command::brScan()
 {
+    moduleBrInit();
     std::cout << tr("Scannig...").toStdString() << std::endl;
-    disconnect(m_dbusBRProxy, &BRDbusProxy::ScanProgress, 0, 0);
-    disconnect(m_dbusBRProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-    // 进行一次扫描 仅获取扫描结果，不对UI进行调整
     connect(m_dbusBRProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult)
             {
-                ssrJobResult(jobResult);
+                brJobResultProcess(jobResult);
             });
     connect(m_dbusBRProxy, &BRDbusProxy::ProgressFinished, this, [this]
             {
                 disconnect(m_dbusBRProxy, &BRDbusProxy::ScanProgress, 0, 0);
                 disconnect(m_dbusBRProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-                KLOG_DEBUG() << "ProgressFinished";
-                outputBrResult();
+                outputMethodProcess(MODULE_BR);
             });
 
-    QStringList items = getBrInfo();
-    m_dbusBRProxy->Scan(items);
+    m_dbusBRProxy->Scan(getReinforcements());
+    return 0;
+}
+
+int Command::brReinforce(const QStringList &name)
+{
+    moduleBrInit();
+    std::cout << tr("Reinforcing...").toStdString() << std::endl;
+    connect(m_dbusBRProxy, &BRDbusProxy::ReinforceProgress, this, [this](const QString &jobResult)
+            {
+                brJobResultProcess(jobResult);
+            });
+    connect(m_dbusBRProxy, &BRDbusProxy::ProgressFinished, this, [this]
+            {
+                KLOG_INFO() << "ProgressFinished";
+                outputMethodProcess(MODULE_BR);
+            });
+    QStringList items = getReinforcements(name);
+    if (items.isEmpty())
+    {
+        std::cout << tr("Failed to get reinforcements").toStdString() << std::endl;
+        return -1;
+    }
+    auto reply = m_dbusBRProxy->Reinforce(items);
+    reply.waitForFinished();
+    if (reply.isError())
+    {
+        std::cout << tr("Reinforcement failed, error message: ").toStdString() << reply.error().message().toStdString() << std::endl;
+        return -1;
+    }
+    return 0;
+}
+int Command::brExport(const QString &filePath)
+{
+    if (filePath.isEmpty())
+    {
+        std::cout << tr("Please enter the pdf file name").toStdString() << std::endl;
+        return -1;
+    }
+    QString path = QDir(QDir::currentPath()).absoluteFilePath(filePath);
+    if (checkExportPath(path) != 0)
+    {
+        return -1;
+    }
+    moduleBrInit();
+    connect(m_dbusBRProxy, &BRDbusProxy::ExportReportFinished, this, &Command::exportReportFinished);
+    m_dbusBRProxy->ExportReport(path);
     return 0;
 }
 
 int Command::vulnerabilityScan()
 {
+    moduleVulnerabilityInit();
     std::cout << tr("Scannig...").toStdString() << std::endl;
-    m_onlyScan = true;
-    m_lastPercent = 0;
-    connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ScanProgress, this, &Command::scanProgress, Qt::QueuedConnection);
+    connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ScanProgress, this, &Command::scanProgress);
     m_dbusVulnerabilityProxy->Scan();
     return 0;
 }
 
-int Command::reinforce(const QStringList &name)
+int Command::vulnerabilityRepair(const QStringList &name)
 {
-    std::cout << tr("Reinforcing...").toStdString() << std::endl;
-    connect(m_dbusBRProxy, &BRDbusProxy::ReinforceProgress, this, [this](const QString &jobResult)
-            {
-                ssrJobResult(jobResult);
-            });
-    connect(m_dbusBRProxy, &BRDbusProxy::ProgressFinished, this, [this]
-            {
-                KLOG_INFO() << "ProgressFinished";
-                outputBrResult();
-            });
-    QStringList items = getBrInfo();
-    if (!name.isEmpty())
-        items = name;
-    KLOG_DEBUG() << "reinforce items:" << items;
-    auto reply = m_dbusBRProxy->Reinforce(items);
-    reply.waitForFinished();
-    if (reply.isError())
-    {
-        KLOG_ERROR() << "error:" << reply.error().message();
-        std::cout << tr("Reinforcement Failure").toStdString() << std::endl;
-        exit(-1);
-    }
-    return 0;
-}
-
-void Command::repair(const QStringList &cves)
-{
-    m_onlyScan = false;
-    m_lastPercent = 0;
-    m_cveIds = cves;
+    moduleVulnerabilityInit();
     connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::RepairProgress, this, &Command::repairProgress);
-    if (cves.isEmpty())
+    if (name.isEmpty())
     {
         std::cout << tr("Scannig...").toStdString() << std::endl;
+        m_onlyScan = false;
         connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ScanProgress, this, &Command::scanProgress);
         m_dbusVulnerabilityProxy->Scan();
     }
     else
     {
-        getCVEsInfo();
-        KLOG_DEBUG() << "CVE Ids:" << m_cveIds;
+        if (0 != getCVEsInfo(name))
+        {
+            return -1;
+        }
+        KLOG_DEBUG() << "CVE Ids:" << name;
+#if 0
+        auto notExist = name.toSet().subtract(m_outputInfo.keys().toSet());
+        std::string cveStr = "\"";
+        for (const auto &cve : notExist)
+        {
+            cveStr = cveStr + cve.toStdString() + ",";
+        }
+        cveStr = cveStr.substr(0, cveStr.size() - 1) + "\"";
+        if (!notExist.isEmpty())
+        {
+            std::cout << tr("Vulnerability ").toStdString() << cveStr << tr(" does not exist").toStdString() << std::endl;
+        }
+        if (m_outputInfo.isEmpty())
+        {
+            return -1;
+        }
+#endif
         std::cout << tr("Repairing...").toStdString() << std::endl;
-        m_dbusVulnerabilityProxy->Repair(m_cveIds);
+        auto reply = m_dbusVulnerabilityProxy->Repair(m_outputInfo.keys());
+        reply.waitForFinished();
+        if (reply.isError())
+        {
+            std::cout << tr("Repair Failure, error message: ").toStdString() << reply.error().message().toStdString() << std::endl;
+            return -1;
+        }
     }
-}
-
-int Command::exportReport(QString which, QString path)
-{
-    KLOG_INFO() << which << "exportPath:" << path;
-    if (!path.endsWith(".pdf"))
-    {
-        std::cout << tr("File name suffix error, please end with .pdf").toStdString() << std::endl;
-        exit(-1);
-    }
-    QFileInfo fileInfo(path);
-    QDir dir(fileInfo.absolutePath());
-    if (!dir.exists())
-    {
-        std::cout << tr("The specified directory does not exist").toStdString() << std::endl;
-        exit(-1);
-    }
-    //    auto reply = "br" == which ? m_dbusBRProxy->ExportReport(path) : m_dbusVulnerabilityProxy->ExportReport(path);
-    //    reply.waitForFinished();
-    //    if (reply.isError())
-    //    {
-    //        KLOG_WARNING() << "error:" << reply.error().message();
-    //        std::cout << tr("Failed to export report").toStdString() << std::endl;
-    //        exit(-1);
-    //    }
-
-    //    std::cout << tr("Export Report Success").toStdString() << std::endl;
-    //    exit(0);
-
-    connect(m_dbusBRProxy, &BRDbusProxy::ExportReportFinished, this, &Command::exportReportFinished, Qt::QueuedConnection);
-    connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ExportReportFinished, this, &Command::exportReportFinished, Qt::QueuedConnection);
-
-    "br" == which ? m_dbusBRProxy->ExportReport(path) : m_dbusVulnerabilityProxy->ExportReport(path);
     return 0;
 }
 
-QStringList Command::getBrInfo(const QStringList &category)
+int Command::vulnerabilityExport(const QString &filePath)
 {
-    for (auto iter = m_brItemInfo.begin(); iter != m_brItemInfo.end(); ++iter)
+    QString path = QDir(QDir::currentPath()).absoluteFilePath(filePath);
+    if (checkExportPath(path) != 0)
     {
-        delete iter.value();
+        return -1;
     }
-    m_brItemInfo.clear();
 
-    QStringList ret;
-    auto reply = m_dbusBRProxy->GetReinforcements();
-    reply.waitForFinished();
-    if (reply.isError() || reply.value() == "")
-    {
-        KLOG_WARNING() << "error:" << reply.error().message();
-        return ret;
-    }
-    KLOG_DEBUG() << "param category list:" << category;
-    const QString xmlString = reply.value();
-    QLocale local;
-    std::istringstream istringStream(xmlString.toStdString());
-    auto rsReinforcements = KS::Protocol::br_reinforcements(istringStream, xml_schema::Flags::dont_validate);
-    auto rsReinforcement = rsReinforcements.get()->reinforcement();
-    for (auto iter : rsReinforcement)
-    {
-        QString defaultLabel;
-        for (auto label : iter.label())
-        {
-            if (label.lang() == nullptr)
-            {
-                defaultLabel = QString(label.c_str());
-                continue;
-            }
-
-            if (local.name().toStdString() == label.lang().get())
-            {
-                defaultLabel = QString(label.c_str());
-            }
-        }
-        BrInfo *pBr = new BrInfo(iter.category().get().c_str(), defaultLabel);
-        m_brItemInfo[iter.name().c_str()] = pBr;
-        if (category.isEmpty() || category.indexOf(iter.category().get().c_str()) == 0)
-        {
-            ret << iter.name().c_str();
-        }
-    }
-    KLOG_DEBUG() << ret;
-    return ret;
+    moduleVulnerabilityInit();
+    connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ExportReportFinished, this, &Command::exportReportFinished);
+    m_dbusVulnerabilityProxy->ExportReport(path);
+    return 0;
 }
 
-bool Command::ssrJobResult(const QString &xmlString)
+void Command::checkLicenseActive()
 {
-    if (xmlString.isEmpty())
-        return false;
-    std::istringstream istringStream(xmlString.toStdString());
-    auto jobResult = KS::Protocol::br_job_result(istringStream, xml_schema::Flags::dont_validate);
-    for (auto reinforcement : jobResult->reinforcement())
+    QSharedPointer<LicenseProxy> licenseProxy = LicenseProxy::getDefault();
+    if (!licenseProxy->isActivated())
     {
-        if (reinforcement.error() != nullptr)
-        {
-            KLOG_WARNING() << "error:" << reinforcement.error().get().c_str();
-        }
-        QString name = reinforcement.name().c_str();
-        if (!m_brItemInfo.contains(name))
-        {
-            BrInfo *pBr = new BrInfo(QString(""), QString(""));
-            m_brItemInfo[name] = pBr;
-        }
-        m_brItemInfo.value(name)->state = state2Str(reinforcement.state());
-        m_getBrJob = true;
+        std::cout << tr("The software is not activated.").toStdString() << std::endl;
+        exit(-1);
     }
-
-    return true;
 }
 
-int Command::displayWidth(const QString &str)
+void Command::addDbusServerWatcher()
 {
-    int width = 0;
-    for (const QChar &ch : str)
+    QDBusConnection connection = QDBusConnection::systemBus();
+    QDBusConnectionInterface *interface = connection.interface();
+    if (interface)
     {
-        if (ch.unicode() < 128)
+        QDBusReply<QString> reply = interface->serviceOwner(SSR_DBUS_NAME);
+        if (reply.isValid())
         {
-            width += 1;  // ASCII characters
+            KLOG_INFO() << "Service UniqueName:" << reply.value();
+            m_dbusServerWatcher->setConnection(connection);
+            m_dbusServerWatcher->setWatchMode(QDBusServiceWatcher::WatchForOwnerChange);
+            m_dbusServerWatcher->addWatchedService(reply.value());
+            connect(m_dbusServerWatcher, &QDBusServiceWatcher::serviceUnregistered, [this](const QString &service)
+                    {
+                        std::cout << tr("The background daemon service exits. The unique name of the dbus service: ").toStdString() << service.toStdString() << std::endl;
+                        exit(-1);
+                    });
         }
         else
         {
-            width += 2;  // Non-ASCII characters (e.g., Chinese)
+            KLOG_ERROR() << "Failed to get the UniqueName for service:" << SSR_DBUS_NAME;
         }
     }
-    return width;
-}
-
-QString Command::leftJustify(const QString &str, int width, QChar fillChar)
-{
-    int strWidth = displayWidth(str);
-    if (strWidth >= width)
+    else
     {
-        return str;
+        KLOG_ERROR() << "Failed to get the DBus connection interface.";
     }
-    return str + QString(width - strWidth, fillChar);
 }
 
-void Command::outputBrResult()
+void Command::moduleBrInit()
 {
-    if (!m_getBrJob)
-        return;
+    m_dbusBRProxy = new BRDbusProxy(SSR_DBUS_NAME,
+                                    BR_DBUS_OBJECT_PATH,
+                                    QDBusConnection::systemBus(),
+                                    this);
+}
 
-    if (!m_fileOutput)
+void Command::moduleVulnerabilityInit()
+{
+    m_dbusVulnerabilityProxy = new VulnerabilityDbusProxy(SSR_DBUS_NAME,
+                                                          SSR_VULNERABILITY_DBUS_OBJECT_PATH,
+                                                          QDBusConnection::systemBus(),
+                                                          this);
+}
+
+void Command::brOutputResult(QTextStream &output)
+{
+    output.setCodec("UTF-8");
+    for (const auto &key : m_outputInfo.keys())
     {
-        for (const auto &key : m_brItemInfo.keys())
+        QString label = m_outputInfo.value(key)->secondColumn;
+        QString state = m_outputInfo.value(key)->state;
+        output << leftJustify(key, 50) << leftJustify(label, 50);
+        if (m_fileOutput)
         {
-            QString label = m_brItemInfo.value(key)->label;
-            QString state = m_brItemInfo.value(key)->state;
-            if (state.isEmpty())
-                continue;
-            std::string color = state == QString(tr("Conformity")) || state == QString(tr("Reinforced")) ? "\033[0m" : "\033[31m";
-            std::cout << leftJustify(key, 50).toStdString() << leftJustify(label, 50).toStdString() << color << leftJustify(state, 20).toStdString() << "\033[0m" << std::endl;
+            output << leftJustify(state, 20) << "\n";
         }
-
-        exit(0);
+        else
+        {
+            QString color = state.isEmpty() || QString(tr("Conformity")) == state || QString(tr("Reinforced")) == state ? "\033[0m" : "\033[31m";
+            output << color << leftJustify(state, 20) << "\033[0m"
+                   << "\n";
+        }
     }
-    QString timeStr = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss");
-    QString fileName = QString(tr("KylinSecHostReinforcementReport_%1_%2_%3.txt")).arg(QSysInfo::machineHostName()).arg(getIPPath()).arg(timeStr);
-    QFile f(fileName);
-    if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        std::cout << tr("open file failed").toStdString() << std::endl;
-        exit(-1);
-    }
-    QTextStream txtOutput(&f);
-    txtOutput.setCodec("UTF-8");  // 确保使用 UTF-8 编码
-    for (const auto &key : m_brItemInfo.keys())
-    {
-        QString label = m_brItemInfo.value(key)->label;
-        QString state = m_brItemInfo.value(key)->state;
-        if (state.isEmpty())
-            continue;
-        txtOutput << leftJustify(key, 50) << leftJustify(label, 50) << leftJustify(state, 20) << "\n";
-    }
-    f.close();
-    std::cout << tr("Results output to file ").toStdString() << fileName.toStdString() << std::endl;
-    exit(0);
 }
 
-void Command::outputRepairResult(QTextStream &output)
+void Command::vulnerabilityOutputResult(QTextStream &output)
 {
-    auto cveList = m_repairResult.values();
-    std::sort(cveList.begin(), cveList.end(), [](const KS::Command::VulnerabilityInfo *a, const KS::Command::VulnerabilityInfo *b)
+    auto cveList = m_outputInfo.values();
+    std::sort(cveList.begin(), cveList.end(), [](const KS::Command::OutputInfo *a, const KS::Command::OutputInfo *b)
               {
-                  return (a->score).toDouble() > (b->score).toDouble();
+                  return (a->thirdColumn).toDouble() > (b->thirdColumn).toDouble();
               });
 
     output.setCodec("UTF-8");  // 确保使用 UTF-8 编码
     QMap<QString, int> levelMap;
     QMap<QString, int> stateMap;
-    int all = 0;
     for (const auto &cve : cveList)
     {
-        if (cve->id.isEmpty())
-            continue;
-        QString threat_severity = cve->threat_severity;
-        QString score = cve->score;
-        QString state = m_onlyScan ? "" : cve->state;
-        all++;
+        QString threat_severity = cve->secondColumn;
+        QString score = cve->thirdColumn;
+        QString state = cve->state;
         levelMap[threat_severity]++;
         stateMap[state]++;
+        output << leftJustify(cve->name, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20);
         if (m_fileOutput)
         {
-            output << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << leftJustify(state, 20) << "\n";
+            output << leftJustify(state, 20) << "\n";
         }
         else
         {
-            QString color = state.isEmpty() || state == QString(tr("succeed")) ? "\033[0m" : "\033[31m";
-            output << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << color << leftJustify(state, 20) << "\033[0m"
+            QString color = state.isEmpty() || QString(tr("succeed")) == state ? "\033[0m" : "\033[31m";
+            output << color << leftJustify(state, 20) << "\033[0m"
                    << "\n";
         }
     }
-    output << tr("Total number of vulnerabilities: ") << QString::number(all) << tr(" ");
+    output << tr("Total number of vulnerabilities: ") << QString::number(cveList.size()) << tr(" ");
     for (const auto &key : levelMap.keys())
     {
         output << key << tr(": ") << QString::number(levelMap.value(key)) << tr(" ");
     }
-    if (!m_onlyScan)
-    {
-        for (const auto &key : stateMap.keys())
-        {
-            output << key << tr(": ") << QString::number(stateMap.value(key)) << tr(" ");
-        }
-    }
-
     output << "\n";
 }
 
-void Command::outputRepairResult()
+void Command::outputResult(QTextStream &output, ModuleType type)
 {
-    if (m_repairResult.size() == 0)
-        return;
+    switch (type)
+    {
+    case MODULE_BR:
+        brOutputResult(output);
+        break;
+    case MODULE_VULNERABILITY:
+        vulnerabilityOutputResult(output);
+        break;
+    default:
+        KLOG_WARNING() << type;
+        break;
+    }
+}
 
+void Command::outputMethodProcess(ModuleType type)
+{
+    if (m_outputInfo.size() == 0)
+    {
+        std::cout << tr("Job done").toStdString() << std::endl;
+        exit(0);
+    }
+
+    QTextStream text;
     if (m_fileOutput)
     {
         QString timeStr = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss");
