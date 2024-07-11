@@ -14,7 +14,7 @@ except:
     # python 2.6版本sys.version_info是一个元组
     import ConfigParser as configparser
 
-from utils import change_log_config, ROLLBACK_LOG_FILE, LEVEL, runcmd, proc_lock
+from utils import change_log_config, ROLLBACK_LOG_FILE, LEVEL, runcmd, proc_lock, BASE_DIR_64
 
 logger = logging.getLogger(__name__)
 current_log = ROLLBACK_LOG_FILE.format(datetime=datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m%d-%H%M"))
