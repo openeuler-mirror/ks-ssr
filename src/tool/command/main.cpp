@@ -15,8 +15,8 @@
 #include <qt5-log-i.h>
 #include <QCommandLineParser>
 #include <QCoreApplication>
-#include <QDir>
 #include <QLocale>
+#include <QTextStream>
 #include <QTranslator>
 #include <iostream>
 #include "cmd-parser.h"
