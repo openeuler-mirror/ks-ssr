@@ -41,11 +41,11 @@ struct ArgTransfer
                 const QString &argLabel = "",
                 const QString &argValue = "",
                 KS::Protocol::WidgetType::Value type = KS::Protocol::WidgetType::Value::DEFAULT)
+        : categoryName(category),
+          argName(argLabel),
+          value(argValue),
+          widgetType(type)
     {
-        categoryName = category;
-        argName = argLabel;
-        value = argValue;
-        widgetType = type;
     }
 };
 
