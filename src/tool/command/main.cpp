@@ -212,7 +212,6 @@ int main(int argc, char *argv[])
     }
     else
     {
-        cerr << QObject::tr("Invalid module!") << Qt::endl;
         helpTextOut(parser.helpText(), "", true);
         return 1;
     }
