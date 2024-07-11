@@ -657,40 +657,27 @@ void Command::scanProgress(const QString &progress)
 
         if (m_onlyScan)
         {
-            outputRepairResult();
-            exit(0);
+            outputMethodProcess(MODULE_VULNERABILITY);
         }
-
-        KLOG_DEBUG() << "CVE Ids:" << m_cveIds;
-        std::cout << tr("Repairing...").toStdString() << std::endl;
-        m_lastPercent = 0;
-        m_dbusVulnerabilityProxy->Repair(m_cveIds);
+        else
+        {
+            std::cout << tr("Repairing...").toStdString() << std::endl;
+            KLOG_INFO() << QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss");
+            m_lastPercent = 0;
+            auto reply = m_dbusVulnerabilityProxy->Repair(m_outputInfo.keys());
+            reply.waitForFinished();
+            if (reply.isError())
+            {
+                std::cout << tr("Repair Failure, error message: ").toStdString() << reply.error().message().toStdString() << std::endl;
+                exit(-1);
+            }
+        }
     }
 }
 
 void Command::repairProgress(const QString &progress)
 {
     QJsonObject progressJson = str2jsonObject(progress);
-    QJsonArray cveArray = progressJson.value("RepairInfo").toArray();
-    // for (auto item : cveArray)
-    // {
-    //     auto cve = item.toObject();
-    //     if (!cve.contains("cveId"))
-    //     {
-    //         continue;
-    //     }
-
-    //     int state = QString(cve.value("state").toString()).compare("Success", Qt::CaseInsensitive) ? 2 : 1;
-    //     QString id = cve.value("cveId").toString();
-    //     if (!m_repairResult.contains(id))
-    //     {
-    //         m_notExistCVE << id;
-    //         continue;
-    //     }
-    //     m_repairResult.value(id)->state = getCveState(state);
-    // }
-
-    // 进度
     int percent = progressJson.value("progress").toInt();
     auto errorMessage = progressJson.value("errorMessage").toVariant().toString();
     if (-1 == percent)
