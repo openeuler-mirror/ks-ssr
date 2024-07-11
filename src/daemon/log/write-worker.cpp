@@ -26,6 +26,11 @@ namespace Log
 {
 void WriteWorker::run()
 {
+    if (m_condition)
+    {
+        delete m_condition;
+        m_condition = nullptr;
+    }
     m_condition = new QMutex();
     while (true)
     {
