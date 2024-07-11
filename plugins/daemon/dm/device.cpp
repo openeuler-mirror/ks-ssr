@@ -26,7 +26,8 @@ Device::Device(const QString& syspath, QObject* parent)
     : QObject(parent),
       m_type(DeviceType::DEVICE_TYPE_OTHER),
       m_interfaceType(InterfaceType::INTERFACE_TYPE_OTHER),
-      m_state(DeviceState::DEVICE_STATE_UNAUTHORIED)
+      m_state(DeviceState::DEVICE_STATE_UNAUTHORIED),
+      m_device(QSharedPointer<SystemDevice>(new SystemDevice(syspath)))
 {
     m_permission = QSharedPointer<Permission>(new Permission{
         .read = false,
