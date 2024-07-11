@@ -26,22 +26,19 @@ namespace KS
 class LicenseProxy;
 namespace Command
 {
-struct VulnerabilityInfo
+enum ModuleType
 {
-    VulnerabilityInfo(QString _id, QString _threat_severity, QString _score)
-        : id(_id), threat_severity(_threat_severity), score(_score) {}
-    QString id;
-    QString threat_severity;
-    QString score;
-    QString state;
+    MODULE_BR = 1,
+    MODULE_VULNERABILITY,
 };
 
-struct BrInfo
+struct OutputInfo
 {
-    BrInfo(QString _category, QString _label)
-        : category(_category), label(_label) {}
-    QString category;
-    QString label;
+    OutputInfo(QString _name)
+        : name(_name) {}
+    QString name;
+    QString secondColumn;  // for vulnerability: threat_severity; for br: label
+    QString thirdColumn;   // for vulnerability: score
     QString state;
 };
 
