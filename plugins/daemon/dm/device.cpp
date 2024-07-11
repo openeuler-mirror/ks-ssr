@@ -35,7 +35,6 @@ Device::Device(const QString& syspath, QObject* parent)
         .execute = false,
     });
 
-    m_device = QSharedPointer<SystemDevice>(new SystemDevice(syspath));
     m_syspath = syspath;
 
     m_connectedTime = QDateTime::currentMSecsSinceEpoch();
