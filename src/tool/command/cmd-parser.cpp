@@ -617,42 +617,6 @@ QJsonObject Command::str2jsonObject(const QString &str)
     return doc.object();
 }
 
-int Command::getCVEsInfo()
-{
-    auto reply = m_dbusVulnerabilityProxy->GetCVEsInfo(m_cveIds);
-    reply.waitForFinished();
-    if (reply.isError())
-    {
-        KLOG_ERROR() << "error:" << reply.error().message();
-        std::cout << tr("Failed to get CVE information").toStdString() << std::endl;
-        exit(-1);
-    }
-
-    QJsonDocument document = QJsonDocument::fromJson(reply.value().toLocal8Bit());
-    if (!document.isArray())
-    {
-        std::cout << tr("The return data is not a JSON array").toStdString() << std::endl;
-        exit(-1);
-    }
-
-    QJsonArray jsonArray = document.array();
-    for (const QJsonValue &value : jsonArray)
-    {
-        if (!value.isObject())
-        {
-            KLOG_DEBUG() << "JSON array item is not an object";
-            continue;
-        }
-
-        QJsonObject jsonObject = value.toObject();
-        QString level = getCveLevel(jsonObject["threat_severity"].toInt());
-        VulnerabilityInfo *pVu = new VulnerabilityInfo(jsonObject["name"].toString(), level, jsonObject["score"].toString());
-        m_repairResult[jsonObject["name"].toString()] = pVu;
-    }
-
-    return 0;
-}
-
 void Command::scanProgress(const QString &progress)
 {
     QJsonObject progressJson = str2jsonObject(progress);
