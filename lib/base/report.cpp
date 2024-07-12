@@ -145,61 +145,10 @@ static void makeHomePage(HPDF_Doc pdf,
     HPDF_Page_EndText(page);
 }
 
-static void draw_table(HPDF_Page page, float x, float y, float width, float height, int rows, int cols)
-{
-    float cell_width = width / cols;
-    float cell_height = height / rows;
-
-    // Draw horizontal lines
-    for (int i = 0; i <= rows; ++i)
-    {
-        float y_offset = y - (i * cell_height);
-        HPDF_Page_MoveTo(page, x, y_offset);
-        HPDF_Page_LineTo(page, x + width, y_offset);
-        HPDF_Page_Stroke(page);
-    }
-
-    // Draw vertical lines
-    for (int j = 0; j <= cols; ++j)
-    {
-        float x_offset = x + (j * cell_width);
-        HPDF_Page_MoveTo(page, x_offset, y);
-        HPDF_Page_LineTo(page, x_offset, y - height);
-        HPDF_Page_Stroke(page);
-    }
-}
-
-static void add_table_data(HPDF_Page page, HPDF_Font font, float x, float y, float width, float height, int rows, int cols, const QList<QStringList> &tabelData, bool hasFirstRow, const QList<uint> &colWidth)
-{
-    float cell_width = width / cols;
-    float cell_height = height / rows;
-
-    for (int i = 0; i < tabelData.size(); ++i)
-    {
-        for (int j = 0; j < tabelData.at(i).size(); ++j)
-        {
-            float x_pos = x + (j * cell_width) + 2;                 // Add some padding
-            float y_pos = y - (i * cell_height) - cell_height + 2;  // Add some padding
-
-            if (hasFirstRow && 0 == i)
-            {
-                HPDF_Page_SetFontAndSize(page, font, TABLE_CONTENT_FONT_SIZE + 3);
-                HPDF_Page_BeginText(page);
-                HPDF_Page_TextOut(page, x_pos, y_pos, tabelData[i][j].toLocal8Bit());
-                HPDF_Page_EndText(page);
-                HPDF_Page_SetFontAndSize(page, font, TABLE_CONTENT_FONT_SIZE);
-            }
-            else
-            {
-                HPDF_Page_BeginText(page);
-                HPDF_Page_TextOut(page, x_pos, y_pos, tabelData[i][j].toLocal8Bit());
-                HPDF_Page_EndText(page);
-            }
-        }
-    }
-}
-
-static void makeTableTitle(HPDF_Page page, HPDF_Font font, const QString &tableTitle, bool emptyTable = false)
+static void makeTableTitle(HPDF_Page page,
+                           HPDF_Font font,
+                           const QString &tableTitle,
+                           bool emptyTable = false)
 {
     // 获取页面宽度和高度
     float pageWidth = HPDF_Page_GetWidth(page);
