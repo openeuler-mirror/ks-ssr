@@ -1,0 +1,633 @@
+/**
+ * Copyright (c) 2024 ~ 2025 KylinSec Co., Ltd.
+ * ks-ssr is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
+ */
+
+#include <libdnf/libdnf.h>
+
+#include "config.h"
+
+// 在同时引用 glib 头文件和 QObject 时， 注意 QObject 得在 glib 之后包含， 不然会出现编译错误。
+#include <qt5-log-i.h>
+#include <ssr-i.h>
+#include <QDir>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QProcess>
+#include <QString>
+#include <atomic>
+
+#include "dnf-context.h"
+#include "dnf-package-advisory.h"
+#include "dnf-package.h"
+#include "dnf-repo.h"
+
+KS::Vulnerability::PackageManager::DnfContext* KS::Vulnerability::PackageManager::DnfContext::m_dnfCtxManager = nullptr;
+
+typedef void (*percentageChangedCBType)(DnfState*, uint);
+typedef void (*actionChangedTypeCBType)(DnfState*, DnfStateAction, const char*);
+typedef void (*allowCancelChangedCBType)(DnfState*, bool);
+typedef void (*packageProgressChangedCBType)(DnfState*, const gchar*, DnfStateAction, guint);
+typedef void (*dnfCacheInvalidateCBType)(DnfContext*, const gchar*);
+
+#define HOLD_CACHE()        \
+    SCOPE_EXIT(             \
+        {                   \
+            releaseCache(); \
+        });                 \
+    holdCache();
+
+namespace KS
+{
+namespace Vulnerability
+{
+namespace PackageManager
+{
+DnfContext::
+    DnfContext()
+    : m_dnfCtx(dnf_context_new()),
+      m_dnfSack(nullptr),
+      m_cacheStatus(cacheStatus::CACHE_AVAILABLE),
+      m_cacheNeedUpdate(0),
+      m_installState(nullptr),
+      m_installCancellable(nullptr),
+      m_isCancel(false),
+      m_installFinishedWithCancel(false)
+{
+    dnf_context_set_cache_dir(m_dnfCtx, DNF_CACHE_DIR);
+    dnf_context_set_solv_dir(m_dnfCtx, DNF_SOLV_DIR);
+    dnf_context_set_repo_dir(m_dnfCtx, DNF_REPO_DIR);
+    dnf_context_set_rpm_verbosity(m_dnfCtx, "info");
+    g_autoptr(GError) error = nullptr;
+    if (!dnf_context_setup(m_dnfCtx, nullptr, &error))
+    {
+        KLOG_ERROR() << "Failed to init dnf context! error message: " << error->message;
+        return;
+    }
+    g_clear_error(&error);
+
+    getCveInfo();
+
+    auto dnfCacheInvalidateCB = [](::DnfContext* context, const gchar* message)
+    {
+        Q_UNUSED(context);
+        KLOG_DEBUG() << "cache invalidate, because " << message;
+        emit m_dnfCtxManager->cacheInvalidate();
+    };
+    g_signal_connect(m_dnfCtx, "invalidate",
+                     G_CALLBACK((dnfCacheInvalidateCBType)dnfCacheInvalidateCB), nullptr);
+
+    QObject::connect(this, &DnfContext::cacheInvalidate, &DnfContext::updateCache);
+    updateCache();
+}
+
+DnfContext::~DnfContext()
+{
+    g_object_unref(m_dnfCtx);
+    g_object_unref(m_dnfSack);
+}
+
+void DnfContext::globalInit()
+{
+    if (m_dnfCtxManager)
+    {
+        return;
+    }
+    m_dnfCtxManager = new DnfContext();
+}
+
+void DnfContext::globalDeinit()
+{
+    delete m_dnfCtxManager;
+}
+
+QList<DnfRepo> DnfContext::getRepos()
+{
+    QList<DnfRepo> ret{};
+    g_autoptr(DnfRepoLoader) repoLoader = dnf_repo_loader_new(m_dnfCtx);
+    g_autoptr(GError) error = nullptr;
+    auto repos = dnf_repo_loader_get_repos(repoLoader, &error);
+    if (!repos)
+    {
+        KLOG_ERROR() << "Failed to get repos! error message:" << error->message;
+        return ret;
+    }
+    for (uint i = 0; i < repos->len; i++)
+    {
+        auto repo = static_cast<::DnfRepo*>(g_ptr_array_index(repos, i));
+        ret.append(DnfRepo{repo});
+    }
+    g_ptr_array_free(repos, FALSE);
+    return ret;
+}
+
+DnfRepo DnfContext::getRepoById(const QString& id)
+{
+    g_autoptr(DnfRepoLoader) repoLoader = dnf_repo_loader_new(m_dnfCtx);
+    ::DnfRepo* repo = nullptr;
+    g_autoptr(GError) error = nullptr;
+    if ((repo = dnf_repo_loader_get_repo_by_id(repoLoader, id.toLatin1().data(), &error)))
+    {
+        KLOG_ERROR() << "Failed get repo from repoId " << id
+                     << ", error message: " << error->message;
+    }
+    return DnfRepo(repo);
+}
+
+QList<DnfPackage> DnfContext::getPackagesFromRepo(DnfRepo& dnfRepo)
+{
+    HOLD_CACHE();
+    QList<DnfPackage> ret{};
+    HyQuery hyQuery = hy_query_create(m_dnfSack);
+    if (!hy_query_filter(hyQuery, HY_PKG_REPONAME, HY_EQ, dnfRepo.dnfRepoGetId().toLatin1().data()))
+    {
+        KLOG_WARNING() << "Failed to add repo query filter: " << dnfRepo.dnfRepoGetId();
+    }
+    // 过滤出适配本机架构的包
+    if (!hy_query_filter_in(hyQuery, HY_PKG_ARCH, HY_EQ, dnf_context_get_native_arches(m_dnfCtx)))
+    {
+        KLOG_WARNING() << "Failed to add arch query filter: " << dnfRepo.dnfRepoGetId();
+    }
+    g_autoptr(GPtrArray) pkgList = hy_query_run(hyQuery);
+    for (uint i = 0; i < pkgList->len; i++)
+    {
+        g_autoptr(DnfPackage) pkg = (::DnfPackage*)g_ptr_array_index(pkgList, i);
+        ret.append(DnfPackage{pkg});
+    }
+    hy_query_free(hyQuery);
+    return ret;
+}
+
+QList<DnfPackage> DnfContext::getInstalledPackages()
+{
+    HOLD_CACHE();
+    QList<DnfPackage> ret{};
+    int dnfError = -1;
+    HyQuery hyQuery = hy_query_create(m_dnfSack);
+    if ((dnfError = hy_query_filter(hyQuery, HY_PKG_REPONAME, HY_EQ, HY_SYSTEM_REPO_NAME)))
+    {
+        KLOG_WARNING() << "Failed to add repo query filter: " << HY_SYSTEM_REPO_NAME << ", dnf Error number: " << dnfError;
+    }
+    GPtrArray* pkgList = hy_query_run(hyQuery);
+    for (uint i = 0; i < pkgList->len; i++)
+    {
+        g_autoptr(DnfPackage) pkg = (::DnfPackage*)g_ptr_array_index(pkgList, i);
+        ret.append(DnfPackage{pkg});
+    }
+    g_ptr_array_free(pkgList, FALSE);
+    hy_query_free(hyQuery);
+    return ret;
+}
+
+QList<DnfPackage> DnfContext::getUpgradesPackages()
+{
+    HOLD_CACHE();
+    QList<DnfPackage> ret{};
+    HyQuery hyQuery = hy_query_create(m_dnfSack);
+    hy_query_filter_upgrades(hyQuery, TRUE);
+    GPtrArray* pkgList = hy_query_run(hyQuery);
+    for (uint i = 0; i < pkgList->len; i++)
+    {
+        g_autoptr(DnfPackage) pkg = (::DnfPackage*)g_ptr_array_index(pkgList, i);
+        ret.append(DnfPackage{pkg});
+    }
+    g_ptr_array_free(pkgList, FALSE);
+    hy_query_free(hyQuery);
+    return ret;
+}
+
+QList<DnfPackage> DnfContext::getLatestPackagesWithCveIds(const QStringList& cveIds)
+{
+    HOLD_CACHE();
+    QList<DnfPackage> ret{};
+    int dnfError{0};
+    HyQuery hyQuery = hy_query_create(m_dnfSack);
+    // hy_query_filter_in 需要传入二级指针， QString 需要先转换为 byteArray 再转成 char*
+    // 为了防止出现指针指向临时变量， 所以先转成 std::string.
+    std::vector<std::string> cveIdStdLists(cveIds.size());
+    const char** cveIdsPtr = (const char**)malloc((cveIds.size() + 1) * sizeof(char*));
+    auto cveIdsPtrIt = cveIdsPtr;
+    for (int i = 0; i < cveIds.size(); i++)
+    {
+        cveIdStdLists[i] = cveIds[i].toStdString();
+        *cveIdsPtrIt++ = cveIdStdLists[i].c_str();
+    }
+    *cveIdsPtrIt = nullptr;
+    if ((dnfError = hy_query_filter_in(hyQuery, HY_PKG_ADVISORY_CVE, HY_EQ, cveIdsPtr)))
+    // if ((dnfError = hy_query_filter(hyQuery, HY_PKG_ADVISORY_CVE, HY_EQ, cveId.toLocal8Bit().data())))
+    {
+        KLOG_WARNING() << "Failed to add advisory cve query filter, dnf Error number: " << dnfError;
+        dnfError = 0;
+    }
+    hy_query_filter_upgrades(hyQuery, TRUE);
+    hy_query_filter_latest_per_arch(hyQuery, TRUE);
+    GPtrArray* pkgList = hy_query_run(hyQuery);
+    for (uint i = 0; i < pkgList->len; i++)
+    {
+        g_autoptr(DnfPackage) pkg = (::DnfPackage*)g_ptr_array_index(pkgList, i);
+        ret.append(DnfPackage(pkg));
+    }
+    g_ptr_array_free(pkgList, FALSE);
+    hy_query_free(hyQuery);
+    free(cveIdsPtr);
+    return ret;
+}
+
+QList<QString> DnfContext::getHostArches()
+{
+    QList<QString> ret{};
+    auto arches = dnf_context_get_native_arches(m_dnfCtx);
+    if (!arches)
+    {
+        KLOG_ERROR() << "Failed to get host arches!";
+        return ret;
+    }
+    for (; *arches; arches++)
+    {
+        ret.append(*arches);
+    }
+    return ret;
+}
+
+UpdatePackageResult DnfContext::installPackages(QList<DnfPackage>& pkgList)
+{
+    HOLD_CACHE();
+    if (!pkgList.size())
+    {
+        return {QObject::tr("Nothing to repair"), false};
+    }
+    m_installFinishedWithCancel = false;
+    m_installCancellable = g_cancellable_new();
+    m_installState.store(dnf_state_new(), std::memory_order::memory_order_release);
+    g_autoptr(DnfState) trState = m_installState.load(std::memory_order::memory_order_relaxed);
+    g_autoptr(GCancellable) cancellable = m_installCancellable;
+    g_autoptr(GError) error = nullptr;
+    dnf_state_set_cancellable(trState, cancellable);
+    auto goal = QSharedPointer<typename std::remove_pointer<HyGoal>::type>(hy_goal_create(pkgList.first().getDnfSack()), &hy_goal_free);
+    g_autoptr(DnfTransaction) transaction = dnf_transaction_new(m_dnfCtx);
+    dnf_transaction_set_repos(transaction, dnf_context_get_repos(m_dnfCtx));
+
+    auto percentageChangedCB = [](DnfState*, uint percentage)
+    {
+        KLOG_DEBUG() << "percentage" << percentage;
+        emit m_dnfCtxManager->installPercentageChanged(percentage);
+    };
+
+    auto actionChangedTypeCB = [](DnfState*, DnfStateAction action, const char* actionHint)
+    {
+        KLOG_DEBUG() << "action: " << m_dnfCtxManager->dnfStateActionWrapper(action)
+                     << " actionHint: " << actionHint;
+        emit m_dnfCtxManager->installActionChanged(m_dnfCtxManager->dnfStateActionWrapper(action), QString(actionHint));
+    };
+
+    auto allowCancelChangedCB = [](DnfState* state, bool isAllowCancel)
+    {
+        KLOG_DEBUG() << "allow Cancel changed, isAllowCancel: " << isAllowCancel;
+        bool cancel = true;
+        bool notCancel = false;
+        if (isAllowCancel &&
+            m_dnfCtxManager->m_isCancel.compare_exchange_strong(cancel,
+                                                                notCancel,
+                                                                std::memory_order::memory_order_release))
+        {
+            g_cancellable_cancel(dnf_state_get_cancellable(state));
+            m_dnfCtxManager->m_installFinishedWithCancel = true;
+            KLOG_DEBUG() << "Cancel Install!";
+        }
+        emit m_dnfCtxManager->installAllowCancelChanged(isAllowCancel);
+    };
+
+    auto packageProgressChangedCB = [](DnfState* state,
+                                       const gchar* dnf_package_get_id,
+                                       DnfStateAction action,
+                                       guint percentage)
+    {
+        KLOG_DEBUG() << "Package id : " << dnf_package_get_id
+                     << "action: " << m_dnfCtxManager->dnfStateActionWrapper(action)
+                     << "percentage: " << percentage;
+        emit m_dnfCtxManager->installPackageProgressChanged(QString(dnf_package_get_id),
+                                                            m_dnfCtxManager->dnfStateActionWrapper(action),
+                                                            percentage);
+    };
+
+    g_signal_connect(trState, "percentage-changed",
+                     G_CALLBACK((percentageChangedCBType)percentageChangedCB),
+                     nullptr);
+    g_signal_connect(trState, "action-changed",
+                     G_CALLBACK((actionChangedTypeCBType)actionChangedTypeCB),
+                     nullptr);
+    g_signal_connect(trState, "allow-cancel-changed",
+                     G_CALLBACK((allowCancelChangedCBType)allowCancelChangedCB),
+                     nullptr);
+    g_signal_connect(trState, "package-progress-changed",
+                     G_CALLBACK((packageProgressChangedCBType)packageProgressChangedCB),
+                     nullptr);
+
+    if (!dnf_state_set_steps(trState, &error,
+                             5,  /* depsolve */
+                             10, /* download */
+                             85, /* commit else */
+                             -1))
+    {
+        KLOG_ERROR() << "Failed to init transaction state! error message: " << error->message;
+        return {error->message, false};
+    }
+
+    for (auto& pkg : pkgList)
+    {
+        hy_goal_install(goal.data(), pkg.getDnfPackage());
+    }
+    dnf_transaction_set_flags(transaction, DNF_TRANSACTION_FLAG_NONE);
+    // 开始之前确认任务是否取消。
+    allowCancelChangedCB(trState, true);
+    dnf_state_set_allow_cancel(trState, false);
+    KLOG_DEBUG() << "Depsolve started";
+    if (!dnf_transaction_depsolve(transaction, goal.data(),
+                                  dnf_state_get_child(trState), &error) ||
+        !dnf_state_done(trState, &error))
+    {
+        KLOG_ERROR() << "Failed to solve dep, error message: " << error->message;
+        return {error->message, false};
+    }
+    KLOG_DEBUG() << "Depsolve finished";
+    dnf_state_set_allow_cancel(trState, true);
+
+    KLOG_DEBUG() << "Download started";
+    if (!dnf_transaction_download(transaction,
+                                  dnf_state_get_child(trState), &error) ||
+        !dnf_state_done(trState, &error))
+    {
+        KLOG_ERROR() << "Failed to download, error message: " << error->message;
+        return {error->message, false};
+    }
+    KLOG_DEBUG() << "Download finished";
+    dnf_state_set_allow_cancel(trState, true);
+
+    KLOG_DEBUG() << "Commit started";
+    if (!dnf_transaction_commit(transaction, goal.data(),
+                                dnf_state_get_child(trState), &error) ||
+        !dnf_state_done(trState, &error))
+    {
+        KLOG_ERROR() << "Failed to commit, error message: " << error->message;
+        return {error->message, false};
+    }
+    KLOG_DEBUG() << "Commit finished";
+    // emit cacheInvalidate();
+    return {"", true};
+}
+
+void DnfContext::initSack()
+{
+    KLOG_DEBUG() << "init Sack";
+    if (m_dnfSack)
+    {
+        g_object_unref(m_dnfSack);
+    }
+    g_autoptr(GError) error = nullptr;
+    GPtrArray* repos = nullptr;
+    m_dnfSack = dnf_sack_new();
+    dnf_sack_set_cachedir(m_dnfSack, dnf_context_get_solv_dir(m_dnfCtx));
+    dnf_sack_set_rootdir(m_dnfSack, dnf_context_get_install_root(m_dnfCtx));
+    if (!dnf_sack_setup(m_dnfSack, DNF_SACK_SETUP_FLAG_NONE, &error))
+    {
+        KLOG_ERROR() << "Failed to init sack! error message: " << error->message;
+        return;
+    }
+    if (!(repos = dnf_repo_loader_get_repos(dnf_context_get_repo_loader(m_dnfCtx), &error)))
+    {
+        KLOG_ERROR() << "Failed to get repos! error message: " << error->message;
+    }
+    for (uint i = 0; i < repos->len; i++)
+    {
+        auto dnfState = dnf_state_new();
+        auto repo = (::DnfRepo*)g_ptr_array_index(repos, i);
+        g_clear_error(&error);
+        if (!dnf_sack_add_repo(m_dnfSack, repo, 0,
+                               static_cast<DnfSackAddFlags>(DNF_SACK_ADD_FLAG_NONE | DNF_SACK_ADD_FLAG_FILELISTS | DNF_SACK_ADD_FLAG_UPDATEINFO),
+                               dnfState,
+                               &error))
+        {
+            KLOG_ERROR() << "Failed to load repo" << dnf_repo_get_id(repo)
+                         << "error message: " << error->message;
+            continue;
+        }
+        KLOG_DEBUG() << "Load repo: " << dnf_repo_get_id(repo);
+        g_object_unref(dnfState);
+    }
+    g_ptr_array_unref(repos);
+    g_clear_error(&error);
+    if (!dnf_sack_load_system_repo(m_dnfSack, NULL,
+                                   DNF_SACK_LOAD_FLAG_BUILD_CACHE,
+                                   &error))
+    {
+        KLOG_ERROR() << "Failed to load system repo! error message: " << error->message;
+    }
+}
+
+void DnfContext::getCveInfo()
+{
+    QString cveInfoCacheDir(CVE_INFO_CACHE_DIR);
+    QDir dir(cveInfoCacheDir);
+    if (!dir.exists())
+    {
+        if (!dir.mkdir(cveInfoCacheDir))
+        {
+            KLOG_ERROR() << "Failed to make cve info cache dir: " << cveInfoCacheDir;
+        }
+    }
+
+    g_autoptr(GError) error = nullptr;
+    // 获取所有的 cves.json
+    auto repos = getRepos();
+    for (auto& repo : repos)
+    {
+        auto libRepoHandle = dnf_repo_get_lr_handle(repo.getDnfRepo());
+        char** baseUrl = nullptr;
+        if (!lr_handle_getinfo(libRepoHandle, &error, LRI_URLS, &baseUrl))
+        {
+            KLOG_ERROR() << "Failed to get repo:" << repo.dnfRepoGetId() << " base url! error message: " << error->message;
+            g_clear_error(&error);
+            continue;
+        }
+        if (!baseUrl)
+        {
+            KLOG_ERROR() << "Failed to get repo:" << repo.dnfRepoGetId() << " base url!";
+            continue;
+        }
+        auto baseUrlForFree = baseUrl;
+        while (*baseUrl)
+        {
+            auto ret = QProcess::execute("curl", QStringList{"-f", "-o",
+                                                             (cveInfoCacheDir + "/%1-cves.json").arg(repo.dnfRepoGetId()),
+                                                             *baseUrl + QString("//repodata/cves.json")});
+            if (ret)
+            {
+                KLOG_WARNING() << "Failed to get cve info from repo: " << repo.dnfRepoGetId();
+            }
+            else
+            {
+                KLOG_INFO() << "Get cve infos from repo: " << repo.dnfRepoGetId();
+            }
+            baseUrl++;
+        }
+        g_strfreev(baseUrlForFree);
+    }
+}
+
+void DnfContext::updateCache()
+{
+    SCOPE_EXIT(
+        {
+            m_cacheNeedUpdate.fetch_sub(1);
+        });
+    KLOG_DEBUG() << "updateCache!";
+    m_cacheNeedUpdate.fetch_add(1);
+    // 如果此时缓存状态不为非法， 则修改其为非法。
+    if (m_cacheStatus.load(std::memory_order::memory_order_relaxed) >= cacheStatus::CACHE_AVAILABLE)
+    {
+        int expect = cacheStatus::CACHE_AVAILABLE;
+        // 如果缓存状态为 using 时， 等待其修改为 valid。
+        while (m_cacheStatus.compare_exchange_weak(expect, cacheStatus::CACHE_UNAVAILABLE))
+        {
+            expect = cacheStatus::CACHE_AVAILABLE;
+            // 如果有其他线程将缓存状态修改为 invalid， 则不再尝试将其修改为 invalid。
+            if (m_cacheStatus.load(std::memory_order::memory_order_relaxed) <= cacheStatus::CACHE_UNAVAILABLE)
+            {
+                break;
+            }
+        }
+    }
+
+    int expect = cacheStatus::CACHE_UNAVAILABLE;
+    // 如果当前缓存状态为 invalid 时， 则表明当前没有线程正在更新缓存， 所以当前线程来负责更新缓存， 并登记。
+    if (m_cacheStatus.compare_exchange_strong(expect, cacheStatus::CACHE_UNAVAILABLE - 1))
+    {
+        initSack();
+    }
+    else
+    {
+        // 此时有其他线程正在更新缓存， 登记即可, 有其他线程负责更新缓存。
+        m_cacheStatus.fetch_sub(1);
+        return;
+    }
+    // 登记当前更新缓存任务数量
+
+    int afterUpdateExpect = cacheStatus::CACHE_UNAVAILABLE - 1;
+    // 如果完成更新缓存之后没有其他线程登记缓存状态， 则将其设置为合法， 否则设置清空缓存登记， 并重新更新缓存。
+    if (!m_cacheStatus.compare_exchange_strong(afterUpdateExpect, cacheStatus::CACHE_AVAILABLE))
+    {
+        m_cacheStatus.store(cacheStatus::CACHE_UNAVAILABLE);
+        updateCache();
+    }
+}
+
+InstallPackageAction DnfContext::dnfStateActionWrapper(int action)
+{
+    InstallPackageAction _action;
+    switch (action)
+    {
+    case DNF_STATE_ACTION_UNKNOWN:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_UNKNOWN;
+        break;
+    case DNF_STATE_ACTION_DOWNLOAD_PACKAGES:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_DOWNLOAD_PACKAGES;
+        break;
+    case DNF_STATE_ACTION_DOWNLOAD_METADATA:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_DOWNLOAD_METADATA;
+        break;
+    case DNF_STATE_ACTION_LOADING_CACHE:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_LOADING_CACHE;
+        break;
+    case DNF_STATE_ACTION_TEST_COMMIT:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_TEST_COMMIT;
+        break;
+    case DNF_STATE_ACTION_REQUEST:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_REQUEST;
+        break;
+    case DNF_STATE_ACTION_REMOVE:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_REMOVE;
+        break;
+    case DNF_STATE_ACTION_INSTALL:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_INSTALL;
+        break;
+    case DNF_STATE_ACTION_UPDATE:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_UPDATE;
+        break;
+    case DNF_STATE_ACTION_CLEANUP:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_CLEANUP;
+        break;
+    case DNF_STATE_ACTION_OBSOLETE:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_OBSOLETE;
+        break;
+    case DNF_STATE_ACTION_REINSTALL:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_REINSTALL;
+        break;
+    case DNF_STATE_ACTION_DOWNGRADE:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_DOWNGRADE;
+        break;
+    case DNF_STATE_ACTION_QUERY:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_QUERY;
+        break;
+    case DNF_STATE_ACTION_LAST:
+        _action = InstallPackageAction::INSTALLPACKAGEACTION_LAST;
+        break;
+    default:
+        break;
+    }
+    return _action;
+}
+
+bool DnfContext::installFinishedWithCancel()
+{
+    return m_installFinishedWithCancel;
+}
+
+void DnfContext::cancelInstall()
+{
+    KLOG_DEBUG() << "Cancel install!";
+    // 如果当前不能取消， 则延迟
+    if (m_installState.load(std::memory_order::memory_order_relaxed) &&
+        dnf_state_get_allow_cancel(m_installState.load(std::memory_order::memory_order_relaxed)))
+    {
+        g_cancellable_cancel(m_installCancellable);
+    }
+    m_isCancel.store(true, std::memory_order::memory_order_release);
+}
+
+void DnfContext::holdCache()
+{
+    // 如果缓存被标记为需要更新， 则在这里阻塞。
+    while (m_cacheNeedUpdate.load(std::memory_order_consume))
+    {
+        usleep(500 * 1000);
+    }
+    int cacheAvailableExpect = cacheStatus::CACHE_AVAILABLE;
+    // 在缓存可用的情况下， 如果 m_cacheStatus 为 AVAILABLE， 则将其修改为 USING， 如果为 USING 则加一， 实现递归锁的效果。
+    if (!m_cacheStatus.compare_exchange_strong(cacheAvailableExpect, cacheStatus::CACHE_USING, std::memory_order::memory_order_release))
+    {
+        m_cacheStatus.fetch_add(1);
+    }
+}
+
+void DnfContext::releaseCache()
+{
+    int expect = cacheStatus::CACHE_USING;
+    // 如果 m_cacheStatus 为 USING, 则设置为 CACHE_AVAILABLE， 否则减一
+    if (!m_cacheStatus.compare_exchange_strong(expect, cacheStatus::CACHE_AVAILABLE, std::memory_order::memory_order_release))
+    {
+        m_cacheStatus.fetch_sub(1);
+    }
+}
+
+}  // namespace PackageManager
+}  // namespace Vulnerability
+}  // namespace KS
