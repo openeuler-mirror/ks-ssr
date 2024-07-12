@@ -35,7 +35,6 @@ UdevDevice::UdevDevice(const UdevDevice& device)
 
 UdevDevice::UdevDevice(const QString& syspath)
 {
-#pragma message("todo")
     m_device = udev_device_new_from_syspath(udev, syspath.toLatin1().data());
 }
 
