@@ -19,7 +19,7 @@
 
 template <typename T>
 class QList;
-class udev;
+struct udev;
 class udev_enumerate;
 
 namespace KS
