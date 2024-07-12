@@ -288,7 +288,7 @@ class BaseFileLock(object):
                 self._lock_counter = max(0, self._lock_counter - 1)
 
             raise
-        return _Acquire_ReturnProxy(lock = self)
+        return AcquireReturnProxy(lock = self)
 
     def release(self, force = False):
         """
