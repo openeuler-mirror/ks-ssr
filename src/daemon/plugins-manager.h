@@ -22,7 +22,7 @@ class QSettings;
 
 namespace KS
 {
-class PluginInfo;
+struct PluginInfo;
 
 class PluginsManager : public QObject
 {
