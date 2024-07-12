@@ -32,14 +32,14 @@ public:
     UserEntity(QWidget *parent = nullptr);
     virtual ~UserEntity(){};
 
-    virtual void init();
+    virtual void init() override;
     // 显示修改密码界面
-    virtual void showPasswordModification();
+    virtual void showPasswordModification() override;
     // 显示登录界面
-    virtual void showLogin();
+    virtual void showLogin() override;
     // 退出用户
-    virtual bool logout();
-    virtual QString getCurrentUserName() const;
+    virtual bool logout() override;
+    virtual QString getCurrentUserName() const override;
 
 private slots:
     void acceptedLogin();
