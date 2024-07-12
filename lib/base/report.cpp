@@ -312,7 +312,7 @@ static void makeTablePage(HPDF_Doc pdf,
 
         // 获取页面宽度和高度
         //        float pageWidth = HPDF_Page_GetWidth(page);
-        //        float page_height = HPDF_Page_GetHeight(page);
+        //        float pageHeight = HPDF_Page_GetHeight(page);
         //        float table_width = pageWidth - CONTENT_MARGIN * 2;
 
         if (tabelData.isEmpty())
