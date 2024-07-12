@@ -226,7 +226,6 @@ QList<DnfPackage> DnfContext::getLatestPackagesWithCveIds(const QStringList& cve
     // if ((dnfError = hy_query_filter(hyQuery, HY_PKG_ADVISORY_CVE, HY_EQ, cveId.toLocal8Bit().data())))
     {
         KLOG_WARNING() << "Failed to add advisory cve query filter, dnf Error number: " << dnfError;
-        dnfError = 0;
     }
     hy_query_filter_upgrades(hyQuery, TRUE);
     hy_query_filter_latest_per_arch(hyQuery, TRUE);
