@@ -342,10 +342,10 @@ static void makeTablePage(HPDF_Doc pdf,
 
             for (int col = 0; col < curRowData.size(); col++)
             {
-                WrappedTextResult wrapped_text = wrap_text(page, curRowData[col], font, TABLE_CONTENT_FONT_SIZE, colWidth[col] - 4);
-                if (wrapped_text.total_height > rowHeight)
+                WrappedTextResult wrappedText = wrapText(page, curRowData[col], font, TABLE_CONTENT_FONT_SIZE, colWidth[col] - 4);
+                if (wrappedText.totalHeight > rowHeight)
                 {
-                    rowHeight = wrapped_text.total_height;
+                    rowHeight = wrappedText.totalHeight;
                 }
             }
 
