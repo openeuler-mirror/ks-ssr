@@ -127,13 +127,13 @@ bool KV::set(const QString &key, const QString &value)
 
     for (const auto &line : lines)
     {
-        QVector<QString> fields;
-
         // 注释行判断需要包括前面的空白字符
 
         // 不包含以空白字符开头的行，例如/etc/logrotate.conf中rotate可能有多个，有些是以空白字符开头
         if (line.size() > 0 && !isspace(line.at(0).toLatin1()))
         {
+            QVector<QString> fields;
+
             bool is_comment = StrUtils::startswith(line, this->comment_);
             if (is_comment)
             {
