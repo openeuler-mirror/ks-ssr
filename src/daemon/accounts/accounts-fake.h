@@ -26,10 +26,10 @@ public:
     AccountsFake(QObject *parent = nullptr);
     virtual ~AccountsFake(){};
 
-    virtual AccountRole getRole(const QString &dbusUniqueName) const;
-    virtual AccountRole getRole(pid_t dbusPid) const;
-    virtual QString getUserName(const QString &dbusUniqueName) const;
-    virtual QString getUserName(pid_t dbusPid) const;
+    virtual AccountRole getRole(const QString &dbusUniqueName) const override;
+    virtual AccountRole getRole(pid_t dbusPid) const override;
+    virtual QString getUserName(const QString &dbusUniqueName) const override;
+    virtual QString getUserName(pid_t dbusPid) const override;
 };
 
 }  // namespace KS
