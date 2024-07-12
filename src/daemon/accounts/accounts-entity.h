@@ -116,7 +116,7 @@ public:  // PROPERTIES
         return it->name;
     }
 
-    virtual QString getUserName(pid_t dbusPid) const
+    virtual QString getUserName(pid_t dbusPid) const override
     {
         QReadLocker locker(&m_clientMutex);
         for (const auto& client : m_clients)
