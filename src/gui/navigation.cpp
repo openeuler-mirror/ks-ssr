@@ -63,16 +63,19 @@ NavigationItem::NavigationItem(NavigationIndex index,
 
 Navigation::Navigation(QWidget *parent)
     : QWidget(parent),
-      m_navigationItemsInfo({{NavigationIndex::REMOTE_MANAGEMENT, ":/images/remote-manager", tr("Remote Manager")},
-                             {NavigationIndex::BASE_REINFORCEMENT, ":/images/baseline-reinforcement", tr("Baseline reinforcement")},
-                             {NavigationIndex::VULNERABILITY, ":/images/vulnerability-fix", tr("Vulnerability Fix")},
-                             {NavigationIndex::TRUST_PROTECTION, ":/images/trusted-protected", tr("Trusted protected")},
-                             {NavigationIndex::FILE_PROTECTION, ":/images/file-protected", tr("File protected")},
-                             {NavigationIndex::PRIVATE_SAFE_BOX, ":/images/box-manager", tr("Private box")},
-                             {NavigationIndex::DEVICE_MANAGEMENT, ":/images/device", tr("Device management")},
-                             {NavigationIndex::SECURITY_TOOL_BOX, ":/images/tool-box", tr("Tool Box")},
-                             {NavigationIndex::LOG_AUDIT, ":/images/log-audit", tr("Log audit")}})
+      m_navigationItemsInfo({})
 {
+    m_navigationItemsInfo = {
+        {NavigationIndex::REMOTE_MANAGEMENT, ":/images/remote-manager", tr("Remote Manager")},
+        {NavigationIndex::BASE_REINFORCEMENT, ":/images/baseline-reinforcement", tr("Baseline reinforcement")},
+        {NavigationIndex::VULNERABILITY, ":/images/vulnerability-fix", tr("Vulnerability Fix")},
+        {NavigationIndex::TRUST_PROTECTION, ":/images/trusted-protected", tr("Trusted protected")},
+        {NavigationIndex::FILE_PROTECTION, ":/images/file-protected", tr("File protected")},
+        {NavigationIndex::PRIVATE_SAFE_BOX, ":/images/box-manager", tr("Private box")},
+        {NavigationIndex::DEVICE_MANAGEMENT, ":/images/device", tr("Device management")},
+        {NavigationIndex::SECURITY_TOOL_BOX, ":/images/tool-box", tr("Tool Box")},
+        {NavigationIndex::LOG_AUDIT, ":/images/log-audit", tr("Log audit")}};
+
     buildItems();
 }
 
