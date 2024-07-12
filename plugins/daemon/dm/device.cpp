@@ -56,7 +56,7 @@ QString Device::getID() const
     return m_id;
 }
 
-void Device::setID(QString& id)
+void Device::setID(const QString& id)
 {
     m_id = id;
 }
