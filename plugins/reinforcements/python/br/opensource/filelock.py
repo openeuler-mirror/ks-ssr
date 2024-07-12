@@ -112,7 +112,7 @@ class Timeout(TimeoutError):
 # automatically.
 #
 # :seealso: issue #37 (memory leak)
-class _Acquire_ReturnProxy(object):
+class AcquireReturnProxy(object):
 
     def __init__(self, lock):
         self.lock = lock
