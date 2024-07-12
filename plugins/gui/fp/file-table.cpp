@@ -325,12 +325,12 @@ void FilesModel::updateRecord()
     while (jsonData != jsonDataArray.begin())
     {
         jsonData--;
-        auto data = jsonData->toObject();
-        auto a = data.value(KSS_JSON_KEY_DATA_FILE_NAME).toString();
+        auto jsonObj = jsonData->toObject();
+        auto a = jsonObj.value(KSS_JSON_KEY_DATA_FILE_NAME).toString();
         auto fileInfo = FPFileInfo{.selected = false,
-                                   .fileName = data.value(KSS_JSON_KEY_DATA_FILE_NAME).toString(),
-                                   .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
-                                   .addTime = data.value(KSS_JSON_KEY_DATA_ADD_TIME).toString()};
+                                   .fileName = jsonObj.value(KSS_JSON_KEY_DATA_FILE_NAME).toString(),
+                                   .filePath = jsonObj.value(KSS_JSON_KEY_DATA_PATH).toString(),
+                                   .addTime = jsonObj.value(KSS_JSON_KEY_DATA_ADD_TIME).toString()};
         m_filesInfo.push_back(fileInfo);
     }
 
