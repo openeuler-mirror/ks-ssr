@@ -194,7 +194,7 @@ void Progress::adjustWidgetPosition(QWidget* widget)
     {
         p = p->parent();
     }
-    QWidget* topParentWidget = (QWidget*)p;
+    QWidget* topParentWidget = static_cast<QWidget*>(p);
     QRect rect = topParentWidget->geometry();
     widget->move(rect.x() + (rect.width() - widget->width()) / 2,
                  rect.y() + ((rect.height() - widget->height()) / 2));
