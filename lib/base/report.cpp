@@ -37,9 +37,9 @@
 #define TAIL_POS_Y 40               // 页尾Y坐标
 #define TAIL_FONT_SIZE 8            // 页尾字体大小
 
-static void error_handler(HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data)
+static void errorHandler(HPDF_STATUS errorNo, HPDF_STATUS detailNo, void *userData)
 {
-    KLOG_ERROR() << "libharu error: " << error_no << ", detail: " << detail_no;
+    KLOG_ERROR() << "libharu error: " << errorNo << ", detail: " << detailNo;
 }
 
 void addTail(HPDF_Page page, HPDF_Font font)
