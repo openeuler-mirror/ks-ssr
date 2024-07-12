@@ -26,18 +26,18 @@ public:
     UserFake(QWidget *parent = nullptr);
     virtual ~UserFake(){};
 
-    virtual void init(){};
+    virtual void init() override{};
     // 显示修改密码界面
-    virtual void showPasswordModification(){};
+    virtual void showPasswordModification() override{};
     // 显示登录界面
-    virtual void showLogin();
+    virtual void showLogin() override;
     // 退出用户
-    virtual bool logout()
+    virtual bool logout() override
     {
         return true;
     };
     // 获取登录用户
-    virtual QString getCurrentUserName() const;
+    virtual QString getCurrentUserName() const override;
 };
 
 }  // namespace KS
