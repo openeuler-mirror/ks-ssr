@@ -355,42 +355,24 @@ static void makeTablePage(HPDF_Doc pdf,
                 break;
             }
 
-            draw_table(page, font, TABLE_CONTENT_FONT_SIZE, tableX, curY, curRowData, colWidth);
+            drawTable(page, font, TABLE_CONTENT_FONT_SIZE, tableX, curY, curRowData, colWidth);
 
             curY -= rowHeight;
             curRowIndex++;
             totalRows--;
         }
-
-#if 0
-        int rows = TABLE_LINE_PER_PAGE;
-        int cols = tabelData.at(0).size();
-        if (rows >= totalRows)
-        {
-            rows = totalRows;
-        }
-
-        totalRows -= rows;
-
-        float table_width = pageWidth - CONTENT_MARGIN * 2;
-        float table_height = TABLE_LINE_HEIGHT * rows;
-
-        // 画表格
-        draw_table(page, table_x, table_y, table_width, table_height, rows, cols);
-        // 填充表格数据
-        add_table_data(page, font, table_x, table_y, table_width, table_height, rows, cols, tabelData.mid(curRowIndex, rows), hasFirstRow, colWidth);
-
-        hasFirstRow = false;
-        curRowIndex += rows;
-#endif
     } while (totalRows > 0);
 }
 
-QString Report::genReport(const QString &savePath, const QList<QPair<QString, QString>> &homeExtraData, const QString &tableTitle, const QList<QStringList> &tabelData, const QList<uint> &colWidth)
+QString Report::genReport(const QString &savePath,
+                          const QList<QPair<QString, QString>> &homeExtraData,
+                          const QString &tableTitle,
+                          const QList<QStringList> &tabelData,
+                          const QList<uint> &colWidth)
 {
     QString failedReason;
 
-    HPDF_Doc pdf = HPDF_New(error_handler, nullptr);
+    HPDF_Doc pdf = HPDF_New(errorHandler, nullptr);
     if (!pdf)
     {
         failedReason = "Failed to create PDF object";
