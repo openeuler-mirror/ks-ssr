@@ -417,15 +417,15 @@ int Command::getCVEsInfo(const QStringList &name)
         }
 
         QJsonObject jsonObject = value.toObject();
-        QString name = jsonObject["name"].toString();
-        if (name.isEmpty())
+        QString objName = jsonObject["name"].toString();
+        if (objName.isEmpty())
         {
             continue;
         }
-        OutputInfo *pInfo = new OutputInfo(name);
+        OutputInfo *pInfo = new OutputInfo(objName);
         pInfo->secondColumn = getCveLevel(jsonObject["threat_severity"].toInt());
         pInfo->thirdColumn = jsonObject["score"].toString();
-        m_outputInfo[name] = pInfo;
+        m_outputInfo[objName] = pInfo;
     }
     KLOG_INFO() << m_outputInfo.keys();
     return 0;
