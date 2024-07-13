@@ -249,47 +249,47 @@
         <translation>湖南麒麟信安科技股份有限公司。</translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="109"/>
+        <location filename="../../lib/base/report.cpp" line="111"/>
         <source>KylinSec Host Security Reinforcement V1 report</source>
         <translation>麒麟信安主机安全加固V1报告</translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="115"/>
+        <location filename="../../lib/base/report.cpp" line="117"/>
         <source>Information overview</source>
         <translation>信息总览</translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="121"/>
+        <location filename="../../lib/base/report.cpp" line="123"/>
         <source>OS:</source>
         <translation>操作系统:</translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="122"/>
+        <location filename="../../lib/base/report.cpp" line="124"/>
         <source>Host:</source>
         <translation>主机:</translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="125"/>
+        <location filename="../../lib/base/report.cpp" line="127"/>
         <source>kernel version:</source>
         <translation>系统内核版本:</translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="126"/>
+        <location filename="../../lib/base/report.cpp" line="128"/>
         <source>Software active state:</source>
         <translation>软件激活状态:</translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="126"/>
+        <location filename="../../lib/base/report.cpp" line="128"/>
         <source>activated</source>
         <translation>已激活</translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="127"/>
+        <location filename="../../lib/base/report.cpp" line="129"/>
         <source>Export time:</source>
         <translation>导出时间:</translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="218"/>
+        <location filename="../../lib/base/report.cpp" line="169"/>
         <source>No problems were found in this test</source>
         <translation>本次检测没有发现问题</translation>
     </message>
