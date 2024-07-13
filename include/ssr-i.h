@@ -135,7 +135,6 @@ extern "C"
 #define SSR_OFFLINE_INSTALL_TRIGGER "/.ssr_offline_install_trigger"
 #define SSR_OFFLINE_INSTALL_PACKAGE_LIST SSR_VULNERABILITY_INSTALL_DATADIR "/offline-install-packages.txt"
 
-
     enum OsUserType
     {
         USER_TYPE_MANAGER = 0,
