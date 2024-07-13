@@ -102,47 +102,47 @@
 <context>
     <name>KS::Navigation</name>
     <message>
-        <location filename="../../src/gui/navigation.cpp" line="68"/>
+        <location filename="../../src/gui/navigation.cpp" line="69"/>
         <source>Remote Manager</source>
         <translation>远程管理</translation>
     </message>
     <message>
-        <location filename="../../src/gui/navigation.cpp" line="69"/>
+        <location filename="../../src/gui/navigation.cpp" line="70"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../../src/gui/navigation.cpp" line="70"/>
+        <location filename="../../src/gui/navigation.cpp" line="71"/>
         <source>Vulnerability Fix</source>
         <translation>漏洞修复</translation>
     </message>
     <message>
-        <location filename="../../src/gui/navigation.cpp" line="71"/>
+        <location filename="../../src/gui/navigation.cpp" line="72"/>
         <source>Trusted protected</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../../src/gui/navigation.cpp" line="72"/>
+        <location filename="../../src/gui/navigation.cpp" line="73"/>
         <source>File protected</source>
         <translation>文件保护</translation>
     </message>
     <message>
-        <location filename="../../src/gui/navigation.cpp" line="73"/>
+        <location filename="../../src/gui/navigation.cpp" line="74"/>
         <source>Private box</source>
         <translation>私密保险箱</translation>
     </message>
     <message>
-        <location filename="../../src/gui/navigation.cpp" line="74"/>
+        <location filename="../../src/gui/navigation.cpp" line="75"/>
         <source>Device management</source>
         <translation>设备管理</translation>
     </message>
     <message>
-        <location filename="../../src/gui/navigation.cpp" line="75"/>
+        <location filename="../../src/gui/navigation.cpp" line="76"/>
         <source>Tool Box</source>
         <translation>安全工具箱</translation>
     </message>
     <message>
-        <location filename="../../src/gui/navigation.cpp" line="76"/>
+        <location filename="../../src/gui/navigation.cpp" line="77"/>
         <source>Log audit</source>
         <translation>日志审计</translation>
     </message>
