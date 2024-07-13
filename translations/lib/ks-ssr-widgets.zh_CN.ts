@@ -27,12 +27,12 @@
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../lib/widgets/message-dialog.cpp" line="85"/>
+        <location filename="../../lib/widgets/message-dialog.cpp" line="83"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../lib/widgets/message-dialog.cpp" line="98"/>
+        <location filename="../../lib/widgets/message-dialog.cpp" line="96"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
