@@ -100,7 +100,9 @@ void PDFDetails::addLine(const QString &name,
 
     auto nameLabel = new QLabel(line);
     auto scanLabel = new QLabel(line);
-    nameLabel->setObjectName("nameLabel");
+    QPalette palette;
+    palette.setColor(QPalette::WindowText, Qt::black);
+    nameLabel->setPalette(palette);
 
     nameLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
     scanLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
