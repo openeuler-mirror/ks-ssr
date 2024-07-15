@@ -539,68 +539,68 @@
 <context>
     <name>KS::BR::Scan</name>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="97"/>
-        <location filename="../../plugins/gui/br/scan.cpp" line="122"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="96"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="121"/>
         <source>strategy(*.xml)</source>
         <translation>策略文件(*.xml)</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="97"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="96"/>
         <source>export strategy</source>
         <translation>导出策略</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="106"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="105"/>
         <source>Please check the file name and whether you have write permission!</source>
         <translation>请检查文件名以及您是否具有写入权限！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="115"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="114"/>
         <source>Export successed!</source>
         <translation>导出成功！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="115"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="114"/>
         <source>Export failed!</source>
         <translation>导出失败！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="122"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="121"/>
         <source>import strategy</source>
         <translation>导入策略</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="131"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="130"/>
         <source>Open files failed!</source>
         <translation>打开文件失败！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="142"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="141"/>
         <source>Read reinforcements failed</source>
         <translation>读取策略字段失败</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="320"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="317"/>
         <source>Failed to reset arg! Error message:%1</source>
         <translation>重置失败! 错误信息:%1</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="407"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="404"/>
         <source>Listening service stop, return to initial page</source>
         <translation>监听到服务停止，返回初始页面</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="445"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="442"/>
         <source>Please check the reinforcement items to be scanned or reinforcement classification for scanning.</source>
         <translation>请勾选需要扫描的加固项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="460"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="457"/>
         <source>Please check the content to be reinforced.</source>
         <translation>请勾选要加固的项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="515"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="512"/>
         <source>Export succeeded!</source>
         <translation>导出成功！</translation>
     </message>
