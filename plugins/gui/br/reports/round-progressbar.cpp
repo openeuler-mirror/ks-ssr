@@ -104,18 +104,22 @@ void RoundProgressBar::initUI()
     m_percentLabel->setStyleSheet("QLabel{background-color: transparent;}");
 
     m_nameLabel = new QLabel(this);
-    m_nameLabel->setObjectName("m_nameLabel");
     m_nameLabel->setFixedSize(379, 30);
     m_nameLabel->setAlignment(Qt::AlignCenter);
     m_nameLabel->move(0, 180);
     m_nameLabel->setText(m_name);
 
     m_noteLabel = new QLabel(this);
-    m_noteLabel->setObjectName("m_noteLabel");
     m_noteLabel->setFixedSize(379, 20);
     m_noteLabel->setAlignment(Qt::AlignCenter);
     m_noteLabel->move(0, 220);
     m_noteLabel->setText(QString(tr("Total: %1 conform: %2 inconform: %3")).arg(m_total).arg(m_conform).arg(m_inconform));
+
+    QPalette palette;
+    palette.setColor(QPalette::WindowText, Qt::black);
+    m_percentLabel->setPalette(palette);
+    m_nameLabel->setPalette(palette);
+    m_noteLabel->setPalette(palette);
 }
 }  // namespace BR
 }  // namespace KS
