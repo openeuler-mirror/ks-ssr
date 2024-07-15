@@ -15,6 +15,7 @@
 #include "report.h"
 #include <kylin-license/license-i.h>
 #include <QDataStream>
+#include <QDateTime>
 #include <QFile>
 #include <QFileDialog>
 #include <QFrame>
