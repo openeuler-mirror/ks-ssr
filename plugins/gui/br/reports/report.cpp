@@ -56,17 +56,6 @@ QSharedPointer<Report> Report::getDefault()
 void Report::init()
 {
     setWindowModality(Qt::ApplicationModal);
-    // 初始化样式表
-    QFile file(SSR_REPORTS_STYLE_PATH);
-    if (file.open(QIODevice::ReadOnly))
-    {
-        QString windowStyle = file.readAll();
-        setStyleSheet(styleSheet() + windowStyle);
-    }
-    else
-    {
-        KLOG_WARNING() << "Failed to open file " << SSR_REPORTS_STYLE_PATH;
-    }
 }
 
 QString Report::state2Str(int state)
