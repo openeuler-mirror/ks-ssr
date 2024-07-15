@@ -349,20 +349,20 @@ bool Report::createFilesScanResults(QPrinter &printer, const InvalidData &invali
         ++i;
         if (i >= TABLE_MAX_LINE)
         {
-            m_table->addSpacer();
+            m_pdfDetails->addSpacer();
             i = 1;
-            QPixmap page = m_table->grab(m_table->rect());
+            QPixmap page = m_pdfDetails->grab(m_pdfDetails->rect());
             m_painter->drawPixmap(0, 0, page);
             printer.newPage();
 
-            delete m_table;
-            m_table = new PDFDetails(this, is_scan);
+            delete m_pdfDetails;
+            m_pdfDetails = new PDFDetails(this, is_scan);
         }
         showTailFlag = (i >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
         if (i % 2 == 1)
-            m_table->addScanLine(scanFilesList.at(count), scanTypeList.at(count), "-", "#f2f2f2");
+            m_pdfDetails->addScanLine(scanFilesList.at(count), scanTypeList.at(count), "-", "#f2f2f2");
         else
-            m_table->addScanLine(scanFilesList.at(count), scanTypeList.at(count), "-", "#ffffff");
+            m_pdfDetails->addScanLine(scanFilesList.at(count), scanTypeList.at(count), "-", "#ffffff");
     }
 
     return true;
