@@ -264,7 +264,7 @@ border-radius:0px;</string>
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="../../../../resources/resources.qrc">:/images/pdf-end</pixmap>
+    <pixmap>:/images/pdf-end</pixmap>
    </property>
   </widget>
   <widget class="QLabel" name="m_tailBar">
