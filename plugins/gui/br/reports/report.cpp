@@ -30,7 +30,6 @@
 
 #define TABLE_MAX_LINE 28
 #define TABLE_SHOW_TAIL_MAX_LINE 20
-#define SSR_REPORTS_STYLE_PATH ":/styles/br-reports"
 // 初始扫描状态（未扫描）
 #define INI_SCAN_STATUS 4
 
