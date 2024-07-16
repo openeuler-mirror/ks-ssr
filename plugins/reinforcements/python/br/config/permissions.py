@@ -100,10 +100,18 @@ class PermissionSetting:
         return (True, "")
 
     def backup(self):
-        return self.get()
+        retdata = dict()
+        retdata[ST_MODE] = get_mode(self.mode_filelist)
+        return (True, json.dumps(retdata))
 
     def rollback(self, args_json):
-        return self.set(args_json)
+        args = json.loads(args_json)
+        if ST_MODE in args:
+            set_mode(args[ST_MODE])
+        else:
+            return self.set(args_json)
+
+        return (True, '')
 
 
 class DirectoryPermissionSetting:
