@@ -10,6 +10,7 @@ import stat
 import br.utils
 import json
 import br.vars
+import re
 
 if os.path.exists('/etc/logrotate.d/rsyslog'):
     LOGFILE_CONF_FILEPATH = '/etc/logrotate.d/rsyslog'
