@@ -81,10 +81,9 @@ class AuthorityFiles:
         return (True, '')
 
     def backup(self):
-        return self.get()
+        return (True, '')
     def rollback(self, args_json):
-        return self.set(args_json)
-
+        return (True, '')
 
 class SuidSgidFiles:
     def __init__(self):
