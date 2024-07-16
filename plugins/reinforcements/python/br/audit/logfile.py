@@ -27,25 +27,27 @@ EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH | stat.
 
 PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
 PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT = "append-permissions-limit"
+RAW_DATA = "raw-data"
 
 FORMAT_STR = "{0} \"{1}\" {2}"
 GREP_CMD = 'grep -r'
-MESSAGES_FILE_PATH = '/var/log/messages'
+
+MESSAGES_FILE_PATH = ['/var/log/cron', '/var/log/maillog', '/var/log/messages', '/var/log/secure', '/var/log/spooler']
 KS_BR_MANAGER_STR = "### KSBRManager ###"
 
 LOGFILE_ROTETE_CONF = '### KSBRManager ###\n\
-/var/log/messages\n\
-{\n\
+{0}\n\
+{{\n\
     missingok\n\
     sharedscripts\n\
     prerotate\n\
-        sudo /usr/bin/chattr -a /var/log/messages\n\
+        sudo /usr/bin/chattr -a {0}\n\
     endscript\n\
     postrotate\n\
         sudo /usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true\n\
-        sudo /usr/bin/chattr +a /var/log/messages\n\
+        sudo /usr/bin/chattr +a {0}\n\
     endscript\n\
-}\n\
+}}\n\
 ### KSBRManager ###'
 
 
