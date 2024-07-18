@@ -214,7 +214,7 @@ QList<DnfPackage> DnfContext::getLatestPackagesWithCveIds(const QStringList& cve
     // hy_query_filter_in 需要传入二级指针， QString 需要先转换为 byteArray 再转成 char*
     // 为了防止出现指针指向临时变量， 所以先转成 std::string.
     std::vector<std::string> cveIdStdLists(cveIds.size());
-    const char** cveIdsPtr = (const char**)malloc((cveIds.size() + 1) * sizeof(char*));
+    const char** cveIdsPtr = static_cast<const char**>(malloc((cveIds.size() + 1) * sizeof(char*)));
     auto cveIdsPtrIt = cveIdsPtr;
     for (int i = 0; i < cveIds.size(); i++)
     {
