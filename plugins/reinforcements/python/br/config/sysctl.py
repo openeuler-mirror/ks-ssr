@@ -66,11 +66,10 @@ class Dmesg:
 
     def get(self):
         retdata = dict()
-        dmesg_value = self.conf.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)
-        sys_value = self.conf_sys.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)
-        if sys_value:
-            dmesg_value = sys_value
-        retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = "" if not dmesg_value else dmesg_value == "1"
+        dmesg_value = br.utils.subprocess_has_output(
+            "{} -n kernel.dmesg_restrict".format(SYSCTL_PATH)
+        )
+        retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = True if dmesg_value == "1" else False
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
