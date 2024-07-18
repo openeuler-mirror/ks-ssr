@@ -11,32 +11,36 @@ import br.utils
 import json
 import br.vars
 import re
+import base64
 
-if os.path.exists('/etc/logrotate.d/rsyslog'):
-    LOGFILE_CONF_FILEPATH = '/etc/logrotate.d/rsyslog'
+
+if os.path.exists("/etc/logrotate.d/rsyslog"):
+    LOGFILE_CONF_FILEPATH = "/etc/logrotate.d/rsyslog"
 else:
-    LOGFILE_CONF_FILEPATH = '/etc/logrotate.d/syslog'
-
-LOGFILE_INI_FILEPATH = br.vars.SSR_BR_PLUGIN_PYTHON_ROOT_DIR + "/br/audit/logfile.ini"
-LOGFILE_GROUP_PERMISSIONS = "Permissions"
-# LPK: Logfile Permissions Key
-LPK_MODE_FILE_LIST = "ModeFileList"
-LPK_APPEND_FILE_LIST = "AppendFileList"
+    LOGFILE_CONF_FILEPATH = "/etc/logrotate.d/syslog"
 
 EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH | stat.S_IXUSR
 
-PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
-PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT = "append-permissions-limit"
+MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
+APPEND_ATTR_LIMIT = "append-permissions-limit"
 RAW_DATA = "raw-data"
+APPEND_ATTR_DATA = "append-attr-data"
+ST_MODE = "st-mode"
 
-FORMAT_STR = "{0} \"{1}\" {2}"
-GREP_CMD = 'grep -r'
+FORMAT_STR = '{} "{}" {}'
+GREP_CMD = "grep -r"
 
-MESSAGES_FILE_PATH = ['/var/log/cron', '/var/log/maillog', '/var/log/messages', '/var/log/secure', '/var/log/spooler']
-KS_BR_MANAGER_STR = "### KSBRManager ###"
+SYSLOG_PATHS = [
+    "/var/log/cron",
+    "/var/log/maillog",
+    "/var/log/messages",
+    "/var/log/secure",
+    "/var/log/spooler",
+]
 
-LOGFILE_ROTETE_CONF = '### KSBRManager ###\n\
-{0}\n\
+# 轮转前，先去掉追加属性，否则会导致轮转失败
+# 轮转后，加上追加属性
+LOGFILE_ROTETE_CONF = "{0}\n\
 {{\n\
     missingok\n\
     sharedscripts\n\
