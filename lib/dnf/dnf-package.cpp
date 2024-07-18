@@ -139,7 +139,6 @@ const QList<DnfPackageAdvisoryRef>& DnfPackage::getAdvisoriesRef() const
 
 QStringList DnfPackage::getCveIds() const
 {
-    QList<PackageManager::DnfPackageAdvisoryRef> refs;
     QStringList cveIds{};
 
     for (const auto& ref : m_advisoryRef)
