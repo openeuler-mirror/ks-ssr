@@ -5,13 +5,15 @@ import br.configuration
 import br.utils
 import os
 
-SYSCTL_PATH = '/usr/sbin/sysctl'
+SYSCTL_PATH = "/usr/sbin/sysctl"
 # 修改schemas默认值
 SCHEMAS_CONF_FILEPATH = "/usr/share/glib-2.0/schemas/98-br-config.gschema.override"
 RELOAD_SCHEMAS_CMD = "glib-compile-schemas /usr/share/glib-2.0/schemas"
 
-MODIFY_RULE_CLOSE = "[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'\'"
-MODIFY_RULE_OPEN = "[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'<Control><Alt>Delete\'"
+MODIFY_RULE_CLOSE = "[org.mate.SettingsDaemon.plugins.media-keys]\npower=''"
+MODIFY_RULE_OPEN = (
+    "[org.mate.SettingsDaemon.plugins.media-keys]\npower='<Control><Alt>Delete'"
+)
 
 SAK_KEY_SWITCH_CONF_FILE = "/etc/sysctl.d/90-br-config.conf"
 SAK_KEY_SWITCH_CONF_SYS_FILE = "/etc/sysctl.conf"
