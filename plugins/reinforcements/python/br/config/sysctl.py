@@ -119,72 +119,78 @@ class KeyRebootSwitch:
         self.conf = br.configuration.Table(SCHEMAS_CONF_FILEPATH, ",\\s+")
 
     def reload_schemas(self):
-        cmd = '{0}'.format(RELOAD_SCHEMAS_CMD)
+        cmd = "{0}".format(RELOAD_SCHEMAS_CMD)
         br.utils.subprocess_not_output(cmd)
 
     # 判断文件是否存在
     def service_exists(self):
         command = "ls /usr/lib/systemd/system/ |grep -wx ctrl-alt-del.target"
-        cmd = '{0}'.format(command)
+        cmd = "{0}".format(command)
         output = br.utils.subprocess_has_output(cmd)
         return len(output) != 0
 
     def service_status(self):
-        command = '{0} | grep masked'.format(COMPOSITE_KEY_REBOOT_STATUS_CMD)
+        command = "{0} | grep masked".format(COMPOSITE_KEY_REBOOT_STATUS_CMD)
         output = br.utils.subprocess_has_output(command)
         return len(output) == 0
 
     # 判断.bak是否存在
     def status_bak(self):
         command = " ls /usr/lib/systemd/system/ |grep ctrl-alt-del.target.bak"
-        cmd = '{0}'.format(command)
+        cmd = "{0}".format(command)
         output = br.utils.subprocess_has_output(cmd)
         return len(output) != 0
 
     def open(self):
-        command = '{0}'.format(COMPOSITE_KEY_REBOOT_ENABLE_CMD)
+        command = "{0}".format(COMPOSITE_KEY_REBOOT_ENABLE_CMD)
         br.utils.subprocess_not_output(command)
-        rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
+        rm_cmd = "rm -rf {0}".format(SCHEMAS_CONF_FILEPATH)
         br.utils.subprocess_not_output(rm_cmd)
-        self.conf.set_value("1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'\'", MODIFY_RULE_OPEN)
+        self.conf.set_value(
+            "1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=''", MODIFY_RULE_OPEN
+        )
         self.reload_schemas()
 
     def close(self):
-        command = '{0}'.format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
+        command = "{0}".format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
         br.utils.subprocess_not_output(command)
-        rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
+        rm_cmd = "rm -rf {0}".format(SCHEMAS_CONF_FILEPATH)
         br.utils.subprocess_not_output(rm_cmd)
-        self.conf.set_value("1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'<Control><Alt>Delete\'", MODIFY_RULE_CLOSE)
+        self.conf.set_value(
+            "1=[org.mate.SettingsDaemon.plugins.media-keys]\npower='<Control><Alt>Delete'",
+            MODIFY_RULE_CLOSE,
+        )
         self.reload_schemas()
 
     def get(self):
         retdata = dict()
         if self.service_exists():
-            retdata['enabled'] = self.service_status()
+            retdata["enabled"] = self.service_status()
         else:
-            retdata['enabled'] = False
+            retdata["enabled"] = False
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
 
         # 针对3.3-6的处理规则，文件不存在，开关为打开是，将.bak改为ctrl-alt-del.target
-        if args['enabled'] and self.status_bak():
+        if args["enabled"] and self.status_bak():
             command = "mv /usr/lib/systemd/system/ctrl-alt-del.target.bak /usr/lib/systemd/system/ctrl-alt-del.target"
             br.utils.subprocess_not_output(command)
 
-        if args['enabled'] and not self.service_exists():
-            return (False, 'No related services found')
+        if args["enabled"] and not self.service_exists():
+            return (False, "No related services found")
 
         if self.service_exists():
-            if args['enabled']:
+            if args["enabled"]:
                 self.open()
             else:
                 self.close()
 
-        return (True, '')
+        return (True, "")
 
     def backup(self):
         return self.get()
+
     def rollback(self, args_json):
         return self.set(args_json)
