@@ -77,17 +77,40 @@ class Dmesg:
         value = ""
         if str(args[DMESG_SWITCH_CONF_KEY_SYSRQ]):
             value = "1" if bool(args[DMESG_SWITCH_CONF_KEY_SYSRQ]) else "0"
-        
-        self.conf.set_value(DMESG_SWITCH_CONF_KEY_SYSRQ, value)
+
         if len(self.conf_sys.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)) != 0:
             self.conf_sys.set_value(DMESG_SWITCH_CONF_KEY_SYSRQ, value)
-        br.utils.subprocess_not_output('{0} --system'.format(SYSCTL_PATH))
+        self.conf.set_value(DMESG_SWITCH_CONF_KEY_SYSRQ, value)
+        br.utils.subprocess_not_output("{} --system".format(SYSCTL_PATH))
 
-        return (True, '')
+        dmesg_value = br.utils.subprocess_has_output(
+            "{} -n kernel.dmesg_restrict".format(SYSCTL_PATH)
+        )
+        if dmesg_value != value:
+            return (False, 'Not in effect, "kernel.dmesg restrict" is set elsewhere')
+
+        return (True, "")
 
     def backup(self):
-        return self.get()
+        # 记录自定义值
+        retdata = dict()
+
+        value = self.conf.get_value(DMESG_SWITCH_CONF_KEY_SYSRQ)
+        if value == "1":
+            retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = True
+        elif value == "0":
+            retdata[DMESG_SWITCH_CONF_KEY_SYSRQ] = False
+
+        return (True, json.dumps(retdata))
+
     def rollback(self, args_json):
+        args = json.loads(args_json)
+        if DMESG_SWITCH_CONF_KEY_SYSRQ in args:  # 如果存在
+            arg_value = args[DMESG_SWITCH_CONF_KEY_SYSRQ]
+            value = "1" if bool(arg_value) else "0"
+            self.conf.set_value(DMESG_SWITCH_CONF_KEY_SYSRQ, value)
+        else:  # 不存在，删除自定义值
+            self.conf.del_record(DMESG_SWITCH_CONF_KEY_SYSRQ)
         return self.set(args_json)
 
 
