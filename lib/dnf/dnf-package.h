@@ -66,10 +66,10 @@ private:
     void init();
 
 private:
-    ::DnfPackage* m_dnfPackage;
+    ::DnfPackage* m_dnfPackage{nullptr};
     // 在 package 中管理 sack 是因为 ::DnfSack 初始化时并不会对 sack 的引用加一
     // 导致 package 还存在时, sack 已经被析构
-    ::DnfSack* m_dnfSack;
+    ::DnfSack* m_dnfSack{nullptr};
     QList<DnfPackageAdvisory> m_advisories;
     QList<DnfPackageAdvisoryRef> m_advisoryRef;
     QList<DnfPackageAdvisory::DnfAdvisoryPkg> m_upgradesPackages;
