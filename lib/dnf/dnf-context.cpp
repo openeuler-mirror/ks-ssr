@@ -537,7 +537,7 @@ void DnfContext::updateCache()
 
 InstallPackageAction DnfContext::dnfStateActionWrapper(int action)
 {
-    InstallPackageAction _action;
+    InstallPackageAction _action = InstallPackageAction::INSTALLPACKAGEACTION_UNKNOWN;
     switch (action)
     {
     case DNF_STATE_ACTION_UNKNOWN:
