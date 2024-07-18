@@ -62,7 +62,7 @@ public:
     QString dnfRepoGetFilenameMd(const QString&);
 
 private:
-    ::DnfRepo* m_dnfRepo;
+    ::DnfRepo* m_dnfRepo{nullptr};
 };
 }  // namespace PackageManager
 }  // namespace Vulnerability
