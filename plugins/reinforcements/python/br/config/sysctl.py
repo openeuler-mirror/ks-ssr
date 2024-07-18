@@ -28,8 +28,7 @@ COMPOSITE_KEY_REBOOT_ENABLE_CMD = "systemctl   unmask   ctrl-alt-del.target"
 class SAKKey:
     def __init__(self):
         self.conf = br.configuration.KV(SAK_KEY_SWITCH_CONF_FILE, "=", "=")
-        self.conf_sys = br.configuration.KV(
-            SAK_KEY_SWITCH_CONF_SYS_FILE, "=", "=")
+        self.conf_sys = br.configuration.KV(SAK_KEY_SWITCH_CONF_SYS_FILE, "=", "=")
 
     def get(self):
         retdata = dict()
