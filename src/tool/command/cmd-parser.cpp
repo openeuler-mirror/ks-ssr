@@ -146,6 +146,67 @@ int Command::vulnerabilityScan()
     return 0;
 }
 
+int Command::backup(QString directory)
+{
+    moduleVulnerabilityInit();
+    if (!QFileInfo::exists(directory))
+    {
+        std::cout << tr("The backup directory does not exist").toStdString() << std::endl;
+        exit(-1);
+    }
+
+    std::cout << tr("Start backup").toStdString() << std::endl;
+    connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::BackUpProgress, this, &Command::backupProgress);
+    auto reply = m_dbusVulnerabilityProxy->BackUp(directory);
+    reply.waitForFinished();
+    if (reply.isError())
+    {
+        disconnect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::BackUpProgress, nullptr, nullptr);
+        std::cout << tr("BackUp Failure, error message: ").toStdString() << reply.error().message().toStdString() << std::endl;
+        exit(-1);
+    }
+
+    return 0;
+}
+
+int Command::rollback()
+{
+    moduleVulnerabilityInit();
+    auto reply = m_dbusVulnerabilityProxy->GetBackUpInfo();
+    reply.waitForFinished();
+    if (reply.isError())
+    {
+        std::cout << tr("Check backup Failure, error message: ").toStdString() << reply.error().message().toStdString() << std::endl;
+        exit(-1);
+    }
+
+    QJsonObject backupJson = StrUtils::str2jsonObject(reply);
+    QString backupPath = backupJson.value("path").toString();
+    int backupSize = backupJson.value("size").toInt();
+
+    if (backupJson.isEmpty() || backupPath.isEmpty() || 0 == backupSize)
+    {
+        std::cout << tr("Backup data not detected").toStdString() << std::endl;
+        exit(-1);
+    }
+
+    std::cout << tr("Existing backup data:\n").toStdString()
+              << tr("path:").toStdString() << backupPath.toStdString() << "\t" << tr("size:").toStdString() << backupSize << std::endl;
+
+    std::cout << tr("Start rollback").toStdString() << std::endl;
+    connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::RollBackProgress, this, &Command::rollBackProgress);
+    reply = m_dbusVulnerabilityProxy->RollBack();
+    reply.waitForFinished();
+    if (reply.isError())
+    {
+        disconnect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::RollBackProgress, nullptr, nullptr);
+        std::cout << tr("RollBack Failure, error message: ").toStdString() << reply.error().message().toStdString() << std::endl;
+        exit(-1);
+    }
+
+    return 0;
+}
+
 int Command::vulnerabilityRepair(const QStringList &name)
 {
     moduleVulnerabilityInit();
