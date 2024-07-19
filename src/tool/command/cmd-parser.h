@@ -53,6 +53,8 @@ public:
     int brReinforce(const QStringList &name = QStringList());
     int brExport(const QString &filePath);
     int vulnerabilityScan();
+    int backup(QString directory);
+    int rollback();
     int vulnerabilityRepair(const QStringList &name = QStringList());
     int vulnerabilityExport(const QString &filePath);
 
