@@ -593,7 +593,7 @@ which will cause many problems!</source>
         <translation>配置设置</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="336"/>
+        <location filename="../../data/br-system-rs.xml" line="283"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-config.xml" line="10"/>
         <source>Turn on sendmail service</source>
         <translation>开启发送邮件服务</translation>
