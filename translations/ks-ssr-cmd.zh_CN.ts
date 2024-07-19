@@ -318,54 +318,64 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="117"/>
+        <location filename="../src/tool/command/main.cpp" line="118"/>
         <source>This tool is mainly used in non-graphical system scenarios as a command line alternative to ks-ssr-gui.</source>
         <translation>该工具主要用于非图形系统场景下，作为替代ks-ssr-gui的命令行工具。</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="120"/>
+        <location filename="../src/tool/command/main.cpp" line="121"/>
         <source>baseline hardening</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="121"/>
+        <location filename="../src/tool/command/main.cpp" line="122"/>
         <source>vulnerability fixing</source>
         <translation>漏洞修复</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="134"/>
+        <location filename="../src/tool/command/main.cpp" line="135"/>
         <source>One-click scanning</source>
         <translation>一键扫描</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="135"/>
+        <location filename="../src/tool/command/main.cpp" line="136"/>
         <source>name - Specify reinforcement items to be reinforced, multiple reinforcement items are separated by comma; All - One-click reinforcement</source>
         <translation>name - 指定加固项加固，多个加固项用逗号分隔；All - 一键加固</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="137"/>
+        <location filename="../src/tool/command/main.cpp" line="138"/>
+        <source>Backup system data. directory - Input backup save directory</source>
+        <translation>备份系统数据。directory - 传入备份保存路径</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/main.cpp" line="139"/>
+        <source>Rollback system data</source>
+        <translation>系统数据备份回退</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/main.cpp" line="140"/>
         <source>name - specify the vulnerability to fix, multiple vulnerabilities are separated by commas; All - One-click repair</source>
         <translation>name - 指定漏洞修复，多个漏洞用逗号分隔；All - 一键修复</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="139"/>
+        <location filename="../src/tool/command/main.cpp" line="141"/>
+        <source>Export the report. save_path - Input pdf file path</source>
+        <translation>导出报告。save_path - 传入pdf保存路径</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/main.cpp" line="142"/>
         <source>Output results to file</source>
         <translation>输出结果到文件</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="148"/>
+        <location filename="../src/tool/command/main.cpp" line="152"/>
         <source>The current selection is br.</source>
         <translation>当前选择的是基线加固。</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="182"/>
+        <location filename="../src/tool/command/main.cpp" line="186"/>
         <source>The current selection is vulnerability.</source>
         <translation>当前选择的是漏洞修复。</translation>
-    </message>
-    <message>
-        <location filename="../src/tool/command/main.cpp" line="138"/>
-        <source>Export the report. Input pdf file path</source>
-        <translation>导出报表。传入 pdf 文件路径</translation>
     </message>
 </context>
 </TS>
