@@ -195,12 +195,13 @@ int Command::rollback()
 
     std::cout << tr("Start rollback").toStdString() << std::endl;
     connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::RollBackProgress, this, &Command::rollBackProgress);
-    reply = m_dbusVulnerabilityProxy->RollBack();
-    reply.waitForFinished();
-    if (reply.isError())
+
+    auto replyRollBack = m_dbusVulnerabilityProxy->RollBack();
+    replyRollBack.waitForFinished();
+    if (replyRollBack.isError())
     {
         disconnect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::RollBackProgress, nullptr, nullptr);
-        std::cout << tr("RollBack Failure, error message: ").toStdString() << reply.error().message().toStdString() << std::endl;
+        std::cout << tr("RollBack Failure, error message: ").toStdString() << replyRollBack.error().message().toStdString() << std::endl;
         exit(-1);
     }
 
