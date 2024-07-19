@@ -81,6 +81,8 @@ private slots:
     void scanProgress(const QString &progress);
     void repairProgress(const QString &progress);
     void exportReportFinished(const QString &failed_reason);
+    void rollBackProgress(const QString &progress);
+    void backupProgress(const QString &progress);
 
 private:
     bool m_fileOutput;
