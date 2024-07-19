@@ -833,387 +833,357 @@ which will cause many problems!</source>
         <translation>禁止主机被traceroute探测</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="102"/>
-        <source>Turn on system firewall service</source>
-        <translation>开启系统防火墙服务</translation>
-    </message>
-    <message>
-        <location filename="../../data/br-system-rs.xml" line="116"/>
+        <location filename="../../data/br-system-rs.xml" line="103"/>
         <source>transport protocol</source>
         <translation>传输协议</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="129"/>
+        <location filename="../../data/br-system-rs.xml" line="116"/>
         <source>Disable ports that may threaten the system by default</source>
         <translation>默认禁用可能威胁系统的端口</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="142"/>
+        <location filename="../../data/br-system-rs.xml" line="129"/>
         <source>clear iptables configuration</source>
         <translation>清空iptables配置</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="144"/>
+        <location filename="../../data/br-system-rs.xml" line="131"/>
         <source>If this configuration is enabled, all firewall configurations will be cleared, and the firewall rules reinforced this time will not take effect</source>
         <translation>此条配置开启，将清空所有防火墙配置，此次加固防火墙规则不生效</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="153"/>
-        <source>allow network segment (Split with comma)</source>
-        <translation>允许输入网段（逗号分隔）</translation>
-    </message>
-    <message>
-        <location filename="../../data/br-system-rs.xml" line="163"/>
+        <location filename="../../data/br-system-rs.xml" line="140"/>
         <source>disable network segment (Split with comma)</source>
         <translation>禁止输入网段（逗号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="173"/>
-        <source>Opened ports (Split with semicolon)</source>
-        <translation>开放端口（分号分隔）</translation>
-    </message>
-    <message>
-        <location filename="../../data/br-system-rs.xml" line="183"/>
+        <location filename="../../data/br-system-rs.xml" line="150"/>
         <source>disable ports (Split with semicolon)</source>
         <translation>禁用端口（分号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="198"/>
+        <location filename="../../data/br-system-rs.xml" line="165"/>
         <source>Limit input port maximum connections(0 means unlimited)</source>
         <translation>限制输入端口最大连接数（0为不限制）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="208"/>
-        <source>allow output network segment (Split with comma)</source>
-        <translation>允许输出网段（逗号分隔）</translation>
-    </message>
-    <message>
-        <location filename="../../data/br-system-rs.xml" line="218"/>
+        <location filename="../../data/br-system-rs.xml" line="175"/>
         <source>disable output network segment (Split with comma)</source>
         <translation>禁止输出网段（逗号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="228"/>
-        <source>Opened output ports (Split with semicolon)</source>
-        <translation>开放输出端口（分号分隔）</translation>
-    </message>
-    <message>
-        <location filename="../../data/br-system-rs.xml" line="238"/>
+        <location filename="../../data/br-system-rs.xml" line="185"/>
         <source>disable output ports (Split with semicolon)</source>
         <translation>禁用输出端口（分号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="251"/>
+        <location filename="../../data/br-system-rs.xml" line="198"/>
         <source>disable icmp ping</source>
         <translation>ICMP禁用ping传入请求</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="267"/>
+        <location filename="../../data/br-system-rs.xml" line="214"/>
         <source>Turn on system bluetooth service</source>
         <translation>开启系统蓝牙服务</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="280"/>
+        <location filename="../../data/br-system-rs.xml" line="227"/>
         <source>Turn on system cups service</source>
         <translation>开启系统打印服务</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="293"/>
+        <location filename="../../data/br-system-rs.xml" line="240"/>
         <source>Turn on system avahi-daemon service</source>
         <translation>开启系统avahi-daemon服务</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="306"/>
+        <location filename="../../data/br-system-rs.xml" line="253"/>
         <source>Turn on system rpcbind service</source>
         <translation>开启系统RPC端口映射功能</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="319"/>
+        <location filename="../../data/br-system-rs.xml" line="266"/>
         <source>Turn on system smb service</source>
         <translation>开启Web连接和客户与服务器之间的信息沟通功能</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="370"/>
+        <location filename="../../data/br-system-rs.xml" line="317"/>
         <source>The maximum permissions of important configuration files in the system is set to 0644</source>
         <translation>系统中重要配置文件的最大权限设置为0644</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="372"/>
+        <location filename="../../data/br-system-rs.xml" line="319"/>
         <source>The maximum permissions for configuration files /etc/passwd, /etc/bashrc, /etc/shadow, /etc/group, /etc/security/limits.conf, /etc/pam.d/system-auth-ac, /etc/fstab are set to 0644</source>
         <translation>配置文件/etc/passwd, /etc/bashrc, /etc/shadow, /etc/group, /etc/security/limits.conf, /etc/pam.d/system-auth-ac, /etc/fstab的最大权限设置为0644</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="387"/>
+        <location filename="../../data/br-system-rs.xml" line="334"/>
         <source>The maximum permission of key directories in the system is 0755</source>
         <translation>系统中目录的权限设置为0755</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="389"/>
+        <location filename="../../data/br-system-rs.xml" line="336"/>
         <source>The permissions for the/usr,/usr/bin,/usr/sbin,/usr/lib,/usr/lib64,/etc,/var directories in the system are set to 0755</source>
         <translation>系统中/usr,/usr/bin,/usr/sbin,/usr/lib,/usr/lib64,/etc,/var目录权限设置为0755</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="406"/>
+        <location filename="../../data/br-system-rs.xml" line="353"/>
         <source>The restart function is applied to the non graphical interface, and in the graphical interface, it acts as shutdown, and the function takes effect after logging out of the user.</source>
         <translation>重启功能作用于非图形界面，在图形界面中作用为关机，且功能需在注销用户后生效。</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="423"/>
+        <location filename="../../data/br-system-rs.xml" line="370"/>
         <source>Password error times</source>
         <translation>密码错误次数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="438"/>
+        <location filename="../../data/br-system-rs.xml" line="385"/>
         <source>Automatic unlocking time after locking (Sec)</source>
         <translation>非root用户锁定后自动解锁时间（秒）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="451"/>
+        <location filename="../../data/br-system-rs.xml" line="398"/>
         <source>Root login failed lock</source>
         <translation>root用户登录失败锁定</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="466"/>
+        <location filename="../../data/br-system-rs.xml" line="413"/>
         <source>Unlock time after root user locks (Sec)</source>
         <translation>root用户锁定后自动解锁时间（秒）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="484"/>
+        <location filename="../../data/br-system-rs.xml" line="431"/>
         <source>Maximum number of valid days for new users to use passwords</source>
         <translation>新用户可使用密码的最大有效天数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="499"/>
+        <location filename="../../data/br-system-rs.xml" line="446"/>
         <source>Minimum number of days allowed between password changes</source>
         <translation>密码允许更改的最小间隔天数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="514"/>
-        <source>Minimum acceptable password length</source>
-        <translation>可接受的最小密码长度</translation>
-    </message>
-    <message>
-        <location filename="../../data/br-system-rs.xml" line="529"/>
+        <location filename="../../data/br-system-rs.xml" line="461"/>
         <source>Number of days warning given before a password expires</source>
         <translation>密码过期前发出警告的天数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="542"/>
+        <location filename="../../data/br-system-rs.xml" line="474"/>
         <source>Whether to set the expiration time for the current existing account</source>
         <translation>是否设置现有用户的到期时间（三权及root用户除外）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="557"/>
+        <location filename="../../data/br-system-rs.xml" line="489"/>
         <source>Existing users set expiration days</source>
         <translation>现有用户设置过期天数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="575"/>
+        <location filename="../../data/br-system-rs.xml" line="507"/>
         <source>Minimum password length</source>
         <translation>最小密码长度</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="590"/>
+        <location filename="../../data/br-system-rs.xml" line="522"/>
         <source>Number of capital letters</source>
         <translation>大写字母个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="605"/>
+        <location filename="../../data/br-system-rs.xml" line="537"/>
         <source>Number of lowercase letters</source>
         <translation>小写字母个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="620"/>
+        <location filename="../../data/br-system-rs.xml" line="552"/>
         <source>Number of digits</source>
         <translation>数字个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="635"/>
+        <location filename="../../data/br-system-rs.xml" line="567"/>
         <source>Number of special characters</source>
         <translation>特殊字符个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="650"/>
+        <location filename="../../data/br-system-rs.xml" line="582"/>
         <source>Contains number of character types (special characters, numbers, letters)</source>
         <translation>包含字符类型数（特殊字符、数字、字母）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="665"/>
+        <location filename="../../data/br-system-rs.xml" line="597"/>
         <source>Maximum number of consecutive characters</source>
         <translation>最大连续字符个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="678"/>
+        <location filename="../../data/br-system-rs.xml" line="610"/>
         <source>Allow user names</source>
         <translation>允许包含用户名</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="691"/>
+        <location filename="../../data/br-system-rs.xml" line="623"/>
         <source>Enable dictionary check</source>
         <translation>启用字典检查</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="707"/>
+        <location filename="../../data/br-system-rs.xml" line="639"/>
         <source>Stack and RSS sizes are limited (10240)</source>
         <translation>限制stack和rss的大小（10240）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="739"/>
+        <location filename="../../data/br-system-rs.xml" line="671"/>
         <source>Allow administrators to view dmesg only</source>
         <translation>仅允许管理员查看dmesg</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="771"/>
+        <location filename="../../data/br-system-rs.xml" line="703"/>
         <source>No master file in the scanning system</source>
         <translation>扫描系统中的无属主文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="773"/>
+        <location filename="../../data/br-system-rs.xml" line="705"/>
         <source>Check if there are files in the /bin,/usr/bin,/sbin,/usr/sbin directories that do not belong to the user</source>
         <translation>扫描/bin,/usr/bin,/sbin,/usr/sbin关键目录中的无属主文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="788"/>
+        <location filename="../../data/br-system-rs.xml" line="720"/>
         <source>Scanning system files with 777 permissions</source>
         <translation>扫描系统中权限为777的文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="790"/>
+        <location filename="../../data/br-system-rs.xml" line="722"/>
         <source>Scan files with permissions of 777 in the /bin,/usr/bin,/sbin,/usr/sbin directory</source>
         <translation>扫描/bin,/usr/bin,/sbin,/usr/sbin关键目录中权限为777的文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="805"/>
+        <location filename="../../data/br-system-rs.xml" line="737"/>
         <source>Scan system important directory suid-sgid file</source>
         <translation>扫描系统重要目录中有suid-sgid权限的文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="807"/>
+        <location filename="../../data/br-system-rs.xml" line="739"/>
         <source>Scan files with SUID SGID permissions in the/bin,/usr/bin,/sbin, and/usr/sbin directories of the system</source>
         <translation>扫描系统/bin,/usr/bin,/sbin, /usr/sbin目录中具有suid-sgid权限的文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="823"/>
+        <location filename="../../data/br-system-rs.xml" line="755"/>
         <source>Turn on system auditd service</source>
         <translation>开启系统审计服务</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="836"/>
+        <location filename="../../data/br-system-rs.xml" line="768"/>
         <source>Add audit rules to path</source>
         <translation>添加审计规则</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="854"/>
+        <location filename="../../data/br-system-rs.xml" line="786"/>
         <source>System log save cycle (weekly)</source>
         <translation>系统日志保存周期（周）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="870"/>
+        <location filename="../../data/br-system-rs.xml" line="802"/>
         <source>The maximum permission of log files and configurations is set to 0644</source>
         <translation>日志文件和配置的最大权限为0644</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="883"/>
+        <location filename="../../data/br-system-rs.xml" line="815"/>
         <source>Log files can only be appended</source>
         <translation>日志仅能被添加</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="900"/>
+        <location filename="../../data/br-system-rs.xml" line="832"/>
         <source>Allow to use CD-ROM device</source>
         <translation>允许使用光驱设备（首次加固时间长，请耐心等待）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="916"/>
+        <location filename="../../data/br-system-rs.xml" line="848"/>
         <source>Allow to use USB device</source>
         <translation>允许使用USB设备</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="932"/>
+        <location filename="../../data/br-system-rs.xml" line="864"/>
         <source>Allow to use serial port device</source>
         <translation>允许使用串口设备</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="958"/>
+        <location filename="../../data/br-system-rs.xml" line="890"/>
         <source>Allow login to account (separated by semicolons)</source>
         <translation>允许登录账号（分号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="974"/>
+        <location filename="../../data/br-system-rs.xml" line="906"/>
         <source>Disable null password user present</source>
         <translation>禁止空密码用户出现</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="990"/>
+        <location filename="../../data/br-system-rs.xml" line="922"/>
         <source>Delete lp, games, operator and adm by default</source>
         <translation>默认删除lp，games，operator，adm</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1000"/>
+        <location filename="../../data/br-system-rs.xml" line="932"/>
         <source>Add users to delete (Split with semicolon)</source>
         <translation>添加需删除用户（分号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1016"/>
+        <location filename="../../data/br-system-rs.xml" line="948"/>
         <source>Rrohibit remote login of root user via SSH</source>
         <translation>禁止通过ssh远程登录root用户</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1032"/>
+        <location filename="../../data/br-system-rs.xml" line="964"/>
         <source>Allow SSH password free login</source>
         <translation>允许ssh免密登录</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1048"/>
+        <location filename="../../data/br-system-rs.xml" line="980"/>
         <source>Allow to use SSH weak encryption algorithm</source>
         <translation>允许ssh弱加密算法</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1065"/>
+        <location filename="../../data/br-system-rs.xml" line="997"/>
         <source>Hiding operating system version information</source>
         <translation>隐藏操作系统版本信息</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1081"/>
+        <location filename="../../data/br-system-rs.xml" line="1013"/>
         <source>Enforce V2 security protocol</source>
         <translation>强制使用V2安全协议</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1094"/>
+        <location filename="../../data/br-system-rs.xml" line="1026"/>
         <source>Prohibit SSH users with empty password from logging in</source>
         <translation>禁止主机密码为空的用户ssh登录</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1104"/>
+        <location filename="../../data/br-system-rs.xml" line="1036"/>
         <source>Modify the default SSH port</source>
         <translation>修改默认ssh端口</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1117"/>
+        <location filename="../../data/br-system-rs.xml" line="1049"/>
         <source>Enable PAM login mechanism</source>
         <translation>启用pam登录机制</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1149"/>
+        <location filename="../../data/br-system-rs.xml" line="1081"/>
         <source>Restrict user sudo command permission</source>
         <translation>限制用户sudo命令使用权限（开启selinux失效）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1162"/>
+        <location filename="../../data/br-system-rs.xml" line="1094"/>
         <source>List of IP addresses that allow remote access (Split with comma)</source>
         <translation>允许远程访问的ip列表（逗号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1172"/>
+        <location filename="../../data/br-system-rs.xml" line="1104"/>
         <source>List of IP addresses for which remote access is prohibited (Split with comma)</source>
         <translation>禁止远程访问的ip列表（逗号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1190"/>
+        <location filename="../../data/br-system-rs.xml" line="1122"/>
         <source>If no operation is performed for more than the following time (seconds), the session exits</source>
         <translation>超过以下时间（秒）未操作则会话退出</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1206"/>
+        <location filename="../../data/br-system-rs.xml" line="1138"/>
         <source>Whether to configure sftpuser special account</source>
         <translation>是否配置sftpuser用户（请自行设置密码）</translation>
     </message>
