@@ -201,6 +201,22 @@ int main(int argc, char *argv[])
         {
             ret = cmd_parser.vulnerabilityScan();
         }
+        else if (parser.isSet(backupOption))
+        {
+            QString directory = parser.value(backupOption);
+            if (directory.isEmpty())
+            {
+                helpTextOut(parser.helpText(), "vulnerability [options]");
+            }
+            else
+            {
+                ret = cmd_parser.backup(directory);
+            }
+        }
+        else if (parser.isSet(rollbackOption))
+        {
+            ret = cmd_parser.rollback();
+        }
         else if (parser.isSet(repairOption))
         {
             QString param = parser.value(repairOption);
