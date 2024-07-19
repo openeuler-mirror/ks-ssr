@@ -135,13 +135,16 @@ int main(int argc, char *argv[])
     QCommandLineOption scanOption("scan", QObject::tr("One-click scanning"));
     QString reinforceDes = QObject::tr("name - Specify reinforcement items to be reinforced, multiple reinforcement items are separated by comma; All - One-click reinforcement");
     QCommandLineOption reinforceOption("reinforce", reinforceDes, "name", "All");
+    QCommandLineOption backupOption("backup", QObject::tr("Backup system data. directory - Input backup save directory"), "directory");
+    QCommandLineOption rollbackOption("rollback", QObject::tr("Rollback system data"));
     QCommandLineOption repairOption("repair", QObject::tr("name - specify the vulnerability to fix, multiple vulnerabilities are separated by commas; All - One-click repair"), "name", "All");
-    QCommandLineOption exportOption("export", QObject::tr("Export the report. Input pdf file path"), QString("save_path"));
+    QCommandLineOption exportOption("export", QObject::tr("Export the report. save_path - Input pdf file path"), QString("save_path"));
     QCommandLineOption outputOption("output", QObject::tr("Output results to file"));
 
     const QString subCommand = args.first();
     int ret = -1;
     KS::Command::Command cmd_parser;
+
     if (subCommand == "br")
     {
         // 重新定义一个　QCommandLineParser，原因：addOption历史记录会在helpText()中打印
