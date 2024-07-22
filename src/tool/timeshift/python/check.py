@@ -74,6 +74,22 @@ class Check(Backup):
             error_msg += msg + "\n"
         return error_msg, boot_free_spec, backup_space_detail
 
+    def signal_handler(self, signal_code, frame):
+        self.is_terminal = True
+        logger.error('Received kill signal: %s' % signal_code)
+        self.result['msg'] = 'Received kill signal: %s' % signal_code
+        if self.store_path and self.check_done_flag:
+            if os.path.exists(self.store_path) and os.path.exists(self.check_done_flag):
+                logger.info("Delete the directory created during the check phase: %s" % self.store_path)
+                shutil.rmtree(self.store_path)
+        sys.exit(1)
+
+    def print_result(self):
+        print(json.dumps(self.result))
+        if self.is_terminal:
+            sys.exit(15)
+
+    # sonarqube block off
     def run(self):
         logger.info("Start the check process...")
         try:
