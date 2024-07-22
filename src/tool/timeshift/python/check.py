@@ -5,8 +5,9 @@ import sys
 import json
 import os
 import shutil
+import signal
 from backup import Backup, setup_logger as setup_logger_b
-from utils import change_log_config, CHECK_LOG_FILE, LEVEL, calculate_free_space_by_df, proc_lock
+from utils import change_log_config, CHECK_LOG_FILE, LEVEL, calculate_free_space_by_df, proc_lock, CHECK_RESULT
 
 logger = logging.getLogger(__name__)
 current_log = CHECK_LOG_FILE.format(datetime=datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m%d-%H%M"))
