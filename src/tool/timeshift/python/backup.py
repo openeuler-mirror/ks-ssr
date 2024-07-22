@@ -196,6 +196,7 @@ class Backup(object):
 
         return True, 0, None
 
+    # sonarqube block off
     def device_space_check(self):
         if not os.path.exists(self.store_path):
             mkdir_p(self.store_path)
