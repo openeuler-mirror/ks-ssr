@@ -336,10 +336,10 @@ class Backup(object):
                     if mount_point.startswith(back_path) and mount_point not in self.exclude_dir_list:
                         need_umount_list.append(mount_point)
 
-        if os.path.exists("/run/user/0/gvfs/") and len(os.listdir("/run/user/0/gvfs/")) > 0 \
-                and "/run/user/0/gvfs/" not in need_umount_list:
+        if os.path.exists(gvfs_path) and len(os.listdir(gvfs_path)) > 0 \
+                and gvfs_path not in need_umount_list:
             # 检查是否存在如ftp挂载等情况
-            need_umount_list.append("/run/user/0/gvfs/")
+            need_umount_list.append(gvfs_path)
 
         if need_umount_list:
             msg = "Stopping conversion due to  mount points below %s.\n" \
