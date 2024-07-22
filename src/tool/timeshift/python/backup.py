@@ -45,6 +45,8 @@ class Backup(object):
         self.backup_check_rpm_file_path = '/opt/ks-ssr/rpm_backup_check_file.txt'
         self.back_done_flag = None
         self.back_done_list = []
+        # 存放subprocess调用的进程id的集合
+        self.pid_list = set()
         # 备份进度记录文件
         self.progress_file = '/tmp/ks-ssr-backup-progress'
         if not os.path.exists(os.path.dirname(self.backup_rpm_file_path)):
