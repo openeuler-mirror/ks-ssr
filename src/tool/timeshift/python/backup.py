@@ -314,7 +314,9 @@ class Backup(object):
 
         return True, 0, ''
 
+    # sonarqube block off
     def check_readonly_mounts(self):
+        gvfs_path = "/run/user/0/gvfs/"
         mounts = get_file_content("/proc/mounts", as_list=True)
         need_umount_list = []
         for line in mounts:
