@@ -328,10 +328,7 @@ class Backup(object):
                 mount_point = codecs.escape_decode(mount_point)[0].decode()
 
             if "ro" in flags:
-                if mount_point == '/mnt':
-                    continue
-
-                elif mount_point == '/sys':
+                if mount_point == '/mnt' or mount_point == '/sys':
                     continue
 
                 for back_path in self.backup_dir_list:
