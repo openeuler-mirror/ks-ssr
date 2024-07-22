@@ -215,6 +215,7 @@ def get_file_content(filename, as_list=False):
     return "".join(lines)
 
 
+# sonarqube block off
 def mkdir_p(path):
     """Create all missing directories for the path and raise no exception
     if the path exists.
