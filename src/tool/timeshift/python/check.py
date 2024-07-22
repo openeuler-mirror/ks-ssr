@@ -137,13 +137,19 @@ class Check(Backup):
         if self.result['result'] in ['SUCCESS', "WARNING"]:
             logger.info("The backup process successful!")
         logger.info("check result: %s" % json.dumps(self.result))
-        print(json.dumps(self.result))
+    # sonarqube block off
 
 
 def main(config):
     if not proc_lock():
-        logger.warning("There is a ks-ssr-timeshift process running,exit!")
+        msg = "There is a ks-ssr-timeshift process running,exit!"
+        logger.warning(msg)
+        CHECK_RESULT['msg'] = msg
+        print(json.dumps(CHECK_RESULT))
         exit(1)
     setup_logger_b(current_log, 'KSSSRLogger', False)
-    check_obj = Check(conf_path=config)
+    check_obj = Check(conf_path=config, check_result=CHECK_RESULT)
+    # 开始监听SIGTERM信号
+    signal.signal(signal.SIGTERM, check_obj.signal_handler)
     check_obj.run()
+    check_obj.print_result()
