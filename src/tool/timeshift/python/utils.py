@@ -22,6 +22,14 @@ LOCKDIR = "/run/lock/"
 
 BASE_DIR_64 = "/usr/lib64/ks-ssr/timeshift"
 
+CHECK_RESULT = {
+    "result": "FAILED",  # SUCCESS FAILED WARNING
+    "msg": "",
+    "boot": 0.0,  # /boot分区剩余空间(MB)
+    "backup_file_size": 0.0,  # 备份文件所需占用的空间(MB)
+    "remaining_space_size": 0.0  # 备份目录所在分区的剩余空间(MB)
+}
+
 
 def get_logging_config(level, console, log_file):
     """
