@@ -181,13 +181,13 @@ class Backup(object):
             # 备份rpm list
             backup_rpm_cmd = "rsync -av --ignore-missing-args --ignore-existing --files-from=%s / %s" \
                              % (self.backup_rpm_file_path, self.store_path)
-            status1, err_code1, rst1 = execute_cmd(backup_rpm_cmd, logger)
+            status1, err_code1, rst1 = execute_cmd(backup_rpm_cmd, logger, pid_list=self.pid_list)
             self.write_progress('rpm_file_list')
             if status1 is not True:
                 logger.info("Start backup files leaved over.")
                 _backup_rpm_cmd = "rsync -av --ignore-existing --files-from=%s / %s" \
                                   % (self.backup_rpm_file_path, self.store_path)
-                _status1, _err_code1, _rst1 = execute_cmd(_backup_rpm_cmd, logger)
+                _status1, _err_code1, _rst1 = execute_cmd(_backup_rpm_cmd, logger, pid_list=self.pid_list)
                 if _status1 is not True:
                     return False, 2, 'Failed to execute backup: %s ' % _backup_rpm_cmd
 
