@@ -110,6 +110,7 @@ Q_SIGNALS:
 
     // @note 此信号发出后之前所有的 dnf* 内存实例失效，需要重新获取。
     void cacheInvalidate();
+    void cveInfoUpdated();
 
 public:
     static DnfContext* m_dnfCtxManager;
