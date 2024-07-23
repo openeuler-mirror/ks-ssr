@@ -530,7 +530,7 @@ void DnfContext::updateCache()
     // 如果当前缓存状态为 invalid 时， 则表明当前没有线程正在更新缓存， 所以当前线程来负责更新缓存， 并登记。
     if (m_cacheStatus.compare_exchange_strong(expect, cacheStatus::CACHE_UNAVAILABLE - 1))
     {
-        initSack();
+        initDnf();
     }
     else
     {
