@@ -77,8 +77,6 @@ DnfContext::DnfContext()
     }
     g_clear_error(&error);
 
-    getCveInfo();
-
     auto dnfCacheInvalidateCB = [](::DnfContext* context, const gchar* message)
     {
         Q_UNUSED(context);
