@@ -39,6 +39,7 @@ typedef void (*actionChangedTypeCBType)(DnfState*, DnfStateAction, const char*);
 typedef void (*allowCancelChangedCBType)(DnfState*, bool);
 typedef void (*packageProgressChangedCBType)(DnfState*, const gchar*, DnfStateAction, guint);
 typedef void (*dnfCacheInvalidateCBType)(DnfContext*, const gchar*);
+typedef void (*dnfRepoChangedCBType)(DnfRepoLoader*);
 
 #define HOLD_CACHE()        \
     SCOPE_EXIT(             \
