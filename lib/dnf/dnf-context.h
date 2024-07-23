@@ -148,6 +148,7 @@ private:
     std::atomic<int> m_cacheNeedUpdate{0};
     std::atomic<::DnfState*> m_installState{nullptr};
     ::GCancellable* volatile m_installCancellable{nullptr};
+    QFileSystemWatcher* m_repoWatcher;
     std::atomic<bool> m_isCancel{false};
     bool m_installFinishedWithCancel{false};
 };
