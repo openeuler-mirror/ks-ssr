@@ -118,7 +118,7 @@ public:
 private:
     DnfContext();
     virtual ~DnfContext();
-    void initSack();
+    void initDnf();
     void getCveInfo();
     void updateCache();
     void holdCache();
