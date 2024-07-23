@@ -1,4 +1,4 @@
-set(TARGET_NAME ssr-dnf)
+set(TARGET_NAME spm)
 
 add_definitions(-fPIC)
 
