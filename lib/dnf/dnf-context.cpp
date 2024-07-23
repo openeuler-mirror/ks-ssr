@@ -54,14 +54,14 @@ namespace Vulnerability
 {
 namespace PackageManager
 {
-DnfContext::
-    DnfContext()
+DnfContext::DnfContext()
     : m_dnfCtx(dnf_context_new()),
       m_dnfSack(nullptr),
       m_cacheStatus(cacheStatus::CACHE_AVAILABLE),
       m_cacheNeedUpdate(0),
       m_installState(nullptr),
       m_installCancellable(nullptr),
+      m_repoWatcher(new QFileSystemWatcher()),
       m_isCancel(false),
       m_installFinishedWithCancel(false)
 {
