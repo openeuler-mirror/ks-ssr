@@ -1,0 +1,280 @@
+/**
+ * Copyright (c) 2024 ~ 2025 KylinSec Co., Ltd.
+ * ks-ssr is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
+ */
+
+#include <libdnf/libdnf.h>
+
+#include <qt5-log-i.h>
+#include <QList>
+#include <QString>
+
+#include "dnf-context.h"
+#include "dnf-package.h"
+
+// libdnf 在 0.11.0 版本是用 c 实现， 需要注意符号粉碎规则。
+#if (KS_DEP_LIBDNF_VERSION <= KS_VERSION_CHECK(0, 15, 0))
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+    DnfSack* dnf_package_get_sack(DnfPackage* pkg);
+
+#ifdef __cplusplus
+}
+#endif
+#else
+DnfSack* dnf_package_get_sack(DnfPackage* pkg);
+#endif
+
+namespace KS
+{
+namespace Vulnerability
+{
+namespace PackageManager
+{
+DnfPackage::DnfPackage(::DnfPackage* _dnfPackage)
+    : m_dnfPackage((::DnfPackage*)g_object_ref((gpointer)_dnfPackage)),
+      m_dnfSack((::DnfSack*)g_object_ref(dnf_package_get_sack(m_dnfPackage)))
+{
+    init();
+}
+
+DnfPackage::DnfPackage(::DnfSack* sack, const char* localPkgPath)
+    : m_dnfPackage(dnf_sack_add_cmdline_package(sack, localPkgPath)),
+      m_dnfSack((::DnfSack*)g_object_ref(sack))
+{
+    init();
+}
+
+DnfPackage::DnfPackage(const DnfPackage& other)
+{
+    *this = other;
+}
+
+DnfPackage::DnfPackage(DnfPackage&& other)
+{
+    *this = std::forward<DnfPackage&&>(other);
+}
+
+DnfPackage& DnfPackage::operator=(const DnfPackage& other)
+{
+    m_dnfPackage = other.m_dnfPackage;
+    m_dnfSack = other.m_dnfSack;
+    m_advisories = other.m_advisories;
+    m_advisoryRef = other.m_advisoryRef;
+    m_upgradesPackages = other.m_upgradesPackages;
+    g_object_ref(m_dnfPackage);
+    g_object_ref(m_dnfSack);
+    return *this;
+}
+
+DnfPackage& DnfPackage::operator=(DnfPackage&& other)
+{
+    m_dnfPackage = other.m_dnfPackage;
+    m_dnfSack = other.m_dnfSack;
+    m_advisories.swap(other.m_advisories);
+    m_advisoryRef.swap(other.m_advisoryRef);
+    m_upgradesPackages.swap(other.m_upgradesPackages);
+    other.m_dnfPackage = nullptr;
+    other.m_dnfSack = nullptr;
+    return *this;
+}
+
+DnfPackage::~DnfPackage()
+{
+    g_object_unref(m_dnfPackage);
+    g_object_unref(m_dnfSack);
+}
+
+QString DnfPackage::getName() const
+{
+    return QString(dnf_package_get_name(m_dnfPackage));
+}
+
+QString DnfPackage::getVersion() const
+{
+    return QString(dnf_package_get_evr(m_dnfPackage));
+}
+
+QString DnfPackage::getArch() const
+{
+    return QString(dnf_package_get_arch(m_dnfPackage));
+}
+
+QString DnfPackage::getRepoName() const
+{
+    return QString(dnf_package_get_reponame(m_dnfPackage));
+}
+
+QString DnfPackage::getSourceRpm() const
+{
+    return QString(dnf_package_get_sourcerpm(m_dnfPackage));
+}
+
+const QList<DnfPackageAdvisory>& DnfPackage::getAdvisories() const
+{
+    return m_advisories;
+}
+
+const QList<DnfPackageAdvisory::DnfAdvisoryPkg>& DnfPackage::getUpdatesPkgs() const
+{
+    return m_upgradesPackages;
+}
+
+const QList<DnfPackageAdvisoryRef>& DnfPackage::getAdvisoriesRef() const
+{
+    return m_advisoryRef;
+}
+
+QStringList DnfPackage::getCveIds() const
+{
+    QStringList cveIds{};
+
+    for (const auto& ref : m_advisoryRef)
+    {
+        if (!ref.isCve())
+        {
+            continue;
+        }
+        cveIds.append(ref.getId());
+    }
+    return cveIds;
+}
+
+bool DnfPackage::isDownloaded() const
+{
+    return dnf_package_is_downloaded(m_dnfPackage);
+}
+
+QString DnfPackage::downLoadPkg(const QString& directory)
+{
+    GError* error = nullptr;
+    const char* filePath = nullptr;
+    DnfState* state = dnf_state_new();
+    auto repo = dnf_repo_loader_get_repo_by_id(dnf_context_get_repo_loader(DnfContext::m_dnfCtxManager->getDnfContext()),
+                                               getRepoName().toLocal8Bit().data(),
+                                               &error);
+    if (!repo)
+    {
+        KLOG_ERROR() << "Failed to get repo from repo loader by repo name: " << getRepoName()
+                     << "error message: " << error->message;
+    }
+    g_clear_error(&error);
+
+    if (directory.isEmpty())
+    {
+        auto repoDirectory = dnf_repo_get_packages(repo);
+        filePath = dnf_repo_download_package(repo, m_dnfPackage, repoDirectory, state, &error);
+    }
+    else
+    {
+        filePath = dnf_repo_download_package(repo, m_dnfPackage, directory.toLocal8Bit().data(), state, &error);
+    }
+    QString ret{};
+    ret.append(filePath);
+    KLOG_DEBUG() << "filePath: " << ret;
+    g_free((gpointer)filePath);
+
+    // sonarqube block off
+    // 由于 sonarqube 中报错 ret.isEmpty 永远为假， 而这个报错个人认为没有根据， 所以注释。
+    if (ret.isEmpty())
+    // sonarqube block on
+    {
+        KLOG_ERROR() << "Failed to downLoad package: " << getName()
+                     << "error message: " << error->message;
+    }
+    g_object_unref(state);
+    g_clear_error(&error);
+    return ret;
+}
+
+::DnfPackage* DnfPackage::getDnfPackage()
+{
+    return (::DnfPackage*)g_object_ref((gpointer)m_dnfPackage);
+}
+
+::DnfSack* DnfPackage::getDnfSack()
+{
+    return m_dnfSack;
+}
+
+void DnfPackage::downLoadPkgs(QList<DnfPackage>& pkgList, const QString& directory)
+{
+    for (auto& pkg : pkgList)
+    {
+        auto filePath = pkg.downLoadPkg(directory);
+        if (filePath.isEmpty())
+        {
+            KLOG_ERROR() << "Failed to download package: " << pkg.getName();
+        }
+        else
+        {
+            KLOG_DEBUG() << "DownLoad package: " << pkg.getName()
+                         << " to " << filePath;
+        }
+    }
+}
+
+DnfPackage DnfPackage::getLatestPkg(const QList<DnfPackage>& pkgList)
+{
+    auto it = pkgList.constBegin();
+    DnfPackage latestPkg = *it++;
+    while (it != pkgList.constEnd())
+    {
+        if (latestPkg.getName() != (*it).getName())
+        {
+            KLOG_ERROR() << "Cannot not compare version with different packages!";
+            return latestPkg;
+        }
+
+        if (dnf_package_evr_cmp(latestPkg.m_dnfPackage, (*it).m_dnfPackage) < 0)
+        {
+            latestPkg = *it;
+        }
+        it++;
+    }
+    return latestPkg;
+}
+
+void DnfPackage::init()
+{
+    auto advisories = dnf_package_get_advisories(m_dnfPackage, HY_EQ);
+    for (uint i = 0; i < advisories->len; i++)
+    {
+        auto advisory = (::DnfAdvisory*)g_ptr_array_index(advisories, i);
+        m_advisories.append(DnfPackageAdvisory(advisory));
+    }
+    g_ptr_array_free(advisories, FALSE);
+    for (const auto& advisory : m_advisories)
+    {
+        m_advisoryRef.append(advisory.getRefs());
+    }
+    QMap<QString, DnfPackageAdvisory::DnfAdvisoryPkg> tmp{};
+    for (const auto& adv : m_advisories)
+    {
+        for (const auto& pkg : adv.getPkgList())
+        {
+            if (tmp.contains(pkg.fileName))
+            {
+                continue;
+            }
+            tmp.insert(pkg.fileName, pkg);
+        }
+    }
+    m_upgradesPackages = tmp.values();
+}
+
+}  // namespace PackageManager
+}  // namespace Vulnerability
+}  // namespace KS
