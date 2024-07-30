@@ -73,7 +73,9 @@ void Scan::usingCustomStrategy()
     // 更新加固项和相关参数
     Utils::getDefault()->ssrResetReinforcements(m_dbusProxy->GetReinforcements().value(), m_categories);
 
-    m_ui->m_progress->showStrategy();
+    //    m_ui->m_progress->showStrategy();
+    // 暂不需要
+    m_ui->m_progress->hideStrategy();
 }
 
 void Scan::reset()
