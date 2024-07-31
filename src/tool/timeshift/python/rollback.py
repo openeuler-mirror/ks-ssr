@@ -163,6 +163,7 @@ class RollBack(object):
             runcmd(rm_cmd)
             cmd = 'grubby --add-kernel={vmlinuz} --initrd={initrd} --title="{title}" --copy-default --make-default ' \
                   '--args=rollback'.format(vmlinuz=self.vmlinuz, initrd=self.initrd, title="KylinSec Rollback")
+            logger.debug("cmd: %s" %cmd)
             grbret, errgrb = runcmd(cmd)
             if errgrb:
                 logger.warning(errgrb)
