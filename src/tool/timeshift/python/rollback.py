@@ -190,7 +190,6 @@ class RollBack(object):
         else:
             logger.info("Apply existed vmlinz: %s, initramfs: %s" % (self.vmlinuz, self.initrd))
 
-        # TODO 验证一下上面代码中的退出函数，程序退出后，标志文件是否会被删除
         if os.path.exists(self.ssr_tag_dracut):
             os.remove(self.ssr_tag_dracut)
         if os.path.exists(self.ssr_tag_service):
