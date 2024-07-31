@@ -252,3 +252,26 @@ def runcmd(command, pid_list=None):
     return (
         stdout.decode('utf-8').strip("\n"), stderr.decode('utf-8')
     )
+
+
+def get_partition_fs_type(partition, logger):
+    logger.info("Start obtaining the file system type of the mount point")
+    mounts = get_file_content("/proc/mounts", as_list=True)
+    find_fs_type = set()
+    backup_partition_fs_type = None
+    for mount in mounts:
+        device = mount.split()[0]
+        mount_point = mount.split()[1]
+        fs_type = mount.split()[2]
+        if device.startswith("/") and mount_point == partition:
+            logger.info("The file system type of backup partition {0} is {1}".format(mount_point, fs_type))
+            find_fs_type.add(fs_type)
+            backup_partition_fs_type = fs_type
+        if device.startswith("/") and mount_point.startswith("/"):
+            logger.info("The file system type of the mounting point {0} is {1}".format(mount_point, fs_type))
+            find_fs_type.add(fs_type)
+    if backup_partition_fs_type:
+        return find_fs_type
+    else:
+        logger.critical("Failed to obtain the file system type of mount point {0}".format(partition))
+        return None
