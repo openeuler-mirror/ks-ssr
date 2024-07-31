@@ -134,7 +134,25 @@ class RollBack(object):
         uname_r, err = runcmd("uname -r")
         logger.info("Generate rollback initramfs!")
         if uname_r:
-            cmd = "dracut -v -f -a 'lvm' %s %s" % (self.initrd, uname_r)
+            # 获取备份目录所在的挂载点
+            logger.info("Obtain the partition where the backup path located.")
+            status, err_code, partition_info = calculate_partition_by_df(self.store_path, logger)
+            if not status:
+                logger.critical("Obtain the partition where the backup path located failed.")
+                if os.path.exists(self.ssr_tag_dracut):
+                    os.remove(self.ssr_tag_dracut)
+                if os.path.exists(self.ssr_tag_service):
+                    os.remove(self.ssr_tag_service)
+                sys.exit(1)
+            fs_type = get_partition_fs_type(partition_info, logger)
+            if fs_type is None:
+                if os.path.exists(self.ssr_tag_dracut):
+                    os.remove(self.ssr_tag_dracut)
+                if os.path.exists(self.ssr_tag_service):
+                    os.remove(self.ssr_tag_service)
+                sys.exit(1)
+            cmd = "dracut -v -f -a 'lvm' --add-drivers \"%s\" %s %s" % (" ".join(fs_type), self.initrd, uname_r)
+            logger.debug("cmd: %s" % cmd)
             runcmd(cmd)
         elif err:
             logger.warning(err)
