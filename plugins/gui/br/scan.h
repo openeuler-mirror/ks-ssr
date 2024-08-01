@@ -68,7 +68,7 @@ public:
     // 重置所有加固项
     void resetAllReinforcementItem();
 
-    bool checkCanExit();
+    bool isTaskRunning();
     bool cancelProgress();
 
 signals:
