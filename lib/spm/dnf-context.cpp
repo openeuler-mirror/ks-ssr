@@ -25,6 +25,7 @@
 #include <QJsonObject>
 #include <QProcess>
 #include <QString>
+#include <thread>
 #include <atomic>
 
 #include "dnf-context.h"
