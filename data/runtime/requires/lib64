@@ -121,3 +121,6 @@ libhpdf
 libgtk-3
 libresolv
 libgvfscommon
+#ks-ssr-timeshift-dep-rsync
+libacl
+libzstd
