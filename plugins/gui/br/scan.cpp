@@ -255,9 +255,9 @@ void Scan::resetAllReinforcementItem()
     Utils::getDefault()->ssrResetReinforcements(allResetStr, m_categories);
 }
 
-bool Scan::checkCanExit()
+bool Scan::isTaskRunning()
 {
-    return PROCESS_METHOD_STANDBY == m_progressInfo.method;
+    return PROCESS_METHOD_STANDBY != m_progressInfo.method;
 }
 
 void Scan::clearInvalidData()
