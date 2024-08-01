@@ -10,6 +10,7 @@ qtplugins_installdir=${plugins_installdir}/qt/plugins/
 gio_modules_installdir=${lib_installdir}/gio/modules
 
 mkdir -p ${lib_installdir}
+mkdir -p ${bin_installdir}
 mkdir -p ${qtplugins_installdir}
 mkdir -p ${gio_modules_installdir}
 
