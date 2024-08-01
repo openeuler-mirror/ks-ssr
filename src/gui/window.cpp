@@ -124,7 +124,7 @@ void Window::closeEvent(QCloseEvent *event)
     {
         for (auto &page : pages)
         {
-            if (!page->checkCanExit())
+            if (page->isTaskRunning())
             {
                 // 弹窗阻止退出
                 auto messageDialog = new KS::MessageDialog(this, true);
