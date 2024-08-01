@@ -108,6 +108,16 @@ QString ExecuteProtectedPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SECADM;
 }
 
+bool ExecuteProtectedPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool ExecuteProtectedPage::stopTask()
+{
+    return true;
+}
+
 void ExecuteProtectedPage::updateTips(int total)
 {
     // 更新表格右上角提示信息
