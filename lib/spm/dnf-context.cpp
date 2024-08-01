@@ -602,27 +602,12 @@ void DnfContext::cancelInstall()
 
 void DnfContext::holdCache()
 {
-    int cacheAvailableExpect = cacheStatus::CACHE_AVAILABLE;
-    // 如果缓存被标记为需要更新， 则在这里阻塞。
-    while (m_cacheNeedUpdate.load(std::memory_order_consume))
-    {
-        usleep(500 * 1000);
-    }
-    // 在缓存可用的情况下， 如果 m_cacheStatus 为 AVAILABLE， 则将其修改为 USING， 如果为 USING 则加一， 实现递归锁的效果。
-    while (!m_cacheStatus.compare_exchange_weak(cacheAvailableExpect, cacheStatus::CACHE_USING, std::memory_order::memory_order_release))
-    {
-        usleep(500 * 1000);
-    }
+    m_cacheLock->lock();
 }
 
 void DnfContext::releaseCache()
 {
-    int expect = cacheStatus::CACHE_USING;
-    // 如果 m_cacheStatus 为 USING, 则设置为 CACHE_AVAILABLE， 否则减一
-    if (!m_cacheStatus.compare_exchange_strong(expect, cacheStatus::CACHE_AVAILABLE, std::memory_order::memory_order_release))
-    {
-        m_cacheStatus.fetch_sub(1);
-    }
+    m_cacheLock->unlock();
 }
 
 }  // namespace PackageManager
