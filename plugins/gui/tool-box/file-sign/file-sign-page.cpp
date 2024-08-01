@@ -118,6 +118,16 @@ void FileSign::updateTableData(const QStringList& fileList)
     m_ui->m_fileSignTable->updateData(newData);
 }
 
+bool FileSign::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool FileSign::stopTask()
+{
+    return true;
+}
+
 void FileSign::initConnection()
 {
     connect(m_ui->m_search, SIGNAL(textChanged(const QString&)), m_ui->m_fileSignTable, SLOT(searchTextChanged(const QString&)));
