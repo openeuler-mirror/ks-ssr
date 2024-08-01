@@ -68,6 +68,16 @@ QString LogPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_AUDADM;
 }
 
+bool LogPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool LogPage::stopTask()
+{
+    return true;
+}
+
 void LogPage::initUI()
 {
     auto text = QString(tr("A total of %1 records")).arg(m_ui->m_logTable->getLogNumbers());
