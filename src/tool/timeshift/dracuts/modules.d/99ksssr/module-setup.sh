@@ -13,6 +13,13 @@ depends() {
 }
 
 install() {
+    if [ -d /usr/lib64/ks-ssr/bin ];then
+        export PATH=/usr/lib64/ks-ssr/bin:$PATH
+    fi
+    if [ -d /usr/lib/ks-ssr/bin ];then
+        export PATH=/usr/lib/ks-ssr/bin:$PATH
+    fi
+
     inst_multiple rsync sync mount umount ip ifconfig chmod dos2unix date basename dirname expr touch sed setcap awk realpath
 	
     if [ -f /usr/sbin/efibootmgr ];then

@@ -13,6 +13,12 @@ depends() {
 }
 
 install_fn() {
+    if [ -d /usr/lib64/ks-ssr/bin ];then
+        export PATH=/usr/lib64/ks-ssr/bin:$PATH
+    fi
+    if [ -d /usr/lib/ks-ssr/bin ];then
+        export PATH=/usr/lib/ks-ssr/bin:$PATH
+    fi
     dracut_install rsync sync mount umount ip ifconfig chmod dos2unix date basename dirname expr touch sed setcap awk readlink chroot shutdown tr find lsblk
     if [ -f /usr/sbin/efibootmgr ];then
         dracut_install efibootmgr
