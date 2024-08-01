@@ -43,7 +43,7 @@ public:
     QString getSidebarUID() override;
     QString getSidebarIcon() override;
     QString getAccountRoleName() override;
-    bool checkCanExit() override;
+    bool isTaskRunning() override;
     bool stopTask() override;
 
     // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
