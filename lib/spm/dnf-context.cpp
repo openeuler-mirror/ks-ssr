@@ -105,6 +105,7 @@ DnfContext::~DnfContext()
     g_object_unref(m_dnfCtx);
     g_object_unref(m_dnfSack);
     delete m_repoWatcher;
+    delete m_cacheLock;
 }
 
 void DnfContext::globalInit()
