@@ -58,6 +58,16 @@ QString AccessControlPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SECADM;
 }
 
+bool AccessControlPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool AccessControlPage::stopTask()
+{
+    return true;
+}
+
 void AccessControlPage::initUI()
 {
     auto selinuxStatus = m_ui->m_table->getSelinuxStatus();
