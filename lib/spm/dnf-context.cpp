@@ -510,49 +510,21 @@ void DnfContext::getCveInfo()
 
 void DnfContext::updateCache()
 {
-    SCOPE_EXIT(
-        {
-            m_cacheNeedUpdate.fetch_sub(1);
-        });
-    KLOG_DEBUG() << "updateCache!";
-    m_cacheNeedUpdate.fetch_add(1);
-    // 如果此时缓存状态不为非法， 则修改其为非法。
-    if (m_cacheStatus.load(std::memory_order::memory_order_relaxed) >= cacheStatus::CACHE_AVAILABLE)
+    // 只有一个线程更新缓存， 将 m_cacheNeedUpdate 更新为 1 的线程负责更新缓存(如果当前有任务正在使用缓存， 那么也只有这个线程阻塞)， 其他线程退出。
+    int updateCacheThread = 0;
+    if (m_cacheNeedUpdate.compare_exchange_strong(updateCacheThread, 1))
     {
-        int expect = cacheStatus::CACHE_AVAILABLE;
-        // 如果缓存状态为 using 时， 等待其修改为 valid。
-        while (m_cacheStatus.compare_exchange_weak(expect, cacheStatus::CACHE_UNAVAILABLE))
-        {
-            expect = cacheStatus::CACHE_AVAILABLE;
-            // 如果有其他线程将缓存状态修改为 invalid， 则不再尝试将其修改为 invalid。
-            if (m_cacheStatus.load(std::memory_order::memory_order_relaxed) <= cacheStatus::CACHE_UNAVAILABLE)
-            {
-                break;
-            }
-        }
-    }
-
-    int expect = cacheStatus::CACHE_UNAVAILABLE;
-    // 如果当前缓存状态为 invalid 时， 则表明当前没有线程正在更新缓存， 所以当前线程来负责更新缓存， 并登记。
-    if (m_cacheStatus.compare_exchange_strong(expect, cacheStatus::CACHE_UNAVAILABLE - 1))
-    {
-        initDnf();
+        m_cacheLock->lock();
     }
     else
     {
-        // 此时有其他线程正在更新缓存， 登记即可, 有其他线程负责更新缓存。
-        m_cacheStatus.fetch_sub(1);
+        // 登记当前更新缓存任务数量lock();
         return;
     }
-    // 登记当前更新缓存任务数量
-
-    int afterUpdateExpect = cacheStatus::CACHE_UNAVAILABLE - 1;
-    // 如果完成更新缓存之后没有其他线程登记缓存状态， 则将其设置为合法， 否则设置清空缓存登记， 并重新更新缓存。
-    if (!m_cacheStatus.compare_exchange_strong(afterUpdateExpect, cacheStatus::CACHE_AVAILABLE))
-    {
-        m_cacheStatus.store(cacheStatus::CACHE_UNAVAILABLE);
-        updateCache();
-    }
+    KLOG_DEBUG() << "updateCache!";
+    initDnf();
+    m_cacheNeedUpdate.fetch_sub(1);
+    m_cacheLock->unlock();
 }
 
 InstallPackageAction DnfContext::dnfStateActionWrapper(int action)
