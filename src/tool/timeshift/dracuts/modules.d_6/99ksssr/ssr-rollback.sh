@@ -1,11 +1,5 @@
 #!/bin/bash
 
-if [ -d /usr/lib64/ks-ssr/bin ];then
-    export PATH=/usr/lib64/ks-ssr/bin:$PATH
-fi
-if [ -d /usr/lib/ks-ssr/bin ];then
-    export PATH=/usr/lib/ks-ssr/bin:$PATH
-fi
 export WORK_DIR="/opt/ks-ssr/ks-ssr"
 declare -A FILTER_LIST=()
 
@@ -120,7 +114,7 @@ function get_filter_list()
         return $INVALID_CONFIG
     fi
 
-    exclude_dir_list=$(echo $EXCLUDE_DIR | awk -F ',' '{for(i=1;i<=NF;i++){print $i}}' | awk '{gsub(/^\s+|\s+$/, "");print}')
+    exclude_dir_list=$(echo $EXCLUDE_DIR | awk -F ';' '{for(i=1;i<=NF;i++){print $i}}' | awk '{gsub(/^\s+|\s+$/, "");print}')
     for exclude_dir_tmp in $exclude_dir_list
     do
         get_dir_name_and_depth $exclude_dir_tmp
