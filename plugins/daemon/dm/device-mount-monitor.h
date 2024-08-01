@@ -26,8 +26,13 @@ namespace DM
 struct DeviceMount
 {
 public:
-    DeviceMount()
-        : read(false), write(false), execute(false);
+    DeviceMount(
+        const QString &deviceArg = "",
+        const QString &pathArg = "",
+        bool readArg = false,
+        bool writeArg = false,
+        bool executeArg = false)
+        : device(deviceArg), path(pathArg), read(readArg), write(writeArg), execute(executeArg) {}
     // 设备文件
     QString device;
     // 设备挂载位置
