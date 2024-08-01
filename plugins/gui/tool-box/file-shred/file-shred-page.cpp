@@ -70,6 +70,16 @@ QString FileShredPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SECADM;
 }
 
+bool FileShredPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool FileShredPage::stopTask()
+{
+    return true;
+}
+
 void FileShredPage::addFiles(bool checked)
 {
     Q_UNUSED(checked);
