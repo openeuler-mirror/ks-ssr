@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -d /usr/lib64/ks-ssr/bin ];then
+    export PATH=/usr/lib64/ks-ssr/bin:$PATH
+fi
+if [ -d /usr/lib/ks-ssr/bin ];then
+    export PATH=/usr/lib/ks-ssr/bin:$PATH
+fi
 export WORK_DIR="/opt/ks-ssr/ks-ssr"
 declare -A FILTER_LIST=()
 
