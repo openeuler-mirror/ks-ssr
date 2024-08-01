@@ -83,6 +83,16 @@ QString FileProtectionPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SECADM;
 }
 
+bool FileProtectionPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool FileProtectionPage::stopTask()
+{
+    return true;
+}
+
 void FileProtectionPage::searchTextChanged(const QString &text)
 {
     m_ui->m_fileTable->searchTextChanged(text);
