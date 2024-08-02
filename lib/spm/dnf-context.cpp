@@ -98,8 +98,14 @@ DnfContext::DnfContext()
 
     QObject::connect(this, &DnfContext::cacheInvalidate, [this]
                      {
-                         std::thread t{std::bind(&PackageManager::DnfContext::updateCache, this)};
-                         t.detach();
+                         auto wrapper = new QThreadWrapper<void (DnfContext::*)()>(&DnfContext::updateCache, this);
+                         QObject::connect(
+                             wrapper, &QThread::finished, this, [wrapper]
+                             {
+                                 delete wrapper;
+                             },
+                             Qt::ConnectionType::QueuedConnection);
+                         wrapper->detach();
                      });
     QObject::connect(this, &DnfContext::cacheInvalidate, &DnfContext::getCveInfo);
     updateCache();
