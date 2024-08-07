@@ -57,6 +57,7 @@ public:
     int rollback();
     int vulnerabilityRepair(const QStringList &name = QStringList());
     int vulnerabilityExport(const QString &filePath);
+    int checkBackup();
 
 private:
     void checkLicenseActive();
