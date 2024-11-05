@@ -337,11 +337,25 @@ class KeyRebootSwitch:
                 br.utils.subprocess_not_output(ENABLE_ETC_INIT_REBOOT_CONF)
             args.pop(ETC_INIT_REBOOT_CONF_OVERRIDE, None)
 
-            # 处理各个用户
-            for key in args:
-                value = args[key]
-                br.utils.subprocess_not_output(
-                    GCONF_SET_REBOOT_KEYBINDING.format(key, value)
+            if len(br.utils.subprocess_has_output(CHECK_GCONFD_PROC)):
+                # 处理默认配置
+                if DEFAULT_GCONF in args:
+                    value = args[DEFAULT_GCONF]
+                    command = DEFAULT_GCONF_SET_REBOOT_KEYBINDING.format(value)
+                    br.utils.subprocess_not_output(command)
+
+                args.pop(DEFAULT_GCONF, None)
+
+                # 处理各个用户
+                for key in args:
+                    value = args[key]
+                    br.utils.subprocess_not_output(
+                        GCONF_SET_REBOOT_KEYBINDING.format(key, value)
+                    )
+            else:
+                # 不存在gconf服务时，触发警告
+                br.log.warning(
+                    "gconfd-2 do not running, We will not check gconf reboot keybinding"
                 )
 
             return (True, "")
