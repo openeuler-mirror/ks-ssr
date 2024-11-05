@@ -566,7 +566,7 @@ which will cause many problems!</source>
         <translation>su命令限制</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1061"/>
+        <location filename="../../data/br-system-rs.xml" line="1071"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-external.xml" line="66"/>
         <source>Users outside the wheel group are prohibited from using the &apos;su root&apos; command</source>
         <translation>禁止wheel组之外的用户使用su命令</translation>
