@@ -612,7 +612,7 @@ which will cause many problems!</source>
         <translation>限制sftp用户向上跨目录访问</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1150"/>
+        <location filename="../../data/br-system-rs.xml" line="1160"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-external.xml" line="90"/>
         <source>Disable radio network</source>
         <translation>禁用无线网络</translation>
