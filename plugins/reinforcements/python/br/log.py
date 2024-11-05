@@ -73,11 +73,13 @@ def warning(*args):
 def error(*args):
     try:
         try:
-            klog.debug(
-                ' '.join(map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args))
+            klog.error(
+                " ".join(
+                    map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args)
+                )
             )
         except:
-            klog.debug(' '.join(map(lambda x: x, args)))
+            klog.error(" ".join(map(lambda x: x, args)))
     except:
         klog.error(str(traceback.format_exc()))
 
