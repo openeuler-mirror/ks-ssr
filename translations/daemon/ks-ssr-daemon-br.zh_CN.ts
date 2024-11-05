@@ -4,185 +4,185 @@
 <context>
     <name>KS::BR::BRDBus</name>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="174"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="186"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="193"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="230"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="245"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="175"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="187"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="194"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="231"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="246"/>
         <source>system</source>
         <translation>系统</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="174"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="186"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="193"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="230"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="245"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="175"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="187"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="194"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="231"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="246"/>
         <source>custom</source>
         <translation>自定义</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="289"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="305"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="324"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="350"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="290"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="306"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="325"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="351"/>
         <source>open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="289"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="305"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="324"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="350"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="290"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="306"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="325"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="351"/>
         <source>close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="173"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="185"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="174"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="186"/>
         <source>Failed to set standard type to %1.</source>
         <translation>设置加固标准为%1标准失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="192"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="193"/>
         <source>Success to set standard type to %1.</source>
         <translation>成功设置加固标准为%1标准。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="206"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="207"/>
         <source>Failed to import custom reinforcement standard.</source>
         <translation>导入自定义加固标准失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="211"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="212"/>
         <source>Success to import custom reinforcement standard.</source>
         <translation>导入自定义加固标准成功。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="222"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="239"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="223"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="240"/>
         <source>Failed to set strategy type.</source>
         <translation>设置加固策略失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="229"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="244"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="230"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="245"/>
         <source>Set strategy type to %1.</source>
         <translation>设置加固策略为%1.策略。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="256"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="269"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="257"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="270"/>
         <source>Set time scan to %1.</source>
         <translation>设置定时扫描时间为%1小时。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="264"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="265"/>
         <source>Failed to set time scan.</source>
         <translation>设置定时扫描时间失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="282"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="299"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="283"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="300"/>
         <source>Failed to set notification status.</source>
         <translation>设置通知状态失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="289"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="305"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="290"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="306"/>
         <source>Set notification status to %1.</source>
         <translation>%1气泡通知。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="316"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="333"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="317"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="334"/>
         <source>Failed to set resource monitor switch.</source>
         <translation>设置资源监控开关失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="324"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="350"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="325"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="351"/>
         <source>Set resource monitor switch to %1.</source>
         <translation>设置资源监控开关为%1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="408"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="409"/>
         <source>Reset all reinforcement parameters.</source>
         <translation>重置所有加固参数。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="504"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="505"/>
         <source>Reset reinforcement parameters. name is %1.</source>
         <translation>重置加固参数，名称为%1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="621"/>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="630"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="628"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="637"/>
         <source>Failed to export report.</source>
         <translation>导出报表失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="683"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="690"/>
         <source>Scan finished.</source>
         <translation>扫描完成。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="693"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="700"/>
         <source>Reinforcement finished.</source>
         <translation>加固完成。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="587"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="774"/>
+        <source>total:%1 conformity:%2 inconformity:%3</source>
+        <translation>总计:%1 符合:%2 不符合:%3</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="594"/>
         <source>Failed to cancel progress.</source>
         <translation>取消加固失败。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="593"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="600"/>
         <source>Cancel. job id: %1.</source>
         <translation>取消加固，任务id为%1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="602"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="609"/>
         <source>Export strategy.</source>
         <translation>导出策略。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="610"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="617"/>
         <source>Export report.</source>
         <translation>导出报表。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="701"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="708"/>
         <source>Rollback finished.</source>
         <translation>回退完成.</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="718"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="725"/>
         <source>Test Item</source>
         <translation>检测项</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="718"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="725"/>
         <source>Result</source>
         <translation>结果</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="733"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="740"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="738"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="745"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="766"/>
-        <source>total:%1 conformity:%2 conformity:%3</source>
-        <translation>总计:%1 符合:%2 不符合:%3</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="771"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="780"/>
         <source>test information</source>
         <translation>扫描信息</translation>
     </message>
@@ -190,17 +190,17 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="278"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="330"/>
         <source>The return value of %1 isn&apos;t tuple type.</source>
         <translation>返回值%1不是个 tuple 类型。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="286"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="338"/>
         <source>The number of tuple returned by %1 is less than 2.</source>
         <translation>%1 返回的 tuple 编号小于2。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="303"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="355"/>
         <source>The type of tuple item returned by %1 is invalid.</source>
         <translation>%1 所返回的 tuple 类型是非法的。</translation>
     </message>
@@ -331,6 +331,41 @@ which will cause many problems!</source>
         <source>umask is already defined in /etc/bashrc, please delete it first.</source>
         <translation>umask已经在/etc/bashrc中定义，请先删除。</translation>
     </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="74"/>
+        <source>HISTSIZE is already defined in other files, please delete it first.</source>
+        <translation>HISTSIZE已经在其他文件中定义，请先删除。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="75"/>
+        <source>Rollback failed, please check the value of HISTSIZE.</source>
+        <translation>回退失败，请检查HISTSIZE的值。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="76"/>
+        <source>&apos;the maximum stack size&apos; or &apos;the maximum resident set size&apos; is already defined in other files, please delete it first.</source>
+        <translation>&apos;最大栈限制&apos;或&apos;最大驻留集限制&apos;已经在其他文件中定义，请先删除。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="77"/>
+        <source>Please remove all USB storage devices before dis/enable USB storage.</source>
+        <translation>在禁/启用 USB 存储设备之前请移除所有的 USB 存储设备。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="78"/>
+        <source>Please remove all cdrom devices before dis/enable cdrom.</source>
+        <translation>在禁/启用 cdrom 存储设备之前请移除所有的 cdrom 存储设备。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="79"/>
+        <source>Not in effect, {} is set elsewhere</source>
+        <translation>未生效，{}在其他地方定义了</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="80"/>
+        <source>TMOUT has defined outside of /etc/profile, please remove it first.</source>
+        <translation>TMOUT已经在/etc/profile之外定义，请先删除。</translation>
+    </message>
 </context>
 <context>
     <name>xml</name>
@@ -450,7 +485,7 @@ which will cause many problems!</source>
         <translation>用户登录限制</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="880"/>
+        <location filename="../../data/br-system-rs.xml" line="876"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-external.xml" line="26"/>
         <source>Restrict system independent user login</source>
         <translation>限制系统无关用户的登录</translation>
@@ -531,7 +566,7 @@ which will cause many problems!</source>
         <translation>su命令限制</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1065"/>
+        <location filename="../../data/br-system-rs.xml" line="1061"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-external.xml" line="66"/>
         <source>Users outside the wheel group are prohibited from using the &apos;su root&apos; command</source>
         <translation>禁止wheel组之外的用户使用su命令</translation>
@@ -577,7 +612,7 @@ which will cause many problems!</source>
         <translation>限制sftp用户向上跨目录访问</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1154"/>
+        <location filename="../../data/br-system-rs.xml" line="1150"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-external.xml" line="90"/>
         <source>Disable radio network</source>
         <translation>禁用无线网络</translation>
@@ -686,7 +721,7 @@ which will cause many problems!</source>
         <translation>限制系统关键资源大小</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="655"/>
+        <location filename="../../data/br-system-rs.xml" line="651"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-config.xml" line="55"/>
         <source>Turn on SAK key</source>
         <translation>开启SAK键</translation>
@@ -707,7 +742,7 @@ which will cause many problems!</source>
         <translation>限制dmesg信息权限</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="687"/>
+        <location filename="../../data/br-system-rs.xml" line="683"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-config.xml" line="65"/>
         <source>File directory default permission</source>
         <translation>文件目录缺省权限</translation>
@@ -968,222 +1003,222 @@ which will cause many problems!</source>
         <translation>密码过期前发出警告的天数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="474"/>
+        <location filename="../../data/br-system-rs.xml" line="470"/>
         <source>Whether to set the expiration time for the current existing account</source>
         <translation>是否设置现有用户的到期时间（三权及root用户除外）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="489"/>
+        <location filename="../../data/br-system-rs.xml" line="485"/>
         <source>Existing users set expiration days</source>
         <translation>现有用户设置过期天数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="507"/>
+        <location filename="../../data/br-system-rs.xml" line="503"/>
         <source>Minimum password length</source>
         <translation>最小密码长度</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="522"/>
+        <location filename="../../data/br-system-rs.xml" line="518"/>
         <source>Number of capital letters</source>
         <translation>大写字母个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="537"/>
+        <location filename="../../data/br-system-rs.xml" line="533"/>
         <source>Number of lowercase letters</source>
         <translation>小写字母个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="552"/>
+        <location filename="../../data/br-system-rs.xml" line="548"/>
         <source>Number of digits</source>
         <translation>数字个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="567"/>
+        <location filename="../../data/br-system-rs.xml" line="563"/>
         <source>Number of special characters</source>
         <translation>特殊字符个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="582"/>
+        <location filename="../../data/br-system-rs.xml" line="578"/>
         <source>Contains number of character types (special characters, numbers, letters)</source>
         <translation>包含字符类型数（特殊字符、数字、字母）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="597"/>
+        <location filename="../../data/br-system-rs.xml" line="593"/>
         <source>Maximum number of consecutive characters</source>
         <translation>最大连续字符个数</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="610"/>
+        <location filename="../../data/br-system-rs.xml" line="606"/>
         <source>Allow user names</source>
         <translation>允许包含用户名</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="623"/>
+        <location filename="../../data/br-system-rs.xml" line="619"/>
         <source>Enable dictionary check</source>
         <translation>启用字典检查</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="639"/>
+        <location filename="../../data/br-system-rs.xml" line="635"/>
         <source>Stack and RSS sizes are limited (10240)</source>
         <translation>限制stack和rss的大小（10240）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="671"/>
+        <location filename="../../data/br-system-rs.xml" line="667"/>
         <source>Allow administrators to view dmesg only</source>
         <translation>仅允许管理员查看dmesg</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="703"/>
+        <location filename="../../data/br-system-rs.xml" line="699"/>
         <source>No master file in the scanning system</source>
         <translation>扫描系统中的无属主文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="705"/>
+        <location filename="../../data/br-system-rs.xml" line="701"/>
         <source>Check if there are files in the /bin,/usr/bin,/sbin,/usr/sbin directories that do not belong to the user</source>
         <translation>扫描/bin,/usr/bin,/sbin,/usr/sbin关键目录中的无属主文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="720"/>
+        <location filename="../../data/br-system-rs.xml" line="716"/>
         <source>Scanning system files with 777 permissions</source>
         <translation>扫描系统中权限为777的文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="722"/>
+        <location filename="../../data/br-system-rs.xml" line="718"/>
         <source>Scan files with permissions of 777 in the /bin,/usr/bin,/sbin,/usr/sbin directory</source>
         <translation>扫描/bin,/usr/bin,/sbin,/usr/sbin关键目录中权限为777的文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="737"/>
+        <location filename="../../data/br-system-rs.xml" line="733"/>
         <source>Scan system important directory suid-sgid file</source>
         <translation>扫描系统重要目录中有suid-sgid权限的文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="739"/>
+        <location filename="../../data/br-system-rs.xml" line="735"/>
         <source>Scan files with SUID SGID permissions in the/bin,/usr/bin,/sbin, and/usr/sbin directories of the system</source>
         <translation>扫描系统/bin,/usr/bin,/sbin, /usr/sbin目录中具有suid-sgid权限的文件</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="755"/>
+        <location filename="../../data/br-system-rs.xml" line="751"/>
         <source>Turn on system auditd service</source>
         <translation>开启系统审计服务</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="768"/>
+        <location filename="../../data/br-system-rs.xml" line="764"/>
         <source>Add audit rules to path</source>
-        <translation>添加审计规则</translation>
+        <translation>设置审计规则</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="786"/>
+        <location filename="../../data/br-system-rs.xml" line="782"/>
         <source>System log save cycle (weekly)</source>
         <translation>系统日志保存周期（周）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="802"/>
+        <location filename="../../data/br-system-rs.xml" line="798"/>
         <source>The maximum permission of log files and configurations is set to 0644</source>
         <translation>日志文件和配置的最大权限为0644</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="815"/>
+        <location filename="../../data/br-system-rs.xml" line="811"/>
         <source>Log files can only be appended</source>
         <translation>日志仅能被添加</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="832"/>
+        <location filename="../../data/br-system-rs.xml" line="828"/>
         <source>Allow to use CD-ROM device</source>
         <translation>允许使用光驱设备（首次加固时间长，请耐心等待）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="848"/>
+        <location filename="../../data/br-system-rs.xml" line="844"/>
         <source>Allow to use USB device</source>
         <translation>允许使用USB设备</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="864"/>
+        <location filename="../../data/br-system-rs.xml" line="860"/>
         <source>Allow to use serial port device</source>
         <translation>允许使用串口设备</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="890"/>
+        <location filename="../../data/br-system-rs.xml" line="886"/>
         <source>Allow login to account (separated by semicolons)</source>
         <translation>允许登录账号（分号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="906"/>
+        <location filename="../../data/br-system-rs.xml" line="902"/>
         <source>Disable null password user present</source>
         <translation>禁止空密码用户出现</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="922"/>
+        <location filename="../../data/br-system-rs.xml" line="918"/>
         <source>Delete lp, games, operator and adm by default</source>
         <translation>默认删除lp，games，operator，adm</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="932"/>
+        <location filename="../../data/br-system-rs.xml" line="928"/>
         <source>Add users to delete (Split with semicolon)</source>
         <translation>添加需删除用户（分号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="948"/>
+        <location filename="../../data/br-system-rs.xml" line="944"/>
         <source>Rrohibit remote login of root user via SSH</source>
         <translation>禁止通过ssh远程登录root用户</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="964"/>
+        <location filename="../../data/br-system-rs.xml" line="960"/>
         <source>Allow SSH password free login</source>
         <translation>允许ssh免密登录</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="980"/>
+        <location filename="../../data/br-system-rs.xml" line="976"/>
         <source>Allow to use SSH weak encryption algorithm</source>
         <translation>允许ssh弱加密算法</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="997"/>
+        <location filename="../../data/br-system-rs.xml" line="993"/>
         <source>Hiding operating system version information</source>
         <translation>隐藏操作系统版本信息</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1013"/>
+        <location filename="../../data/br-system-rs.xml" line="1009"/>
         <source>Enforce V2 security protocol</source>
         <translation>强制使用V2安全协议</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1026"/>
+        <location filename="../../data/br-system-rs.xml" line="1022"/>
         <source>Prohibit SSH users with empty password from logging in</source>
         <translation>禁止主机密码为空的用户ssh登录</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1036"/>
+        <location filename="../../data/br-system-rs.xml" line="1032"/>
         <source>Modify the default SSH port</source>
         <translation>修改默认ssh端口</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1049"/>
+        <location filename="../../data/br-system-rs.xml" line="1045"/>
         <source>Enable PAM login mechanism</source>
         <translation>启用pam登录机制</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1081"/>
+        <location filename="../../data/br-system-rs.xml" line="1077"/>
         <source>Restrict user sudo command permission</source>
         <translation>限制用户sudo命令使用权限（开启selinux失效）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1094"/>
+        <location filename="../../data/br-system-rs.xml" line="1090"/>
         <source>List of IP addresses that allow remote access (Split with comma)</source>
         <translation>允许远程访问的ip列表（逗号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1104"/>
+        <location filename="../../data/br-system-rs.xml" line="1100"/>
         <source>List of IP addresses for which remote access is prohibited (Split with comma)</source>
         <translation>禁止远程访问的ip列表（逗号分隔）</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1122"/>
+        <location filename="../../data/br-system-rs.xml" line="1118"/>
         <source>If no operation is performed for more than the following time (seconds), the session exits</source>
         <translation>超过以下时间（秒）未操作则会话退出</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="1138"/>
+        <location filename="../../data/br-system-rs.xml" line="1134"/>
         <source>Whether to configure sftpuser special account</source>
         <translation>是否配置sftpuser用户（请自行设置密码）</translation>
     </message>
