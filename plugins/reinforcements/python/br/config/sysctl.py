@@ -56,6 +56,10 @@ CHECK_ETC_INIT_REBOOT_CONF_OVERRIDE = (
 CHECK_ETC_INIT_REBOOT_CONF_OVERRIDE_HAS_EXEC = (
     'grep -P "^\s*exec" ' + ETC_INIT_REBOOT_CONF_OVERRIDE
 )
+# 新用户的重启快捷键更改
+DEFAULT_GCONF_SET_REBOOT_KEYBINDING = 'gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/gnome_settings_daemon/keybindings/power "{}"'
+DEFAULT_GCONF_GET_REBOOT_KEYBINDING = "gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --get /apps/gnome_settings_daemon/keybindings/power"
+DEFAULT_GCONF = "gconf.xml.defaults"
 
 
 # todo: 添加加固项是否兼容的接口。
