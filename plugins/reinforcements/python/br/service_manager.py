@@ -185,10 +185,10 @@ class Initd(ServiceManager):
         pass
 
     def restart(self):
-        self.__call_noresult('restart')
+        self.__call_noresult("restart")
 
     def reload(self):
-        self.__call_noresult('reload')
+        self.__call_noresult("reload")
 
     def is_enable(self):
         return (
