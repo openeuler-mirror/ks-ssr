@@ -16,6 +16,7 @@
 #include <Python.h>
 #include <QCoreApplication>
 
+#include <ssr-marcos.h>
 #include "plugin-python.h"
 #include "utils.h"
 
@@ -24,6 +25,13 @@ namespace KS
 namespace BR
 {
 #define PYTHON_PLUGIN_VAR_REINFORCEMENTS "reinforcements"
+
+static void _PyObjectClean(PyObject **op)
+{
+    Py_XDECREF(*op);
+}
+
+#define PYOBJECT_AUTOPTR __attribute__((cleanup(_PyObjectClean))) PyObject *
 
 ReinforcementPython::ReinforcementPython(PyObject *module,
                                          const QString &className)
@@ -71,6 +79,14 @@ ReinforcementPython::ReinforcementPython(PyObject *module,
     Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "PAM is not configured with a faillock, please manually configure it"));
     Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "umask is already defined in /etc/profile, please delete it first."));
     Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "umask is already defined in /etc/bashrc, please delete it first."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "HISTSIZE is already defined in other files, please delete it first."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Rollback failed, please check the value of HISTSIZE."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "'the maximum stack size' or 'the maximum resident set size' is already defined in other files, please delete it first."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Please remove all USB storage devices before dis/enable USB storage."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Please remove all cdrom devices before dis/enable cdrom."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Not in effect, {} is set elsewhere"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "TMOUT has defined outside of /etc/profile, please remove it first."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Please set a password for empty password account"));
 }
 
 ReinforcementPython::~ReinforcementPython()
@@ -101,6 +117,43 @@ bool ReinforcementPython::init()
 bool ReinforcementPython::isInit()
 {
     return m_isInited;
+}
+
+bool ReinforcementPython::available()
+{
+    auto gstate = PyGILState_Ensure();
+    SCOPE_EXIT(
+        {
+            PyGILState_Release(gstate);
+        });
+    PYOBJECT_AUTOPTR method = PyObject_GetAttrString(this->m_classInstance, "available");
+    if (!method)
+    {
+        // 如果加固项没有实现 is_support 方法，那么 Python 的错误指示器会被设置，并导致下一个加固项初始化失败。
+        PyErr_Clear();
+        return true;
+    }
+    if (!PyCallable_Check(method))
+    {
+        KLOG_ERROR() << "Failed to get method is_support for "
+                     << this->m_moduleFullname.toLocal8Bit()
+                     << "."
+                     << this->m_className.toLocal8Bit();
+        return false;
+    }
+    PYOBJECT_AUTOPTR result = PyObject_CallFunction(method, nullptr);
+    if (result && PyObject_IsTrue(result))
+    {
+        return true;
+    }
+
+    KLOG_ERROR() << "This reinforcement is not support! Module: "
+                 << this->m_moduleFullname.toLocal8Bit()
+                 << "."
+                 << this->m_className.toLocal8Bit()
+                 << ", class: "
+                 << this->m_class;
+    return false;
 }
 
 bool ReinforcementPython::get(QString &args, QString &error)
