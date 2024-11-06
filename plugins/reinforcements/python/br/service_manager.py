@@ -264,17 +264,17 @@ class ServiceManagerProxy(ServiceManager):
                 == 0
             ):
                 return service_ctl
-        raise Exception('No service control command found!')
+        raise Exception("No service control command found!")
 
     @staticmethod
     def get_service_manager(service):
         service_control = ServiceManagerProxy.__get_service_control()
-        if service_control == 'systemctl':
+        if service_control == "systemctl":
             return Systemd(service)
-        elif service_control == 'service':
+        elif service_control == "service":
             return Initd(service)
         else:
-            raise Exception('No support service manager: {0}'.format(service_control))
+            raise Exception("No support service manager: {0}".format(service_control))
 
     def exist(self):
         return self.serviceManager.exist()
