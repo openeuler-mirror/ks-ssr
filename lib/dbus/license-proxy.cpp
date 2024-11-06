@@ -38,19 +38,14 @@ LicenseProxy::LicenseProxy(QObject* parent)
       m_isActivated(false),
       m_expiredTime(0)
 {
-    // 向下兼容，判断KSSSRManager是否激活，已激活则使用KSSSRManager
-    m_objectPath = getObjectPath(LICENSE_OBJECT_NAME);
-    QDBusConnection::systemBus().connect(LICENSE_MANAGER_DBUS_NAME,
-                                         m_objectPath,
-                                         LICENSE_OBJECT_DBUS_NAME,
-                                         QLatin1String(SIGNAL_LICENSE_CHANGED),
-                                         this,
-                                         SLOT(licenseChange(bool)));
 }
 
 QSharedPointer<LicenseProxy> LicenseProxy::getDefault()
 {
     static QSharedPointer<LicenseProxy> licenseProxy = QSharedPointer<LicenseProxy>(new LicenseProxy);
+    // m_objectPath 的获取不能放在构造函数
+    // LicenseProxy 构造时，m_objectPath获取可能会失败，比如在构造时，com.kylinsec.Kiran.LicenseManager 未启动
+    licenseProxy->updateObjectPath();
     licenseProxy->updateLicense();
     return licenseProxy;
 }
