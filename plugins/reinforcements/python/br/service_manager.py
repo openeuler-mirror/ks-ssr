@@ -62,15 +62,15 @@ class ServiceManager:
 class Systemd(ServiceManager):
 
     def __call_noresult(self, action):
-        command = 'systemctl {0} {1}.service'.format(action, self.service)
+        command = "systemctl {0} {1}.service".format(action, self.service)
         br.utils.subprocess_not_output(command)
 
     def __call_result(self, action):
-        command = 'systemctl {0} {1}.service'.format(action, self.service)
+        command = "systemctl {0} {1}.service".format(action, self.service)
         return br.utils.subprocess_has_output(command)
 
     def exist(self):
-        command = 'systemctl list-unit-files | grep {0}\.service | wc -l'.format(
+        command = "systemctl list-unit-files | grep {0}\.service | wc -l".format(
             self.service
         )
         try:
