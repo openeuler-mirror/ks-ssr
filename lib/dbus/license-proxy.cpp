@@ -84,6 +84,32 @@ QString LicenseProxy::getObjectPath(const QString& objectName)
     return path->path();
 }
 
+void LicenseProxy::updateObjectPath()
+{
+    if (m_objectPath.isEmpty())
+    {
+        m_objectPath = getObjectPath(LICENSE_OBJECT_NAME);
+        if (QDBusConnection::systemBus().isConnected())
+        {
+            QDBusConnection::systemBus()
+                .disconnect(LICENSE_MANAGER_DBUS_NAME,
+                            m_objectPath,
+                            LICENSE_OBJECT_DBUS_NAME,
+                            QLatin1String(SIGNAL_LICENSE_CHANGED),
+                            this,
+                            SLOT(licenseChange(bool)));
+        }
+
+        QDBusConnection::systemBus()
+            .connect(LICENSE_MANAGER_DBUS_NAME,
+                     m_objectPath,
+                     LICENSE_OBJECT_DBUS_NAME,
+                     QLatin1String(SIGNAL_LICENSE_CHANGED),
+                     this,
+                     SLOT(licenseChange(bool)));
+    }
+}
+
 void LicenseProxy::updateLicense()
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_MANAGER_DBUS_NAME,
