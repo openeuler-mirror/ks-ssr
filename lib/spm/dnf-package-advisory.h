@@ -19,7 +19,7 @@
 #include <QSharedPointer>
 #include <QString>
 
-#if (KS_DEP_LIBDNF_VERSION >= KS_VERSION_CHECK(0, 65, 0))
+#if (KS_DEP_LIBDNF_VERSION >= KS_VERSION_CHECK(0, 15, 0))
 namespace libdnf
 {
 struct Advisory;
