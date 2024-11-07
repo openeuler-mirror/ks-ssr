@@ -87,7 +87,6 @@ DnfContext::DnfContext()
         KLOG_ERROR() << "Failed to init dnf context! error message: " << error->message;
         return;
     }
-    g_clear_error(&error);
 
     auto dnfCacheInvalidateCB = [](::DnfContext* context, const gchar* message)
     {
