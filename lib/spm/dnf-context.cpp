@@ -21,6 +21,7 @@
 #include <ssr-i.h>
 #include <QDir>
 #include <QFileSystemWatcher>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QProcess>
@@ -28,13 +29,18 @@
 #include <atomic>
 #include <thread>
 #include "lib/base/QThreadWrapper.hpp"
+#include "lib/base/os-release-info.h"
 
 #include "dnf-context.h"
 #include "dnf-package-advisory.h"
 #include "dnf-package.h"
 #include "dnf-repo.h"
 
+#define DNF_LOG_PATH "/var/log/kylinsec/ks-ssr/dnf-log/"
+
 KS::Vulnerability::PackageManager::DnfContext* KS::Vulnerability::PackageManager::DnfContext::m_dnfCtxManager = nullptr;
+
+// extern void dnf_repo_loader_invalidate(DnfRepoLoader* self);
 
 typedef void (*percentageChangedCBType)(DnfState*, uint);
 typedef void (*actionChangedTypeCBType)(DnfState*, DnfStateAction, const char*);
@@ -70,6 +76,10 @@ DnfContext::DnfContext()
     dnf_context_set_cache_dir(m_dnfCtx, DNF_CACHE_DIR);
     dnf_context_set_solv_dir(m_dnfCtx, DNF_SOLV_DIR);
     dnf_context_set_repo_dir(m_dnfCtx, DNF_REPO_DIR);
+    if (!QFileInfo::exists("/etc/os-release"))
+    {
+        dnf_context_set_release_ver(m_dnfCtx, OSReleaseInfo::getOSReleaseVer().toLocal8Bit());
+    }
     dnf_context_set_rpm_verbosity(m_dnfCtx, "info");
     g_autoptr(GError) error = nullptr;
     if (!dnf_context_setup(m_dnfCtx, nullptr, &error))
@@ -395,6 +405,12 @@ UpdatePackageResult DnfContext::installPackages(QList<DnfPackage>& pkgList)
     KLOG_DEBUG() << "Download finished";
     dnf_state_set_allow_cancel(trState, true);
 
+    // 输出本次有变动的相关包
+    if (!hy_goal_write_debugdata(goal.data(), DNF_LOG_PATH, &error))
+    {
+        KLOG_WARNING() << "Failed to write debugdata, error message: " << error->message;
+    }
+
     KLOG_DEBUG() << "Commit started";
     if (!dnf_transaction_commit(transaction, goal.data(),
                                 dnf_state_get_child(trState), &error) ||
@@ -620,6 +636,105 @@ void DnfContext::holdCache()
 void DnfContext::releaseCache()
 {
     m_cacheLock->unlock();
+}
+
+QString DnfContext::processGoalResult(HyGoal goal)
+{
+    QJsonObject goalResult{};
+    QStringList erasuresPkg{};
+    QStringList installsPkg{};
+    QStringList obsoletedPkg{};
+    QStringList upgradesPkg{};
+    g_autoptr(GError) error = nullptr;
+
+    if (g_autoptr(GPtrArray) erasures = hy_goal_list_erasures(goal, &error))
+    {
+        for (uint i = 0; i < erasures->len; i++)
+        {
+            auto pkg = (::DnfPackage*)g_ptr_array_index(erasures, i);
+            erasuresPkg.append(QString(dnf_package_get_nevra(pkg)));
+        }
+    }
+    else
+    {
+        KLOG_WARNING() << "Failed to get erasures packages: " << error->message;
+        g_clear_error(&error);
+    }
+    goalResult.insert("Erasures", QJsonArray::fromStringList(erasuresPkg));
+
+    if (g_autoptr(GPtrArray) installs = hy_goal_list_installs(goal, &error))
+    {
+        for (uint i = 0; i < installs->len; i++)
+        {
+            auto pkg = (::DnfPackage*)g_ptr_array_index(installs, i);
+            installsPkg.append(QString(dnf_package_get_nevra(pkg)));
+        }
+    }
+    else
+    {
+        KLOG_WARNING() << "Failed to get installs packages: " << error->message;
+        g_clear_error(&error);
+    }
+    goalResult.insert("Installs", QJsonArray::fromStringList(installsPkg));
+
+    if (g_autoptr(GPtrArray) obsoleted = hy_goal_list_obsoleted(goal, &error))
+    {
+        for (uint i = 0; i < obsoleted->len; i++)
+        {
+            auto pkg = (::DnfPackage*)g_ptr_array_index(obsoleted, i);
+            obsoletedPkg.append(QString(dnf_package_get_nevra(pkg)));
+        }
+    }
+    else
+    {
+        KLOG_WARNING() << "Failed to get obsoleted packages: " << error->message;
+        g_clear_error(&error);
+    }
+    goalResult.insert("Obsoleted", QJsonArray::fromStringList(obsoletedPkg));
+
+    if (g_autoptr(GPtrArray) upgrades = hy_goal_list_upgrades(goal, &error))
+    {
+        for (uint i = 0; i < upgrades->len; i++)
+        {
+            auto pkg = (::DnfPackage*)g_ptr_array_index(upgrades, i);
+            upgradesPkg.append(QString(dnf_package_get_nevra(pkg)));
+        }
+    }
+    else
+    {
+        KLOG_WARNING() << "Failed to get upgrades packages: " << error->message;
+        g_clear_error(&error);
+    }
+    goalResult.insert("Upgrades", QJsonArray::fromStringList(upgradesPkg));
+
+    return QJsonDocument(goalResult).toJson(QJsonDocument::JsonFormat::Compact);
+}
+
+QString DnfContext::getPreRepairInfo(QList<DnfPackage>& pkgList)
+{
+    if (pkgList.size() == 0)
+    {
+        KLOG_WARNING() << "Failed to get pre repair info!, pkgList is empty!";
+        return QString();
+    }
+    g_autoptr(GError) error = nullptr;
+    auto goal = QSharedPointer<typename std::remove_pointer<HyGoal>::type>(hy_goal_create(pkgList.first().getDnfSack()), &hy_goal_free);
+    g_autoptr(DnfTransaction) transaction = dnf_transaction_new(m_dnfCtx);
+    dnf_transaction_set_repos(transaction, dnf_context_get_repos(m_dnfCtx));
+
+    for (auto& pkg : pkgList)
+    {
+        hy_goal_install(goal.data(), pkg.getDnfPackage());
+    }
+    dnf_transaction_set_flags(transaction, DNF_TRANSACTION_FLAG_NONE);
+    if (!dnf_transaction_depsolve(transaction, goal.data(),
+                                  nullptr, &error))
+    {
+        KLOG_ERROR() << "Failed to solve dep, error message: " << error->message;
+        return QString();
+    }
+
+    return processGoalResult(goal.data());
 }
 
 }  // namespace PackageManager
