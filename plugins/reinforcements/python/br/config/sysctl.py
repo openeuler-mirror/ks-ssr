@@ -156,24 +156,13 @@ class KeyRebootSwitch:
         return len(output) != 0
 
     def open(self):
-        command = "{0}".format(COMPOSITE_KEY_REBOOT_ENABLE_CMD)
-        br.utils.subprocess_not_output(command)
-        rm_cmd = "rm -rf {0}".format(SCHEMAS_CONF_FILEPATH)
-        br.utils.subprocess_not_output(rm_cmd)
-        self.conf.set_value(
-            "1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=''", MODIFY_RULE_OPEN
-        )
+        br.utils.subprocess_not_output(SYSTEMD_REBOOT_KEY_ENABLE)
+        br.utils.subprocess_not_output(SCHEMAS_REBOOT_KEY_ENABLE)
         self.reload_schemas()
 
     def close(self):
-        command = "{0}".format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
-        br.utils.subprocess_not_output(command)
-        rm_cmd = "rm -rf {0}".format(SCHEMAS_CONF_FILEPATH)
-        br.utils.subprocess_not_output(rm_cmd)
-        self.conf.set_value(
-            "1=[org.mate.SettingsDaemon.plugins.media-keys]\npower='<Control><Alt>Delete'",
-            MODIFY_RULE_CLOSE,
-        )
+        br.utils.subprocess_not_output(SYSTEMD_REBOOT_KEY_DISABLE)
+        br.utils.subprocess_not_output(SCHEMAS_REBOOT_KEY_DISABLE)
         self.reload_schemas()
 
     def get_on_centos_6(self):
