@@ -133,22 +133,18 @@ class Dmesg(Sysctl):
 
 
 class KeyRebootSwitch:
-    def __init__(self):
-        self.conf = br.configuration.Table(SCHEMAS_CONF_FILEPATH, ",\\s+")
-
     def reload_schemas(self):
-        cmd = "{0}".format(RELOAD_SCHEMAS_CMD)
-        br.utils.subprocess_not_output(cmd)
+        br.utils.subprocess_not_output(SCHEMAS_RELOAD)
 
     # 判断文件是否存在
-    def service_exists(self):
+    def systemd_reboot_key_service_exists(self):
         command = "ls /usr/lib/systemd/system/ |grep -wx ctrl-alt-del.target"
         cmd = "{0}".format(command)
         output = br.utils.subprocess_has_output(cmd)
         return len(output) != 0
 
-    def service_status(self):
-        command = "{0} | grep masked".format(COMPOSITE_KEY_REBOOT_STATUS_CMD)
+    def systemd_reboot_key_service_status(self):
+        command = "{0} | grep masked".format(SYSTEMD_REBOOT_KEY_STATUS)
         output = br.utils.subprocess_has_output(command)
         return len(output) == 0
 
