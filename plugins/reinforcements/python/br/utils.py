@@ -77,8 +77,23 @@ def subprocess_has_output_ignore_error_handling(args):
 
     return child_process.stdout.read().strip().decode("utf-8")
 
+
 def is_cent_os_6():
-    return len(br.utils.subprocess_has_output("cat /etc/redhat-release | grep -E '\s6\.'")) > 0
+    return (
+        len(br.utils.subprocess_has_output("cat /etc/redhat-release | grep -E '\s6\.'"))
+        > 0
+    )
+
 
 def is_cent_os_7():
-    return len(br.utils.subprocess_has_output("cat /etc/redhat-release | grep -E '\s7\.'")) > 0
+    return (
+        len(br.utils.subprocess_has_output("cat /etc/redhat-release | grep -E '\s7\.'"))
+        > 0
+    )
+
+
+def is_cent_os_8():
+    return (
+        len(br.utils.subprocess_has_output("cat /etc/redhat-release | grep -E '\s8\.'"))
+        > 0
+    )
