@@ -36,33 +36,32 @@ SCHEMAS_REBOOT_KEY_ENABLE = "rm -f " + SCHEMAS_REBOOT_KEY_CONF_FILE
 # 开关机快捷键 gconf
 # centos6桌面配置的是gnome（gconf）快捷键，使用gconftool-2进行配置，注销生效
 # 设置时，需要设置现有用户的快捷键，同时设置后续新用户的默认快捷键
-# 另外 红帽官方文档介绍的 /etc/init/control-alt-delete.conf 和 /etc/inittab，也要设置，配置的是命令行的快捷键（即/etc/init/control-alt-delete.override内容）
+# 另外 红帽官方文档介绍的 /etc/init/control-alt-delete.conf 和 /etc/inittab，也要设置，配置的是命令行的快捷键
+# 6.10 支持 /etc/init/control-alt-delete.override 覆蓋配置，但 6.0 不支持，需要直接更改 /etc/init/control-alt-delete.conf
 # 详见：https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/deployment_guide/disabling-rebooting-using-ctrl-alt-del
 
 # 判断后台进程是否启动
 CHECK_GCONFD_PROC = "pgrep gconfd-2"
-# gconf 获取命令
-GCONF_GET_REBOOT_KEYBINDING = (
-    "sudo -u {} gconftool-2 --get /apps/gnome_settings_daemon/keybindings/power"
-)
+# gconf 获取命令：参数为配置文件路径
+GCONF_GET_REBOOT_KEYBINDING = "gconftool-2 --direct --config-source xml:readwrite:{}/.gconf --get /apps/gnome_settings_daemon/keybindings/power"
 DEFAULT_REBOOT_KEYBINDING = "<Control><Alt>Delete"
-# gconf 设置命令
-GCONF_SET_REBOOT_KEYBINDING = 'sudo -u {} gconftool-2 --set /apps/gnome_settings_daemon/keybindings/power --type string "{}"'
-KEYBINDING_POWER = "power"
+# 这里不能用sudo -u 或者 su -l 去改写配置，6.0 sudo命令需要tty，自启进程不支持，6.10不支持 su -l
+# gconf 设置命令：第一参数为配置文件路径，第二参数为配置值
+GCONF_SET_REBOOT_KEYBINDING = 'gconftool-2 --direct --config-source xml:readwrite:{}/.gconf --set /apps/gnome_settings_daemon/keybindings/power --type string "{}"'
 
 ETC_INIT_REBOOT_CONF = "/etc/init/control-alt-delete.conf"
-ETC_INIT_REBOOT_CONF_OVERRIDE = "/etc/init/control-alt-delete.override"
-DISABLE_ETC_INIT_REBOOT_CONF = 'echo "exec true" > ' + ETC_INIT_REBOOT_CONF_OVERRIDE
-ENABLE_ETC_INIT_REBOOT_CONF = "rm -f " + ETC_INIT_REBOOT_CONF_OVERRIDE
+ETC_INIT_REBOOT_BAK_CONF = (
+    "/etc/init/control-alt-delete.conf.bak"  # 这个备份文件用于使能重启快捷键
+)
+ETC_INIT_REBOOT_CONF_BAK = "mv " + ETC_INIT_REBOOT_CONF + " " + ETC_INIT_REBOOT_BAK_CONF
+DISABLE_ETC_INIT_REBOOT_CONF = 'echo "exec true" > ' + ETC_INIT_REBOOT_CONF
+ENABLE_ETC_INIT_REBOOT_CONF = (
+    "mv " + ETC_INIT_REBOOT_BAK_CONF + " " + ETC_INIT_REBOOT_CONF
+)
 CHECK_ETC_INIT_REBOOT_CONF = (
-    'grep -P "^\s*exec /sbin(shutdown|reboot)" ' + ETC_INIT_REBOOT_CONF
+    'grep -P "^\s*exec /sbin/(shutdown|reboot)" ' + ETC_INIT_REBOOT_CONF
 )
-CHECK_ETC_INIT_REBOOT_CONF_OVERRIDE = (
-    'grep -P "^\s*exec /sbin(shutdown|reboot)" ' + ETC_INIT_REBOOT_CONF_OVERRIDE
-)
-CHECK_ETC_INIT_REBOOT_CONF_OVERRIDE_HAS_EXEC = (
-    'grep -P "^\s*exec" ' + ETC_INIT_REBOOT_CONF_OVERRIDE
-)
+
 # 新用户的重启快捷键更改
 DEFAULT_GCONF_SET_REBOOT_KEYBINDING = 'gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/gnome_settings_daemon/keybindings/power "{}"'
 DEFAULT_GCONF_GET_REBOOT_KEYBINDING = "gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --get /apps/gnome_settings_daemon/keybindings/power"
