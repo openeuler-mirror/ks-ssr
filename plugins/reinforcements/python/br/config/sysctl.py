@@ -301,11 +301,14 @@ class KeyRebootSwitch:
                     "gconfd-2 do not running, We will not check gconf reboot keybinding"
                 )
 
-            # override
-            if os.path.exists(ETC_INIT_REBOOT_CONF_OVERRIDE):
-                retdata[ETC_INIT_REBOOT_CONF_OVERRIDE] = br.utils.subprocess_has_output(
-                    "cat " + ETC_INIT_REBOOT_CONF_OVERRIDE
-                )
+            # ETC_INIT_REBOOT_CONF
+            if os.path.exists(ETC_INIT_REBOOT_CONF):
+                with open(ETC_INIT_REBOOT_CONF, "r") as file:
+                    raw_data = file.read()
+                    raw_data_bytes = raw_data.encode("utf-8")
+                    encoded_data = base64.b64encode(raw_data_bytes)
+                    encoded_str = encoded_data.decode("utf-8")
+                    retdata[ETC_INIT_REBOOT_CONF] = encoded_str
 
             return (True, json.dumps(retdata))
 
