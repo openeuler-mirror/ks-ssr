@@ -172,11 +172,11 @@ class KeyRebootSwitch:
             for user_home in os.listdir("/home"):
                 user_path = os.path.join("/home", user_home)
                 if os.path.isdir(user_path):
-                    command = GCONF_GET_REBOOT_KEYBINDING.format(user_home)
+                    command = GCONF_GET_REBOOT_KEYBINDING.format(user_path)
                     if len(br.utils.subprocess_has_output(command)):
                         return True
             # root
-            command = GCONF_GET_REBOOT_KEYBINDING.format("root")
+            command = GCONF_GET_REBOOT_KEYBINDING.format("/root")
             if len(br.utils.subprocess_has_output(command)):
                 return True
             # 默认配置
