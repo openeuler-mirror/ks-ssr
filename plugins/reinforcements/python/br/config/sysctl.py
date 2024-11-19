@@ -87,20 +87,17 @@ class Sysctl(object):
             "sysctl -p {0}".format(SAK_KEY_SWITCH_CONF_SYS_FILE), ignore_exception=True
         )
         cmd = "sysctl -n {}".format(self.key)
-        return br.utils.subprocess_has_output(cmd)
+        return int(br.utils.subprocess_has_output(cmd))
 
     def get(self):
         retdata = dict()
-        value = self.get_value()
-        retdata[self.key] = value == "1"
+        retdata[self.key] = self.get_value()
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        value = ""
-        if str(args[self.key]):
-            value = "1" if bool(args[self.key]) else "0"
-        self.conf.set_value(self.key, value)
+        value = self.get_value()
+        self.conf.set_value(self.key, int(args[self.key]))
         check_value = self.get_value()
         if check_value != value:
             return (False, "Not in effect, {} is set elsewhere".format(self.key))
