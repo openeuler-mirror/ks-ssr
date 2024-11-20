@@ -144,7 +144,7 @@ class KeyRebootSwitch:
         return len(output) != 0
 
     def systemd_reboot_key_service_status(self):
-        command = "{0} | grep masked".format(SYSTEMD_REBOOT_KEY_STATUS)
+        command = "{0} | grep 'Loaded: masked'".format(SYSTEMD_REBOOT_KEY_STATUS)
         output = br.utils.subprocess_has_output(command)
         return len(output) == 0
 
