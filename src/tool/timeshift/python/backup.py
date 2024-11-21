@@ -78,8 +78,8 @@ class Backup(object):
         all_phases = ['rpm_file_list', 'generate_boot']
         all_phases.extend(self.backup_dir_list)
         current_progress = int(float(len(self.back_done_list)) / len(all_phases) * 100)
-        with open(self.progress_file, "a+") as fd:
-            fd.write("%d\n" % current_progress)
+        with open(self.progress_file, "w") as fd:
+            fd.write("%d" % current_progress)
 
     @staticmethod
     def clean(path):
