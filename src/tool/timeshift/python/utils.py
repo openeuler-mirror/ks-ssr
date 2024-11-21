@@ -1,4 +1,4 @@
-# coding:utf-8
+# -*- coding: utf-8 -*-
 
 import logging
 import subprocess
@@ -63,7 +63,7 @@ def get_logging_config(level, console, log_file):
             'file2': {
                 'formatter': 'fmt',
                 'class': 'logging.FileHandler',
-                'level': 'DEBUG',
+                'level': 'INFO',
                 'filename': TMP_BACKUP_LOG,
                 'mode': "w"
             }
@@ -177,12 +177,16 @@ def calculate_partition_by_df(path, logger, pid_list=None):
     return True, 0, partition_info
 
 
-def calculate_used_space_by_du(path, logger, pid_list=None):
+def calculate_used_space_by_du(path, logger, pid_list=None, is_check_rpm_file=False):
+    if is_check_rpm_file:
+        if not os.path.exists(path):
+            logger.warning('Failed to calculate the %s used size, path is not exists' % path)
+            return True, 0, 0
     if not os.path.exists(path):
         return False, 1, 'Failed to calculate the %s used size, path is not exists' % path
 
     try:
-        used_dist_cmd = "du -s %s | awk 'NR==1{print $1}'" % path
+        used_dist_cmd = "du -s '%s' | awk 'NR==1{print $1}'" % path
         status, err_code, used_space = execute_cmd(used_dist_cmd, logger, pid_list=pid_list)
         if status is not True:
             return False, 2, 'Failed to calculate the %s used size' % path
