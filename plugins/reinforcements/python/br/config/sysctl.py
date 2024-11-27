@@ -51,6 +51,13 @@ DEFAULT_REBOOT_KEYBINDING = "<Control><Alt>Delete"
 # gconf 设置命令：第一参数为配置文件路径，第二参数为配置值
 GCONF_SET_REBOOT_KEYBINDING = 'gconftool-2 --direct --config-source xml:readwrite:{}/.gconf --set /apps/gnome_settings_daemon/keybindings/power --type string "{}"'
 
+# 初始状态下，没有设置快捷键，所以需要判断
+GCONF_CHECK_REBOOT_KEYBINDING = "gconftool-2 --direct --config-source xml:readwrite:{}/.gconf -a /apps/gnome_settings_daemon/keybindings | grep power"
+# 当没有的情况下，需要删除，如果置空，会导致默认重启快捷键失效
+GCONF_UNSET_REBOOT_KEYBINDING = "gconftool-2 --direct --config-source xml:readwrite:{}/.gconf --unset /apps/gnome_settings_daemon/keybindings/power"
+# 置空值，用于判断是否设置过，避免加固后新创建用户受影响
+UNSET_VALUE = "UNSET_VALUE"
+
 ETC_INIT_REBOOT_CONF = "/etc/init/control-alt-delete.conf"
 ETC_INIT_REBOOT_BAK_CONF = (
     "/etc/init/control-alt-delete.conf.bak"  # 这个备份文件用于使能重启快捷键
