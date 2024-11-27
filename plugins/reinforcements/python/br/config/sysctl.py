@@ -295,13 +295,23 @@ class KeyRebootSwitch:
                 for user_home in os.listdir("/home"):
                     user_path = os.path.join("/home", user_home)
                     if os.path.isdir(user_path):
-                        command = GCONF_GET_REBOOT_KEYBINDING.format(user_path)
-                        value = br.utils.subprocess_has_output(command)
-                        retdata[user_path] = value
+                        # 当存在配置时，才创建备份
+                        command = GCONF_CHECK_REBOOT_KEYBINDING.format(user_path)
+                        if len(br.utils.subprocess_has_output(command)):
+                            command = GCONF_GET_REBOOT_KEYBINDING.format(user_path)
+                            value = br.utils.subprocess_has_output(command)
+                            retdata[user_path] = value
+                        else:
+                            retdata[user_path] = UNSET_VALUE
+
                 # root
-                command = GCONF_GET_REBOOT_KEYBINDING.format("/root")
-                value = br.utils.subprocess_has_output(command)
-                retdata["/root"] = value
+                command = GCONF_CHECK_REBOOT_KEYBINDING.format("/root")
+                if len(br.utils.subprocess_has_output(command)):
+                    command = GCONF_GET_REBOOT_KEYBINDING.format("/root")
+                    value = br.utils.subprocess_has_output(command)
+                    retdata["/root"] = value
+                else:
+                    retdata["/root"] = UNSET_VALUE
 
                 # 默认配置
                 value = br.utils.subprocess_has_output(
