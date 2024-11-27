@@ -230,11 +230,17 @@ class KeyRebootSwitch:
 
         # 命令行
         if is_enable:
-            br.utils.subprocess_not_output(ENABLE_ETC_INIT_REBOOT_CONF)
+            if not len(br.utils.subprocess_has_output(CHECK_ETC_INIT_REBOOT_CONF)):
+                if os.path.exists(ETC_INIT_REBOOT_BAK_CONF):
+                    br.utils.subprocess_not_output(ENABLE_ETC_INIT_REBOOT_CONF)
+                else:
+                    return "do not detect /etc/init/control-alt-delete.conf.bak, pleace check."
         else:
             if not os.path.exists(ETC_INIT_REBOOT_BAK_CONF):  # 不存在备份，先备份
                 br.utils.subprocess_not_output(ETC_INIT_REBOOT_CONF_BAK)
             br.utils.subprocess_not_output(DISABLE_ETC_INIT_REBOOT_CONF)
+
+        return ""
 
     def get(self):
         retdata = dict()
