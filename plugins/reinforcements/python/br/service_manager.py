@@ -6,6 +6,7 @@ import time
 import abc
 
 SERVICE_MANAGER_LIST = ["systemctl", "service"]
+SERVICE_AUTOSTART = "autostart"
 
 
 class ServiceManager:
