@@ -115,17 +115,12 @@ class Sysctl(object):
 
     def backup(self):
         retdata = dict()
-        value = self.get_value()
-        if value:  # 原样备份
-            retdata[self.key] = value
+        retdata[self.key] = self.get_value()
         return (True, json.dumps(retdata))
 
     def rollback(self, args_json):
         args = json.loads(args_json)
-        if self.key in args:  # 原样还原
-            self.conf.set_value(self.key, args[self.key])
-        else:
-            self.conf.del_record(self.key)
+        self.conf.set_value(self.key, args[self.key])
         return self.set(args_json)
 
 
