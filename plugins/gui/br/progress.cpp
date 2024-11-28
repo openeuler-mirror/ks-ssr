@@ -152,16 +152,38 @@ void Progress::completeProcess(ProgressInfo info)
     }
     else
     {
-        m_ui->m_definition->setText(info.method == PROCESS_METHOD_SCAN
-                                        ? QString(tr("Scanned %1, %2 conform, %3 inconform!"))
-                                              .arg(info.successCount + info.failureCount)
-                                              .arg(info.successCount)
-                                              .arg(info.failureCount)
-                                        : QString(tr("Reinforcement completed %1, successfully reinforced %2, failed %3!"))
-                                              .arg(info.successCount + info.failureCount)
-                                              .arg(info.successCount)
-                                              .arg(info.failureCount));
+        if (info.isCanceled && info.method == PROCESS_METHOD_SCAN)
+        {
+            // 扫描取消
+            m_ui->m_definition->setText(QString(tr("Scanned %1, %2 conform, %3 inconform, %4 unscan!"))
+                                            .arg(info.successCount + info.failureCount)
+                                            .arg(info.successCount)
+                                            .arg(info.failureCount)
+                                            .arg(info.total - info.successCount - info.failureCount));
+        }
+        else if (info.isCanceled && info.method == PROCESS_METHOD_FASTEN)
+        {
+            // 加固取消
+            m_ui->m_definition->setText(QString(tr("Reinforcement completed %1, successfully reinforced %2, failed %3, unreinforce %4!"))
+                                            .arg(info.successCount + info.failureCount)
+                                            .arg(info.successCount)
+                                            .arg(info.failureCount)
+                                            .arg(info.total - info.successCount - info.failureCount));
+        }
+        else
+        {
+            m_ui->m_definition->setText(info.method == PROCESS_METHOD_SCAN
+                                            ? QString(tr("Scanned %1, %2 conform, %3 inconform!"))
+                                                  .arg(info.successCount + info.failureCount)
+                                                  .arg(info.successCount)
+                                                  .arg(info.failureCount)
+                                            : QString(tr("Reinforcement completed %1, successfully reinforced %2, failed %3!"))
+                                                  .arg(info.successCount + info.failureCount)
+                                                  .arg(info.successCount)
+                                                  .arg(info.failureCount));
+        }
     }
+
     m_progressTimer->stop();
     m_ui->m_progressBar->hide();
     m_ui->m_return->disconnect();
