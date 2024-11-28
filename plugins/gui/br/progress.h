@@ -41,6 +41,7 @@ struct ProgressInfo
     int failureCount = 0;
     double progress;
     ProcessMethod method = PROCESS_METHOD_STANDBY;
+    bool isCanceled = false;
 };
 
 class Progress : public QWidget
