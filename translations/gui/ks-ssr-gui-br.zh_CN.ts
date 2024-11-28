@@ -331,8 +331,8 @@
     </message>
     <message>
         <location filename="../../plugins/gui/br/progress.cpp" line="73"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="176"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="184"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="202"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="210"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
