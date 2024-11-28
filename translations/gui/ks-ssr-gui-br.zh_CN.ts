@@ -253,7 +253,7 @@
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/item-table.cpp" line="492"/>
+        <location filename="../../plugins/gui/br/item-table.cpp" line="491"/>
         <source>Info</source>
         <translation>说明</translation>
     </message>
