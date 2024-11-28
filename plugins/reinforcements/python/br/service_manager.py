@@ -243,10 +243,28 @@ class SwitchBase(object):
             return (False, "Abnormal service!")
 
     def backup(self):
-        return self.get()
+        retdata = dict()
+        retdata[self.key] = self.systemd_proxy.is_active()
+        retdata[SERVICE_AUTOSTART] = self.systemd_proxy.is_enable()
+        return (True, json.dumps(retdata))
 
     def rollback(self, args_json):
-        return self.set(args_json)
+        args = json.loads(args_json)
+        try:
+            if args[self.key]:
+                if self.systemd_proxy.exist():
+                    self.systemd_proxy.start()
+            else:
+                if self.systemd_proxy.exist():
+                    self.systemd_proxy.stop()
+            if args[SERVICE_AUTOSTART]:
+                self.systemd_proxy.enable()
+            else:
+                self.systemd_proxy.disable()
+            return (True, "")
+        except Exception as e:
+            br.log.error(str(e))
+            return (False, "Abnormal service!")
 
 
 class ServiceManagerProxy(ServiceManager):
