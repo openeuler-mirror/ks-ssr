@@ -98,7 +98,6 @@ DnfContext::DnfContext()
     connect(m_repoWatcher, &QFileSystemWatcher::directoryChanged, [](const QString&)
             {
                 KLOG_DEBUG() << "repo changed";
-                dnf_repo_loader_invalidate(dnf_context_get_repo_loader(m_dnfCtxManager->getDnfContext()));
                 emit m_dnfCtxManager->cacheInvalidate();
             });
 
