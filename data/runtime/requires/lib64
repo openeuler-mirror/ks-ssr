@@ -44,7 +44,7 @@ libnotify
 libpcre
 libpcre2-16
 libpng15
-libpython2.7
+libpython
 libqrencode
 libQt5Core
 libQt5DBus
