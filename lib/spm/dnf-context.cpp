@@ -86,9 +86,8 @@ DnfContext::DnfContext()
         return;
     }
 
-    auto dnfCacheInvalidateCB = [](::DnfContext* context, const gchar* message)
+    auto dnfCacheInvalidateCB = [](::DnfContext*, const gchar* message)
     {
-        Q_UNUSED(context);
         KLOG_DEBUG() << "cache invalidate, because " << message;
         emit m_dnfCtxManager->cacheInvalidate();
     };
