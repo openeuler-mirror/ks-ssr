@@ -120,7 +120,7 @@ bool Configuration::isIFCEnable(int type)
     // 未配置情况下，接口为启用状态
     RETURN_VAL_IF_FALSE(m_interfaceSettings->childGroups().contains(group), true)
 
-    // FIXME: 为了 HDMI 接口禁用所特例化的功能
+    // 为了 HDMI 接口禁用所特例化的功能
     RETURN_VAL_IF_TRUE(INTERFACE_TYPE_HDMI == type, m_isEnableHDMI);
 
     m_interfaceSettings->beginGroup(group);
