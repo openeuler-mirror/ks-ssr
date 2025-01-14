@@ -302,7 +302,6 @@ void Configuration::finishGrubsUpdate()
     this->m_grubUpdateThread = nullptr;
     this->checkWaitingUpdateGrubs();
 
-    // FIXME: 为了 HDMI 接口的特殊化处理
     // 当更新内核参数配置命令更新完毕后再更新配置文件的标志位
     m_interfaceSettings->beginGroup(QString("interface%1").arg(INTERFACE_TYPE_HDMI));
     m_interfaceSettings->setValue(DI_SK_TYPE, INTERFACE_TYPE_HDMI);
