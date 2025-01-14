@@ -191,7 +191,7 @@ void Configuration::init()
 {
     m_deviceSettings = new QSettings(SSR_DEVICE_CONFIG_FILE, QSettings::NativeFormat, this);
     m_interfaceSettings = new QSettings(SSR_DI_CONFIG_FILE, QSettings::NativeFormat, this);
-    // FIXME: 为了 HDMI 接口的特殊化处理
+    // 为了 HDMI 接口的特殊化处理
     auto group = QString("interface%1").arg(INTERFACE_TYPE_HDMI);
     auto isContainGroup = m_interfaceSettings->childGroups().contains(group);
     m_interfaceSettings->beginGroup(group);
