@@ -145,8 +145,8 @@ private:
     std::atomic<int> m_cacheNeedUpdate{0};
     std::atomic<::DnfState*> m_installState{nullptr};
     ::GCancellable* volatile m_installCancellable{nullptr};
-    QFileSystemWatcher* m_repoWatcher;
-    QMutex* m_cacheLock;
+    QFileSystemWatcher* m_repoWatcher{nullptr};
+    QMutex* m_cacheLock{nullptr};
     std::atomic<bool> m_isCancel{false};
     bool m_installFinishedWithCancel{false};
 };
