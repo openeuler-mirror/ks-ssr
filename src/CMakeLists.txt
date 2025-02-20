@@ -1,4 +1,6 @@
 add_subdirectory(tool)
 add_subdirectory(daemon)
-add_subdirectory(gui)
+if(ENABLE_GUI)
+  add_subdirectory(gui)
+endif()
 add_subdirectory(notify)
