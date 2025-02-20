@@ -170,8 +170,19 @@ install(
 install(FILES ${PROJECT_SOURCE_DIR}/data/br-iptables.rules
         DESTINATION ${SSR_BR_INSTALL_DATADIR}/)
 
-install(FILES ${PROJECT_SOURCE_DIR}/data/help.pdf
-        DESTINATION ${SSR_INSTALL_DATADIR}/)
+if(ENABLE_GUI)
+  install(FILES ${PROJECT_SOURCE_DIR}/data/help.pdf
+          DESTINATION ${SSR_INSTALL_DATADIR}/)
 
-install(FILES ${PROJECT_SOURCE_DIR}/data/AlibabaPuHuiTi-3-55-Regular.ttf
-        DESTINATION ${SSR_INSTALL_DATADIR}/)
+  # desktop
+  configure_file(${PROJECT_SOURCE_DIR}/data/ks-ssr-gui.desktop.in
+                 ${PROJECT_BINARY_DIR}/data/ks-ssr-gui.desktop)
+  install(FILES ${PROJECT_BINARY_DIR}/data/ks-ssr-gui.desktop
+          DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/applications/)
+  # appdata.xml
+  install(FILES ${PROJECT_SOURCE_DIR}/data/ks-ssr-gui.appdata.xml
+          DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/metainfo/)
+
+  install(FILES ${PROJECT_SOURCE_DIR}/data/AlibabaPuHuiTi-3-55-Regular.ttf
+          DESTINATION ${SSR_INSTALL_DATADIR}/)
+endif()
