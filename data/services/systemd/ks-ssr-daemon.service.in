@@ -1,0 +1,14 @@
+[Unit]
+Description=KylinSec SSR Daemon Service
+After=@SYSTEM_SERVICE_DEP@network.service
+@IS_REFUSE_MANUAL_STOP@
+
+[Service]
+Type=dbus
+BusName=com.kylinsec.SSR
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/ks-ssr-daemon
+Restart=on-failure
+@SELINUX_CONTEXT@
+
+[Install]
+WantedBy=multi-user.target
