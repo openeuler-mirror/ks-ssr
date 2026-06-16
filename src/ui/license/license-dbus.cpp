@@ -122,8 +122,7 @@ void LicenseDBus::updateLicense()
 
     //获取激活状态
     auto activationStatus = (LicenseActivationStatus)data.value(LICENSE_JK_ACTIVATION_STATUS).toInt();
-    auto currTime = QDateTime::currentDateTime().toSecsSinceEpoch();
-    m_isActivated = (activationStatus == LAS_ACTIVATED) && (currTime <= m_expiredTime);
+    m_isActivated = activationStatus == LAS_ACTIVATED;
 }
 
 bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QString& errorMsg)
