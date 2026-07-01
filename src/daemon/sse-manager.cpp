@@ -8,9 +8,9 @@
 #include "src/daemon/sse-manager.h"
 #include <json/json.h>
 #include "lib/base/base.h"
-#include "lib/core/sse-categories.h"
-#include "lib/core/sse-configuration.h"
-#include "lib/core/sse-plugins.h"
+#include "src/daemon/sse-categories.h"
+#include "src/daemon/sse-configuration.h"
+#include "src/daemon/sse-plugins.h"
 #include "sse-i.h"
 
 namespace Kiran

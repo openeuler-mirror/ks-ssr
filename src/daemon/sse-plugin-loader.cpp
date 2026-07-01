@@ -5,7 +5,7 @@
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "lib/core/sse-plugin-loader.h"
+#include "src/daemon/sse-plugin-loader.h"
 
 namespace Kiran
 {
