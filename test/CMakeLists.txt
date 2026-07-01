@@ -17,7 +17,8 @@ target_include_directories(${TARGET_NAME} PUBLIC
 
 target_link_libraries(${TARGET_NAME} PRIVATE
                       ${GTEST_LIBRARIES}
-                      lib-base)
+                      lib-base
+                      lib-config)
 
 add_test(NAME test 
         COMMAND ${TARGET_NAME})

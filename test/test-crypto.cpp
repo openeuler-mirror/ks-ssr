@@ -28,6 +28,6 @@ TEST(DESTest, EncryptAndDecrypt)
 
     auto encrypted_text = Kiran::CryptoHelper::des_encrypt(raw_text);
     auto decrypted_text = Kiran::CryptoHelper::des_decrypt(encrypted_text);
-    // fmt::print("{0}.", encrypted_text.c_str());
+    // fmt::print("xxxxxxxxxxx {0} {1}.", encrypted_text.c_str(), encrypted_text.size());
     ASSERT_STREQ(raw_text.c_str(), decrypted_text.c_str());
 }
