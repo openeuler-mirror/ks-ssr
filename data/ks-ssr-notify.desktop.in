@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Security reinforcement notify
+Name[zh_CN]=主机安全加固提示
+Comment=Security reinforcement notify
+Comment[zh_CN]=主机安全加固提示
+Exec=ks-ssr-notify
+Terminal=false
+Type=Application

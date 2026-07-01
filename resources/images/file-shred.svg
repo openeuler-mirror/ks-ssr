@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="文件粉碎icon" class="cls-1" d="M1480,951v-2h1v-8.45a0.568,0.568,0,0,1,.59-0.551h11.92a0.568,0.568,0,0,1,.59.551V949h0.9v2h-15Zm12.76-9.762h-10.42V949h10.42v-7.762Zm-8.78,1.754h7.15a0.146,0.146,0,0,1,.15.138v0.825a0.146,0.146,0,0,1-.15.138h-7.15a0.14,0.14,0,0,1-.15-0.138V943.13A0.14,0.14,0,0,1,1483.98,942.992ZM1491,947h-7v-1h7v1Zm-9,9h-1v-3h1v3Zm3,0h-1v-3h1v3Zm3,0h-1v-3h1v3Zm3,0h-1v-3h1v3Zm3,0h-1v-3h1v3Z" transform="translate(-1479.5 -940)"/>
+</svg>

@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=com.kylinsec.SSR
+User=root
+Exec=@CMAKE_INSTALL_FULL_BINDIR@/ks-ssr-daemon
+@SYSTEMD_SERVICE@
