@@ -41,7 +41,7 @@ std::shared_ptr<SSEOperation> SSEJob::add_operation(const std::string &plugin_na
     operation->job_id = this->job_id_;
     operation->operation_id = this->operations_.size() + 1;
     operation->plugin_name = plugin_name;
-    operation->reforcement_name = reinforcement_name;
+    operation->reinforcement_name = reinforcement_name;
     operation->func = std::move(func);
 
     auto iter = this->operations_.emplace(operation->operation_id, operation);

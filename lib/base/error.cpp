@@ -56,6 +56,8 @@ std::string SSEError::get_error_desc(SSEErrorCode error_code)
     case SSEErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2:
     case SSEErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB:
     case SSEErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_ARGS_FAILED:
+    case SSEErrorCode::ERROR_PLUGIN_AUDIT_GET_JSON_ERROR:
+    case SSEErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR:
         error_desc = _("Internel error.");
         break;
     default:

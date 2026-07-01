@@ -8,7 +8,6 @@
 #pragma once
 
 #include "lib/base/base.h"
-#include "sse-i.h"
 
 namespace Kiran
 {

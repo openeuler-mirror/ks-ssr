@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/core/sse-plugins.cpp
+ * @file          /kiran-sse-manager/src/daemon/sse-plugins.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -54,7 +54,7 @@ SSEReinforcementVec SSEPlugins::get_used_reinforcements_by_category(const std::s
     for (auto iter : this->used_reinforcements_)
     {
         auto reinforcement = iter.second.lock();
-        if (reinforcement && reinforcement->category_name == category_name)
+        if (reinforcement && reinforcement->get_category_name() == category_name)
         {
             result.push_back(reinforcement);
         }
@@ -66,7 +66,7 @@ bool SSEPlugins::set_reinforcement_arguments(const std::string& name, const std:
 {
     auto reinforcement = this->get_used_reinforcement(name);
     RETURN_VAL_IF_FALSE(reinforcement, false);
-    reinforcement->custom_args = custom_args;
+    reinforcement->set_custom_args(custom_args);
     return this->write_ra();
 }
 
@@ -140,17 +140,17 @@ bool SSEPlugins::add_plugin(std::shared_ptr<SSEPlugin> plugin)
     {
         // KLOG_DEBUG("reinforcement name: %s.", reinforcement->name.c_str());
 
-        auto old_reinforcement = this->get_reinforcement(reinforcement->name);
+        auto old_reinforcement = this->get_reinforcement(reinforcement->get_name());
         if (old_reinforcement)
         {
             KLOG_WARNING("The reinforcement %s is conflicted with other plugin. reinforcement name: %s, old plugin: %s, cur plugin: %s.",
-                         old_reinforcement->name.c_str(),
-                         old_reinforcement->plugin_name.c_str(),
-                         reinforcement->plugin_name.c_str());
+                         old_reinforcement->get_name().c_str(),
+                         old_reinforcement->get_plugin_name().c_str(),
+                         reinforcement->get_plugin_name().c_str());
         }
         else
         {
-            this->reinforcements_[reinforcement->name] = reinforcement;
+            this->reinforcements_[reinforcement->get_name()] = reinforcement;
         }
     }
     return true;
@@ -167,11 +167,11 @@ void SSEPlugins::load_use_reinforcements()
 
     try
     {
-        const auto& rs_items = rs["body"]["items"];
+        const auto& rs_items = rs[SSE_JSON_BODY][SSE_JSON_BODY_ITEMS];
         for (uint32_t i = 0; i < rs_items.size(); ++i)
         {
             const auto& rs_item = rs_items[i];
-            auto name = rs_item["name"].asString();
+            auto name = rs_item[SSE_JSON_BODY_REINFORCEMENT_NAME].asString();
 
             // 加固标准中的加固项如果没有插件支持，则加载失败
             auto iter = this->reinforcements_.find(name);
@@ -182,10 +182,9 @@ void SSEPlugins::load_use_reinforcements()
                 return;
             }
             auto reinforcement = iter->second.lock();
-            reinforcement->rules = rs_item["rules"];
-            reinforcement->default_args = rs_item["default_args"];
-            reinforcement->layout = rs_item["layout"];
-
+            reinforcement->set_rules(rs_item[SSE_JSON_BODY_RULES]);
+            reinforcement->set_default_args(rs_item[SSE_JSON_BODY_REINFORCEMENT_DEFAULT_ARGS]);
+            reinforcement->set_layout(rs_item[SSE_JSON_BODY_REINFORCEMENT_LAYOUT]);
             this->used_reinforcements_.emplace(name, reinforcement);
         }
     }
@@ -225,7 +224,7 @@ void SSEPlugins::load_ra()
                     continue;
                 }
                 auto reinforcement = iter->second.lock();
-                reinforcement->custom_args = ra_item["custom_args"];
+                reinforcement->set_custom_args(ra_item[SSE_JSON_BODY_REINFORCEMENT_CUSTOM_ARGS]);
             }
         }
         catch (const std::exception& e)
@@ -240,7 +239,7 @@ bool SSEPlugins::write_ra()
     try
     {
         Json::Value ra_values;
-        ra_values["head"]["version"] = PROJECT_VERSION;
+        ra_values[SSE_JSON_HEAD][SSE_JSON_HEAD_VERSION] = PROJECT_VERSION;
         int32_t item_count = 0;
 
         for (auto iter : this->reinforcements_)
@@ -251,11 +250,11 @@ bool SSEPlugins::write_ra()
                 KLOG_WARNING("The reinforcement %s isn't found.", iter.first.c_str());
                 continue;
             }
-            ra_values["body"]["items"][item_count]["name"] = reinforcement->name;
-            ra_values["body"]["items"][item_count]["custom_args"] = reinforcement->custom_args;
+            ra_values[SSE_JSON_BODY][SSE_JSON_BODY_ITEMS][item_count][SSE_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
+            ra_values[SSE_JSON_BODY][SSE_JSON_BODY_ITEMS][item_count][SSE_JSON_BODY_REINFORCEMENT_CUSTOM_ARGS] = reinforcement->get_custom_args();
             ++item_count;
         }
-        ra_values["body"]["item_count"] = item_count;
+        ra_values[SSE_JSON_BODY][SSE_JSON_BODY_REINFORCEMENT_COUNT] = item_count;
         return this->configuration_->set_custom_ra(StrUtils::json2str(ra_values));
     }
     catch (const std::exception& e)

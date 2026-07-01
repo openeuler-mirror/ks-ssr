@@ -11,7 +11,6 @@
 #include "src/daemon/sse-categories.h"
 #include "src/daemon/sse-configuration.h"
 #include "src/daemon/sse-plugins.h"
-#include "sse-i.h"
 
 namespace Kiran
 {
@@ -146,20 +145,13 @@ void SSEManager::GetReinforcements(MethodInvocation& invocation)
         {
             auto reinforcement = reinforcements[i];
 
-            result_values["items"][i]["name"] = reinforcement->name;
-            result_values["items"][i]["category_name"] = reinforcement->category_name;
-            result_values["items"][i]["label"] = reinforcement->label;
-            if (!reinforcement->custom_args.isNull())
-            {
-                result_values["items"][i]["args"] = reinforcement->custom_args;
-            }
-            else
-            {
-                result_values["items"][i]["args"] = reinforcement->default_args;
-            }
-            result_values["items"][i]["layout"] = reinforcement->layout;
+            result_values[SSE_JSON_BODY_ITEMS][i][SSE_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
+            result_values[SSE_JSON_BODY_ITEMS][i][SSE_JSON_BODY_REINFORCEMENT_CATEGORY_NAME] = reinforcement->get_category_name();
+            result_values[SSE_JSON_BODY_ITEMS][i][SSE_JSON_BODY_REINFORCEMENT_LABEL] = reinforcement->get_label();
+            result_values[SSE_JSON_BODY_ITEMS][i][SSE_JSON_BODY_REINFORCEMENT_ARGS] = reinforcement->get_args();
+            result_values[SSE_JSON_BODY_ITEMS][i][SSE_JSON_BODY_REINFORCEMENT_LAYOUT] = reinforcement->get_layout();
         }
-        result_values["item_count"] = reinforcements.size();
+        result_values[SSE_JSON_BODY_REINFORCEMENT_COUNT] = reinforcements.size();
         auto result = Json::writeString(wbuilder, result_values);
         invocation.ret(result);
     }
@@ -181,9 +173,9 @@ void SSEManager::SetReinforcementArgs(const Glib::ustring& name,
     invocation.ret();
 }
 
-void SSEManager::Scan(const Glib::ustring& range, MethodInvocation& invocation)
+void SSEManager::Scan(const Glib::ustring& scan_range, MethodInvocation& invocation)
 {
-    KLOG_PROFILE("range: %s.", range.c_str());
+    KLOG_PROFILE("range: %s.", scan_range.c_str());
 
     // 已经在扫描则返回错误
     if (this->scan_job_ && this->scan_job_->get_state() == SSEJobState::SSE_JOB_STATE_RUNNING)
@@ -195,10 +187,10 @@ void SSEManager::Scan(const Glib::ustring& range, MethodInvocation& invocation)
     {
         this->scan_job_ = SSEJob::create();
 
-        auto range_json = StrUtils::str2json(range);
-        for (int32_t i = 0; i < (int32_t)range_json["items"].size(); ++i)
+        auto range_json = StrUtils::str2json(scan_range);
+        for (int32_t i = 0; i < (int32_t)range_json[SSE_JSON_SCAN_ITEMS].size(); ++i)
         {
-            auto name = range_json["items"][i]["name"].asString();
+            auto name = range_json[SSE_JSON_SCAN_ITEMS][i][SSE_JSON_SCAN_REINFORCEMENT_NAME].asString();
             auto reinforcement = this->plugins_->get_used_reinforcement(name);
 
             if (!reinforcement)
@@ -206,24 +198,23 @@ void SSEManager::Scan(const Glib::ustring& range, MethodInvocation& invocation)
                 DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND, name);
             }
 
-            auto plugin = this->plugins_->get_plugin(reinforcement->plugin_name);
+            auto plugin = this->plugins_->get_plugin(reinforcement->get_plugin_name());
             if (!plugin)
             {
                 KLOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
-                             reinforcement->plugin_name.c_str(),
-                             reinforcement->name.c_str());
+                             reinforcement->get_plugin_name().c_str(),
+                             reinforcement->get_name().c_str());
                 DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
             }
             auto interface = plugin->get_loader()->get_interface();
 
             Json::Value param;
-            param["head"]["id"] = int32_t(SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_SC_MATCH_RS_REQ);
-            param["body"]["name"] = reinforcement->name;
-            param["body"]["rules"] = reinforcement->rules;
+            param[SSE_JSON_HEAD][SSE_JSON_HEAD_PROTOCOL_ID] = int32_t(SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_GET_REQ);
+            param[SSE_JSON_BODY][SSE_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
             auto param_str = StrUtils::json2str(param);
 
-            this->scan_job_->add_operation(reinforcement->plugin_name,
-                                           reinforcement->name,
+            this->scan_job_->add_operation(reinforcement->get_plugin_name(),
+                                           reinforcement->get_name(),
                                            [interface, param_str]() -> std::string {
                                                return interface->execute(param_str);
                                            });
@@ -273,31 +264,24 @@ void SSEManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation
                 DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND_2, name);
             }
 
-            auto plugin = this->plugins_->get_plugin(reinforcement->plugin_name);
+            auto plugin = this->plugins_->get_plugin(reinforcement->get_plugin_name());
             if (!plugin)
             {
                 KLOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
-                             reinforcement->plugin_name.c_str(),
-                             reinforcement->name.c_str());
+                             reinforcement->get_plugin_name().c_str(),
+                             reinforcement->get_name().c_str());
                 DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND_2);
             }
             auto interface = plugin->get_loader()->get_interface();
 
             Json::Value param;
-            param["head"]["id"] = SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_REINFORCE_REQ;
-            param["body"]["name"] = reinforcement->name;
-            if (!reinforcement->custom_args.isNull())
-            {
-                param["body"]["args"] = reinforcement->custom_args;
-            }
-            else
-            {
-                param["body"]["args"] = reinforcement->default_args;
-            }
+            param[SSE_JSON_HEAD][SSE_JSON_HEAD_PROTOCOL_ID] = SSEPluginProtocol::SSE_PLUGIN_PROTOCOL_SET_REQ;
+            param[SSE_JSON_BODY][SSE_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
+            param[SSE_JSON_BODY][SSE_JSON_BODY_REINFORCEMENT_ARGS] = reinforcement->get_args();
 
             auto param_str = StrUtils::json2str(param);
-            this->reinforce_job_->add_operation(reinforcement->plugin_name,
-                                                reinforcement->name,
+            this->reinforce_job_->add_operation(reinforcement->get_plugin_name(),
+                                                reinforcement->get_name(),
                                                 [interface, param_str]() -> std::string {
                                                     return interface->execute(param_str);
                                                 });
@@ -386,23 +370,23 @@ void SSEManager::on_scan_process_changed_cb(const SSEJobResult& job_result)
 
     try
     {
-        scan_result["process"] = double(job_result.finished_operation_num * 100.0 / job_result.sum_operation_num);
-        scan_result["job_id"] = job_result.job_id;
-        scan_result["job_state"] = this->scan_job_->get_state();
+        scan_result[SSE_JSON_SCAN_PROCESS] = double(job_result.finished_operation_num * 100.0 / job_result.sum_operation_num);
+        scan_result[SSE_JSON_SCAN_JOB_ID] = job_result.job_id;
+        scan_result[SSE_JSON_SCAN_JOB_STATE] = this->scan_job_->get_state();
 
         int32_t item_count = 0;
         for (auto operation_id : job_result.running_operations)
         {
             auto operation = this->scan_job_->get_operation(operation_id);
-            scan_result["items"][item_count]["name"] = operation->reforcement_name;
-            scan_result["items"][item_count]["state"] = SSEReinforcementState::SSE_REINFORCEMENT_STATE_SCANNING;
+            scan_result[SSE_JSON_SCAN_ITEMS][item_count][SSE_JSON_SCAN_REINFORCEMENT_NAME] = operation->reinforcement_name;
+            scan_result[SSE_JSON_SCAN_ITEMS][item_count][SSE_JSON_SCAN_REINFORCEMENT_STATE] = SSEReinforcementState::SSE_REINFORCEMENT_STATE_SCANNING;
             ++item_count;
         }
 
         for (const auto& operation_result : job_result.current_finished_operations)
         {
             auto operation = this->scan_job_->get_operation(operation_result.operation_id);
-            scan_result["items"][item_count]["name"] = operation->reforcement_name;
+            scan_result[SSE_JSON_SCAN_ITEMS][item_count][SSE_JSON_SCAN_REINFORCEMENT_NAME] = operation->reinforcement_name;
 
             SSEReinforcementState state = SSEReinforcementState::SSE_REINFORCEMENT_STATE_UNKNOWN;
             Json::Value result_values = StrUtils::str2json(operation_result.result);
@@ -416,7 +400,11 @@ void SSEManager::on_scan_process_changed_cb(const SSEJobResult& job_result)
                 state = SSEReinforcementState::SSE_REINFORCEMENT_STATE_SCAN_DONE;
             }
 
-            if (result_values.isMember("body") && result_values["body"]["match"].asBool())
+            auto reinforcement = this->plugins_->get_used_reinforcement(operation->reinforcement_name);
+
+            if (result_values.isMember(SSE_JSON_BODY) &&
+                reinforcement &&
+                reinforcement->match_rules(result_values[SSE_JSON_BODY][SSE_JSON_BODY_REINFORCEMENT_SYSTEM_ARGS]))
             {
                 state = SSEReinforcementState(state | SSEReinforcementState::SSE_REINFORCEMENT_STATE_SAFE);
             }
@@ -424,11 +412,11 @@ void SSEManager::on_scan_process_changed_cb(const SSEJobResult& job_result)
             {
                 state = SSEReinforcementState(state | SSEReinforcementState::SSE_REINFORCEMENT_STATE_UNSAFE);
             }
-            scan_result["items"][item_count]["state"] = int32_t(state);
+            scan_result[SSE_JSON_BODY_ITEMS][item_count][SSE_JSON_SCAN_REINFORCEMENT_STATE] = int32_t(state);
             ++item_count;
         }
 
-        scan_result["item_count"] = item_count;
+        scan_result[SSE_JSON_BODY_REINFORCEMENT_COUNT] = item_count;
     }
     catch (const std::exception& e)
     {
@@ -454,7 +442,7 @@ void SSEManager::on_reinfoce_process_changed_cb(const SSEJobResult& job_result)
         for (auto operation_id : job_result.running_operations)
         {
             auto operation = this->reinforce_job_->get_operation(operation_id);
-            reinforce_result["items"][item_count]["name"] = operation->reforcement_name;
+            reinforce_result["items"][item_count]["name"] = operation->reinforcement_name;
             reinforce_result["items"][item_count]["state"] = SSEReinforcementState::SSE_REINFORCEMENT_STATE_REINFORCING;
             ++item_count;
         }
@@ -462,7 +450,7 @@ void SSEManager::on_reinfoce_process_changed_cb(const SSEJobResult& job_result)
         for (const auto& operation_result : job_result.current_finished_operations)
         {
             auto operation = this->reinforce_job_->get_operation(operation_result.operation_id);
-            reinforce_result["items"][item_count]["name"] = operation->reforcement_name;
+            reinforce_result["items"][item_count]["name"] = operation->reinforcement_name;
 
             SSEReinforcementState state = SSEReinforcementState::SSE_REINFORCEMENT_STATE_UNKNOWN;
             Json::Value result_values = StrUtils::str2json(operation_result.result);

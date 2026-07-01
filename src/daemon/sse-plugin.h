@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/core/sse-plugin.h
+ * @file          /kiran-sse-manager/src/daemon/sse-plugin.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,7 +8,7 @@
 #pragma once
 
 #include "src/daemon/sse-plugin-loader.h"
-#include "sse-i.h"
+#include "src/daemon/sse-reinforcement.h"
 
 namespace Kiran
 {
@@ -41,29 +41,6 @@ struct SSEPluginInfo
     // 插件的加固项名称
     std::vector<std::string> reinforcements_name;
 };
-
-struct SSEReinforcement
-{
-    // 加固项名称
-    std::string name;
-    // 加固项所属插件名
-    std::string plugin_name;
-    // 加固项所属分类
-    std::string category_name;
-    // 加固项标签
-    std::string label;
-
-    // 标准的判断规则
-    Json::Value rules;
-    // 满足规则的默认参数
-    Json::Value default_args;
-    // 自定义加固参数
-    Json::Value custom_args;
-    // 前端显示的UI布局
-    Json::Value layout;
-};
-
-using SSEReinforcementVec = std::vector<std::shared_ptr<SSEReinforcement>>;
 
 class SSEPlugin
 {

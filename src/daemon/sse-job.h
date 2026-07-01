@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/core/sse-job.h
+ * @file          /kiran-sse-manager/src/daemon/sse-job.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -9,7 +9,6 @@
 
 #include <mutex>
 #include "lib/base/base.h"
-#include "sse-i.h"
 
 namespace Kiran
 {
@@ -31,7 +30,7 @@ struct SSEOperation
     // 插件名
     std::string plugin_name;
     // 加固项名
-    std::string reforcement_name;
+    std::string reinforcement_name;
     // 执行的函数
     std::function<std::string(void)> func;
 };

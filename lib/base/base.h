@@ -23,3 +23,4 @@
 #include "lib/base/stl-helper.h"
 #include "lib/base/str-utils.h"
 #include "lib/base/thread-pool.h"
+#include "sse-i.h"

@@ -50,7 +50,7 @@ protected:
     virtual void SetReinforcementArgs(const Glib::ustring &name, const Glib::ustring &custom_args, MethodInvocation &invocation);
 
     // 扫描指定加固项
-    virtual void Scan(const Glib::ustring &range, MethodInvocation &invocation);
+    virtual void Scan(const Glib::ustring &scan_range, MethodInvocation &invocation);
 
     // 对加固项进行加固
     virtual void Reinforce(const Glib::ustring &reinforcements, MethodInvocation &invocation);
