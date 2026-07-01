@@ -86,7 +86,7 @@ void SSEPlugins::init()
 
 void SSEPlugins::load_plugins()
 {
-    SETTINGS_PROFILE("");
+    KLOG_PROFILE("");
 
     try
     {
@@ -99,7 +99,7 @@ void SSEPlugins::load_plugins()
             if (!Glib::file_test(filename, Glib::FILE_TEST_IS_REGULAR) ||
                 !Glib::str_has_prefix(basename, "sse-plugin"))
             {
-                LOG_DEBUG("Skip file %s.", filename.c_str());
+                KLOG_DEBUG("Skip file %s.", filename.c_str());
                 continue;
             }
             auto plugin = std::make_shared<SSEPlugin>(filename);
@@ -118,7 +118,7 @@ void SSEPlugins::load_plugins()
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s.", e.what().c_str());
     }
 }
 
@@ -126,27 +126,27 @@ bool SSEPlugins::add_plugin(std::shared_ptr<SSEPlugin> plugin)
 {
     RETURN_VAL_IF_FALSE(plugin, false);
 
-    LOG_DEBUG("plugin name: %s.", plugin->get_name().c_str());
+    KLOG_DEBUG("plugin name: %s.", plugin->get_name().c_str());
 
     auto iter = this->plugins_.emplace(plugin->get_name(), plugin);
     if (!iter.second)
     {
-        LOG_WARNING("The plugin is already exist. name: %s.", plugin->get_name().c_str());
+        KLOG_WARNING("The plugin is already exist. name: %s.", plugin->get_name().c_str());
         return false;
     }
 
     auto reinforcements = plugin->get_reinforcements();
     for (auto reinforcement : reinforcements)
     {
-        // LOG_DEBUG("reinforcement name: %s.", reinforcement->name.c_str());
+        // KLOG_DEBUG("reinforcement name: %s.", reinforcement->name.c_str());
 
         auto old_reinforcement = this->get_reinforcement(reinforcement->name);
         if (old_reinforcement)
         {
-            LOG_WARNING("The reinforcement %s is conflicted with other plugin. reinforcement name: %s, old plugin: %s, cur plugin: %s.",
-                        old_reinforcement->name.c_str(),
-                        old_reinforcement->plugin_name.c_str(),
-                        reinforcement->plugin_name.c_str());
+            KLOG_WARNING("The reinforcement %s is conflicted with other plugin. reinforcement name: %s, old plugin: %s, cur plugin: %s.",
+                         old_reinforcement->name.c_str(),
+                         old_reinforcement->plugin_name.c_str(),
+                         reinforcement->plugin_name.c_str());
         }
         else
         {
@@ -158,7 +158,7 @@ bool SSEPlugins::add_plugin(std::shared_ptr<SSEPlugin> plugin)
 
 void SSEPlugins::load_use_reinforcements()
 {
-    SETTINGS_PROFILE("");
+    KLOG_PROFILE("");
 
     auto rs_str = this->configuration_->get_rs();
     auto rs = StrUtils::str2json(rs_str);
@@ -177,7 +177,7 @@ void SSEPlugins::load_use_reinforcements()
             auto iter = this->reinforcements_.find(name);
             if (iter == this->reinforcements_.end() || !iter->second.lock())
             {
-                LOG_WARNING("The reinforcement %s is unsupported by any plugin.", name.c_str());
+                KLOG_WARNING("The reinforcement %s is unsupported by any plugin.", name.c_str());
                 this->used_reinforcements_.clear();
                 return;
             }
@@ -191,7 +191,7 @@ void SSEPlugins::load_use_reinforcements()
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         this->used_reinforcements_.clear();
     }
 }
@@ -221,7 +221,7 @@ void SSEPlugins::load_ra()
                 auto iter = this->reinforcements_.find(name);
                 if (iter == this->reinforcements_.end() || !iter->second.lock())
                 {
-                    LOG_WARNING("The reinforcement %s isn't found.", name.c_str());
+                    KLOG_WARNING("The reinforcement %s isn't found.", name.c_str());
                     continue;
                 }
                 auto reinforcement = iter->second.lock();
@@ -230,7 +230,7 @@ void SSEPlugins::load_ra()
         }
         catch (const std::exception& e)
         {
-            LOG_WARNING("%s.", e.what());
+            KLOG_WARNING("%s.", e.what());
         }
     } while (0);
 }
@@ -248,7 +248,7 @@ bool SSEPlugins::write_ra()
             auto reinforcement = iter.second.lock();
             if (!reinforcement)
             {
-                LOG_WARNING("The reinforcement %s isn't found.", iter.first.c_str());
+                KLOG_WARNING("The reinforcement %s isn't found.", iter.first.c_str());
                 continue;
             }
             ra_values["body"]["items"][item_count]["name"] = reinforcement->name;
@@ -260,7 +260,7 @@ bool SSEPlugins::write_ra()
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return false;
     }
 }

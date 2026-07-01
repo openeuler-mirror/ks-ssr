@@ -37,7 +37,7 @@ void SSEManager::global_init()
 
 void SSEManager::SetStandardType(guint32 standard_type, MethodInvocation& invocation)
 {
-    SETTINGS_PROFILE("standard type: %d.", standard_type);
+    KLOG_PROFILE("standard type: %d.", standard_type);
 
     if (standard_type >= SSEStandardType::SEE_STANDARD_TYPE_LAST)
     {
@@ -59,7 +59,7 @@ void SSEManager::SetStandardType(guint32 standard_type, MethodInvocation& invoca
 
 void SSEManager::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvocation& invocation)
 {
-    SETTINGS_PROFILE("encoded standard: %s.", encoded_standard.c_str());
+    KLOG_PROFILE("encoded standard: %s.", encoded_standard.c_str());
 
     SSEErrorCode error_code = SSEErrorCode::SUCCESS;
     if (!this->configuration_->set_custom_rs(encoded_standard, error_code))
@@ -71,7 +71,7 @@ void SSEManager::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInv
 
 void SSEManager::GetCategories(MethodInvocation& invocation)
 {
-    SETTINGS_PROFILE("");
+    KLOG_PROFILE("");
 
     Json::Value values;
     Json::StreamWriterBuilder wbuilder;
@@ -96,7 +96,7 @@ void SSEManager::GetCategories(MethodInvocation& invocation)
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s", e.what());
+        KLOG_WARNING("%s", e.what());
         DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED);
     }
 }
@@ -123,14 +123,14 @@ void SSEManager::GetCategories(MethodInvocation& invocation)
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s", e.what());
+        KLOG_WARNING("%s", e.what());
         DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DEAMON_CONVERT_CATEGORIES2JSON_FAILED);
     }
 }*/
 
 void SSEManager::GetReinforcements(MethodInvocation& invocation)
 {
-    SETTINGS_PROFILE("");
+    KLOG_PROFILE("");
 
     Json::Value result_values;
     Json::StreamWriterBuilder wbuilder;
@@ -165,7 +165,7 @@ void SSEManager::GetReinforcements(MethodInvocation& invocation)
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s", e.what());
+        KLOG_WARNING("%s", e.what());
         DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID);
     }
 }
@@ -183,7 +183,7 @@ void SSEManager::SetReinforcementArgs(const Glib::ustring& name,
 
 void SSEManager::Scan(const Glib::ustring& range, MethodInvocation& invocation)
 {
-    SETTINGS_PROFILE("range: %s.", range.c_str());
+    KLOG_PROFILE("range: %s.", range.c_str());
 
     // 已经在扫描则返回错误
     if (this->scan_job_ && this->scan_job_->get_state() == SSEJobState::SSE_JOB_STATE_RUNNING)
@@ -209,9 +209,9 @@ void SSEManager::Scan(const Glib::ustring& range, MethodInvocation& invocation)
             auto plugin = this->plugins_->get_plugin(reinforcement->plugin_name);
             if (!plugin)
             {
-                LOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
-                            reinforcement->plugin_name.c_str(),
-                            reinforcement->name.c_str());
+                KLOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
+                             reinforcement->plugin_name.c_str(),
+                             reinforcement->name.c_str());
                 DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND);
             }
             auto interface = plugin->get_loader()->get_interface();
@@ -234,7 +234,7 @@ void SSEManager::Scan(const Glib::ustring& range, MethodInvocation& invocation)
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s", e.what());
+        KLOG_WARNING("%s", e.what());
         DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID);
     }
 
@@ -276,9 +276,9 @@ void SSEManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation
             auto plugin = this->plugins_->get_plugin(reinforcement->plugin_name);
             if (!plugin)
             {
-                LOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
-                            reinforcement->plugin_name.c_str(),
-                            reinforcement->name.c_str());
+                KLOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
+                             reinforcement->plugin_name.c_str(),
+                             reinforcement->name.c_str());
                 DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND_2);
             }
             auto interface = plugin->get_loader()->get_interface();
@@ -305,7 +305,7 @@ void SSEManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s", e.what());
+        KLOG_WARNING("%s", e.what());
         DBUS_ERROR_REPLY_AND_RET(SSEErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID);
     }
 
@@ -323,7 +323,7 @@ void SSEManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation
 
 void SSEManager::Cancel(gint64 job_id, MethodInvocation& invocation)
 {
-    SETTINGS_PROFILE("job id: %d.", job_id);
+    KLOG_PROFILE("job id: %d.", job_id);
 
     SSEErrorCode error_code = SSEErrorCode::SUCCESS;
 
@@ -432,7 +432,7 @@ void SSEManager::on_scan_process_changed_cb(const SSEJobResult& job_result)
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return;
     }
 
@@ -492,7 +492,7 @@ void SSEManager::on_reinfoce_process_changed_cb(const SSEJobResult& job_result)
     }
     catch (const std::exception& e)
     {
-        LOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what());
         return;
     }
 
@@ -502,10 +502,10 @@ void SSEManager::on_reinfoce_process_changed_cb(const SSEJobResult& job_result)
 
 void SSEManager::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
-    SETTINGS_PROFILE("name: %s", name.c_str());
+    KLOG_PROFILE("name: %s", name.c_str());
     if (!connect)
     {
-        LOG_WARNING("Failed to connect dbus. name: %s", name.c_str());
+        KLOG_WARNING("Failed to connect dbus. name: %s", name.c_str());
         return;
     }
     try
@@ -514,18 +514,18 @@ void SSEManager::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& conn
     }
     catch (const Glib::Error& e)
     {
-        LOG_WARNING("Register object_path %s fail: %s.", SSE_DBUS_OBJECT_PATH, e.what().c_str());
+        KLOG_WARNING("Register object_path %s fail: %s.", SSE_DBUS_OBJECT_PATH, e.what().c_str());
     }
 }
 
 void SSEManager::on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
-    LOG_DEBUG("Success to register dbus name: %s", name.c_str());
+    KLOG_DEBUG("Success to register dbus name: %s", name.c_str());
 }
 
 void SSEManager::on_name_lost(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
-    LOG_WARNING("Failed to register dbus name: %s", name.c_str());
+    KLOG_WARNING("Failed to register dbus name: %s", name.c_str());
 }
 
 }  // namespace Kiran

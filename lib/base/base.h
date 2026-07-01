@@ -10,6 +10,7 @@
 #include <fmt/format.h>
 #include <giomm.h>
 
+#include <gtk3-log-i.h>
 #include <map>
 #include <memory>
 #include <string>
@@ -19,7 +20,6 @@
 #include "lib/base/def.h"
 #include "lib/base/error.h"
 #include "lib/base/file-utils.h"
-#include "lib/base/log.h"
 #include "lib/base/stl-helper.h"
 #include "lib/base/str-utils.h"
 #include "lib/base/thread-pool.h"

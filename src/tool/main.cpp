@@ -6,17 +6,16 @@
  */
 
 #include <glib/gi18n.h>
+#include <gtk3-log-i.h>
 #include "src/tool/sse-cmd-parser.h"
 #include "sse-config.h"
-#include "zlog_ex.h"
 
 int main(int argc, char* argv[])
 {
     Gio::init();
 
     auto program_name = Glib::path_get_basename(argv[0]);
-    dzlog_init_ex(NULL, "kylinsec-session", PROJECT_NAME, program_name.c_str());
-    Kiran::Log::global_init();
+    klog_gtk3_init(std::string(), "kylinsec-session", PROJECT_NAME, program_name.c_str());
     Gio::init();
 
     setlocale(LC_ALL, "");
