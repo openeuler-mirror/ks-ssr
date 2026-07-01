@@ -1,2 +1,0 @@
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/resources/icons/hicolor
-        DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/icons)
