@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/base/crypto-helper.h
+ * @file          /kiran-ssr-manager/lib/base/crypto-helper.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -48,7 +48,7 @@ public:
     static std::string des_decrypt(const std::string &message);
 
     // 安全加固的加密和解密算法
-    static std::string sse_encrypt(const std::string &public_filename, const std::string &message);
-    static std::string sse_decrypt(const std::string &private_filename, const std::string &ciphertext);
+    static std::string ssr_encrypt(const std::string &public_filename, const std::string &message);
+    static std::string ssr_decrypt(const std::string &private_filename, const std::string &ciphertext);
 };
 }  // namespace Kiran

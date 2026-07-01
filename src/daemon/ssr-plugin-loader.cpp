@@ -1,25 +1,25 @@
 /**
- * @file          /kiran-sse-manager/lib/core/sse-plugin-loader.cpp
+ * @file          /kiran-ssr-manager/lib/core/ssr-plugin-loader.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/sse-plugin-loader.h"
+#include "src/daemon/ssr-plugin-loader.h"
 
 namespace Kiran
 {
-SSEPluginCPPLoader::SSEPluginCPPLoader(const std::string &so_path) : so_path_(so_path),
+SSRPluginCPPLoader::SSRPluginCPPLoader(const std::string &so_path) : so_path_(so_path),
                                                                      is_activate_(false)
 {
 }
 
-bool SSEPluginCPPLoader::load()
+bool SSRPluginCPPLoader::load()
 {
     return this->load_module();
 }
 
-bool SSEPluginCPPLoader::activate()
+bool SSRPluginCPPLoader::activate()
 {
     KLOG_DEBUG("is activate: %d, so path: %s.", this->is_activate_, this->so_path_.c_str());
 
@@ -29,7 +29,7 @@ bool SSEPluginCPPLoader::activate()
     return true;
 }
 
-bool SSEPluginCPPLoader::deactivate()
+bool SSRPluginCPPLoader::deactivate()
 {
     KLOG_PROFILE("");
 
@@ -39,7 +39,7 @@ bool SSEPluginCPPLoader::deactivate()
     return true;
 }
 
-bool SSEPluginCPPLoader::load_module()
+bool SSRPluginCPPLoader::load_module()
 {
     KLOG_PROFILE("load module %s", this->so_path_.c_str());
 
@@ -62,7 +62,7 @@ bool SSEPluginCPPLoader::load_module()
             return false;
         }
 
-        this->interface_ = std::shared_ptr<SSEPluginInterface>((Kiran::SSEPluginInterface *)((NewPluginFun)new_plugin_fun)(), (DelPluginFun)del_plugin_fun);
+        this->interface_ = std::shared_ptr<SSRPluginInterface>((Kiran::SSRPluginInterface *)((NewPluginFun)new_plugin_fun)(), (DelPluginFun)del_plugin_fun);
         return true;
     }
     else

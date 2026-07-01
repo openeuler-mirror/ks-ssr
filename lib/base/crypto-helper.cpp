@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/base/crypto-helper.cpp
+ * @file          /kiran-ssr-manager/lib/base/crypto-helper.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -35,8 +35,8 @@ RandomNumberGenerator &GlobalRNG()
 
 namespace Kiran
 {
-#define SSE_RSA_SEED_DEFAULT "kylinsec"
-#define SSE_DES_KEY "kylinsec"
+#define SSR_RSA_SEED_DEFAULT "kylinsec"
+#define SSR_DES_KEY "kylinsec"
 
 CryptoHelper::CryptoHelper()
 {
@@ -107,7 +107,7 @@ void CryptoHelper::generate_rsa_key(uint32_t key_length,
     try
     {
         RandomPool random_pool;
-        random_pool.IncorporateEntropy((const byte *)SSE_RSA_SEED_DEFAULT, sizeof(SSE_RSA_SEED_DEFAULT));
+        random_pool.IncorporateEntropy((const byte *)SSR_RSA_SEED_DEFAULT, sizeof(SSR_RSA_SEED_DEFAULT));
 
         RSAES_OAEP_SHA_Decryptor priv(random_pool, key_length);
         HexEncoder priv_file(new Base64Encoder(new FileSink(private_filename.c_str())));
@@ -134,7 +134,7 @@ std::string CryptoHelper::rsa_encrypt(const std::string &public_filename,
         RSAES_OAEP_SHA_Encryptor pub(pub_file);
 
         RandomPool random_pool;
-        random_pool.IncorporateEntropy((const byte *)SSE_RSA_SEED_DEFAULT, sizeof(SSE_RSA_SEED_DEFAULT));
+        random_pool.IncorporateEntropy((const byte *)SSR_RSA_SEED_DEFAULT, sizeof(SSR_RSA_SEED_DEFAULT));
 
         if (message.size() > pub.FixedMaxPlaintextLength())
         {
@@ -233,7 +233,7 @@ bool CryptoHelper::rsa_verify_file(const std::string &public_filename,
 // {
 //     SecByteBlock key(DES::DEFAULT_KEYLENGTH);
 //     RandomPool random_pool;
-//     random_pool.IncorporateEntropy((const byte *)SSE_RSA_SEED_DEFAULT, sizeof(SSE_RSA_SEED_DEFAULT));
+//     random_pool.IncorporateEntropy((const byte *)SSR_RSA_SEED_DEFAULT, sizeof(SSR_RSA_SEED_DEFAULT));
 //     random_pool.GenerateBlock(key, key.size());
 //     return key;
 // }
@@ -245,7 +245,7 @@ std::string CryptoHelper::des_encrypt(const std::string &message)
         std::string result;
         ECB_Mode<DES>::Encryption encoder;
         // 这里的key长度必须为8
-        encoder.SetKey((const byte *)SSE_DES_KEY, DES::DEFAULT_KEYLENGTH);
+        encoder.SetKey((const byte *)SSR_DES_KEY, DES::DEFAULT_KEYLENGTH);
         // auto key = get_des_key();
         // encoder.SetKey(key, key.size());
         StringSource(message, true, new StreamTransformationFilter(encoder, new Base64Encoder(new StringSink(result))));
@@ -264,7 +264,7 @@ std::string CryptoHelper::des_decrypt(const std::string &message)
     {
         std::string result;
         ECB_Mode<DES>::Decryption decoder;
-        decoder.SetKey((const byte *)SSE_DES_KEY, DES::DEFAULT_KEYLENGTH);
+        decoder.SetKey((const byte *)SSR_DES_KEY, DES::DEFAULT_KEYLENGTH);
         StringSource(message, true, new Base64Decoder(new StreamTransformationFilter(decoder, new StringSink(result))));
         return result;
     }
@@ -275,7 +275,7 @@ std::string CryptoHelper::des_decrypt(const std::string &message)
     }
 }
 
-std::string CryptoHelper::sse_encrypt(const std::string &public_filename, const std::string &message)
+std::string CryptoHelper::ssr_encrypt(const std::string &public_filename, const std::string &message)
 {
     KLOG_DEBUG("key filename: %s. message: %s.", public_filename.c_str(), message.c_str());
 
@@ -297,7 +297,7 @@ std::string CryptoHelper::sse_encrypt(const std::string &public_filename, const 
     return result;
 }
 
-std::string CryptoHelper::sse_decrypt(const std::string &private_filename, const std::string &ciphertext)
+std::string CryptoHelper::ssr_decrypt(const std::string &private_filename, const std::string &ciphertext)
 {
     KLOG_DEBUG("key filename: %s. ciphertext: %s.", private_filename.c_str(), ciphertext.c_str());
 

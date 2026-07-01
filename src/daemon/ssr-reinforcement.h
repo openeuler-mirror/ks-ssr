@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/src/daemon/sse-reinforcement.h
+ * @file          /kiran-ssr-manager/src/daemon/ssr-reinforcement.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -8,11 +8,11 @@
 #pragma once
 
 #include "lib/base/base.h"
-#include "src/daemon/sse-rule.h"
+#include "src/daemon/ssr-rule.h"
 
 namespace Kiran
 {
-struct SSEReinforcementInfo
+struct SSRReinforcementInfo
 {
     // 加固项名称
     std::string name;
@@ -24,12 +24,12 @@ struct SSEReinforcementInfo
     std::string label;
 };
 
-class SSEReinforcement
+class SSRReinforcement
 {
 public:
-    SSEReinforcement() = delete;
-    SSEReinforcement(const SSEReinforcementInfo &base_info);
-    virtual ~SSEReinforcement(){};
+    SSRReinforcement() = delete;
+    SSRReinforcement(const SSRReinforcementInfo &base_info);
+    virtual ~SSRReinforcement(){};
 
     std::string get_name() { return this->base_info_.name; };
     std::string get_plugin_name() { return this->base_info_.plugin_name; };
@@ -53,9 +53,9 @@ public:
 
 private:
     // 基本信息
-    SSEReinforcementInfo base_info_;
+    SSRReinforcementInfo base_info_;
     // 标准的判断规则
-    std::map<std::string, std::shared_ptr<SSERule>> rules_;
+    std::map<std::string, std::shared_ptr<SSRRule>> rules_;
     // 满足规则的默认参数
     Json::Value default_args_;
     // 自定义加固参数
@@ -64,5 +64,5 @@ private:
     Json::Value layout_;
 };
 
-using SSEReinforcementVec = std::vector<std::shared_ptr<SSEReinforcement>>;
+using SSRReinforcementVec = std::vector<std::shared_ptr<SSRReinforcement>>;
 }  // namespace Kiran

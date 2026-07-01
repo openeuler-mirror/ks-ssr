@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/lib/base/base.h
+ * @file          /kiran-ssr-manager/lib/base/base.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -23,4 +23,4 @@
 #include "lib/base/stl-helper.h"
 #include "lib/base/str-utils.h"
 #include "lib/base/thread-pool.h"
-#include "sse-i.h"
+#include "ssr-i.h"

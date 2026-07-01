@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/src/daemon/sse-plugin.h
+ * @file          /kiran-ssr-manager/src/daemon/ssr-plugin.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,46 +7,46 @@
 
 #pragma once
 
-#include "src/daemon/sse-plugin-loader.h"
-#include "src/daemon/sse-reinforcement.h"
+#include "src/daemon/ssr-plugin-loader.h"
+#include "src/daemon/ssr-reinforcement.h"
 
 namespace Kiran
 {
-enum SSEPluginLanguageType
+enum SSRPluginLanguageType
 {
     // c++
-    SSE_PLUGIN_LANGUAGE_TYPE_CPP,
+    SSR_PLUGIN_LANGUAGE_TYPE_CPP,
     // python
-    SSE_PLUGIN_LANGUAGE_TYPE_PYTHON
+    SSR_PLUGIN_LANGUAGE_TYPE_PYTHON
 };
 
-// enum SSEPluginState
+// enum SSRPluginState
 // {
 //     // 未初始化
-//     SSE_PLUGIN_STATE_UNINIT,
+//     SSR_PLUGIN_STATE_UNINIT,
 //     // 插件已初始化
-//     SSE_PLUGIN_STATE_INITED,
+//     SSR_PLUGIN_STATE_INITED,
 //     // 插件已激活
-//     SSE_PLUGIN_STATE_ACTIVED,
+//     SSR_PLUGIN_STATE_ACTIVED,
 //     // 插件不可用
-//     SSE_PLUGIN_STATE_UNAVAILABLE
+//     SSR_PLUGIN_STATE_UNAVAILABLE
 // };
 
-struct SSEPluginInfo
+struct SSRPluginInfo
 {
     // 插件名称
     std::string name;
     // 插件使用的开发语言
-    SSEPluginLanguageType language_type;
+    SSRPluginLanguageType language_type;
     // 插件的加固项名称
     std::vector<std::string> reinforcements_name;
 };
 
-class SSEPlugin
+class SSRPlugin
 {
 public:
-    SSEPlugin(const std::string &conf_path);
-    virtual ~SSEPlugin();
+    SSRPlugin(const std::string &conf_path);
+    virtual ~SSRPlugin();
 
     // 初始化
     bool init();
@@ -54,15 +54,15 @@ public:
     // 获取插件名称
     std::string get_name() { return this->plugin_info_.name; };
     // 获取插件状态
-    // SSEPluginState get_state() { return this->state_; };
+    // SSRPluginState get_state() { return this->state_; };
     // 获取插件加载器
-    std::shared_ptr<SSEPluginLoader> get_loader() { return this->loader_; };
+    std::shared_ptr<SSRPluginLoader> get_loader() { return this->loader_; };
 
     // 获取插件数据
-    const SSEPluginInfo &get_plugin_info() { return this->plugin_info_; };
+    const SSRPluginInfo &get_plugin_info() { return this->plugin_info_; };
 
     // 获取插件的所有加固项
-    SSEReinforcementVec get_reinforcements() { return MapHelper::get_values(this->reinforcements_); };
+    SSRReinforcementVec get_reinforcements() { return MapHelper::get_values(this->reinforcements_); };
 
 private:
     // 使用插件加载器加载插件
@@ -71,21 +71,21 @@ private:
     bool load_reinforcement(const Glib::KeyFile &keyfile, const std::string &reinforcement_name);
 
     // 添加加固项
-    bool add_reinforcement(std::shared_ptr<SSEReinforcement> reinforcement);
+    bool add_reinforcement(std::shared_ptr<SSRReinforcement> reinforcement);
 
 private:
     // 插件配置文件路径
     std::string conf_path_;
     // 插件数据
-    SSEPluginInfo plugin_info_;
+    SSRPluginInfo plugin_info_;
     // 插件状态
-    // SSEPluginState state_;
+    // SSRPluginState state_;
     // 插件加载器
-    std::shared_ptr<SSEPluginLoader> loader_;
+    std::shared_ptr<SSRPluginLoader> loader_;
 
     // 属于该插件的加固项信息：<加固项名称，加固项信息>
-    std::map<std::string, std::shared_ptr<SSEReinforcement>> reinforcements_;
+    std::map<std::string, std::shared_ptr<SSRReinforcement>> reinforcements_;
 };
 
-using SSEPluginVec = std::vector<std::shared_ptr<SSEPlugin>>;
+using SSRPluginVec = std::vector<std::shared_ptr<SSRPlugin>>;
 }  // namespace Kiran

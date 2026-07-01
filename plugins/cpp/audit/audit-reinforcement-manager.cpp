@@ -1,9 +1,10 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/audit/audit-reinforcement-manager.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/audit-reinforcement-manager.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
- * @copyright (c) 2020 KylinSec. All rights reserved. 
+ * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
+
 #include "plugins/cpp/audit/audit-reinforcement-manager.h"
 #include "plugins/cpp/audit/reinforcements/audit-auditd.h"
 #include "plugins/cpp/audit/reinforcements/audit-logrotate.h"

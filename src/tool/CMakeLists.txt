@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set (TARGET_NAME kiran-sse-tool)
+set (TARGET_NAME kiran-ssr-tool)
 
 file(GLOB_RECURSE TOOL_H_FILES ./*.h)
 file(GLOB_RECURSE TOOL_CPP_FILES ./*.cpp)

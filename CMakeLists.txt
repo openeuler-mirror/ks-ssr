@@ -1,12 +1,12 @@
 
 cmake_minimum_required(VERSION 3.2)
 
-project(kiran-sse-manager VERSION 1.0.0)
+project(kiran-ssr-manager VERSION 1.0.0)
 
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-find_package(SSE REQUIRED)
+find_package(SSR REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 
@@ -34,7 +34,7 @@ else()
     SET (GDBUS_CODEGEN ${GDBUS-CODEGEN-GLIBMM-FOUND})
 endif()
 
-configure_file(sse-config.h.in ${PROJECT_BINARY_DIR}/sse-config.h)
+configure_file(ssr-config.h.in ${PROJECT_BINARY_DIR}/ssr-config.h)
 
 add_subdirectory(po)
 add_subdirectory(data)
