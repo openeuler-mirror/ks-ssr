@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<br_plugin>
+    <name>network</name>
+    <category>network</category>
+    <label>QT_TRANSLATE_NOOP("xml", "network settings")</label>
+    <language_type>python</language_type>
+    <available>true</available>
+    <reinforcement>
+        <name>network-firewalld-switch</name>
+        <label>QT_TRANSLATE_NOOP("xml", "Firewall configuration")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Configure system firewall rules")</description>
+    </reinforcement>
+    <reinforcement>
+        <name>network-sysctl-icmp-redirect</name>
+        <label>QT_TRANSLATE_NOOP("xml", "ICMP redirection")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Protect against ICMP redirection attacks")</description>
+    </reinforcement>
+    <reinforcement>
+        <name>network-sysctl-syn-flood</name>
+        <label>QT_TRANSLATE_NOOP("xml", "Syn flood attacks")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Protect against syn flood attacks")</description>
+    </reinforcement>
+    <reinforcement>
+        <name>network-sysctl-source-route</name>
+        <label>QT_TRANSLATE_NOOP("xml", "IP source routing")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Prevent source address spoofing")</description>
+    </reinforcement>
+    <reinforcement>
+        <name>network-icmp-timestamp</name>
+        <label>QT_TRANSLATE_NOOP("xml", "ICMP timestamp query")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Prevent attackers from attacking some time authentication based protocols")</description>
+    </reinforcement>
+    <reinforcement>
+        <name>network-icmp-traceroute</name>
+        <label>QT_TRANSLATE_NOOP("xml", "Traceroute probe")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Preventing threats to hosts detected by traceroute")</description>
+    </reinforcement>
+    <reinforcement>
+        <name>network-sysctl-high-risk-vulnerability</name>
+        <label>QT_TRANSLATE_NOOP("xml", "High risk vulnerability")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Disable high risk vulnerability services")</description>
+    </reinforcement>
+</br_plugin>
