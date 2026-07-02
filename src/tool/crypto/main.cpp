@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/main.cpp
+ * @file          /kiran-ssr-manager/src/tool/crypto/main.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -7,8 +7,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk3-log-i.h>
-#include "src/tool/ssr-cmd-parser.h"
-#include "ssr-config.h"
+#include "src/tool/crypto/ssr-cmd-parser.h"
 
 int main(int argc, char* argv[])
 {

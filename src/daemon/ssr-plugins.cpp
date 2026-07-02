@@ -10,7 +10,7 @@
 
 #include "src/daemon/ssr-configuration.h"
 #include "src/daemon/ssr-plugins.h"
-#include "ssr-config.h"
+
 
 namespace Kiran
 {

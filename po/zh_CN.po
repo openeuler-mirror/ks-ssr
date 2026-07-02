@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-23 11:39+0800\n"
+"POT-Creation-Date: 2021-08-25 17:12+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,46 +37,103 @@ msgstr "任务正在运行，请不要重复操作。"
 msgid "The standard reinforcement configuration is not found."
 msgstr "加固标准配置未找到"
 
-#: ../lib/base/error.cpp:64
+#: ../lib/base/error.cpp:65
 msgid "Internel error."
 msgstr "内部错误。"
 
-#: ../lib/base/error.cpp:67
+#: ../lib/base/error.cpp:68
 msgid "Unknown error."
 msgstr "未知错误。"
 
-#: ../lib/base/error.cpp:71
+#: ../lib/base/error.cpp:72
 msgid " (error code: 0x{:x})"
 msgstr "（错误码：0x{:x}）"
 
-#: ../src/tool/ssr-cmd-parser.cpp:25
+#: ../src/tool/crypto/ssr-cmd-parser.cpp:24
 msgid "Output version infomation and exit."
 msgstr "输出版本信息并退出。"
 
-#: ../src/tool/ssr-cmd-parser.cpp:31
+#: ../src/tool/crypto/ssr-cmd-parser.cpp:30
 msgid "Generate public and private keys for RSA."
 msgstr "生成RSA公钥和私钥。"
 
-#: ../src/tool/ssr-cmd-parser.cpp:37
+#: ../src/tool/crypto/ssr-cmd-parser.cpp:36
 msgid "Decrypt a file."
 msgstr "解密文件。"
 
-#: ../src/tool/ssr-cmd-parser.cpp:44
+#: ../src/tool/crypto/ssr-cmd-parser.cpp:43
 msgid "Encrypt a file."
 msgstr "加密文件。"
 
-#: ../src/tool/ssr-cmd-parser.cpp:51
+#: ../src/tool/crypto/ssr-cmd-parser.cpp:50
 msgid "RSA public file path."
 msgstr "RSA公钥路径。"
 
-#: ../src/tool/ssr-cmd-parser.cpp:54
+#: ../src/tool/crypto/ssr-cmd-parser.cpp:53
 msgid "RSA private file path."
 msgstr "RSA私钥路径。"
 
-#: ../src/tool/ssr-cmd-parser.cpp:57
+#: ../src/tool/crypto/ssr-cmd-parser.cpp:56
 msgid "Output file path."
 msgstr "输出文件路径。"
 
+#: ../src/tool/config/main.cpp:26
+msgid "Command 'kiran-ssr-config' can only be run as root!"
+msgstr "命令 'kiran-ssr-config' 只能在root用户下运行！"
+
+#: ../src/tool/config/cmd-parser.cpp:18
+msgid "FILE"
+msgstr "文件"
+
+#: ../src/tool/config/cmd-parser.cpp:25
+msgid "The configuration file type"
+msgstr "配置文件类型"
+
+#: ../src/tool/config/cmd-parser.cpp:26
+msgid "Specify the key to get value"
+msgstr "指定用于获取值的键"
+
+#: ../src/tool/config/cmd-parser.cpp:27
+msgid "Specify the key to set value"
+msgstr "指定用于设置值的键"
+
+#: ../src/tool/config/cmd-parser.cpp:28
+msgid "Specify the set value"
+msgstr "指定设置的值"
+
+#: ../src/tool/config/cmd-parser.cpp:29
+msgid "Specify regular expression to split columns"
+msgstr "查找时用于分割列的正则表达式"
+
+#: ../src/tool/config/cmd-parser.cpp:30
+msgid "Specify string to join columns"
+msgstr "设置时用于拼接列的字符串"
+
+#: ../src/tool/config/cmd-parser.cpp:46
+msgid "Failed to parse command arguments"
+msgstr "解析命令行参数失败"
+
+#: ../src/tool/config/cmd-parser.cpp:52
+msgid "The file path is not specified"
+msgstr "文件路径未指定"
+
+#: ../src/tool/config/cmd-parser.cpp:59
+msgid "The file {0} doesn't exist"
+msgstr "文件{0}不存在"
+
+#: ../src/tool/config/cmd-parser.cpp:65
+msgid "No specify file type"
+msgstr "文件类型未指定"
+
+#: ../src/tool/config/cmd-parser.cpp:74
+msgid "Unknown file type"
+msgstr "未知文件类型"
+
+#: ../src/tool/config/cmd-parser.cpp:89
+msgid "Failed to get value for {0}"
+msgstr "获取键{0}的值失败"
+
+#. namespace Config
 #. namespace Kiran
 #: ../data/ssr-categories.ini.in.h:1
 msgid "configuration manager"
@@ -115,11 +172,15 @@ msgid "Disable IP source routing"
 msgstr "禁止IP源路由"
 
 #: ../data/ssr-system-rs.xml.in.h:6
+msgid "Network test"
+msgstr "网络测试"
+
+#: ../data/ssr-system-rs.xml.in.h:7
 #: ../plugins/cpp/audit/ssr-plugin-audit.xml.in.h:2
 msgid "Turn on system auditd service"
 msgstr "开启系统审计服务"
 
-#: ../data/ssr-system-rs.xml.in.h:7
+#: ../data/ssr-system-rs.xml.in.h:8
 #: ../plugins/cpp/audit/ssr-plugin-audit.xml.in.h:3
 msgid "System log save cycle"
 msgstr "系统日志保存周期"
@@ -131,6 +192,15 @@ msgstr "网络设置"
 #: ../plugins/cpp/audit/ssr-plugin-audit.xml.in.h:1
 msgid "audit settings"
 msgstr "审计设置"
+
+#~ msgid "The configuration file path"
+#~ msgstr "配置文件路径"
+
+#~ msgid "Get the value of a key"
+#~ msgstr "获取键的值"
+
+#~ msgid "Set the value of a key"
+#~ msgstr "设置键的值"
 
 #~ msgid ""
 #~ "The user will be locked if the number of login failed exceeds the limit."

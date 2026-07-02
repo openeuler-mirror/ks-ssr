@@ -1,13 +1,12 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/ssr-cmd-parser.cpp
+ * @file          /kiran-ssr-manager/src/tool/crypto/ssr-cmd-parser.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/tool/ssr-cmd-parser.h"
+#include "src/tool/crypto/ssr-cmd-parser.h"
 #include <glib/gi18n.h>
-#include "ssr-config.h"
 
 namespace Kiran
 {
