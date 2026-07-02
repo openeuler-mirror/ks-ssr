@@ -42,6 +42,9 @@ Box::Box(const QString &uid) : m_uid(uid),
 
     m_passwdEdit = new QLineEdit;
     m_process = new QProcess;
+    m_imageLock = new BoxImage(this, ":/images/box-locked");
+    m_imageUnlock = new BoxImage(this);
+
     this->initBox();
     this->initMenu();
 }
@@ -58,8 +61,24 @@ void Box::initBox()
     // 放在qss中会被scrollarea->viewport的样式表覆盖，所以在代码中设定背景
     this->m_showingIcon->setFlat(true);
     this->m_showingIcon->setFixedSize(QSize(102, 102));
-    this->m_showingIcon->setIcon(QIcon(":/images/box-big"));
-    this->m_showingIcon->setIconSize(QSize(70, 70));
+    //    this->m_showingIcon->setIcon(QIcon(":/images/box-big"));
+    //    this->m_showingIcon->setIconSize(QSize(70, 70));
+    QVBoxLayout *vlay = new QVBoxLayout(m_showingIcon);
+    vlay->setContentsMargins(0, 0, 0, 0);
+    vlay->addWidget(m_imageLock, 0, Qt::AlignCenter);
+    vlay->addWidget(m_imageUnlock, 0, Qt::AlignCenter);
+
+    if (m_mounted)
+    {
+        m_imageLock->hide();
+    }
+    else
+    {
+        m_imageUnlock->hide();
+    }
+
+    vlay->addWidget(m_imageLock, 0, Qt::AlignCenter);
+
     layout->addWidget(this->m_showingIcon);
 
     connect(m_showingIcon, &QPushButton::clicked, this, &Box::onIconBtnClick);
@@ -110,9 +129,18 @@ void Box::boxChanged()
 {
     // 保密箱属性发生变化，需要进行更新
     auto mounted = this->m_boxManagerProxy->IsMounted(this->m_uid).value();
-    KLOG_DEBUG() << "mounted = " << mounted;
     m_mounted = mounted;
     this->m_mountedStatusAction->setText(mounted ? tr("Lock") : tr("Unlock"));
+    if (m_mounted)
+    {
+        m_imageUnlock->show();
+        m_imageLock->hide();
+    }
+    else
+    {
+        m_imageLock->show();
+        m_imageUnlock->hide();
+    }
 }
 
 void Box::onIconBtnClick()

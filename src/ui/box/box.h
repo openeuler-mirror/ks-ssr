@@ -15,8 +15,10 @@
 #pragma once
 
 #include <QLineEdit>
-#include <QWidget>
 #include <QProcess>
+#include <QWidget>
+
+#include "src/ui/box/box-image.h"
 
 class QMouseEvent;
 class QMenu;
@@ -84,6 +86,9 @@ private:
     QPushButton *m_showingIcon;
     // 保险箱显示名称
     QLabel *m_showingName;
+
+    BoxImage *m_imageLock;
+    BoxImage *m_imageUnlock;
 
     BoxManagerProxy *m_boxManagerProxy;
     ModifyPassword *m_modifyPassword;
