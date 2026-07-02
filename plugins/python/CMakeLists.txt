@@ -38,6 +38,9 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/98-ssr-config.gschema.override
          RENAME "98-ssr-config.gschema.override"
          DESTINATION /usr/share/glib-2.0/schemas/)
 
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/ssr-blacklist.conf
+         RENAME "ssr-blacklist.conf"
+         DESTINATION /etc/modprobe.d/)
 
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-audit.xml.in)
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-config.xml.in)
