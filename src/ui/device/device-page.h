@@ -24,8 +24,8 @@ class DevicePage;
 namespace KS
 {
 class SidebarItem;
-class DeviceLogPage;
-class DeviceListPage;
+class DeviceLog;
+class DeviceList;
 
 class DevicePage : public QWidget
 {
@@ -33,7 +33,7 @@ class DevicePage : public QWidget
 
 public:
     DevicePage(QWidget *parent = nullptr);
-    ~DevicePage();
+    virtual ~DevicePage();
 
 protected:
     void paintEvent(QPaintEvent *event);

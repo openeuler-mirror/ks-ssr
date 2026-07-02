@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DeviceLogPage</class>
- <widget class="QWidget" name="DeviceLogPage">
+ <class>DeviceLog</class>
+ <widget class="QWidget" name="DeviceLog">
   <property name="geometry">
    <rect>
     <x>0</x>

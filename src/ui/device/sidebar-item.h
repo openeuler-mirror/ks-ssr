@@ -28,10 +28,10 @@ class SidebarItem : public QWidget
     Q_PROPERTY(bool selected READ isSelected WRITE setSelected NOTIFY selectChanged)
 
 public:
-    explicit SidebarItem(const QString &text,
-                         const QString &icon,
-                         QWidget *parent = nullptr);
-    ~SidebarItem();
+    SidebarItem(const QString &text,
+                const QString &icon,
+                QWidget *parent = nullptr);
+    virtual ~SidebarItem();
 
 public:
     void setSelected(bool isSelected);

@@ -12,28 +12,28 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "src/ui/device/device-list-page.h"
+#include "src/ui/device/device-list.h"
 #include "src/ui/device/device-permission.h"
-#include "src/ui/ui_device-list-page.h"
+#include "src/ui/ui_device-list.h"
 
 #include <kiran-log/qt5-log-i.h>
 #include <QPainter>
 
 namespace KS
 {
-DeviceListPage::DeviceListPage(QWidget *parent) : QWidget(parent),
-                                                  m_ui(new Ui::DeviceListPage),
-                                                  m_devicePermission(nullptr)
+DeviceList::DeviceList(QWidget *parent) : QWidget(parent),
+                                          m_ui(new Ui::DeviceList),
+                                          m_devicePermission(nullptr)
 {
     m_ui->setupUi(this);
     m_ui->m_title->setText(tr("Device List"));
 
     m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
-    connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceListPage::searchTextChanged);
-    connect(m_ui->m_edit, &QPushButton::clicked, this, &DeviceListPage::editClicked);
+    connect(m_ui->m_search, &QLineEdit::textChanged, this, &DeviceList::searchTextChanged);
+    connect(m_ui->m_edit, &QPushButton::clicked, this, &DeviceList::editClicked);
 }
 
-DeviceListPage::~DeviceListPage()
+DeviceList::~DeviceList()
 {
     delete m_ui;
     if (m_devicePermission)
@@ -43,7 +43,7 @@ DeviceListPage::~DeviceListPage()
     }
 }
 
-void DeviceListPage::paintEvent(QPaintEvent *event)
+void DeviceList::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QStyleOption opt;
@@ -52,20 +52,19 @@ void DeviceListPage::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void DeviceListPage::searchTextChanged(const QString &text)
+void DeviceList::searchTextChanged(const QString &text)
 {
-    KLOG_DEBUG() << "The search text is change to " << text;
-
     auto filterProxy = this->m_ui->m_table->getFilterProxy();
     filterProxy->setFilterFixedString(text);
 }
 
-void DeviceListPage::editClicked(bool checked)
+void DeviceList::editClicked(bool checked)
 {
     if (!m_devicePermission)
     {
+        //TODO:由于现在还没有调用后台接口获取设备名，先设置test作为设备名，后续改为具体的设备名
         m_devicePermission = new DevicePermission("test");
-        connect(m_devicePermission, &DevicePermission::okCliecked, this, &DeviceListPage::updateDevice);
+        connect(m_devicePermission, &DevicePermission::clickConfirm, this, &DeviceList::updateDevice);
         connect(m_devicePermission, &DevicePermission::destroyed,
                 [this]
                 {
@@ -74,9 +73,8 @@ void DeviceListPage::editClicked(bool checked)
                 });
     }
 
-    QList<PMPermissionsType> permissions;
-    permissions.append(PM_PERMISSIONS_TYPE_READ);
-    m_devicePermission->setDeviceStatus(PM_DEVICE_STATUS_UNACTIVE);
+    int permissions = DEVICE_PERMISSION_TYPE_READ | DEVICE_PERMISSION_TYPE_EXEC;
+    m_devicePermission->setDeviceStatus(DEVICE_STATUS_UNACTIVE);
     m_devicePermission->setDevicePermission(permissions);
 
     int x = this->x() + this->width() / 4 + m_devicePermission->width() / 4;
@@ -85,9 +83,14 @@ void DeviceListPage::editClicked(bool checked)
     this->m_devicePermission->show();
 }
 
-void DeviceListPage::updateDevice()
+void DeviceList::updateDevice()
 {
+    //获取用户选择的设备权限和状态
     auto status = m_devicePermission->getDeviceStatus();
     auto permissions = m_devicePermission->getDevicePermission();
+
+    //TODO:将数据传入后台
+
+    //TODO:将数据更新至表格
 }
 }  //namespace KS

@@ -32,8 +32,8 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/file-protected/fp-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-page.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/sidebar-item.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/device/device-list-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/device/device-log-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/device/device-list.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/device/device-log.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/device/device-permission.ui)
 
 set(TARGET_NAME ks-sc-gui)
