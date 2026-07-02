@@ -13,15 +13,35 @@ namespace Kiran
 {
 namespace Daemon
 {
-std::string Utils::PyUnicode_AsString(PyObject *unicode)
+std::string Utils::pyobject_as_string(PyObject *pyobject)
 {
-    auto bytes = PyUnicode_AsASCIIString(unicode);
-    RETURN_VAL_IF_FALSE(bytes, std::string());
-    SCOPE_EXIT({
-        Py_XDECREF(bytes);
-    });
-    auto str = PyBytes_AsString(bytes);
-    return POINTER_TO_STRING(str);
+    if (PyUnicode_Check(pyobject))
+    {
+        auto bytes = PyUnicode_AsASCIIString(pyobject);
+        RETURN_VAL_IF_FALSE(bytes, std::string());
+        SCOPE_EXIT({
+            Py_XDECREF(bytes);
+        });
+        auto str = PyBytes_AsString(bytes);
+        return POINTER_TO_STRING(str);
+    }
+    else if (PyString_Check(pyobject))
+    {
+        auto str = PyString_AsString(pyobject);
+        return POINTER_TO_STRING(str);
+    }
+    else if (PyExceptionInstance_Check(pyobject))
+    {
+        auto args = PyObject_GetAttrString(pyobject, "args");
+        SCOPE_EXIT({
+            Py_XDECREF(args);
+        });
+        if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0)
+        {
+            return Utils::pyobject_as_string(PyTuple_GetItem(args, 0));
+        }
+    }
+    return std::string();
 }
 
 std::string Utils::catch_exception()
@@ -43,20 +63,15 @@ std::string Utils::catch_exception()
     RETURN_VAL_IF_TRUE(value == NULL, std::string());
 
     PyErr_NormalizeException(&type, &value, 0);
-    if (PyUnicode_Check(value))
-    {
-        retval = Utils::PyUnicode_AsString(value);
-    }
+    retval = Utils::pyobject_as_string(value);
 
     if (traceback != NULL)
     {
         retval += "Traceback:";
 
-        auto trace_module_name = PyUnicode_FromString("traceback");
-        auto trace_module = PyImport_Import(trace_module_name);
+        auto trace_module = PyImport_ImportModule("traceback");
 
         SCOPE_EXIT({
-            Py_XDECREF(trace_module_name);
             Py_XDECREF(trace_module);
         });
 
@@ -74,7 +89,7 @@ std::string Utils::catch_exception()
                         auto list_size = PyList_Size(error_list);
                         for (int i = 0; i < list_size; ++i)
                         {
-                            retval += Utils::PyUnicode_AsString(PyList_GetItem(error_list, i));
+                            retval += Utils::pyobject_as_string(PyList_GetItem(error_list, i));
                         }
                     }
                 }
