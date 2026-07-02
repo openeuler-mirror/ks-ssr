@@ -37,5 +37,5 @@ target_link_libraries(${TARGET_NAME} PUBLIC
                       lib-base)
 
 install(TARGETS ${TARGET_NAME}
-        DESTINATION ${SSR_INSTALL_BINDIR}/)
+        DESTINATION ${SSR_INSTALL_LIBEXECDIR}/)
 
