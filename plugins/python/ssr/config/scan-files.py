@@ -8,11 +8,6 @@ import ssr.log
 # 扫描的路径
 SCAN_FILES_PATH = ("/bin","/usr/bin","/sbin","/usr/sbin")
 
-# 扫描结果存放路径
-SCAN_NOUSER_FILES_RESULT_PATH = "/usr/share/ks-ssr-manager/ssr-config-scan-nouser-files-result.txt"
-SCAN_AUTHORITY_FILES_RESULT_PATH = "/usr/share/ks-ssr-manager/ssr-config-scan-authority-files-result.txt"
-SCAN_SUID_SGID_FILES_RESULT_PATH = "/usr/share/ks-ssr-manager/ssr-config-scan-suid-sgid-files-result.txt"
-
 SCAN_FILES_CMD = "find"
 
 class NouserFiles:

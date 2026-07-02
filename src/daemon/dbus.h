@@ -122,7 +122,7 @@ protected:
     virtual void SetFallback(const uint32_t &snapshot_status);
 
     // 通过激活码注册
-    virtual void ActivateByActivationCode(const std::string &activation_code);
+    virtual std::string ActivateByActivationCode(const std::string &activation_code);
 
     virtual void on_get_property(::DBus::InterfaceAdaptor &interface, const std::string &property, ::DBus::Variant &value);
     virtual void on_set_property(::DBus::InterfaceAdaptor &interface, const std::string &property, const ::DBus::Variant &value);
