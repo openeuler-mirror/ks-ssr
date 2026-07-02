@@ -96,6 +96,74 @@
                 </layout>
             </arg>
         </reinforcement>
+        <reinforcement>
+            <name>network-sysctl-high-risk-vulnerability</name>
+            <arg>
+                <name>bluetooth</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on system bluetooth service</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>cups</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on system cups service</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>avahi-daemon</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on system avahi-daemon service</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>rpcbind</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on system rpcbind service</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>smb</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Turn on system smb service</_label>
+                </layout>
+            </arg>
+        </reinforcement>
         <!-- 配置类 -->
         <reinforcement>
             <name>config-sendmail-switch</name>

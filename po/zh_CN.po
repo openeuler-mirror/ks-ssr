@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-17 14:30+0800\n"
+"POT-Creation-Date: 2022-03-04 15:57+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,24 +136,32 @@ msgstr "指定注释字符串"
 msgid "Add new line when the speficied line pattern is dismatch in PAM"
 msgstr "指定未匹配到模式行时添加的新行"
 
-#: ../src/tool/config/cmd-parser.cpp:52
+#: ../src/tool/config/cmd-parser.cpp:37
+#, fuzzy
+msgid ""
+"Specifies a regular expression to match the next row of the inserted row. If "
+"multiple rows are matched, the value is used by the first matched row"
+msgstr ""
+"指定一个正则表达式用于匹配行。如果多行被匹配，则值由第一个被匹配的行被使用"
+
+#: ../src/tool/config/cmd-parser.cpp:53
 msgid "Failed to parse command arguments"
 msgstr "解析命令行参数失败"
 
-#: ../src/tool/config/cmd-parser.cpp:58
+#: ../src/tool/config/cmd-parser.cpp:59
 msgid "The file path is not specified"
 msgstr "文件路径未指定"
 
-#: ../src/tool/config/cmd-parser.cpp:71
+#: ../src/tool/config/cmd-parser.cpp:72
 msgid "No specify file type"
 msgstr "文件类型未指定"
 
-#: ../src/tool/config/cmd-parser.cpp:84
+#: ../src/tool/config/cmd-parser.cpp:85
 msgid "Unknown file type"
 msgstr "未知文件类型"
 
-#: ../src/tool/config/cmd-parser.cpp:120 ../src/tool/config/cmd-parser.cpp:172
-#: ../src/tool/config/cmd-parser.cpp:223
+#: ../src/tool/config/cmd-parser.cpp:124 ../src/tool/config/cmd-parser.cpp:176
+#: ../src/tool/config/cmd-parser.cpp:227
 msgid "Exec method {0} failed"
 msgstr "执行方法{0}失败"
 
@@ -204,190 +212,211 @@ msgid "Allow ICMP timestamp query"
 msgstr "允许ICMP时间戳请求"
 
 #: ../data/ssr-system-rs.xml.in.h:8
+msgid "Turn on system bluetooth service"
+msgstr "开启系统蓝牙服务"
+
+#: ../data/ssr-system-rs.xml.in.h:9
+msgid "Turn on system cups service"
+msgstr "开启系统打印服务"
+
+#: ../data/ssr-system-rs.xml.in.h:10
+msgid "Turn on system avahi-daemon service"
+msgstr "开启系统avahi-daemon服务"
+
+#: ../data/ssr-system-rs.xml.in.h:11
+msgid "Turn on system rpcbind service"
+msgstr "开启系统RPC端口映射功能"
+
+#: ../data/ssr-system-rs.xml.in.h:12
+msgid "Turn on system smb service"
+msgstr "开启Web连接和客户端与服务器之间的信息沟通功能"
+
+#: ../data/ssr-system-rs.xml.in.h:13
 #: ../plugins/python/ssr-plugin-config.xml.in.h:2
 msgid "Turn on sendmail service"
 msgstr "开启发送邮件服务"
 
-#: ../data/ssr-system-rs.xml.in.h:9
+#: ../data/ssr-system-rs.xml.in.h:14
 #: ../plugins/python/ssr-plugin-config.xml.in.h:4
 msgid "Number of historical commands"
 msgstr "历史命令条数"
 
-#: ../data/ssr-system-rs.xml.in.h:10
+#: ../data/ssr-system-rs.xml.in.h:15
 msgid ""
 "The maximum permissions of important configuration files in the system is "
 "set to 0644"
 msgstr "系统中重要配置文件的最大权限设置为0644"
 
-#: ../data/ssr-system-rs.xml.in.h:11
+#: ../data/ssr-system-rs.xml.in.h:16
 #: ../plugins/python/ssr-plugin-config.xml.in.h:8
 msgid "Turn on composite key reboot"
 msgstr "开启组合键重启"
 
-#: ../data/ssr-system-rs.xml.in.h:12
+#: ../data/ssr-system-rs.xml.in.h:17
 msgid "Password error times"
 msgstr "密码错误次数"
 
-#: ../data/ssr-system-rs.xml.in.h:14
+#: ../data/ssr-system-rs.xml.in.h:18
 msgid "Automatic unlocking time after locking (Sec)"
 msgstr "锁定后自动解锁时间(秒)"
 
-#: ../data/ssr-system-rs.xml.in.h:15
+#: ../data/ssr-system-rs.xml.in.h:19
 msgid "Root login failed lock"
 msgstr "root用户登录失败锁定"
 
-#: ../data/ssr-system-rs.xml.in.h:16
+#: ../data/ssr-system-rs.xml.in.h:20
 msgid "Unlock time after root user locks (Sec)"
 msgstr "root用户锁定后的解锁时间(秒)"
 
-#: ../data/ssr-system-rs.xml.in.h:17
+#: ../data/ssr-system-rs.xml.in.h:21
 msgid "Maximum number of days a password may be used"
 msgstr "可使用密码的最大有效天数"
 
-#: ../data/ssr-system-rs.xml.in.h:18
+#: ../data/ssr-system-rs.xml.in.h:22
 msgid "Minimum number of days allowed between password changes"
 msgstr "密码更改允许的最小间隔天数"
 
-#: ../data/ssr-system-rs.xml.in.h:19
+#: ../data/ssr-system-rs.xml.in.h:23
 msgid "Minimum acceptable password length"
 msgstr "可接受的最小密码长度"
 
-#: ../data/ssr-system-rs.xml.in.h:20
+#: ../data/ssr-system-rs.xml.in.h:24
 msgid "Number of days warning given before a password expires"
 msgstr "密码过期前发出警告的天数"
 
-#: ../data/ssr-system-rs.xml.in.h:21
+#: ../data/ssr-system-rs.xml.in.h:25
 msgid "Minimum password length"
 msgstr "最小密码长度"
 
-#: ../data/ssr-system-rs.xml.in.h:22
+#: ../data/ssr-system-rs.xml.in.h:26
 msgid "Number of capital letters"
 msgstr "大写字母数"
 
-#: ../data/ssr-system-rs.xml.in.h:23
+#: ../data/ssr-system-rs.xml.in.h:27
 msgid "Number of lowercase letters"
 msgstr "小写字母数"
 
-#: ../data/ssr-system-rs.xml.in.h:24
+#: ../data/ssr-system-rs.xml.in.h:28
 msgid "Number of digits"
 msgstr "数字个数"
 
-#: ../data/ssr-system-rs.xml.in.h:25
+#: ../data/ssr-system-rs.xml.in.h:29
 msgid "Number of special characters"
 msgstr "特殊字符个数"
 
-#: ../data/ssr-system-rs.xml.in.h:26
+#: ../data/ssr-system-rs.xml.in.h:30
+msgid ""
+"Contains number of character types (special characters, numbers, letters)"
+msgstr "包含字符类型数(特殊字符、数字、字母)"
+
+#: ../data/ssr-system-rs.xml.in.h:31
 msgid "Maximum number of consecutive characters"
 msgstr "最大连续字符个数"
 
-#: ../data/ssr-system-rs.xml.in.h:27
+#: ../data/ssr-system-rs.xml.in.h:32
 msgid "Allow user names"
 msgstr "允许包含用户名"
 
-#: ../data/ssr-system-rs.xml.in.h:28
+#: ../data/ssr-system-rs.xml.in.h:33
 msgid "Max stack size"
 msgstr "最大栈空间大小"
 
-#: ../data/ssr-system-rs.xml.in.h:29
+#: ../data/ssr-system-rs.xml.in.h:34
 msgid "Max resident set size"
 msgstr "最大常驻内存集"
 
-#: ../data/ssr-system-rs.xml.in.h:30
+#: ../data/ssr-system-rs.xml.in.h:35
 #: ../plugins/python/ssr-plugin-config.xml.in.h:18
 msgid "Turn on SAK key"
 msgstr "开启SAK键"
 
-#: ../data/ssr-system-rs.xml.in.h:31
+#: ../data/ssr-system-rs.xml.in.h:36
 #: ../plugins/python/ssr-plugin-config.xml.in.h:20
 msgid "File directory default permission"
 msgstr "文件目录缺省权限"
 
-#: ../data/ssr-system-rs.xml.in.h:32
+#: ../data/ssr-system-rs.xml.in.h:37
 msgid "Turn on system auditd service"
 msgstr "开启系统审计服务"
 
-#: ../data/ssr-system-rs.xml.in.h:33
+#: ../data/ssr-system-rs.xml.in.h:38
 msgid "System log save cycle（weekly）"
 msgstr "系统日志保存周期（周）"
 
-#: ../data/ssr-system-rs.xml.in.h:34
+#: ../data/ssr-system-rs.xml.in.h:39
 msgid "The maximum permission of log files and configurations is set to 0644"
 msgstr "日志文件和配置的最大权限为0644"
 
-#: ../data/ssr-system-rs.xml.in.h:35
+#: ../data/ssr-system-rs.xml.in.h:40
 msgid "Log files can only be appended"
 msgstr "日志文件仅能被添加"
 
-#: ../data/ssr-system-rs.xml.in.h:36
+#: ../data/ssr-system-rs.xml.in.h:41
 msgid "Allow to use CD-ROM device"
 msgstr "允许使用光驱设备"
 
-#: ../data/ssr-system-rs.xml.in.h:37
+#: ../data/ssr-system-rs.xml.in.h:42
 msgid "Allow to use USB device"
 msgstr "允许使用USB设备"
 
-#: ../data/ssr-system-rs.xml.in.h:38
+#: ../data/ssr-system-rs.xml.in.h:43
 msgid "Allow to use serial port device"
 msgstr "允许使用串口设备"
 
-#: ../data/ssr-system-rs.xml.in.h:39
+#: ../data/ssr-system-rs.xml.in.h:44
 #: ../plugins/python/ssr-plugin-external.xml.in.h:9
 msgid "Restrict system independent user login"
 msgstr "限制系统无关用户登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:40
+#: ../data/ssr-system-rs.xml.in.h:45
 msgid "Allow account retention (Split with semicolon)"
 msgstr "允许保留账号 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:41
+#: ../data/ssr-system-rs.xml.in.h:46
 msgid "Disable null password user present"
 msgstr "禁止空密码用户出现"
 
-#: ../data/ssr-system-rs.xml.in.h:42
+#: ../data/ssr-system-rs.xml.in.h:47
 msgid "Allow remote login of root user via SSH"
 msgstr "允许通过ssh远程登陆root用户"
 
-#: ../data/ssr-system-rs.xml.in.h:43
+#: ../data/ssr-system-rs.xml.in.h:48
 msgid "Allow SSH password free login"
 msgstr "允许SSH免密登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:44
+#: ../data/ssr-system-rs.xml.in.h:49
 msgid "Allow to use SSH weak encryption algorithm"
 msgstr "允许使用SSH弱加密算法"
 
-#: ../data/ssr-system-rs.xml.in.h:45
+#: ../data/ssr-system-rs.xml.in.h:50
 msgid "Allow hiding operating system version information"
 msgstr "允许隐藏操作系统版本信息"
 
-#: ../data/ssr-system-rs.xml.in.h:46
+#: ../data/ssr-system-rs.xml.in.h:51
 #: ../plugins/python/ssr-plugin-external.xml.in.h:21
 msgid ""
 "Users outside the wheel group are prohibited from using the 'su root' command"
 msgstr "禁止wheel组以外的用户使用'su root'命令"
 
-#: ../data/ssr-system-rs.xml.in.h:47
+#: ../data/ssr-system-rs.xml.in.h:52
 msgid "List of IP addresses that allow remote access (Split with comma)"
 msgstr "允许远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:48
+#: ../data/ssr-system-rs.xml.in.h:53
 msgid ""
 "List of IP addresses for which remote access is prohibited (Split with comma)"
 msgstr "禁止远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:49
+#: ../data/ssr-system-rs.xml.in.h:54
 msgid ""
 "If no operation is performed for more than the following time (seconds), the "
 "session exits"
 msgstr "超过以下时间（秒）未操作则会话退出"
 
-#: ../data/ssr-system-rs.xml.in.h:50
+#: ../data/ssr-system-rs.xml.in.h:55
 #: ../plugins/python/ssr-plugin-external.xml.in.h:26
 msgid "Disable radio network"
 msgstr "禁用无线网络"
-
-#: ../data/ssr-system-rs.xml.in.h:51
-msgid "Contains number of character types (special characters, numbers, letters)"
-msgstr "包含字符类型数(特殊字符、数字、字母)"
 
 #: ../plugins/python/ssr-plugin-audit.xml.in.h:1
 msgid "audit settings"
@@ -634,6 +663,14 @@ msgstr "ICMP时间戳请求"
 msgid ""
 "Prevent attackers from attacking some time authentication based protocols"
 msgstr "防止攻击者攻击一些基于时间认证的协议"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:12
+msgid "High risk vulnerability"
+msgstr "禁止高危漏洞服务"
+
+#: ../plugins/python/ssr-plugin-network.xml.in.h:13
+msgid "Disable high risk vulnerability services"
+msgstr "预防bluetooth、cups、avahi-daemon、rpcbind、smb服务潜在的危险"
 
 #~ msgid "Passwd file permissionse"
 #~ msgstr "passwd文件权限"
