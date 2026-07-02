@@ -162,7 +162,7 @@ void BoxManager::newBoxClicked(bool checked)
 void BoxManager::createBoxAccepted()
 {
     // rsa加密
-    auto encryptPassword = CryptoHelper::rsa_encrypt(this->m_boxManagerProxy->rSAPublicKey(), this->m_createBox->getPassword());
+    auto encryptPassword = CryptoHelper::rsaEncrypt(this->m_boxManagerProxy->rSAPublicKey(), this->m_createBox->getPassword());
     auto reply = this->m_boxManagerProxy->CreateBox(this->m_createBox->getName(),
                                                     encryptPassword);
 

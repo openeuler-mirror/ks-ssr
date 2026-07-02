@@ -43,51 +43,40 @@ BoxManager::~BoxManager()
 
 QString BoxManager::CreateBox(const QString &name, const QString &password)
 {
-    auto decryptPasswd = CryptoHelper::rsa_decrypt(this->m_rsaPrivateKey, password);
+    auto decryptPasswd = CryptoHelper::rsaDecrypt(this->m_rsaPrivateKey, password);
     Box *box = new Box(name, decryptPasswd, getSenderUid());
 
-    m_boxList << box;
+    m_boxs.insert(box->getBoxID(), box);
 
     emit BoxAdded(box->getBoxID());
     return box->getBoxID();
 }
 
-bool BoxManager::DelBox(const QString &box_uid, const QString &password)
+bool BoxManager::DelBox(const QString &box_uid, const QString &boxId)
 {
-    for (Box *box : m_boxList)
-    {
-        if (box->getBoxID() == box_uid)
-        {
-            auto decryptInputPassword = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, password);
+    auto box = m_boxs.value(box_uid);
+    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, boxId);
 
-            RETURN_VAL_IF_TRUE(!box->delBox(decryptInputPassword), false)
-            emit BoxDeleted(box_uid);
-        }
-    }
+    RETURN_VAL_IF_TRUE(!box->delBox(decryptInputPassword), false)
+    m_boxs.remove(box_uid);
+    emit BoxDeleted(box_uid);
 
     return true;
 }
 
-QString BoxManager::GetBoxByUID(const QString &box_uid)
+QString BoxManager::GetBoxByUID(const QString &boxId)
 {
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
+    auto box = m_boxs.value(boxId);
 
-    for (Box *box : m_boxList)
-    {
-        if (box->getBoxID() == box_uid)
-        {
-            jsonObj = QJsonObject{
-                {BOX_NAME_KEY, box->getBoxName()},
-                {BOX_UID_KEY, box_uid},
-                {BOX_ISMOUNT_KEY, box->isMount()}};
-            jsonDoc.setObject(jsonObj);
+    jsonObj = QJsonObject{
+        {BOX_NAME_KEY, box->getBoxName()},
+        {BOX_UID_KEY, boxId},
+        {BOX_ISMOUNT_KEY, box->isMount()}};
+    jsonDoc.setObject(jsonObj);
 
-            return QString(jsonDoc.toJson());
-        }
-    }
-
-    return "";
+    return QString(jsonDoc.toJson());
 }
 
 QString BoxManager::GetBoxs()
@@ -95,13 +84,12 @@ QString BoxManager::GetBoxs()
     QJsonDocument jsonDoc;
     QJsonArray jsonArr;
 
-    int i = 0;
-    for (Box *box : m_boxList)
+    for (auto it = m_boxs.begin(); it != m_boxs.end(); it++)
     {
+        auto box = it.value();
         // 调用者uid检测，不属于调用者创建的box不返回给前台
         if (getSenderUid() != box->getUserUid())
         {
-            i++;
             continue;
         }
         // 暂只返回以下三个数据给前台
@@ -111,69 +99,65 @@ QString BoxManager::GetBoxs()
             {BOX_ISMOUNT_KEY, box->isMount()}};
 
         jsonArr.push_back(jsonObj);
-        i++;
     }
 
     jsonDoc.setArray(jsonArr);
     return QString(jsonDoc.toJson());
 }
 
-bool BoxManager::IsMounted(const QString &box_uid)
+bool BoxManager::IsMounted(const QString &boxId)
 {
-    for (Box *box : m_boxList)
+    auto box = m_boxs.value(boxId);
+
+    if (box->getBoxID() == boxId)
     {
-        if (box->getBoxID() == box_uid)
-        {
-            return box->isMount();
-        }
+        return box->isMount();
     }
+
     return false;
 }
 
-bool BoxManager::ModifyBoxPassword(const QString &box_uid,
-                                   const QString &current_password,
-                                   const QString &new_password)
+bool BoxManager::ModifyBoxPassword(const QString &boxId,
+                                   const QString &currentPassword,
+                                   const QString &newPassword)
 {
-    auto decryptInputPassword = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, current_password);
-    auto decryptNewPassword = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, new_password);
+    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, currentPassword);
+    auto decryptNewPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, newPassword);
 
-    for (Box *box : m_boxList)
+    auto box = m_boxs.value(boxId);
+
+    if (box->getBoxID() == boxId)
     {
-        if (box->getBoxID() == box_uid)
-        {
-            return box->modifyBoxPassword(decryptInputPassword, decryptNewPassword);
-        }
+        return box->modifyBoxPassword(decryptInputPassword, decryptNewPassword);
     }
 
     return false;
 }
 
 // 解锁
-bool BoxManager::Mount(const QString &box_uid, const QString &password)
+bool BoxManager::Mount(const QString &boxId, const QString &password)
 {
-    auto decryptInputPassword = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, password);
+    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto box = m_boxs.value(boxId);
 
-    for (Box *box : m_boxList)
+    if (box->getBoxID() == boxId)
     {
-        if (box->getBoxID() == box_uid)
-        {
-            emit BoxChanged(box_uid);
-            return box->mount(decryptInputPassword);
-        }
+        emit BoxChanged(boxId);
+        return box->mount(decryptInputPassword);
     }
+
     return false;
 }
 
 // 上锁
-void BoxManager::UnMount(const QString &box_uid)
+void BoxManager::UnMount(const QString &boxId)
 {
-    for (Box *box : m_boxList)
+    auto box = m_boxs.value(boxId);
+
+    if (box->getBoxID() == boxId)
     {
-        if (box->getBoxID() == box_uid)
-        {
-            emit BoxChanged(box_uid);
-            return box->umount();
-        }
+        emit BoxChanged(boxId);
+        return box->umount();
     }
 }
 
@@ -186,16 +170,16 @@ void BoxManager::init()
         KLOG_WARNING() << "Can't register object:" << connection.lastError();
     }
 
-    KS::CryptoHelper::generate_rsa_key(RSA_KEY_LENGTH, m_rsaPrivateKey, m_rsaPublicKey);
+    KS::CryptoHelper::generateRsaKey(RSA_KEY_LENGTH, m_rsaPrivateKey, m_rsaPublicKey);
 
-    m_boxList = {};
+    m_boxs.clear();
     BoxDao *boxDao = new BoxDao;
     auto boxInfoList = boxDao->getBoxs();
-    for (BoxDaoInfo boxInfo : boxInfoList)
+    for (auto boxInfo : boxInfoList)
     {
-        auto decryptPassword = CryptoHelper::aes_decrypt(boxInfo.encryptpassword);
-        Box *box = new Box(boxInfo.boxName, decryptPassword, boxInfo.senderUserUid, boxInfo.boxId);
-        m_boxList << box;
+        auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
+        Box *box = new Box(boxInfo.boxName, decryptPassword, boxInfo.userUid, boxInfo.boxId);
+        m_boxs.insert(boxInfo.boxId, box);
     }
 }
 
