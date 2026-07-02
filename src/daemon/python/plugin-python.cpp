@@ -282,7 +282,7 @@ void PluginPython::add_reinforcement(const std::string &package_name,
     auto iter = this->reinforcements_.emplace(reinforcement_name, reinforcement);
     if (!iter.second)
     {
-        KLOG_WARNING("The reinforcement %s is repeated.", reinforcement_name);
+        KLOG_WARNING("The reinforcement %s is repeated.", reinforcement_name.c_str());
         return;
     }
 }

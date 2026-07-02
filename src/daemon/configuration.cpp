@@ -245,7 +245,7 @@ std::string Configuration::decrypt_file(const std::string& filename)
     }
     catch (const Glib::Error& e)
     {
-        KLOG_WARNING("%s.", e.what());
+        KLOG_WARNING("%s.", e.what().c_str());
     }
     return std::string();
 }
