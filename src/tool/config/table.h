@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/config/table.h
+ * @file          /ks-ssr-manager/src/tool/config/table.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,7 +11,7 @@
 
 /* TABLE类型配置： 每行是一个分割符分割的多列数据，每行的列数量可以不相同 */
 
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
@@ -45,4 +45,4 @@ private:
     std::string join_str_;
 };
 }  // namespace Config
-}  // namespace Kiran
+}  // namespace KS

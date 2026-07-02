@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/auditd.h
+ * @file          /ks-ssr-manager/plugins/cpp/audit/reinforcements/auditd.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -10,7 +10,7 @@
 #include "lib/base/base.h"
 #include "lib/dbus/dbus-proxy-systemd.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Audit
 {
@@ -27,4 +27,4 @@ private:
     std::shared_ptr<DBusSystemdProxy> systemd_proxy_;
 };
 }  // namespace Audit
-}  // namespace Kiran
+}  // namespace KS

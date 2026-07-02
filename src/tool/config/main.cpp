@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/config/main.cpp
+ * @file          /ks-ssr-manager/src/tool/config/main.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -8,7 +8,7 @@
 #include "lib/base/base.h"
 #include "src/tool/config/cmd-parser.h"
 
-using namespace Kiran;
+using namespace KS;
 
 int main(int argc, char* argv[])
 {
@@ -23,11 +23,11 @@ int main(int argc, char* argv[])
 
     if (getuid() != 0)
     {
-        fmt::print(stderr, _("Command 'kiran-ssr-config' can only be run as root!"));
+        fmt::print(stderr, _("Command 'ks-ssr-config' can only be run as root!"));
         return EXIT_FAILURE;
     }
 
-    Kiran::Config::CmdParser cmd_parser;
+    KS::Config::CmdParser cmd_parser;
     cmd_parser.init();
     return cmd_parser.run(argc, argv);
 }

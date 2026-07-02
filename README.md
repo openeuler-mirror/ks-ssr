@@ -15,7 +15,7 @@
 后端运行
 
 ```
-systemctl start kiran-ssr-daemon.service
+systemctl start ks-ssr-daemon.service
 ```
 
 ## 生成ssr-system-rs.encrypted文件
@@ -25,11 +25,11 @@ systemctl start kiran-ssr-daemon.service
 ```
 intltool-merge -x po/ data/ssr-system-rs.xml.in data/ssr-system-rs.xml
 sed -i -e 's/xml:lang/lang/g' ssr-system-rs.xml
-./build/src/tool/kiran-ssr-tool --encrypt-file=./data/ssr-system-rs.xml --private-key=./data/ssr-private.key --output-file=./data/ssr-system-rs.encrypted
+./build/src/tool/ks-ssr-tool --encrypt-file=./data/ssr-system-rs.xml --private-key=./data/ssr-private.key --output-file=./data/ssr-system-rs.encrypted
 ```
 
 ## 日志
-日志请到/var/log/kylinsec/kiran-ssr-manager/目录中查看
+日志请到/var/log/kylinsec/ks-ssr-manager/目录中查看
 
 ## 其他参考
 xsd: w3school.com.cn/schema/index.asp

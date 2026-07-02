@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/rule.cpp
+ * @file          /ks-ssr-manager/src/daemon/rule.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #include "src/daemon/rule.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -151,4 +151,4 @@ bool RuleEnum::match(const Json::Value &value)
     return false;
 }
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

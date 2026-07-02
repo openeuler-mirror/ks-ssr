@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/test/test-config.cpp
+ * @file          /ks-ssr-manager/test/test-config.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -9,7 +9,7 @@
 #include "lib/base/base.h"
 // #include "lib/config/config-plain.h"
 
-using namespace Kiran;
+using namespace KS;
 
 const std::string login_defs = R""(#
 # Please note that the parameters in this configuration file control the

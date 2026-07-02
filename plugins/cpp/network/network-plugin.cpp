@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/network/network-plugin.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/network/network-plugin.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,9 +11,9 @@
 #include "plugins/cpp/network/reinforcements/firewalld.h"
 #include "plugins/cpp/network/reinforcements/sysctl.h"
 
-PLUGIN_EXPORT_FUNC_DEF(Kiran::Network::SSRPluginNetwork);
+PLUGIN_EXPORT_FUNC_DEF(KS::Network::SSRPluginNetwork);
 
-namespace Kiran
+namespace KS
 {
 namespace Network
 {
@@ -36,4 +36,4 @@ void SSRPluginNetwork::deactivate()
     this->reinforcements_.clear();
 }
 }  // namespace Network
-}  // namespace Kiran
+}  // namespace KS

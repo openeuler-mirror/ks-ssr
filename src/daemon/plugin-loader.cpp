@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/plugin-loader.cpp
+ * @file          /ks-ssr-manager/src/daemon/plugin-loader.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -12,7 +12,7 @@
 #include "src/daemon/python/plugin-python.h"
 #include "src/daemon/utils.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -68,7 +68,7 @@ bool PluginCPPLoader::load_module()
             return false;
         }
 
-        this->interface_ = std::shared_ptr<SSRPluginInterface>((Kiran::SSRPluginInterface *)((NewPluginFun)new_plugin_fun)(), (DelPluginFun)del_plugin_fun);
+        this->interface_ = std::shared_ptr<SSRPluginInterface>((KS::SSRPluginInterface *)((NewPluginFun)new_plugin_fun)(), (DelPluginFun)del_plugin_fun);
         return true;
     }
     else
@@ -122,4 +122,4 @@ bool PluginPythonLoader::deactivate()
     return true;
 }
 }  // namespace Daemon
-}  // namespace  Kiran
+}  // namespace KS

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 enable_testing()
 
-set (TARGET_NAME kiran-ssr-tests)
+set (TARGET_NAME ks-ssr-tests)
 
 file(GLOB_RECURSE TEST_H_FILES ./*.h)
 file(GLOB_RECURSE TEST_CPP_FILES ./*.cpp)

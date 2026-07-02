@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/stl-helper.h
+ * @file          /ks-ssr-manager/lib/base/stl-helper.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -8,7 +8,7 @@
 #include <map>
 #include <vector>
 
-namespace Kiran
+namespace KS
 {
 class MapHelper
 {
@@ -50,4 +50,4 @@ public:
     }
 };
 
-}  // namespace Kiran
+}  // namespace KS

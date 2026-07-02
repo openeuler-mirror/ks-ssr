@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/file-lock.h
+ * @file          /ks-ssr-manager/lib/base/file-lock.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,7 +10,7 @@
 #include <memory>
 #include "lib/base/def.h"
 
-namespace Kiran
+namespace KS
 {
 enum FileLockType
 {
@@ -45,4 +45,4 @@ private:
     int32_t file_descriptor_;
     FileLockType lock_type_;
 };
-}  // namespace Kiran
+}  // namespace KS

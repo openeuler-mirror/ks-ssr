@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/lib/base/crypto-helper.cpp
+ * @file          /ks-ssr-manager/lib/base/crypto-helper.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -33,7 +33,7 @@ RandomNumberGenerator &GlobalRNG()
     return dynamic_cast<RandomNumberGenerator &>(s_globalRNG);
 }
 
-namespace Kiran
+namespace KS
 {
 #define SSR_RSA_SEED_DEFAULT "kylinsec"
 
@@ -324,4 +324,4 @@ std::string CryptoHelper::ssr_decrypt(const std::string &private_filename, const
     }
 }
 
-}  // namespace Kiran
+}  // namespace KS

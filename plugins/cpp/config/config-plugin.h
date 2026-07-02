@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/config-plugin.h
+ * @file          /ks-ssr-manager/plugins/cpp/config/config-plugin.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,7 +8,7 @@
 #include "lib/base/base.h"
 #include "ssr-plugin-i.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
@@ -30,4 +30,4 @@ std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements
 
 }  // namespace Config
 
-}  // namespace Kiran
+}  // namespace KS

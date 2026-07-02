@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/config/kv.h
+ * @file          /ks-ssr-manager/src/tool/config/kv.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -14,7 +14,7 @@ KV类型配置：
     每行是一个分割符分割的两列组成的键值(key-value)对。
     写入时首先判断文件是否已经存在key，如果存在则直接替换value，否则新增一行。
 */
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
@@ -51,4 +51,4 @@ private:
     std::string comment_;
 };
 }  // namespace Config
-}  // namespace Kiran
+}  // namespace KS

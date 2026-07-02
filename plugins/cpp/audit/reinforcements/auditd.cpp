@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/auditd.cpp
+ * @file          /ks-ssr-manager/plugins/cpp/audit/reinforcements/auditd.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -9,7 +9,7 @@
 #include <json/json.h>
 #include <unistd.h>
 
-namespace Kiran
+namespace KS
 {
 namespace Audit
 {
@@ -77,4 +77,4 @@ bool AuditdSwitch::set(const std::string &args, SSRErrorCode &error_code)
 }
 
 }  // namespace Audit
-}  // namespace Kiran
+}  // namespace KS

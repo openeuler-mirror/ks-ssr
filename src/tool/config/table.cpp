@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/config/table.cpp
+ * @file          /ks-ssr-manager/src/tool/config/table.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,7 +11,7 @@
 #include "lib/base/file-lock.h"
 #include "lib/base/file-utils.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Config
 {
@@ -157,4 +157,4 @@ bool Table::del(std::function<bool(std::vector<std::string>)> pred)
 }
 
 }  // namespace Config
-}  // namespace Kiran
+}  // namespace KS

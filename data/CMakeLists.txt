@@ -27,10 +27,10 @@ endforeach()
 
 add_custom_target(ssr-system-rs.encrypted ALL
                   COMMAND sed -i -e 's/xml:lang/lang/g' ${PROJECT_BINARY_DIR}/data/ssr-system-rs.xml
-                  COMMAND ${PROJECT_BINARY_DIR}/src/tool/crypto/kiran-ssr-crypto --encrypt-file=${PROJECT_BINARY_DIR}/data/ssr-system-rs.xml
-                                                                                 --private-key=${PROJECT_SOURCE_DIR}/data/ssr-private.key
-                                                                                 --output-file=${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
-                  DEPENDS kiran-ssr-crypto)
+                  COMMAND ${PROJECT_BINARY_DIR}/src/tool/crypto/ks-ssr-crypto --encrypt-file=${PROJECT_BINARY_DIR}/data/ssr-system-rs.xml
+                                                                              --private-key=${PROJECT_SOURCE_DIR}/data/ssr-private.key
+                                                                              --output-file=${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
+                  DEPENDS ks-ssr-crypto)
 
 install(FILES ${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
         DESTINATION ${SSR_INSTALL_DATADIR}/
@@ -51,18 +51,18 @@ foreach(SERVICE_IN_FILE IN LISTS SERVICE_IN_FILES)
     configure_file(${SERVICE_IN_FILE} ${PROJECT_BINARY_DIR}/data/${SERVICE_FILE})
 endforeach()
 
-install(FILES ${PROJECT_BINARY_DIR}/data/com.kylinsec.Kiran.SSR.service
+install(FILES ${PROJECT_BINARY_DIR}/data/com.kylinsec.SSR.service
         DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/dbus-1/system-services)
 
 if (SYSTEMD_FOUND)
     pkg_get_variable(SYSTEM_UNIT_DIR systemd systemdsystemunitdir)
-    install(FILES ${PROJECT_BINARY_DIR}/data/kiran-ssr-daemon.service
+    install(FILES ${PROJECT_BINARY_DIR}/data/ks-ssr-daemon.service
             DESTINATION ${SYSTEM_UNIT_DIR})
 endif()
 
 
 # conf files
-install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.Kiran.SSR.conf
+install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SSR.conf
         DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d/)
 
 # pc file

@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/job.cpp
+ * @file          /ks-ssr-manager/src/daemon/job.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -11,7 +11,7 @@
 #include "src/daemon/job.h"
 #include "src/daemon/plugins.h"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -205,4 +205,4 @@ bool Job::idle_check_operation()
     return true;
 }
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS

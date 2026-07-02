@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/reinforcements/external-login-restrictions.h
+ * @file          /ks-ssr-manager/plugins/cpp/config/reinforcements/external-login-restrictions.h
  * @brief         
  * @author        pengyulong <pengyulong@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -10,11 +10,10 @@
 #include "lib/config/config-plain.h"
 #include "reinforcement-i.h"
 
-namespace Kiran
+namespace KS
 {
 namespace External
 {
-
 class LoginRestrictions : public SSRReinforcementInterface
 {
 public:
@@ -39,7 +38,7 @@ public:
 
 private:
     std::shared_ptr<ConfigPlain> login_timeout_config_;
-}；
+} ；
 
 }  // namespace External
-}  // namespace Kiran
+}  // namespace KS

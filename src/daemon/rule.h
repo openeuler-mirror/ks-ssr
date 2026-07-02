@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/rule.h
+ * @file          /ks-ssr-manager/src/daemon/rule.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -11,7 +11,7 @@
 #include "lib/base/base.h"
 #include "src/daemon/ssr-protocol.hxx"
 
-namespace Kiran
+namespace KS
 {
 namespace Daemon
 {
@@ -89,4 +89,4 @@ private:
 };
 
 }  // namespace Daemon
-}  // namespace Kiran
+}  // namespace KS
