@@ -42,6 +42,16 @@ extern "C"
         SSR_STRATEGY_TYPE_LAST
     };
 
+    // 前台通知提示 开启/关闭
+    enum SSRNotificationStatus
+    {
+        // 关闭通知
+        SSR_NOTIFICATION_OPEN = 0,
+        // 开启通知
+        SSR_NOTIFICATION_CLOSE,
+        SSR_NOTIFICATION_OTHER
+    };
+
     // 加固项状态
     enum SSRReinforcementState
     {

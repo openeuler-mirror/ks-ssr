@@ -134,14 +134,14 @@ class Switch(Firewall):
             
             # 禁用端口
             if len(args['disable-ports']) != 0:
-                self.del_iptables_history("|grep INPUT |grep dport |grep -v -E '{0}|\-s' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
+                self.del_iptables_history("|grep INPUT |grep dport |grep -v -E '{0}| \-s' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
                 for port in args['disable-ports'].split(";"):
                     if args['tcp-udp'] == "tcp":
                         ssr.utils.subprocess_has_output("{0} {1} --dport {2}  -j REJECT".format(FIREWALL_ADD_RULE_CMD, IPTABLES_INPUT_TCP, port))
                     else:
                         ssr.utils.subprocess_has_output("{0} {1} --dport {2}  -j REJECT".format(FIREWALL_ADD_RULE_CMD, IPTABLES_INPUT_UDP, port))
             else:
-                self.del_iptables_history("|grep INPUT |grep dport |grep -v -E '{0}|\-s' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
+                self.del_iptables_history("|grep INPUT |grep dport |grep -v -E '{0}| \-s' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
             self.reload()
 
             # 禁用网段 output
@@ -158,14 +158,14 @@ class Switch(Firewall):
 
             # 禁用端口 output
             if len(args['disable-ports-output']) != 0:
-                self.del_iptables_history("|grep OUTPUT |grep dport |grep -v -E '{0}|\-d' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
+                self.del_iptables_history("|grep OUTPUT |grep dport |grep -v -E '{0}| \-d' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
                 for port in args['disable-ports-output'].split(";"):
                     if args['tcp-udp'] == "tcp":
                         ssr.utils.subprocess_has_output("{0} {1} --dport {2}  -j REJECT".format(FIREWALL_ADD_RULE_CMD, IPTABLES_OUTPUT_TCP, port))
                     else:
                         ssr.utils.subprocess_has_output("{0} {1} --dport {2}  -j REJECT".format(FIREWALL_ADD_RULE_CMD, IPTABLES_OUTPUT_UDP, port))
             else:
-                self.del_iptables_history("|grep OUTPUT |grep dport |grep -v -E '{0}|\-d' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
+                self.del_iptables_history("|grep OUTPUT |grep dport |grep -v -E '{0}| \-d' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
             self.reload()
 
             if args['clear-configuration']:

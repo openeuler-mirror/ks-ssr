@@ -25,6 +25,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
                            ${PYTHON_INCLUDE_DIRS}
                            ${GUDEV_INCLUDE_DIRS}
                            ${LIBCRYPTO_INCLUDE_DIRS}
+                           ${LIBAUDIT_INCLUDE_DIRS}
                            ${KYLIN_LICENSE_INCLUDE_DIRS}
                            ${DBUSCXX_INCLUDE_DIRS})
 
@@ -33,6 +34,7 @@ target_link_libraries(${TARGET_NAME} PUBLIC
                       ${PYTHON_LIBRARIES}
                       ${GUDEV_LIBRARIES}
                       ${LIBCRYPTO_LIBRARIES}
+                      ${LIBAUDIT_LIBRARIES}
                       ${DBUSCXX_LIBRARIES}
                       lib-base)
 
