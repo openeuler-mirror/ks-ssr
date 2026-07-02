@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-19 10:53+0800\n"
+"POT-Creation-Date: 2022-07-27 14:03+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -207,8 +207,8 @@ msgid "Prohibit the host from being detected by traceroute"
 msgstr "禁止主机被Traceroute探测"
 
 #: ../data/ssr-system-rs.xml.in.h:7
-msgid "Whether to set TCP (otherwise UDP)"
-msgstr "是否设置TCP（否则为UDP）"
+msgid "transport protocol"
+msgstr "传输协议"
 
 #: ../data/ssr-system-rs.xml.in.h:8
 msgid "Disable ports that may threaten the system by default"
@@ -836,6 +836,9 @@ msgstr "禁止高危漏洞服务"
 #: ../plugins/python/ssr-plugin-network.xml.in.h:15
 msgid "Disable high risk vulnerability services"
 msgstr "预防bluetooth、cups、avahi-daemon、rpcbind、smb服务潜在的危险"
+
+#~ msgid "Whether to set TCP (otherwise UDP)"
+#~ msgstr "是否设置TCP（否则为UDP）"
 
 #~ msgid "Turn on system firewall service"
 #~ msgstr "开启系统防火墙服务"
