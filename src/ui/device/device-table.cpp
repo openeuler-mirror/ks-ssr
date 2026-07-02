@@ -19,7 +19,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyle>
-#include "sc-marcos.h"
+#include "ksc-marcos.h"
 #include "src/ui/device/device-list-delegate.h"
 #include "src/ui/device/device-record-delegate.h"
 #include "src/ui/device/table-filter-model.h"

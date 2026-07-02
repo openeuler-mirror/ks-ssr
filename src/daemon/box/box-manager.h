@@ -41,30 +41,30 @@ public Q_SLOTS:  // METHODS
     // 创建box
     QString CreateBox(const QString &name, const QString &password);
     // 删除box
-    bool DelBox(const QString &password, const QString &boxId);
+    bool DelBox(const QString &password, const QString &boxID);
     // 通过box uid获取box
-    QString GetBoxByUID(const QString &boxId);
+    QString GetBoxByUID(const QString &boxID);
     // 获取所有box信息
     QString GetBoxs();
     // 通过box uid获取mount状态
-    bool IsMounted(const QString &boxId);
+    bool IsMounted(const QString &boxID);
     // 修改box的密码
-    bool ModifyBoxPassword(const QString &boxId,
+    bool ModifyBoxPassword(const QString &boxID,
                            const QString &currentPassword,
                            const QString &newPassword);
     // 挂载box（解锁）
-    bool Mount(const QString &boxId, const QString &password);
+    bool Mount(const QString &boxID, const QString &password);
     // 通过口令找回密码
-    bool RetrievePassword(const QString &boxId, const QString &passphrase, const QString &newPassword);
+    bool RetrievePassword(const QString &boxID, const QString &passphrase, const QString &newPassword);
     // 取消挂载（加锁）
-    void UnMount(const QString &boxId);
+    void UnMount(const QString &boxID);
 Q_SIGNALS:  // SIGNALS
     // box增加
-    void BoxAdded(const QString &boxId, const QString &passphrase);
+    void BoxAdded(const QString &boxID, const QString &passphrase);
     // box信息改变
-    void BoxChanged(const QString &boxId);
+    void BoxChanged(const QString &boxID);
     // 删除box
-    void BoxDeleted(const QString &boxId);
+    void BoxDeleted(const QString &boxID);
 
 public Q_SLOTS:
 

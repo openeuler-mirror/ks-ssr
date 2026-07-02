@@ -27,12 +27,17 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QToolTip>
-#include "sc-i.h"
-#include "sc-marcos.h"
+#include "ksc-i.h"
+#include "ksc-marcos.h"
 #include "src/ui/file_protected_proxy.h"
 
 namespace KS
 {
+#define KSS_JSON_KEY_DATA KSC_JK_DATA
+#define KSS_JSON_KEY_DATA_PATH KSC_JK_DATA_PATH
+#define KSS_JSON_KEY_DATA_FILE_NAME KSC_JK_DATA_FILE_NAME
+#define KSS_JSON_KEY_DATA_ADD_TIME KSC_JK_DATA_ADD_TIME
+
 enum FileTableField
 {
     FILE_TABLE_FIELD_CHECKBOX,
@@ -92,9 +97,9 @@ void FPFilesDelegate::paint(QPainter *painter,
         this->initStyleOption(&checkboxOption, index);
 
         QStyleOptionButton checkboxStyle;
-        QPixmap pix;
+        QPixmap pixmap;
         auto value = index.model()->data(index, Qt::EditRole).toBool();
-        pix.load(value ? ":/images/checkbox-checked-normal" : ":/images/checkbox-unchecked-normal");
+        pixmap.load(value ? ":/images/checkbox-checked-normal" : ":/images/checkbox-unchecked-normal");
         checkboxStyle.state = value ? QStyle::State_On : QStyle::State_Off;
         checkboxStyle.state |= QStyle::State_Enabled;
         checkboxStyle.iconSize = QSize(20, 20);
@@ -104,7 +109,7 @@ void FPFilesDelegate::paint(QPainter *painter,
         const QWidget *widget = option.widget;
         QStyle *style = widget ? widget->style() : QApplication::style();
         //        style->drawControl(QStyle::CE_CheckBox, &checkboxStyle, painter);
-        style->drawItemPixmap(painter, option.rect, Qt::AlignCenter, pix);
+        style->drawItemPixmap(painter, option.rect, Qt::AlignCenter, pixmap);
     }
     else
     {
@@ -150,8 +155,8 @@ bool FPFilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
 
 FPFilesModel::FPFilesModel(QObject *parent) : QAbstractTableModel(parent)
 {
-    this->m_fileProtectedProxy = new FileProtectedProxy(SC_DBUS_NAME,
-                                                        SC_FILE_PROTECTED_DBUS_OBJECT_PATH,
+    this->m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
+                                                        KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
                                                         QDBusConnection::systemBus(),
                                                         this);
 
@@ -356,11 +361,11 @@ FPFileTable::FPFileTable(QWidget *parent) : QTableView(parent),
 
     // 设置Model
     m_model = new FPFilesModel(this);
-    m_newHeaderView = new NewHeaderView(this);
-    this->setHorizontalHeader(m_newHeaderView);
+    m_headerViewProxy = new TPTableHeaderProxy(this);
+    this->setHorizontalHeader(m_headerViewProxy);
     this->setMouseTracking(true);
-    connect(m_newHeaderView, &NewHeaderView::toggled, m_model, &FPFilesModel::onStateChanged);
-    connect(m_model, &FPFilesModel::stateChanged, m_newHeaderView, &NewHeaderView::setCheckState);
+    connect(m_headerViewProxy, &TPTableHeaderProxy::toggled, m_model, &FPFilesModel::onStateChanged);
+    connect(m_model, &FPFilesModel::stateChanged, m_headerViewProxy, &TPTableHeaderProxy::setCheckState);
 
     this->m_filterProxy = new FPFilesFilterModel(this);
     this->m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
@@ -372,15 +377,15 @@ FPFileTable::FPFileTable(QWidget *parent) : QTableView(parent),
     this->setItemDelegate(new FPFilesDelegate(this));
 
     // 设置水平行表头
-    m_newHeaderView->resizeSection(FileTableField::FILE_TABLE_FIELD_CHECKBOX, 50);
-    m_newHeaderView->resizeSection(FileTableField::FILE_TABLE_FIELD_NUMBER, 100);
-    m_newHeaderView->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_NAME, 150);
-    m_newHeaderView->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_PATH, 500);
-    m_newHeaderView->setStretchLastSection(true);
-    m_newHeaderView->setSectionsMovable(false);
-    m_newHeaderView->setDefaultAlignment(Qt::AlignLeft);
-    m_newHeaderView->setFixedHeight(24);
-    m_newHeaderView->setDefaultAlignment(Qt::AlignVCenter);
+    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_CHECKBOX, 50);
+    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_NUMBER, 100);
+    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_NAME, 150);
+    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_PATH, 500);
+    m_headerViewProxy->setStretchLastSection(true);
+    m_headerViewProxy->setSectionsMovable(false);
+    m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft);
+    m_headerViewProxy->setFixedHeight(24);
+    m_headerViewProxy->setDefaultAlignment(Qt::AlignVCenter);
 
     // 设置垂直列表头
     auto verticalHeader = this->verticalHeader();

@@ -23,12 +23,12 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.conf
         DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d/)
 
 # sc sql
-install(FILES ${PROJECT_SOURCE_DIR}/data/sc.dat
-        DESTINATION ${SC_INSTALL_DATADIR})
+install(FILES ${PROJECT_SOURCE_DIR}/data/ksc.dat
+        DESTINATION ${KSC_INSTALL_DATADIR})
 
 # ini files
-install(FILES ${PROJECT_SOURCE_DIR}/data/sc.ini
-        DESTINATION ${SC_INSTALL_DATADIR})
+install(FILES ${PROJECT_SOURCE_DIR}/data/ksc.ini
+        DESTINATION ${KSC_INSTALL_DATADIR})
 
 # desktop
 configure_file (
