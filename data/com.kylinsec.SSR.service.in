@@ -2,4 +2,4 @@
 Name=com.kylinsec.SSR
 User=root
 Exec=@SSR_INSTALL_BINDIR@/ks-ssr-daemon
-SystemdService=ks-ssr-daemon.service
+@SYSTEMD_SERVICE@

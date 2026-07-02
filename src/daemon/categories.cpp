@@ -22,7 +22,7 @@ Categories::Categories()
     this->conf_path_ = Glib::build_filename(SSR_INSTALL_DATADIR, SSR_CATEGORIES_BASENAME);
 }
 
-Categories* Categories::instance_ = nullptr;
+Categories* Categories::instance_ = NULL;
 void Categories::global_init()
 {
     instance_ = new Categories();
@@ -49,8 +49,9 @@ void Categories::load()
 
     auto groups_name = keyfile.get_groups();
 
-    for (const auto& group_name : groups_name)
+    for (auto iter = groups_name.begin(); iter != groups_name.end(); ++iter)
     {
+        auto group_name = (*iter);
         auto category = std::make_shared<Category>();
         category->name = group_name;
         IGNORE_EXCEPTION(category->label = keyfile.get_locale_string(group_name, SSR_CATEGORY_KEY_LABEL));
@@ -66,12 +67,13 @@ bool Categories::add_category(std::shared_ptr<Category> category)
 {
     RETURN_VAL_IF_FALSE(category, false);
 
-    auto iter = this->categories_.emplace(category->name, category);
-    if (!iter.second)
+    if (this->categories_.find(category->name) != this->categories_.end())
     {
         KLOG_WARNING("The category is already exist. name: %s.", category->name.c_str());
         return false;
     }
+
+    this->categories_[category->name] = category;
     return true;
 }
 }  // namespace Daemon

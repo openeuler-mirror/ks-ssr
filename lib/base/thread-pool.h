@@ -7,6 +7,30 @@
 
 #pragma once
 
+#if (__GNUC__ < 5) || (__GNUC__ == 4 && __GNUC_MINOR__ <= 9)
+
+#include <glibmm.h>
+
+namespace KS
+{
+class ThreadPool
+{
+public:
+    ThreadPool(size_t);
+
+    void enqueue(const sigc::slot<void>& slot);
+    // 不支持按照idx分配线程，这里直接调用enqueue函数随机分配
+    void enqueue_by_idx(size_t idx, const sigc::slot<void>& slot);
+
+    virtual ~ThreadPool(){};
+
+private:
+    Glib::ThreadPool thread_pool_;
+};
+}  // namespace KS
+
+#else
+
 #include <condition_variable>
 #include <functional>
 #include <future>
@@ -23,7 +47,7 @@ struct ThreadWorkerInfo
 {
     std::thread thread;
     // 线程私有任务，当前线程空闲时优先读取私有任务，然后读取公共任务
-    std::queue<std::packaged_task<void()>> tasks;
+    std::queue<std::packaged_task<void()> > tasks;
 };
 
 class ThreadPool
@@ -46,7 +70,7 @@ private:
     // need to keep track of threads so we can join them
     std::vector<ThreadWorkerInfo> workers_;
     // 公共任务，当线程空闲时会从该任务队列中读取后执行
-    std::queue<std::packaged_task<void()>> tasks_;
+    std::queue<std::packaged_task<void()> > tasks_;
 
     // synchronization
     std::mutex queue_mutex_;
@@ -116,3 +140,5 @@ inline ThreadPool::~ThreadPool()
 }
 
 }  // namespace KS
+
+#endif

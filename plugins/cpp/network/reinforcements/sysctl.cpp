@@ -96,7 +96,7 @@ bool SysctlRedirect::set(const std::string &args, SSRErrorCode &error_code)
 
         // 从文件中刷新
         std::vector<std::string> argv = {SYSCTL_COMMAND, "--load", SYSCTL_CONFI_FILE};
-        RETURN_ERROR_IF_TRUE(!MiscUtils::spawn_sync(argv, nullptr, nullptr), SSRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_TRUE(!MiscUtils::spawn_sync(argv), SSRErrorCode::ERROR_FAILED);
     }
     catch (const std::exception &e)
     {
@@ -159,7 +159,7 @@ bool SysctlSourceRoute::set(const std::string &args, SSRErrorCode &error_code)
 
         // 从文件中刷新
         std::vector<std::string> argv = {SYSCTL_COMMAND, "--load", SYSCTL_CONFI_FILE};
-        RETURN_ERROR_IF_TRUE(!MiscUtils::spawn_sync(argv, nullptr, nullptr), SSRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_TRUE(!MiscUtils::spawn_sync(argv), SSRErrorCode::ERROR_FAILED);
     }
     catch (const std::exception &e)
     {

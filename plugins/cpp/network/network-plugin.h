@@ -18,9 +18,9 @@ public:
     SSRPluginNetwork(){};
     virtual ~SSRPluginNetwork(){};
 
-    virtual void activate() override;
+    virtual void activate();
 
-    virtual void deactivate() override;
+    virtual void deactivate();
 
     virtual std::shared_ptr<SSRReinforcementInterface> get_reinforcement(const std::string &name) { return MapHelper::get_value(this->reinforcements_, name); };
 

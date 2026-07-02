@@ -82,8 +82,8 @@ public:
     virtual std::shared_ptr<SSRReinforcementInterface> get_reinforcement(const std::string &name) = 0;
 };
 
-using NewPluginFun = void *(*)(void);
-using DelPluginFun = void (*)(void *);
+typedef void *(*NewPluginFun)(void);
+typedef void (*DelPluginFun)(void *);
 
 }  // namespace KS
 

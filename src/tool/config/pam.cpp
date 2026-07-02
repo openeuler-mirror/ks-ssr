@@ -41,15 +41,15 @@ bool PAM::get_value(const std::string &key, const std::string &kv_split_pattern,
 
     auto split_field_regex = Glib::Regex::create(kv_split_pattern, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
-    for (const auto &line : lines)
+    for (auto iter = lines.begin(); iter != lines.end(); ++iter)
     {
         Glib::MatchInfo match_info;
-        auto trim_line = StrUtils::trim(line);
+        auto trim_line = StrUtils::trim(*iter);
         // 忽略空行和注释行
         CONTINUE_IF_TRUE(trim_line.empty() || trim_line[0] == '#');
-        CONTINUE_IF_TRUE(!line_match_regex->match(line));
+        CONTINUE_IF_TRUE(!line_match_regex->match(*iter));
 
-        if (kv_regex->match(line, match_info) &&
+        if (kv_regex->match(*iter, match_info) &&
             match_info.matches())
         {
             if (!kv_split_pattern.empty())

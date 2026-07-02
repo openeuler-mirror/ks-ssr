@@ -27,7 +27,7 @@ struct Category
     int32_t priority;
 };
 
-using CategoryVec = std::vector<std::shared_ptr<Category>>;
+typedef std::vector<std::shared_ptr<Category>> CategoryVec;
 
 class Categories
 {

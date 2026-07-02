@@ -20,9 +20,9 @@ public:
     static std::vector<V> get_keys(const std::map<K, V> &maps)
     {
         std::vector<K> values;
-        for (auto &iter : maps)
+        for (auto iter = maps.begin(); iter != maps.end(); ++iter)
         {
-            values.push_back(iter.first);
+            values.push_back(iter->first);
         }
         return values;
     }
@@ -31,9 +31,9 @@ public:
     static std::vector<V> get_values(const std::map<K, V> &maps)
     {
         std::vector<V> values;
-        for (auto &iter : maps)
+        for (auto iter = maps.begin(); iter != maps.end(); ++iter)
         {
-            values.push_back(iter.second);
+            values.push_back(iter->second);
         }
         return values;
     }
@@ -46,7 +46,7 @@ public:
         {
             return iter->second;
         }
-        return nullptr;
+        return V();
     }
 };
 

@@ -11,25 +11,6 @@
 #include <giomm.h>
 #include <json/json.h>
 
-namespace fmt
-{
-template <>
-struct formatter<Glib::ustring>
-{
-    template <typename ParseContext>
-    constexpr typename ParseContext::iterator parse(ParseContext &ctx) const
-    {
-        return ctx.begin();
-    }
-
-    template <typename FormatContext>
-    format_context::iterator format(const Glib::ustring &str, FormatContext &ctx)
-    {
-        return format_to(ctx.out(), "{0}", str.raw());
-    }
-};
-}  // namespace fmt
-
 namespace KS
 {
 class StrUtils

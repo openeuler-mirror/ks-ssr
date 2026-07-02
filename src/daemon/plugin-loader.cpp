@@ -53,8 +53,8 @@ bool PluginCPPLoader::load_module()
 
     if (this->module_ && (*this->module_))
     {
-        void *new_plugin_fun = nullptr;
-        void *del_plugin_fun = nullptr;
+        void *new_plugin_fun = NULL;
+        void *del_plugin_fun = NULL;
 
         if (!this->module_->get_symbol("new_plugin", new_plugin_fun))
         {
@@ -90,18 +90,21 @@ PluginPythonLoader::PluginPythonLoader(const std::string &package_name) : packag
 bool PluginPythonLoader::load()
 {
     auto module = PyImport_ImportModule(this->package_name_.c_str());
-    SSR_SCOPE_EXIT({
-        Py_XDECREF(module);
-    });
+    bool retval = true;
 
-    if (!module)
+    do
     {
-        KLOG_WARNING("Failed to load module: %s, error: %s.", this->package_name_.c_str(), Utils::py_catch_exception().c_str());
-        return false;
-    }
+        if (!module)
+        {
+            KLOG_WARNING("Failed to load module: %s, error: %s.", this->package_name_.c_str(), Utils::py_catch_exception().c_str());
+            retval = false;
+            break;
+        }
+        this->interface_ = std::make_shared<PluginPython>(module);
+    } while (0);
 
-    this->interface_ = std::make_shared<PluginPython>(module);
-    return true;
+    Py_XDECREF(module);
+    return retval;
 }
 
 bool PluginPythonLoader::activate()

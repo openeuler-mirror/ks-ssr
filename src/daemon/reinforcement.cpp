@@ -79,10 +79,13 @@ void Reinforcement::update_rules()
         auto rule = Rule::create(arg.rule().get());
         if (rule)
         {
-            auto iter = this->rules_.emplace(arg.name(), rule);
-            if (!iter.second)
+            if (this->rules_.find(arg.name()) != this->rules_.end())
             {
                 KLOG_WARNING("The rule name %s is repeat.", arg.name().c_str());
+            }
+            else
+            {
+                this->rules_[arg.name()] = rule;
             }
         }
         else

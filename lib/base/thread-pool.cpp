@@ -7,6 +7,24 @@
 
 #include "lib/base/thread-pool.h"
 
+#if (__GNUC__ < 5) || (__GNUC__ == 4 && __GNUC_MINOR__ <= 9)
+
+namespace KS
+{
+ThreadPool::ThreadPool(size_t thread_num) : thread_pool_(thread_num)
+{
+}
+void ThreadPool::enqueue(const sigc::slot<void>& slot)
+{
+    this->thread_pool_.push(slot);
+}
+
+void ThreadPool::enqueue_by_idx(size_t idx, const sigc::slot<void>& slot)
+{
+    this->enqueue(slot);
+}
+}  // namespace KS
+#else
 namespace KS
 {
 ThreadPool::ThreadPool(size_t thread_num) : thread_num_(thread_num),
@@ -54,3 +72,5 @@ ThreadPool::ThreadPool(size_t thread_num) : thread_num_(thread_num),
 }
 
 }  // namespace KS
+
+#endif
