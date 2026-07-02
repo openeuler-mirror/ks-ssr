@@ -1,18 +1,74 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-
-<ssr_ra>
-    <reinforcement>
-        <name>audit-auditd-switch</name>
-        <arg>
-            <name>enabled</name>
-            <value>true</value>
-        </arg>
-    </reinforcement>
-    <reinforcement>
-        <name>audit-logrotate-rotate</name>
-        <arg>
-            <name>rotate</name>
-            <value>9</value>
-        </arg>
-    </reinforcement>
-</ssr_ra>
+<?xml version="1.0" encoding="UTF-8"?>
+<ssr_rs>
+    <head>
+        <name>CUSTOM_CLASS_I_SAFETY_STANDARD</name>
+        <label>Level I safety standard</label>
+        <label lang="zh_CN">一级安全标准</label>
+        <version>1.0.0</version>
+    </head>
+    <body>
+        <reinforcement>
+            <name>network-firewalld-switch</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>Turn on system firewall service</label>
+                    <label lang="zh_CN">开启系统防火墙服务</label>
+                </layout>
+            </arg>
+            <arg>
+                <name>ports</name>
+                <value>""</value>
+                <value_limits>""</value_limits>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>Opened ports</label>
+                    <label lang="zh_CN">开放端口</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-umask-limit</name>
+            <arg>
+                <name>umask</name>
+                <value>"027"</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"027"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>File directory default permission</label>
+                    <label lang="zh_CN">文件目录缺省权限</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>audit-logrotate-rotate</name>
+            <arg>
+                <name>rotate</name>
+                <value>24</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>24</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>System log save cycle（weekly）</label>
+                    <label lang="zh_CN">系统日志保存周期（周）</label>
+                </layout>
+            </arg>
+        </reinforcement>
+    </body>
+</ssr_rs>
