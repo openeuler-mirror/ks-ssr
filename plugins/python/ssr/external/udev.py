@@ -18,11 +18,11 @@ SR_MOD_DRIVE = "sr_mod"
 FIND_DRIVE_CMD = "find /lib/modules/ -name"
 UNINSTALL_DRIVE = "rmmod"
 INSTALL_DRIVE = "insmod"
+RELOAD_INITRAMFS = "dracut -f"
 
 CDROM_ARG_ENABLED = "enabled"
 USB_ARG_ENABLED = "enabled"
 TTYS_ARG_ENABLED = "enabled"
-
 
 class UDev:
     def __init__(self):
@@ -32,7 +32,7 @@ class UDev:
         command =  'udevadm control --reload'
         outpur = ssr.utils.subprocess_has_output(command)
 
-class CDROM():
+class CDROM:
     def find_drive(self,key):
         command = '{0} {1}.ko*'.format(FIND_DRIVE_CMD,key)
         output = ssr.utils.subprocess_has_output(command)
@@ -41,24 +41,66 @@ class CDROM():
     def open(self):
         try:
             if not self.status():
+                cdrom_drive_path = self.find_drive(CDROM_DRIVE)
+                sr_mod_drive_path = self.find_drive(SR_MOD_DRIVE)
+
+                # install the driver
                 cmd_cdrom = '{0} {1}'.format(INSTALL_DRIVE,self.find_drive(CDROM_DRIVE))
                 cmd_sr_mod = '{0} {1}'.format(INSTALL_DRIVE,self.find_drive(SR_MOD_DRIVE))
                 output_cdrom = ssr.utils.subprocess_has_output(cmd_cdrom)
                 output_sr_mod = ssr.utils.subprocess_has_output(cmd_sr_mod)
+
+                # change the driver name
+                if cdrom_drive_path.find('.bak') > 0:
+                    mv_cdrom = 'mv {0} {1}'.format(cdrom_drive_path,cdrom_drive_path.replace('.bak',''))
+                    output = ssr.utils.subprocess_not_output(mv_cdrom)
+                if sr_mod_drive_path.find('.bak') > 0:
+                    mv_sr_mod = 'mv {0} {1}'.format(sr_mod_drive_path,sr_mod_drive_path.replace('.bak',''))
+                    output = ssr.utils.subprocess_not_output(mv_sr_mod)
+
+                # reload initramfs
+                str_spl = cdrom_drive_path.split('/')
+                kernel_version = str_spl[3]
+                self.reload_drive(kernel_version)
+
         except Exception as e:
-            ssr.log.debug(e)
+            ssr.log.debug('Exception_open',e)
             return (False,str(e))
 
     def close(self):
         try:
             if self.status():
+                cdrom_drive_path = self.find_drive(CDROM_DRIVE)
+                sr_mod_drive_path = self.find_drive(SR_MOD_DRIVE)
+
+                # uninstall the driver
                 cmd_cdrom = '{0} {1}'.format(UNINSTALL_DRIVE,CDROM_DRIVE)
                 cmd_sr_mod = '{0} {1}'.format(UNINSTALL_DRIVE,SR_MOD_DRIVE)
                 output_sr_mod = ssr.utils.subprocess_has_output(cmd_sr_mod)
                 output_cdrom = ssr.utils.subprocess_has_output(cmd_cdrom)
+                
+                # change the driver name and retain the backup
+                if cdrom_drive_path.find('.bak') < 0:
+                    mv_cdrom = 'mv {0} {1}'.format(cdrom_drive_path,cdrom_drive_path + '.bak')
+                    output = ssr.utils.subprocess_not_output(mv_cdrom)
+                if not sr_mod_drive_path.find('.bak') < 0:
+                    mv_sr_mod = 'mv {0} {1}'.format(sr_mod_drive_path,sr_mod_drive_path + '.bak')
+                    output = ssr.utils.subprocess_not_output(mv_sr_mod)
+
+                # reload initramfs
+                str_spl = cdrom_drive_path.split('/')
+                kernel_version = str_spl[3]
+                self.reload_drive(kernel_version)
+
         except Exception as e:
-            ssr.log.debug(e)
+            ssr.log.debug('Exception_close',e)
             return (False,str(e))
+
+    def reload_drive(self,kernel_version):
+        ssr.log.debug('kernel_version = ',kernel_version)
+        initramfs_name = 'initramfs-' + kernel_version + '.img'
+        reload_initramfs = 'cd /boot/ ; {0} {1} ; cd -'.format(RELOAD_INITRAMFS,initramfs_name)
+        output = ssr.utils.subprocess_not_output(reload_initramfs)
 
     def status(self):
         cmd_sr_mod = '{0} {1}'.format(CDROM_STATUS_CMD,SR_MOD_DRIVE)
@@ -76,7 +118,7 @@ class CDROM():
         if not args[CDROM_ARG_ENABLED]:
             output = self.close()
             if output:
-                return (False,"Device busy , please pop up! \t\t")
+                return (False,"Device busy , please pop up! \t\t\n You can use the eject command to eject the device. \t\t")
         else:
             output = self.open()
             if output:
@@ -105,7 +147,6 @@ class USB(UDev):
 
 
 class TTYS(UDev):
-
     def get(self):
         retdata = dict()
         index_get = 0

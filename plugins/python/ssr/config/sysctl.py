@@ -6,6 +6,12 @@ import ssr.utils
 
 
 SYSCTL_PATH = '/usr/sbin/sysctl'
+#修改schemas默认值
+SCHEMAS_CONF_FILEPATH = "/usr/share/glib-2.0/schemas/98-ssr-config.gschema.override"
+RELOAD_SCHEMAS_CMD = "glib-compile-schemas /usr/share/glib-2.0/schemas"
+
+MODIFY_RULE_CLOSE = "[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'\'"
+MODIFY_RULE_OPEN = "[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'<Control><Alt>Delete\'"
 
 SAK_KEY_SWITCH_CONF_FILE = "/etc/sysctl.d/90-ssr-config.conf"
 SAK_KEY_SWITCH_CONF_KEY_SYSRQ = "kernel.sysrq"
@@ -35,6 +41,13 @@ class SAKKey:
         return (True, '')
 
 class KeyRebootSwitch:
+    def __init__(self):
+        self.conf = ssr.configuration.Table(SCHEMAS_CONF_FILEPATH, ",\\s+")
+
+    def reload_schemas(self):
+        cmd = '{0}'.format(RELOAD_SCHEMAS_CMD)
+        output = ssr.utils.subprocess_has_output(cmd)
+
     #判断文件是否存在
     def status_exist(self):
         command =  "ls /usr/lib/systemd/system/ |grep -wx ctrl-alt-del.target"
@@ -73,9 +86,17 @@ class KeyRebootSwitch:
             if  not self.status() :
                 if args['enabled']:
                     self.open()
+                    rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
+                    output = ssr.utils.subprocess_not_output(rm_cmd)
+                    self.conf.set_value("1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'\'", MODIFY_RULE_OPEN)
+                    self.reload_schemas()
             else:
                 if not args['enabled']:
                     self.close()
+                    rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
+                    output = ssr.utils.subprocess_not_output(rm_cmd)
+                    self.conf.set_value("1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'<Control><Alt>Delete\'", MODIFY_RULE_CLOSE)
+                    self.reload_schemas()
         else:
             #针对3.3-6的处理规则，文件不存在，开关为打开是，将.bak改为ctrl-alt-del.target
             if args['enabled'] and self.status_bak():
