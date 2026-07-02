@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/audit-auditd.h
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/auditd.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -13,11 +13,13 @@
 
 namespace Kiran
 {
-class AuditAuditdSwitch : public SSRReinforcementInterface
+namespace Audit
+{
+class AuditdSwitch : public SSRReinforcementInterface
 {
 public:
-    AuditAuditdSwitch();
-    virtual ~AuditAuditdSwitch(){};
+    AuditdSwitch();
+    virtual ~AuditdSwitch(){};
 
     virtual bool get(std::string &args, SSRErrorCode &error_code);
     virtual bool set(const std::string &args, SSRErrorCode &error_code);
@@ -25,4 +27,5 @@ public:
 private:
     std::shared_ptr<DBusSystemdProxy> systemd_proxy_;
 };
+}  // namespace Audit
 }  // namespace Kiran

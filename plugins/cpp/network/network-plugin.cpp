@@ -8,12 +8,14 @@
 #include "plugins/cpp/network/network-plugin.h"
 #include <json/json.h>
 #include "lib/base/base.h"
-#include "plugins/cpp/network/network-reinforcement-manager.h"
+#include "plugins/cpp/network/reinforcement-manager.h"
+
+PLUGIN_EXPORT_FUNC_DEF(Kiran::Network::SSRPluginNetwork);
 
 namespace Kiran
 {
-PLUGIN_EXPORT_FUNC_DEF(SSRPluginNetwork);
-
+namespace Network
+{
 void SSRPluginNetwork::activate()
 {
 }
@@ -87,4 +89,5 @@ std::string SSRPluginNetwork::execute(const std::string& in_json)
     return StrUtils::json2str(out_values);
 }
 
+}  // namespace Network
 }  // namespace Kiran
