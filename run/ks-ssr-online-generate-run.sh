@@ -24,4 +24,4 @@ mv install-ks-ssr-rpm ks-ssr-rpm
 sudo tar cvf install-ssr-rpm.tar.gz ks-ssr-rpm
 cat ./ks-ssr.sh install-ssr-rpm.tar.gz > ks-ssr-1.0.run
 sudo chmod 0755 ks-ssr-1.0.run
-sudo rm -rf /tmp/KS-SSR.repo install-ssr-rpm.tar.gz ks-ssr-rpm
+sudo rm -rf /etc/yum.repos.d/KS-SSR.repo install-ssr-rpm.tar.gz ks-ssr-rpm
