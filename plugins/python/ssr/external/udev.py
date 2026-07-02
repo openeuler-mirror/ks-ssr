@@ -13,7 +13,7 @@ DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", DRIVERS==\\\"u
 TTYPS_CMD_STR = "setserial /dev/ttyS"
 TTYPS_STATUS_CMD = "setserial -g /dev/ttyS"
 TTYPS_SUM_DEV_CMD = "ls /dev/ttyS* |wc -l"
-USB_SUM_DEV_CMD = "ls /dev/ |grep sd"
+USB_SUM_DEV_CMD = "ls /proc/scsi/ |grep usb-storage"
 
 CDROM_STATUS_CMD = " cat /proc/modules |grep "
 CDROM_DRIVE = "cdrom"
