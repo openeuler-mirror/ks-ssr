@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/reinforcements/cr-login-lock.h
+ * @file          /kiran-ssr-manager/plugins/cpp/config/reinforcements/cr-login-lock.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "reinforcement-i.h"
+#include "plugin-i.h"
 
 namespace Kiran
 {

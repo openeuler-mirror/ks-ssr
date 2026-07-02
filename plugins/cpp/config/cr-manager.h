@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/cr-manager.h
+ * @file          /kiran-ssr-manager/plugins/cpp/config/cr-manager.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -8,7 +8,6 @@
 #pragma once
 
 #include "lib/base/base.h"
-#include "reinforcement-i.h"
 
 // config reinforcement manager
 

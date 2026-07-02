@@ -47,6 +47,34 @@ SSRReinforcementVec SSRPlugins::get_reinforcements_by_category(const std::string
     return result;
 }
 
+std::shared_ptr<SSRReinforcementInterface> SSRPlugins::get_reinfocement_interface(const std::string& plugin_name,
+                                                                                  const std::string& reinforcement_name)
+{
+    auto plugin = this->get_plugin(plugin_name);
+    if (!plugin)
+    {
+        KLOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
+                     plugin_name.c_str(),
+                     reinforcement_name.c_str());
+        return nullptr;
+    }
+
+    auto plugin_interface = plugin->get_loader()->get_interface();
+    if (!plugin_interface)
+    {
+        KLOG_WARNING("The Plugin interface for %s is nullptr.", plugin_name.c_str());
+        return nullptr;
+    }
+
+    auto reinforcement_interface = plugin_interface->get_reinforcement(reinforcement_name);
+    if (!reinforcement_interface)
+    {
+        KLOG_WARNING("The reinforcement interface for %s is nullptr.", reinforcement_name.c_str());
+        return nullptr;
+    }
+    return reinforcement_interface;
+}
+
 void SSRPlugins::init()
 {
     this->load_plugins();
