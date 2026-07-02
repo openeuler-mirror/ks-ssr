@@ -2,7 +2,7 @@ reinforcements = (
     {
         'name': 'network-firewalld-switch',
         'module': 'firewalld',
-        'class': 'Switch'
+        'class': 'FirewallManager'
     },
     {
         'name': 'network-icmp-timestamp',
