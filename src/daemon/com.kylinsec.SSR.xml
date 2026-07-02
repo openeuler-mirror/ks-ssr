@@ -17,6 +17,30 @@
             <description>Import the encoded custom reinforcement standard.</description>
         </method>
 
+        <method name="SetStrategyType">
+            <arg type="u" name="strategy_type" direction="in">
+                <summary>The security reinforcement standard type.</summary>
+            </arg>
+            <description>Set the desktop background.</description>
+        </method>
+
+        <method name="ImportCustomRA">
+            <arg type="s" name="encoded_strategy" direction="in">
+                <summary>The encoded reinforcement strategy.</summary>
+            </arg>
+            <description>Import the encoded custom reinforcement strategy.</description>
+        </method>
+
+        <method name="SetCheckBox">
+            <arg type="s" name="reinforcement_name" direction="in">
+                <summary>Name of reinforcement item.</summary>
+            </arg>
+            <arg type="s" name="checkbox_status" direction="in">
+                <summary>Check whether the check box is checked.</summary>
+            </arg>
+            <description>Set check box selection status.</description>
+        </method>
+
         <method name="GetCategories">
             <arg type="s" name="categories" direction="out">
                 <summary>The categories is a xml string.</summary>
@@ -115,6 +139,11 @@
         <property name="standard_type" type="u" access="read">
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
             <description>The standard type.</description>
+        </property>
+
+        <property name="strategy_type" type="u" access="read">
+            <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+            <description>The strategy type.</description>
         </property>
 
         <signal name="ScanProgress">

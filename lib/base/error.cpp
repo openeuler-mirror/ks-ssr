@@ -30,6 +30,9 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     // case SSRErrorCode::ERROR_CORE_RS_NOT_FOUND:
     //     error_desc = _("The reinforcement standard file is not found.");
     //     break;
+    case SSRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID:
+        error_desc = _("The strategy type is invalid.");
+        break;
     case SSRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED:
     case SSRErrorCode::ERROR_DAEMON_JSON2RS_FAILED:
     case SSRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID:
@@ -58,6 +61,7 @@ std::string SSRError::get_error_desc(SSRErrorCode error_code)
     case SSRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED:
     case SSRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED:
     case SSRErrorCode::ERROR_DAEMON_SET_STANDARD_TYPE_FAILED:
+    case SSRErrorCode::ERROR_DAEMON_SET_STRATEGY_TYPE_FAILED:
     case SSRErrorCode::ERROR_PLUGIN_CONFIG_JSON_EXCEPTION:
     case SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID:
     case SSRErrorCode::ERROR_PLUGIN_CONFIG_REINFORCEMENT_NOTFOUND:
