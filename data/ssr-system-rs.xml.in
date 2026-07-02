@@ -139,6 +139,33 @@
                 </layout>
             </arg>
         </reinforcement>
+        <reinforcement>
+            <name>audit-logfile-permissions</name>
+            <arg>
+                <name>mode-permissions-limit</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>The maximum permission of log files and configurations is set to 0644</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>append-permissions-limit</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Log files can only be appended</_label>
+                </layout>
+            </arg>
+        </reinforcement>
         <!-- 接入类 -->
         <reinforcement>
             <name>external-radio-switch</name>
