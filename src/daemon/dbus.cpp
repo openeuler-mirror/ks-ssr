@@ -16,6 +16,9 @@
 #include "src/daemon/ssr-protocol.hxx"
 #include "src/daemon/utils.h"
 
+// 十分钟
+#define RESOURCEMONITORMS 1000 * 60 * 10
+
 namespace KS
 {
 namespace Daemon
@@ -35,6 +38,10 @@ DBus::DBus(::DBus::Connection& connection) : ::DBus::ObjectAdaptor(connection, S
 
 DBus::~DBus()
 {
+    if (this->timeout_handler_)
+    {
+        this->timeout_handler_.disconnect();
+    }
 }
 
 DBus* DBus::instance_ = NULL;
@@ -568,6 +575,16 @@ void DBus::init()
     {
         KLOG_WARNING("%s: %s.", e.name(), e.message());
     }
+
+    this->resource_monitor_ = new ResourceMonitor();
+    KLOG_DEBUG("init ResourceMonitor.");
+    this->resource_monitor_->signal_home_free_space_ratio().connect(sigc::mem_fun(this, &DBus::homeFreeSpaceRatio));
+    this->resource_monitor_->signal_root_free_space_ratio().connect(sigc::mem_fun(this, &DBus::rootFreeSpaceRatio));
+    this->resource_monitor_->signal_cpu_average_load_ratio().connect(sigc::mem_fun(this, &DBus::cpuAverageLoadRatio));
+    this->resource_monitor_->signal_vmstat_siso().connect(sigc::mem_fun(this, &DBus::vmstatSiSo));
+
+    auto timeout = Glib::MainContext::get_default()->signal_timeout();
+    this->timeout_handler_ = timeout.connect(sigc::mem_fun(this, &DBus::on_resource_monitor), RESOURCEMONITORMS);
 }
 
 void DBus::update_license_info()
@@ -731,6 +748,79 @@ void DBus::on_license_info_changed_cb(bool placeholder)
 {
     this->update_license_info();
     this->LicenseChanged(placeholder);
+}
+
+bool DBus::on_resource_monitor()
+{
+    KLOG_DEBUG("on_resource_monitor.");
+    if (configuration_->get_resource_monitor_status() == SSRResourceMonitor::SSR_RESOURCE_MONITOR_OPEN)
+        resource_monitor_->startMonitor();
+    else if (configuration_->get_resource_monitor_status() == SSRResourceMonitor::SSR_RESOURCE_MONITOR_CLOSE)
+        resource_monitor_->closeMonitor();
+    else
+        resource_monitor_->startMonitor();
+    return true;
+}
+
+void DBus::homeFreeSpaceRatio(const float space_ratio)
+{
+    // 家目录可用空间小于10%告警
+    float homeSpa = 0.1;
+    if (space_ratio < homeSpa)
+    {
+        KLOG_DEBUG("home free space less than 10%.");
+        KLOG_DEBUG("homeFreeSpaceRatio %f.", space_ratio);
+
+        this->HomeFreeSpaceRatioLower(std::to_string(space_ratio));
+    }
+}
+
+void DBus::rootFreeSpaceRatio(const float space_ratio)
+{
+    // 根目录可用空间小于10%告警
+    float rootSpa = 0.1;
+    if (space_ratio < rootSpa)
+    {
+        KLOG_DEBUG("root free space less than 10%.");
+        KLOG_DEBUG("rootFreeSpaceRatio %f.",space_ratio);
+
+        this->RootFreeSpaceRatioLower(std::to_string(space_ratio));
+    }
+}
+
+void DBus::cpuAverageLoadRatio(const float load_ratio)
+{
+    // cpu单核五分钟平均负载大于1告警
+    float cpuLoad = 1;
+    if (load_ratio >= cpuLoad)
+    {
+        KLOG_DEBUG("The average load of a single core CPU exceeds 1.");
+        KLOG_DEBUG("cpuAverageLoadRatio %f.",load_ratio);
+
+        this->CpuAverageLoadRatioHigher(std::to_string(load_ratio));
+    }
+}
+
+void DBus::vmstatSiSo(const std::vector<std::string> results)
+{
+    // vmstat swap 中si或者so不为0告警
+    std::string si = results.at(0).c_str();
+    std::string so = results.at(1).c_str();
+    if(si != "0")
+    {
+        KLOG_DEBUG("The vmstat swap page si is not 0.");
+        KLOG_DEBUG("vmstat si is %s.",results.at(0).c_str());
+
+        this->VmstatSiSoabnormal(si,so);
+    }
+
+    if(so != "0")
+    {
+        KLOG_DEBUG("The vmstat swap page so is not 0.");
+        KLOG_DEBUG("vmstat so is %s.",results.at(1).c_str());
+        if(si == "0")
+            this->VmstatSiSoabnormal(si,so);
+    }
 }
 
 }  // namespace Daemon

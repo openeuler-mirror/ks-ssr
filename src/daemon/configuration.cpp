@@ -16,6 +16,7 @@ namespace Daemon
 #define SSR_BASE_KEY_MAX_THREAD_NUM "max_thread_num"
 #define SSR_BASE_KEY_STANDARD_TYPE "standard_type"
 #define SSR_BASE_KEY_STRATEGY_TYPE "strategy_type"
+#define SSR_BASE_KEY_RESOURCE_MONITOR "resource_monitor"
 
 #define MAX_THREAD_NUM_DEFAULT 1
 
@@ -239,6 +240,21 @@ void Configuration::del_all_custom_ra()
         ra->reinforcement().clear();
         this->write_ra_to_file(ra);
     }
+}
+
+SSRResourceMonitor Configuration::get_resource_monitor_status()
+{
+    auto retval = this->get_integer(SSR_GROUP_NAME,
+                                    SSR_BASE_KEY_RESOURCE_MONITOR,
+                                    SSRResourceMonitor::SSR_RESOURCE_MONITOR_OPEN);
+
+    if (retval >= SSR_RESOURCE_MONITOR_OR || retval < 0)
+    {
+        KLOG_WARNING("The resource monitor is invalid. resource monitor: %d.", retval);
+        return SSRResourceMonitor::SSR_RESOURCE_MONITOR_OPEN;
+    }
+
+    return SSRResourceMonitor(retval);
 }
 
 void Configuration::init()
