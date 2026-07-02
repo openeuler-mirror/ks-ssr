@@ -6,7 +6,7 @@ import ssr.configuration
 PASSWORD_EXPIRED_CONF_PATH = "/etc/login.defs"
 PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS = "PASS_MAX_DAYS"
 PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS = "PASS_MIN_DAYS"
-PASSWORD_EXPIRED_CONF_KEY_MIN_LEN  = "PASS_MIN_LEN"
+# PASSWORD_EXPIRED_CONF_KEY_MIN_LEN  = "PASS_MIN_LEN"
 PASSWORD_EXPIRED_CONF_KEY_WARN_AGE = "PASS_WARN_AGE"
 
 #PASSWORD_COMPLEXTIY_CONF_PATH  = "/etc/security/pwquality.conf.d/90-ssr-config.conf"
@@ -19,7 +19,7 @@ PASSWORD_COMPLEXITY_CONF_KEY_MINUSCULES = "lcredit"
 PASSWORD_COMPLEXITY_CONF_KEY_NUMBER  =  "dcredit"
 PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL = "ocredit"
 PASSWORD_COMPLEXITY_CONF_KEY_MINCLASS = "minclass"
-PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION = "maxclassrepeat"
+PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION = "maxsequence"
 PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK = "usercheck"
 
 PASSWORD_COMPLEXITY_CONF_NEXT_MATCH_LINE_PATTERN = "password\\s+sufficient\\s+pam_unix.so"
@@ -32,7 +32,7 @@ class PasswordExpired:
         retdata = dict()
         retdata[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS] = int(self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS))
         retdata[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS] = int(self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS))
-        retdata[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN]  = int(self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_MIN_LEN))
+        # retdata[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN]  = int(self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_MIN_LEN))
         retdata[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE] = int(self.conf.get_value(PASSWORD_EXPIRED_CONF_KEY_WARN_AGE))
         return (True, json.dumps(retdata))
 
@@ -40,7 +40,7 @@ class PasswordExpired:
         args = json.loads(args_json)
         self.conf.set_value(PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS, args[PASSWORD_EXPIRED_CONF_KEY_MAX_DAYS])
         self.conf.set_value(PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS, args[PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS])
-        self.conf.set_value(PASSWORD_EXPIRED_CONF_KEY_MIN_LEN, args[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN])
+        # self.conf.set_value(PASSWORD_EXPIRED_CONF_KEY_MIN_LEN, args[PASSWORD_EXPIRED_CONF_KEY_MIN_LEN])
         self.conf.set_value(PASSWORD_EXPIRED_CONF_KEY_WARN_AGE, args[PASSWORD_EXPIRED_CONF_KEY_WARN_AGE])
 
         return (True, '')

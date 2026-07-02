@@ -69,6 +69,11 @@ class PAM:
             SSR_CONFIG_PATH, self.line_match_pattern, key, split_pattern, self.config_path)
         return ssr.utils.subprocess_has_output(command)
 
+    def del_record(self, key, split_pattern):
+        command = '{0} --type=PAM --method=DELVAL --line-match-pattern="{1}" --key="{2}" --split-pattern="{3}" {4}'.format(
+            SSR_CONFIG_PATH, self.line_match_pattern, key, split_pattern, self.config_path)
+        return ssr.utils.subprocess_not_output(command)
+
     def has_key(self, key):
         command = '{0} --type=PAM --method=GETVAL --line-match-pattern="{1}" --key="{2}" {3}'.format(SSR_CONFIG_PATH, self.line_match_pattern, key,
                                                                                                      self.config_path)
