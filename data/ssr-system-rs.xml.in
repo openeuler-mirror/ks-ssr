@@ -56,7 +56,7 @@
             </arg>
         </reinforcement>
         <reinforcement>
-            <name>network-firewalld-icmp-timestamp</name>
+            <name>network-icmp-timestamp</name>
             <arg>
                 <name>timestamp_request</name>
                 <value>false</value>
@@ -72,7 +72,7 @@
             </arg>
         </reinforcement>
         <reinforcement>
-            <name>network-firewalld-icmp-traceroute</name>
+            <name>network-icmp-traceroute</name>
             <arg>
                 <name>enabled</name>
                 <value>true</value>
@@ -89,7 +89,7 @@
         </reinforcement>
         <reinforcement>
             <name>network-firewalld-switch</name>
-            <arg>
+            <!-- <arg>
                 <name>enabled</name>
                 <value>true</value>
                 <value_limits>""</value_limits>
@@ -101,7 +101,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>Turn on system firewall service</_label>
                 </layout>
-            </arg>
+            </arg> -->
             <arg>
                 <name>tcp-udp</name>
                 <value>true</value>
@@ -125,7 +125,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Disable FTP, SMTP and other ports that may threaten the system</_label>
+                    <_label>Disable ports that may threaten the system by default</_label>
                 </layout>
             </arg>
             <arg>
@@ -141,7 +141,7 @@
                     <_label>clear iptables configuration</_label>
                 </layout>
             </arg>
-            <arg>
+            <!-- <arg>
                 <name>allow-network-segment</name>
                 <value>""</value>
                 <value_limits>(((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1}))){1}(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1})))*</value_limits>
@@ -150,7 +150,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>allow network segment (Split with comma)</_label>
                 </layout>
-            </arg>
+            </arg> -->
             <arg>
                 <name>disable-network-segment</name>
                 <value>""</value>
@@ -161,7 +161,7 @@
                     <_label>disable network segment (Split with comma)</_label>
                 </layout>
             </arg>
-            <arg>
+            <!-- <arg>
                 <name>ports</name>
                 <value>""</value>
                 <value_limits>(((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))){1}(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3})))*</value_limits>
@@ -170,7 +170,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>Opened ports (Split with semicolon)</_label>
                 </layout>
-            </arg>
+            </arg> -->
             <arg>
                 <name>disable-ports</name>
                 <value>""</value>
@@ -196,7 +196,7 @@
                     <_label>Limit input port maximum connections(0 means unlimited)</_label>
                 </layout>
             </arg>
-            <arg>
+            <!-- <arg>
                 <name>allow-network-segment-output</name>
                 <value>""</value>
                 <value_limits>(((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1}))){1}(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1})))*</value_limits>
@@ -205,7 +205,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>allow output network segment (Split with comma)</_label>
                 </layout>
-            </arg>
+            </arg> -->
             <arg>
                 <name>disable-network-segment-output</name>
                 <value>""</value>
@@ -216,7 +216,7 @@
                     <_label>disable output network segment (Split with comma)</_label>
                 </layout>
             </arg>
-            <arg>
+            <!-- <arg>
                 <name>ports-output</name>
                 <value>""</value>
                 <value_limits>(((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))){1}(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3})))*</value_limits>
@@ -225,7 +225,7 @@
                     <widget_type>DEFAULT</widget_type>
                     <_label>Opened output ports (Split with semicolon)</_label>
                 </layout>
-            </arg>
+            </arg> -->
             <arg>
                 <name>disable-ports-output</name>
                 <value>""</value>
@@ -536,7 +536,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>The account setting expiration time already exists</_label>
+                    <_label>Existing users set expiration days</_label>
                 </layout>
             </arg>
         </reinforcement>
