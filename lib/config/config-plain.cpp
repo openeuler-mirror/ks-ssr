@@ -6,11 +6,13 @@
  */
 
 #include "lib/config/config-plain.h"
+#include <fcntl.h>
 #include <set>
+#include "lib/base/file-lock.h"
 
 namespace Kiran
 {
-std::map<std::string, std::shared_ptr<ConfigPlain>> ConfigPlain::plains_ = std::map<std::string, std::shared_ptr<ConfigPlain>>();
+#define CONF_FILE_PERMISSION 0644
 
 ConfigPlain::ConfigPlain(const std::string &conf_path,
                          const std::string &delimiter_pattern,
@@ -142,37 +144,26 @@ double ConfigPlain::get_double(const std::string &key)
     return value;
 }
 
-std::shared_ptr<ConfigPlain> ConfigPlain::create(const std::string &conf_path,
-                                                 std::string delimiter_pattern,
-                                                 std::string insert_delimiter)
-{
-    auto iter = ConfigPlain::plains_.find(conf_path);
-    if (iter != ConfigPlain::plains_.end())
-    {
-        return iter->second;
-    }
-
-    std::shared_ptr<ConfigPlain> plain(new ConfigPlain(conf_path, delimiter_pattern, insert_delimiter));
-    auto retval = ConfigPlain::plains_.emplace(conf_path, plain);
-    if (!retval.second)
-    {
-        KLOG_WARNING("Failed to insert config %s.", conf_path.c_str());
-        return nullptr;
-    }
-    return plain;
-}
-
 bool ConfigPlain::read_from_file()
 {
     std::string contents;
-    try
     {
-        contents = Glib::file_get_contents(this->conf_path_);
-    }
-    catch (const Glib::FileError &e)
-    {
-        KLOG_WARNING("Failed to get file contents: %s.", this->conf_path_.c_str());
-        return false;
+        auto file_lock = FileLock::create_share_lock(this->conf_path_, O_RDONLY, 0);
+        if (!file_lock)
+        {
+            KLOG_DEBUG("Failed to create share lock for %s.", this->conf_path_.c_str());
+            return false;
+        }
+
+        try
+        {
+            contents = Glib::file_get_contents(this->conf_path_);
+        }
+        catch (const Glib::FileError &e)
+        {
+            KLOG_WARNING("Failed to get file contents: %s.", this->conf_path_.c_str());
+            return false;
+        }
     }
 
     auto lines = StrUtils::split_lines(contents);
@@ -221,7 +212,11 @@ bool ConfigPlain::write_to_file()
     {
         try
         {
-            contents = Glib::file_get_contents(this->conf_path_);
+            auto file_lock = FileLock::create_share_lock(this->conf_path_, O_RDONLY, 0);
+            if (file_lock)
+            {
+                contents = Glib::file_get_contents(this->conf_path_);
+            }
         }
         catch (const Glib::Error &e)
         {
@@ -273,9 +268,15 @@ bool ConfigPlain::write_to_file()
         new_contents.append(new_line);
     }
 
+    auto file_lock = FileLock::create_excusive_lock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
+    if (!file_lock)
+    {
+        KLOG_DEBUG("Failed to create share lock");
+    }
+    else
     {
         this->is_writing_ = true;
-        SCOPE_EXIT({
+        SSR_SCOPE_EXIT({
             this->is_writing_ = false;
         });
 
