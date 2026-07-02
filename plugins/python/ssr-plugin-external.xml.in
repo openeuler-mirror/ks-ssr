@@ -81,6 +81,11 @@
         <_description>If the session does not operate within the specified time after login, it will exit automatically</_description>
     </reinforcement>
     <reinforcement>
+        <name>external-sftp-user</name>
+        <_label>Limit SFTP</_label>
+        <_description>Restrict SFTP users' upward cross directory access</_description>
+    </reinforcement>
+    <reinforcement>
         <name>external-radio-switch</name>
         <_label>Disable radio network</_label>
         <_description>Restrict wireless network connections</_description>
