@@ -90,13 +90,25 @@ QHeaderView::section
     margin-bottom: 2px;
 }
 
+QHeaderView::section:first
+{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+QHeaderView::section:last
+{
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
 QTableView::item
 {
     border: 0px;
-    background-color: #393939;
+    /*background-color: #393939;*/
+    background-color: transparent;
     margin: 2px 0px 2px 0px;
 }
-
 
 /* main window */
 QWidget#m_banner
@@ -117,6 +129,40 @@ QWidget#m_contents
     border-radius: 6px;
 }
 
+/* common QCheckBox */
+
+QCheckBox::indicator:unchecked {
+    image: url(:/images/checkbox-unchecked-normal);
+}
+
+QCheckBox::indicator:unchecked:hover {
+    image: url(:/images/checkbox-unchecked-hover);
+}
+
+QCheckBox::indicator:unchecked:pressed {
+    image: url(:/images/checkbox-unchecked-active);
+}
+
+QCheckBox::indicator:checked {
+    image: url(:/images/checkbox-checked-normal);
+}
+
+QCheckBox::indicator:checked:hover {
+    image: url(:/images/checkbox-checked-hover);
+}
+
+QCheckBox::indicator:checked:pressed {
+    image: url(:/images/checkbox-checked-active);
+}
+
+QCheckBox::indicator:indeterminate:hover {
+    image: url(:/images/checkbox-indeterminate-hover);
+}
+
+QCheckBox::indicator:indeterminate:pressed {
+    image: url(:/images/checkbox-indeterminate-active);
+}
+
 /* security box */
 
 QPushButton#m_newBox
@@ -126,7 +172,7 @@ QPushButton#m_newBox
 
 /* file protected */
 
-QTableView#m_fpFileTableView > QWidget 
+QTableView#m_fileTable > QWidget 
 {
     margin: 0px 22px 0px 0px;
 }

@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     auto argv0 = QFileInfo(argv[0]);
     auto programName = argv0.baseName();
 
-    if (klog_qt5_init(QString(), "kylinsec-system", PROJECT_NAME, programName) < 0)
+    if (klog_qt5_init(QString(), "kylinsec-session", PROJECT_NAME, programName) < 0)
     {
         fprintf(stderr, "Failed to init kiran-log.");
     }

@@ -9,6 +9,14 @@
         <file alias="box-big">images/box-big.png</file>
         <file alias="box-locked">images/box-locked.png</file>
         <file alias="search">images/search.svg</file>
+        <file alias="checkbox-checked-active">images/checkbox-checked-active.svg</file>
+        <file alias="checkbox-checked-disabled">images/checkbox-checked-disabled.svg</file>
+        <file alias="checkbox-checked-hover">images/checkbox-checked-hover.svg</file>
+        <file alias="checkbox-checked-normal">images/checkbox-checked-normal.svg</file>
+        <file alias="checkbox-unchecked-active">images/checkbox-unchecked-active.svg</file>
+        <file alias="checkbox-unchecked-disabled">images/checkbox-unchecked-disabled.svg</file>
+        <file alias="checkbox-unchecked-hover">images/checkbox-unchecked-hover.svg</file>
+        <file alias="checkbox-unchecked-normal">images/checkbox-unchecked-normal.svg</file>
     </qresource>
 
     <qresource prefix="/images/titlebar">
