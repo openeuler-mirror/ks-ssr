@@ -19,7 +19,7 @@
 
         <method name="GetCategories">
             <arg type="s" name="categories" direction="out">
-                <summary>The categories is a json string.</summary>
+                <summary>The categories is a xml string.</summary>
             </arg>
             <description>Get the categories information of SSR.</description>
         </method>
