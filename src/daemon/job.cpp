@@ -78,11 +78,10 @@ bool Job::run_sync()
         this->job_result_.current_finished_operations.push_back(std::move(result));
 
         if (this->job_result_.finished_operation_num == this->job_result_.sum_operation_num)
-        {
             this->state_ = SSRJobState::SSR_JOB_STATE_DONE;
-            this->process_finished_.emit();
-        }
         this->process_changed_.emit(this->job_result_);
+        if (this->job_result_.finished_operation_num == this->job_result_.sum_operation_num)
+            this->process_finished_.emit();
     }
     this->state_ = SSRJobState::SSR_JOB_STATE_IDLE;
     return true;
@@ -189,12 +188,11 @@ bool Job::idle_check_operation()
                    tmp_result.current_finished_operations.size());
 
         if (tmp_result.finished_operation_num == tmp_result.sum_operation_num)
-        {
             this->state_ = this->need_cancel_ ? SSRJobState::SSR_JOB_STATE_CANCEL_DONE : SSRJobState::SSR_JOB_STATE_DONE;
-            this->process_finished_.emit();
-        }
 
         this->process_changed_.emit(tmp_result);
+        if (tmp_result.finished_operation_num == tmp_result.sum_operation_num)
+            this->process_finished_.emit();
 
         // 确保前面的信号发送出去后再将状态设置为空闲，这样信号的回调函数能够收到正确的状态值
         if (this->state_ == SSRJobState::SSR_JOB_STATE_DONE ||
