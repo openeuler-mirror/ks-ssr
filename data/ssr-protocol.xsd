@@ -104,6 +104,16 @@
             <xsd:element name="rule" type="Rule" minOccurs="0" />
             <!-- 参数在设置界面的布局 -->
             <xsd:element name="layout" type="Layout" minOccurs="0" />
+            <!-- 加固项详情 -->
+            <xsd:element name="note" maxOccurs="unbounded" minOccurs="0">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="lang" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 

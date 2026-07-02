@@ -42,6 +42,10 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/ssr-blacklist.conf
          RENAME "ssr-blacklist.conf"
          DESTINATION /etc/modprobe.d/)
 
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/ssr-audit.rules
+         RENAME "ssr-audit.rules"
+         DESTINATION /etc/audit/rules.d/)
+
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-audit.xml.in)
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-config.xml.in)
 GEN_AND_INSTALL_PLUGIN_PYTHON_XML(ssr-plugin-external.xml.in)
