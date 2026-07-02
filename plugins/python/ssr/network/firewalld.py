@@ -88,8 +88,9 @@ class Switch(Firewalld):
                 self.firewalld_systemd.enable()
                 self.firewalld_systemd.start()
             else:
+                if self.firewalld_systemd.stop():
+                    return (False, 'Unable to stop firewalld service! \t\t')
                 self.firewalld_systemd.disable()
-                self.firewalld_systemd.stop()
         except Exception as e:
             return (False, e)
 
