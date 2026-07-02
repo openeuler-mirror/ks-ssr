@@ -17,8 +17,8 @@ BUILTIN_IGNORE_USRES = ("bin", "daemon", "adm", "lp", "sync", "shutdown", "halt"
                         "nfsnobody", "pcap", "mysql", "ftp", "games", "man", "at", "gdm", "gnome-initial-setup")
 BUILTIN_PERMISSION_USERS = ("root")
 
-# 移除三权账户的空密码检测
-THREE_RIGHTS_USERS = ("sysadm","secadm","audadm")
+# 移除三权和sftpuser账户的空密码检测
+THREE_RIGHTS_USERS = ("sysadm","secadm","audadm","sftpuser")
 
 ACCOUNTS_INI_FILEPATH = ssr.vars.SSR_PLUGIN_PYTHON_ROOT_DIR + "/ssr/external/accounts.ini"
 ACCOUNTS_GROUP_LOGIN_LIMIT = "LoginLimit"
