@@ -29,19 +29,22 @@ Pagination::Pagination(QWidget *parent) : QWidget(parent),
                                           m_ui(new Ui::Pagination)
 {
     m_ui->setupUi(this);
-    m_ui->m_input->setValidator(new QIntValidator(m_ui->m_input));
+    m_ui->m_pageNoInput->setValidator(new QIntValidator(m_ui->m_pageNoInput));
 
     initPageButton();
     hide();
 
-    connect(m_ui->m_input, &QLineEdit::returnPressed, this, &Pagination::jump);
-    connect(m_ui->m_jumper, &QPushButton::clicked, this, &Pagination::jump);
+    connect(m_ui->m_pageNoInput, &QLineEdit::returnPressed, this, &Pagination::jump);
+    connect(m_ui->m_pageJumper, &QPushButton::clicked, this, &Pagination::jump);
+
+    //m_ui->m_prev: 跳转至上一页的按钮
+    //m_ui->m_next: 跳转至下一页的按钮
     connect(m_ui->m_prev, &QPushButton::clicked, this, &Pagination::prevClick);
     connect(m_ui->m_next, &QPushButton::clicked, this, &Pagination::nextClick);
     //更新页码按钮
     connect(this, &Pagination::totalPageChanged, this, &Pagination::updatetPageBtns);
     //更新页码按钮
-    connect(this, &Pagination::currentPageChanged, this, &Pagination::setSelectedBtn);
+    connect(this, &Pagination::currentPageChanged, this, &Pagination::updatetPageBtns);
 }
 
 Pagination::~Pagination()
@@ -52,13 +55,13 @@ Pagination::~Pagination()
 void Pagination::setTotalPages(int number)
 {
     m_totalPage = number;
-    emit totalPageChanged();
+    emit totalPageChanged(m_totalPage);
 }
 
 void Pagination::initPageButton()
 {
     m_pageButtons = new QList<QPushButton *>();
-    for (int i = 0; i < PAGE_BUTTON_SIZE; ++i)
+    for (auto i = 0; i < PAGE_BUTTON_SIZE; ++i)
     {
         auto *btn = new QPushButton(QString::number(i + 1), this);
 
@@ -80,7 +83,7 @@ void Pagination::setCurrentPage(int currentPage)
 
 void Pagination::jump()
 {
-    auto number = m_ui->m_input->text();
+    auto number = m_ui->m_pageNoInput->text();
     RETURN_IF_TRUE(number.isEmpty() ||
                    0 > number.toInt() ||
                    number.toInt() > m_totalPage);
@@ -107,19 +110,11 @@ void Pagination::pageBtnClick()
     setCurrentPage(m_currentPage);
 }
 
-void Pagination::updatetPageBtns()
+void Pagination::updatetPageBtns(int number)
 {
     //只有一页（8条）时隐藏分页控件
     if (m_totalPage <= 1)
         this->hide();
-    else
-    {
-    }
-}
-
-void Pagination::setSelectedBtn()
-{
-    //如果被点击的btn显示在界面中（已有选中状态），则不处理
 }
 
 }  // namespace KS
