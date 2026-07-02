@@ -135,9 +135,8 @@ void SSRManager::GetReinforcements(MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
-    Json::Value result_values;
+    Json::Value reinforcements_json;
     Json::StreamWriterBuilder wbuilder;
-    std::string error;
 
     wbuilder["indentation"] = "";
 
@@ -148,25 +147,16 @@ void SSRManager::GetReinforcements(MethodInvocation& invocation)
         for (uint32_t i = 0; i < reinforcements.size(); ++i)
         {
             auto reinforcement = reinforcements[i];
-
-            result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
-            result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_CATEGORY_NAME] = reinforcement->get_category_name();
-            result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_LABEL] = reinforcement->get_label();
-            for (const auto& arg : reinforcement->get_rs().arg())
+            auto reinforcement_json = this->get_reinforcement_json(reinforcement->get_name());
+            if (reinforcement_json.isNull())
             {
-                Json::Value arg_value;
-                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_NAME] = arg.name();
-                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_VALUE] = arg.value();
-                if (arg.layout().present())
-                {
-                    arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_TYPE] = arg.layout().get().widget_type();
-                    arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_LABEL] = SSRUtils::get_xsd_local_value(arg.layout().get().label());
-                }
-                result_values[SSR_JSON_BODY_ITEMS][i][SSR_JSON_BODY_REINFORCEMENT_ARGS].append(std::move(arg_value));
+                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID);
             }
+            reinforcements_json[SSR_JSON_BODY_ITEMS].append(std::move(reinforcement_json));
         }
-        result_values[SSR_JSON_BODY_REINFORCEMENT_COUNT] = reinforcements.size();
-        auto result = Json::writeString(wbuilder, result_values);
+
+        reinforcements_json[SSR_JSON_BODY_REINFORCEMENT_COUNT] = reinforcements.size();
+        auto result = Json::writeString(wbuilder, reinforcements_json);
         invocation.ret(result);
     }
     catch (const std::exception& e)
@@ -174,6 +164,22 @@ void SSRManager::GetReinforcements(MethodInvocation& invocation)
         KLOG_WARNING("%s", e.what());
         DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID);
     }
+}
+
+void SSRManager::GetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
+{
+    KLOG_PROFILE("");
+
+    Json::StreamWriterBuilder wbuilder;
+    wbuilder["indentation"] = "";
+
+    auto reinforcement_json = this->get_reinforcement_json(name);
+    if (reinforcement_json.isNull())
+    {
+        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID);
+    }
+    auto result = Json::writeString(wbuilder, reinforcement_json);
+    invocation.ret(result);
 }
 
 void SSRManager::SetReinforcementArgs(const Glib::ustring& name,
@@ -379,6 +385,38 @@ void SSRManager::init()
                                                  sigc::mem_fun(this, &SSRManager::on_bus_acquired),
                                                  sigc::mem_fun(this, &SSRManager::on_name_acquired),
                                                  sigc::mem_fun(this, &SSRManager::on_name_lost));
+}
+
+Json::Value SSRManager::get_reinforcement_json(const std::string& name)
+{
+    Json::Value retval;
+
+    try
+    {
+        auto reinforcement = this->plugins_->get_reinforcement(name);
+
+        retval[SSR_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
+        retval[SSR_JSON_BODY_REINFORCEMENT_CATEGORY_NAME] = reinforcement->get_category_name();
+        retval[SSR_JSON_BODY_REINFORCEMENT_LABEL] = reinforcement->get_label();
+        for (const auto& arg : reinforcement->get_rs().arg())
+        {
+            Json::Value arg_value;
+            arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_NAME] = arg.name();
+            arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_VALUE] = arg.value();
+            if (arg.layout().present())
+            {
+                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_TYPE] = arg.layout().get().widget_type();
+                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_LABEL] = SSRUtils::get_xsd_local_value(arg.layout().get().label());
+            }
+            retval[SSR_JSON_BODY_REINFORCEMENT_ARGS].append(std::move(arg_value));
+        }
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+        return Json::Value();
+    }
+    return retval;
 }
 
 void SSRManager::on_scan_process_changed_cb(const SSRJobResult& job_result)
