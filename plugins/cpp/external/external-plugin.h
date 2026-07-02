@@ -1,7 +1,7 @@
 /**
- * @file          /kiran-sse-manager/plugins/cpp/config/config-plugin.h
+ * @file          /kiran-SSR-manager/plugins/cpp/external/external-plugin.h
  * @brief         
- * @author        tangjie02 <tangjie02@kylinos.com.cn>
+ * @author        pengyulong <pengyulong@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
@@ -10,24 +10,24 @@
 
 namespace Kiran
 {
-namespace Config
+namespace External
 {
-class SSRPluginConfig : public SSRPluginInterface
+
+class SSRPluginExternal : public SSRPluginInterface
 {
 public:
-    SSEPluginConfig(){};
-    virtual ~SSEPluginConfig(){};
+    SSRPluginExternal(){};
+    virtual ~SSRPluginExternal(){};
 
     virtual void activate() override;
 
     virtual void deactivate() override;
 
     virtual std::shared_ptr<SSRReinforcementInterface> get_reinforcement(const std::string &name) { return MapHelper::get_value(this->reinforcements_, name); };
-};
 
 private:
     std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements_;
+};
 
-}  // namespace Config
-
+}  // namespace External
 }  // namespace Kiran

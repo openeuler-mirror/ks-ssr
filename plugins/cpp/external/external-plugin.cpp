@@ -1,0 +1,36 @@
+/**
+ * @file          /kiran-SSR-manager/plugins/cpp/config/external-plugin.cpp
+ * @brief         
+ * @author        tangjie02 <tangjie02@kylinos.com.cn>
+ * @copyright (c) 2020 KylinSec. All rights reserved. 
+ */
+
+#include "plugins/cpp/external/external-plugin.h"
+#include <json/json.h>
+#include "plugins/cpp/external/reinforcements/devices.cpp"
+#include "plugins/cpp/external/reinforcements/login-restrictions.cpp"
+
+PLUGIN_EXPORT_FUNC_DEF(Kiran::External::SSRPluginExternal);
+
+namespace Kiran
+{
+namespace External
+{
+
+#define EXTERNAL_REINFORCEMENT_LOGIN_RESTRICTIONS "external-login-restrictions"
+#define EXTERNAL_REINFORCEMENT_DEVICES_SWITCH "external-devices-switch"
+
+void SSRPluginExternal::activate()
+{
+    this->reinforcements_ = std::map<std::string, std::shared_ptr<SSRReinforcementInterface>>(
+        {{EXTERNAL_REINFORCEMENT_LOGIN_RESTRICTIONS, std::make_shared<LoginRestrictions>()},
+         {EXTERNAL_REINFORCEMENT_DEVICES_SWITCH, std::make_shared<DeviceSwitch>()}});
+}
+
+void SSRPluginExternal::deactivate()
+{
+    this->reinforcements_.clear();
+}
+
+}  // namespace External
+}  // namespace Kiran
