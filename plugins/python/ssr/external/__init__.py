@@ -25,6 +25,11 @@ reinforcements = (
         'class': 'NullPassword'
     },
     {
+        'name': 'external-accounts-surplus-user',
+        'module': 'accounts',
+        'class': 'SurplusUser'
+    },
+    {
         'name': 'external-sshd-root-login',
         'module': 'sshd',
         'class': 'RootLogin'
@@ -43,6 +48,11 @@ reinforcements = (
         'name': 'external-sshd-banner-info',
         'module': 'sshd',
         'class': 'BannerInfo'
+    },
+    {
+        'name': 'external-sshd-service',
+        'module': 'sshd',
+        'class': 'SshdService'
     },
     {
         'name': 'external-pam-su-wheel',

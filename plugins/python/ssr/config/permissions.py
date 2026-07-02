@@ -89,6 +89,8 @@ class UmaskLimit:
     def set(self, args_json):
         args = json.loads(args_json)
 
+        profile_value = self.conf_profile.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
+        bashrc_vale = self.conf_bashrc.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
         if args['enabled']:
             self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
             self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
