@@ -47,11 +47,17 @@ protected:
     // 获取所有加固项的基本信息和加固参数
     virtual void GetReinforcements(MethodInvocation &invocation);
 
+    // 重置所有加固项的信息到默认值
+    virtual void ResetReinforcements(MethodInvocation &invocation);
+
     // 获取指定加固项的基本信息和加固参数
     virtual void GetReinforcement(const Glib::ustring &name, MethodInvocation &invocation);
 
     // 设置自定义加固参数
     virtual void SetReinforcement(const Glib::ustring &reinforcement_xml, MethodInvocation &invocation);
+
+    // 重置指定的加固项
+    virtual void ResetReinforcement(const Glib::ustring &name, MethodInvocation &invocation);
 
     // 扫描指定加固项
     virtual void Scan(const std::vector<Glib::ustring> &names, MethodInvocation &invocation);

@@ -38,6 +38,9 @@ public:
     bool set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code);
     // 设置加固参数
     bool set_custom_ra(const Protocol::Reinforcement& rs_reinforcement);
+    // 删除加固项的自定义参数
+    void del_custom_ra(const std::string& name);
+    void del_all_custom_ra();
 
     // 加固标准发生变化
     sigc::signal<void> signal_rs_changed() { return this->rs_changed_; };
@@ -52,7 +55,9 @@ private:
     // 加载加固标准文件(不变化的部分)
     std::shared_ptr<Protocol::RS> get_fixed_rs();
     // 加载加固参数文件
-    std::shared_ptr<Protocol::RA> get_ra();
+    std::shared_ptr<Protocol::RA> read_ra_from_file();
+    // 写加固参数文件
+    bool write_ra_to_file(std::shared_ptr<Protocol::RA> ra);
 
     void join_reinforcement(Protocol::Reinforcement& to_r, const Protocol::Reinforcement& from_r);
 
