@@ -71,7 +71,7 @@ bool ReinforcementPython::get(std::string &args, std::string &error)
     auto py_retval = PyObject_CallMethod(this->class_instance_, method, format);
 #endif
 
-    SCOPE_EXIT({
+    SSR_SCOPE_EXIT({
         Py_XDECREF(py_retval);
         PyGILState_Release(gstate);
     });
@@ -105,7 +105,7 @@ bool ReinforcementPython::set(const std::string &args, std::string &error)
     auto py_retval = PyObject_CallMethod(this->class_instance_, method, format, args.c_str());
 #endif
 
-    SCOPE_EXIT({
+    SSR_SCOPE_EXIT({
         Py_XDECREF(py_retval);
         PyGILState_Release(gstate);
     });
@@ -174,7 +174,7 @@ void PluginPython::activate()
 {
     PyObject *py_reinforcements = NULL;
 
-    SCOPE_EXIT({
+    SSR_SCOPE_EXIT({
         Py_XDECREF(py_reinforcements);
     });
 

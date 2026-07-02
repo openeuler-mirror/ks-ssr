@@ -21,7 +21,7 @@ std::string Utils::pyobject_as_string(PyObject *pyobject)
     {
         auto bytes = PyUnicode_AsASCIIString(pyobject);
         RETURN_VAL_IF_FALSE(bytes, std::string());
-        SCOPE_EXIT({
+        SSR_SCOPE_EXIT({
             Py_XDECREF(bytes);
         });
         auto str = PyBytes_AsString(bytes);
@@ -37,7 +37,7 @@ std::string Utils::pyobject_as_string(PyObject *pyobject)
     else if (PyExceptionInstance_Check(pyobject))
     {
         auto args = PyObject_GetAttrString(pyobject, "args");
-        SCOPE_EXIT({
+        SSR_SCOPE_EXIT({
             Py_XDECREF(args);
         });
         if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0)
@@ -57,7 +57,7 @@ std::string Utils::py_catch_exception()
     PyObject *traceback = NULL;
     std::string retval;
 
-    SCOPE_EXIT({
+    SSR_SCOPE_EXIT({
         Py_XDECREF(type);
         Py_XDECREF(value);
         Py_XDECREF(traceback);
@@ -75,7 +75,7 @@ std::string Utils::py_catch_exception()
 
         auto trace_module = PyImport_ImportModule("traceback");
 
-        SCOPE_EXIT({
+        SSR_SCOPE_EXIT({
             Py_XDECREF(trace_module);
         });
 
