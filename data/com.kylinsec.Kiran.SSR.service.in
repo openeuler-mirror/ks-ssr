@@ -2,4 +2,4 @@
 Name=com.kylinsec.Kiran.SSR
 User=root
 Exec=@SSR_INSTALL_BINDIR@/kiran-ssr-daemon
-SystemService=kiran-ssr-daemon.service
+SystemdService=kiran-ssr-daemon.service
