@@ -33,12 +33,12 @@ public:
     // 初始化
     bool init();
 
+    // 获取插件ID，由插件名称+语言拼接
+    std::string get_id() { return this->plugin_config_->name() + "_" + this->plugin_config_->language_type(); };
     // 获取插件名称
     std::string get_name() { return this->plugin_config_->name(); };
     // 插件所属分类
     std::string get_category_name() { return this->plugin_config_->category(); };
-    // 获取插件状态
-    // SSRPluginState get_state() { return this->state_; };
     // 获取插件加载器
     std::shared_ptr<SSRPluginLoader> get_loader() { return this->loader_; };
     // 获取加固项名称列表
