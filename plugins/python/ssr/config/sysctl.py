@@ -3,7 +3,6 @@
 import json
 import ssr.configuration
 import ssr.utils
-#from gi.repository import Gio
 
 
 SYSCTL_PATH = '/usr/sbin/sysctl'
@@ -35,60 +34,52 @@ class SAKKey:
 
         return (True, '')
 
-# class KeyRebootSwitch:
-#     def __init__(self):
-#         self.gso = Gio.Settings("org.mate.SettingsDaemon.plugins.media-keys")
-#         self.key = "power"
-
-#     def status(self):
-#         command = '{0} | grep masked'.format(COMPOSITE_KEY_REBOOT_STATUS_CMD)
-#         output = ssr.utils.subprocess_has_output(command)
-
-#         value = self.gso.get_string(self.key)
-#         if value == "disabled":
-#             return False
-#         return True
-
-#     def open(self):
-#         command = '{0}'.format(COMPOSITE_KEY_REBOOT_ENABLE_CMD)
-#         output = ssr.utils.subprocess_not_output(command)
-
-#         self.gso.set_string(self.key, '<Control><Alt>Delete')
-
-#     def close(self):
-#         command = '{0}'.format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
-#         output = ssr.utils.subprocess_not_output(command)
-
-#         self.gso.set_string(self.key, 'disabled')
-
-#     def get(self):
-#         retdata = dict()
-#         retdata['enabled'] = self.status()
-#         return (True, json.dumps(retdata))
-
-#     def set(self, args_json):
-#         args = json.loads(args_json)
-
-#         if args['enabled']:
-#             self.open()
-#         if not args['enabled']:
-#             self.close()
-
-#         return (True, '')
-
-
 class KeyRebootSwitch:
+    #判断文件是否存在
+    def status_exist(self):
+        command =  "ls /usr/lib/systemd/system/ |grep -wx ctrl-alt-del.target"
+        cmd = '{0}'.format(command)
+        output = ssr.utils.subprocess_has_output(cmd)
+        return len(output) != 0
+
+    def status(self):
+        command = '{0} | grep masked'.format(COMPOSITE_KEY_REBOOT_STATUS_CMD)
+        output = ssr.utils.subprocess_has_output(command)
+        return len(output) == 0
+
+    #判断.bak是否存在
+    def status_bak(self):
+        command = " ls /usr/lib/systemd/system/ |grep ctrl-alt-del.target.bak"
+        cmd = '{0}'.format(command)
+        output = ssr.utils.subprocess_has_output(cmd)
+        return len(output) != 0
+
+    def open(self):
+        command = '{0}'.format(COMPOSITE_KEY_REBOOT_ENABLE_CMD)
+        output = ssr.utils.subprocess_not_output(command)
+
+    def close(self):
+         command = '{0}'.format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
+         output = ssr.utils.subprocess_not_output(command)
+
     def get(self):
         retdata = dict()
-        retdata['enabled'] = False
+        retdata['enabled'] = self.status()
         return (True, json.dumps(retdata))
-
+ 
     def set(self, args_json):
         args = json.loads(args_json)
-
-        # if args['enabled']:
-        #     self.open()
-        # if not args['enabled']:
-        #     self.close()
+        if self.status_exist():
+            if  not self.status() :
+                if args['enabled']:
+                    self.open()
+            else:
+                if not args['enabled']:
+                    self.close()
+        else:
+            #针对3.3-6的处理规则，文件不存在，开关为打开是，将.bak改为ctrl-alt-del.target
+            if args['enabled'] and self.status_bak():
+                command = "mv /usr/lib/systemd/system/ctrl-alt-del.target.bak /usr/lib/systemd/system/ctrl-alt-del.target"
+                output = ssr.utils.subprocess_not_output(command)
 
         return (True, '')
