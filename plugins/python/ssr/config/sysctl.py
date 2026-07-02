@@ -17,7 +17,7 @@ class SAKKey:
 
     def get(self):
         retdata = dict()
-        retdata[SAK_KEY_SWITCH_CONF_KEY_SYSRQ] = bool(self.conf.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ) == 0)
+        retdata[SAK_KEY_SWITCH_CONF_KEY_SYSRQ] = bool(self.conf.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ) == "0")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
@@ -34,7 +34,7 @@ class KeyRebootSwitch:
     def status(self):
         command = '{0} | grep masked'.format(COMPOSITE_KEY_REBOOT_STATUS_CMD)
         output = ssr.utils.subprocess_has_output(command)
-        return len(output) != 0
+        return len(output) == 0
 
     def open(self):
         command = '{0}'.format(COMPOSITE_KEY_REBOOT_ENABLE_CMD)
@@ -46,7 +46,7 @@ class KeyRebootSwitch:
 
     def get(self):
         retdata = dict()
-        retdata['enabled'] = self.search()
+        retdata['enabled'] = self.status()
         return (True, json.dumps(retdata))
 
     def set(self, args_json):

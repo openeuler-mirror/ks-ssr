@@ -5,7 +5,7 @@ import re
 import ssr.utils
 import ssr.configuration
 
-RESOURCE_LIMITS_CONF_PATH = "/etc/security/limits.conf.d/90-ssr-config-resource.conf"
+RESOURCE_LIMITS_CONF_PATH = "/etc/security/limits.d/90-ssr-config.conf"
 RESOURCE_LIMITS_KEY_STACK  = "*\s+soft\s+stack"
 RESOURCE_LIMITS_KEY_RSS = "*\s+hard\s+rss"
 
@@ -17,21 +17,23 @@ class ResourceLimits:
         retdata = dict()
 
         #忽略有注释的行
-        stack_cmd = 'grep -v \"^\s*#\" {0} | egrep {1}'.format(RESOURCE_LIMITS_CONF_PATH, RESOURCE_LIMITS_KEY_STACK)
+        stack_cmd = 'grep -v "^\s*#" {0} | egrep "{1}"'.format(RESOURCE_LIMITS_CONF_PATH, RESOURCE_LIMITS_KEY_STACK)
         stack_output = ssr.utils.subprocess_has_output(stack_cmd)
 
-        rss_cmd = 'grep -v \"^\s*#\" {0} | egrep {1}'.format(RESOURCE_LIMITS_CONF_PATH, RESOURCE_LIMITS_KEY_RSS)
+        rss_cmd = 'grep -v "^\s*#" {0} | egrep "{1}"'.format(RESOURCE_LIMITS_CONF_PATH, RESOURCE_LIMITS_KEY_RSS)
         rss_output = ssr.utils.subprocess_has_output(rss_cmd)
 
         if len(stack_output) == 0:
             retdata['stack'] = ''
         else:
-            retdata['stack'] = re.findall("\d+", stack_output)
+            stack = list(map(int,re.findall("\d+", stack_output)))
+            retdata['stack'] = stack[0]
 
         if len(rss_output) == 0:
             retdata['rss'] = ''
         else:
-            retdata['rss']  = re.findall("\d+", rss_output)
+            rss = list(map(int,re.findall("\d+", rss_output)))
+            retdata['rss']  = rss[0]
 
         return (True, json.dumps(retdata))
 
