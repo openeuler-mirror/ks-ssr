@@ -134,7 +134,7 @@ class Switch(Firewall):
             
             # 禁用端口
             if len(args['disable-ports']) != 0:
-                self.del_iptables_history("|grep INPUT |grep dport |grep -v -E '{0}| \-s' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
+                self.del_iptables_history("|grep INPUT |grep dport |grep -v -E '{0}| \-s|connlimit' ".format(IPTABLES_LIMITS_PORTS.replace(",","|")))
                 for port in args['disable-ports'].split(";"):
                     if args['tcp-udp'] == "tcp":
                         ssr.utils.subprocess_has_output("{0} {1} --dport {2}  -j REJECT".format(FIREWALL_ADD_RULE_CMD, IPTABLES_INPUT_TCP, port))
