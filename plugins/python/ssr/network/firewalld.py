@@ -43,6 +43,8 @@ CLEAR_IPTABLES = "iptables -F"
 CLEAR_IPTABLES_INPUT = "iptables -F INPUT"
 CLEAR_IPTABLES_OUTPUT = "iptables -F OUTPUT"
 
+FIND_IPTABLES_INPUT = "iptables -L INPUT -n --line-numbers"
+
 # 禁止主机被Traceroute检测 time-exceeded
 TRACEROUTE_DETAIL = "time-exceeded -j DROP"
 
@@ -139,7 +141,14 @@ class Switch(Firewall):
         
         if self.iptables_systemd.is_active():
             if args['input-ports-connect-nums']  == 0:
-                self.del_iptables(DELETE_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j DROP")
+                count = 0
+                output_result = str(ssr.utils.subprocess_has_output(FIND_IPTABLES_INPUT + " |grep 1:60999"))
+                for line in output_result.splitlines():
+                    ssr.log.debug("output_result.splitlines() = ",line)
+                    count = count + 1
+                for i in range(count):
+                    ssr.log.debug("index = ",str(ssr.utils.subprocess_has_output(FIND_IPTABLES_INPUT + " |grep 1:60999")).splitlines()[0].split(' ')[0])
+                    ssr.utils.subprocess_not_output('iptables -D INPUT {0}'.format(str(ssr.utils.subprocess_has_output(FIND_IPTABLES_INPUT + " |grep 1:60999")).splitlines()[0].split(' ')[0]))
             else:
                 self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j DROP")
  
