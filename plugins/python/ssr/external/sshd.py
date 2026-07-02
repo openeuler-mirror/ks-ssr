@@ -17,6 +17,10 @@ BANNER_INFO_ARG_ENABLED = "enabled"
 PROFILE_CLIENT_TMOUT = "ClientAliveInterval"
 PROFILE_CLIENT_COUNT = "ClientAliveCountMax"
 
+#用于匹配TMOUT进行删除或注释
+PROFILE_TMOUT = "TMOUT"
+PROFILE_TMOUT_RXPORT = "export TMOUT"
+
 DEFAULT_CIPHERS = ("aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-cbc", "3des-cbc")
 WEAK_CIPHERS = ("arcfour", "arcfour128", "arcfour256")
 
@@ -113,6 +117,8 @@ class SessionTimeout(SSHD):
 
     def set(self, args_json):
         args = json.loads(args_json)
+        self.conf_profile = ssr.configuration.KV("/etc/profile", "=", "=")
+        self.conf_bashrc = ssr.configuration.KV("/etc/bashrc","=", "=")
 
         if (args[PROFILE_CLIENT_TMOUT] <= 0):
             self.conf.del_record(PROFILE_CLIENT_TMOUT)
@@ -120,6 +126,11 @@ class SessionTimeout(SSHD):
         else:
             self.conf.set_value(PROFILE_CLIENT_TMOUT, args[PROFILE_CLIENT_TMOUT])
             self.conf.set_value(PROFILE_CLIENT_COUNT, 0)
+            self.conf_bashrc.set_all_value(PROFILE_TMOUT,"")
+            self.conf_profile.set_all_value(PROFILE_TMOUT,"")
+            self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
+            self.conf_profile.set_all_value(PROFILE_TMOUT_RXPORT,"")
+
         # 重启服务生效
         self.service.restart()
         return (True, '')
