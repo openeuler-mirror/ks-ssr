@@ -1,5 +1,6 @@
 # service files
 if (USE_SYSTEMD)
+    set (SYSTEM_UNIT_DIR "/usr/lib/systemd/system")
     pkg_get_variable(SYSTEM_UNIT_DIR systemd systemdsystemunitdir)
     install(FILES ${PROJECT_BINARY_DIR}/data/ks-sc-daemon.service
             DESTINATION ${SYSTEM_UNIT_DIR})

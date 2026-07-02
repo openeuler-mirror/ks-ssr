@@ -27,59 +27,57 @@ BoxDao::~BoxDao()
 {
 }
 
-void BoxDao::addBox(const QString boxName, const QString boxId, bool isMount, const QString encryptpassword, const QString encryptKey, const QString encryptPspr, int senderUserUid)
+void BoxDao::addBox(const QString &boxName, const QString &boxId, bool isMount, const QString &encryptpassword, const QString &encryptKey, const QString &encryptPspr, int senderUserUid)
 {
+    KLOG_DEBUG() << "Insert sql table boxs. boxId = " << boxId;
     QSqlQuery query(m_boxDb);
-
     QString cmd = QString("insert into boxs (boxName,boxId,isMount,encryptpassword,encryptKey,encryptPspr,senderUserUid) values('%1','%2','%3','%4','%5','%6',%7);")
                       .arg(boxName, boxId, QString::number(isMount), encryptpassword, encryptKey, encryptPspr, QString::number(senderUserUid));
-    KLOG_DEBUG() << "addQuery cmd = " << cmd;
+
     if (!query.exec(cmd))
-        KLOG_DEBUG() << "BoxDao insert error!";
+        KLOG_ERROR() << "Insert sql error!";
 }
 
-void BoxDao::modifyMountStatus(const QString boxId, bool isMount)
+void BoxDao::modifyMountStatus(const QString &boxId, bool isMount)
 {
+    KLOG_DEBUG() << "Modify mount status to " << isMount;
     QSqlQuery query(m_boxDb);
-
     QString cmd = QString("update boxs set isMount ='%1' where boxId='%2';").arg(QString::number(isMount), boxId);
-    KLOG_DEBUG() << "fixedQueryMountStatus cmd = " << cmd;
     if (!query.exec(cmd))
-        KLOG_DEBUG() << "modifyQueryMountStatus error!";
+        KLOG_ERROR() << "Update boxs mount status error! boxId = " << boxId;
 }
 
-void BoxDao::modifyPasswd(const QString boxId, const QString encryptpassword)
+void BoxDao::modifyPasswd(const QString &boxId, const QString &encryptpassword)
 {
+    KLOG_DEBUG() << "Modify password. boxId = " << boxId;
     QSqlQuery query(m_boxDb);
-
     QString cmd = QString("update boxs set encryptpassword='%1' where boxId='%2';").arg(encryptpassword, boxId);
-    KLOG_DEBUG() << "fixedQueryPasswd cmd = " << cmd;
     if (!query.exec(cmd))
-        KLOG_DEBUG() << "ModifyQueryPasswd error!";
+        KLOG_ERROR() << "ModifyQueryPasswd error!";
 }
 
-bool BoxDao::delBox(const QString boxId)
+bool BoxDao::delBox(const QString &boxId)
 {
+    KLOG_DEBUG() << "Delete box. boxId = " << boxId;
     QSqlQuery query(m_boxDb);
 
     QString cmd = QString("delete from boxs where boxId='%1';").arg(boxId);
-    KLOG_DEBUG() << "addQuery cmd = " << cmd;
     if (!query.exec(cmd))
     {
-        KLOG_DEBUG() << "BoxDao delete error! boxId = " << boxId;
+        KLOG_ERROR() << "Delete box error! boxId = " << boxId;
         return false;
     }
     else
         return true;
 }
 
-BoxInfo BoxDao::getBox(const QString boxId)
+BoxInfo BoxDao::getBox(const QString &boxId)
 {
     QSqlQuery query(m_boxDb);
     BoxInfo boxInfo;
     QString cmd = "select * from boxs;";
     if (!query.exec(cmd))
-        KLOG_DEBUG() << "select error!";
+        KLOG_WARNING() << "Box no found! boxId = " << boxId;
     else
     {
         while (query.next())
@@ -88,7 +86,7 @@ BoxInfo BoxDao::getBox(const QString boxId)
             {
                 boxInfo.boxName = query.value(0).toString();
                 boxInfo.boxId = query.value(1).toString();
-                boxInfo.isMount = query.value(2).toBool();
+                boxInfo.isMount = QVariant(query.value(2).toString()).toBool();
                 boxInfo.encryptpassword = query.value(3).toString();
                 boxInfo.encryptKey = query.value(4).toString();
                 boxInfo.encryptPspr = query.value(5).toString();
@@ -107,7 +105,7 @@ QList<BoxInfo> BoxDao::getBoxs()
 
     QString cmd = "select * from boxs;";
     if (!query.exec(cmd))
-        KLOG_DEBUG() << "select error!";
+        KLOG_WARNING() << "Table boxs is empty search error!";
     else
     {
         while (query.next())
@@ -115,7 +113,7 @@ QList<BoxInfo> BoxDao::getBoxs()
             BoxInfo boxInfo;
             boxInfo.boxName = query.value(0).toString();
             boxInfo.boxId = query.value(1).toString();
-            boxInfo.isMount = query.value(2).toBool();
+            boxInfo.isMount = QVariant(query.value(2).toString()).toBool();
             boxInfo.encryptpassword = query.value(3).toString();
             boxInfo.encryptKey = query.value(4).toString();
             boxInfo.encryptPspr = query.value(5).toString();
@@ -132,35 +130,14 @@ int BoxDao::getBoxCount()
     QString cmd = "select count() from boxs;";
     if (!query.exec(cmd))
     {
-        KLOG_DEBUG() << "getQuerySum error!";
+        KLOG_ERROR() << "Get boxs sum error!";
         return -1;
     }
     else
     {
         query.seek(0);
-        KLOG_DEBUG() << "count = " << query.value(0).toInt();
+        KLOG_DEBUG() << "Boxs count = " << query.value(0).toInt();
         return query.value(0).toInt();
-    }
-}
-
-// 判断表格是否存在
-bool sqlTableExist(QSqlQuery query)
-{
-    //    QString cmd = QString("select count(*) from sqlite_master where type='table' and name='%1'").arg(tablename);
-    if (!query.exec("select count() from boxs;"))
-    {
-        //        KLOG_DEBUG()<<"sqlTableExist error!";
-        KLOG_DEBUG() << "not Exist!";
-        return false;
-    }
-    else
-    {
-        query.seek(0);
-        KLOG_DEBUG() << "count = " << query.value(0).toInt();
-        if (query.value(0).toInt() != 0)
-            return true;
-        else
-            return false;
     }
 }
 
@@ -190,6 +167,26 @@ void BoxDao::init()
 
         if (!query.exec(cmd))
             KLOG_ERROR() << "BoxDao query create error!";
+    }
+}
+
+bool BoxDao::sqlTableExist(QSqlQuery query)
+{
+    //    QString cmd = QString("select count(*) from sqlite_master where type='table' and name='%1'").arg(tablename);
+    if (!query.exec("select count() from boxs;"))
+    {
+        //        KLOG_DEBUG()<<"sqlTableExist error!";
+        KLOG_WARNING() << "Table boxs is not exist!";
+        return false;
+    }
+    else
+    {
+        query.seek(0);
+        KLOG_DEBUG() << "Table boxs count is " << query.value(0).toInt();
+        if (query.value(0).toInt() != 0)
+            return true;
+        else
+            return false;
     }
 }
 }  // namespace KS
