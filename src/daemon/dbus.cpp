@@ -1088,8 +1088,7 @@ void DBus::homeFreeSpaceRatio(const float space_ratio)
         return;
     }
 
-    KLOG_WARNING("home free space less than 10%.");
-    KLOG_WARNING("homeFreeSpaceRatio %f.", space_ratio);
+    KLOG_WARNING("Home free space less than 10%. The remaining space ratio is %f.", space_ratio);
 
     _audit_log(1101, -1, "home free space less than 10%.");
 
@@ -1105,8 +1104,7 @@ void DBus::rootFreeSpaceRatio(const float space_ratio)
         return;
     }
 
-    KLOG_WARNING("root free space less than 10%.");
-    KLOG_WARNING("rootFreeSpaceRatio %f.", space_ratio);
+    KLOG_WARNING("Root free space less than 10%. The remaining space ratio is %f.", space_ratio);
 
     _audit_log(1101, -1, "root free space less than 10%.");
 
@@ -1122,8 +1120,7 @@ void DBus::cpuAverageLoadRatio(const float load_ratio)
         return;
     }
 
-    KLOG_WARNING("The average load of a single core CPU exceeds 1.");
-    KLOG_WARNING("cpuAverageLoadRatio %f.", load_ratio);
+    KLOG_WARNING("The average load of a single core CPU exceeds 1. The average load ratio is %f.", load_ratio);
 
     _audit_log(1101, -1, "The average load of a single core CPU exceeds 1.");
 
