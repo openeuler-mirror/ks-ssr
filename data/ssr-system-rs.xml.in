@@ -677,7 +677,7 @@
                 <rule>
                     <type>RANGE</type>
                     <value_range>
-                        <min_value>300</min_value>
+                        <max_value>300</max_value>
                     </value_range>
                 </rule>
                 <layout>
