@@ -15,7 +15,7 @@ TTYPS_SUM_DEV_CMD = "ls /dev/ttyS* |wc -l"
 CDROM_STATUS_CMD = " cat /proc/modules |grep "
 CDROM_DRIVE = "cdrom"
 SR_MOD_DRIVE = "sr_mod"
-FIND_DRIVE_CMD = "find /lib/modules/ -name"
+FIND_DRIVE_CMD = "find /lib/modules/"
 UNINSTALL_DRIVE = "rmmod"
 INSTALL_DRIVE = "insmod"
 RELOAD_INITRAMFS = "dracut -f"
@@ -34,9 +34,16 @@ class UDev:
 
 class CDROM:
     def find_drive(self,key):
-        command = '{0} {1}.ko*'.format(FIND_DRIVE_CMD,key)
-        output = ssr.utils.subprocess_has_output(command)
-        return str(output)
+        command = '{0}{1}  -name {2}.ko*'.format(FIND_DRIVE_CMD,str(self.get_kernel_version()),key)
+        drivers = ssr.utils.subprocess_has_output(command)
+        ssr.log.debug('find_drive = ',drivers)
+        return str(drivers)
+
+    def get_kernel_version(self) :
+        cmd = 'uname -a'
+        output = ssr.utils.subprocess_has_output(cmd)
+        kernel_version = str(output).split(' ')
+        return kernel_version[2]
 
     def open(self):
         try:
@@ -59,9 +66,7 @@ class CDROM:
                     output = ssr.utils.subprocess_not_output(mv_sr_mod)
 
                 # reload initramfs
-                str_spl = cdrom_drive_path.split('/')
-                kernel_version = str_spl[3]
-                self.reload_drive(kernel_version)
+                self.reload_drive(self.get_kernel_version())
 
         except Exception as e:
             ssr.log.debug('Exception_open',e)
@@ -88,9 +93,7 @@ class CDROM:
                     output = ssr.utils.subprocess_not_output(mv_sr_mod)
 
                 # reload initramfs
-                str_spl = cdrom_drive_path.split('/')
-                kernel_version = str_spl[3]
-                self.reload_drive(kernel_version)
+                self.reload_drive(self.get_kernel_version())
 
         except Exception as e:
             ssr.log.debug('Exception_close',e)
@@ -118,7 +121,7 @@ class CDROM:
         if not args[CDROM_ARG_ENABLED]:
             output = self.close()
             if output:
-                return (False,"Device busy , please pop up! \t\t\n You can use the eject command to eject the device. \t\t")
+                return (False,"Device busy , please pop up! \t\t\nYou can use the eject command to eject the device. \t\t")
         else:
             output = self.open()
             if output:

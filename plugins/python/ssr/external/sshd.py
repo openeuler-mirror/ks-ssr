@@ -125,6 +125,11 @@ class SessionTimeout(SSHD):
         if (args[PROFILE_CLIENT_TMOUT] <= 0):
             self.conf.del_record(PROFILE_CLIENT_TMOUT)
             self.conf.del_record(PROFILE_CLIENT_COUNT)
+            # 如果/etc/profile /etc/bashrc 中有TMOUT的值，则进行修改
+            self.conf_profile.set_all_value(PROFILE_TMOUT,"")
+            self.conf_profile.set_all_value(PROFILE_TMOUT_RXPORT,"")
+            self.conf_bashrc.set_all_value(PROFILE_TMOUT,"")
+            self.conf_bashrc.set_all_value(PROFILE_TMOUT_RXPORT,"")
         else:
             self.conf.set_value(PROFILE_CLIENT_TMOUT, args[PROFILE_CLIENT_TMOUT])
             self.conf.set_value(PROFILE_CLIENT_COUNT, 0)
