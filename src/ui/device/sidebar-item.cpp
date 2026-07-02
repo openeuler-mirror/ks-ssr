@@ -12,7 +12,7 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "src/ui/peripheral-management/sidebar-item.h"
+#include "src/ui/device/sidebar-item.h"
 #include "src/ui/ui_sidebar-item.h"
 
 #include <QPainter>
@@ -20,10 +20,11 @@
 
 namespace KS
 {
-SidebarItem::SidebarItem(const QString text, const QString icon, QWidget *parent) :
-    QWidget(parent),
-    m_ui(new Ui::SidebarItem),
-    m_isSelected(false)
+SidebarItem::SidebarItem(const QString &text,
+                         const QString &icon,
+                         QWidget *parent) : QWidget(parent),
+                                            m_ui(new Ui::SidebarItem),
+                                            m_isSelected(false)
 {
     m_ui->setupUi(this);
     m_ui->m_text->setText(text);
@@ -38,10 +39,14 @@ SidebarItem::~SidebarItem()
 void SidebarItem::setSelected(bool isSelected)
 {
     m_isSelected = isSelected;
-    if(m_isSelected)
+    if (m_isSelected)
+    {
         m_ui->m_arrow->show();
+    }
     else
+    {
         m_ui->m_arrow->hide();
+    }
 }
 
 bool SidebarItem::isSelected()
@@ -58,4 +63,4 @@ void SidebarItem::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-}   //namespace ks
+}  // namespace KS

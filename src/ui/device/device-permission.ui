@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>EditPermissions</class>
- <widget class="QWidget" name="EditPermissions">
+ <class>DevicePermission</class>
+ <widget class="QWidget" name="DevicePermission">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -24,7 +24,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="m_cb_status"/>
+      <widget class="QComboBox" name="m_status"/>
      </item>
     </layout>
    </item>
@@ -45,21 +45,21 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="m_btn_read">
+       <widget class="QCheckBox" name="m_read">
         <property name="text">
          <string>read</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="m_btn_write">
+       <widget class="QCheckBox" name="m_write">
         <property name="text">
          <string>write</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="m_btn_exec">
+       <widget class="QCheckBox" name="m_exec">
         <property name="text">
          <string>exec</string>
         </property>
