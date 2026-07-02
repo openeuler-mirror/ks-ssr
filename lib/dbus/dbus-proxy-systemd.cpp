@@ -24,6 +24,21 @@ namespace Kiran
 // SDUP: systemd dbus unit property
 #define SDUP_ACTIVE_STATE "ActiveState"
 
+std::shared_ptr<DBusSystemdProxy> DBusSystemdProxy::instance_ = nullptr;
+
+std::shared_ptr<DBusSystemdProxy> DBusSystemdProxy::get_default()
+{
+    static std::mutex mutex;
+    {
+        std::unique_lock<std::mutex> lck(mutex);
+        if (DBusSystemdProxy::instance_)
+        {
+            DBusSystemdProxy::instance_ = std::make_shared<DBusSystemdProxy>();
+        }
+    }
+    return DBusSystemdProxy::instance_;
+}
+
 DBusSystemdProxy::DBusSystemdProxy()
 {
     this->systemd_proxy_ = Gio::DBus::Proxy::create_for_bus_sync(Gio::DBus::BUS_TYPE_SYSTEM,
@@ -126,13 +141,16 @@ Glib::VariantContainerBase DBusSystemdProxy::call_manager_method(const std::stri
     KLOG_PROFILE("method_name: %s.", method_name.c_str());
 
     Glib::VariantContainerBase retval;
-    try
     {
-        retval = this->systemd_proxy_->call_sync(method_name, parameters);
-    }
-    catch (const Glib::Error &e)
-    {
-        KLOG_WARNING("Failed to call systemd method %s: %s", method_name.c_str(), e.what().c_str());
+        std::unique_lock<std::mutex> lck(this->mutex_);
+        try
+        {
+            retval = this->systemd_proxy_->call_sync(method_name, parameters);
+        }
+        catch (const Glib::Error &e)
+        {
+            KLOG_WARNING("Failed to call systemd method %s: %s", method_name.c_str(), e.what().c_str());
+        }
     }
     return retval;
 }

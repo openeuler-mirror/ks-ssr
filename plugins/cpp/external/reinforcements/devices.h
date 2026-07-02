@@ -8,14 +8,12 @@
 #pragma once
 
 #include "lib/base/base.h"
-#include "reinforcement-i.h"
 #include "lib/config/config-plain.h"
 
 namespace Kiran
 {
 namespace External
 {
-
 class DeviceSwitch : public SSRReinforcementInterface
 {
 public:
