@@ -30,13 +30,20 @@ public:
     explicit EcryptFS(QObject *parent = nullptr);
     virtual ~EcryptFS(){};
 
-    // 通过口令生成密钥 ，返回passphrase
-    QString generate_passphrase(const QString &key);
+    // 添加口令 ，返回ecryptfs_sig
+    QString add_passphrase(const QString &passphrase);
     // 解密 umount
     void encrypt(const QString &umountPath);
-    // 解密：mount key:口令 passphrase：密钥
-    bool dcrypt(const QString &mountObjectPath, const QString &mountPath, const QString &key, const QString &passphrase);
-    void mkdirBoxDir(const QString &path);
+    /*
+     * 解密：mount
+     * @passphrase:口令
+     * @sig：指定装载范围的身份验证令牌的签名，在执行装载之前，身份验证令牌必须位于内核密钥环中。
+     */
+    bool decrypt(const QString &mountObjectPath,
+                 const QString &mountPath,
+                 const QString &passphrase,
+                 const QString &sig);
+    void mkdirBoxDir(const QString &path, const QString &userName);
     void rmBoxDir(const QString &path);
 
 public Q_SLOTS:
@@ -44,8 +51,8 @@ public Q_SLOTS:
 
 private:
     QProcess *m_process;
-    QString m_processOutput = "";
-    QString m_errorOutput = "";
+    QString m_processOutput;
+    QString m_errorOutput;
 };
 }  // namespace KS
 #endif  // ECRYPTFS_H

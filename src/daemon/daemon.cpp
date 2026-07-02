@@ -12,25 +12,25 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#include "src/daemon/daemon-manager.h"
+#include "src/daemon/daemon.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include "include/sc-i.h"
 
 namespace KS
 {
-DaemonManager *DaemonManager::m_instance = nullptr;
+Daemon *Daemon::m_instance = nullptr;
 
-DaemonManager::DaemonManager() : QObject(nullptr)
+Daemon::Daemon() : QObject(nullptr)
 {
     boxManger = new BoxManager(this);
 }
 
-DaemonManager::~DaemonManager()
+Daemon::~Daemon()
 {
 }
 
-void DaemonManager::init()
+void Daemon::init()
 {
     QDBusConnection connection = QDBusConnection::systemBus();
 

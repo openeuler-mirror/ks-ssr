@@ -13,14 +13,12 @@ target_include_directories(${TARGET_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_BINARY_DIR}
-    ${KLOG_QT5_INCLUDE_DIRS}
-    ${JSONCPP_INCLUDE_DIRS})
+    ${KLOG_QT5_INCLUDE_DIRS})
 
 target_include_directories(${TARGET_NAME} PRIVATE ${CRYPTOPP_INCLUDE_DIRS})
 
 target_link_libraries(${TARGET_NAME} PUBLIC
     Qt5::Core
-    ${KLOG_QT5_LIBRARIES}
-    ${JSONCPP_LIBRARIES})
+    ${KLOG_QT5_LIBRARIES})
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${CRYPTOPP_LIBRARIES})

@@ -69,7 +69,7 @@ private:
 
     // 解锁时需输入密码
     QWidget *buildMountInputPasswdPage();
-    QWidget *buildNotifyPage(const QString notify);
+    QWidget *buildNotifyPage(const QString &notify);
 
 private slots:
     void modifyPasswordAccepted();

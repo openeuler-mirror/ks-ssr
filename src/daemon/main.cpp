@@ -21,7 +21,7 @@
 #include <QtGlobal>
 #include <iostream>
 #include "config.h"
-#include "src/daemon/daemon-manager.h"
+#include "src/daemon/daemon.h"
 
 using namespace KS;
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     parser.process(app);
 
-    KS::DaemonManager::globalInit();
+    KS::Daemon::globalInit();
 
     auto retval = app.exec();
 

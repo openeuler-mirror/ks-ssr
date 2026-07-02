@@ -12,29 +12,29 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
 
-#ifndef DAEMONMANAGER_H
-#define DAEMONMANAGER_H
+#ifndef DAEMON_H
+#define DAEMON_H
 
 #include <QObject>
 #include "src/daemon/box/box-manager.h"
 
 namespace KS
 {
-class DaemonManager : public QObject
+class Daemon : public QObject
 {
     Q_OBJECT
 public:
-    DaemonManager();
-    virtual ~DaemonManager();
+    Daemon();
+    virtual ~Daemon();
 
-    static DaemonManager *getInstance()
+    static Daemon *getInstance()
     {
         return m_instance;
     };
 
     static void globalInit()
     {
-        m_instance = new DaemonManager();
+        m_instance = new Daemon();
         m_instance->init();
     };
 
@@ -46,8 +46,8 @@ private:
     void init();
 
 private:
-    static DaemonManager *m_instance;
+    static Daemon *m_instance;
 };
 }  // namespace KS
 
-#endif  // DAEMONMANAGER_H
+#endif  // DAEMON_H

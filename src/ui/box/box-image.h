@@ -20,7 +20,7 @@ class BoxImage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BoxImage(QWidget *parent = nullptr, QString imagePath = "");
+    explicit BoxImage(QWidget *parent = nullptr, const QString &imagePath = "");
 
 protected:
     void paintEvent(QPaintEvent *event);

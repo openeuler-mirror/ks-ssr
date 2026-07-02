@@ -35,7 +35,7 @@ QString ModifyPassword::getNewPassword()
     return this->m_ui->m_newPassword->text();
 }
 
-void ModifyPassword::setBoxName(const QString boxName)
+void ModifyPassword::setBoxName(const QString &boxName)
 {
     this->m_ui->m_boxName->setText(boxName);
 }
@@ -44,10 +44,11 @@ void ModifyPassword::init()
 {
     this->setWindowModality(Qt::ApplicationModal);
 
-    connect(this->m_ui->pushButton_2, &QPushButton::clicked, this, [this] {
-        this->hide();
-        emit rejected();
-    });
+    connect(this->m_ui->pushButton_2, &QPushButton::clicked, this, [this]
+            {
+                this->hide();
+                emit rejected();
+            });
 
     connect(this->m_ui->pushButton, &QPushButton::clicked, this, &ModifyPassword::onOkClicked);
 }

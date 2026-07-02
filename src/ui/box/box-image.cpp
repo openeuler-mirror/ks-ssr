@@ -14,7 +14,7 @@
 #include "box-image.h"
 #include <QPainter>
 
-BoxImage::BoxImage(QWidget *parent, QString imagePath) : QWidget(parent)
+BoxImage::BoxImage(QWidget *parent, const QString &imagePath) : QWidget(parent)
 {
     this->setWindowFlag(Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
