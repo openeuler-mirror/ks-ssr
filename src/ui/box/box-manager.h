@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * kiran-session-manager is licensed under Mulan PSL v2.
+ * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -46,7 +46,7 @@ private:
     void addBox(Box *box);
     void removeBox(const QString &boxUID);
 
-private Q_SLOTS:
+private slots:
     void boxAdded(const QString &boxUID);
     void boxDeleted(const QString &boxUID);
     void boxChanged(const QString &boxUID);
