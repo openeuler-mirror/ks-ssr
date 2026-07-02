@@ -104,8 +104,8 @@ class WeakEncryption(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
-        if not self.service.is_active():
-            return (False,'sshd.services is not running! \t\t')
+        # if not self.service.is_active():
+        #     return (False,'sshd.services is not running! \t\t')
         args = json.loads(args_json)
         ciphers = self.conf.get_value("Ciphers").split(",")
         # 过滤空元素
