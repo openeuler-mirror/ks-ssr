@@ -33,6 +33,13 @@ public:
 
     QString getCurrentPassword();
     QString getNewPassword();
+    void setBoxName(const QString boxName);
+
+private:
+    void init();
+
+private Q_SLOTS:
+    void onOkClicked();
 
 Q_SIGNALS:
     void accepted();
