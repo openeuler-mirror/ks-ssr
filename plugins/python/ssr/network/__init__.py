@@ -5,6 +5,16 @@ reinforcements = (
         'class': 'Switch'
     },
     {
+        'name': 'network-firewalld-icmp-timestamp',
+        'module': 'firewalld',
+        'class': 'IcmpTimestamp'
+    },
+    {
+        'name': 'network-firewalld-icmp-traceroute',
+        'module': 'firewalld',
+        'class': 'Traceroute'
+    },
+    {
         'name': 'network-sysctl-icmp-redirect',
         'module': 'sysctl',
         'class': 'IcmpRedirect'
@@ -13,11 +23,6 @@ reinforcements = (
         'name': 'network-sysctl-syn-flood',
         'module': 'sysctl',
         'class': 'SynFlood'
-    },
-    {
-        'name': 'network-firewalld-icmp-timestamp',
-        'module': 'firewalld',
-        'class': 'IcmpTimestamp'
     },
     {
         'name': 'network-sysctl-source-route',

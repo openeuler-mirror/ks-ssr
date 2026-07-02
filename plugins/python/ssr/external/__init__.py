@@ -60,6 +60,11 @@ reinforcements = (
         'class': 'SuWheel'
     },
     {
+        'name': 'external-pam-sudo-limits',
+        'module': 'pam',
+        'class': 'SudoLimits'
+    },
+    {
         'name': 'external-hosts-login-limit',
         'module': 'hosts',
         'class': 'RemoteLogin'
