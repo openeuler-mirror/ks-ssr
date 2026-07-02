@@ -56,12 +56,9 @@ class Accounts:
     def is_null_pw_human(self, uid, username, shell):
         if self.is_nologin_shell(shell):
             return False
-
-        MINIMUM_UID = ssr.utils.subprocess_has_output(GET_MINIMUM_UID)
-        MAXIMUM_UID = ssr.utils.subprocess_has_output(GET_MAXIMUM_UID)
-        ssr.log.debug("MINIMUM_UID = ", MINIMUM_UID, "MAXIMUM_UID = ", MAXIMUM_UID)
-
-        return (uid < MINIMUM_UID) or (uid > MAXIMUM_UID)
+        if BUILTIN_IGNORE_USRES.__contains__(username):
+            return False
+        return uid >= MINIMUM_UID
 
     def is_null_password(self, username):
         spwdent = spwd.getspnam(username)
