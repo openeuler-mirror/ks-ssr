@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-08 17:58+0800\n"
+"POT-Creation-Date: 2021-11-11 09:43+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,68 +81,82 @@ msgstr "输出文件路径。"
 msgid "Command 'kiran-ssr-config' can only be run as root!"
 msgstr "命令 'kiran-ssr-config' 只能在root用户下运行！"
 
-#: ../src/tool/config/cmd-parser.cpp:19
+#: ../src/tool/config/cmd-parser.cpp:21
 msgid "FILE"
 msgstr "文件"
 
-#: ../src/tool/config/cmd-parser.cpp:26
+#: ../src/tool/config/cmd-parser.cpp:28
 msgid "The configuration file type"
 msgstr "配置文件类型"
 
-#: ../src/tool/config/cmd-parser.cpp:27
-msgid "Specify the key to get value"
-msgstr "指定用于获取值的键"
-
-#: ../src/tool/config/cmd-parser.cpp:28
-msgid "Specify the key to set value"
-msgstr "指定用于设置值的键"
-
 #: ../src/tool/config/cmd-parser.cpp:29
+msgid "Specify the key or rule to get value"
+msgstr "指定键或者规则用于获取对应的值"
+
+#: ../src/tool/config/cmd-parser.cpp:30
+msgid "Specify the key or rule to set value"
+msgstr "指定键或者规则用于设置对应的值"
+
+#: ../src/tool/config/cmd-parser.cpp:31
+msgid "Specify the key or rule to delete record"
+msgstr "指定键或者规则用于删除对应的记录"
+
+#: ../src/tool/config/cmd-parser.cpp:32
 msgid "Specify the set value"
 msgstr "指定设置的值"
 
-#: ../src/tool/config/cmd-parser.cpp:30
+#: ../src/tool/config/cmd-parser.cpp:33
 msgid ""
 "Specify regular expression to match the line. If many lines is matched, then "
 "the first matched line is used only"
 msgstr ""
 "指定一个正则表达式用于匹配行。如果多行被匹配，则值由第一个被匹配的行被使用"
 
-#: ../src/tool/config/cmd-parser.cpp:31
-msgid "Specify regular expression to split key-value pairs"
-msgstr "指定查找时用于分割键值对的正则表达式"
+#: ../src/tool/config/cmd-parser.cpp:34
+msgid "Specify regular expression to split line"
+msgstr "指定查找时用于划分列的正则表达式"
 
-#: ../src/tool/config/cmd-parser.cpp:32
-msgid "Specify string to join key-value pairs"
-msgstr "指定用于拼接键值对的字符串"
+#: ../src/tool/config/cmd-parser.cpp:35
+msgid "Specify string for joining fields to line"
+msgstr "指定用于拼接列的字符串"
 
-#: ../src/tool/config/cmd-parser.cpp:48
+#: ../src/tool/config/cmd-parser.cpp:51
 msgid "Failed to parse command arguments"
 msgstr "解析命令行参数失败"
 
-#: ../src/tool/config/cmd-parser.cpp:54
+#: ../src/tool/config/cmd-parser.cpp:57
 msgid "The file path is not specified"
 msgstr "文件路径未指定"
 
-#: ../src/tool/config/cmd-parser.cpp:61
+#: ../src/tool/config/cmd-parser.cpp:64
 msgid "The file {0} doesn't exist"
 msgstr "文件{0}不存在"
 
-#: ../src/tool/config/cmd-parser.cpp:67
+#: ../src/tool/config/cmd-parser.cpp:70
 msgid "No specify file type"
 msgstr "文件类型未指定"
 
-#: ../src/tool/config/cmd-parser.cpp:78
+#: ../src/tool/config/cmd-parser.cpp:83
 msgid "Unknown file type"
 msgstr "未知文件类型"
 
-#: ../src/tool/config/cmd-parser.cpp:93 ../src/tool/config/cmd-parser.cpp:122
+#: ../src/tool/config/cmd-parser.cpp:98 ../src/tool/config/cmd-parser.cpp:138
+#: ../src/tool/config/cmd-parser.cpp:187
 msgid "Failed to get value for {0}"
 msgstr "获取键{0}的值失败"
 
-#: ../src/tool/config/cmd-parser.cpp:105 ../src/tool/config/cmd-parser.cpp:136
+#: ../src/tool/config/cmd-parser.cpp:110 ../src/tool/config/cmd-parser.cpp:152
+#: ../src/tool/config/cmd-parser.cpp:200
 msgid "Failed to set value for {0}"
-msgstr "获取键{0}的值失败"
+msgstr "设置匹配{0}键的值失败"
+
+#: ../src/tool/config/cmd-parser.cpp:120
+msgid "Failed to delete value for {0}"
+msgstr "删除匹配{0}键的值失败"
+
+#: ../src/tool/config/cmd-parser.cpp:211
+msgid "Failed to delete record for rule {0}"
+msgstr "删除匹配{0}规则的记录失败"
 
 #. namespace Config
 #. namespace Kiran
@@ -191,6 +205,7 @@ msgid "Allow ICMP timestamp query"
 msgstr "允许ICMP时间戳请求"
 
 #: ../data/ssr-system-rs.xml.in.h:8
+#: ../plugins/python/ssr-plugin-config.xml.in.h:2
 msgid "Turn off sendmail service"
 msgstr "关闭系统审计服务"
 
@@ -211,8 +226,111 @@ msgid "Log files can only be appended"
 msgstr "日志文件仅能被添加"
 
 #: ../data/ssr-system-rs.xml.in.h:13
+msgid "Allow to use CD-ROM device"
+msgstr "允许使用光驱设备"
+
+#: ../data/ssr-system-rs.xml.in.h:14
+msgid "Allow to use USB device"
+msgstr "允许使用USB设备"
+
+#: ../data/ssr-system-rs.xml.in.h:15
+msgid "Allow to use serial port device"
+msgstr "允许使用串口设备"
+
+#: ../data/ssr-system-rs.xml.in.h:16
+#: ../plugins/python/ssr-plugin-external.xml.in.h:9
+msgid "Restrict system independent user login"
+msgstr "限制系统无关用户登陆"
+
+#: ../data/ssr-system-rs.xml.in.h:17
+msgid "Allow account retention"
+msgstr "允许保留账号"
+
+#: ../data/ssr-system-rs.xml.in.h:18
+msgid "Disable null password user present"
+msgstr "禁止空密码用户出现"
+
+#: ../data/ssr-system-rs.xml.in.h:19
+#: ../plugins/python/ssr-plugin-external.xml.in.h:12
 msgid "Disable radio network"
 msgstr ""
+
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:1
+msgid "audit settings"
+msgstr "审计设置"
+
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:2
+msgid "Auditd service"
+msgstr "审计服务"
+
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:3
+msgid ""
+"Write audit records to the log file. This includes recording system calls "
+"and file access. Administrator can check these logs to determine whether "
+"there are security vulnerabilities."
+msgstr ""
+"将审计记录写入日志文件。包括记录系统调用和文件访问。管理员可以检查这些日志，"
+"确定是否存在安全漏洞。"
+
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:4
+msgid "Log save cycle"
+msgstr "日志保存周期"
+
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:5
+msgid "Log files are rotated before being removed"
+msgstr "日志文件在被删除之前进行滚动"
+
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:6
+msgid "Log file permissions"
+msgstr "日志文件权限"
+
+#: ../plugins/python/ssr-plugin-audit.xml.in.h:7
+msgid "Avoid changes to log files at will"
+msgstr "避免随意改动日志文件"
+
+#: ../plugins/python/ssr-plugin-config.xml.in.h:1
+msgid "config settings"
+msgstr "配置设置"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:1
+msgid "external settings"
+msgstr "接入设置"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:2
+msgid "CD-ROM device restrictions"
+msgstr "光驱设备限制"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:3
+msgid "Restrict read and write operations of CD-ROM devices"
+msgstr "限制光驱设备的读写操作"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:4
+msgid "USB storage device restrictions"
+msgstr "USB存储设备限制"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:5
+msgid "Restrict read and write operations of USB storage devices"
+msgstr "限制USB存储设备的读写操作"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:6
+msgid "Serial port device restrictions"
+msgstr "串口设备限制"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:7
+msgid "Restrict read and write operations of Serial port devices"
+msgstr "限制串口设备的读写操作"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:8
+msgid "User login limit"
+msgstr "用户登陆限制"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:10
+msgid "Null password detection"
+msgstr "检测空密码"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:11
+msgid "Avoid null password user in the system"
+msgstr "避免系统中存在空密码用户"
 
 #: ../plugins/python/ssr-plugin-network.xml.in.h:1
 msgid "network settings"
@@ -258,36 +376,3 @@ msgstr "ICMP时间戳请求"
 msgid ""
 "Prevent attackers from attacking some time authentication based protocols"
 msgstr "防止攻击者攻击一些基于时间认证的协议"
-
-#: ../plugins/python/ssr-plugin-audit.xml.in.h:1
-msgid "audit settings"
-msgstr "审计设置"
-
-#: ../plugins/python/ssr-plugin-audit.xml.in.h:2
-msgid "Auditd service"
-msgstr "审计服务"
-
-#: ../plugins/python/ssr-plugin-audit.xml.in.h:3
-msgid ""
-"Write audit records to the log file. This includes recording system calls "
-"and file access. Administrator can check these logs to determine whether "
-"there are security vulnerabilities."
-msgstr ""
-"将审计记录写入日志文件。包括记录系统调用和文件访问。管理员可以检查这些日志，"
-"确定是否存在安全漏洞。"
-
-#: ../plugins/python/ssr-plugin-audit.xml.in.h:4
-msgid "Log save cycle"
-msgstr "日志保存周期"
-
-#: ../plugins/python/ssr-plugin-audit.xml.in.h:5
-msgid "Log files are rotated before being removed"
-msgstr "日志文件在被删除之前进行滚动"
-
-#: ../plugins/python/ssr-plugin-audit.xml.in.h:6
-msgid "Log file permissions"
-msgstr "日志文件权限"
-
-#: ../plugins/python/ssr-plugin-audit.xml.in.h:7
-msgid "Avoid changes to log files at will"
-msgstr "避免随意改动日志文件"

@@ -6,6 +6,31 @@
     <language_type>python</language_type>
     <available>true</available>
     <reinforcement>
+        <name>external-udev-cdrom</name>
+        <_label>CD-ROM device restrictions</_label>
+        <_description>Restrict read and write operations of CD-ROM devices</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>external-udev-usb</name>
+        <_label>USB storage device restrictions</_label>
+        <_description>Restrict read and write operations of USB storage devices</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>external-udev-ttys</name>
+        <_label>Serial port device restrictions</_label>
+        <_description>Restrict read and write operations of Serial port devices</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>external-accounts-login-limit</name>
+        <_label>User login limit</_label>
+        <_description>Restrict system independent user login</_description>
+    </reinforcement>
+    <reinforcement>
+        <name>external-accounts-null-password</name>
+        <_label>Null password detection</_label>
+        <_description>Avoid null password user in the system</_description>
+    </reinforcement>
+    <reinforcement>
         <name>external-radio-switch</name>
         <_label>Disable radio network</_label>
     </reinforcement>

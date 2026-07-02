@@ -168,6 +168,89 @@
         </reinforcement>
         <!-- 接入类 -->
         <reinforcement>
+            <name>external-udev-cdrom</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow to use CD-ROM device</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-udev-usb</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow to use USB device</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-udev-ttys</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow to use serial port device</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-accounts-login-limit</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Restrict system independent user login</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>permission-users</name>
+                <value>""</value>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow account retention</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-accounts-null-password</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Disable null password user present</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
             <name>external-radio-switch</name>
             <arg>
                 <name>enabled</name>

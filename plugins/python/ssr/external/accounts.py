@@ -1,0 +1,118 @@
+#--coding:utf8 --
+
+try:
+    import configparser
+except:
+    import ConfigParser as configparser
+
+import json
+import os
+import pwd
+import spwd
+import ssr.vars
+import ssr.utils
+
+MINIMUM_UID = 1000
+BUILTIN_IGNORE_USRES = ("bin", "daemon", "adm", "lp", "sync", "shutdown", "halt", "mail", "news", "uucp", "nobody", "postgres", "pvm", "rpm",
+                        "nfsnobody", "pcap", "mysql", "ftp", "games", "man", "at", "gdm", "gnome-initial-setup")
+BUILTIN_PERMISSION_USERS = ("root")
+
+ACCOUNTS_INI_FILEPATH = ssr.vars.SSR_PLUGIN_PYTHON_ROOT_DIR + "/ssr/external/accounts.ini"
+ACCOUNTS_GROUP_LOGIN_LIMIT = "LoginLimit"
+# LPK: Accounts LoginLimit Key
+ALK_MODE_PERMISSION_USERS = "PermissionUsers"
+
+# 开启无关账号设置为不可登陆(默认保留root账号、三权账号、普通账号)
+LOGIN_LIMIT_ARG_ENABLED = "enabled"
+# 用户自定义允许登陆账号列表
+LOGIN_LIMIT_ARG_PERMISSION_USERS = "permission-users"
+
+# 禁止存在空密码账号
+NULL_PASSWORD_ARG_ENABLED = "enabled"
+
+
+class Accounts:
+    def is_nologin_shell(self, shell):
+        basename = os.path.basename(shell)
+        if len(shell) == 0 or basename == "nologin" or basename == "false":
+            return True
+        return False
+
+    def is_human(self, uid, username, shell):
+        if BUILTIN_IGNORE_USRES.__contains__(username):
+            return False
+        if self.is_nologin_shell(shell):
+            return False
+        return uid >= MINIMUM_UID
+
+    def is_null_password(self, username):
+        spwdent = spwd.getspnam(username)
+        # 兼容python2和python3
+        try:
+            return (spwdent.sp_pwd == "" or spwdent.sp_pwd == "!!")
+        except:
+            return (spwdent.sp_pwdp == "" or spwdent.sp_pwdp == "!!")
+
+
+class LoginLimit(Accounts):
+    def __init__(self):
+        self.conf = configparser.ConfigParser()
+        self.conf.read(ACCOUNTS_INI_FILEPATH)
+
+    def get(self):
+        retdata = dict()
+        retdata[LOGIN_LIMIT_ARG_ENABLED] = True
+        retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS] = self.conf.get(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS)
+        permission_users = retdata[LOGIN_LIMIT_ARG_PERMISSION_USERS].split(";")
+
+        for pwdent in pwd.getpwall():
+            if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell) or BUILTIN_PERMISSION_USERS.__contains__(pwdent.pw_name)
+                    or permission_users.__contains__(pwdent.pw_name)):
+                continue
+            if not self.is_nologin_shell(pwdent.pw_shell):
+                retdata[LOGIN_LIMIT_ARG_ENABLED] = False
+                break
+
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+
+        self.conf.set(ACCOUNTS_GROUP_LOGIN_LIMIT, ALK_MODE_PERMISSION_USERS, args[LOGIN_LIMIT_ARG_PERMISSION_USERS])
+        permission_users = args[LOGIN_LIMIT_ARG_PERMISSION_USERS].split(";")
+
+        if args[LOGIN_LIMIT_ARG_ENABLED]:
+            for pwdent in pwd.getpwall():
+                if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell) or BUILTIN_PERMISSION_USERS.__contains__(pwdent.pw_name)
+                        or permission_users.__contains__(pwdent.pw_name)):
+                    continue
+                if not self.is_nologin_shell(pwdent.pw_shell):
+                    ssr.utils.subprocess_not_output("usermod -s /sbin/nologin {0}".format(pwdent.pw_name))
+
+        return (True, '')
+
+
+class NullPassword(Accounts):
+    def get(self):
+        retdata = dict()
+        retdata[NULL_PASSWORD_ARG_ENABLED] = True
+
+        for pwdent in pwd.getpwall():
+            if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)):
+                continue
+            if self.is_null_password(pwdent.pw_name):
+                retdata[NULL_PASSWORD_ARG_ENABLED] = False
+                break
+
+        return (True, json.dumps(retdata))
+
+    def set(self, args_json):
+        args = json.loads(args_json)
+
+        if args[NULL_PASSWORD_ARG_ENABLED]:
+            for pwdent in pwd.getpwall():
+                if (not self.is_human(pwdent.pw_uid, pwdent.pw_name, pwdent.pw_shell)):
+                    continue
+                if self.is_null_password(pwdent.pw_name) and pwdent.pw_uid != 0:
+                    ssr.utils.subprocess_not_output("userdel {0}".format(pwdent.pw_name))
+        return (True, '')
