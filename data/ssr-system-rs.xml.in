@@ -102,6 +102,21 @@
                 </layout>
             </arg>
             <arg>
+                <name>input-ports-connect-nums</name>
+                <value>0</value>
+                <value_limits>-1</value_limits>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>0</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Limit input port maximum connections(0 means unlimited)</_label>
+                </layout>
+            </arg>
+            <arg>
                 <name>allow-network-segment-output</name>
                 <value>""</value>
                 <value_limits>(((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1}))){1}(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1})))*</value_limits>

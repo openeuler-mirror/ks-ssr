@@ -71,7 +71,7 @@ class Firewall:
             self.iptables_systemd.start()
             self.iptables_systemd.service_save()
 
-    def close_iptables(self):
+    def open_firewalld(self):
         if self.iptables_systemd.exist():
             if len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_PORTS)) == 0:
                 ssr.utils.subprocess_not_output(CLOSE_IPTABLES_PORTS)
@@ -85,6 +85,16 @@ class Firewall:
             self.firewalld_systemd.unmask()
             self.firewalld_systemd.enable()
             self.firewalld_systemd.start()
+
+    def close_iptables(self):
+        if self.iptables_systemd.exist():
+            if len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_PORTS)) == 0:
+                ssr.utils.subprocess_not_output(CLOSE_IPTABLES_PORTS)
+            if self.iptables_systemd.stop():
+                return (False, 'Unable to stop iptables service! \t\t')
+            self.iptables_systemd.disable()
+            self.iptables_systemd.service_save()
+            # self.iptables_systemd.mask()
 
     def set_iptables(self,iptables_set_cmd,iptables_check_cmd,set_name,set_type):
         set_cmd = '{0}  {1}  {2}'.format(iptables_set_cmd ,set_name ,set_type)
@@ -109,8 +119,9 @@ class Switch(Firewall):
         retdata['threat-port'] = len(ssr.utils.subprocess_has_output_ignore_error_handling(CHECK_IPTABLES_INPUT_TCP + " --dport 21 -j DROP")) == 0
         # 设置tcp或udp都符合
         retdata['tcp-udp'] = True
-        # 是否清空规则由用户决定，默认为否，服务启动则符合
+        # 是否清空规则与最大连接数由用户决定，默认为否，服务启动则符合
         retdata['clear-configuration'] = not self.iptables_systemd.is_active()
+        retdata['input-ports-connect-nums'] = 0
         
         return (True, json.dumps(retdata))
 
@@ -127,6 +138,11 @@ class Switch(Firewall):
             return (False, e)
         
         if self.iptables_systemd.is_active():
+            if args['input-ports-connect-nums']  == 0:
+                ssr.utils.subprocess_not_output(CLEAR_IPTABLES_INPUT)
+            else:
+                self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j DROP")
+ 
             # Disable FTP, SMTP and other ports that may threaten the system
             if args['threat-port']:
                 for port in IPTABLES_LIMITS_PORTS.split(","):
@@ -173,7 +189,7 @@ class Switch(Firewall):
                     else:
                         self.set_iptables(ADD_IPTABLES_INPUT_UDP ,CHECK_IPTABLES_INPUT_UDP ,"--dport " + port ,"-j DROP")
 
-            # 允许网段 output
+           # 允许网段 output
             if len(args['allow-network-segment-output']) != 0:
                 for network_segment in args['allow-network-segment-output'].split(","):
                     if args['tcp-udp']:
