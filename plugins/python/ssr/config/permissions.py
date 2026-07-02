@@ -12,9 +12,9 @@ import json
 import ssr.vars
 
 PERMISSIONS_INI_FILEPATH = ssr.vars.SSR_PLUGIN_PYTHON_ROOT_DIR + "/ssr/config/permissions.ini"
-GROUP_PERMISSIONS = "Permissions"
-
-MODE_FILE_LIST = "ModeFileList"
+FILE_GROUP_PERMISSIONS = "Permissions"
+# FPK: File Permissions Key
+FPK_MODE_FILE_LIST = "ModeFileList"
 
 EXCLUDE_MODE = stat.S_IWGRP | stat.S_IXGRP | stat.S_IWOTH | stat.S_IXOTH
 
@@ -30,7 +30,7 @@ class PermissionSetting:
         self.conf = configparser.ConfigParser()
         self.conf.read(PERMISSIONS_INI_FILEPATH)
         try:
-            self.mode_filelist = self.conf.get(LOGFILE_GROUP_PERMISSIONS, LPK_MODE_FILE_LIST).split(';')
+            self.mode_filelist = self.conf.get(FILE_GROUP_PERMISSIONS, FPK_MODE_FILE_LIST).split(';')
         except Exception as e:
             self.mode_filelist = list()
             ssr.log.debug(str(e))
@@ -58,6 +58,7 @@ class PermissionSetting:
 
         if args[PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT]:
             for mode_file in self.mode_filelist:
+                ssr.log.debug(str(mode_file))
                 if not os.access(mode_file, os.F_OK):
                     continue
                 mode = os.stat(mode_file).st_mode

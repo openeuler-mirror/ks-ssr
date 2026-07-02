@@ -102,7 +102,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Turn off sendmail service</_label>
+                    <_label>Turn on sendmail service</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -167,20 +167,6 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Password error times</_label>
-                </layout>
-            </arg>
-            <arg>
-                <name>lock_time</name>
-                <value>300</value>
-                <rule>
-                    <type>RANGE</type>
-                    <value_range>
-                        <min_value>300</min_value>
-                    </value_range>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Lock time</_label>
                 </layout>
             </arg>
             <arg>
@@ -331,11 +317,11 @@
             </arg>
             <arg>
                 <name>dcredit</name>
-                <value>-1</value>
+                <value>-4</value>
                 <rule>
                     <type>RANGE</type>
                     <value_range>
-                        <max_value>-1</max_value>
+                        <max_value>-4</max_value>
                     </value_range>
                 </rule>
                 <layout>
@@ -372,11 +358,11 @@
                 </layout>
             </arg>
             <arg>
-                <name>reject_username</name>
-                <value>true</value>
+                <name>usercheck</name>
+                <value>false</value>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
+                    <value_fixed>false</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
@@ -396,7 +382,7 @@
                     </value_range>
                 </rule>
                 <layout>
-                    <widget_type>DEFAULT</widget_type>
+                    <widget_type>TEXT</widget_type>
                     <_label>Max stack size</_label>
                 </layout>
             </arg>
@@ -410,7 +396,7 @@
                     </value_range>
                 </rule>
                 <layout>
-                    <widget_type>DEFAULT</widget_type>
+                    <widget_type>TEXT</widget_type>
                     <_label>Max resident set size</_label>
                 </layout>
             </arg>
@@ -474,7 +460,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>System log save cycle</_label>
+                    <_label>System log save cycle（weekly）</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -517,7 +503,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow to use CD-ROM device (Effective after restart)</_label>
+                    <_label>Allow to use CD-ROM device</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -532,7 +518,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow to use USB device (Effective after restart)</_label>
+                    <_label>Allow to use USB device</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -547,7 +533,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow to use serial port device (Effective after restart)</_label>
+                    <_label>Allow to use serial port device</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -704,10 +690,10 @@
             <name>external-radio-switch</name>
             <arg>
                 <name>enabled</name>
-                <value>false</value>
+                <value>true</value>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
+                    <value_fixed>true</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>

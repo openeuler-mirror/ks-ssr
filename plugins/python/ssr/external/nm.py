@@ -29,15 +29,15 @@ class NMClient:
 class Switch(NMClient):
     def get(self):
         retdata = dict()
-        retdata['enabled'] = (self.wifi_is_enabled() or self.wwan_is_enabled())
+        retdata['enabled'] = not (self.wifi_is_enabled() or self.wwan_is_enabled())
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
 
         if args['enabled']:
-            self.enable_radio()
-        else:
             self.disable_radio()
+        else:
+            self.enable_radio()
 
         return (True, '')
