@@ -34,6 +34,30 @@ class Proxy:
         if not self.is_active():
             return
         self.__call_noresult('kill')
+    
+    def mask(self):
+        try:
+            output = self.__call_result('mask')
+            ssr.log.debug(output)
+        except Exception as e:
+            ssr.log.debug(e)
+            return (False,str(e))
+
+    def unmask(self):
+        try:
+            output = self.__call_result('unmask')
+            ssr.log.debug(output)
+        except Exception as e:
+            ssr.log.debug(e)
+            return (False,str(e))
+
+    def service_save(self):
+        try:
+            output = self.__call_service_result('save')
+            ssr.log.debug(output)
+        except Exception as e:
+            ssr.log.debug(e)
+            return (False,str(e))
 
     def service_stop(self):
         output = self.__call_service_result('stop')

@@ -23,13 +23,122 @@
                 </layout>
             </arg>
             <arg>
+                <name>tcp-udp</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Whether to set TCP (otherwise UDP)</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>threat-port</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Disable FTP, SMTP and other ports that may threaten the system</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>clear-configuration</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>clear iptables configuration</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>allow-network-segment</name>
+                <value>""</value>
+                <value_limits>(((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1}))){1}(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1})))*</value_limits>
+                <input_example>192.168.163.1/24</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>allow network segment (Split with comma)</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>disable-network-segment</name>
+                <value>""</value>
+                <value_limits>(((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1}))){1}(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1})))*</value_limits>
+                <input_example>192.168.163.1/24</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>disable network segment (Split with comma)</_label>
+                </layout>
+            </arg>
+            <arg>
                 <name>ports</name>
                 <value>""</value>
-                <value_limits>(((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))((\/tcp)|(\/udp))){1}(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))((\/tcp)|(\/udp)))*</value_limits>
-                <input_example>1~60999/(tcp|udp)</input_example>
+                <value_limits>(((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))){1}(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3})))*</value_limits>
+                <input_example>1~60999</input_example>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Opened ports (Split with semicolon)</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>disable-ports</name>
+                <value>""</value>
+                <value_limits>(((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))){1}(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3})))*</value_limits>
+                <input_example>1~60999</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>disable ports (Split with semicolon)</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>allow-network-segment-output</name>
+                <value>""</value>
+                <value_limits>(((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1}))){1}(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1})))*</value_limits>
+                <input_example>192.168.163.1/24</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>allow output network segment (Split with comma)</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>disable-network-segment-output</name>
+                <value>""</value>
+                <value_limits>(((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1}))){1}(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2}))(\/((3[0-2])|[0-2]?\d{1})))*</value_limits>
+                <input_example>192.168.163.1/24</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>disable output network segment (Split with comma)</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>ports-output</name>
+                <value>""</value>
+                <value_limits>(((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))){1}(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3})))*</value_limits>
+                <input_example>1~60999</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Opened output ports (Split with semicolon)</_label>
+                </layout>
+            </arg>
+            <arg>
+                <name>disable-ports-output</name>
+                <value>""</value>
+                <value_limits>(((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3}))){1}(;((60[0-9]{3})|([1-5][0-9]{4})|([1-9][0-9]{0,3})))*</value_limits>
+                <input_example>1~60999</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>disable output ports (Split with semicolon)</_label>
                 </layout>
             </arg>
         </reinforcement>
