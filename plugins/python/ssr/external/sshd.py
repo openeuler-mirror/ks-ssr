@@ -120,8 +120,10 @@ class WeakEncryption(SSHD):
             if len(ciphers) == 0:
                 self.conf.del_record("Ciphers")
             else:
-                # self.conf.set_all_value("Ciphers", ','.join(ciphers))
-                self.conf_ciphers.set_line("Ciphers " + ",".join(ciphers), "#\\s+no\\s+default\\s+banner")
+                self.conf.set_all_value("Ciphers", ','.join(ciphers))
+                ssr.log.debug("Ciphers " + ",".join(ciphers))
+                # self.conf.del_record("Ciphers")
+                # self.conf_ciphers.set_line("Ciphers " + ",".join(ciphers), "#\\s+no\\s+default\\s+banner\\s+path")
             # 重启服务生效
             self.service.reload()
         return (True, '')

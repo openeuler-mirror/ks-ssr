@@ -75,9 +75,9 @@ class Accounts:
         spwdent = spwd.getspnam(username)
         # 兼容python2和python3
         try:
-            return (spwdent.sp_pwd == "" or spwdent.sp_pwd == "!!")
+            return (spwdent.sp_pwd == "" or spwdent.sp_pwd == "!!" or spwdent.sp_pwd == "!")
         except:
-            return (spwdent.sp_pwdp == "" or spwdent.sp_pwdp == "!!")
+            return (spwdent.sp_pwdp == "" or spwdent.sp_pwdp == "!!" or spwdent.sp_pwdp == "!")
 
     # def get_user_name(self, permission_users):
     #     output = ssr.utils.subprocess_has_output(GET_USER_NAME_CMD)
