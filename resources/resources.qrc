@@ -8,6 +8,7 @@
         <file alias="box-manager">images/box-manager.png</file>
         <file alias="box-big">images/box-big.png</file>
         <file alias="box-locked">images/box-locked.png</file>
+        <file alias="search">images/search.svg</file>
     </qresource>
 
     <qresource prefix="/images/titlebar">

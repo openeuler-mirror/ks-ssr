@@ -33,19 +33,6 @@
             <description>Create a encrypted box.</description>
         </method>
 
-        <method name="DelBox">
-            <arg type="s" name="box_uid" direction="in">
-                <summary>The box UID.</summary>
-            </arg>
-            <arg type="s" name="password" direction="in">
-                <summary>The password needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
-            </arg>
-            <arg type="b" name="deleted" direction="out">
-                <summary>Whether to deleted.</summary>
-            </arg>
-            <description>DelBox a encrypted box.</description>
-        </method>
-
         <method name="ModifyBoxPassword">
             <arg type="s" name="box_uid" direction="in">
                 <summary>The box UID.</summary>
@@ -56,9 +43,6 @@
             <arg type="s" name="new_password" direction="in">
                 <summary>The new password which needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
             </arg>
-            <arg type="b" name="modify" direction="out">
-                <summary>Whether to modify.</summary>
-            </arg>
             <description>Modify password for box.</description>
         </method>
 
@@ -66,11 +50,8 @@
             <arg type="s" name="box_uid" direction="in">
                 <summary>The box UID.</summary>
             </arg>
-            <arg type="s" name="password" direction="in">
+            <arg type="s" name="password" direction="out">
                 <summary>The password needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
-            </arg>
-            <arg type="b" name="unlocked" direction="out">
-                <summary>Whether to unlock.</summary>
             </arg>
             <description>Mount the box.</description>
         </method>
@@ -92,22 +73,6 @@
             <description>Return true if the box is mounted else return false.</description>
         </method>
 
-        <method name="RetrievePassword">
-            <arg type="s" name="box_uid" direction="in">
-                <summary>The box UID.</summary>
-            </arg>
-            <arg type="s" name="passphrase" direction="in">
-                <summary>The box passphrase which needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
-            </arg>
-            <arg type="s" name="new_password" direction="in">
-                <summary>The new password which needs to be encrypted by RSA algorithm using RSAPublicKey.</summary>
-            </arg>
-            <arg type="b" name="retrieve" direction="out">
-                <summary>Whether to retrieve.</summary>
-            </arg>
-            <description>Retrieve box password.</description>
-        </method>
-
         <property name="RSAPublicKey" type="s" access="read">
             <description>The RSA public key.</description>
         </property>
@@ -115,9 +80,6 @@
         <signal name="BoxAdded">
             <arg name="box_uid" type="s">
                 <summary>The box UID.</summary>
-            </arg>
-            <arg name="passphrase" type="s">
-                <summary>The box passphrase.</summary>
             </arg>
             <description>Emit the signal when box is added.</description>
         </signal>

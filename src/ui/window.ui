@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Security center</string>
+   <string>Security control</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -72,19 +72,19 @@
        <widget class="KS::Navigation" name="m_navigation" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="spacing">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="leftMargin">
-          <number>20</number>
+          <number>8</number>
          </property>
          <property name="topMargin">
-          <number>15</number>
+          <number>16</number>
          </property>
          <property name="rightMargin">
           <number>20</number>
          </property>
          <property name="bottomMargin">
-          <number>15</number>
+          <number>0</number>
          </property>
         </layout>
        </widget>
@@ -132,7 +132,7 @@
       <item>
        <widget class="QStackedWidget" name="m_categoryPages">
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="page"/>
         <widget class="QWidget" name="page_2"/>
