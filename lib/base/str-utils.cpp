@@ -133,4 +133,10 @@ Json::Value StrUtils::str2json(const std::string &str)
     }
     return result;
 }
+
+bool StrUtils::startswith(const std::string &str, const std::string &prefix)
+{
+    RETURN_VAL_IF_TRUE(str.size() < prefix.size(), false);
+    return (str.substr(0, prefix.size()) == prefix);
+}
 }  // namespace Kiran

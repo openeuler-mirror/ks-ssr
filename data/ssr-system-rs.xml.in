@@ -251,6 +251,66 @@
             </arg>
         </reinforcement>
         <reinforcement>
+            <name>external-sshd-root-login</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow remote login of root user via SSH</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-sshd-pubkey-auth</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow SSH password free login</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-sshd-weak-encryption</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Allow to use SSH weak encryption algorithm</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-pam-su-wheel</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Users outside the wheel group are prohibited from using the 'su root' command</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
             <name>external-radio-switch</name>
             <arg>
                 <name>enabled</name>

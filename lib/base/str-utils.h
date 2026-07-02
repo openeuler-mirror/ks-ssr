@@ -53,6 +53,9 @@ public:
     static std::string json2str(const Json::Value &json);
     static Json::Value str2json(const std::string &str);
 
+    // 判断str是否以prefix字符串开头
+    static bool startswith(const std::string &str, const std::string &prefix);
+
     template <class T>
     static std::string join(const std::vector<T> &vec, const std::string &join_chars);
 };
