@@ -1,17 +1,17 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-rule.cpp
+ * @file          /kiran-ssr-manager/src/daemon/rule.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
-#include "src/daemon/ssr-rule.h"
+#include "src/daemon/rule.h"
 
 namespace Kiran
 {
-using namespace Protocol;
-
-std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
+namespace Daemon
+{
+std::shared_ptr<Rule> Rule::create(const Json::Value &rule)
 {
     RETURN_VAL_IF_TRUE(!rule[SSR_JSON_BODY_RULES_TYPE].isInt(), nullptr);
     auto type = rule[SSR_JSON_BODY_RULES_TYPE].asInt();
@@ -19,7 +19,7 @@ std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
     switch (type)
     {
         // TODO: 实现FIXED/ENUM
-    case RuleType::Value::RANGE:
+    case Protocol::RuleType::Value::RANGE:
     {
         RETURN_VAL_IF_TRUE(!rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) && !rule.isMember(SSR_JSON_BODY_RULES_MAX_VALUE), nullptr);
         if (rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) &&
@@ -29,7 +29,7 @@ std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
             KLOG_WARNING("The type of min_value and max_value is not equal.");
             return nullptr;
         }
-        return std::make_shared<SSRRuleRange>(rule[SSR_JSON_BODY_RULES_MIN_VALUE], rule[SSR_JSON_BODY_RULES_MAX_VALUE]);
+        return std::make_shared<RuleRange>(rule[SSR_JSON_BODY_RULES_MIN_VALUE], rule[SSR_JSON_BODY_RULES_MAX_VALUE]);
     }
     default:
         break;
@@ -37,17 +37,17 @@ std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
     return nullptr;
 }
 
-std::shared_ptr<SSRRule> SSRRule::create(const Rule &rule)
+std::shared_ptr<Rule> Rule::create(const Protocol::Rule &rule)
 {
     switch (rule.type())
     {
-    case RuleType::Value::FIXED:
+    case Protocol::RuleType::Value::FIXED:
     {
         RETURN_VAL_IF_FALSE(rule.value_fixed().present(), nullptr);
         auto value = StrUtils::str2json(rule.value_fixed().get());
-        return std::make_shared<SSRRuleFixed>(value);
+        return std::make_shared<RuleFixed>(value);
     }
-    case RuleType::Value::RANGE:
+    case Protocol::RuleType::Value::RANGE:
     {
         RETURN_VAL_IF_FALSE(rule.value_range().present(), nullptr);
         auto &value_range = rule.value_range().get();
@@ -61,9 +61,9 @@ std::shared_ptr<SSRRule> SSRRule::create(const Rule &rule)
         {
             max_value = StrUtils::str2json(value_range.max_value().get());
         }
-        return std::make_shared<SSRRuleRange>(min_value, max_value);
+        return std::make_shared<RuleRange>(min_value, max_value);
     }
-    case RuleType::Value::ENUM:
+    case Protocol::RuleType::Value::ENUM:
     {
         RETURN_VAL_IF_FALSE(rule.value_enum().present(), nullptr);
         auto &value_enum = rule.value_enum().get();
@@ -73,7 +73,7 @@ std::shared_ptr<SSRRule> SSRRule::create(const Rule &rule)
             auto value = StrUtils::str2json(enum_value);
             values.push_back(value);
         }
-        return std::make_shared<SSRRuleEnum>(values);
+        return std::make_shared<RuleEnum>(values);
         break;
     }
     default:
@@ -82,7 +82,7 @@ std::shared_ptr<SSRRule> SSRRule::create(const Rule &rule)
     return nullptr;
 }
 
-SSRRule::JsonCmpResult SSRRule::json_value_cmp(const Json::Value &v1, const Json::Value &v2)
+Rule::JsonCmpResult Rule::json_value_cmp(const Json::Value &v1, const Json::Value &v2)
 {
     RETURN_VAL_IF_TRUE(v1.isNull() && v2.isNull(), JsonCmpResult::JSON_CMP_RESULT_EQUAL);
     RETURN_VAL_IF_TRUE(v1.isNull(), JsonCmpResult::JSON_CMP_RESULT_LESS);
@@ -124,10 +124,10 @@ SSRRule::JsonCmpResult SSRRule::json_value_cmp(const Json::Value &v1, const Json
     return JsonCmpResult::JSON_CMP_RESULT_UNKNOWN;
 }
 
-SSRRuleRange::SSRRuleRange(const Json::Value &min_value,
-                           const Json::Value &max_value) : min_value_(min_value),
-                                                           max_value_(max_value),
-                                                           value_type_(Json::ValueType::nullValue)
+RuleRange::RuleRange(const Json::Value &min_value,
+                     const Json::Value &max_value) : min_value_(min_value),
+                                                     max_value_(max_value),
+                                                     value_type_(Json::ValueType::nullValue)
 {
     if (!min_value.isNull())
     {
@@ -139,7 +139,7 @@ SSRRuleRange::SSRRuleRange(const Json::Value &min_value,
     }
 }
 
-bool SSRRuleRange::match(const Json::Value &value)
+bool RuleRange::match(const Json::Value &value)
 {
     // 如果最大值和最小值都为空，则表示不限制
     RETURN_VAL_IF_TRUE(this->min_value_.isNull() && this->max_value_.isNull(), true);
@@ -160,15 +160,15 @@ bool SSRRuleRange::match(const Json::Value &value)
     return true;
 }
 
-SSRRuleFixed::SSRRuleFixed(const Json::Value &value) : SSRRuleRange(value, value)
+RuleFixed::RuleFixed(const Json::Value &value) : RuleRange(value, value)
 {
 }
 
-SSRRuleEnum::SSRRuleEnum(const std::vector<Json::Value> &values) : enum_values_(values)
+RuleEnum::RuleEnum(const std::vector<Json::Value> &values) : enum_values_(values)
 {
 }
 
-bool SSRRuleEnum::match(const Json::Value &value)
+bool RuleEnum::match(const Json::Value &value)
 {
     for (const auto &enum_value : this->enum_values_)
     {
@@ -176,5 +176,5 @@ bool SSRRuleEnum::match(const Json::Value &value)
     }
     return false;
 }
-
+}  // namespace Daemon
 }  // namespace Kiran

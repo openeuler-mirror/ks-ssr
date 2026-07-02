@@ -7,12 +7,13 @@
 
 #include <glib/gi18n.h>
 #include <gtk3-log-i.h>
-#include "src/daemon/ssr-categories.h"
-#include "src/daemon/ssr-configuration.h"
-#include "src/daemon/ssr-manager.h"
-#include "src/daemon/ssr-plugins.h"
+#include "src/daemon/categories.h"
+#include "src/daemon/configuration.h"
+#include "src/daemon/manager.h"
+#include "src/daemon/plugins.h"
 
-// TODO: 去除ssr前缀
+using namespace Kiran::Daemon;
+
 int main(int argc, char* argv[])
 {
     Gio::init();
@@ -52,10 +53,10 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    Kiran::SSRConfiguration::global_init(SSR_INSTALL_DATADIR "/ssr.ini");
-    Kiran::SSRCategories::global_init();
-    Kiran::SSRPlugins::global_init(Kiran::SSRConfiguration::get_instance());
-    Kiran::SSRManager::global_init();
+    Configuration::global_init(SSR_INSTALL_DATADIR "/ssr.ini");
+    Categories::global_init();
+    Plugins::global_init(Configuration::get_instance());
+    Manager::global_init();
 
     auto loop = Glib::MainLoop::create();
     loop->run();

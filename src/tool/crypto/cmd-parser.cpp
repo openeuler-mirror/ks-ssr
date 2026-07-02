@@ -1,23 +1,25 @@
 /**
- * @file          /kiran-ssr-manager/src/tool/crypto/ssr-cmd-parser.cpp
+ * @file          /kiran-ssr-manager/src/tool/crypto/cmd-parser.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/tool/crypto/ssr-cmd-parser.h"
+#include "src/tool/crypto/cmd-parser.h"
 #include <glib/gi18n.h>
 
 namespace Kiran
 {
+namespace Crypto
+{
 #define SSR_RSA_LENGTH 1024
 
-SSRCmdParser::SSRCmdParser() : option_group_(PROJECT_NAME, "group options"),
-                               operation_type_(OperationType::OPERATION_TYPE_NONE)
+CmdParser::CmdParser() : option_group_(PROJECT_NAME, "group options"),
+                         operation_type_(OperationType::OPERATION_TYPE_NONE)
 {
 }
 
-void SSRCmdParser::init()
+void CmdParser::init()
 {
     Glib::OptionEntry entry;
 
@@ -60,7 +62,7 @@ void SSRCmdParser::init()
     this->option_context_.set_main_group(this->option_group_);
 }
 
-int SSRCmdParser::run(int& argc, char**& argv)
+int CmdParser::run(int& argc, char**& argv)
 {
     try
     {
@@ -98,7 +100,7 @@ int SSRCmdParser::run(int& argc, char**& argv)
     return EXIT_SUCCESS;
 }
 
-bool SSRCmdParser::process_decrypt_file()
+bool CmdParser::process_decrypt_file()
 {
     if (this->public_filename_.empty())
     {
@@ -127,7 +129,7 @@ bool SSRCmdParser::process_decrypt_file()
     }
 }
 
-bool SSRCmdParser::process_encrypt_file()
+bool CmdParser::process_encrypt_file()
 {
     if (this->private_filename_.empty())
     {
@@ -157,9 +159,9 @@ bool SSRCmdParser::process_encrypt_file()
     }
 }
 
-Glib::OptionEntry SSRCmdParser::create_entry(const std::string& long_name,
-                                             const Glib::ustring& description,
-                                             int32_t flags)
+Glib::OptionEntry CmdParser::create_entry(const std::string& long_name,
+                                          const Glib::ustring& description,
+                                          int32_t flags)
 {
     Glib::OptionEntry result;
     result.set_long_name(long_name);
@@ -167,4 +169,6 @@ Glib::OptionEntry SSRCmdParser::create_entry(const std::string& long_name,
     result.set_flags(flags);
     return result;
 }
+
+}  // namespace Crypto
 }  // namespace Kiran

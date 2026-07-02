@@ -7,7 +7,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk3-log-i.h>
-#include "src/tool/crypto/ssr-cmd-parser.h"
+#include "src/tool/crypto/cmd-parser.h"
 
 int main(int argc, char* argv[])
 {
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     bind_textdomain_codeset(PROJECT_NAME, "UTF-8");
     textdomain(PROJECT_NAME);
 
-    Kiran::SSRCmdParser cmd_parser;
+    Kiran::Crypto::CmdParser cmd_parser;
     cmd_parser.init();
     return cmd_parser.run(argc, argv);
 }

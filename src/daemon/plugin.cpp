@@ -1,31 +1,31 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-plugin.cpp
+ * @file          /kiran-ssr-manager/src/daemon/plugin.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/ssr-plugin.h"
+#include "src/daemon/plugin.h"
 
 namespace Kiran
 {
-using namespace Protocol;
-
-SSRPlugin::SSRPlugin(const std::string& conf_path) : conf_path_(conf_path)
+namespace Daemon
+{
+Plugin::Plugin(const std::string& conf_path) : conf_path_(conf_path)
 {
 }
 
-SSRPlugin::~SSRPlugin()
+Plugin::~Plugin()
 {
 }
 
-bool SSRPlugin::init()
+bool Plugin::init()
 {
     KLOG_DEBUG("plugin config path: %s.", this->conf_path_.c_str());
 
     try
     {
-        this->plugin_config_ = ssr_plugin(this->conf_path_, xml_schema::Flags::dont_validate);
+        this->plugin_config_ = Protocol::ssr_plugin(this->conf_path_, xml_schema::Flags::dont_validate);
 
         // 判断插件是否启用
         if (!this->plugin_config_->available())
@@ -46,7 +46,7 @@ bool SSRPlugin::init()
     return true;
 }
 
-std::vector<std::string> SSRPlugin::get_reinforcement_names()
+std::vector<std::string> Plugin::get_reinforcement_names()
 {
     std::vector<std::string> names;
     for (const auto& reinforcement_config : this->plugin_config_->reinforcement())
@@ -56,7 +56,7 @@ std::vector<std::string> SSRPlugin::get_reinforcement_names()
     return names;
 }
 
-const Protocol::Reinforcement* SSRPlugin::get_reinforcement_config(const std::string& name)
+const Protocol::Reinforcement* Plugin::get_reinforcement_config(const std::string& name)
 {
     for (const auto& reinforcement_config : this->plugin_config_->reinforcement())
     {
@@ -65,7 +65,7 @@ const Protocol::Reinforcement* SSRPlugin::get_reinforcement_config(const std::st
     return nullptr;
 }
 
-bool SSRPlugin::load_plugin_module()
+bool Plugin::load_plugin_module()
 {
     KLOG_PROFILE("");
 
@@ -75,12 +75,12 @@ bool SSRPlugin::load_plugin_module()
     case Protocol::LanguageType::Value::cpp:
     {
         auto so_path = Glib::build_filename(dirname, "lib" + this->plugin_config_->name() + ".so");
-        this->loader_ = std::make_shared<SSRPluginCPPLoader>(so_path);
+        this->loader_ = std::make_shared<PluginCPPLoader>(so_path);
         return this->loader_->load();
     }
     case Protocol::LanguageType::Value::python:
     {
-        this->loader_ = std::make_shared<SSRPluginPythonLoader>(this->plugin_config_->name());
+        this->loader_ = std::make_shared<PluginPythonLoader>(this->plugin_config_->name());
         return this->loader_->load();
     }
     default:
@@ -88,5 +88,5 @@ bool SSRPlugin::load_plugin_module()
         return false;
     }
 }
-
+}  // namespace Daemon
 }  // namespace Kiran
