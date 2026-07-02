@@ -6,7 +6,7 @@
  */
 
 #include "lib/base/base.h"
-#include "plugin-i.h"
+#include "ssr-plugin-i.h"
 
 namespace Kiran
 {
@@ -26,7 +26,7 @@ public:
 };
 
 private:
-    std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements_;
+std::map<std::string, std::shared_ptr<SSRReinforcementInterface>> reinforcements_;
 
 }  // namespace Config
 

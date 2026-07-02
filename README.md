@@ -3,7 +3,7 @@
 
 ## 编译安装
 ```
-# yum install ....
+# yum install glib2-devel glibmm24-devel kiran-log-gtk3-devel jsoncpp-devel gtest-devel fmt-devel cryptopp-devel xerces-c-devel python2-devel gdbus-codegen-glibmm systemd xsd intltool sed
 # mkdir build
 # cd build && cmake -DCMAKE_INSTALL_PREFIX=/usr ..
 # make

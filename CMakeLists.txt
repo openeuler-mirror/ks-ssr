@@ -48,6 +48,7 @@ configure_file(ssr-config.h.in ${PROJECT_BINARY_DIR}/ssr-config.h)
 
 add_subdirectory(po)
 add_subdirectory(data)
+add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(src/daemon)
 add_subdirectory(src/tool)
