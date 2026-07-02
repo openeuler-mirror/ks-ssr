@@ -24,7 +24,8 @@ target_link_libraries(${TARGET_NAME} PUBLIC
     ${GIOMM_LIBRARIES}
     ${KLOG_LIBRARIES}
     ${FMT_LIBRARIES}
-    ${JSONCPP_LIBRARIES})
+    ${JSONCPP_LIBRARIES}
+    pthread)
 
 target_link_libraries(${TARGET_NAME} PRIVATE
                       ${CRYPTOPP_LIBRARIES})
