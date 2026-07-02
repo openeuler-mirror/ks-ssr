@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 11:21+0800\n"
+"POT-Creation-Date: 2022-06-14 17:07+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,75 +17,75 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../lib/base/error.cpp:25
+#: ../lib/base/error.cpp:28
 msgid "The standard type is invalid."
 msgstr "标准类型不合法。"
 
-#: ../lib/base/error.cpp:33
+#: ../lib/base/error.cpp:36
 msgid "Error format for reinforcement standard."
 msgstr "加固标准格式错误。"
 
-#: ../lib/base/error.cpp:36
+#: ../lib/base/error.cpp:39
 msgid "Reinforcement item '{0}' is not found."
 msgstr "加固项'{0}'未找到"
 
-#: ../lib/base/error.cpp:40
+#: ../lib/base/error.cpp:43
 msgid "The job is running, please don't repeat the operation."
 msgstr "任务正在运行，请不要重复操作。"
 
-#: ../lib/base/error.cpp:43
+#: ../lib/base/error.cpp:46
 msgid "The standard reinforcement configuration is not found."
 msgstr "加固标准配置未找到"
 
-#: ../lib/base/error.cpp:46
+#: ../lib/base/error.cpp:49
 msgid "Machine code error."
 msgstr "机器码错误。"
 
-#: ../lib/base/error.cpp:49
+#: ../lib/base/error.cpp:52
 msgid "Activation code error."
 msgstr "激活码错误。"
 
-#: ../lib/base/error.cpp:71
+#: ../lib/base/error.cpp:74
 msgid "Internel error."
 msgstr "内部错误。"
 
-#: ../lib/base/error.cpp:74
+#: ../lib/base/error.cpp:77
 msgid "The software is not activated."
 msgstr "软件未激活。"
 
-#: ../lib/base/error.cpp:77
+#: ../lib/base/error.cpp:80
 msgid "Unknown error."
 msgstr "未知错误。"
 
-#: ../lib/base/error.cpp:81
+#: ../lib/base/error.cpp:84
 msgid " (error code: 0x{:x})"
 msgstr "（错误码：0x{:x}）"
 
-#: ../src/tool/crypto/cmd-parser.cpp:26
+#: ../src/tool/crypto/cmd-parser.cpp:23
 msgid "Output version infomation and exit."
 msgstr "输出版本信息并退出。"
 
-#: ../src/tool/crypto/cmd-parser.cpp:32
+#: ../src/tool/crypto/cmd-parser.cpp:26
 msgid "Generate public and private keys for RSA."
 msgstr "生成RSA公钥和私钥。"
 
-#: ../src/tool/crypto/cmd-parser.cpp:38
+#: ../src/tool/crypto/cmd-parser.cpp:29
 msgid "Decrypt a file."
 msgstr "解密文件。"
 
-#: ../src/tool/crypto/cmd-parser.cpp:45
+#: ../src/tool/crypto/cmd-parser.cpp:32
 msgid "Encrypt a file."
 msgstr "加密文件。"
 
-#: ../src/tool/crypto/cmd-parser.cpp:52
+#: ../src/tool/crypto/cmd-parser.cpp:35
 msgid "RSA public file path."
 msgstr "RSA公钥路径。"
 
-#: ../src/tool/crypto/cmd-parser.cpp:55
+#: ../src/tool/crypto/cmd-parser.cpp:38
 msgid "RSA private file path."
 msgstr "RSA私钥路径。"
 
-#: ../src/tool/crypto/cmd-parser.cpp:58
+#: ../src/tool/crypto/cmd-parser.cpp:41
 msgid "Output file path."
 msgstr "输出文件路径。"
 
@@ -155,12 +155,12 @@ msgstr "文件路径未指定"
 msgid "No specify file type"
 msgstr "文件类型未指定"
 
-#: ../src/tool/config/cmd-parser.cpp:85
+#: ../src/tool/config/cmd-parser.cpp:90
 msgid "Unknown file type"
 msgstr "未知文件类型"
 
-#: ../src/tool/config/cmd-parser.cpp:124 ../src/tool/config/cmd-parser.cpp:176
-#: ../src/tool/config/cmd-parser.cpp:227
+#: ../src/tool/config/cmd-parser.cpp:126 ../src/tool/config/cmd-parser.cpp:175
+#: ../src/tool/config/cmd-parser.cpp:222
 msgid "Exec method {0} failed"
 msgstr "执行方法{0}失败"
 
@@ -347,112 +347,124 @@ msgid "File directory default permission"
 msgstr "文件目录缺省权限"
 
 #: ../data/ssr-system-rs.xml.in.h:40
+msgid "No master file in the scanning system"
+msgstr "扫描系统中的无属文件"
+
+#: ../data/ssr-system-rs.xml.in.h:41
+msgid "Scanning system files with 777 permissions"
+msgstr "扫描系统中权限为777的文件"
+
+#: ../data/ssr-system-rs.xml.in.h:42
+msgid "Scan system important directory suid-sgid file"
+msgstr "扫描系统重要目录中有suid-sgid权限的文件"
+
+#: ../data/ssr-system-rs.xml.in.h:43
 msgid "Turn on system auditd service"
 msgstr "开启系统审计服务"
 
-#: ../data/ssr-system-rs.xml.in.h:41
+#: ../data/ssr-system-rs.xml.in.h:44
 msgid "System log save cycle（weekly）"
 msgstr "系统日志保存周期（周）"
 
-#: ../data/ssr-system-rs.xml.in.h:42
+#: ../data/ssr-system-rs.xml.in.h:45
 msgid "The maximum permission of log files and configurations is set to 0644"
 msgstr "日志文件和配置的最大权限为0644"
 
-#: ../data/ssr-system-rs.xml.in.h:43
+#: ../data/ssr-system-rs.xml.in.h:46
 msgid "Log files can only be appended"
 msgstr "日志文件仅能被添加"
 
-#: ../data/ssr-system-rs.xml.in.h:44
+#: ../data/ssr-system-rs.xml.in.h:47
 msgid "Allow to use CD-ROM device"
 msgstr "允许使用光驱设备（首次加固时间长，请耐心等待）"
 
-#: ../data/ssr-system-rs.xml.in.h:45
+#: ../data/ssr-system-rs.xml.in.h:48
 msgid "Allow to use USB device"
 msgstr "允许使用USB设备"
 
-#: ../data/ssr-system-rs.xml.in.h:46
+#: ../data/ssr-system-rs.xml.in.h:49
 msgid "Allow to use serial port device"
 msgstr "允许使用串口设备"
 
-#: ../data/ssr-system-rs.xml.in.h:47
+#: ../data/ssr-system-rs.xml.in.h:50
 #: ../plugins/python/ssr-plugin-external.xml.in.h:9
 msgid "Restrict system independent user login"
 msgstr "限制系统无关用户登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:48
+#: ../data/ssr-system-rs.xml.in.h:51
 msgid "Allow account retention (Split with semicolon)"
 msgstr "允许保留账号 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:49
+#: ../data/ssr-system-rs.xml.in.h:52
 msgid "Disable null password user present"
 msgstr "禁止空密码用户出现"
 
-#: ../data/ssr-system-rs.xml.in.h:50
+#: ../data/ssr-system-rs.xml.in.h:53
 msgid "Delete lp, games, operator and adm by default"
 msgstr "默认删除lp, games, operator, adm"
 
-#: ../data/ssr-system-rs.xml.in.h:51
+#: ../data/ssr-system-rs.xml.in.h:54
 msgid "Add users to delete (Split with semicolon)"
 msgstr "添加需删除用户 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:52
+#: ../data/ssr-system-rs.xml.in.h:55
 msgid "Allow remote login of root user via SSH"
 msgstr "允许通过ssh远程登陆root用户"
 
-#: ../data/ssr-system-rs.xml.in.h:53
+#: ../data/ssr-system-rs.xml.in.h:56
 msgid "Allow SSH password free login"
 msgstr "允许SSH免密登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:54
+#: ../data/ssr-system-rs.xml.in.h:57
 msgid "Allow to use SSH weak encryption algorithm"
 msgstr "允许使用SSH弱加密算法"
 
-#: ../data/ssr-system-rs.xml.in.h:55
+#: ../data/ssr-system-rs.xml.in.h:58
 msgid "Hiding operating system version information"
 msgstr "隐藏操作系统版本信息"
 
-#: ../data/ssr-system-rs.xml.in.h:56
+#: ../data/ssr-system-rs.xml.in.h:59
 msgid "Enforce V2 security protocol"
 msgstr "强制使用V2安全协议"
 
-#: ../data/ssr-system-rs.xml.in.h:57
+#: ../data/ssr-system-rs.xml.in.h:60
 msgid "Prohibit SSH users with empty password from logging in"
 msgstr "禁止密码为空的SSH用户登录"
 
-#: ../data/ssr-system-rs.xml.in.h:58
+#: ../data/ssr-system-rs.xml.in.h:61
 msgid "Modify the default SSH port"
 msgstr "修改默认SSH端口"
 
-#: ../data/ssr-system-rs.xml.in.h:59
+#: ../data/ssr-system-rs.xml.in.h:62
 msgid "Enable PAM login mechanism"
 msgstr "启用PAM登录机制"
 
-#: ../data/ssr-system-rs.xml.in.h:60
+#: ../data/ssr-system-rs.xml.in.h:63
 #: ../plugins/python/ssr-plugin-external.xml.in.h:25
 msgid ""
 "Users outside the wheel group are prohibited from using the 'su root' command"
 msgstr "禁止wheel组以外的用户使用'su root'命令"
 
-#: ../data/ssr-system-rs.xml.in.h:61
+#: ../data/ssr-system-rs.xml.in.h:64
 msgid "Only root is allowed to use sudo command"
 msgstr "仅允许root用户使用sudo命令"
 
-#: ../data/ssr-system-rs.xml.in.h:62
+#: ../data/ssr-system-rs.xml.in.h:65
 msgid "List of IP addresses that allow remote access (Split with comma)"
 msgstr "允许远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:63
+#: ../data/ssr-system-rs.xml.in.h:66
 msgid ""
 "List of IP addresses for which remote access is prohibited (Split with comma)"
 msgstr "禁止远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:64
+#: ../data/ssr-system-rs.xml.in.h:67
 msgid ""
 "If no operation is performed for more than the following time (seconds), the "
 "session exits"
 msgstr "超过以下时间（秒）未操作则会话退出"
 
-#: ../data/ssr-system-rs.xml.in.h:65
+#: ../data/ssr-system-rs.xml.in.h:68
 #: ../plugins/python/ssr-plugin-external.xml.in.h:32
 msgid "Disable radio network"
 msgstr "禁用无线网络"
@@ -573,6 +585,36 @@ msgstr "加固dmesg信息"
 #: ../plugins/python/ssr-plugin-config.xml.in.h:25
 msgid "Restrict file directory default permissions"
 msgstr "限制文件目录缺省权限"
+
+#: ../plugins/python/ssr-plugin-config.xml.in.h:26
+msgid "Scan for non owned master files"
+msgstr "扫描无属文件"
+
+#: ../plugins/python/ssr-plugin-config.xml.in.h:27
+msgid ""
+"Check whether there are files in the important directory that the user does "
+"not belong to"
+msgstr "检查重要目录中的无属文件"
+
+#: ../plugins/python/ssr-plugin-config.xml.in.h:28
+msgid "Scan 777 permission file"
+msgstr "扫描有777权限的文件"
+
+#: ../plugins/python/ssr-plugin-config.xml.in.h:29
+msgid ""
+"Check whether there is a file with permission 777 under the important "
+"directory"
+msgstr "检查重要目录中权限为777的文件"
+
+#: ../plugins/python/ssr-plugin-config.xml.in.h:30
+msgid "Scan suid-sgid permission file"
+msgstr "扫描有suid-sgid权限的文件"
+
+#: ../plugins/python/ssr-plugin-config.xml.in.h:31
+msgid ""
+"Check whether there is a file with suid-sgid permission under the important "
+"directory"
+msgstr "检查重要目录中有suid-sgid权限的文件"
 
 #: ../plugins/python/ssr-plugin-external.xml.in.h:1
 msgid "external settings"
@@ -761,9 +803,6 @@ msgstr "预防bluetooth、cups、avahi-daemon、rpcbind、smb服务潜在的危�
 
 #~ msgid "Minimum acceptable password length"
 #~ msgstr "可接受的最小密码长度"
-
-#~ msgid "Passwd file permissionse"
-#~ msgstr "passwd文件权限"
 
 #~ msgid "Bashrc file permissionse"
 #~ msgstr "bashrc文件权限"
