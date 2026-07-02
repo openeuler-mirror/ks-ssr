@@ -11,7 +11,7 @@ PASSWORD_EXPIRED_CONF_KEY_MIN_DAYS = "PASS_MIN_DAYS"
 # PASSWORD_EXPIRED_CONF_KEY_MIN_LEN  = "PASS_MIN_LEN"
 PASSWORD_EXPIRED_CONF_KEY_WARN_AGE = "PASS_WARN_AGE"
 
-# PASSWORD_COMPLEXTIY_CONF_PATH  = "/etc/security/pwquality.conf.d/90-ssr-config.conf"
+PASSWORD_COMPLEXTIY_CONF_PATH = "/etc/security/pwquality.conf"
 PASSWORD_COMPLEXTIY_SYSTEM_CONF_PATH = "/etc/pam.d/system-auth"
 PASSWORD_COMPLEXTIY_PASSWORD_CONF_PATH = "/etc/pam.d/password-auth"
 PASSWORD_COMPLEXTIY_CONF_KEY_PWQUALITY = "password    requisite                                    pam_pwquality.so try_first_pass local_users_only"
@@ -23,6 +23,7 @@ PASSWORD_COMPLEXITY_CONF_KEY_SPECIAL = "ocredit"
 PASSWORD_COMPLEXITY_CONF_KEY_MINCLASS = "minclass"
 PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION = "maxsequence"
 PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK = "usercheck"
+PASSWORD_COMPLEXITY_CONF_KEY_DICT_CHECK = "dictcheck"
 
 PASSWORD_COMPLEXITY_CONF_NEXT_MATCH_LINE_PATTERN = "password\\s+sufficient\\s+pam_unix.so"
 
@@ -110,6 +111,8 @@ class PasswordComplexity:
             PASSWORD_COMPLEXTIY_SYSTEM_CONF_PATH, "password\\s+requisite\\s+pam_pwquality.so")
         self.password_conf = ssr.configuration.PAM(
             PASSWORD_COMPLEXTIY_PASSWORD_CONF_PATH, "password\\s+requisite\\s+pam_pwquality.so")
+        self.conf = ssr.configuration.KV(
+            PASSWORD_COMPLEXTIY_CONF_PATH, "\\s*=\\s*", " = ")
 
     def get(self):
         retdata = dict()
@@ -146,6 +149,12 @@ class PasswordComplexity:
         user_check = self.system_conf.get_value(
             PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK, '=')
         retdata[PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK] = user_check == '0'
+
+        dict_check = self.conf.get_value(
+            PASSWORD_COMPLEXITY_CONF_KEY_DICT_CHECK)
+        ssr.log.debug("dict_check = {0}".format(dict_check))
+        retdata[PASSWORD_COMPLEXITY_CONF_KEY_DICT_CHECK] = str(
+            dict_check) != "0"
 
         return (True, json.dumps(retdata))
 
@@ -193,5 +202,6 @@ class PasswordComplexity:
             PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION, '=', args[PASSWORD_COMPLEXITY_CONF_KEY_SUCCESSION], '=')
         self.password_conf.set_value(PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK, '=',
                                      '0' if args[PASSWORD_COMPLEXITY_CONF_KEY_USER_CHECK] else '1', '=')
-
+        self.conf.set_all_value(PASSWORD_COMPLEXITY_CONF_KEY_DICT_CHECK,
+                                '1' if args[PASSWORD_COMPLEXITY_CONF_KEY_DICT_CHECK] else '0')
         return (True, '')
