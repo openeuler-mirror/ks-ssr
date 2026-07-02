@@ -14,25 +14,31 @@
 
 #pragma once
 
-#include "src/ui/common/titlebar-window.h"
+#include <QWidget>
 
 namespace Ui
 {
-class Window;
-}
+class ModifyPassword;
+};
 
 namespace KS
 {
-class Navigation;
-
-class Window : public QWidget
+class ModifyPassword : public QWidget
 {
     Q_OBJECT
+
 public:
-    Window();
-    virtual ~Window(){};
+    ModifyPassword(QWidget *parent = nullptr);
+    virtual ~ModifyPassword(){};
+
+    QString getCurrentPassword();
+    QString getNewPassword();
+
+Q_SIGNALS:
+    void accepted();
+    void rejected();
 
 private:
-    Ui::Window *m_ui;
+    Ui::ModifyPassword *m_ui;
 };
 }  // namespace KS

@@ -84,9 +84,7 @@
     </widget>
    </item>
    <item>
-    <widget class="KS::Boxs" name="m_boxs" native="true">
-     <layout class="QGridLayout" name="m_boxsLayout"/>
-    </widget>
+    <widget class="KS::Boxs" name="m_boxs" native="true"/>
    </item>
    <item>
     <spacer name="verticalSpacer">
