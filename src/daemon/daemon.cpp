@@ -1,11 +1,11 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/manager.cpp
+ * @file          /kiran-ssr-manager/src/daemon/daemon.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
  */
 
-#include "src/daemon/manager.h"
+#include "src/daemon/daemon.h"
 #include <json/json.h>
 #include <iostream>
 #include "lib/base/base.h"
@@ -19,15 +19,15 @@ namespace Kiran
 {
 namespace Daemon
 {
-#define JOB_ERROR_CODE "error_code"
+#define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
 
-Manager::Manager() : dbus_connect_id_(0),
-                     object_register_id_(0)
+Daemon::Daemon() : dbus_connect_id_(0),
+                   object_register_id_(0)
 {
 }
 
-Manager::~Manager()
+Daemon::~Daemon()
 {
     if (this->dbus_connect_id_)
     {
@@ -35,14 +35,14 @@ Manager::~Manager()
     }
 }
 
-Manager* Manager::instance_ = nullptr;
-void Manager::global_init()
+Daemon* Daemon::instance_ = nullptr;
+void Daemon::global_init()
 {
-    instance_ = new Manager();
+    instance_ = new Daemon();
     instance_->init();
 }
 
-void Manager::SetStandardType(guint32 standard_type, MethodInvocation& invocation)
+void Daemon::SetStandardType(guint32 standard_type, MethodInvocation& invocation)
 {
     KLOG_PROFILE("standard type: %d.", standard_type);
 
@@ -64,7 +64,7 @@ void Manager::SetStandardType(guint32 standard_type, MethodInvocation& invocatio
     invocation.ret();
 }
 
-void Manager::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvocation& invocation)
+void Daemon::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvocation& invocation)
 {
     KLOG_PROFILE("encoded standard: %s.", encoded_standard.c_str());
 
@@ -76,7 +76,7 @@ void Manager::ImportCustomRS(const Glib::ustring& encoded_standard, MethodInvoca
     invocation.ret();
 }
 
-void Manager::GetCategories(MethodInvocation& invocation)
+void Daemon::GetCategories(MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -108,7 +108,7 @@ void Manager::GetCategories(MethodInvocation& invocation)
     }
 }
 
-void Manager::GetRS(MethodInvocation& invocation)
+void Daemon::GetRS(MethodInvocation& invocation)
 {
     std::ostringstream ostring_stream;
     auto rs = this->configuration_->get_rs();
@@ -130,7 +130,7 @@ void Manager::GetRS(MethodInvocation& invocation)
     }
 }
 
-void Manager::GetReinforcements(MethodInvocation& invocation)
+void Daemon::GetReinforcements(MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -155,7 +155,7 @@ void Manager::GetReinforcements(MethodInvocation& invocation)
     }
 }
 
-void Manager::GetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
+void Daemon::GetReinforcement(const Glib::ustring& name, MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -179,7 +179,7 @@ void Manager::GetReinforcement(const Glib::ustring& name, MethodInvocation& invo
     }
 }
 
-void Manager::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvocation& invocation)
+void Daemon::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
@@ -200,7 +200,7 @@ void Manager::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInv
     invocation.ret();
 }
 
-void Manager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
+void Daemon::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
@@ -235,12 +235,15 @@ void Manager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& in
                                            [reinforcement_interface]() -> std::string {
                                                Json::Value retval;
                                                std::string args;
-                                               SSRErrorCode error_code = SSRErrorCode::SUCCESS;
-                                               if (reinforcement_interface->get(args, error_code))
+                                               std::string error;
+                                               if (reinforcement_interface->get(args, error))
                                                {
                                                    retval[JOB_RETURN_VALUE] = StrUtils::str2json(args);
                                                }
-                                               retval[JOB_ERROR_CODE] = int32_t(error_code);
+                                               else
+                                               {
+                                                   retval[JOB_ERROR_STR] = error;
+                                               }
                                                return StrUtils::json2str(retval);
                                            });
 
@@ -254,7 +257,7 @@ void Manager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& in
         DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID);
     }
 
-    this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &Manager::on_scan_process_changed_cb));
+    this->scan_job_->signal_process_changed().connect(sigc::mem_fun(this, &Daemon::on_scan_process_changed_cb));
 
     if (!this->scan_job_->run_async())
     {
@@ -266,7 +269,7 @@ void Manager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& in
     }
 }
 
-void Manager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
+void Daemon::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
@@ -305,10 +308,12 @@ void Manager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocatio
             this->reinforce_job_->add_operation(reinforcement->get_plugin_name(),
                                                 reinforcement->get_name(),
                                                 [reinforcement_interface, param_str]() -> std::string {
-                                                    SSRErrorCode error_code = SSRErrorCode::SUCCESS;
-                                                    reinforcement_interface->set(param_str, error_code);
+                                                    std::string error;
                                                     Json::Value retval;
-                                                    retval[JOB_ERROR_CODE] = int32_t(error_code);
+                                                    if (!reinforcement_interface->set(param_str, error))
+                                                    {
+                                                        retval[JOB_ERROR_STR] = error;
+                                                    }
                                                     return StrUtils::json2str(retval);
                                                 });
         }
@@ -319,7 +324,7 @@ void Manager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocatio
         DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID);
     }
 
-    this->reinforce_job_->signal_process_changed().connect(sigc::mem_fun(this, &Manager::on_reinfoce_process_changed_cb));
+    this->reinforce_job_->signal_process_changed().connect(sigc::mem_fun(this, &Daemon::on_reinfoce_process_changed_cb));
 
     if (!this->reinforce_job_->run_async())
     {
@@ -331,7 +336,7 @@ void Manager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocatio
     }
 }
 
-void Manager::Cancel(gint64 job_id, MethodInvocation& invocation)
+void Daemon::Cancel(gint64 job_id, MethodInvocation& invocation)
 {
     KLOG_PROFILE("job id: %d.", job_id);
 
@@ -367,17 +372,17 @@ void Manager::Cancel(gint64 job_id, MethodInvocation& invocation)
     invocation.ret();
 }
 
-bool Manager::standard_type_setHandler(guint32 value)
+bool Daemon::standard_type_setHandler(guint32 value)
 {
     return this->configuration_->set_standard_type(SSRStandardType(value));
 }
 
-guint32 Manager::standard_type_get()
+guint32 Daemon::standard_type_get()
 {
     return this->configuration_->get_standard_type();
 }
 
-void Manager::init()
+void Daemon::init()
 {
     this->configuration_ = Configuration::get_instance();
     this->categories_ = Categories::get_instance();
@@ -385,44 +390,12 @@ void Manager::init()
 
     this->dbus_connect_id_ = Gio::DBus::own_name(Gio::DBus::BUS_TYPE_SYSTEM,
                                                  SSR_DBUS_NAME,
-                                                 sigc::mem_fun(this, &Manager::on_bus_acquired),
-                                                 sigc::mem_fun(this, &Manager::on_name_acquired),
-                                                 sigc::mem_fun(this, &Manager::on_name_lost));
+                                                 sigc::mem_fun(this, &Daemon::on_bus_acquired),
+                                                 sigc::mem_fun(this, &Daemon::on_name_acquired),
+                                                 sigc::mem_fun(this, &Daemon::on_name_lost));
 }
 
-Json::Value Manager::get_reinforcement_json(const std::string& name)
-{
-    Json::Value retval;
-
-    try
-    {
-        auto reinforcement = this->plugins_->get_reinforcement(name);
-
-        retval[SSR_JSON_BODY_REINFORCEMENT_NAME] = reinforcement->get_name();
-        retval[SSR_JSON_BODY_REINFORCEMENT_CATEGORY_NAME] = reinforcement->get_category_name();
-        retval[SSR_JSON_BODY_REINFORCEMENT_LABEL] = reinforcement->get_label();
-        for (const auto& arg : reinforcement->get_rs().arg())
-        {
-            Json::Value arg_value;
-            arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_NAME] = arg.name();
-            arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_VALUE] = arg.value();
-            if (arg.layout().present())
-            {
-                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_TYPE] = arg.layout().get().widget_type();
-                arg_value[SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT][SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_LABEL] = Utils::get_xsd_local_value(arg.layout().get().label());
-            }
-            retval[SSR_JSON_BODY_REINFORCEMENT_ARGS].append(std::move(arg_value));
-        }
-    }
-    catch (const std::exception& e)
-    {
-        KLOG_WARNING("%s", e.what());
-        return Json::Value();
-    }
-    return retval;
-}
-
-void Manager::on_scan_process_changed_cb(const JobResult& job_result)
+void Daemon::on_scan_process_changed_cb(const JobResult& job_result)
 {
     KLOG_PROFILE("");
 
@@ -467,8 +440,7 @@ void Manager::on_scan_process_changed_cb(const JobResult& job_result)
 
             auto reinforcement = this->plugins_->get_reinforcement(operation->reinforcement_name);
 
-            if (result_values[JOB_ERROR_CODE].isInt() &&
-                result_values[JOB_ERROR_CODE].asInt() == int32_t(SSRErrorCode::SUCCESS) &&
+            if (!result_values[JOB_ERROR_STR].isString() &&
                 reinforcement &&
                 reinforcement->match_rules(result_values[JOB_RETURN_VALUE]))
             {
@@ -477,6 +449,11 @@ void Manager::on_scan_process_changed_cb(const JobResult& job_result)
             else
             {
                 state = SSRReinforcementState(state | SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNSAFE);
+            }
+
+            if (result_values[JOB_ERROR_STR].isString())
+            {
+                reinforcement_result.error(result_values[JOB_ERROR_STR].asString());
             }
             reinforcement_result.state(int32_t(state));
             scan_result.reinforcement().push_back(std::move(reinforcement_result));
@@ -494,7 +471,7 @@ void Manager::on_scan_process_changed_cb(const JobResult& job_result)
     }
 }
 
-void Manager::on_reinfoce_process_changed_cb(const JobResult& job_result)
+void Daemon::on_reinfoce_process_changed_cb(const JobResult& job_result)
 {
     KLOG_PROFILE("");
 
@@ -528,23 +505,14 @@ void Manager::on_reinfoce_process_changed_cb(const JobResult& job_result)
             SSRReinforcementState state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNKNOWN;
             Json::Value result_values = StrUtils::str2json(operation_result.result);
 
-            if (result_values.isNull())
+            if (result_values[JOB_ERROR_STR].isString())
             {
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNREINFORCE;
+                reinforcement_result.error(result_values[JOB_ERROR_STR].asString());
             }
             else
             {
                 state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_REINFORCE_DONE;
-            }
-
-            if (result_values[JOB_ERROR_CODE].isInt() &&
-                result_values[JOB_ERROR_CODE].asInt() != int32_t(SSRErrorCode::SUCCESS))
-            {
-                SSRErrorCode error_code = SSRErrorCode(result_values[JOB_ERROR_CODE].asInt());
-                if (error_code != SSRErrorCode::SUCCESS)
-                {
-                    reinforcement_result.error(CC_ERROR2STR(error_code));
-                }
             }
             reinforcement_result.state(int32_t(state));
             reinforce_result.reinforcement().push_back(std::move(reinforcement_result));
@@ -562,7 +530,7 @@ void Manager::on_reinfoce_process_changed_cb(const JobResult& job_result)
     }
 }
 
-void Manager::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
+void Daemon::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
     KLOG_PROFILE("name: %s", name.c_str());
     if (!connect)
@@ -580,12 +548,12 @@ void Manager::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect
     }
 }
 
-void Manager::on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
+void Daemon::on_name_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
     KLOG_DEBUG("Success to register dbus name: %s", name.c_str());
 }
 
-void Manager::on_name_lost(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
+void Daemon::on_name_lost(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
 {
     KLOG_WARNING("Failed to register dbus name: %s", name.c_str());
 }

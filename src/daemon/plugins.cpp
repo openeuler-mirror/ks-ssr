@@ -10,6 +10,7 @@
 
 #include "src/daemon/configuration.h"
 #include "src/daemon/plugins.h"
+#include "src/daemon/python/python-log.h"
 
 namespace Kiran
 {
@@ -81,8 +82,10 @@ std::shared_ptr<SSRReinforcementInterface> Plugins::get_reinfocement_interface(c
 
 void Plugins::init()
 {
-    auto import_package_path = fmt::format("sys.path.append('{0}')", SSR_PLUGIN_PYTHON_ROOT_DIR);
+    // 内建模块的名称不支持package.module格式，因此这里不加ssr前缀了
+    PyImport_AppendInittab("log", PyInit_log);
 
+    auto import_package_path = fmt::format("sys.path.append('{0}')", SSR_PLUGIN_PYTHON_ROOT_DIR);
     Py_Initialize();
     PyRun_SimpleString("import sys");
     PyRun_SimpleString(import_package_path.c_str());
