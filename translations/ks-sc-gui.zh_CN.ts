@@ -4,25 +4,45 @@
 <context>
     <name>Box</name>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="44"/>
-        <location filename="../src/ui/box/box.cpp" line="55"/>
+        <location filename="../src/ui/box/box.cpp" line="98"/>
+        <location filename="../src/ui/box/box.cpp" line="110"/>
         <source>Lock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="44"/>
-        <location filename="../src/ui/box/box.cpp" line="55"/>
+        <location filename="../src/ui/box/box.cpp" line="98"/>
+        <location filename="../src/ui/box/box.cpp" line="110"/>
         <source>Unlock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="47"/>
+        <location filename="../src/ui/box/box.cpp" line="101"/>
         <source>Modify password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="48"/>
+        <location filename="../src/ui/box/box.cpp" line="102"/>
         <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="154"/>
+        <source>input password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="159"/>
+        <source>Please input password:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="163"/>
+        <source>ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box.cpp" line="164"/>
+        <source>canel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -34,12 +54,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-manager.ui" line="41"/>
+        <location filename="../src/ui/box/box-manager.ui" line="71"/>
         <source>Provides data isolation, hiding and encryption protection functions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-manager.ui" line="66"/>
+        <location filename="../src/ui/box/box-manager.ui" line="129"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
@@ -52,27 +72,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="22"/>
+        <location filename="../src/ui/box/create-box.ui" line="26"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="36"/>
+        <location filename="../src/ui/box/create-box.ui" line="40"/>
         <source>Password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="50"/>
+        <location filename="../src/ui/box/create-box.ui" line="54"/>
         <source>Confirm password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="64"/>
+        <location filename="../src/ui/box/create-box.ui" line="68"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/create-box.ui" line="71"/>
+        <location filename="../src/ui/box/create-box.ui" line="75"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -103,6 +123,19 @@
     <message>
         <location filename="../src/ui/execution-control.ui" line="89"/>
         <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KS::Window</name>
+    <message>
+        <location filename="../src/ui/window.cpp" line="39"/>
+        <source>Security center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/window.cpp" line="62"/>
+        <source>Private box</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -147,7 +180,7 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="../src/ui/window.ui" line="14"/>
+        <location filename="../src/ui/window.ui" line="20"/>
         <source>Security center</source>
         <translation type="unfinished"></translation>
     </message>

@@ -1,11 +1,24 @@
 <RCC>
-    <!--主题-->
-    <qresource prefix="/">
-        <file>styles/ks-sc-gui.qss</file>
+
+    <qresource prefix="/images">
+        <file alias="logo">images/logo.png</file>
+        <file alias="banner">images/banner.png</file>
+        <file alias="trusted-protected">images/trusted-protected.png</file>
+        <file alias="file-protected">images/file-protected.png</file>
+        <file alias="box-manager">images/box-manager.png</file>
+        <file alias="box-big">images/box-big.png</file>
+        <file alias="box-locked">images/box-locked.png</file>
     </qresource>
 
-    <qresource prefix="/">
-        <file alias="box-little">images/box-little.png</file>
-        <file alias="box-big">images/box-big.png</file>
+    <qresource prefix="/images/titlebar">
+        <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>
+        <file alias="window-maximum-symbolic">images/titlebar/window-maximum-symbolic.svg</file>
+        <file alias="window-unmaximum-symbolic">images/titlebar/window-unmaximum-symbolic.svg</file>
+        <file alias="window-close-symbolic">images/titlebar/window-close-symbolic.svg</file>
+    </qresource>
+
+    <qresource prefix="/styles">
+        <file alias="sc">styles/sc.qss</file>
+        <file alias="titlebar-window">styles/titlebar-window.qss</file>
     </qresource>
 </RCC>

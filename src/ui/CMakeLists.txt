@@ -37,7 +37,8 @@ target_include_directories(
 
 target_link_libraries(
   ${TARGET_NAME} PRIVATE ${KLOG_QT5_LIBRARIES} ${X11_LIBRARIES} Qt5::DBus
-                         Qt5::Widgets Qt5::X11Extras)
+                         Qt5::Widgets Qt5::X11Extras
+                         lib-base)
 
 install(FILES ${QM_FILES} DESTINATION ${SC_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
