@@ -1,4 +1,4 @@
-#--coding:utf8 --
+# -*- coding: utf-8 -*-
 import ssr.utils
 
 SSR_CONFIG_PATH = '/usr/bin/ks-ssr-config'
@@ -82,15 +82,17 @@ class PAM:
 
     def set_line(self, newline, next_line_match_pattern):
         command = '{0} --type=PAM --method=SETLINE --line-match-pattern="{1}" --new-line="{2}" --next-line-match-pattern="{3}" {4}'.format(
-            SSR_CONFIG_PATH, self.line_match_pattern, newline, next_line_match_pattern ,self.config_path)
+            SSR_CONFIG_PATH, self.line_match_pattern, newline, next_line_match_pattern, self.config_path)
         ssr.utils.subprocess_not_output(command)
 
     def del_line(self):
-        command = '{0} --type=PAM --method=DELLINE --line-match-pattern="{1}" {2}'.format(SSR_CONFIG_PATH, self.line_match_pattern, self.config_path)
+        command = '{0} --type=PAM --method=DELLINE --line-match-pattern="{1}" {2}'.format(
+            SSR_CONFIG_PATH, self.line_match_pattern, self.config_path)
         ssr.utils.subprocess_not_output(command)
 
     def get_line(self):
-        command = '{0} --type=PAM --method=GETLINE --line-match-pattern="{1}" {2}'.format(SSR_CONFIG_PATH, self.line_match_pattern, self.config_path)
+        command = '{0} --type=PAM --method=GETLINE --line-match-pattern="{1}" {2}'.format(
+            SSR_CONFIG_PATH, self.line_match_pattern, self.config_path)
         return ssr.utils.subprocess_has_output(command)
 
     # 为了避免设置值时匹配行不存在，这里先设置一个默认行，如果不存在则使用默认行
