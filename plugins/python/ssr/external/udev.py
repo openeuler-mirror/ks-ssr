@@ -1,5 +1,6 @@
 import json
 import ssr.configuration
+import ssr.utils
 
 UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-ssr-external.rules"
 
@@ -16,6 +17,9 @@ class UDev:
     def __init__(self):
         self.conf = ssr.configuration.Table(UDEV_CONF_FILEPATH, ",\\s+")
 
+    def mkinitrd(self):
+        command =  'mkinitrd /boot/initramfs-`uname -r`.img'
+        outpur = ssr.utils.subprocess_has_output(command)
 
 class CDROM(UDev):
     def get(self):
@@ -32,6 +36,7 @@ class CDROM(UDev):
         else:
             self.conf.set_value("1=KERNEL==\\\"sr0\\\"", DISABLE_CDROM_RULE)
 
+        self.mkinitrd()
         return (True, '')
 
 
@@ -50,6 +55,7 @@ class USB(UDev):
         else:
             self.conf.set_value("1=ACTION==\\\"add\\\";2=SUBSYSTEMS==\\\"usb\\\"", DISABLE_USB_RULE)
 
+        self.mkinitrd()
         return (True, '')
 
 
@@ -68,4 +74,5 @@ class TTYS(UDev):
         else:
             self.conf.set_value("1=KERNEL==\\\"ttyS[0-9]*\\\"", DISABLE_TTYPS_RULE)
 
+        self.mkinitrd()
         return (True, '')

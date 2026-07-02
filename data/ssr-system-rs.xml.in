@@ -126,87 +126,15 @@
         <reinforcement>
             <name>config-file-permissions</name>
             <arg>
-                <name>passwd</name>
-                <value>"0644"</value>
+                <name>mode-permissions-limit</name>
+                <value>true</value>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>"0644"</value_fixed>
+                    <value_fixed>true</value_fixed>
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Passwd file permissionse</_label>
-                </layout>
-            </arg>
-            <arg>
-                <name>bashrc</name>
-                <value>"0644"</value>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>"0644"</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Bashrc file permissionse</_label>
-                </layout>
-            </arg>
-            <arg>
-                <name>shadow</name>
-                <value>"0644"</value>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>"0644"</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Shadow file permissionse</_label>
-                </layout>
-            </arg>
-            <arg>
-                <name>group</name>
-                <value>"0644"</value>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>"0644"</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Group file permissionse</_label>
-                </layout>
-            </arg>
-            <arg>
-                <name>services</name>
-                <value>"0644"</value>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>"0644"</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Services file permissionse</_label>
-                </layout>
-            </arg>
-            <arg>
-                <name>xinetd</name>
-                <value>"0644"</value>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>"0644"</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Xinetd directory permissions</_label>
-                </layout>
-            </arg>
-            <arg>
-                <name>security</name>
-                <value>"0644"</value>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>"0644"</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <_label>Security directory permissions</_label>
+                    <_label>The maximum permissions of important configuration files in the system is set to 0644</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -589,7 +517,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow to use CD-ROM device</_label>
+                    <_label>Allow to use CD-ROM device (Effective after restart)</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -604,7 +532,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow to use USB device</_label>
+                    <_label>Allow to use USB device (Effective after restart)</_label>
                 </layout>
             </arg>
         </reinforcement>
@@ -619,7 +547,7 @@
                 </rule>
                 <layout>
                     <widget_type>DEFAULT</widget_type>
-                    <_label>Allow to use serial port device</_label>
+                    <_label>Allow to use serial port device (Effective after restart)</_label>
                 </layout>
             </arg>
         </reinforcement>
