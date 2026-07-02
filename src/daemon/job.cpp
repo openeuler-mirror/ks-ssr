@@ -61,7 +61,7 @@ std::shared_ptr<Operation> Job::add_operation(const std::string &plugin_name,
 
 bool Job::run_sync()
 {
-    KLOG_DEBUG("job id: %d.", this->job_id_);
+    KLOG_DEBUG("job id: %d, operation num: %d.", this->job_id_, this->operations_.size());
 
     RETURN_VAL_IF_FALSE(this->state_ == SSRJobState::SSR_JOB_STATE_IDLE, false);
     this->state_ = SSRJobState::SSR_JOB_STATE_RUNNING;
@@ -74,9 +74,7 @@ bool Job::run_sync()
         auto operation = iter.second;
         result.operation_id = operation->operation_id;
         result.result = operation->func();
-        // operation->func_result = operation->func();
         ++this->job_result_.finished_operation_num;
-        // this->job_result_.finished_operations.push_back(operation->operation_id);
         this->job_result_.current_finished_operations.push_back(std::move(result));
 
         if (this->job_result_.finished_operation_num == this->job_result_.sum_operation_num)
@@ -91,7 +89,7 @@ bool Job::run_sync()
 
 bool Job::run_async()
 {
-    KLOG_DEBUG("job id: %d.", this->job_id_);
+    KLOG_DEBUG("job id: %d, operation num: %d.", this->job_id_, this->operations_.size());
 
     RETURN_VAL_IF_FALSE(this->state_ == SSRJobState::SSR_JOB_STATE_IDLE, false);
     this->state_ = SSRJobState::SSR_JOB_STATE_RUNNING;

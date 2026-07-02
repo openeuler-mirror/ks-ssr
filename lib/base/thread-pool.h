@@ -66,14 +66,14 @@ auto ThreadPool::enqueue(F&& f, Args&&... args)
 
     std::future<return_type> res = task.get_future();
     {
-        std::unique_lock<std::mutex> lock(queue_mutex_);
+        std::unique_lock<std::mutex> lock(this->queue_mutex_);
 
-        if (stop_)
+        if (this->stop_)
             throw std::runtime_error("enqueue on stopped ThreadPool");
 
         this->tasks_.emplace(std::move(task));
     }
-    condition_.notify_one();
+    this->condition_.notify_one();
     return res;
 }
 
@@ -88,15 +88,16 @@ auto ThreadPool::enqueue_by_idx(size_t idx, F&& f, Args&&... args)
 
     std::future<return_type> res = task.get_future();
     {
-        std::unique_lock<std::mutex> lock(queue_mutex_);
+        std::unique_lock<std::mutex> lock(this->queue_mutex_);
 
         // don't allow enqueueing after stopping the pool
-        if (stop_)
+        if (this->stop_)
             throw std::runtime_error("enqueue on stopped ThreadPool");
 
         this->workers_[idx % this->thread_num_].tasks.emplace(std::move(task));
     }
-    condition_.notify_one();
+    // 这里正常只需要通知上面插入任务的线程即可，由于condition_.notify_one只能随机通知一个线程，为了简化代码就先全部通知了，反正线程数也不会太多
+    this->condition_.notify_all();
     return res;
 }
 
@@ -104,10 +105,10 @@ auto ThreadPool::enqueue_by_idx(size_t idx, F&& f, Args&&... args)
 inline ThreadPool::~ThreadPool()
 {
     {
-        std::unique_lock<std::mutex> lock(queue_mutex_);
-        stop_ = true;
+        std::unique_lock<std::mutex> lock(this->queue_mutex_);
+        this->stop_ = true;
     }
-    condition_.notify_all();
+    this->condition_.notify_all();
     for (auto& worker : this->workers_)
     {
         worker.thread.join();
