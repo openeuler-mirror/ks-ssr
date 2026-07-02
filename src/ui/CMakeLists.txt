@@ -18,7 +18,8 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/box-manager.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/box/create-box.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/box/modify-password.ui)
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/modify-password.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/retrieve-password.ui)
 
 set(TARGET_NAME ks-sc-gui)
 

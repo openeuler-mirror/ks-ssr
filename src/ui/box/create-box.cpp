@@ -22,13 +22,15 @@ CreateBox::CreateBox(QWidget *parent) : QWidget(parent),
 {
     this->m_ui->setupUi(this);
     this->setWindowModality(Qt::ApplicationModal);
-
+    this->m_ui->m_password->setEchoMode(QLineEdit::Password);
+    this->m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
     connect(this->m_ui->m_ok, &QPushButton::clicked, this, &CreateBox::onOkClicked);
 
-    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this](bool) {
-        Q_EMIT this->rejected();
-        this->close();
-    });
+    connect(this->m_ui->m_cancel, &QPushButton::clicked, this, [this](bool)
+            {
+                Q_EMIT this->rejected();
+                this->close();
+            });
 }
 
 QString CreateBox::getName()

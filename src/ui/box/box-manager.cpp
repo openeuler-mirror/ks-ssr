@@ -44,7 +44,7 @@ BoxManager::BoxManager() : QWidget(nullptr),
 
     initBoxs();
 
-    connect(this->m_boxManagerProxy, SIGNAL(BoxAdded(const QString &)), this, SLOT(boxAdded(const QString &)));
+    connect(this->m_boxManagerProxy, SIGNAL(BoxAdded(const QString &, const QString &)), this, SLOT(boxAdded(const QString &, const QString &)));
     connect(this->m_boxManagerProxy, SIGNAL(BoxDeleted(const QString &)), this, SLOT(boxDeleted(const QString &)));
     connect(this->m_boxManagerProxy, SIGNAL(BoxChanged(const QString &)), this, SLOT(boxChanged(const QString &)));
     connect(this->m_ui->m_newBox, SIGNAL(clicked(bool)), this, SLOT(newBoxClicked(bool)));
@@ -52,13 +52,6 @@ BoxManager::BoxManager() : QWidget(nullptr),
 
 void BoxManager::initBoxs()
 {
-    //    // TODO: test
-    //    for (int i = 0; i <= 50; ++i)
-    //    {
-    //        auto box = new Box(QString("ID%1").arg(i));
-    //        this->m_ui->m_boxs->addBox(box);
-    //    }
-
     QJsonParseError jsonError;
     auto reply = this->m_boxManagerProxy->GetBoxs();
     auto boxs = reply.value();
@@ -104,7 +97,7 @@ void BoxManager::removeBox(const QString &boxUID)
     }
 }
 
-void BoxManager::boxAdded(const QString &boxUID)
+void BoxManager::boxAdded(const QString &boxUID, const QString &passphrase)
 {
     QJsonParseError jsonError;
 
@@ -127,6 +120,10 @@ void BoxManager::boxAdded(const QString &boxUID)
     }
 
     auto jsonBox = jsonDoc.object();
+    auto box = this->buildBox(jsonBox);
+    auto notify = box->buildNotifyPage(QString(tr("Please remember this box passphrase : %1")).arg(passphrase));
+    notify->show();
+
     //    auto box = this->buildBox(jsonBox);
     //    this->addBox(box);
 }
