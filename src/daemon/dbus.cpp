@@ -7,6 +7,7 @@
 
 #include "src/daemon/dbus.h"
 #include <json/json.h>
+#include <kylin-license/license-i.h>
 #include <iostream>
 #include "lib/base/base.h"
 #include "src/daemon/categories.h"
@@ -21,6 +22,8 @@ namespace Daemon
 {
 #define JOB_ERROR_STR "error"
 #define JOB_RETURN_VALUE "return_value"
+
+#define LICENSE_OBJECT_SSR_NAME "KiranSSRManager"
 
 DBus::DBus() : dbus_connect_id_(0),
                object_register_id_(0)
@@ -290,6 +293,14 @@ void DBus::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& 
 {
     KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
+    // 未授权不允许加固
+    if (this->license_values.isNull() ||
+        this->license_values[LICENSE_JK_ACTIVATION_STATUS].isNull() ||
+        this->license_values[LICENSE_JK_ACTIVATION_STATUS].asInt() != LicenseActivationStatus::LAS_ACTIVATED)
+    {
+        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SOFTWARE_UNACTIVATED);
+    }
+
     // 已经在加固则返回错误
     if (this->reinforce_job_ && this->reinforce_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
     {
@@ -394,6 +405,38 @@ void DBus::Cancel(gint64 job_id, MethodInvocation& invocation)
     invocation.ret();
 }
 
+void DBus::GetLicense(MethodInvocation& invocation)
+{
+    try
+    {
+        auto license_info = this->license_object_proxy_->GetLicense_sync();
+        invocation.ret(license_info);
+    }
+    catch (const Glib::Error& e)
+    {
+        KLOG_WARNING("%s.", e.what().c_str());
+        invocation.ret(Glib::Error(G_DBUS_ERROR, G_DBUS_ERROR_FAILED, e.what().c_str()));
+        return;
+    }
+}
+
+void DBus::ActivateByActivationCode(const Glib::ustring& activation_code, MethodInvocation& invocation)
+{
+    KLOG_PROFILE("Activation code: %s.", activation_code.c_str());
+
+    try
+    {
+        this->license_object_proxy_->ActivateByActivationCode_sync(activation_code);
+    }
+    catch (const Glib::Error& e)
+    {
+        KLOG_WARNING("%s.", e.what().c_str());
+        invocation.ret(Glib::Error(G_DBUS_ERROR, G_DBUS_ERROR_FAILED, e.what().c_str()));
+        return;
+    }
+    invocation.ret();
+}
+
 bool DBus::standard_type_setHandler(guint32 value)
 {
     return this->configuration_->set_standard_type(SSRStandardType(value));
@@ -415,6 +458,43 @@ void DBus::init()
                                                  sigc::mem_fun(this, &DBus::on_bus_acquired),
                                                  sigc::mem_fun(this, &DBus::on_name_acquired),
                                                  sigc::mem_fun(this, &DBus::on_name_lost));
+
+    try
+    {
+        this->license_manager_proxy_ = Kiran::LicenseManagerProxy::createForBus_sync(Gio::DBus::BUS_TYPE_SYSTEM,
+                                                                                     Gio::DBus::PROXY_FLAGS_NONE,
+                                                                                     LICENSE_MANAGER_DBUS_NAME,
+                                                                                     LICENSE_MANAGER_OBJECT_PATH);
+
+        auto object_path = this->license_manager_proxy_->GetLicenseObject_sync(LICENSE_OBJECT_SSR_NAME);
+        this->license_object_proxy_ = Kiran::LicenseObjectProxy::createForBus_sync(Gio::DBus::BUS_TYPE_SYSTEM,
+                                                                                   Gio::DBus::PROXY_FLAGS_NONE,
+                                                                                   LICENSE_MANAGER_DBUS_NAME,
+                                                                                   object_path);
+
+        this->license_object_proxy_->LicenseChanged_signal.connect(sigc::mem_fun(this, &DBus::on_license_info_changed_cb));
+
+        this->update_license_info();
+    }
+    catch (const Glib::Error& e)
+    {
+        KLOG_WARNING("%s", e.what().c_str());
+    }
+}
+
+void DBus::update_license_info()
+{
+    RETURN_IF_FALSE(this->license_object_proxy_);
+
+    try
+    {
+        auto license_info = this->license_object_proxy_->GetLicense_sync();
+        this->license_values = StrUtils::str2json(license_info);
+    }
+    catch (const Glib::Error& e)
+    {
+        KLOG_WARNING("%s.", e.what().c_str());
+    }
 }
 
 void DBus::on_scan_process_changed_cb(const JobResult& job_result)
@@ -555,6 +635,12 @@ void DBus::on_reinfoce_process_changed_cb(const JobResult& job_result)
         KLOG_WARNING("%s.", e.what());
         return;
     }
+}
+
+void DBus::on_license_info_changed_cb(bool placeholder)
+{
+    this->update_license_info();
+    this->LicenseChanged_signal.emit(placeholder);
 }
 
 void DBus::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)

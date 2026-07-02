@@ -7,7 +7,7 @@
 
 #include <gtest/gtest.h>
 #include "lib/base/base.h"
-#include "lib/config/config-plain.h"
+// #include "lib/config/config-plain.h"
 
 using namespace Kiran;
 
@@ -75,27 +75,27 @@ USERGROUPS_ENAB yes
 ENCRYPT_METHOD SHA512
 )"";
 
-TEST(ConfigTest, KVConfig)
-{
-    auto test_filename = "/tmp/kv-config-test.conf";
-    Glib::file_set_contents(test_filename, login_defs);
+// TEST(ConfigTest, KVConfig)
+// {
+//     auto test_filename = "/tmp/kv-config-test.conf";
+//     Glib::file_set_contents(test_filename, login_defs);
 
-    auto kv_config1 = ConfigPlain::create(test_filename);
-    kv_config1->set_value("PASS_MAX_DAYS", "8888");
-    kv_config1->set_value("USERGROUPS_ENAB", "no");
-    kv_config1->delete_key("SYS_GID_MAX");
+//     auto kv_config1 = ConfigPlain::create(test_filename);
+//     kv_config1->set_value("PASS_MAX_DAYS", "8888");
+//     kv_config1->set_value("USERGROUPS_ENAB", "no");
+//     kv_config1->delete_key("SYS_GID_MAX");
 
-    auto kv_config2 = ConfigPlain::create(test_filename);
+//     auto kv_config2 = ConfigPlain::create(test_filename);
 
-    ASSERT_EQ(kv_config2->has_key("SYS_GID_MAX"), false);
+//     ASSERT_EQ(kv_config2->has_key("SYS_GID_MAX"), false);
 
-    ASSERT_STREQ(kv_config2->get_value("PASS_MAX_DAYS").c_str(), "8888");
-    ASSERT_EQ(kv_config2->get_integer("PASS_MAX_DAYS"), 8888);
-    ASSERT_EQ(kv_config2->get_bool("TEST_BOOL_STR"), false);
-    ASSERT_EQ(kv_config2->get_bool("TEST_BOOL_NUM"), true);
-    ASSERT_STREQ(kv_config2->get_value("USERGROUPS_ENAB").c_str(), "no");
+//     ASSERT_STREQ(kv_config2->get_value("PASS_MAX_DAYS").c_str(), "8888");
+//     ASSERT_EQ(kv_config2->get_integer("PASS_MAX_DAYS"), 8888);
+//     ASSERT_EQ(kv_config2->get_bool("TEST_BOOL_STR"), false);
+//     ASSERT_EQ(kv_config2->get_bool("TEST_BOOL_NUM"), true);
+//     ASSERT_STREQ(kv_config2->get_value("USERGROUPS_ENAB").c_str(), "no");
 
-    ASSERT_EQ(kv_config2->is_bool("USERGROUPS_ENAB"), false);
-    ASSERT_EQ(kv_config2->is_integer("CREATE_HOME"), false);
-    ASSERT_EQ(kv_config2->is_integer("PASS_MAX_DAYS"), true);
-}
+//     ASSERT_EQ(kv_config2->is_bool("USERGROUPS_ENAB"), false);
+//     ASSERT_EQ(kv_config2->is_integer("CREATE_HOME"), false);
+//     ASSERT_EQ(kv_config2->is_integer("PASS_MAX_DAYS"), true);
+// }

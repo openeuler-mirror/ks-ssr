@@ -56,6 +56,9 @@ public:
     // 判断str是否以prefix字符串开头
     static bool startswith(const std::string &str, const std::string &prefix);
 
+    // 字符串列表交集
+    static std::vector<std::string> intersect(const std::vector<std::string> &a1, const std::vector<std::string> &a2);
+
     template <class T>
     static std::string join(const std::vector<T> &vec, const std::string &join_chars);
 };

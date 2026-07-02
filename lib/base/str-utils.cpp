@@ -139,4 +139,22 @@ bool StrUtils::startswith(const std::string &str, const std::string &prefix)
     RETURN_VAL_IF_TRUE(str.size() < prefix.size(), false);
     return (str.substr(0, prefix.size()) == prefix);
 }
+
+std::vector<std::string> StrUtils::intersect(const std::vector<std::string> &a1, const std::vector<std::string> &a2)
+{
+    std::vector<std::string> result;
+
+    for (const auto &s1 : a1)
+    {
+        for (const auto &s2 : a2)
+        {
+            if (s1 == s2)
+            {
+                result.push_back(s1);
+            }
+        }
+    }
+
+    return result;
+}
 }  // namespace Kiran
