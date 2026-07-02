@@ -16,24 +16,14 @@
 
 #include <QPushButton>
 
-class QPushButton;
-class QLabel;
-
 namespace KS
 {
-class NavigationItem : public QWidget
+class NavigationItem : public QPushButton
 {
     Q_OBJECT
 public:
-    NavigationItem(const QString &iconName, const QString &description);
+    NavigationItem(const QString &iconName);
     virtual ~NavigationItem(){};
-
-Q_SIGNALS:
-    void clicked(bool checked);
-
-private:
-    QPushButton *m_icon;
-    QLabel *m_description;
 };
 
 class Navigation : public QWidget
