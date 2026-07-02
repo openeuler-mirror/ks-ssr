@@ -360,7 +360,7 @@
         <reinforcement>
             <name>config-directory-permissions</name>
             <arg>
-                <name>directory--permissions-limit</name>
+                <name>directory-permissions-limit</name>
                 <value>true</value>
                 <value_limits>""</value_limits>
                 <rule>
@@ -773,6 +773,22 @@
                 <layout>
                     <widget_type>DEFAULT</widget_type>
                     <_label>Scan system important directory suid-sgid file</_label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-vulnerability-scanning</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <_label>Built in common vulnerability version version number scanning</_label>
                 </layout>
             </arg>
         </reinforcement>
