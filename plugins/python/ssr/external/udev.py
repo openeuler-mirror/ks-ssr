@@ -5,7 +5,7 @@ import ssr.utils
 UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-ssr-external.rules"
 
 DISABLE_CDROM_RULE = "KERNEL==\\\"sr0\\\", ENV{UDISKS_IGNORE}=\\\"1\\\""
-DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", RUN+=\\\"/bin/sh -c 'for host in /sys/bus/usb/devices/usb*; do echo 0 > $host/authorized_default; done'\\\""
+DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", DRIVERS==\\\"usb-storage|uas\\\", ATTR{authorized}=\\\"0\\\""
 DISABLE_TTYPS_RULE = "KERNEL==\\\"ttyS[0-9]*\\\", SUBSYSTEM==\\\"tty\\\", MODE=\\\"0000\\\""
 
 CDROM_ARG_ENABLED = "enabled"
@@ -17,8 +17,8 @@ class UDev:
     def __init__(self):
         self.conf = ssr.configuration.Table(UDEV_CONF_FILEPATH, ",\\s+")
 
-    def mkinitrd(self):
-        command =  'mkinitrd /boot/initramfs-`uname -r`.img'
+    def reload(self):
+        command =  'udevadm control --reload'
         outpur = ssr.utils.subprocess_has_output(command)
 
 class CDROM(UDev):
@@ -36,7 +36,7 @@ class CDROM(UDev):
         else:
             self.conf.set_value("1=KERNEL==\\\"sr0\\\"", DISABLE_CDROM_RULE)
 
-        self.mkinitrd()
+        self.reload()
         return (True, '')
 
 
@@ -55,7 +55,7 @@ class USB(UDev):
         else:
             self.conf.set_value("1=ACTION==\\\"add\\\";2=SUBSYSTEMS==\\\"usb\\\"", DISABLE_USB_RULE)
 
-        self.mkinitrd()
+        self.reload()
         return (True, '')
 
 
@@ -74,5 +74,5 @@ class TTYS(UDev):
         else:
             self.conf.set_value("1=KERNEL==\\\"ttyS[0-9]*\\\"", DISABLE_TTYPS_RULE)
 
-        self.mkinitrd()
+        self.reload()
         return (True, '')
