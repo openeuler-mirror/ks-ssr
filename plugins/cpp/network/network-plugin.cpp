@@ -18,10 +18,12 @@ namespace Network
 {
 void SSRPluginNetwork::activate()
 {
+    ReinforcementManager::global_init();
 }
 
 void SSRPluginNetwork::deactivate()
 {
+    ReinforcementManager::global_deinit();
 }
 
 std::string SSRPluginNetwork::execute(const std::string& in_json)
@@ -40,7 +42,7 @@ std::string SSRPluginNetwork::execute(const std::string& in_json)
 
 #define CHECK_NAME                                                                                                               \
     auto name = in_values[SSR_JSON_BODY][SSR_JSON_BODY_REINFORCEMENT_NAME].asString();                                           \
-    auto reinforcement = NetworkReinforcementManager::get_instance()->get_reinforcement(name);                                   \
+    auto reinforcement = ReinforcementManager::get_instance()->get_reinforcement(name);                                          \
     if (!reinforcement)                                                                                                          \
     {                                                                                                                            \
         KLOG_DEBUG("The reinforcement %s isn't found.", name.c_str());                                                           \

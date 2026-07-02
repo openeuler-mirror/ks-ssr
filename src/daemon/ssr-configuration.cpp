@@ -6,6 +6,7 @@
  */
 
 #include "src/daemon/ssr-configuration.h"
+#include <fstream>
 #include "ssr-config.h"
 
 namespace Kiran
@@ -15,10 +16,14 @@ namespace Kiran
 #define SSR_BASE_KEY_STANDARD_TYPE "standard_type"
 
 #define MAX_THREAD_NUM_DEFAULT 1
-#define SYSTEM_RS_FILEPATH SSR_INSTALL_DATADIR "/ssr-system-rs.json"
-#define CUSTOM_RS_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-rs.json"
-#define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.json"
+
+#define SYSTEM_RS_FILEPATH SSR_INSTALL_DATADIR "/ssr-system-rs"
+#define CUSTOM_RS_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-rs"
+
+#define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/ssr-custom-ra.xml"
 #define RSA_PUBLIC_KEY_FILEPATH SSR_INSTALL_DATADIR "/ssr-public.key"
+
+using namespace RS;
 
 SSRConfiguration::SSRConfiguration(const std::string& config_path) : config_path_(config_path)
 {
@@ -58,29 +63,15 @@ SSRStandardType SSRConfiguration::get_standard_type()
 bool SSRConfiguration::set_standard_type(SSRStandardType standard_type)
 {
     RETURN_VAL_IF_FALSE(standard_type < SSRStandardType::SSR_STANDARD_TYPE_LAST, false);
+    RETURN_VAL_IF_TRUE(standard_type == this->get_standard_type(), true);
 
-    // 如果设置的加固标准类型不存在对应的文件，则返回错误
-    if ((standard_type == SSRStandardType::SSR_STANDARD_TYPE_SYSTEM && this->system_rs_.empty()) ||
-        (standard_type == SSRStandardType::SSR_STANDARD_TYPE_CUSTOM && this->custom_rs_.empty()))
+    if (!this->set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_STANDARD_TYPE, int32_t(standard_type)))
     {
-        // error_code = SSRErrorCode::ERROR_CORE_RS_NOT_FOUND;
+        KLOG_WARNING("Failed to set standard type.");
         return false;
     }
-
-    return this->set_integer(SSR_GROUP_NAME, SSR_BASE_KEY_STANDARD_TYPE, int32_t(standard_type));
-}
-
-std::string SSRConfiguration::get_rs()
-{
-    switch (this->get_standard_type())
-    {
-    case SSRStandardType::SSR_STANDARD_TYPE_SYSTEM:
-        return this->system_rs_;
-    case SSRStandardType::SSR_STANDARD_TYPE_CUSTOM:
-        return this->custom_rs_;
-    default:
-        return std::string();
-    }
+    this->reload_rs();
+    return true;
 }
 
 bool SSRConfiguration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCode& error_code)
@@ -96,30 +87,52 @@ bool SSRConfiguration::set_custom_rs(const std::string& encrypted_rs, SSRErrorCo
     try
     {
         Glib::file_set_contents(CUSTOM_RS_FILEPATH, encrypted_rs);
-        // 更新自定义加固配置
-        this->custom_rs_ = decrypted_rs;
-        return true;
+        if (this->get_standard_type() == SSRStandardType::SSR_STANDARD_TYPE_CUSTOM)
+        {
+            this->reload_rs();
+        }
     }
     catch (const Glib::Error& e)
     {
         KLOG_WARNING("%s.", e.what().c_str());
+        return false;
     }
-    return false;
+    return true;
 }
 
-bool SSRConfiguration::set_custom_ra(const std::string& ra)
+bool SSRConfiguration::set_custom_ra(const std::string& name, const std::string& custom_ra)
 {
+    auto ra = this->get_ra();
+    auto custom_ra_values = StrUtils::str2json(custom_ra);
+
+    for (auto& reinforcement : ra->reinforcement())
+    {
+        CONTINUE_IF_TRUE(reinforcement.name() != name);
+        for (const auto& arg_name : custom_ra_values.getMemberNames())
+        {
+            for (auto& arg : reinforcement.arg())
+            {
+                CONTINUE_IF_TRUE(arg.name() != arg_name);
+                arg.value(StrUtils::json2str(custom_ra_values[arg_name]));
+                break;
+            }
+        }
+        break;
+    }
+
     try
     {
-        Glib::file_set_contents(CUSTOM_RA_FILEPATH, ra);
-        this->custom_ra_ = ra;
-        return true;
+        std::ofstream ofs(CUSTOM_RA_FILEPATH, std::ios_base::out);
+        ssr_ra(ofs, *ra.get());
+        ofs.close();
     }
-    catch (const Glib::Error& e)
+    catch (const std::exception& e)
     {
-        KLOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s", e.what());
+        return false;
     }
-    return false;
+    this->reload_rs();
+    return true;
 }
 
 void SSRConfiguration::init()
@@ -136,36 +149,82 @@ void SSRConfiguration::init()
         return;
     }
 
-    this->load_rs_files();
-    this->load_ra_files();
+    this->load_rs();
 }
 
-void SSRConfiguration::load_rs_files()
+void SSRConfiguration::reload_rs()
+{
+    this->load_rs();
+    this->rs_changed_.emit();
+}
+
+void SSRConfiguration::load_rs()
+{
+    this->rs_ = this->get_fixed_rs();
+    RETURN_IF_FALSE(this->rs_);
+
+    auto ra = this->get_ra();
+    // 将固定不变的加固标准部分和用户修改的自定义部分进行整合
+    for (const auto& custom_r : ra->reinforcement())
+    {
+        for (auto fixed_r : this->rs_->body().reinforcement())
+        {
+            CONTINUE_IF_TRUE(custom_r.name() != fixed_r.name());
+            this->join_reinforcement(fixed_r, custom_r);
+        }
+    }
+}
+
+std::shared_ptr<SSRRS> SSRConfiguration::get_fixed_rs()
 {
     KLOG_PROFILE("");
+
+    std::string rs_file_path = (this->get_standard_type() == SSRStandardType::SSR_STANDARD_TYPE_CUSTOM) ? CUSTOM_RS_FILEPATH : SYSTEM_RS_FILEPATH;
 
     // 加载加固标准
-    this->system_rs_ = this->decrypt_file(SYSTEM_RS_FILEPATH);
-    this->custom_rs_ = this->decrypt_file(CUSTOM_RS_FILEPATH);
-
-    // KLOG_DEBUG("system rs: %s.", this->system_rs_.c_str());
-    // KLOG_DEBUG("custom rs: %s.", this->custom_rs_.c_str());
+    try
+    {
+        auto rs_decrypted = this->decrypt_file(rs_file_path);
+        KLOG_DEBUG("%s", rs_decrypted.c_str());
+        std::stringbuf rs_stringbuf(rs_decrypted);
+        std::istream rs_istream(&rs_stringbuf);
+        return ssr_rs(rs_istream, xml_schema::Flags::dont_validate);
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+    }
+    return nullptr;
 }
 
-void SSRConfiguration::load_ra_files()
+std::shared_ptr<SSRRA> SSRConfiguration::get_ra()
 {
     KLOG_PROFILE("");
 
-    this->custom_ra_.clear();
-    RETURN_IF_TRUE(!Glib::file_test(CUSTOM_RA_FILEPATH, Glib::FILE_TEST_IS_REGULAR));
+    RETURN_VAL_IF_TRUE(!Glib::file_test(CUSTOM_RA_FILEPATH, Glib::FILE_TEST_IS_REGULAR),
+                       std::make_shared<SSRRA>());
 
     try
     {
-        this->custom_ra_ = Glib::file_get_contents(CUSTOM_RA_FILEPATH);
+        return ssr_ra(CUSTOM_RA_FILEPATH, xml_schema::Flags::dont_validate);
     }
-    catch (const Glib::Error& e)
+    catch (const std::exception& e)
     {
-        KLOG_WARNING("%s.", e.what().c_str());
+        KLOG_WARNING("%s", e.what());
+    }
+    return std::make_shared<SSRRA>();
+}
+
+void SSRConfiguration::join_reinforcement(SSRRSReinforcement& to_r, const SSRRSReinforcement& from_r)
+{
+    for (const auto& from_ra : from_r.arg())
+    {
+        for (auto& to_ra : to_r.arg())
+        {
+            CONTINUE_IF_TRUE(from_ra.name() != to_ra.name());
+            to_ra.value(from_ra.value());
+            break;
+        }
     }
 }
 

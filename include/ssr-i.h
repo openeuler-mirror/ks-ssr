@@ -144,6 +144,11 @@ extern "C"
 #define SSR_JSON_BODY_RULES_MAX_VALUE "max_value"
 // 加固项的加固参数。如果加固项存在自定义参数，则使用自定义参数，否则使用默认参数
 #define SSR_JSON_BODY_REINFORCEMENT_ARGS "args"
+#define SSR_JSON_BODY_REINFORCEMENT_ARG_NAME "name"
+#define SSR_JSON_BODY_REINFORCEMENT_ARG_VALUE "value"
+#define SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT "layout"
+#define SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_TYPE "widget_type"
+#define SSR_JSON_BODY_REINFORCEMENT_ARG_LAYOUT_LABEL "label"
 // 加固项默认参数
 #define SSR_JSON_BODY_REINFORCEMENT_DEFAULT_ARGS "default_args"
 // 加固项自定义参数

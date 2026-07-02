@@ -16,5 +16,15 @@ target_link_libraries(${TARGET_NAME} PRIVATE
                       lib-config
                       lib-dbus)
 
+execute_process(COMMAND ${INTLTOOL-MERGE} -x ${PROJECT_SOURCE_DIR}/po/
+                                          ${PROJECT_SOURCE_DIR}/plugins/cpp/network/ssr-plugin-network.xml.in 
+                                          ${PROJECT_BINARY_DIR}/plugins/cpp/network/ssr-plugin-network.xml)
+
+execute_process(COMMAND ${SED} -i -e "s/xml:lang/lang/g" ${PROJECT_BINARY_DIR}/plugins/cpp/network/ssr-plugin-network.xml)
+
+
+install (FILES ${PROJECT_BINARY_DIR}/plugins/cpp/network/ssr-plugin-network.xml
+        DESTINATION ${SSR_PLUGIN_ROOT_DIR}/)
+
 install(TARGETS ${TARGET_NAME}
-        DESTINATION ${SSE_PLUGIN_ROOT_DIR}/cpp/)
+        DESTINATION ${SSR_PLUGIN_ROOT_DIR}/cpp/)

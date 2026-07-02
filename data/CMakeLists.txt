@@ -11,20 +11,25 @@ foreach(INI_IN_FILE IN LISTS INI_IN_FILES)
     execute_process(COMMAND ${INTLTOOL-MERGE} -d ${PROJECT_SOURCE_DIR}/po/ ${INI_IN_FILE} ${PROJECT_BINARY_DIR}/data/${INI_FILE})
 endforeach()
 
-
 install(FILES ${PROJECT_SOURCE_DIR}/data/ssr.ini
               ${PROJECT_BINARY_DIR}/data/ssr-categories.ini
               ${PROJECT_SOURCE_DIR}/data/ssr-public.key
         DESTINATION ${SSR_INSTALL_DATADIR}/)
 
-install (FILES ${PROJECT_BINARY_DIR}/data/ssr-plugin-config.ini
-        DESTINATION ${SSR_PLUGIN_ROOT_DIR}/)
+
+# xml files
+file(GLOB XML_IN_FILES ./*.xml.in)
+
+foreach(XML_IN_FILE IN LISTS XML_IN_FILES)
+    string(REGEX REPLACE ".+/(.+)\\..*" "\\1" XML_FILE ${XML_IN_FILE})
+    execute_process(COMMAND ${INTLTOOL-MERGE} -x ${PROJECT_SOURCE_DIR}/po/ ${XML_IN_FILE} ${PROJECT_BINARY_DIR}/data/${XML_FILE})
+endforeach()
 
 
 # reinforcement stardand
-install(FILES ${PROJECT_SOURCE_DIR}/data/ssr-system-rs.json.encrypted
+install(FILES ${PROJECT_SOURCE_DIR}/data/ssr-system-rs.encrypted
         DESTINATION ${SSR_INSTALL_DATADIR}/
-        RENAME ssr-system-rs.json)
+        RENAME ssr-system-rs)
 
 # service files
 file(GLOB SERVICE_IN_FILES ./*.service.in)
@@ -50,5 +55,7 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.Kiran.SSR.conf
 
 install (FILES ${PROJECT_SOURCE_DIR}/data/10-sysctl-ssr.conf
          DESTINATION /etc/sysctl.d/)
+
+
 
 
