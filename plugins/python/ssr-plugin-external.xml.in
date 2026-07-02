@@ -46,6 +46,11 @@
         <_description>Enhance the security of SSH data transmission and prevent data from being cracked</_description>
     </reinforcement>
     <reinforcement>
+        <name>external-sshd-banner-info</name>
+        <_label>SSH login banner information</_label>
+        <_description>Avoid the leakage of operating system version information through SSH</_description>
+    </reinforcement>
+    <reinforcement>
         <name>external-pam-su-wheel</name>
         <_label>su command limit</_label>
         <_description>Users outside the wheel group are prohibited from using the 'su root' command</_description>
@@ -63,5 +68,6 @@
     <reinforcement>
         <name>external-radio-switch</name>
         <_label>Disable radio network</_label>
+        <_description>Restrict wireless network connections</_description>
     </reinforcement>
 </ssr_plugin>
