@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-26 18:21+0800\n"
+"POT-Creation-Date: 2023-03-01 15:34+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,47 +22,54 @@ msgid "The standard type is invalid."
 msgstr "标准类型不合法。"
 
 #: ../lib/base/error.cpp:34
-#, fuzzy
 msgid "The strategy type is invalid."
-msgstr "标准类型不合法。"
+msgstr "策略类型不合法。"
 
-#: ../lib/base/error.cpp:39
+#: ../lib/base/error.cpp:37
+msgid "The notification status is invalid."
+msgstr "通知状态不合法。"
+
+#: ../lib/base/error.cpp:40
+msgid "The resource monitor is invalid."
+msgstr "资源监控不合法。"
+
+#: ../lib/base/error.cpp:45
 msgid "Error format for reinforcement standard."
 msgstr "加固标准格式错误。"
 
-#: ../lib/base/error.cpp:42
+#: ../lib/base/error.cpp:48
 msgid "Reinforcement item '{0}' is not found."
 msgstr "加固项'{0}'未找到"
 
-#: ../lib/base/error.cpp:46
+#: ../lib/base/error.cpp:52
 msgid "The job is running, please don't repeat the operation."
 msgstr "任务正在运行，请不要重复操作。"
 
-#: ../lib/base/error.cpp:49
+#: ../lib/base/error.cpp:55
 msgid "The standard reinforcement configuration is not found."
 msgstr "加固标准配置未找到"
 
-#: ../lib/base/error.cpp:52
+#: ../lib/base/error.cpp:58
 msgid "Machine code error."
 msgstr "机器码错误。"
 
-#: ../lib/base/error.cpp:55
+#: ../lib/base/error.cpp:61
 msgid "Activation code error."
 msgstr "激活码错误。"
 
-#: ../lib/base/error.cpp:78
+#: ../lib/base/error.cpp:86
 msgid "Internel error."
 msgstr "内部错误。"
 
-#: ../lib/base/error.cpp:81
+#: ../lib/base/error.cpp:89
 msgid "The software is not activated."
 msgstr "软件未激活。"
 
-#: ../lib/base/error.cpp:84
+#: ../lib/base/error.cpp:92
 msgid "Unknown error."
 msgstr "未知错误。"
 
-#: ../lib/base/error.cpp:88
+#: ../lib/base/error.cpp:96
 msgid " (error code: 0x{:x})"
 msgstr "（错误码：0x{:x}）"
 
@@ -212,40 +219,40 @@ msgid "Prohibit the host from being detected by traceroute"
 msgstr "禁止主机被Traceroute探测"
 
 #: ../data/ssr-system-rs.xml.in.h:7
-msgid "Turn on system firewall service"
-msgstr "开启系统防火墙服务"
-
-#: ../data/ssr-system-rs.xml.in.h:8
 msgid "transport protocol"
 msgstr "传输协议"
 
-#: ../data/ssr-system-rs.xml.in.h:9
+#: ../data/ssr-system-rs.xml.in.h:8
 msgid "Disable ports that may threaten the system by default"
 msgstr "默认禁用可能威胁系统的端口"
 
-#: ../data/ssr-system-rs.xml.in.h:10
+#: ../data/ssr-system-rs.xml.in.h:9
 msgid "clear iptables configuration"
 msgstr "清空iptables配置"
 
-#: ../data/ssr-system-rs.xml.in.h:11
+#: ../data/ssr-system-rs.xml.in.h:10
 msgid "disable network segment (Split with comma)"
 msgstr "禁止输入网段 (逗号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:12
+#: ../data/ssr-system-rs.xml.in.h:11
 msgid "disable ports (Split with semicolon)"
 msgstr "禁用输入端口 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:13
+#: ../data/ssr-system-rs.xml.in.h:12
 msgid "Limit input port maximum connections(0 means unlimited)"
 msgstr "限制输入端口最大连接数（0为不限制）"
 
-#: ../data/ssr-system-rs.xml.in.h:14
+#: ../data/ssr-system-rs.xml.in.h:13
 msgid "disable output network segment (Split with comma)"
 msgstr "禁止输出网段 (逗号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:15
+#: ../data/ssr-system-rs.xml.in.h:14
 msgid "disable output ports (Split with semicolon)"
 msgstr "禁用输出端口 (分号分割)"
+
+#: ../data/ssr-system-rs.xml.in.h:15
+msgid "disable icmp ping"
+msgstr "ICMP禁用ping传入请求"
 
 #: ../data/ssr-system-rs.xml.in.h:16
 msgid "Turn on system bluetooth service"
@@ -396,120 +403,116 @@ msgid "Built in common vulnerability version version number scanning"
 msgstr "内置常见漏洞版本号扫描"
 
 #: ../data/ssr-system-rs.xml.in.h:51
-msgid "Open monitor(Takes effect after the backend service is restarted)"
-msgstr "开启监控（重启后端服务生效）"
-
-#: ../data/ssr-system-rs.xml.in.h:52
 msgid "Turn on system auditd service"
 msgstr "开启系统审计服务"
 
-#: ../data/ssr-system-rs.xml.in.h:53
+#: ../data/ssr-system-rs.xml.in.h:52
 msgid "System log save cycle（weekly）"
 msgstr "系统日志保存周期（周）"
 
-#: ../data/ssr-system-rs.xml.in.h:54
+#: ../data/ssr-system-rs.xml.in.h:53
 msgid "The maximum permission of log files and configurations is set to 0644"
 msgstr "日志文件和配置的最大权限为0644"
 
-#: ../data/ssr-system-rs.xml.in.h:55
+#: ../data/ssr-system-rs.xml.in.h:54
 msgid "Log files can only be appended"
 msgstr "日志文件仅能被添加"
 
-#: ../data/ssr-system-rs.xml.in.h:56
+#: ../data/ssr-system-rs.xml.in.h:55
 msgid "Allow to use CD-ROM device"
 msgstr "允许使用光驱设备（首次加固时间长，请耐心等待）"
 
-#: ../data/ssr-system-rs.xml.in.h:57
+#: ../data/ssr-system-rs.xml.in.h:56
 msgid "Allow to use USB device"
 msgstr "允许使用USB设备"
 
-#: ../data/ssr-system-rs.xml.in.h:58
+#: ../data/ssr-system-rs.xml.in.h:57
 msgid "Allow to use serial port device"
 msgstr "允许使用串口设备"
 
-#: ../data/ssr-system-rs.xml.in.h:59
+#: ../data/ssr-system-rs.xml.in.h:58
 #: ../plugins/python/ssr-plugin-external.xml.in.h:9
 msgid "Restrict system independent user login"
 msgstr "限制系统无关用户登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:60
+#: ../data/ssr-system-rs.xml.in.h:59
 msgid "Allow account retention (Split with semicolon)"
 msgstr "允许保留账号 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:61
+#: ../data/ssr-system-rs.xml.in.h:60
 msgid "Disable null password user present"
 msgstr "禁止空密码用户出现"
 
-#: ../data/ssr-system-rs.xml.in.h:62
+#: ../data/ssr-system-rs.xml.in.h:61
 msgid "Delete lp, games, operator and adm by default"
 msgstr "默认删除lp, games, operator, adm"
 
-#: ../data/ssr-system-rs.xml.in.h:63
+#: ../data/ssr-system-rs.xml.in.h:62
 msgid "Add users to delete (Split with semicolon)"
 msgstr "添加需删除用户 (分号分割)"
 
-#: ../data/ssr-system-rs.xml.in.h:64
+#: ../data/ssr-system-rs.xml.in.h:63
 msgid "Allow remote login of root user via SSH"
 msgstr "允许通过ssh远程登陆root用户"
 
-#: ../data/ssr-system-rs.xml.in.h:65
+#: ../data/ssr-system-rs.xml.in.h:64
 msgid "Allow SSH password free login"
 msgstr "允许SSH免密登陆"
 
-#: ../data/ssr-system-rs.xml.in.h:66
+#: ../data/ssr-system-rs.xml.in.h:65
 msgid "Allow to use SSH weak encryption algorithm"
 msgstr "允许使用SSH弱加密算法"
 
-#: ../data/ssr-system-rs.xml.in.h:67
+#: ../data/ssr-system-rs.xml.in.h:66
 msgid "Hiding operating system version information"
 msgstr "隐藏操作系统版本信息"
 
-#: ../data/ssr-system-rs.xml.in.h:68
+#: ../data/ssr-system-rs.xml.in.h:67
 msgid "Enforce V2 security protocol"
 msgstr "强制使用V2安全协议"
 
-#: ../data/ssr-system-rs.xml.in.h:69
+#: ../data/ssr-system-rs.xml.in.h:68
 msgid "Prohibit SSH users with empty password from logging in"
 msgstr "禁止主机密码为空的用户SSH登录"
 
-#: ../data/ssr-system-rs.xml.in.h:70
+#: ../data/ssr-system-rs.xml.in.h:69
 msgid "Modify the default SSH port"
 msgstr "修改默认SSH端口"
 
-#: ../data/ssr-system-rs.xml.in.h:71
+#: ../data/ssr-system-rs.xml.in.h:70
 msgid "Enable PAM login mechanism"
 msgstr "启用PAM登录机制"
 
-#: ../data/ssr-system-rs.xml.in.h:72
+#: ../data/ssr-system-rs.xml.in.h:71
 #: ../plugins/python/ssr-plugin-external.xml.in.h:25
 msgid ""
 "Users outside the wheel group are prohibited from using the 'su root' command"
 msgstr "禁止wheel组以外的用户使用'su root'命令"
 
-#: ../data/ssr-system-rs.xml.in.h:73
+#: ../data/ssr-system-rs.xml.in.h:72
 msgid "Restrict user sudo command permission"
 msgstr "限制用户sudo命令使用权限(开启selinux失效)"
 
-#: ../data/ssr-system-rs.xml.in.h:74
+#: ../data/ssr-system-rs.xml.in.h:73
 msgid "List of IP addresses that allow remote access (Split with comma)"
 msgstr "允许远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:75
+#: ../data/ssr-system-rs.xml.in.h:74
 msgid ""
 "List of IP addresses for which remote access is prohibited (Split with comma)"
 msgstr "禁止远程访问的IP列表（逗号分割）"
 
-#: ../data/ssr-system-rs.xml.in.h:76
+#: ../data/ssr-system-rs.xml.in.h:75
 msgid ""
 "If no operation is performed for more than the following time (seconds), the "
 "session exits"
 msgstr "超过以下时间（秒）未操作则会话退出"
 
-#: ../data/ssr-system-rs.xml.in.h:77
+#: ../data/ssr-system-rs.xml.in.h:76
 msgid "Whether to configure sftpuser special account"
 msgstr "是否配置sftpuser用户（请自行设置用户密码）"
 
-#: ../data/ssr-system-rs.xml.in.h:78
+#: ../data/ssr-system-rs.xml.in.h:77
 #: ../plugins/python/ssr-plugin-external.xml.in.h:34
 msgid "Disable radio network"
 msgstr "禁用无线网络"
@@ -668,14 +671,6 @@ msgstr "漏洞扫描"
 #: ../plugins/python/ssr-plugin-config.xml.in.h:33
 msgid "Scanning system CVE vulnerability"
 msgstr "扫描系统CVE漏洞"
-
-#: ../plugins/python/ssr-plugin-config.xml.in.h:34
-msgid "Resource monitor"
-msgstr "资源监控"
-
-#: ../plugins/python/ssr-plugin-config.xml.in.h:35
-msgid "Monitoring system resources"
-msgstr "监控系统资源"
 
 #: ../plugins/python/ssr-plugin-external.xml.in.h:1
 msgid "external settings"
@@ -869,6 +864,18 @@ msgstr "禁止高危漏洞服务"
 #: ../plugins/python/ssr-plugin-network.xml.in.h:15
 msgid "Disable high risk vulnerability services"
 msgstr "预防bluetooth、cups、avahi-daemon、rpcbind、smb服务潜在的危险"
+
+#~ msgid "Turn on system firewall service"
+#~ msgstr "开启系统防火墙服务"
+
+#~ msgid "Open monitor(Takes effect after the backend service is restarted)"
+#~ msgstr "开启监控（重启后端服务生效）"
+
+#~ msgid "Resource monitor"
+#~ msgstr "资源监控"
+
+#~ msgid "Monitoring system resources"
+#~ msgstr "监控系统资源"
 
 #~ msgid "Whether to set TCP (otherwise UDP)"
 #~ msgstr "是否设置TCP（否则为UDP）"
