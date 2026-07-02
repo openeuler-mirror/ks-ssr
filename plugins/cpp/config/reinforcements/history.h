@@ -14,18 +14,18 @@ namespace Kiran
 {
 namespace Config
 {
-class HistsizeLimit : public SSEReinforcementInterface
+class HistorySizeLimit : public SSRReinforcementInterface
 {
 public:
-    HistsizeLimit(){};
-    virtual ~HistsizeLimit(){};
+    HistorySizeLimit(){};
+    virtual ~HistorySizeLimit(){};
 
     virtual bool get(std::string &args, SSRErrorCode &error_code);
 
     virtual bool set(const std::string &args, SSRErrorCode &error_code);
 
 private:
-    std::shared_ptr<ConfigPlain> histsize_limit_config_;
+    std::shared_ptr<ConfigPlain> history_size_limit_config_;
 };
 
 }  // namespace Config

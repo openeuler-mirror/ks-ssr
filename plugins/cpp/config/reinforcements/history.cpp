@@ -11,70 +11,60 @@
 namespace Kiran
 {
 
-#define HISTSIZE_LIMIT_CONF_PATH "/etc/profile"
-#define HISTSIZE_LIMIT_CONF_KEY_HISTSIZE "HISTSIZE"
+#define HISTORY_SIZE_LIMIT_CONF_PATH "/etc/profile"
+#define HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE "HISTSIZE"
 
 
-HistsizeLimit::HistsizeLimit()
+HistorySizeLimit::HistorySizeLimit()
 {
-    this->histsize_limit_config_ = ConfigPlain::create(HISTSIZE_LIMIT_CONF_PATH, "=");
+    this->history_size_limit_config_ = ConfigPlain::create(HISTORY_SIZE_LIMIT_CONF_PATH, "=");
 }
 
-bool HistsizeLimit::get(const std::string &args,  SSRErrorCode &error_code)
+bool HistorySizeLimit::get(const std::string &args,  SSRErrorCode &error_code)
 {
-    if(!this->histsize_limit_config_)
+    if(!this->history_size_limit_config_)
     {
-        error_code = SSRErrorCode::ERROR_FAILED;
-        return false;
+        RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
     }
 
     try
     {
         Json::Value values;
-        auto histsize = this->histsize_limit_config_->get_value(HISTSIZE_LIMIT_CONF_KEY_HISTSIZE);
-
-        value[HISTSIZE_LIMIT_CONF_KEY_HISTSIZE] =  histsize;
-
+        auto histsize = this->history_size_limit_config_->get_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE);
+        value[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE] =  histsize;
         args = StrUtils::json2str(values);
+        return true;
+    }
+    catch(const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+        RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
+    }
+}
+
+bool HistorySizeLimit::set(const std::string &args, SSRErrorCode &error_code)
+{
+    if(!this->history_size_limit_config_)
+    {
+        RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
+    }
+
+    try
+    {
+        Json::Value values = StrUtils::str2json(args);
+        
+        RETURN_ERROR_IF_FALSE(values[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE].isInt(), SSRErrorCode::ERROR_FAILED);
+
+        auto histsize = fmt::format("{0}", values[HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE].asInt());
+        this->history_size_limit_config_->set_value(HISTORY_SIZE_LIMIT_CONF_KEY_HISTSIZE, histsize);
 
         return true;
     }
     catch(const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = SSRErrorCode::ERROR_FAILED;
-        return false;
+        RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
     }
-}
-
-bool HistsizeLimit::set(const std::string &args, SSEErrorCode &error_code)
-{
-    if(!this->histsize_limit_config_)
-    {
-        error_code = SSRErrorCode::ERROR_FAILED;
-        return false;
-    }
-
-    try
-    {
-        Json::Value values = StrUtils::str2json(args);
-
-        if(!values[HISTSIZE_LIMIT_CONF_KEY_HISTSIZE].asInt())
-        {
-            error_code = SSRErrorCode::ERROR_FAILED;
-            return false;
-        }
-
-        auto histsize = fmt::format("{0}", values[HISTSIZE_LIMIT_CONF_KEY_HISTSIZE].asInt());
-        this->histsize_limit_config_->set_value(HISTSIZE_LIMIT_CONF_KEY_HISTSIZE, histsize);
-    }
-    catch(const std::exception& e)
-    {
-        KLOG_WARNING("%s", e.what());
-        error_code = SSRErrorCode::ERROR_FAILED;
-        return false;
-    }
-    return true;
 }
 
 }  // namespace Kiran

@@ -11,7 +11,7 @@
 
 namespace Kiran
 {
-std::map<std::string, std::shared_ptr<ConfigPAM>> ConfigPAM::plains_ = std::map<std::string, std::shared_ptr<ConfigPAM>>();
+std::map<std::string, std::shared_ptr<ConfigPAM>> ConfigPAM::pams_ = std::map<std::string, std::shared_ptr<ConfigPAM>>();
 
 ConfigPAM::ConfigPAM(const std::string &conf_path) : conf_path_(conf_path),
                                                          is_writing_(false)
@@ -152,20 +152,20 @@ bool ConfigPAM::delete_key(const std::string &key)
 
 std::shared_ptr<ConfigPAM> ConfigPAM::create(const std::string &conf_path)
 {
-    auto iter = ConfigPAM::plains_.find(conf_path);
-    if (iter != ConfigPAM::plains_.end())
+    auto iter = ConfigPAM::pams_.find(conf_path);
+    if (iter != ConfigPAM::pams_.end())
     {
         return iter->second;
     }
 
-    std::shared_ptr<ConfigPAM> plain(new ConfigPAM(conf_path));
-    auto retval = ConfigPAM::plains_.emplace(conf_path, plain);
+    std::shared_ptr<ConfigPAM> pam(new ConfigPAM(conf_path));
+    auto retval = ConfigPAM::pams_.emplace(conf_path, pam);
     if (!retval.second)
     {
         KLOG_WARNING("Failed to insert config %s.", conf_path.c_str());
         return nullptr;
     }
-    return plain;
+    return pam;
 }
 
 bool ConfigPAM::read_from_file()
@@ -254,8 +254,8 @@ bool ConfigPAM::write_to_file()
             new_contents.append(line);
             new_contents.push_back('\n');
             continue;
-        }  
-        
+        }
+
         fields[0].append(".so");
         // 如果key存在则使用缓存的值进行替换，否则直接删除该行
         auto iter = keys.find(fields[0]);
