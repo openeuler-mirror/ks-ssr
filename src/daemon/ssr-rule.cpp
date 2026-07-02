@@ -9,7 +9,7 @@
 
 namespace Kiran
 {
-using namespace RS;
+using namespace Protocol;
 
 std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
 {
@@ -19,7 +19,7 @@ std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
     switch (type)
     {
         // TODO: 实现FIXED/ENUM
-    case SSRRuleType::Value::RANGE:
+    case RuleType::Value::RANGE:
     {
         RETURN_VAL_IF_TRUE(!rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) && !rule.isMember(SSR_JSON_BODY_RULES_MAX_VALUE), nullptr);
         if (rule.isMember(SSR_JSON_BODY_RULES_MIN_VALUE) &&
@@ -37,17 +37,17 @@ std::shared_ptr<SSRRule> SSRRule::create(const Json::Value &rule)
     return nullptr;
 }
 
-std::shared_ptr<SSRRule> SSRRule::create(const SSRRSRule &rule)
+std::shared_ptr<SSRRule> SSRRule::create(const Rule &rule)
 {
     switch (rule.type())
     {
-    case SSRRuleType::Value::FIXED:
+    case RuleType::Value::FIXED:
     {
         RETURN_VAL_IF_FALSE(rule.value_fixed().present(), nullptr);
         auto value = StrUtils::str2json(rule.value_fixed().get());
         return std::make_shared<SSRRuleFixed>(value);
     }
-    case SSRRuleType::Value::RANGE:
+    case RuleType::Value::RANGE:
     {
         RETURN_VAL_IF_FALSE(rule.value_range().present(), nullptr);
         auto &value_range = rule.value_range().get();
@@ -55,7 +55,7 @@ std::shared_ptr<SSRRule> SSRRule::create(const SSRRSRule &rule)
         auto max_value = StrUtils::str2json(value_range.max_value());
         return std::make_shared<SSRRuleRange>(min_value, max_value);
     }
-    case SSRRuleType::Value::ENUM:
+    case RuleType::Value::ENUM:
     {
         RETURN_VAL_IF_FALSE(rule.value_enum().present(), nullptr);
         auto &value_enum = rule.value_enum().get();

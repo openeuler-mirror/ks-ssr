@@ -45,7 +45,7 @@ public:
      * @param {string} args 系统配置参数
      * @return {*} 如果系统配置符合加固标准，则返回true，否则返回false
      */
-    virtual bool get(std::string &args, SSRErrorCode &error_code) = 0;
+    virtual bool get(std::string &ReinforcementArg, SSRErrorCode &error_code) = 0;
 
     /**
      * @brief 设置系统配置

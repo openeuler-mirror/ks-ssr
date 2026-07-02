@@ -9,11 +9,11 @@
 
 #include <json/json.h>
 #include "lib/base/base.h"
-#include "src/daemon/ssr-rs-config.hxx"
+#include "src/daemon/ssr-protocol.hxx"
 
 namespace Kiran
 {
-// enum SSRRuleType
+// enum RuleType
 // {
 //     SSR_RULE_TYPE_NONE = 0,
 //     // 值是否在一个连续范围内
@@ -26,12 +26,12 @@ class SSRRule
 {
 public:
     // 规则类型
-    virtual RS::SSRRuleType get_type() { return RS::SSRRuleType::Value::NONE; };
+    virtual Protocol::RuleType get_type() { return Protocol::RuleType::Value::NONE; };
     // 判断该值是否符合规则
     virtual bool match(const Json::Value &value) { return false; };
 
     static std::shared_ptr<SSRRule> create(const Json::Value &rule);
-    static std::shared_ptr<SSRRule> create(const RS::SSRRSRule &rule);
+    static std::shared_ptr<SSRRule> create(const Protocol::Rule &rule);
 
 protected:
     enum JsonCmpResult
@@ -60,7 +60,7 @@ public:
     virtual ~SSRRuleRange(){};
 
     // 规则类型
-    virtual RS::SSRRuleType get_type() override { return RS::SSRRuleType::Value::RANGE; };
+    virtual Protocol::RuleType get_type() override { return Protocol::RuleType::Value::RANGE; };
     // 判断该值是否符合规则
     virtual bool match(const Json::Value &value) override;
 
@@ -78,7 +78,7 @@ public:
     virtual ~SSRRuleFixed(){};
 
     // 规则类型
-    virtual RS::SSRRuleType get_type() override { return RS::SSRRuleType::Value::RANGE; };
+    virtual Protocol::RuleType get_type() override { return Protocol::RuleType::Value::RANGE; };
 };
 
 class SSRRuleEnum : public SSRRule
@@ -88,7 +88,7 @@ public:
     virtual ~SSRRuleEnum(){};
 
     // 规则类型
-    virtual RS::SSRRuleType get_type() override { return RS::SSRRuleType::Value::ENUM; };
+    virtual Protocol::RuleType get_type() override { return Protocol::RuleType::Value::ENUM; };
     // 判断该值是否符合规则
     virtual bool match(const Json::Value &value) override;
 

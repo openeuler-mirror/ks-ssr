@@ -7,10 +7,12 @@
 
 #include "src/daemon/ssr-manager.h"
 #include <json/json.h>
+#include <iostream>
 #include "lib/base/base.h"
 #include "src/daemon/ssr-categories.h"
 #include "src/daemon/ssr-configuration.h"
 #include "src/daemon/ssr-plugins.h"
+#include "src/daemon/ssr-protocol.hxx"
 #include "src/daemon/ssr-utils.h"
 
 namespace Kiran
@@ -104,65 +106,50 @@ void SSRManager::GetCategories(MethodInvocation& invocation)
     }
 }
 
-/*void SSRManager::GetPlugins(MethodInvocation& invocation)
+void SSRManager::GetRS(MethodInvocation& invocation)
 {
-    Json::Value values;
-    Json::StreamWriterBuilder wbuilder;
-    wbuilder["indentation"] = "";
-    auto plugins = this->plugins_->get_plugins();
+    std::ostringstream ostring_stream;
+    auto rs = this->configuration_->get_rs();
+
+    if (!rs)
+    {
+        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_GET_RS_FAILED);
+    }
 
     try
     {
-        values["item_count"] = plugins.size();
-        for (uint32_t i = 0; i < plugins.size(); ++i)
-        {
-            auto plugin = plugins[i];
-            const auto& plugin_info = plugin->get_plugin_info();
-            values["items"][i]["name"] = plugin_info.name;
-        }
-
-        auto result = Json::writeString(wbuilder, values);
-        invocation.ret(result);
+        Protocol::ssr_rs(ostring_stream, *rs.get());
+        invocation.ret(ostring_stream.str());
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DEAMON_CONVERT_CATEGORIES2JSON_FAILED);
+        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_GET_RS_FAILED);
     }
-}*/
+}
 
 void SSRManager::GetReinforcements(MethodInvocation& invocation)
 {
     KLOG_PROFILE("");
 
-    Json::Value reinforcements_json;
-    Json::StreamWriterBuilder wbuilder;
+    Protocol::Reinforcements protocol_reinforcements;
 
-    wbuilder["indentation"] = "";
+    for (auto reinforcement : this->plugins_->get_reinforcements())
+    {
+        auto& rs_reinforcement = reinforcement->get_rs();
+        protocol_reinforcements.reinforcement().push_back(rs_reinforcement);
+    }
 
     try
     {
-        auto reinforcements = this->plugins_->get_reinforcements();
-
-        for (uint32_t i = 0; i < reinforcements.size(); ++i)
-        {
-            auto reinforcement = reinforcements[i];
-            auto reinforcement_json = this->get_reinforcement_json(reinforcement->get_name());
-            if (reinforcement_json.isNull())
-            {
-                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID);
-            }
-            reinforcements_json[SSR_JSON_BODY_ITEMS].append(std::move(reinforcement_json));
-        }
-
-        reinforcements_json[SSR_JSON_BODY_REINFORCEMENT_COUNT] = reinforcements.size();
-        auto result = Json::writeString(wbuilder, reinforcements_json);
-        invocation.ret(result);
+        std::ostringstream ostring_stream;
+        Protocol::ssr_reinforcements(ostring_stream, protocol_reinforcements);
+        invocation.ret(ostring_stream.str());
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID);
+        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED);
     }
 }
 
@@ -170,32 +157,50 @@ void SSRManager::GetReinforcement(const Glib::ustring& name, MethodInvocation& i
 {
     KLOG_PROFILE("");
 
-    Json::StreamWriterBuilder wbuilder;
-    wbuilder["indentation"] = "";
-
-    auto reinforcement_json = this->get_reinforcement_json(name);
-    if (reinforcement_json.isNull())
+    auto reinforcement = this->plugins_->get_reinforcement(name);
+    if (!reinforcement)
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID);
+        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND);
     }
-    auto result = Json::writeString(wbuilder, reinforcement_json);
-    invocation.ret(result);
+    auto& rs_reinforcement = reinforcement->get_rs();
+
+    try
+    {
+        std::ostringstream ostring_stream;
+        Protocol::ssr_reinforcement(ostring_stream, rs_reinforcement);
+        invocation.ret(ostring_stream.str());
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED);
+    }
 }
 
-void SSRManager::SetReinforcementArgs(const Glib::ustring& name,
-                                      const Glib::ustring& custom_args,
-                                      MethodInvocation& invocation)
+void SSRManager::SetReinforcement(const Glib::ustring& reinforcement_xml, MethodInvocation& invocation)
 {
-    if (!this->configuration_->set_custom_ra(name, custom_args))
+    KLOG_PROFILE("");
+
+    try
     {
-        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_ARGS_FAILED);
+        std::istringstream istring_stream(reinforcement_xml);
+        auto rs_reinforcement = Protocol::ssr_reinforcement(istring_stream, xml_schema::Flags::dont_validate);
+        if (!this->configuration_->set_custom_ra(*rs_reinforcement.get()))
+        {
+            DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED);
+        }
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+        DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED);
     }
     invocation.ret();
 }
 
-void SSRManager::Scan(const Glib::ustring& scan_range, MethodInvocation& invocation)
+void SSRManager::Scan(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
 {
-    KLOG_PROFILE("range: %s.", scan_range.c_str());
+    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
     // 已经在扫描则返回错误
     if (this->scan_job_ && this->scan_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
@@ -207,15 +212,13 @@ void SSRManager::Scan(const Glib::ustring& scan_range, MethodInvocation& invocat
     {
         this->scan_job_ = SSRJob::create();
 
-        auto range_json = StrUtils::str2json(scan_range);
-        for (int32_t i = 0; i < (int32_t)range_json[SSR_JSON_SCAN_ITEMS].size(); ++i)
+        for (auto& name : names)
         {
-            auto name = range_json[SSR_JSON_SCAN_ITEMS][i][SSR_JSON_SCAN_REINFORCEMENT_NAME].asString();
             auto reinforcement = this->plugins_->get_reinforcement(name);
 
             if (!reinforcement)
             {
-                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND, name);
+                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND, name);
             }
 
             auto reinforcement_interface = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
@@ -261,9 +264,9 @@ void SSRManager::Scan(const Glib::ustring& scan_range, MethodInvocation& invocat
     }
 }
 
-void SSRManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation& invocation)
+void SSRManager::Reinforce(const std::vector<Glib::ustring>& names, MethodInvocation& invocation)
 {
-    KLOG_PROFILE("");
+    KLOG_PROFILE("range: %s.", StrUtils::join(names, " ").c_str());
 
     // 已经在加固则返回错误
     if (this->reinforce_job_ && this->reinforce_job_->get_state() == SSRJobState::SSR_JOB_STATE_RUNNING)
@@ -273,17 +276,15 @@ void SSRManager::Reinforce(const Glib::ustring& reinforcements, MethodInvocation
 
     try
     {
-        Json::Value reinforcenments_values = StrUtils::str2json(reinforcements);
         this->reinforce_job_ = SSRJob::create();
 
-        for (uint32_t i = 0; i < reinforcenments_values["items"].size(); ++i)
+        for (auto& name : names)
         {
-            auto name = reinforcenments_values["items"][i]["name"].asString();
             auto reinforcement = this->plugins_->get_reinforcement(name);
 
             if (!reinforcement)
             {
-                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_SCAN_REINFORCEMENT_NOTFOUND_2, name);
+                DBUS_ERROR_REPLY_AND_RET(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND, name);
             }
 
             auto reinforcement_interface = this->plugins_->get_reinfocement_interface(reinforcement->get_plugin_name(),
@@ -421,27 +422,32 @@ Json::Value SSRManager::get_reinforcement_json(const std::string& name)
 
 void SSRManager::on_scan_process_changed_cb(const SSRJobResult& job_result)
 {
-    Json::Value scan_result;
+    Protocol::JobResult scan_result(0, 0, 0);
 
     try
     {
-        scan_result[SSR_JSON_SCAN_PROCESS] = double(job_result.finished_operation_num * 100.0 / job_result.sum_operation_num);
-        scan_result[SSR_JSON_SCAN_JOB_ID] = job_result.job_id;
-        scan_result[SSR_JSON_SCAN_JOB_STATE] = this->scan_job_->get_state();
+        scan_result.process(job_result.finished_operation_num * 100.0 / job_result.sum_operation_num);
+        scan_result.job_id(job_result.job_id);
+        scan_result.job_state(this->scan_job_->get_state());
 
         int32_t item_count = 0;
         for (auto operation_id : job_result.running_operations)
         {
             auto operation = this->scan_job_->get_operation(operation_id);
-            scan_result[SSR_JSON_SCAN_ITEMS][item_count][SSR_JSON_SCAN_REINFORCEMENT_NAME] = operation->reinforcement_name;
-            scan_result[SSR_JSON_SCAN_ITEMS][item_count][SSR_JSON_SCAN_REINFORCEMENT_STATE] = SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCANNING;
+
+            Protocol::ReinforcementResult reinforcement_result(std::string(), 0);
+            reinforcement_result.name(operation->reinforcement_name);
+            reinforcement_result.state(SSRReinforcementState::SSR_REINFORCEMENT_STATE_SCANNING);
+            scan_result.reinforcement().push_back(std::move(reinforcement_result));
             ++item_count;
         }
 
         for (const auto& operation_result : job_result.current_finished_operations)
         {
             auto operation = this->scan_job_->get_operation(operation_result.operation_id);
-            scan_result[SSR_JSON_SCAN_ITEMS][item_count][SSR_JSON_SCAN_REINFORCEMENT_NAME] = operation->reinforcement_name;
+            Protocol::ReinforcementResult reinforcement_result(std::string(), 0);
+
+            reinforcement_result.name(operation->reinforcement_name);
 
             SSRReinforcementState state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNKNOWN;
             Json::Value result_values = StrUtils::str2json(operation_result.result);
@@ -468,45 +474,50 @@ void SSRManager::on_scan_process_changed_cb(const SSRJobResult& job_result)
             {
                 state = SSRReinforcementState(state | SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNSAFE);
             }
-            scan_result[SSR_JSON_BODY_ITEMS][item_count][SSR_JSON_SCAN_REINFORCEMENT_STATE] = int32_t(state);
+            reinforcement_result.state(int32_t(state));
+            scan_result.reinforcement().push_back(std::move(reinforcement_result));
             ++item_count;
         }
 
-        scan_result[SSR_JSON_BODY_REINFORCEMENT_COUNT] = item_count;
+        std::ostringstream ostring_stream;
+        Protocol::ssr_job_result(ostring_stream, scan_result);
+        this->ScanProgress_signal.emit(ostring_stream.str());
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s.", e.what());
         return;
     }
-
-    auto result = StrUtils::json2str(scan_result);
-    this->ScanProgress_signal.emit(result);
 }
 
 void SSRManager::on_reinfoce_process_changed_cb(const SSRJobResult& job_result)
 {
-    Json::Value reinforce_result;
+    Protocol::JobResult reinforce_result(0, 0, 0);
 
     try
     {
-        reinforce_result["process"] = double(job_result.finished_operation_num * 100.0 / job_result.sum_operation_num);
-        reinforce_result["job_id"] = job_result.job_id;
-        reinforce_result["job_state"] = this->reinforce_job_->get_state();
+        reinforce_result.process(job_result.finished_operation_num * 100.0 / job_result.sum_operation_num);
+        reinforce_result.job_id(job_result.job_id);
+        reinforce_result.job_state(this->reinforce_job_->get_state());
 
         int32_t item_count = 0;
         for (auto operation_id : job_result.running_operations)
         {
             auto operation = this->reinforce_job_->get_operation(operation_id);
-            reinforce_result["items"][item_count]["name"] = operation->reinforcement_name;
-            reinforce_result["items"][item_count]["state"] = SSRReinforcementState::SSR_REINFORCEMENT_STATE_REINFORCING;
+            Protocol::ReinforcementResult reinforcement_result(std::string(), 0);
+
+            reinforcement_result.name(operation->reinforcement_name);
+            reinforcement_result.state(SSRReinforcementState::SSR_REINFORCEMENT_STATE_REINFORCING);
+            reinforce_result.reinforcement().push_back(std::move(reinforcement_result));
             ++item_count;
         }
 
         for (const auto& operation_result : job_result.current_finished_operations)
         {
             auto operation = this->reinforce_job_->get_operation(operation_result.operation_id);
-            reinforce_result["items"][item_count]["name"] = operation->reinforcement_name;
+            Protocol::ReinforcementResult reinforcement_result(std::string(), 0);
+
+            reinforcement_result.name(operation->reinforcement_name);
 
             SSRReinforcementState state = SSRReinforcementState::SSR_REINFORCEMENT_STATE_UNKNOWN;
             Json::Value result_values = StrUtils::str2json(operation_result.result);
@@ -526,23 +537,23 @@ void SSRManager::on_reinfoce_process_changed_cb(const SSRJobResult& job_result)
                 SSRErrorCode error_code = SSRErrorCode(result_values[JOB_ERROR_CODE].asInt());
                 if (error_code != SSRErrorCode::SUCCESS)
                 {
-                    reinforce_result["items"][item_count]["error"] = CC_ERROR2STR(error_code);
+                    reinforcement_result.error(CC_ERROR2STR(error_code));
                 }
             }
-            reinforce_result["items"][item_count]["state"] = int32_t(state);
+            reinforcement_result.state(int32_t(state));
+            reinforce_result.reinforcement().push_back(std::move(reinforcement_result));
             ++item_count;
         }
 
-        reinforce_result["item_count"] = item_count;
+        std::ostringstream ostring_stream;
+        Protocol::ssr_job_result(ostring_stream, reinforce_result);
+        this->ReinforceProgress_signal.emit(ostring_stream.str());
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s.", e.what());
         return;
     }
-
-    auto result = StrUtils::json2str(reinforce_result);
-    this->ReinforceProgress_signal.emit(result);
 }
 
 void SSRManager::on_bus_acquired(const Glib::RefPtr<Gio::DBus::Connection>& connect, Glib::ustring name)
