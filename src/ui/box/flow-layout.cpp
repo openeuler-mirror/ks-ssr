@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * kiran-session-manager is licensed under Mulan PSL v2.
+ * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -120,7 +120,7 @@ int FlowLayout::doLayout(const QRect &rect) const
     int bottom = 0;
     int boxTotalHeight = 0;
 
-    KLOG_DEBUG() << "FlowLayout rect: " << rect;
+    //    KLOG_DEBUG() << "FlowLayout rect: " << rect;
 
     getContentsMargins(&left, &top, &right, &bottom);
     QRect effectiveRect = rect.adjusted(+left, +top, -right, -bottom);

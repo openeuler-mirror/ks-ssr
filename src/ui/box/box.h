@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * kiran-session-manager is licensed under Mulan PSL v2.
+ * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -14,7 +14,11 @@
 
 #pragma once
 
+#include <QLineEdit>
+#include <QProcess>
 #include <QWidget>
+
+#include "src/ui/box/box-image.h"
 
 class QMouseEvent;
 class QMenu;
@@ -47,8 +51,9 @@ public:
     // 获取保险箱UID
     QString getUID() { return this->m_uid; }
 
-public Q_SLOTS:
+public slots:
     void boxChanged();
+    void onIconBtnClick();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -60,8 +65,13 @@ private:
 
     void switchMountedStatus();
     void modifyPassword();
+    void delBox();
 
-private Q_SLOTS:
+    // 解锁时需输入密码
+    QWidget *buildMountInputPasswdPage();
+    QWidget *buildNotifyPage(const QString &notify);
+
+private slots:
     void modifyPasswordAccepted();
 
 private:
@@ -77,10 +87,16 @@ private:
     // 保险箱显示名称
     QLabel *m_showingName;
 
+    BoxImage *m_imageLock;
+    BoxImage *m_imageUnlock;
+
     BoxManagerProxy *m_boxManagerProxy;
     ModifyPassword *m_modifyPassword;
     QMenu *m_popupMenu;
     QAction *m_mountedStatusAction;
+
+    QLineEdit *m_passwdEdit;
+    QProcess *m_process;
 };
 
 }  // namespace KS
