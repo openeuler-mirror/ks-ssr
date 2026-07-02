@@ -6,7 +6,7 @@ import ssr.log
 
 SYSCTL_PATH = '/usr/sbin/sysctl'
 
-SYSCTL_CONFI_FILE = "/etc/sysctl.d/90-ssr.conf"
+SYSCTL_CONFI_FILE = "/etc/sysctl.d/90-ssr-network.conf"
 SYSCTL_CONFIG_FIELD_PARTTERN = "\\s*=\\s*"
 SYSCTL_ACCEPT_REDIRECTS_PATTERN = "net.ipv4.conf.*.accept_redirects"
 SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN = "net.ipv4.conf.*.accept_source_route"

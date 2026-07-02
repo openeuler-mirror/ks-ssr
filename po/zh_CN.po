@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-12 18:00+0800\n"
+"POT-Creation-Date: 2021-11-16 17:58+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,10 +131,6 @@ msgstr "解析命令行参数失败"
 #: ../src/tool/config/cmd-parser.cpp:58
 msgid "The file path is not specified"
 msgstr "文件路径未指定"
-
-#: ../src/tool/config/cmd-parser.cpp:65
-msgid "The file {0} doesn't exist"
-msgstr "文件{0}不存在"
 
 #: ../src/tool/config/cmd-parser.cpp:71
 msgid "No specify file type"
@@ -260,7 +256,22 @@ msgid ""
 msgstr "禁止wheel组以外的用户使用'su root'命令"
 
 #: ../data/ssr-system-rs.xml.in.h:23
-#: ../plugins/python/ssr-plugin-external.xml.in.h:20
+msgid "List of IP addresses that allow remote access (comma separated)"
+msgstr "允许远程访问的IP列表（逗号分割）"
+
+#: ../data/ssr-system-rs.xml.in.h:24
+msgid ""
+"List of IP addresses for which remote access is prohibited (comma separated)"
+msgstr "禁止远程访问的IP列表（逗号分割）"
+
+#: ../data/ssr-system-rs.xml.in.h:25
+msgid ""
+"If no operation is performed for more than the following time (seconds), the "
+"session exits"
+msgstr "超过以下时间（秒）未操作则会话退出"
+
+#: ../data/ssr-system-rs.xml.in.h:26
+#: ../plugins/python/ssr-plugin-external.xml.in.h:24
 msgid "Disable radio network"
 msgstr ""
 
@@ -371,6 +382,24 @@ msgstr "增强SSH数据传输的安全性，防止数据被破解"
 msgid "su command limit"
 msgstr "su命令限制"
 
+#: ../plugins/python/ssr-plugin-external.xml.in.h:20
+msgid "Remote IP access restrictions"
+msgstr "远程IP访问限制"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:21
+msgid "Set the remote IP that can and cannot access this machine"
+msgstr "设置远程IP可以或者不可以访问本机"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:22
+msgid "Session login timeout limit"
+msgstr "会话登陆超时限制"
+
+#: ../plugins/python/ssr-plugin-external.xml.in.h:23
+msgid ""
+"If the session does not operate within the specified time after login, it "
+"will exit automatically"
+msgstr "如果登陆后在指定时间内会话未操作则会话自动退出"
+
 #: ../plugins/python/ssr-plugin-network.xml.in.h:1
 msgid "network settings"
 msgstr "网络设置"
@@ -415,6 +444,9 @@ msgstr "ICMP时间戳请求"
 msgid ""
 "Prevent attackers from attacking some time authentication based protocols"
 msgstr "防止攻击者攻击一些基于时间认证的协议"
+
+#~ msgid "The file {0} doesn't exist"
+#~ msgstr "文件{0}不存在"
 
 #~ msgid "Specify the key or rule to set value"
 #~ msgstr "指定键或者规则用于设置对应的值"

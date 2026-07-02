@@ -1,7 +1,10 @@
+#--coding:utf8 --
+
 import json
 import ssr.utils
 
 NMCLI_CMD_PATH = '/usr/bin/nmcli'
+
 
 class NMClient:
     def wifi_is_enabled(self):
@@ -13,7 +16,7 @@ class NMClient:
         command = '{0} radio wwan'.format(NMCLI_CMD_PATH)
         output = ssr.utils.subprocess_has_output(command)
         return output == 'enabled'
-    
+
     def enable_radio(self):
         command = '{0} radio all on'.format(NMCLI_CMD_PATH)
         ssr.utils.subprocess_not_output(command)
@@ -21,6 +24,7 @@ class NMClient:
     def disable_radio(self):
         command = '{0} radio all off'.format(NMCLI_CMD_PATH)
         ssr.utils.subprocess_not_output(command)
+
 
 class Switch(NMClient):
     def get(self):
