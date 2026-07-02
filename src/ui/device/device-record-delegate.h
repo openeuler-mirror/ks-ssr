@@ -14,36 +14,27 @@
 
 #pragma once
 
-#include <QWidget>
-
-namespace Ui
-{
-class DevicePage;
-}
+#include <QObject>
+#include <QStyledItemDelegate>
 
 namespace KS
 {
-class SidebarItem;
-class DeviceRecord;
-class DeviceList;
+enum RecordTableField
+{
+    RECORD_TABLE_FIELD_NAME,
+    RECORD_TABLE_FIELD_TYPE,
+    RECORD_TABLE_FIELD_TIME,
+    RECORD_TABLE_FIELD_STATUS,
+    RECORD_TABLE_FIELD_LAST
+};
 
-class DevicePage : public QWidget
+class DeviceRecordDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
 public:
-    DevicePage(QWidget *parent = nullptr);
-    virtual ~DevicePage();
-
-protected:
-    void paintEvent(QPaintEvent *event);
-
-private:
-    void initSidebar();
-    void initSubPage();
-    void createSideBarItem(const QString &text, const QString &icon);
-
-private:
-    Ui::DevicePage *m_ui;
+    DeviceRecordDelegate(QObject *parent = 0);
+    virtual ~DeviceRecordDelegate();
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
 }  // namespace KS

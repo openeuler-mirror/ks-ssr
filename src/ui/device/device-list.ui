@@ -142,15 +142,15 @@
     </widget>
    </item>
    <item>
-    <widget class="KS::DeviceListTable" name="m_table" native="true"/>
+    <widget class="KS::DeviceTable" name="m_table" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KS::DeviceListTable</class>
+   <class>KS::DeviceTable</class>
    <extends>QWidget</extends>
-   <header>src/ui/device/device-list-table.h</header>
+   <header>src/ui/device/device-table.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

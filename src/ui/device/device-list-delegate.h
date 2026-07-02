@@ -14,30 +14,30 @@
 
 #pragma once
 
-#include <QWidget>
-
-namespace Ui
-{
-class DeviceLog;
-}
+#include <QObject>
+#include <QStyledItemDelegate>
 
 namespace KS
 {
-class DeviceLog : public QWidget
+enum DeviceTableField
+{
+    DEVICE_TABLE_FIELD_NUMBER,
+    DEVICE_TABLE_FIELD_NAME,
+    DEVICE_TABLE_FIELD_TYPE,
+    DEVICE_TABLE_FIELD_ID,
+    DEVICE_TABLE_FIELD_INTERFACE,
+    DEVICE_TABLE_FIELD_STATUS,
+    DEVICE_TABLE_FIELD_PERMISSION,
+    DEVICE_TABLE_FIELD_LAST
+};
+
+class DeviceListDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
 public:
-    DeviceLog(QWidget *parent = nullptr);
-    virtual ~DeviceLog();
-
-protected:
-    void paintEvent(QPaintEvent *event);
-
-private Q_SLOTS:
-    void searchTextChanged(const QString &text);
-
-private:
-    Ui::DeviceLog *m_ui;
+    DeviceListDelegate(QObject *parent = 0);
+    virtual ~DeviceListDelegate();
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
-}  //namespace KS
+}  // namespace KS

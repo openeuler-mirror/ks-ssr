@@ -18,32 +18,26 @@
 
 namespace Ui
 {
-class DevicePage;
+class DeviceRecord;
 }
 
 namespace KS
 {
-class SidebarItem;
-class DeviceRecord;
-class DeviceList;
-
-class DevicePage : public QWidget
+class DeviceRecord : public QWidget
 {
     Q_OBJECT
 
 public:
-    DevicePage(QWidget *parent = nullptr);
-    virtual ~DevicePage();
+    DeviceRecord(QWidget *parent = nullptr);
+    virtual ~DeviceRecord();
 
 protected:
     void paintEvent(QPaintEvent *event);
 
-private:
-    void initSidebar();
-    void initSubPage();
-    void createSideBarItem(const QString &text, const QString &icon);
+private Q_SLOTS:
+    void searchTextChanged(const QString &text);
 
 private:
-    Ui::DevicePage *m_ui;
+    Ui::DeviceRecord *m_ui;
 };
-}  // namespace KS
+}  //namespace KS
