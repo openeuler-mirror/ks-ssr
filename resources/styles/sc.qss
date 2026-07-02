@@ -73,12 +73,17 @@ QWidget#m_contents
 
 /* box settings */
 
-QScrollArea#m_boxsArea
+QScrollArea#m_boxsScroll
 {
-    background: transparent;
+    background-color: transparent;
+}
+
+QScrollArea > QWidget > QWidget {
+    background-color: transparent;
 }
 
 QPushButton#m_newBox
 {
     background-color: #2eb3ff;
 }
+
