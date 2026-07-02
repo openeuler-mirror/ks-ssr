@@ -15,12 +15,13 @@ namespace Network
 #define SYSCTL_JSON_KEY_ENABLED "enabled"
 
 #define SYSCTL_CONFI_FILE "/etc/sysctl.d/10-sysctl-ssr.conf"
-#define SYSCTL_ACCEPT_REDIRECTS_PATTERN "\"net.ipv(4|6).conf.*.accept_redirects\""
-#define SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN "\"net.ipv(4|6).conf.*.accept_source_route\""
+#define SYSCTL_CONFIG_FIELD_PARTTERN "\\s*=\\s*"
+#define SYSCTL_ACCEPT_REDIRECTS_PATTERN "net.ipv4.conf.*.accept_redirects"
+#define SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN "net.ipv4.conf.*.accept_source_route"
 
 Sysctl::Sysctl()
 {
-    this->sysctl_config_ = std::make_shared<ConfigPlain>(SYSCTL_CONFI_FILE, "\\s*=\\s*", " = ");
+    this->sysctl_config_ = ConfigPlain::create(SYSCTL_CONFI_FILE, SYSCTL_CONFIG_FIELD_PARTTERN, " = ");
 }
 
 std::vector<SysctlRedirect::SysctlVar> Sysctl::get_vars_by_pattern(const std::string &pattern)
@@ -30,11 +31,13 @@ std::vector<SysctlRedirect::SysctlVar> Sysctl::get_vars_by_pattern(const std::st
     std::string standard_error;
     std::vector<std::string> argv = {SYSCTL_COMMAND, "-a", "-r", pattern};
 
-    RETURN_VAL_IF_TRUE(!MiscUtils::spawn_sync(argv, &standard_output, &standard_error), vars);
+    RETURN_VAL_IF_FALSE(MiscUtils::spawn_sync(argv, &standard_output, &standard_error), vars);
+    KLOG_DEBUG("standard output: %s. error: %s.", standard_output.c_str(), standard_error.c_str());
     auto lines = StrUtils::split_lines(standard_output);
+    auto regex = Glib::Regex::create(SYSCTL_CONFIG_FIELD_PARTTERN);
     for (const auto &line : lines)
     {
-        auto fields = StrUtils::split_with_char(line, '=');
+        std::vector<std::string> fields = regex->split(line);
         CONTINUE_IF_TRUE(fields.size() != 2);
         vars.push_back(std::make_pair(fields[0], fields[1]));
     }

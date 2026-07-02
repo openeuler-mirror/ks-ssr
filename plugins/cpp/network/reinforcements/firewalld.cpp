@@ -15,7 +15,6 @@ namespace Network
 #define FIREWALLD_CMD_COMMAND "/usr/bin/firewall-cmd"
 
 #define FIREWALLD_SWITCH_KEY_ENABLED "enabled"
-#define FIREWALLD_SWITCH_KEY_ACTIVE "active"
 
 #define FIREWALLD_ICMP_BLOCK_TIMESTAMP_REQUEST "timestamp-request"
 #define FIREWALLD_ICMP_BLOCK_KEY_TIMESTAMP_REQUEST "disable_timestamp_request"
@@ -32,12 +31,12 @@ bool FirewalldSwitch::get(std::string &args, SSRErrorCode &error_code)
     try
     {
         // 开机自动启动
-        auto unit_file_state = this->systemd_proxy_->get_unit_file_state(FIREWALLD_UNIT_NAME);
-        values[FIREWALLD_SWITCH_KEY_ENABLED] = (unit_file_state == "enabled");
+        // auto unit_file_state = this->systemd_proxy_->get_unit_file_state(FIREWALLD_UNIT_NAME);
+        // values[FIREWALLD_SWITCH_KEY_ENABLED] = (unit_file_state == "enabled");
 
         // 是否运行
         auto state_str = this->systemd_proxy_->get_unit_active_state(FIREWALLD_UNIT_NAME);
-        values[FIREWALLD_SWITCH_KEY_ACTIVE] = (state_str == "active" || state_str == "activating");
+        values[FIREWALLD_SWITCH_KEY_ENABLED] = (state_str == "active" || state_str == "activating");
 
         args = StrUtils::json2str(values);
     }
@@ -59,12 +58,7 @@ bool FirewalldSwitch::set(const std::string &args, SSRErrorCode &error_code)
         {
             auto enabled = values[FIREWALLD_SWITCH_KEY_ENABLED].asBool();
             this->systemd_proxy_->enable_unit_file(FIREWALLD_UNIT_NAME, enabled);
-        }
-
-        if (values[FIREWALLD_SWITCH_KEY_ACTIVE].isBool())
-        {
-            auto active = values[FIREWALLD_SWITCH_KEY_ACTIVE].asBool();
-            if (active)
+            if (enabled)
             {
                 return this->systemd_proxy_->start_unit(FIREWALLD_UNIT_NAME);
             }
@@ -73,6 +67,7 @@ bool FirewalldSwitch::set(const std::string &args, SSRErrorCode &error_code)
                 return this->systemd_proxy_->stop_unit(FIREWALLD_UNIT_NAME);
             }
         }
+
         return true;
     }
     catch (const std::exception &e)

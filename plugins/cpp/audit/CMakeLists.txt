@@ -16,5 +16,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE
                       lib-config
                       lib-dbus)
 
+GEN_AND_INSTALL_PLUGIN_XML(ssr-plugin-audit.xml.in)
+
 install(TARGETS ${TARGET_NAME}
-        DESTINATION ${SSE_PLUGIN_ROOT_DIR}/cpp/)
+        DESTINATION ${SSR_PLUGIN_ROOT_DIR}/cpp/)

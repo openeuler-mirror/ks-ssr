@@ -2,11 +2,17 @@
 [config]
 _label=configuration manager
 _comment=configuration manager
-icon_name=ksd-configuration-manager
+icon_name=ssr-configuration-category
 priority=1
 
 [network]
 _label=network manager
 _comment=network manager
-icon_name=ksd-network-manager
+icon_name=ssr-network-category
 priority=2
+
+[audit]
+_label=audit manager
+_comment=audit manager
+icon_name=ssr-audit-category
+priority=3

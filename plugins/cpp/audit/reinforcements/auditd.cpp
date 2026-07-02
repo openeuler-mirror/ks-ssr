@@ -1,13 +1,13 @@
 /**
- * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/autitd.cpp
+ * @file          /kiran-ssr-manager/plugins/cpp/audit/reinforcements/auditd.cpp
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
  */
 
+#include "plugins/cpp/audit/reinforcements/auditd.h"
 #include <json/json.h>
 #include <unistd.h>
-#include "plugins/cpp/audit/reinforcements/auditd.h"
 
 namespace Kiran
 {
@@ -15,7 +15,6 @@ namespace Audit
 {
 #define AUDITD_UNIT_NAME "auditd.service"
 #define AUDITD_JSON_KEY_ENABLED "enabled"
-#define AUDITD_JSON_KEY_ACTIVE "acitve"
 
 AuditdSwitch::AuditdSwitch()
 {
@@ -29,12 +28,12 @@ bool AuditdSwitch::get(std::string &args, SSRErrorCode &error_code)
     try
     {
         // 开机自动启动
-        auto unit_file_state = this->systemd_proxy_->get_unit_file_state(AUDITD_UNIT_NAME);
-        values[AUDITD_JSON_KEY_ENABLED] = (unit_file_state == "enabled");
+        // auto unit_file_state = this->systemd_proxy_->get_unit_file_state(AUDITD_UNIT_NAME);
+        // values[AUDITD_JSON_KEY_ENABLED] = (unit_file_state == "enabled");
 
         // 是否运行
         auto state_str = this->systemd_proxy_->get_unit_active_state(AUDITD_UNIT_NAME);
-        values[AUDITD_JSON_KEY_ACTIVE] = (state_str == "active" || state_str == "activating");
+        values[AUDITD_JSON_KEY_ENABLED] = (state_str == "active" || state_str == "activating");
 
         args = StrUtils::json2str(values);
     }
@@ -56,12 +55,8 @@ bool AuditdSwitch::set(const std::string &args, SSRErrorCode &error_code)
         {
             auto enabled = values[AUDITD_JSON_KEY_ENABLED].asBool();
             this->systemd_proxy_->enable_unit_file(AUDITD_UNIT_NAME, enabled);
-        }
 
-        if (values[AUDITD_JSON_KEY_ACTIVE].isBool())
-        {
-            auto active = values[AUDITD_JSON_KEY_ACTIVE].asBool();
-            if (active)
+            if (enabled)
             {
                 return this->systemd_proxy_->start_unit(AUDITD_UNIT_NAME);
             }
@@ -70,6 +65,7 @@ bool AuditdSwitch::set(const std::string &args, SSRErrorCode &error_code)
                 return this->systemd_proxy_->stop_unit(AUDITD_UNIT_NAME);
             }
         }
+
         return true;
     }
     catch (const std::exception &e)

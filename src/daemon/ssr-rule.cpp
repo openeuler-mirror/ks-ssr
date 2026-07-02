@@ -51,8 +51,16 @@ std::shared_ptr<SSRRule> SSRRule::create(const Rule &rule)
     {
         RETURN_VAL_IF_FALSE(rule.value_range().present(), nullptr);
         auto &value_range = rule.value_range().get();
-        auto min_value = StrUtils::str2json(value_range.min_value());
-        auto max_value = StrUtils::str2json(value_range.max_value());
+        Json::Value min_value;
+        Json::Value max_value;
+        if (value_range.min_value().present())
+        {
+            min_value = StrUtils::str2json(value_range.min_value().get());
+        }
+        if (value_range.max_value().present())
+        {
+            max_value = StrUtils::str2json(value_range.max_value().get());
+        }
         return std::make_shared<SSRRuleRange>(min_value, max_value);
     }
     case RuleType::Value::ENUM:
@@ -133,6 +141,8 @@ SSRRuleRange::SSRRuleRange(const Json::Value &min_value,
 
 bool SSRRuleRange::match(const Json::Value &value)
 {
+    // 如果最大值和最小值都为空，则表示不限制
+    RETURN_VAL_IF_TRUE(this->min_value_.isNull() && this->max_value_.isNull(), true);
     RETURN_VAL_IF_TRUE(value.type() != this->value_type_, false);
 
     if (!this->min_value_.isNull())
