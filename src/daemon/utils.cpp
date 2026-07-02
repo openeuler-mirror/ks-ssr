@@ -13,6 +13,8 @@ namespace Kiran
 {
 namespace Daemon
 {
+PyThreadState *Utils::main_thread_state_ = NULL;
+
 std::string Utils::pyobject_as_string(PyObject *pyobject)
 {
     if (PyUnicode_Check(pyobject))
@@ -25,11 +27,13 @@ std::string Utils::pyobject_as_string(PyObject *pyobject)
         auto str = PyBytes_AsString(bytes);
         return POINTER_TO_STRING(str);
     }
+#if PY_MAJOR_VERSION < 3
     else if (PyString_Check(pyobject))
     {
         auto str = PyString_AsString(pyobject);
         return POINTER_TO_STRING(str);
     }
+#endif
     else if (PyExceptionInstance_Check(pyobject))
     {
         auto args = PyObject_GetAttrString(pyobject, "args");
@@ -44,7 +48,7 @@ std::string Utils::pyobject_as_string(PyObject *pyobject)
     return std::string();
 }
 
-std::string Utils::catch_exception()
+std::string Utils::py_catch_exception()
 {
     RETURN_VAL_IF_TRUE(PyErr_Occurred() == NULL, std::string());
 
@@ -97,6 +101,31 @@ std::string Utils::catch_exception()
         }
     }
     return retval;
+}
+
+void Utils::py_gi_lock()
+{
+    if (Utils::main_thread_state_ != NULL)
+    {
+        PyEval_RestoreThread(Utils::main_thread_state_);
+        Utils::main_thread_state_ = NULL;
+    }
+    else
+    {
+        KLOG_WARNING("The main thread has held GIL already.");
+    }
+}
+
+void Utils::py_gi_unlock()
+{
+    if (Utils::main_thread_state_ == NULL)
+    {
+        Utils::main_thread_state_ = PyEval_SaveThread();
+    }
+    else
+    {
+        KLOG_WARNING("The main thread has released GIL already.");
+    }
 }
 }  // namespace Daemon
 }  // namespace Kiran

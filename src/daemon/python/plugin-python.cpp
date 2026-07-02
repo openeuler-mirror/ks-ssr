@@ -26,10 +26,16 @@ ReinforcementPython::ReinforcementPython(PyObject *module,
 {
     Py_XINCREF(this->module_);
 
+    this->module_fullname_ = PyModule_GetName(this->module_);
     this->class_ = PyObject_GetAttrString(this->module_, this->class_name_.c_str());
+
     if (!this->class_ || !PyCallable_Check(this->class_))
     {
-        KLOG_WARNING("Failed to get class %s.%s. class: %p.", PyModule_GetName(module), this->class_name_.c_str(), this->class_);
+        KLOG_WARNING("Failed to get class %s.%s, class: %p, error: %s.",
+                     this->module_fullname_.c_str(),
+                     this->class_name_.c_str(),
+                     this->class_,
+                     Utils::py_catch_exception().c_str());
         return;
     }
 
@@ -37,9 +43,9 @@ ReinforcementPython::ReinforcementPython(PyObject *module,
 
     if (!this->class_instance_)
     {
-        KLOG_WARNING("Failed to create object for class %s. class instance: %p",
+        KLOG_WARNING("Failed to create object for class %s. error: %s.",
                      this->class_name_.c_str(),
-                     this->class_instance_);
+                     Utils::py_catch_exception().c_str());
         return;
     }
 
@@ -56,6 +62,7 @@ bool ReinforcementPython::get(std::string &args, std::string &error)
 {
     KLOG_DEBUG("Call get method in class %s.", this->class_name_.c_str());
 
+    auto gstate = PyGILState_Ensure();
 #if PY_MAJOR_VERSION >= 3
     auto py_retval = PyObject_CallMethod(this->class_instance_, "get", NULL);
 #else
@@ -66,6 +73,7 @@ bool ReinforcementPython::get(std::string &args, std::string &error)
 
     SCOPE_EXIT({
         Py_XDECREF(py_retval);
+        PyGILState_Release(gstate);
     });
 
     RETURN_VAL_IF_FALSE(this->check_call_result(py_retval, this->class_name_ + ".get", error), false);
@@ -87,6 +95,8 @@ bool ReinforcementPython::set(const std::string &args, std::string &error)
 {
     KLOG_DEBUG("Call set method in class %s.", this->class_name_.c_str());
 
+    auto gstate = PyGILState_Ensure();
+
 #if PY_MAJOR_VERSION >= 3
     auto py_retval = PyObject_CallMethod(this->class_instance_, "set", "(s)", args.c_str());
 #else
@@ -94,6 +104,12 @@ bool ReinforcementPython::set(const std::string &args, std::string &error)
     char format[] = "(s)";
     auto py_retval = PyObject_CallMethod(this->class_instance_, method, format, args.c_str());
 #endif
+
+    SCOPE_EXIT({
+        Py_XDECREF(py_retval);
+        PyGILState_Release(gstate);
+    });
+
     RETURN_VAL_IF_FALSE(this->check_call_result(py_retval, this->class_name_ + ".set", error), false);
 
     auto successed = PyTuple_GetItem(py_retval, 0);
@@ -108,7 +124,7 @@ bool ReinforcementPython::set(const std::string &args, std::string &error)
 
 bool ReinforcementPython::check_call_result(PyObject *py_retval, const std::string &function_name, std::string &error)
 {
-    error = Utils::catch_exception();
+    error = Utils::py_catch_exception();
     RETURN_VAL_IF_FALSE(error.empty(), false);
 
     if (!py_retval || !PyTuple_Check(py_retval))
@@ -128,7 +144,13 @@ bool ReinforcementPython::check_call_result(PyObject *py_retval, const std::stri
     auto py_arg1 = PyTuple_GetItem(py_retval, 0);
     auto py_arg2 = PyTuple_GetItem(py_retval, 1);
 
-    if (!PyBool_Check(py_arg1) || (!PyUnicode_Check(py_arg2) && !PyString_Check(py_arg2)))
+    bool is_string = false;
+
+#if PY_MAJOR_VERSION < 3
+    is_string = PyString_Check(py_arg2);
+#endif
+
+    if (!PyBool_Check(py_arg1) || (!PyUnicode_Check(py_arg2) && !is_string))
     {
         error = fmt::format(_("The type of tuple item returned by {0} is invalid."), function_name);
         return false;
@@ -248,7 +270,7 @@ void PluginPython::add_reinforcement(const std::string &package_name,
         py_module = PyImport_ImportModule(module_fullname.c_str());
         if (!py_module)
         {
-            KLOG_WARNING("Failed to load module: %s, error: %s.", module_fullname.c_str(), Utils::catch_exception().c_str());
+            KLOG_WARNING("Failed to load module: %s, error: %s.", module_fullname.c_str(), Utils::py_catch_exception().c_str());
             return;
         }
         this->reinforcements_modules_.emplace(module_fullname, py_module);

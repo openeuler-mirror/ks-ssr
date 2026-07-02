@@ -33,6 +33,7 @@ private:
 
 private:
     PyObject *module_;
+    std::string module_fullname_;
     std::string class_name_;
     // python类
     PyObject *class_;

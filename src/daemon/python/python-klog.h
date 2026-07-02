@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/python/python-log.h
+ * @file          /kiran-ssr-manager/src/daemon/python/python-klog.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020~2021 KylinSec Co., Ltd. All rights reserved. 
@@ -16,9 +16,9 @@ extern "C"
 #endif
 
 #if PY_MAJOR_VERSION >= 3
-    PyMODINIT_FUNC PyInit_log(void);
+    PyMODINIT_FUNC PyInit_klog(void);
 #else
-void PyInit_log(void);
+void PyInit_klog(void);
 #endif
 
 #ifdef __cplusplus
