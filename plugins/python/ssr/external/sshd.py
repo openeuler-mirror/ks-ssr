@@ -55,6 +55,8 @@ class RootLogin(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        if not self.service.is_active():
+            return (False,'sshd.services is not running! \t\t')
         args = json.loads(args_json)
         self.conf.set_value("PermitRootLogin", "yes" if args[ROOT_LOGIN_ARG_ENABLED] else "no")
         # 重启服务生效
@@ -69,6 +71,8 @@ class PubkeyAuth(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        if not self.service.is_active():
+            return (False,'sshd.services is not running! \t\t')
         args = json.loads(args_json)
         self.conf.set_value("PubkeyAuthentication", "yes" if args[PUBKEY_AUTH_ARG_ENABLED] else "no")
         # 重启服务生效
@@ -87,6 +91,8 @@ class WeakEncryption(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        if not self.service.is_active():
+            return (False,'sshd.services is not running! \t\t')
         args = json.loads(args_json)
         ciphers = self.conf.get_value("Ciphers").split(",")
         # 过滤空元素
@@ -113,6 +119,8 @@ class BannerInfo(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        if not self.service.is_active():
+            return (False,'sshd.services is not running! \t\t')
         args = json.loads(args_json)
         #self.conf.set_value("Banner", "/etc/issue.net" if args[ROOT_LOGIN_ARG_ENABLED] else "none")
         #只对开启后关闭做处理
@@ -132,6 +140,8 @@ class SessionTimeout(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        if not self.service.is_active():
+            return (False,'sshd.services is not running! \t\t')
         args = json.loads(args_json)
         self.conf_profile = ssr.configuration.KV("/etc/profile", "=", "=")
         self.conf_bashrc = ssr.configuration.KV("/etc/bashrc","=", "=")
@@ -175,6 +185,8 @@ class SshdService(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        if not self.service.is_active():
+            return (False,'sshd.services is not running! \t\t')
         args = json.loads(args_json)
         self.conf.set_value(SSHD_CONF_PROTOCOL, "2" if args[SSHD_CONF_PROTOCOL_KEY] else "")
         self.conf.set_value(SSHD_CONF_PERMIT_EMPTY, "yes" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "no")
@@ -199,6 +211,8 @@ class SftpUser(SSHD):
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
+        if not self.service.is_active():
+            return (False,'sshd.services is not running! \t\t')
         self.conf_table = ssr.configuration.Table(SSHD_CONF_PATH, ",\\s+")
         args = json.loads(args_json)
         if args["enabled"]:
