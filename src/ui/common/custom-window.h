@@ -29,8 +29,12 @@ public:
     QVBoxLayout *getContentLayout();
 
     void buildNotify(const QString &notify);
+
 private:
     void initUI();
+
+protected:
+    void paintEvent(QPaintEvent *event);
 
 private:
     QVBoxLayout *m_contentLayout;

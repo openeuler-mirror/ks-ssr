@@ -21,28 +21,12 @@
 
 namespace KS
 {
-enum TRUSTED_FILE_TYPE
-{
-    // 未知文件类型
-    UNKNOWN_TYPE = 0,
-    // 可执行文件
-    EXECUTABLE_FILE,
-    // 动态库
-    DYNAMIC_LIBRARY,
-    // 内核模块
-    KERNEL_MODULE,
-    // 可执行脚本
-    EXECUTABLE_SCRIPT
-};
-
-class KssInit;
-
-class Kss : public QObject
+class KSS : public QObject
 {
     Q_OBJECT
 public:
-    Kss(QObject *parent = nullptr);
-    virtual ~Kss(){};
+    KSS(QObject *parent = nullptr);
+    virtual ~KSS(){};
 
 public:
     // 可信保护
@@ -84,7 +68,6 @@ private:
     QProcess *m_process;
     QString m_processOutput;
     QString m_errorOutput;
-    KssInit *m_kssInit;
     QSettings *m_ini;
 };
 }  // namespace KS

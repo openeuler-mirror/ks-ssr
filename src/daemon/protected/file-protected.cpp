@@ -26,7 +26,7 @@ namespace KS
 FileProtected::FileProtected(QObject *parent) : QObject(parent)
 {
     this->m_dbusAdaptor = new FileProtectedAdaptor(this);
-    m_kss = new Kss(this);
+    m_kss = new KSS(this);
 
     this->init();
 }

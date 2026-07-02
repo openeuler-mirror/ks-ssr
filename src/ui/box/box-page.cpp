@@ -100,49 +100,49 @@ void BoxPage::addBox(Box *box)
                 notify->show();
             });
     // 解锁
-    connect(box, &Box::sigInputMountPasswd, this, [this](const QString &boxUID)
+    connect(box, &Box::unlockedClicked, this, [this](const QString &boxUID)
             {
                 auto inputPasswdPage = buildInputPasswdPage(boxUID, INPUT_PASSWORD_TYPE::MOUNT_PASSWORD);
                 inputPasswdPage->show();
             });
 
-    connect(this, &BoxPage::sigInputMountPasswdAccepted, box, &Box::checkMountPasswd);
+    connect(this, &BoxPage::inputMountPasswdClicked, box, &Box::checkMountPasswd);
 
-    connect(box, &Box::sigMountPasswdResult, this, [this](bool status)
+    connect(box, &Box::checkMountPasswdResult, this, [this](bool status)
             { this->inputPasswdNotify(tr("Unlock success!"),
                                       tr("Unlock failed, please check whether the password is correct."),
                                       status); });
     // 删除
-    connect(box, &Box::sigDelBox, this, [this](const QString &boxUID)
+    connect(box, &Box::delBoxClicked, this, [this](const QString &boxUID)
             {
                 auto inputPasswdPage = buildInputPasswdPage(boxUID, INPUT_PASSWORD_TYPE::DELETE_BOX_PASSWORD);
                 inputPasswdPage->show();
             });
 
-    connect(this, &BoxPage::sigInputDelPasswdAccepted, box, &Box::checkDelPasswd);
+    connect(this, &BoxPage::inputDelPasswdClicked, box, &Box::checkDelPasswd);
 
-    connect(box, &Box::sigDelPasswdResult, this, [this](bool status)
+    connect(box, &Box::checkDelPasswdResult, this, [this](bool status)
             { this->inputPasswdNotify(tr("Delete success!"),
                                       tr("The Password is wrong or has been mounted!"),
                                       status); });
     // 修改密码
-    connect(box, &Box::sigModifyPasswdResult, this, [this](bool status)
+    connect(box, &Box::checkModifyPasswdResult, this, [this](bool status)
             {
                 this->inputPasswdNotify(tr("Modify success!"),
                                         tr("Password error!"),
                                         status);
                 this->m_modifyPasswordPage->close();
             });
-    connect(box, &Box::showModifyPassword, this, &BoxPage::showModifyPasswordPage);
-    // 找回口令
-    connect(box, &Box::sigRetrievePasswordResult, this, [this](bool status)
+    connect(box, &Box::modifyPasswordClicked, this, &BoxPage::showModifyPasswordPage);
+    // 找回密码
+    connect(box, &Box::checkRetrievePasswordResult, this, [this](bool status)
             {
                 this->inputPasswdNotify(tr("Retrieve success!"),
                                         tr("Passphrase error!"),
                                         status);
                 this->m_retrievePasswordPage->close();
             });
-    connect(box, &Box::showRetrievePassword, this, &BoxPage::showRetrievePasswordPage);
+    connect(box, &Box::retrievePasswordClicked, this, &BoxPage::showRetrievePasswordPage);
 }
 
 void BoxPage::removeBox(const QString &boxUID)
@@ -158,44 +158,29 @@ void BoxPage::removeBox(const QString &boxUID)
 TitlebarWindow *BoxPage::buildInputPasswdPage(const QString &boxUID, INPUT_PASSWORD_TYPE type)
 {
     m_inputPasswdBoxUID = boxUID;
-    auto *widget = new CustomWindow(this);
-    widget->setTitle(tr("Input password"));
-    widget->setFixedSize(300, 220);
+    auto *inputPasswdPage = new CustomWindow(this);
+    inputPasswdPage->setTitle(tr("Input password"));
+    inputPasswdPage->setFixedSize(300, 220);
 
-    auto cusVLay = widget->getContentLayout();
+    auto cusVLay = inputPasswdPage->getContentLayout();
 
-    auto *label = new QLabel(tr("Please input password:"));
+    auto *label = new QLabel(tr("Please input password:"), inputPasswdPage);
     label->setFixedHeight(36);
 
-    auto *hlay = new QHBoxLayout(widget);
-    auto *ok = new QPushButton(tr("ok"), widget);
-    ok->setFixedSize(80, 36);
-    ok->setStyleSheet("QPushButton{"
-                      "color:#FFFFFF;"
-                      "font:NotoSansCJKsc-Regular;"
-                      "font-size:12px;"
-                      "border-radius:8px;"
-                      "background:#43A3F2;}"
-                      "QPushButton:hover{"
-                      "background:#79C3FF;"
-                      "border:4px;}");
+    auto *hlay = new QHBoxLayout(inputPasswdPage);
+    auto *ok = new QPushButton(tr("ok"), inputPasswdPage);
+    ok->setFixedSize(72, 36);
+    ok->setObjectName("passwdOkBtn");
 
-    auto *cancel = new QPushButton(tr("cancel"), widget);
-    cancel->setFixedSize(80, 36);
-    cancel->setStyleSheet("QPushButton{"
-                          "color:#FFFFFF;"
-                          "font:NotoSansCJKsc-Regular;"
-                          "font-size:12px;"
-                          "border-radius:8px;"
-                          "background:#393939;}"
-                          "QPushButton:hover{"
-                          "background:#464646;"
-                          "border:4px;}");
+    auto *cancel = new QPushButton(tr("cancel"), inputPasswdPage);
+    cancel->setFixedSize(72, 36);
+    cancel->setObjectName("passwdCancelBtn");
+
     if (type == INPUT_PASSWORD_TYPE::MOUNT_PASSWORD)
     {
         connect(ok, &QPushButton::clicked, this, [this]
                 {
-                    emit this->sigInputMountPasswdAccepted(m_passwdEdit->text(), m_inputPasswdBoxUID);
+                    emit this->inputMountPasswdClicked(m_passwdEdit->text(), m_inputPasswdBoxUID);
                     this->m_passwdEdit->setText("");
                 });
     }
@@ -203,12 +188,12 @@ TitlebarWindow *BoxPage::buildInputPasswdPage(const QString &boxUID, INPUT_PASSW
     {
         connect(ok, &QPushButton::clicked, this, [this]
                 {
-                    emit this->sigInputDelPasswdAccepted(m_passwdEdit->text(), m_inputPasswdBoxUID);
+                    emit this->inputDelPasswdClicked(m_passwdEdit->text(), m_inputPasswdBoxUID);
                     this->m_passwdEdit->setText("");
                 });
     }
-    connect(ok, &QPushButton::clicked, widget, &QWidget::close);
-    connect(cancel, &QPushButton::clicked, widget, &QWidget::close);
+    connect(ok, &QPushButton::clicked, inputPasswdPage, &QWidget::close);
+    connect(cancel, &QPushButton::clicked, inputPasswdPage, &QWidget::close);
 
     hlay->addWidget(ok);
     hlay->addWidget(cancel);
@@ -219,24 +204,24 @@ TitlebarWindow *BoxPage::buildInputPasswdPage(const QString &boxUID, INPUT_PASSW
     cusVLay->addStretch();
     cusVLay->addLayout(hlay);
 
-    int x = this->x() + this->width() / 4 + widget->width() / 4;
-    int y = this->y() + this->height() / 4 + widget->height() / 4;
-    widget->move(x, y);
+    int x = this->x() + this->width() / 4 + inputPasswdPage->width() / 4;
+    int y = this->y() + this->height() / 4 + inputPasswdPage->height() / 4;
+    inputPasswdPage->move(x, y);
 
-    return widget;
+    return inputPasswdPage;
 }
 
 TitlebarWindow *BoxPage::buildNotifyPage(const QString &notify)
 {
-    auto widget = new CustomWindow(this);
-    widget->setFixedSize(240, 180);
-    widget->buildNotify(notify);
+    auto notifyPage = new CustomWindow(this);
+    notifyPage->setFixedSize(240, 180);
+    notifyPage->buildNotify(notify);
 
-    int x = this->x() + this->width() / 4 + widget->width() / 4;
-    int y = this->y() + this->height() / 4 + widget->height() / 4;
-    widget->move(x, y);
+    int x = this->x() + this->width() / 4 + notifyPage->width() / 4;
+    int y = this->y() + this->height() / 4 + notifyPage->height() / 4;
+    notifyPage->move(x, y);
 
-    return widget;
+    return notifyPage;
 }
 
 void BoxPage::inputPasswdNotify(const QString &normal,

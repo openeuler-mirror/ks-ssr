@@ -14,7 +14,9 @@
 #include "custom-window.h"
 #include <QIcon>
 #include <QLabel>
+#include <QPainter>
 #include <QPushButton>
+#include <QStyleOption>
 
 namespace KS
 {
@@ -46,16 +48,8 @@ void CustomWindow::buildNotify(const QString &notify)
     labelHBox->addStretch();
 
     auto *ok = new QPushButton(tr("ok"), this);
-    ok->setFixedSize(80, 36);
-    ok->setStyleSheet("QPushButton{"
-                      "color:#FFFFFF;"
-                      "font:NotoSansCJKsc-Regular;"
-                      "font-size:12px;"
-                      "border-radius:8px;"
-                      "background:#43A3F2;}"
-                      "QPushButton:hover{"
-                      "background:#79C3FF;"
-                      "border:4px;}");
+    ok->setFixedSize(72, 36);
+    ok->setObjectName("okBtn");
     connect(ok, &QPushButton::clicked, this, &QWidget::close);
 
     auto okHBox = new QHBoxLayout(this);
@@ -81,12 +75,20 @@ void CustomWindow::initUI()
 
     auto cusWidget = new QWidget(this);
     m_contentLayout = new QVBoxLayout(cusWidget);
+    cusWidget->setObjectName("cusWidget");
     m_contentLayout->setContentsMargins(12, 12, 12, 12);
 
-    cusWidget->setStyleSheet("background-color: #2d2d2d;"
-                             "border-radius: 6px;");
     vlay->addWidget(cusWidget);
     this->show();
+}
+
+void CustomWindow::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 }  // namespace KS

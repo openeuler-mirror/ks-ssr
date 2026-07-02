@@ -32,9 +32,6 @@ public:
     FPPage();
     virtual ~FPPage(){};
 
-private:
-    void initStyle();
-
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void addClicked(bool checked);

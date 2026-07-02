@@ -60,7 +60,7 @@ enum ExecuteTableField
 // 执行保护列数
 #define EXECUTE_TABLE_COL 5
 
-TPDelegate::TPDelegate(QObject *parent, TRUSTED_FILE_STATUS status) : QStyledItemDelegate(parent)
+TPDelegate::TPDelegate(QObject *parent, TrustedFileStatus status) : QStyledItemDelegate(parent)
 {
 }
 
@@ -144,15 +144,15 @@ bool TPDelegate::editorEvent(QEvent *event,
     return this->QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
-TPFilterModel::TPFilterModel(QObject *parent, TRUSTED_PROTECT_TYPE type) : QSortFilterProxyModel(parent),
-                                                                           m_type(type)
+TPFilterModel::TPFilterModel(QObject *parent, TrustedProtectType type) : QSortFilterProxyModel(parent),
+                                                                         m_type(type)
 {
 }
 
 bool TPFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     QString textComb;
-    auto col = (m_type == TRUSTED_PROTECT_TYPE::KERNEL_PROTECT) ? KERNEL_TABLE_COL : EXECUTE_TABLE_COL;
+    auto col = (m_type == TrustedProtectType::TRUSTED_PROTECT_KERNEL) ? KERNEL_TABLE_COL : EXECUTE_TABLE_COL;
     for (auto i = 0; i < col; ++i)
     {
         auto index = this->sourceModel()->index(sourceRow, i, sourceParent);
@@ -163,8 +163,8 @@ bool TPFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePar
     return false;
 }
 
-TPModel::TPModel(QObject *parent, TRUSTED_PROTECT_TYPE type) : QAbstractTableModel(parent),
-                                                               m_type(type)
+TPModel::TPModel(QObject *parent, TrustedProtectType type) : QAbstractTableModel(parent),
+                                                             m_type(type)
 {
     this->m_trustedProtectedProxy = new TrustedProxy(SC_DBUS_NAME,
                                                      SC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH,
@@ -180,13 +180,13 @@ int TPModel::rowCount(const QModelIndex &parent) const
 
 int TPModel::columnCount(const QModelIndex &parent) const
 {
-    return (m_type == TRUSTED_PROTECT_TYPE::KERNEL_PROTECT) ? KERNEL_TABLE_COL : EXECUTE_TABLE_COL;
+    return (m_type == TrustedProtectType::TRUSTED_PROTECT_KERNEL) ? KERNEL_TABLE_COL : EXECUTE_TABLE_COL;
 }
 
 QVariant TPModel::data(const QModelIndex &index, int role) const
 {
     RETURN_VAL_IF_TRUE(!index.isValid(), QVariant());
-    auto col = (m_type == TRUSTED_PROTECT_TYPE::KERNEL_PROTECT) ? KERNEL_TABLE_COL : EXECUTE_TABLE_COL;
+    auto col = (m_type == TrustedProtectType::TRUSTED_PROTECT_KERNEL) ? KERNEL_TABLE_COL : EXECUTE_TABLE_COL;
 
     if (index.row() >= this->m_trustedInfos.size() || index.column() >= col)
     {
@@ -200,7 +200,7 @@ QVariant TPModel::data(const QModelIndex &index, int role) const
     {
     case Qt::DisplayRole:
     {
-        if (m_type == TRUSTED_PROTECT_TYPE::KERNEL_PROTECT)
+        if (m_type == TrustedProtectType::TRUSTED_PROTECT_KERNEL)
         {
             switch (index.column())
             {
@@ -251,7 +251,7 @@ QVariant TPModel::data(const QModelIndex &index, int role) const
     }
     case Qt::TextColorRole:
     {
-        if (m_type == TRUSTED_PROTECT_TYPE::KERNEL_PROTECT)
+        if (m_type == TrustedProtectType::TRUSTED_PROTECT_KERNEL)
         {
             switch (index.column())
             {
@@ -317,7 +317,7 @@ QVariant TPModel::headerData(int section, Qt::Orientation orientation, int role)
     {
     case Qt::DisplayRole:
     {
-        if (m_type == TRUSTED_PROTECT_TYPE::KERNEL_PROTECT)
+        if (m_type == TrustedProtectType::TRUSTED_PROTECT_KERNEL)
         {
             switch (section)
             {
@@ -387,7 +387,7 @@ void TPModel::updateInfo()
 {
     beginResetModel();
     m_trustedInfos.clear();
-    auto reply = (m_type == TRUSTED_PROTECT_TYPE::KERNEL_PROTECT) ? this->m_trustedProtectedProxy->GetModuleFiles() : this->m_trustedProtectedProxy->GetExecuteFiles();
+    auto reply = (m_type == TrustedProtectType::TRUSTED_PROTECT_KERNEL) ? this->m_trustedProtectedProxy->GetModuleFiles() : this->m_trustedProtectedProxy->GetExecuteFiles();
     auto files = reply.value();
 
     QJsonParseError jsonError;
@@ -409,26 +409,26 @@ void TPModel::updateInfo()
             QString status;
             switch (data.value(KSS_JSON_KEY_DATA_TYPE).toInt())
             {
-            case TRUSTED_FILE_TYPE::UNKNOWN_TYPE:
+            case TrustedFileType::TRUSTED_FILE_TYPE_NONE:
                 type = QString(tr("Unknown file"));
                 break;
-            case TRUSTED_FILE_TYPE::EXECUTABLE_FILE:
+            case TrustedFileType::TRUSTED_FILE_TYPE_EXECUTABLE_FILE:
                 type = QString(tr("Executable file"));
                 break;
-            case TRUSTED_FILE_TYPE::DYNAMIC_LIBRARY:
+            case TrustedFileType::TRUSTED_FILE_TYPE_DYNAMIC_LIBRARY:
                 type = QString(tr("Dynamic library"));
                 break;
-            case TRUSTED_FILE_TYPE::KERNEL_MODULE:
+            case TrustedFileType::TRUSTED_FILE_TYPE_KERNEL_MODULE:
                 type = QString(tr("Kernel file"));
                 break;
-            case TRUSTED_FILE_TYPE::EXECUTABLE_SCRIPT:
+            case TrustedFileType::TRUSTED_FILE_TYPE_EXECUTABLE_SCRIPT:
                 type = QString(tr("Executable script"));
                 break;
             default:
                 break;
             }
 
-            if (data.value(KSS_JSON_KEY_DATA_STATUS).toInt() == TRUSTED_FILE_STATUS::NORMAL_STATUS)
+            if (data.value(KSS_JSON_KEY_DATA_STATUS).toInt() == TrustedFileStatus::NORMAL_STATUS)
             {
                 status = QString(tr("Certified"));
             }
@@ -485,8 +485,8 @@ void TPModel::onSingleStateChanged()
     emit this->stateChanged(state);
 }
 
-TPTable::TPTable(QWidget *parent, TRUSTED_PROTECT_TYPE type) : QTableView(parent),
-                                                               m_filterProxy(nullptr)
+TPTable::TPTable(QWidget *parent, TrustedProtectType type) : QTableView(parent),
+                                                             m_filterProxy(nullptr)
 {
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -507,7 +507,7 @@ TPTable::TPTable(QWidget *parent, TRUSTED_PROTECT_TYPE type) : QTableView(parent
     this->setItemDelegate(new TPDelegate(this));
 
     // 设置水平行表头
-    if (type == TRUSTED_PROTECT_TYPE::KERNEL_PROTECT)
+    if (type == TrustedProtectType::TRUSTED_PROTECT_KERNEL)
     {
         m_newHeaderView->resizeSection(KernelTableField::KERNEL_FIELD_CHECKBOX, 50);
         m_newHeaderView->resizeSection(KernelTableField::KERNEL_FIELD_NUMBER, 100);

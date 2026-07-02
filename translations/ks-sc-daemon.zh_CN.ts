@@ -35,19 +35,16 @@
     <name>BoxPage</name>
     <message>
         <location filename="../src/ui/box/box-page.ui" line="14"/>
-        <location filename="../build/src/ui/ui_box-page.h" line="115"/>
         <source>Box manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-page.ui" line="71"/>
-        <location filename="../build/src/ui/ui_box-page.h" line="116"/>
         <source>Provides data isolation, hiding and encryption protection functions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box-page.ui" line="129"/>
-        <location filename="../build/src/ui/ui_box-page.h" line="117"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
@@ -155,153 +152,31 @@
     <name>CreateBox</name>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="14"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="120"/>
         <source>Create security box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="29"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="121"/>
         <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="43"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="122"/>
         <source>Password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="57"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="123"/>
         <source>Confirm password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="71"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="124"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/create-box.ui" line="78"/>
-        <location filename="../build/src/ui/ui_create-box.h" line="125"/>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DeviceList</name>
-    <message>
-        <location filename="../src/ui/device/device-list.ui" line="14"/>
-        <location filename="../build/src/ui/ui_device-list.h" line="111"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.ui" line="105"/>
-        <location filename="../build/src/ui/ui_device-list.h" line="114"/>
-        <source>Please enter keyword search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.ui" line="137"/>
-        <location filename="../build/src/ui/ui_device-list.h" line="115"/>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-list.cpp" line="29"/>
-        <source>Device List</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DeviceLog</name>
-    <message>
-        <location filename="../src/ui/device/device-log.ui" line="14"/>
-        <location filename="../build/src/ui/ui_device-log.h" line="102"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-log.ui" line="105"/>
-        <location filename="../build/src/ui/ui_device-log.h" line="105"/>
-        <source>Please enter keyword search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-log.cpp" line="29"/>
-        <source>Connect Record</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DevicePage</name>
-    <message>
-        <location filename="../src/ui/device/device-page.ui" line="14"/>
-        <location filename="../build/src/ui/ui_device-page.h" line="59"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-page.cpp" line="52"/>
-        <source>Device List</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-page.cpp" line="53"/>
-        <source>Connect Record</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DevicePermission</name>
-    <message>
-        <location filename="../src/ui/device/device-permission.ui" line="14"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="127"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.ui" line="22"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="128"/>
-        <source>Device status:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.ui" line="43"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="129"/>
-        <source>Permission control:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.ui" line="50"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="130"/>
-        <source>read</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.ui" line="57"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="131"/>
-        <source>write</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.ui" line="64"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="132"/>
-        <source>exec</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.ui" line="102"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="133"/>
-        <source>Confirm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.ui" line="109"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="134"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -333,43 +208,36 @@
     <name>FPPage</name>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="14"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="133"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="40"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="134"/>
         <source>Protect critical file paths from malicious tampering and deletion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="60"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="135"/>
         <source>0 records in total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="105"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="136"/>
         <source>Please enter keyword search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="137"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="137"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="156"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="138"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/file-protected/fp-page.ui" line="175"/>
-        <location filename="../build/src/ui/ui_fp-page.h" line="139"/>
         <source>Unprotect</source>
         <translation type="unfinished"></translation>
     </message>
@@ -423,39 +291,6 @@
     </message>
     <message>
         <location filename="../src/ui/common/custom-window.cpp" line="48"/>
-        <source>ok</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>KS::DevicePermission</name>
-    <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="34"/>
-        <source>enable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="35"/>
-        <source>disable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="56"/>
-        <source>Please select device status</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="120"/>
-        <source>notice</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="124"/>
-        <source>Please select at least one permission.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="125"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
@@ -579,28 +414,23 @@
 <context>
     <name>KS::Window</name>
     <message>
-        <location filename="../src/ui/window.cpp" line="42"/>
+        <location filename="../src/ui/window.cpp" line="41"/>
         <source>Security control</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="63"/>
+        <location filename="../src/ui/window.cpp" line="62"/>
         <source>Trusted protected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="66"/>
+        <location filename="../src/ui/window.cpp" line="65"/>
         <source>File protected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="67"/>
+        <location filename="../src/ui/window.cpp" line="66"/>
         <source>Private box</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/window.cpp" line="68"/>
-        <source>Peripheral management</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -608,43 +438,36 @@
     <name>ModifyPassword</name>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="14"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="149"/>
         <source>Modify password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="45"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="150"/>
         <source>Security box name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="69"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="151"/>
         <source>Current password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="83"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="152"/>
         <source>New password:       </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="97"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="153"/>
         <source>Confirm password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="124"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="154"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/modify-password.ui" line="131"/>
-        <location filename="../build/src/ui/ui_modify-password.h" line="155"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -653,53 +476,45 @@
     <name>RetrievePassword</name>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="14"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="119"/>
         <source>Create security box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="26"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="120"/>
         <source>passphrase:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="40"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="121"/>
         <source>new password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="54"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="122"/>
         <source>Confirm password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="68"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="123"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="75"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="124"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>SidebarItem</name>
+    <name>TPPage</name>
     <message>
-        <location filename="../src/ui/device/sidebar-item.ui" line="26"/>
-        <location filename="../build/src/ui/ui_sidebar-item.h" line="68"/>
-        <source>Form</source>
+        <location filename="../src/ui/trusted-protected/tp-page.cpp" line="37"/>
+        <source>Execute protecked</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/device/sidebar-item.ui" line="54"/>
-        <location filename="../build/src/ui/ui_sidebar-item.h" line="70"/>
-        <source>TextLabel</source>
+        <location filename="../src/ui/trusted-protected/tp-page.cpp" line="38"/>
+        <source>Kernel protecked</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -707,25 +522,21 @@
     <name>TableCommon</name>
     <message>
         <location filename="../src/ui/trusted-protected/table-common.ui" line="14"/>
-        <location filename="../build/src/ui/ui_table-common.h" line="106"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/trusted-protected/table-common.ui" line="40"/>
-        <location filename="../build/src/ui/ui_table-common.h" line="107"/>
         <source>Protect critical file paths from malicious tampering and deletion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/trusted-protected/table-common.ui" line="64"/>
-        <location filename="../build/src/ui/ui_table-common.h" line="108"/>
         <source>0 records in total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/trusted-protected/table-common.ui" line="109"/>
-        <location filename="../build/src/ui/ui_table-common.h" line="109"/>
         <source>Please enter keyword search</source>
         <translation type="unfinished"></translation>
     </message>
@@ -734,7 +545,6 @@
     <name>Window</name>
     <message>
         <location filename="../src/ui/window.ui" line="20"/>
-        <location filename="../build/src/ui/ui_window.h" line="112"/>
         <source>Security control</source>
         <translation type="unfinished"></translation>
     </message>

@@ -27,28 +27,28 @@ class TrustedProxy;
 
 namespace KS
 {
-enum TRUSTED_PROTECT_TYPE
+enum TrustedProtectType
 {
-    EXECUTE_PROTECT = 0,
-    KERNEL_PROTECT,
-    OTHER_TRUSTED_PROTECT
+    TRUSTED_PROTECT_EXECUTE = 0,
+    TRUSTED_PROTECT_KERNEL,
+    TRUSTED_PROTECT_NONE
 };
 
-enum TRUSTED_FILE_TYPE
+enum TrustedFileType
 {
     // 未知文件类型
-    UNKNOWN_TYPE = 0,
+    TRUSTED_FILE_TYPE_NONE = 0,
     // 可执行文件
-    EXECUTABLE_FILE,
+    TRUSTED_FILE_TYPE_EXECUTABLE_FILE,
     // 动态库
-    DYNAMIC_LIBRARY,
+    TRUSTED_FILE_TYPE_DYNAMIC_LIBRARY,
     // 内核模块
-    KERNEL_MODULE,
+    TRUSTED_FILE_TYPE_KERNEL_MODULE,
     // 可执行脚本
-    EXECUTABLE_SCRIPT
+    TRUSTED_FILE_TYPE_EXECUTABLE_SCRIPT
 };
 
-enum TRUSTED_FILE_STATUS
+enum TrustedFileStatus
 {
     // 异常 (未认证)
     ILLEGAL_STATUS = 0,
@@ -75,7 +75,7 @@ class TPDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
-    TPDelegate(QObject *parent = 0, TRUSTED_FILE_STATUS status = NORMAL_STATUS);
+    TPDelegate(QObject *parent = 0, TrustedFileStatus status = NORMAL_STATUS);
     virtual ~TPDelegate();
 
     void paint(QPainter *painter,
@@ -92,14 +92,14 @@ class TPFilterModel : public QSortFilterProxyModel
     Q_OBJECT
 
 public:
-    TPFilterModel(QObject *parent = nullptr, TRUSTED_PROTECT_TYPE type = KERNEL_PROTECT);
+    TPFilterModel(QObject *parent = nullptr, TrustedProtectType type = TRUSTED_PROTECT_KERNEL);
     virtual ~TPFilterModel(){};
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
-    TRUSTED_PROTECT_TYPE m_type;
+    TrustedProtectType m_type;
 };
 
 class TPModel : public QAbstractTableModel
@@ -107,7 +107,7 @@ class TPModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    TPModel(QObject *parent = nullptr, TRUSTED_PROTECT_TYPE type = KERNEL_PROTECT);
+    TPModel(QObject *parent = nullptr, TrustedProtectType type = TRUSTED_PROTECT_KERNEL);
     virtual ~TPModel(){};
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -143,7 +143,7 @@ private:
 private:
     TrustedProxy *m_trustedProtectedProxy;
     QList<TrustedInfo> m_trustedInfos;
-    TRUSTED_PROTECT_TYPE m_type;
+    TrustedProtectType m_type;
 };
 
 class TPTable : public QTableView
@@ -151,7 +151,7 @@ class TPTable : public QTableView
     Q_OBJECT
 
 public:
-    TPTable(QWidget *parent = nullptr, TRUSTED_PROTECT_TYPE type = KERNEL_PROTECT);
+    TPTable(QWidget *parent = nullptr, TrustedProtectType type = TRUSTED_PROTECT_KERNEL);
     virtual ~TPTable(){};
 
     void searchTextChanged(const QString &text);
