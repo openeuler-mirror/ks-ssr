@@ -43,8 +43,6 @@ private:
     sigc::signal<void, const float &> root_free_space_ratio_;
     sigc::signal<void, const float &> cpu_average_load_ratio_;
     sigc::signal<void, const std::vector<std::string> &> vmstat_siso_;
-
-    bool is_open_monitor = true;
 };
 
 }  // namespace Daemon

@@ -59,6 +59,7 @@ public:
     bool set_custom_rh(const Protocol::Reinforcement& rs_reinforcement, const std::string path);
 
     SSRResourceMonitor get_resource_monitor_status();
+    bool set_resource_monitor_status(SSRResourceMonitor resource_monitor);
 
     // 加固标准发生变化
     sigc::signal<void> signal_rs_changed() { return this->rs_changed_; };
