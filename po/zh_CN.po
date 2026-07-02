@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 17:12+0800\n"
+"POT-Creation-Date: 2021-08-30 15:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,31 +49,31 @@ msgstr "未知错误。"
 msgid " (error code: 0x{:x})"
 msgstr "（错误码：0x{:x}）"
 
-#: ../src/tool/crypto/ssr-cmd-parser.cpp:24
+#: ../src/tool/crypto/cmd-parser.cpp:26
 msgid "Output version infomation and exit."
 msgstr "输出版本信息并退出。"
 
-#: ../src/tool/crypto/ssr-cmd-parser.cpp:30
+#: ../src/tool/crypto/cmd-parser.cpp:32
 msgid "Generate public and private keys for RSA."
 msgstr "生成RSA公钥和私钥。"
 
-#: ../src/tool/crypto/ssr-cmd-parser.cpp:36
+#: ../src/tool/crypto/cmd-parser.cpp:38
 msgid "Decrypt a file."
 msgstr "解密文件。"
 
-#: ../src/tool/crypto/ssr-cmd-parser.cpp:43
+#: ../src/tool/crypto/cmd-parser.cpp:45
 msgid "Encrypt a file."
 msgstr "加密文件。"
 
-#: ../src/tool/crypto/ssr-cmd-parser.cpp:50
+#: ../src/tool/crypto/cmd-parser.cpp:52
 msgid "RSA public file path."
 msgstr "RSA公钥路径。"
 
-#: ../src/tool/crypto/ssr-cmd-parser.cpp:53
+#: ../src/tool/crypto/cmd-parser.cpp:55
 msgid "RSA private file path."
 msgstr "RSA私钥路径。"
 
-#: ../src/tool/crypto/ssr-cmd-parser.cpp:56
+#: ../src/tool/crypto/cmd-parser.cpp:58
 msgid "Output file path."
 msgstr "输出文件路径。"
 
@@ -81,56 +81,66 @@ msgstr "输出文件路径。"
 msgid "Command 'kiran-ssr-config' can only be run as root!"
 msgstr "命令 'kiran-ssr-config' 只能在root用户下运行！"
 
-#: ../src/tool/config/cmd-parser.cpp:18
+#: ../src/tool/config/cmd-parser.cpp:19
 msgid "FILE"
 msgstr "文件"
 
-#: ../src/tool/config/cmd-parser.cpp:25
+#: ../src/tool/config/cmd-parser.cpp:26
 msgid "The configuration file type"
 msgstr "配置文件类型"
 
-#: ../src/tool/config/cmd-parser.cpp:26
+#: ../src/tool/config/cmd-parser.cpp:27
 msgid "Specify the key to get value"
 msgstr "指定用于获取值的键"
 
-#: ../src/tool/config/cmd-parser.cpp:27
+#: ../src/tool/config/cmd-parser.cpp:28
 msgid "Specify the key to set value"
 msgstr "指定用于设置值的键"
 
-#: ../src/tool/config/cmd-parser.cpp:28
+#: ../src/tool/config/cmd-parser.cpp:29
 msgid "Specify the set value"
 msgstr "指定设置的值"
 
-#: ../src/tool/config/cmd-parser.cpp:29
-msgid "Specify regular expression to split columns"
-msgstr "查找时用于分割列的正则表达式"
-
 #: ../src/tool/config/cmd-parser.cpp:30
-msgid "Specify string to join columns"
-msgstr "设置时用于拼接列的字符串"
+msgid ""
+"Specify regular expression to match the line. If many lines is matched, then "
+"the first matched line is used only"
+msgstr "指定一个正则表达式用于匹配行。如果多行被匹配，则值由第一个被匹配的行被使用"
 
-#: ../src/tool/config/cmd-parser.cpp:46
+#: ../src/tool/config/cmd-parser.cpp:31
+msgid "Specify regular expression to split key-value pairs"
+msgstr "指定查找时用于分割键值对的正则表达式"
+
+#: ../src/tool/config/cmd-parser.cpp:32
+msgid "Specify string to join key-value pairs"
+msgstr "指定用于拼接键值对的字符串"
+
+#: ../src/tool/config/cmd-parser.cpp:48
 msgid "Failed to parse command arguments"
 msgstr "解析命令行参数失败"
 
-#: ../src/tool/config/cmd-parser.cpp:52
+#: ../src/tool/config/cmd-parser.cpp:54
 msgid "The file path is not specified"
 msgstr "文件路径未指定"
 
-#: ../src/tool/config/cmd-parser.cpp:59
+#: ../src/tool/config/cmd-parser.cpp:61
 msgid "The file {0} doesn't exist"
 msgstr "文件{0}不存在"
 
-#: ../src/tool/config/cmd-parser.cpp:65
+#: ../src/tool/config/cmd-parser.cpp:67
 msgid "No specify file type"
 msgstr "文件类型未指定"
 
-#: ../src/tool/config/cmd-parser.cpp:74
+#: ../src/tool/config/cmd-parser.cpp:78
 msgid "Unknown file type"
 msgstr "未知文件类型"
 
-#: ../src/tool/config/cmd-parser.cpp:89
+#: ../src/tool/config/cmd-parser.cpp:93 ../src/tool/config/cmd-parser.cpp:122
 msgid "Failed to get value for {0}"
+msgstr "获取键{0}的值失败"
+
+#: ../src/tool/config/cmd-parser.cpp:105 ../src/tool/config/cmd-parser.cpp:136
+msgid "Failed to set value for {0}"
 msgstr "获取键{0}的值失败"
 
 #. namespace Config
@@ -172,15 +182,11 @@ msgid "Disable IP source routing"
 msgstr "禁止IP源路由"
 
 #: ../data/ssr-system-rs.xml.in.h:6
-msgid "Network test"
-msgstr "网络测试"
-
-#: ../data/ssr-system-rs.xml.in.h:7
 #: ../plugins/cpp/audit/ssr-plugin-audit.xml.in.h:2
 msgid "Turn on system auditd service"
 msgstr "开启系统审计服务"
 
-#: ../data/ssr-system-rs.xml.in.h:8
+#: ../data/ssr-system-rs.xml.in.h:7
 #: ../plugins/cpp/audit/ssr-plugin-audit.xml.in.h:3
 msgid "System log save cycle"
 msgstr "系统日志保存周期"
@@ -192,6 +198,12 @@ msgstr "网络设置"
 #: ../plugins/cpp/audit/ssr-plugin-audit.xml.in.h:1
 msgid "audit settings"
 msgstr "审计设置"
+
+#~ msgid "Specify regular expression to match lines"
+#~ msgstr "匹配行的"
+
+#~ msgid "Network test"
+#~ msgstr "网络测试"
 
 #~ msgid "The configuration file path"
 #~ msgstr "配置文件路径"
