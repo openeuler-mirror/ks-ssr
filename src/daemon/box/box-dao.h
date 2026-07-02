@@ -1,8 +1,14 @@
+/**
+ * @file          /ks-sc/src/daemon/box/box-dao.h
+ * @brief         
+ * @author        chendingjian <chendingjian@kylinos.com>
+ * @copyright (c) 2023 KylinSec. All rights reserved.
+ */
 #ifndef BOXDAO_H
 #define BOXDAO_H
 
-#include <QSqlError>
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
 #include "lib/base/base.h"
 
@@ -45,7 +51,6 @@ private:
 private:
     static BoxDao *m_instance;
     QSqlDatabase m_boxDb;
-
 };
 }  // namespace KS
-#endif // BOXDAO_H
+#endif  // BOXDAO_H

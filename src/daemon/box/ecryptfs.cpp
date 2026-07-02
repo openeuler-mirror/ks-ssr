@@ -22,7 +22,6 @@ QString EcryptFS::generate_passphrase(const QString key)
         m_process->start("bash", QStringList() << "-c" << cmd);
         connect(this->m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onProcessExit(int, QProcess::ExitStatus)));
         m_process->waitForFinished(1000);
-
     }
     return m_processOutput;
 }
@@ -41,7 +40,7 @@ void EcryptFS::encrypt(const QString umountPath)
 
 bool EcryptFS::dcrypt(const QString mountObjectPath, const QString mountPath, const QString key, const QString passphrase)
 {
-//    mkdir(mountPath);
+    //    mkdir(mountPath);
     QString cmd = MOUNT_ECRYPTFS_CMD + QString(" %1 %2  -o passphrase_passwd=%3,ecryptfs_sig=%4,ecryptfs_fnek_sig=%5,key=passphrase,ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough,ecryptfs_enable_filename_crypto=y,no_sig_cache")
                                            .arg(mountObjectPath, mountPath, key, passphrase, passphrase);
     if (m_process->state() != QProcess::Running)

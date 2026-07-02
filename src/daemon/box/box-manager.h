@@ -11,15 +11,13 @@
 #include <QObject>
 #include <QStringList>
 
-#include "lib/base/base.h"
 #include "ecryptfs.h"
+#include "lib/base/base.h"
 
 class BoxManagerAdaptor;
 
 namespace KS
 {
-
-
 class BoxManager : public QObject,
                    protected QDBusContext
 {
