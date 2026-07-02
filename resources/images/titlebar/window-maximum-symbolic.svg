@@ -1,4 +1,4 @@
-<svg id="login_btn_maximization_n" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10">
   <metadata><?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c138 79.159824, 2016/09/14-01:09:01        ">
    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -30,10 +30,10 @@
 <defs>
     <style>
       .cls-1 {
-        fill: gray;
+        fill: #fff;
         fill-rule: evenodd;
       }
     </style>
   </defs>
-  <path id="矩形_1718" data-name="矩形 1718" class="cls-1" d="M1667,2577v-10h10v10h-10Zm9-9h-8v8h8v-8Z" transform="translate(-1664 -2564)"/>
+  <path id="login_btn_maximization_n" class="cls-1" d="M5556,189h-9V179h10v10h-1Zm-8-9v8h8v-8h-8Z" transform="translate(-5547 -179)"/>
 </svg>
