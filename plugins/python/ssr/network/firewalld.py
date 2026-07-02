@@ -8,19 +8,22 @@ FIREWALL_CMD_PATH = '/usr/bin/firewall-cmd'
 
 
 class Firewalld:
-    def has_port(self, port):
+    def __init__(self):
+        self.firewalld_systemd = ssr.systemd.Proxy('firewalld')
+
+    def __has_port(self, port):
         command = '{0} --query-port={1} --permanent'.format(FIREWALL_CMD_PATH, port)
         output = ssr.utils.subprocess_has_output(command)
         return (output == 'yes')
 
-    def add_port(self, port):
-        if self.has_port(port):
+    def __add_port(self, port):
+        if self.__has_port(port):
             return
         command = '{0} --add-port={1} --permanent'.format(FIREWALL_CMD_PATH, port)
         ssr.utils.subprocess_not_output(command)
 
-    def remove_port(self, port):
-        if not self.has_port(port):
+    def __remove_port(self, port):
+        if not self.__has_port(port):
             return
         command = '{0} --remove-port={1} --permanent'.format(FIREWALL_CMD_PATH, port)
         ssr.utils.subprocess_not_output(command)
@@ -35,16 +38,16 @@ class Firewalld:
 
         for port in ports:
             if not common_ports.__contains__(port):
-                self.add_port(port)
+                self.__add_port(port)
 
         for port in old_ports:
             if not common_ports.__contains__(port):
-                self.remove_port(port)
+                self.__remove_port(port)
 
     def clear_ports(self):
         ports = self.list_ports()
         for port in ports:
-            self.remove_port(port)
+            self.__remove_port(port)
 
     def reload(self):
         command = '{0} --reload'.format(FIREWALL_CMD_PATH)
@@ -64,13 +67,15 @@ class Firewalld:
 
 
 class Switch(Firewalld):
-    def __init__(self):
-        self.firewalld_systemd = ssr.systemd.Proxy('firewalld')
-
     def get(self):
         retdata = dict()
         retdata['enabled'] = self.firewalld_systemd.is_active()
-        retdata['ports'] = ';'.join(self.list_ports())
+
+        # 只有防火墙开启状态下才可以查询开放端口信息
+        if retdata['enabled']:
+            retdata['ports'] = ';'.join(self.list_ports())
+        else:
+            retdata['ports'] = str()
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
@@ -82,35 +87,41 @@ class Switch(Firewalld):
                 self.firewalld_systemd.enable()
                 self.firewalld_systemd.start()
             else:
-                if self.firewalld_systemd.exist():
-                    self.firewalld_systemd.disable()
-                    self.firewalld_systemd.stop()
+                self.firewalld_systemd.disable()
+                self.firewalld_systemd.stop()
         except Exception as e:
             return (False, e)
 
-        if len(args['ports']) == 0:
-            self.clear_ports()
-        else:
-            self.set_ports(args['ports'].split(';'))
-        self.reload()
+        if self.firewalld_systemd.is_active():
+            if len(args['ports']) == 0:
+                self.clear_ports()
+            else:
+                self.set_ports(args['ports'].split(';'))
+            self.reload()
         return (True, '')
 
 
 class IcmpTimestamp(Firewalld):
     def get(self):
         retdata = dict()
-        command_output = self.list_icmp_blocks()
-        ssr.log.debug(command_output)
-        icmp_blocks = command_output.split()
-        retdata['disable_timestamp_request'] = icmp_blocks.__contains__('timestamp-request')
+        if self.firewalld_systemd.is_active():
+            command_output = self.list_icmp_blocks()
+            ssr.log.debug(command_output)
+            icmp_blocks = command_output.split()
+            retdata['timestamp_request'] = (not icmp_blocks.__contains__('timestamp-request'))
+        else:
+            retdata['timestamp_request'] = True
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-
-        if args['disable_timestamp_request']:
-            self.add_icmp_blocks('timestamp-request')
+        if self.firewalld_systemd.is_active():
+            if args['timestamp_request']:
+                self.remove_icmp_blocks('timestamp-request')
+            else:
+                self.add_icmp_blocks('timestamp-request')
+            self.reload()
         else:
-            self.remove_icmp_blocks('timestamp-request')
-        self.reload()
+            if not args['timestamp_request']:
+                raise Exception('FirewallD is not running')
         return (True, '')
