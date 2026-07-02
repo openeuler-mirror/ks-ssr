@@ -476,8 +476,8 @@ msgid "Prohibit SSH users with empty password from logging in"
 msgstr "禁止主机密码为空的用户SSH登录"
 
 #: ../data/ssr-system-rs.xml.in.h:72
-msgid "Modify the default SSH port(SELinux needs to be turned off for use)"
-msgstr "修改默认SSH端口（需关闭selinux使用）"
+msgid "Modify the default SSH port"
+msgstr "修改默认SSH端口"
 
 #: ../data/ssr-system-rs.xml.in.h:73
 msgid "Enable PAM login mechanism"
