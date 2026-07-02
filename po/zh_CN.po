@@ -333,11 +333,11 @@ msgstr "密码过期前发出警告的天数"
 
 #: ../data/ssr-system-rs.xml.in.h:37
 msgid "Whether to set the expiration time for the current existing account"
-msgstr "是否设置现有帐户的到期时间（三权及root用户除外）"
+msgstr "是否设置现有用户的到期时间（三权及root用户除外）"
 
 #: ../data/ssr-system-rs.xml.in.h:38
 msgid "The account setting expiration time already exists"
-msgstr "现有帐户设置过期时间"
+msgstr "现有用户设置过期时间"
 
 #: ../data/ssr-system-rs.xml.in.h:39
 msgid "Minimum password length"
@@ -392,7 +392,7 @@ msgstr "文件目录缺省权限"
 
 #: ../data/ssr-system-rs.xml.in.h:51
 msgid "No master file in the scanning system"
-msgstr "扫描系统中的无属文件"
+msgstr "扫描系统中的无属主文件"
 
 #: ../data/ssr-system-rs.xml.in.h:52
 msgid "Scanning system files with 777 permissions"
@@ -594,7 +594,7 @@ msgstr "限制登录失败次数，提高密码破解成本"
 
 #: ../plugins/python/ssr-plugin-config.xml.in.h:14
 msgid "Account password validity period"
-msgstr "帐户密码有效期"
+msgstr "用户密码有效期"
 
 #: ../plugins/python/ssr-plugin-config.xml.in.h:15
 msgid "Restrict the maximum validity of passwords and add expiration reminders"
@@ -636,17 +636,17 @@ msgstr "限制文件目录缺省权限"
 
 #: ../plugins/python/ssr-plugin-config.xml.in.h:26
 msgid "Scan for non owned master files"
-msgstr "扫描无属文件"
+msgstr "扫描无属主文件"
 
 #: ../plugins/python/ssr-plugin-config.xml.in.h:27
 msgid ""
 "Check whether there are files in the important directory that the user does "
 "not belong to"
-msgstr "检查重要目录中的无属文件"
+msgstr "检查重要目录中的无属主文件"
 
 #: ../plugins/python/ssr-plugin-config.xml.in.h:28
 msgid "Scan 777 permission file"
-msgstr "扫描有777权限的文件"
+msgstr "扫描777权限的文件"
 
 #: ../plugins/python/ssr-plugin-config.xml.in.h:29
 msgid ""
@@ -656,7 +656,7 @@ msgstr "检查重要目录中权限为777的文件"
 
 #: ../plugins/python/ssr-plugin-config.xml.in.h:30
 msgid "Scan suid-sgid permission file"
-msgstr "扫描有suid-sgid权限的文件"
+msgstr "扫描suid-sgid权限的文件"
 
 #: ../plugins/python/ssr-plugin-config.xml.in.h:31
 msgid ""
