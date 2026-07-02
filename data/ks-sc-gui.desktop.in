@@ -1,0 +1,13 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Encoding=UTF-8
+Name=KS SC Gui
+Name[zh_CN]=安全管控
+Comment=KS SC Gui
+Comment[zh_CN]=安全管控
+Exec=ks-sc-gui
+Icon=ksc.png
+Terminal=false
+Type=Application
+Categories=System;KSSCGui;
+#StartupNotify=true

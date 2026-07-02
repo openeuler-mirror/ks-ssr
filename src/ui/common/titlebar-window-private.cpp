@@ -274,7 +274,8 @@ void TitlebarWindowPrivate::initOtherWidget()
     m_title = new QLabel(m_titlebarWidget);
     m_title->setFont(QFontDatabase::systemFont(QFontDatabase::TitleFont));
     m_title->setObjectName("TitlebarTitle");
-    m_title->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    auto alignment = Qt::Alignment(Qt::AlignVCenter | Qt::AlignLeft);
+    m_title->setAlignment(alignment);
     m_title->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
     m_title->installEventFilter(this);
     m_titleBarLayout->setTitleBarTitleLabel(m_title);

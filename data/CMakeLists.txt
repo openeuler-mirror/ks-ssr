@@ -25,3 +25,16 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.conf
 # sc sql
 install(FILES ${PROJECT_SOURCE_DIR}/data/sc.dat
         DESTINATION ${SC_INSTALL_DATADIR})
+
+# ini files
+install(FILES ${PROJECT_SOURCE_DIR}/data/sc.ini
+        DESTINATION ${SC_INSTALL_DATADIR})
+
+# desktop
+configure_file (
+        ${PROJECT_SOURCE_DIR}/data/ks-sc-gui.desktop.in
+        ${PROJECT_BINARY_DIR}/data/ks-sc-gui.desktop
+)
+
+install(FILES ${PROJECT_BINARY_DIR}/data/ks-sc-gui.desktop
+	DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/applications/)

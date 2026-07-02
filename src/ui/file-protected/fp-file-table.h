@@ -20,6 +20,7 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 #include <QWidget>
+#include "src/ui/trusted-protected/new-headerview.h"
 
 class FileProtectedProxy;
 
@@ -29,6 +30,8 @@ struct FPFileInfo
 {
     // 是否被选中
     bool selected;
+    // 文件名
+    QString fileName;
     // 文件路径
     QString filePath;
     // 添加事件
@@ -79,13 +82,25 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
-    bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
+    //    bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
+
+    void updateInfo();
+
+    QList<FPFileInfo> getFPFileInfos();
+
+signals:
+    void stateChanged(Qt::CheckState checkState);
+
+public slots:
+    void onStateChanged(Qt::CheckState checkState);
+
+private:
+    void onSingleStateChanged();
 
 private:
     FileProtectedProxy *m_fileProtectedProxy;
     QList<FPFileInfo> m_filesInfo;
-    bool m_allSelected;
 };
 
 class FPFileTable : public QTableView
@@ -97,9 +112,17 @@ public:
     virtual ~FPFileTable(){};
 
     FPFilesFilterModel *getFilterProxy() { return this->m_filterProxy; };
+    void searchTextChanged(const QString &text);
+    void updateInfo();
+    QList<FPFileInfo> getFPFileInfos();
+
+private:
+    void mouseEnter(const QModelIndex &index);
 
 private:
     FPFilesFilterModel *m_filterProxy;
+    FPFilesModel *m_model;
+    NewHeaderView *m_newHeaderView;
 };
 
 }  // namespace KS
