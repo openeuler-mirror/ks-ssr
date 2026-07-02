@@ -102,6 +102,17 @@ extern "C"
         SSR_RESOURCE_MONITOR_OR
     };
 
+    // 回退状态
+    enum SSRSnapshotStatus
+    {
+        // 回到初始状态
+        SSR_INITIAL_STATUS = 0,
+        // 回到上一次加固
+        SSR_LAST_REINFORCEMENT_STATUS,
+        // 其它
+        SSR_OTHER_STATUS
+    };
+
 #ifdef __cplusplus
 }
 #endif
