@@ -46,7 +46,7 @@ class LoginLock:
 
         retdata[LOGIN_LOCK_CONF_KEY_FAILURES] = int(deny_value)
         retdata[LOGIN_LOCK_CONF_KEY_UNLOCK_TIME] = int(unlock_time)
-        retdata[LOGIN_LOCK_CONF_KEY_ROOT_LOCK] = bool(even_deny_root)
+        retdata[LOGIN_LOCK_CONF_KEY_ROOT_LOCK] = even_deny_root != False
         retdata[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME] = int(root_unlock_time)
 
         return (True, json.dumps(retdata))
