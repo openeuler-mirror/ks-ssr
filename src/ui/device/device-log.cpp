@@ -14,6 +14,7 @@
 
 #include "src/ui/device/device-log.h"
 #include "src/ui/device/device-permission.h"
+#include "src/ui/device/table-filter-model.h"
 #include "src/ui/ui_device-log.h"
 
 #include <kiran-log/qt5-log-i.h>
@@ -54,7 +55,4 @@ void DeviceLog::searchTextChanged(const QString &text)
     filterProxy->setFilterFixedString(text);
 }
 
-void DeviceLog::update()
-{
-}
 }  //namespace KS

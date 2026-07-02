@@ -37,7 +37,7 @@ protected:
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
-    void editClicked(bool checked);
+    void popupEditDialog(const QModelIndex &index);
     void updateDevice();
 
 private:
