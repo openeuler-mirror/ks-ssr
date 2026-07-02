@@ -1,5 +1,5 @@
 /**
- * @file          /kiran-ssr-manager/src/daemon/ssr-categories.h
+ * @file          /kiran-ssr-manager/src/daemon/categories.h
  * @brief         
  * @author        tangjie02 <tangjie02@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved. 
@@ -19,8 +19,8 @@ struct Category
     std::string name;
     // 分类标签，会对用户进行显示
     std::string label;
-    // 分类描述，预留，暂未使用
-    std::string comment;
+    // 分类描述
+    std::string description;
     // 图标名
     std::string icon_name;
     // 分类显示优先级，值越大显示越靠前

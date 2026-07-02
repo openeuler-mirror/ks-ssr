@@ -208,6 +208,7 @@ void Plugins::load_reinforcements()
                 reinforcement_arg.category(reinforcement_noarg->category().get());
             }
             reinforcement_arg.label(reinforcement_noarg->label());
+            reinforcement_arg.description(reinforcement_noarg->description());
 
             auto reinforcement = std::make_shared<Reinforcement>(plugin->get_id(),
                                                                  reinforcement_arg);

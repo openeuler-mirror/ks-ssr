@@ -9,7 +9,7 @@
 #include <gtk3-log-i.h>
 #include "src/daemon/categories.h"
 #include "src/daemon/configuration.h"
-#include "src/daemon/daemon.h"
+#include "src/daemon/dbus.h"
 #include "src/daemon/plugins.h"
 
 using namespace Kiran::Daemon;
@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
     Configuration::global_init(SSR_INSTALL_DATADIR "/ssr.ini");
     Categories::global_init();
     Plugins::global_init(Configuration::get_instance());
-    Daemon::global_init();
+    DBus::global_init();
 
     auto loop = Glib::MainLoop::create();
     loop->run();

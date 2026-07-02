@@ -6,5 +6,5 @@ src/tool/config/plain.cpp
 src/tool/config/pam.cpp
 [type: gettext/ini] data/ssr-categories.ini.in
 data/ssr-system-rs.xml.in
-plugins/cpp/network/ssr-plugin-network.xml.in
-plugins/cpp/audit/ssr-plugin-audit.xml.in
+plugins/python/ssr-plugin-network.xml.in
+plugins/python/ssr-plugin-audit.xml.in

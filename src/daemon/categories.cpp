@@ -13,7 +13,7 @@ namespace Daemon
 {
 #define SSR_CATEGORIES_BASENAME "ssr-categories.ini"
 #define SSR_CATEGORY_KEY_LABEL "label"
-#define SSR_CATEGORY_KEY_COMMENT "comment"
+#define SSR_CATEGORY_KEY_DESCRIPTION "description"
 #define SSR_CATEGORY_KEY_ICON_NAME "icon_name"
 #define SSR_CATEGORY_KEY_PRIORITY "priority"
 
@@ -54,7 +54,7 @@ void Categories::load()
         auto category = std::make_shared<Category>();
         category->name = group_name;
         IGNORE_EXCEPTION(category->label = keyfile.get_locale_string(group_name, SSR_CATEGORY_KEY_LABEL));
-        IGNORE_EXCEPTION(category->comment = keyfile.get_locale_string(group_name, SSR_CATEGORY_KEY_COMMENT));
+        IGNORE_EXCEPTION(category->description = keyfile.get_locale_string(group_name, SSR_CATEGORY_KEY_DESCRIPTION));
         IGNORE_EXCEPTION(category->icon_name = keyfile.get_string(group_name, SSR_CATEGORY_KEY_ICON_NAME));
         IGNORE_EXCEPTION(category->priority = keyfile.get_integer(group_name, SSR_CATEGORY_KEY_PRIORITY));
 
