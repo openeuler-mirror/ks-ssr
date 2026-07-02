@@ -5,6 +5,7 @@ import ssr.log
 
 UDEV_CONF_FILEPATH = "/etc/udev/rules.d/90-ssr-external.rules"
 DRIVER_BLACKLIST_PATH = "/etc/modprobe.d/ssr-blacklist.conf"
+RC_LOCAL_PATH = "/etc/rc.d/rc.local"
 
 #DISABLE_CDROM_RULE = "KERNEL==\\\"sr0\\\", ENV{UDISKS_IGNORE}=\\\"1\\\""
 DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", DRIVERS==\\\"usb-storage|uas\\\", ATTR{authorized}=\\\"0\\\""
@@ -12,6 +13,7 @@ DISABLE_USB_RULE = "ACTION==\\\"add\\\", SUBSYSTEMS==\\\"usb\\\", DRIVERS==\\\"u
 TTYPS_CMD_STR = "setserial /dev/ttyS"
 TTYPS_STATUS_CMD = "setserial -g /dev/ttyS"
 TTYPS_SUM_DEV_CMD = "ls /dev/ttyS* |wc -l"
+USB_SUM_DEV_CMD = "ls /dev/ |grep sd"
 
 CDROM_STATUS_CMD = " cat /proc/modules |grep "
 CDROM_DRIVE = "cdrom"
@@ -28,6 +30,9 @@ TTYS_ARG_ENABLED = "enabled"
 class UDev:
     def __init__(self):
         self.conf = ssr.configuration.Table(UDEV_CONF_FILEPATH, ",\\s+")
+        self.conf_rc = ssr.configuration.Table(RC_LOCAL_PATH, ",\\s+")
+        command =  'chmod +x {0}'.format(RC_LOCAL_PATH)
+        outpur = ssr.utils.subprocess_has_output(command)
 
     def reload(self):
         command =  'udevadm control --reload'
@@ -148,6 +153,11 @@ class CDROM(DRIVERS):
 
 
 class USB(UDev):
+    def usb_status(self):
+        cmd_usb = '{0}'.format(USB_SUM_DEV_CMD)
+        output = ssr.utils.subprocess_has_output(cmd_usb)
+        return len(output) != 0
+
     def get(self):
         retdata = dict()
         value = self.conf.get_value("1=ACTION==\\\"add\\\";2=SUBSYSTEMS==\\\"usb\\\"")
@@ -156,6 +166,9 @@ class USB(UDev):
 
     def set(self, args_json):
         args = json.loads(args_json)
+
+        if self.usb_status():
+            return (False, 'Device busy , please pop up! \t\t')
 
         if args[USB_ARG_ENABLED]:
             self.conf.del_record("1=ACTION==\\\"add\\\";2=SUBSYSTEMS==\\\"usb\\\"")
@@ -183,6 +196,12 @@ class TTYS(UDev):
             else:
                 list_get.append("enabled")
             index_get += 1
+        
+        setserial_status = 'grep  setserial {0} -nR'.format(RC_LOCAL_PATH) 
+        output = ssr.utils.subprocess_has_output(setserial_status)
+        if  len(output)  == 0:
+            retdata[TTYS_ARG_ENABLED]  = True
+            return (False, json.dumps(retdata))
 
         retdata[TTYS_ARG_ENABLED] = "enabled" in list_get
 
@@ -202,9 +221,11 @@ class TTYS(UDev):
                 flag_open_cmd = TTYPS_STATUS_CMD + str(open_index)
                 command_open_status = '{0} | grep unknown'.format(flag_open_cmd)
                 flag_open = ssr.utils.subprocess_has_output(command_open_status)
+                ttys_open_cmd = TTYPS_CMD_STR + str(open_index) + "  " + "-a autoconfig"
+                ttys_open_command = '{0}'.format(ttys_open_cmd)
+                ttys_close_cmd = TTYPS_CMD_STR + str(open_index) + "  " + "uart none"
+                self.conf_rc.del_record("1={0}".format(ttys_close_cmd))
                 if len(flag_open) != 0:
-                    ttys_open_cmd = TTYPS_CMD_STR + str(open_index) + "  " + "-a autoconfig"
-                    ttys_open_command = '{0}'.format(ttys_open_cmd)
                     open_output = ssr.utils.subprocess_not_output(ttys_open_command)
                 open_index += 1
         else:
@@ -212,9 +233,10 @@ class TTYS(UDev):
                 flag_close_cmd = TTYPS_STATUS_CMD + str(close_index)
                 command_close_status = '{0} | grep unknown'.format(flag_close_cmd)
                 flag_close = ssr.utils.subprocess_has_output(command_close_status)
+                ttys_close_cmd = TTYPS_CMD_STR + str(close_index) + "  " + "uart none"
+                ttys_close_command = '{0}'.format(ttys_close_cmd)
+                self.conf_rc.set_value("1={0}".format(ttys_close_cmd), ttys_close_cmd)
                 if len(flag_close) == 0:
-                    ttys_close_cmd = TTYPS_CMD_STR + str(close_index) + "  " + "uart none"
-                    ttys_close_command = '{0}'.format(ttys_close_cmd)
                     close_output = ssr.utils.subprocess_not_output(ttys_close_command)
                 close_index += 1
 
