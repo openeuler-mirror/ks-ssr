@@ -9,7 +9,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(KSC REQUIRED)
+find_package(SC REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets DBus LinguistTools)
 
@@ -21,6 +21,5 @@ pkg_search_module(KIRAN_STYLE REQUIRED kiran-style-helper)
 
 configure_file(config.h.in ${PROJECT_BINARY_DIR}/config.h)
 
-add_subdirectory(data)
-add_subdirectory(lib)
+# add_subdirectory(data) add_subdirectory(lib)
 add_subdirectory(src)

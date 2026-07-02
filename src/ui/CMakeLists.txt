@@ -1,0 +1,38 @@
+cmake_minimum_required(VERSION 3.0)
+
+file(GLOB_RECURSE UI_H_FILES ./*.h)
+file(GLOB_RECURSE UI_CPP_FILES ./*.cpp)
+
+configure_file(config-ui.h.in ${PROJECT_BINARY_DIR}/config-ui.h)
+
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
+  PROPERTIES CLASSNAME BoxManagerProxy NO_NAMESPACE true)
+
+qt_add_dbus_interface(
+  BOX_MANAGER_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SC.BoxManager.xml
+  box_manager_proxy)
+
+qt5_wrap_ui(
+  UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/window.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/box-manager.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/box/create-box.ui)
+
+set(TARGET_NAME ks-sc-gui)
+
+set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
+qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+
+add_executable(
+  ${TARGET_NAME} ${UI_H_FILES} ${UI_CPP_FILES} ${BOX_MANAGER_SRCS} ${QM_FILES}
+                 ${UI_FILES} "${PROJECT_SOURCE_DIR}/resources/resources.qrc")
+
+target_include_directories(
+  ${TARGET_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
+                         ${PROJECT_SOURCE_DIR}/include ${KLOG_QT5_INCLUDE_DIRS})
+
+target_link_libraries(${TARGET_NAME} PRIVATE ${KLOG_QT5_LIBRARIES} Qt5::DBus
+                                             Qt5::Widgets)
+
+install(FILES ${QM_FILES} DESTINATION ${SC_INSTALL_TRANSLATIONDIR})
+install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
