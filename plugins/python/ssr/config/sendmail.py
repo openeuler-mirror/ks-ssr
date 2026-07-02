@@ -75,6 +75,9 @@ class Switch(SendMailProxy):
         elif self.postfix:
             retdata[self.key] = self.is_active(self.postfix_service)
 
+        else:
+            retdata[self.key] = False   
+
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
