@@ -49,10 +49,10 @@ class SudoLimits:
     def get_selinux_status(self):
         output = ssr.utils.subprocess_has_output("getenforce")
         ssr.log.debug(output)
-        if str(output) == "Disabled":
-            return False
-        else:
+        if str(output) == "Enforcing":
             return True
+        else:
+            return False
 
     def get(self):
         retdata = dict()

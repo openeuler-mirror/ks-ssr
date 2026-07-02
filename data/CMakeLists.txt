@@ -76,6 +76,8 @@ foreach(PC_IN_FILE IN LISTS PC_IN_FILES)
             DESTINATION ${SSR_INSTALL_LIBDIR}/pkgconfig)
 endforeach()
 
-
-
+# selinux mode files
+install(FILES ${PROJECT_SOURCE_DIR}/data/ssr-sshd-port.pp
+                ${PROJECT_SOURCE_DIR}/data/ssr-sshd-sftp.pp
+        DESTINATION ${SSR_INSTALL_DATADIR}/)
 

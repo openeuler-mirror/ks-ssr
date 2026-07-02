@@ -6,6 +6,8 @@ import ssr.systemd
 import ssr.log
 
 SSHD_CONF_PATH = "/etc/ssh/sshd_config"
+SELINUX_MODULES_PORT_PATH = "/usr/share/ks-ssr-manager/ssr-sshd-port.pp"
+SELINUX_MODULES_SFTP_PATH = "/usr/share/ks-ssr-manager/ssr-sshd-sftp.pp"
 
 # 允许root进行ssh远程登陆
 ROOT_LOGIN_ARG_ENABLED = "enabled"
@@ -45,8 +47,16 @@ SET_SFTP_USER_CONFIG = "Match User sftpuser\n\tChrootDirectory /home\n\tX11Forwa
 class SSHD:
     def __init__(self):
         self.conf = ssr.configuration.KV(SSHD_CONF_PATH, join_string=" ")
+        self.conf_protocol = ssr.configuration.PAM(SSHD_CONF_PATH, "Protocol\\s+2")
         self.service = ssr.systemd.Proxy("sshd")
-
+    
+    def get_selinux_status(self):
+        output = ssr.utils.subprocess_has_output("getenforce")
+        ssr.log.debug(output)
+        if str(output) == "Enforcing":
+            return True
+        else:
+            return False
 
 class RootLogin(SSHD):
     def get(self):
@@ -195,9 +205,22 @@ class SshdService(SSHD):
         else:
             return (False,'UsePAM is not recommended to be closed, \t\nwhich will cause many problems! \t')
         
-        self.conf.set_value(SSHD_CONF_PROTOCOL, "2" if args[SSHD_CONF_PROTOCOL_KEY] else "")
+        # self.conf.set_value(SSHD_CONF_PROTOCOL, "2" if args[SSHD_CONF_PROTOCOL_KEY] else "")
+        if args[SSHD_CONF_PROTOCOL_KEY] :
+            self.conf_protocol.set_line("{0} 2".format(SSHD_CONF_PROTOCOL), "#\\s+no\\s+default\\s+banner")
+        else:
+            self.conf_protocol.del_line()
+
         self.conf.set_value(SSHD_CONF_PERMIT_EMPTY, "no" if args[SSHD_CONF_PERMIT_EMPTY_KEY] else "yes")
-        self.conf.set_value(SSHD_CONF_PORT, "1022" if args[SSHD_CONF_PORT_KEY] else "")
+
+        if  args[SSHD_CONF_PORT_KEY] :
+            self.conf.set_value(SSHD_CONF_PORT, "1022")
+            if self.get_selinux_status():
+                ssr.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_PORT_PATH))
+        else:
+            self.conf.set_value(SSHD_CONF_PORT, "")
+            if self.get_selinux_status():
+                ssr.utils.subprocess_not_output("semodule -r ssr-sshd-port &> /dev/null")
 
         # 重启服务生效
         self.service.reload()
@@ -225,6 +248,7 @@ class SftpUser(SSHD):
         self.conf_allowtcp = ssr.configuration.PAM(SSHD_CONF_PATH, "\tAllowTcpForwarding\\s+no")
         self.conf_force = ssr.configuration.PAM(SSHD_CONF_PATH, "\tForceCommand\\s+internal-sftp")
         args = json.loads(args_json)
+
         if args["enabled"]:
             if not self.user_exist("sftpuser"):
                 ssr.utils.subprocess_not_output(SET_SFTP_USER_CMD)
@@ -234,6 +258,9 @@ class SftpUser(SSHD):
             self.conf_x11.set_line("\tX11Forwarding no","\tAllowTcpForwarding\\s+no")
             self.conf_chroot.set_line("\tChrootDirectory /home","\tX11Forwarding\\s+no")
             self.conf_match.set_line("Match User sftpuser","\tChrootDirectory\\s+/home")
+
+            if self.get_selinux_status():
+                ssr.utils.subprocess_not_output("semodule -i {0}".format(SELINUX_MODULES_SFTP_PATH))
 
         else:
             if self.user_exist("sftpuser"):
@@ -245,6 +272,8 @@ class SftpUser(SSHD):
             self.conf_allowtcp.del_line()
             self.conf_force.del_line()
 
+            if self.get_selinux_status():
+                ssr.utils.subprocess_not_output("semodule -r ssr-sshd-sftp &> /dev/null")
         # 重启服务生效
         self.service.reload()
         return (True, '')
