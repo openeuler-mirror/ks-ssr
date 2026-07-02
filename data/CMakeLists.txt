@@ -25,13 +25,20 @@ foreach(XML_IN_FILE IN LISTS XML_IN_FILES)
     execute_process(COMMAND ${INTLTOOL-MERGE} -x ${PROJECT_SOURCE_DIR}/po/ ${XML_IN_FILE} ${PROJECT_BINARY_DIR}/data/${XML_FILE})
 endforeach()
 
-#install (FILES ${PROJECT_SOURCE_DIR}/data/ssr-custom-ra.xml
-#        DESTINATION ${SSR_INSTALL_DATADIR})
+add_custom_target(ssr-system-rs.encrypted ALL
+                  COMMAND sed -i -e 's/xml:lang/lang/g' ${PROJECT_BINARY_DIR}/data/ssr-system-rs.xml
+                  COMMAND ${PROJECT_BINARY_DIR}/src/tool/crypto/kiran-ssr-crypto --encrypt-file=${PROJECT_BINARY_DIR}/data/ssr-system-rs.xml
+                                                                                 --private-key=${PROJECT_SOURCE_DIR}/data/ssr-private.key
+                                                                                 --output-file=${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
+                  DEPENDS kiran-ssr-crypto)
 
-# reinforcement stardand
-install(FILES ${PROJECT_SOURCE_DIR}/data/ssr-system-rs.encrypted
+install(FILES ${PROJECT_BINARY_DIR}/data/ssr-system-rs.encrypted
         DESTINATION ${SSR_INSTALL_DATADIR}/
         RENAME ssr-system-rs)
+
+
+#install (FILES ${PROJECT_SOURCE_DIR}/data/ssr-custom-ra.xml
+#        DESTINATION ${SSR_INSTALL_DATADIR})
 
 # service files
 file(GLOB SERVICE_IN_FILES ./*.service.in)
