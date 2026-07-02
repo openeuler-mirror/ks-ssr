@@ -139,7 +139,7 @@ class Switch(Firewall):
         
         if self.iptables_systemd.is_active():
             if args['input-ports-connect-nums']  == 0:
-                ssr.utils.subprocess_not_output(CLEAR_IPTABLES_INPUT)
+                self.del_iptables(DELETE_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j DROP")
             else:
                 self.set_iptables(ADD_IPTABLES_INPUT_TCP ,CHECK_IPTABLES_INPUT_TCP ,"--dport 1:60999 -m connlimit --connlimit-above {0}".format(args['input-ports-connect-nums']) ,"-j DROP")
  
@@ -251,8 +251,7 @@ class IcmpTimestamp(Firewall):
                 self.set_iptables(DISABLE_IPTABLES_INPUT_ICMP ,CHECK_IPTABLES_INPUT_ICMP ,TIMESTAMP_REPLY_DETAIL ,"")
             self.iptables_systemd.service_save()
         else:
-            if not args['timestamp_request']:
-                raise Exception('iptables is not running')
+            return (True, 'iptables is not running \t')
         return (True, '')
 
 # 禁止主机被Traceroute检测
@@ -279,6 +278,5 @@ class Traceroute(Firewall):
                 self.del_iptables(OPEN_IPTABLES_OUTPUT_ICMP ,CHECK_IPTABLES_OUTPUT_ICMP ,TRACEROUTE_DETAIL ,"")
             self.iptables_systemd.service_save()
         else:
-            if not args['enabled']:
-                raise Exception('iptables is not running')
+            return (True, 'iptables is not running \t')
         return (True, '')

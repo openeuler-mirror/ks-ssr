@@ -7,7 +7,7 @@
 
 #pragma once
 
-#if (__GNUC__ < 5) || (__GNUC__ == 4 && __GNUC_MINOR__ <= 9)
+#if (__GNUC__ < 4) || (__GNUC__ == 4 && __GNUC_MINOR__ <= 4)
 
 #include <glibmm.h>
 

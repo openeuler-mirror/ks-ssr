@@ -68,9 +68,15 @@ class Proxy:
 
     def service_restart(self):
         self.__call_service_noresult('restart')
+    
+    def service_reload(self):
+        self.__call_service_noresult('reload')
 
     def restart(self):
         self.__call_noresult('restart')
+    
+    def reload(self):
+        self.__call_noresult('reload')
 
     def is_enable(self):
         actived = self.__call_result('is-enabled')
