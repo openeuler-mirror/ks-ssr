@@ -29,7 +29,7 @@ ResourceMonitor::~ResourceMonitor()
 
 void ResourceMonitor::startMonitor()
 {
-    KLOG_INFO("startMonitor.");
+    KLOG_DEBUG("startMonitor.");
 
     monitorResource();
 }
@@ -110,28 +110,23 @@ QVector<QString> stringSplit(const QString &s, const QString &delim = " ")
     return elems;
 }
 
-QVector<QString> ResourceMonitor::getVmStatS()
+float ResourceMonitor::getMemoryRemainingRatio()
 {
-    QString results = run_cmd("vmstat");
+    char memTotal[20], memFree[20], memAvailable[20], cached[20], buffers[20];
 
-    QVector<QString> line_list = stringSplit(results, "\n");  // std::string(results.c_str()).split("\n").at(2).split(" ");
-    QVector<QString> r_list = stringSplit(line_list.at(2));
-
-    QVector<QString> result_list = {};
-    int i = 0;
-    for (auto num : r_list)
+    FILE *file = fopen("/proc/meminfo", "r");
+    if (file == nullptr)
     {
-        if (num == "")
-            continue;
-        else
-            i++;
-        if (i == 7)  // si
-            result_list.push_back(num);
-        if (i == 8)  // so
-            result_list.push_back(num);
+        KLOG_ERROR("cannot open /proc/meminfo");
+        return -1;
     }
-    //    KLOG_DEBUG("result_list si : %s so: %s",result_list.at(0).c_str(),result_list.at(1).c_str());
-    return result_list;
+    fscanf(file, "MemTotal: %s kB\n", memTotal);
+    fscanf(file, "MemFree: %s kB\n", memFree);
+    fscanf(file, "MemAvailable: %s kB\n", memAvailable);
+    fscanf(file, "Buffers: %s kB\n", buffers);
+    fscanf(file, "Cached: %s kB\n", cached);
+    fclose(file);
+    return (atof(memFree) + atof(cached) + atof(buffers)) / atof(memTotal);
 }
 
 float ResourceMonitor::getCpuAverageLoad()
@@ -146,9 +141,8 @@ float ResourceMonitor::getCpuAverageLoad()
         sscanf(&buff[5], "%f", &avg);
         fclose(fd);
     }
-    QString cpu_nums = run_cmd("grep 'model name' /proc/cpuinfo | wc -l");
-    float simple_avg = avg / atoi(cpu_nums.toLatin1());
-    return simple_avg;
+    auto cpu_nums = run_cmd("grep 'model name' /proc/cpuinfo | wc -l");
+    return avg / atoi(cpu_nums.toLatin1());
 }
 
 bool ResourceMonitor::monitorResource()
@@ -166,7 +160,7 @@ bool ResourceMonitor::monitorResource()
     Q_EMIT this->cpuAverageLoadRatio_(getCpuAverageLoad());
 
     // this->vmstatSiso_.emit(getVmStatS());
-    Q_EMIT this->vmstatSiso_(getVmStatS());
+    Q_EMIT this->memoryRemainingRatio_(getMemoryRemainingRatio());
     return true;
 }
 

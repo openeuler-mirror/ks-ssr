@@ -15,6 +15,7 @@
 #include <QIcon>
 #include "src/ui/settings/device-control.h"
 #include "src/ui/settings/trusted-protected.h"
+#include "src/ui/settings/baseline-reinforcement.h"
 #include "ui_dialog.h"
 
 namespace KS
@@ -51,6 +52,11 @@ void Dialog::initUI()
 
 void Dialog::initSidebar()
 {
+    auto reinforceItem = new QListWidgetItem(m_ui->m_sidebar);
+    reinforceItem->setText(tr("Baseline reinforcement"));
+    reinforceItem->setTextAlignment(Qt::AlignCenter);
+    reinforceItem->setSizeHint(QSize(110, 42));
+
     auto trustedItem = new QListWidgetItem(m_ui->m_sidebar);
     trustedItem->setText(tr("Trusted protect"));
     trustedItem->setTextAlignment(Qt::AlignCenter);
@@ -61,6 +67,7 @@ void Dialog::initSidebar()
     deviceItem->setTextAlignment(Qt::AlignCenter);
     deviceItem->setSizeHint(QSize(110, 42));
 
+    m_ui->m_sidebar->addItem(reinforceItem);
     m_ui->m_sidebar->addItem(trustedItem);
     m_ui->m_sidebar->addItem(deviceItem);
     m_ui->m_sidebar->setCurrentRow(0);
@@ -68,10 +75,14 @@ void Dialog::initSidebar()
 
 void Dialog::initSubPage()
 {
+    auto reinforceSettings = new BaselineReinforcement(this);
     auto trustedSettings = new TrustedProtected(this);
-
     auto deviceSettings = new DeviceControl(this);
 
+    connect(reinforceSettings, &BaselineReinforcement::exportStrategyClicked, this, &Dialog::exportStrategyClicked);
+    connect(reinforceSettings, &BaselineReinforcement::resetAllArgsClicked, this, &Dialog::resetAllArgsClicked);
+
+    m_ui->m_stacked->addWidget(reinforceSettings);
     m_ui->m_stacked->addWidget(trustedSettings);
     m_ui->m_stacked->addWidget(deviceSettings);
     m_ui->m_stacked->setCurrentIndex(0);

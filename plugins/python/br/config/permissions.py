@@ -1,4 +1,4 @@
-#--coding:utf8 --
+# -*- coding: utf-8 -*-
 
 try:
     import configparser
@@ -12,7 +12,8 @@ import json
 import br.vars
 import br.configuration
 
-PERMISSIONS_INI_FILEPATH = br.vars.SSR_BR_PLUGIN_PYTHON_ROOT_DIR + "/br/config/permissions.ini"
+PERMISSIONS_INI_FILEPATH = br.vars.SSR_BR_PLUGIN_PYTHON_ROOT_DIR + \
+    "/br/config/permissions.ini"
 FILE_GROUP_PERMISSIONS = "Permissions"
 # FPK: File Permissions Key
 FPK_MODE_FILE_LIST = "ModeFileList"
@@ -27,16 +28,18 @@ PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
 PERMISSIONS_ARG_MODE_DIRECTORY_PERMISSIONS_LIMIT = "directory-permissions-limit"
 
 UMASK_LIMIT_PROFILE_PATH = '/etc/profile'
-UMASK_LIMIT_BASHRC_PATH  = '/etc/bashrc'
+UMASK_LIMIT_BASHRC_PATH = '/etc/bashrc'
 
 UMASK_LIMIT_CONF_KEY_UMASK = 'umask'
+
 
 class PermissionSetting:
     def __init__(self):
         self.conf = configparser.ConfigParser()
         self.conf.read(PERMISSIONS_INI_FILEPATH)
         try:
-            self.mode_filelist = self.conf.get(FILE_GROUP_PERMISSIONS, FPK_MODE_FILE_LIST).split(';')
+            self.mode_filelist = self.conf.get(
+                FILE_GROUP_PERMISSIONS, FPK_MODE_FILE_LIST).split(';')
         except Exception as e:
             self.mode_filelist = list()
             br.log.debug(str(e))
@@ -73,12 +76,14 @@ class PermissionSetting:
 
         return (True, '')
 
+
 class DirectoryPermissionSetting:
     def __init__(self):
         self.conf = configparser.ConfigParser()
         self.conf.read(PERMISSIONS_INI_FILEPATH)
         try:
-            self.mode_filelist = self.conf.get(FILE_GROUP_PERMISSIONS, FPK_MODE_DIRECTORY_LIST).split(';')
+            self.mode_filelist = self.conf.get(
+                FILE_GROUP_PERMISSIONS, FPK_MODE_DIRECTORY_LIST).split(';')
         except Exception as e:
             self.mode_filelist = list()
             br.log.debug(str(e))
@@ -115,6 +120,7 @@ class DirectoryPermissionSetting:
 
         return (True, '')
 
+
 class UmaskLimit:
     def __init__(self):
         self.conf_profile = br.configuration.KV(UMASK_LIMIT_PROFILE_PATH)
@@ -144,14 +150,20 @@ class UmaskLimit:
             self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
         else:
             if args['enabled'] == 22:
-                self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
-                self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+                self.conf_profile.set_all_value(
+                    UMASK_LIMIT_CONF_KEY_UMASK, '022')
+                self.conf_bashrc.set_all_value(
+                    UMASK_LIMIT_CONF_KEY_UMASK, '022')
             if args['enabled'] == 222:
-                self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
-                self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
+                self.conf_profile.set_all_value(
+                    UMASK_LIMIT_CONF_KEY_UMASK, '022')
+                self.conf_bashrc.set_all_value(
+                    UMASK_LIMIT_CONF_KEY_UMASK, '022')
             if args['enabled'] == 77:
-                self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
-                self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
+                self.conf_profile.set_all_value(
+                    UMASK_LIMIT_CONF_KEY_UMASK, '077')
+                self.conf_bashrc.set_all_value(
+                    UMASK_LIMIT_CONF_KEY_UMASK, '077')
 
         cmd = "source" + " " + UMASK_LIMIT_BASHRC_PATH + " " + UMASK_LIMIT_PROFILE_PATH
         limit_open_command = '{0}'.format(cmd)
