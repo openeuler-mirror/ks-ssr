@@ -25,7 +25,6 @@ namespace KS
 {
 namespace DM
 {
-
 class SDDeviceMonitor : public QObject
 {
     Q_OBJECT

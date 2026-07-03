@@ -3,8 +3,8 @@
 
 #include <QMap>
 #include <QObject>
-#include "udev-device.h"
 #include <QSharedPointer>
+#include "udev-device.h"
 
 class udev_monitor;
 class QSocketNotifier;
@@ -13,7 +13,6 @@ namespace KS
 {
 namespace DM
 {
-
 class UdevDeviceEnumerator;
 
 class UdevDeviceMonitor : public QObject
