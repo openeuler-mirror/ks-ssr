@@ -20,16 +20,14 @@
 
 namespace Ui
 {
-class Activation;
+class LicenseActivation;
 }
 
 namespace KS
 {
 struct LicenseInfo
 {
-    LicenseInfo() : activationCode(""),
-                    machineCode(""),
-                    activationStatus(LicenseActivationStatus::LAS_LAST),
+    LicenseInfo() : activationStatus(LicenseActivationStatus::LAS_LAST),
                     expiredTime(0) {}
 
     QString activationCode;
@@ -38,15 +36,15 @@ struct LicenseInfo
     time_t expiredTime;
 };
 
-class LicenseUtils;
+class LicenseDBus;
 class QRCodeDialog;
-class Activation : public TitlebarWindow
+class LicenseActivation : public TitlebarWindow
 {
     Q_OBJECT
 
 public:
-    Activation(QWidget* parent = nullptr);
-    virtual ~Activation();
+    LicenseActivation(QWidget* parent = nullptr);
+    virtual ~LicenseActivation();
     bool isActivate();
     void updateLicenseInfo();
 
@@ -68,8 +66,8 @@ signals:
     void closed();
 
 private:
-    Ui::Activation* m_ui;
-    LicenseUtils* m_licenseUtils;
+    Ui::LicenseActivation* m_ui;
+    LicenseDBus* m_licenseUtils;
     LicenseInfo m_licenseInfo;
     QRCodeDialog* m_qrcodeDialog;
 };
