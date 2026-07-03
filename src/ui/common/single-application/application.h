@@ -11,9 +11,8 @@
  * 
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
- 
-#ifndef QAPPLICATIONDEMO_KIRAN_APPLICATION_H
-#define QAPPLICATIONDEMO_KIRAN_APPLICATION_H
+
+#pragma once
 
 #include <QApplication>
 
@@ -21,11 +20,10 @@
 #if defined(qApp)
 #undef qApp
 #endif
-#define qApp (static_cast<Application*>(QCoreApplication::instance()))
+#define qApp (static_cast<Application *>(QCoreApplication::instance()))
 
 namespace KS
 {
-
 class Application;
 class ApplicationPrivate;
 /**
@@ -35,7 +33,8 @@ class ApplicationPrivate;
  *  @since 2.1.0
  *  @see QApplication
  */
-class Q_DECL_EXPORT Application : public QApplication {
+class Q_DECL_EXPORT Application : public QApplication
+{
     Q_OBJECT
     Q_DECLARE_PRIVATE(Application)
     Q_DISABLE_COPY(Application)
@@ -47,15 +46,15 @@ public:
      * @param appFlags 同QApplication::QApplication(int &, char **)中appFlags
      * @see QApplication::QApplication(int &, char **)
      */
-    Application(int &argc, char **argv, int appFlags= ApplicationFlags);
+    Application(int &argc, char **argv, int appFlags = ApplicationFlags);
 
     /**
      * @brief Application析构方法
      */
     ~Application();
+
 private:
     /* ApplicationPrivate私有类指针 */
     ApplicationPrivate *d_ptr;
 };
 }  // namespace KS
-#endif //KIRAN_APPLICATION_H

@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef ABOUT_H
-#define ABOUT_H
+
+#pragma once
 
 #include <QWidget>
 #include "src/ui/common/titlebar-window.h"
@@ -42,4 +42,3 @@ private:
     Ui::about *m_ui;
 };
 }  // namespace KS
-#endif  // ABOUT_H

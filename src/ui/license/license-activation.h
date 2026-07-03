@@ -42,10 +42,11 @@ protected:
 
 private:
     void initUI();
+    void popupQRcode(const QString& QRcode, const QString& title);
 
 private slots:
     void activate();
-    void popupQrencode();
+    void handleQrcode();
 
 signals:
     void closed();

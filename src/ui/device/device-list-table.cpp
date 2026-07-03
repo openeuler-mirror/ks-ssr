@@ -173,8 +173,8 @@ DeviceState DeviceListTable::getState(int row)
         return DeviceState::DEVICE_STATE_UNAUTHORIED;
     }
 
-    auto item = m_model->item(row, ListTableField::LIST_TABLE_FIELD_STATUS);
-    return DeviceUtils::deviceStateStr2Enum(item->text());
+    auto index = m_filterProxy->index(row, ListTableField::LIST_TABLE_FIELD_STATUS);
+    return DeviceUtils::deviceStateStr2Enum(m_filterProxy->data(index).toString());
 }
 
 QString DeviceListTable::getID(int row)
@@ -185,8 +185,8 @@ QString DeviceListTable::getID(int row)
         return QString();
     }
 
-    auto item = m_model->item(row, ListTableField::LIST_TABLE_FIELD_ID);
-    return item->text();
+    auto index = m_filterProxy->index(row, ListTableField::LIST_TABLE_FIELD_ID);
+    return m_filterProxy->data(index).toString();
 }
 
 QString DeviceListTable::getName(int row)
@@ -197,8 +197,8 @@ QString DeviceListTable::getName(int row)
         return QString();
     }
 
-    auto item = m_model->item(row, ListTableField::LIST_TABLE_FIELD_NAME);
-    return item->text();
+    auto index = m_filterProxy->index(row, ListTableField::LIST_TABLE_FIELD_NAME);
+    return m_filterProxy->data(index).toString();
 }
 
 int DeviceListTable::getPermission(int row)
@@ -209,8 +209,8 @@ int DeviceListTable::getPermission(int row)
         return -1;
     }
 
-    auto item = m_model->item(row, ListTableField::LIST_TABLE_FIELD_PERMISSION);
-    return item->text().toInt();
+    auto index = m_filterProxy->index(row, ListTableField::LIST_TABLE_FIELD_PERMISSION);
+    return m_filterProxy->data(index).toInt();
 }
 
 int DeviceListTable::getColCount()
@@ -245,24 +245,22 @@ void DeviceListTable::initTable()
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setFocusPolicy(Qt::NoFocus);
     setMouseTracking(true);
+    setShowGrid(false);
 
     // 设置Model
     m_model = new QStandardItemModel(this);
     m_filterProxy = new TableFilterModel(this);
     m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
     setModel(m_filterProxy);
-    setShowGrid(false);
 
     // 设置代理
     setItemDelegate(new DeviceListDelegate(this));
 
     // 设置水平行表头
-    horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     horizontalHeader()->setStretchLastSection(true);
     horizontalHeader()->setSectionsMovable(false);
-    horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     horizontalHeader()->setFixedHeight(24);
-    horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter);
 
     setHeaderSections(QStringList() << tr("Number")
                                     << tr("Device Name")
@@ -321,21 +319,25 @@ void DeviceListTable::showDetails(const QModelIndex &index)
     RETURN_IF_TRUE(index.column() == ListTableField::LIST_TABLE_FIELD_STATUS ||
                    index.column() == ListTableField::LIST_TABLE_FIELD_PERMISSION);
 
-    auto item = m_model->item(index.row(), index.column());
-    if (item)
+    //FIXME:计算字符像素宽度不准确
+    auto itemText = m_filterProxy->data(index).toString();
+    RETURN_IF_TRUE(itemText.isEmpty());
+
+    QFontMetrics fm(fontMetrics());
+    auto textRect = fm.boundingRect(itemText);
+    const int textMargin = this->style()->pixelMetric(QStyle::PM_FocusFrameHMargin) + 1;
+    //文字矩形宽要加上单元格左边padding的10px
+    auto textWidthInPxs = textRect.width() + 10 + textMargin;
+
+    if (textWidthInPxs > columnWidth(index.column()))
     {
-        QFontMetrics fm(fontMetrics());
-        auto textWidthInPxs = fm.horizontalAdvance(item->text(), item->text().length());
-        if (textWidthInPxs > columnWidth(index.column()))
-        {
-            QPoint point = QCursor::pos();
-            QRect rect = QRect(point.x(), point.y(), 30, 10);
-            QToolTip::showText(point, item->text(), this, rect);
-        }
-        else
-        {
-            QToolTip::hideText();
-        }
+        QPoint point = QCursor::pos();
+        QRect rect = QRect(point.x(), point.y(), 30, 10);
+        QToolTip::showText(point, itemText, this, rect);
+    }
+    else
+    {
+        QToolTip::hideText();
     }
 }
 

@@ -80,6 +80,11 @@ void QRCodeDialog::setText(const QString &text)
     ui->m_qrcodeImage->setPixmap(createQRcodePixmap(text));
 }
 
+void QRCodeDialog::setSummary(const QString &text)
+{
+    ui->m_summary->setText(text);
+}
+
 QRCodeDialog::~QRCodeDialog()
 {
     delete ui;

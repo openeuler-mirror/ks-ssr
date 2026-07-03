@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef TPDELEGATE_H
-#define TPDELEGATE_H
+
+#pragma once
 
 #include <QObject>
 #include <QStyledItemDelegate>
@@ -35,5 +35,3 @@ public:
                      const QModelIndex &index) override;
 };
 }  // namespace KS
-
-#endif  // TPDELEGATE_H

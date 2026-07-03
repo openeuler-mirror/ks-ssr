@@ -89,14 +89,7 @@ void LicenseActivation::activate()
     QString errorMsg;
     auto isActivated = m_licenseDBus->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
 
-    if (isActivated)
-    {
-        POPUP_MESSAGE_DIALOG_RETURN(tr("Activate app successful!"), this)
-    }
-    else
-    {
-        POPUP_MESSAGE_DIALOG_RETURN(errorMsg, this)
-    }
+    POPUP_MESSAGE_DIALOG(isActivated ? tr("Activate app successful!") : errorMsg);
 }
 
 void LicenseActivation::popupQrencode()

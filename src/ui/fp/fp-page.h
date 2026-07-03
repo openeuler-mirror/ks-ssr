@@ -33,7 +33,6 @@ public:
     virtual ~FPPage();
 
 private:
-    void updateInfo();
     bool checkTrustedLoadFinied(bool initialized);
     bool isExistSelectedItem();
 
@@ -42,6 +41,7 @@ private Q_SLOTS:
     void addProtectedFile(bool checked);
     void popDeleteNotify(bool checked);
     void removeProtectedFile();
+    void updateTips(int total);
 
 private:
     Ui::FPPage *m_ui;

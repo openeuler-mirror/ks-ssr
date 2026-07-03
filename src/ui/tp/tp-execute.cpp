@@ -40,7 +40,7 @@ TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
     // 初始化完成自动刷新
     connect(m_dbusProxy, &KSSDbusProxy::InitFinished, this, [this]
             {
-                updateInfo();
+                m_ui->m_executeTable->updateInfo();
                 emit initFinished();
             });
     // 更新表格右上角提示信息
@@ -71,6 +71,7 @@ TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
     connect(m_ui->m_recertification, SIGNAL(clicked(bool)), this, SLOT(recertification(bool)));
     connect(m_ui->m_refresh, SIGNAL(clicked(bool)), this, SLOT(updateExecuteList(bool)));
     connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(popDeleteNotify(bool)));
+    connect(m_ui->m_executeTable, &TPExecuteTable::filesUpdate, this, &TPExecute::updateTips);
 }
 
 TPExecute::~TPExecute()
@@ -83,12 +84,11 @@ bool TPExecute::getInitialized()
     return m_dbusProxy->initialized();
 }
 
-void TPExecute::updateInfo()
+void TPExecute::updateTips(int total)
 {
-    m_ui->m_executeTable->updateRecord();
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2"))
-                    .arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()),
+                    .arg(QString::number(total),
                          QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
     m_ui->m_tips->setText(text);
 }
@@ -115,14 +115,13 @@ void TPExecute::addExecuteFile(bool checked)
     RETURN_IF_TRUE(fileName.isEmpty())
 
     auto reply = m_dbusProxy->AddTrustedFile(fileName);
-    CHECK_ERROR_FOR_DBUS_REPLY(reply, QString(""), this)
-    updateInfo();
+    CHECK_ERROR_FOR_DBUS_REPLY(reply)
 }
 
 void TPExecute::updateExecuteList(bool checked)
 {
     m_refreshTimer->start(100);
-    updateInfo();
+    m_ui->m_executeTable->updateInfo();
 }
 
 void TPExecute::recertification(bool checked)
@@ -135,14 +134,14 @@ void TPExecute::recertification(bool checked)
             m_dbusProxy->AddTrustedFile(trustedInfo.filePath).waitForFinished();
         }
     }
-    updateInfo();
 }
 
 void TPExecute::popDeleteNotify(bool checked)
 {
     if (!isExistSelectedItem())
     {
-        POPUP_MESSAGE_DIALOG_RETURN(tr("Please select the content that needs to be removed."), this)
+        POPUP_MESSAGE_DIALOG(tr("Please select the content that needs to be removed."));
+        return;
     }
 
     auto deleteNotify = new TableDeleteNotify(this);
@@ -166,7 +165,6 @@ void TPExecute::removeExecuteFile()
             m_dbusProxy->RemoveTrustedFile(trustedInfo.filePath).waitForFinished();
         }
     }
-    updateInfo();
 }
 
 void TPExecute::updateRefreshIcon()

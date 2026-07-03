@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef TABLEDELETENOTIFY_H
-#define TABLEDELETENOTIFY_H
+
+#pragma once
 
 #include <QWidget>
 #include "src/ui/common/titlebar-window.h"
@@ -42,5 +42,3 @@ private:
     Ui::TableDeleteNotify *m_ui;
 };
 }  // namespace KS
-
-#endif  // TABLEDELETENOTIFY_H

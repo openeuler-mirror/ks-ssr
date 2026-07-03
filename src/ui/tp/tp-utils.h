@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef TPUTILS_H
-#define TPUTILS_H
+
+#pragma once
 
 #include <QObject>
 namespace KS
@@ -67,5 +67,3 @@ signals:
 };
 
 }  // namespace KS
-
-#endif  // TPUTILS_H

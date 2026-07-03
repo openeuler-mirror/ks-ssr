@@ -12,8 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
-#ifndef TPKERNELTABLE_H
-#define TPKERNELTABLE_H
+#pragma once
 
 #include <QAbstractTableModel>
 #include <QList>
@@ -70,6 +69,7 @@ public:
 
 signals:
     void stateChanged(Qt::CheckState checkState);
+    void filesUpdate(int total);
 
 private:
     void checkSelectStatus();
@@ -88,13 +88,14 @@ public:
     virtual ~TPKernelTable(){};
 
     void searchTextChanged(const QString &text);
-    void updateRecord();
+    void updateInfo();
     QList<TrustedRecord> getKernelRecords();
     // 获取被篡改数
     int getKerneltamperedNums();
 
 signals:
     void prohibitUnloadingStatusChange(bool status, const QString &path);
+    void filesUpdate(int total);
 
 private slots:
     void itemEntered(const QModelIndex &index);
@@ -110,5 +111,3 @@ private:
 };
 
 }  // namespace KS
-
-#endif  // TPKERNELTABLE_H

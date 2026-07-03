@@ -73,22 +73,16 @@ private:
     }
 
 // dbus marcos
-#define RETURN_DBUS_ERROR_IF_TRUE(cond, errorCode, message)                                             \
-    {                                                                                                   \
-        if (cond)                                                                                       \
-        {                                                                                               \
-            auto replyMessage = message.createErrorReply(QDBusError::Failed, KSC_ERROR2STR(errorCode)); \
-            QDBusConnection::systemBus().send(replyMessage);                                            \
-            return;                                                                                     \
-        }                                                                                               \
+#define DBUS_ERROR_REPLY_AND_RETURN(errorCode, message)                                             \
+    {                                                                                               \
+        auto replyMessage = message.createErrorReply(QDBusError::Failed, KSC_ERROR2STR(errorCode)); \
+        QDBusConnection::systemBus().send(replyMessage);                                            \
+        return;                                                                                     \
     }
 
-#define RETURN_VAL_DBUS_ERROR_IF_TRUE(cond, val, errorCode, message)                                    \
-    {                                                                                                   \
-        if (cond)                                                                                       \
-        {                                                                                               \
-            auto replyMessage = message.createErrorReply(QDBusError::Failed, KSC_ERROR2STR(errorCode)); \
-            QDBusConnection::systemBus().send(replyMessage);                                            \
-            return val;                                                                                 \
-        }                                                                                               \
+#define DBUS_ERROR_REPLY_AND_RETURN_VAL(val, errorCode, message)                                    \
+    {                                                                                               \
+        auto replyMessage = message.createErrorReply(QDBusError::Failed, KSC_ERROR2STR(errorCode)); \
+        QDBusConnection::systemBus().send(replyMessage);                                            \
+        return val;                                                                                 \
     }

@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef BOXIMAGE_H
-#define BOXIMAGE_H
+
+#pragma once
 
 #include <QWidget>
 
@@ -29,5 +29,3 @@ private:
     QImage *m_image;
     QRect m_drawArea;  // 绘制区域
 };
-
-#endif  // BOXIMAGE_H

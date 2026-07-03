@@ -11,8 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef INPUTPASSWORD_H
-#define INPUTPASSWORD_H
+
+#pragma once
 
 #include "src/ui/common/titlebar-window.h"
 
@@ -43,5 +43,3 @@ private:
     Ui::BoxPasswordChecked *m_ui;
 };
 }  // namespace KS
-
-#endif  // INPUTPASSWORD_H

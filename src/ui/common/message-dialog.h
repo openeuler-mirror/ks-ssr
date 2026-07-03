@@ -11,6 +11,7 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+
 #pragma once
 
 #include <QVBoxLayout>
