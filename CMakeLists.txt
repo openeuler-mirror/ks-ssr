@@ -19,6 +19,7 @@ pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
 pkg_search_module(CRYPTOPP REQUIRED cryptopp)
 # pkg_search_module(GLIB2 REQUIRED glib-2.0)
 pkg_search_module(X11 REQUIRED x11)
+pkg_search_module(KS_LICENSE_GUI REQUIRED ks-license-gui)
 # pkg_search_module(KSS REQUIRED kss)
 
 configure_file(config.h.in ${PROJECT_BINARY_DIR}/config.h)
