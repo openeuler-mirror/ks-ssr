@@ -30,6 +30,7 @@ extern "C"
         ERROR_TP_ADD_INVALID_FILE,
         ERROR_TP_ADD_RECUR_FILE,
         ERROR_CHANGE_STORAGE_MODE_FAILED,
+        ERROR_USER_PIN_ERROR,
 
         // BM Box manager
         ERROR_BM_DELETE_FAILED,
