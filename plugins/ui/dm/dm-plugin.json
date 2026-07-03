@@ -1,0 +1,10 @@
+{
+    "id": "dm",
+    "pages" : [
+        {
+            "pageUID" : "device-management",
+            "requireRoleName" : "sysadm",
+            "requireDaemon" : "dm"
+        }
+    ]
+}

@@ -28,9 +28,9 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QToolTip>
-#include "common/ssr-marcos-ui.h"
-#include "src/ui/common/date-picker/date-picker.h"
-#include "src/ui/common/table/header-button-delegate.h"
+#include "lib/widgets/date-picker/date-picker.h"
+#include "lib/widgets/ssr-marcos-ui.h"
+#include "lib/widgets/table/header-button-delegate.h"
 #include "src/ui/log/utils.h"
 #include "src/ui/log_proxy.h"
 

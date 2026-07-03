@@ -18,8 +18,8 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QMessageBox>
-#include "lib/license/license-proxy.h"
-#include "src/ui/common/ssr-marcos-ui.h"
+#include "lib/dbus/license-proxy.h"
+#include "lib/widgets/ssr-marcos-ui.h"
 #include "src/ui/license/qrcode-dialog.h"
 #include "ui_activation.h"
 
@@ -31,10 +31,11 @@ namespace KS
 {
 namespace Activation
 {
-Activation::Activation(QWidget *parent) : TitlebarWindow(parent),
-                                          m_ui(new Ui::Activation),
-                                          m_licenseProxy(nullptr),
-                                          m_qrcodeDialog(nullptr)
+Activation::Activation(QWidget *parent)
+    : TitlebarWindow(parent),
+      m_ui(new Ui::Activation),
+      m_licenseProxy(nullptr),
+      m_qrcodeDialog(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
     initUI();
@@ -42,7 +43,7 @@ Activation::Activation(QWidget *parent) : TitlebarWindow(parent),
     m_licenseProxy = KS::LicenseProxy::getDefault();
     update();
 
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, &Activation::closed);
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, &Activation::close);
     connect(m_ui->m_activate, &QPushButton::clicked, this, &Activation::activate);
 
     connect(m_licenseProxy.data(), &KS::LicenseProxy::licenseChanged, this, &Activation::update, Qt::UniqueConnection);
@@ -58,12 +59,6 @@ Activation::~Activation()
     }
 }
 
-void Activation::closeEvent(QCloseEvent *event)
-{
-    Q_UNUSED(event);
-    emit closed();
-}
-
 void Activation::initUI()
 {
     setWindowModality(Qt::ApplicationModal);
@@ -72,7 +67,7 @@ void Activation::initUI()
     setButtonHints(TitlebarCloseButtonHint);
     setFixedSize(469, 409);
 
-    //创建机器码二维码按钮
+    // 创建机器码二维码按钮
     auto machineLayout = new QHBoxLayout(m_ui->m_machine_code);
     machineLayout->setMargin(0);
     machineLayout->setContentsMargins(10, 0, 10, 0);
@@ -84,7 +79,7 @@ void Activation::initUI()
     machineLayout->addWidget(machineQRCodeBtn);
     connect(machineQRCodeBtn, &QPushButton::clicked, this, &Activation::handleQrcode);
 
-    //创建激活码二维码按钮
+    // 创建激活码二维码按钮
     auto activationLayout = new QHBoxLayout(m_ui->m_activation_code);
     activationLayout->setMargin(0);
     activationLayout->setContentsMargins(10, 0, 10, 0);
@@ -108,8 +103,11 @@ void Activation::activate()
 {
     QString errorMsg;
     auto isActivated = m_licenseProxy->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
-
-    POPUP_MESSAGE_DIALOG(isActivated ? tr("Activate app successful!") : errorMsg);
+    emit activated(isActivated ? tr("Activate app successful!") : errorMsg);
+    if (isActivated)
+    {
+        close();
+    }
 }
 
 void Activation::handleQrcode()
@@ -134,9 +132,8 @@ void Activation::popupQRcode(const QString &QRcode, const QString &title)
     }
     m_qrcodeDialog->setText(QRcode);
     m_qrcodeDialog->setSummary(title);
-
-    auto x = this->x() + this->width() / 4 + m_qrcodeDialog->width() / 4;
-    auto y = this->y() + this->height() / 4 + m_qrcodeDialog->height() / 4;
+    auto x = this->x() + this->width() / 2 - m_qrcodeDialog->width() / 2;
+    auto y = this->y() + this->height() / 2 - m_qrcodeDialog->height() / 2;
     m_qrcodeDialog->move(x, y);
     m_qrcodeDialog->raise();
     m_qrcodeDialog->show();

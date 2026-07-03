@@ -1,0 +1,10 @@
+{
+    "id": "private-box",
+    "pages" : [
+        {
+            "pageUID" : "private-box",
+            "requireRoleName" : "",
+            "requireDaemon" : "private-box"
+        }
+    ]
+}

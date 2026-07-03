@@ -1,0 +1,10 @@
+{
+    "id": "br",
+    "pages" : [
+        {
+            "pageUID" : "baseline-reinforcement",
+            "requireRoleName" : "",
+            "requireDaemon" : "br"
+        }
+    ]
+}

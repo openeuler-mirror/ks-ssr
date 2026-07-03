@@ -20,7 +20,7 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 #include <QWidget>
-#include "src/ui/common/table/table-header-proxy.h"
+#include "lib/widgets/table/table-header-proxy.h"
 #include "ssr-i.h"
 
 class LogProxy;

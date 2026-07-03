@@ -14,60 +14,106 @@
 
 #pragma once
 
+#include <daemon-accounts-i.h>
+#include <daemon-log-i.h>
 #include <QDBusContext>
+#include <QList>
 #include <QMutex>
-#include "src/daemon/log/configuration.h"
+#include <QReadWriteLock>
+#include "configuration.h"
+#include "message.h"
 
 class QFileSystemWatcher;
-class QProcess;
 class QWaitCondition;
+class QProcess;
+class QTimer;
 class QFile;
+
+class WriteWorker;
 
 // Qt 自身的文件读写就有一个大小为 16384 大小的缓冲区，所以在此类中不再做缓冲
 namespace KS
 {
-#define SSR_LOG()
+namespace Accounts
+{
+class Manager;
+}
 
-// 使用示例
-// Manager::writeLog(Message{Message::LogType::${TYPE}, "something"}.serialize())
 namespace Log
 {
-class Manager : public QObject, protected QDBusContext
+class RealTimeAlert;
+struct LogRecord;
+
+class Manager : public QObject, public IDaemonLog, protected QDBusContext
 {
     Q_OBJECT
-private:
-    Manager();
-    ~Manager();
+public:
+    Manager(IDaemonAccounts* accountManager);
+    virtual ~Manager();
 
 public:
-    static void globalInit();
-    static void globalDeinit();
-    static void writeLog(const QString& log);
-    static QStringList GetLog(const uint per_page, const uint page);
-    bool SetLogRotateConfig(const QString& config);
+    virtual void writeLog(LogType logType, const QString& logMsg, bool result, const QString& dbusID);
+    virtual void writeLog(const QString& name, int role, QDateTime timestamp, LogType logType, bool result, const QString& logMsg);
+
+    void writeLog(const LogRecord& log);
+    uint GetLogNum(const int role,
+                   const time_t begin_time_stamp,
+                   const time_t end_time_stamp,
+                   const int type,
+                   const uint result,
+                   const QString& searchText);
+    QStringList GetLog(const int role,
+                       const time_t begin_time_stamp,
+                       const time_t end_time_stamp,
+                       const int type,
+                       const uint result,
+                       const QString& searchText,
+                       const uint per_page,
+                       const uint page);
 
 private:
-    void backUpLog();
-    QStringList getLogFileList(bool isReverse);
+    void backUpLog(const QStringList& targetLogList);
+    void getAllLog();
+    QStringList getLogFileList(bool isReverse) const;
+    void logFileRotateInTimer();
+    void logFileRotate();
 
-private slots:
-    void logFileChanged(const QString& path);
-
-public:
-    static Manager* m_logManager;
+Q_SIGNALS:  // SIGNALS
+    void NewLogWritten(uint log_num);
+    void needLogRotate();
 
 private:
+    IDaemonAccounts* m_accountManager;
+    // 当前日志文件的行数
+    uint m_fileLine;
     QString m_path;
     QFile* m_file;
-    QFileSystemWatcher* m_watcher;
     QProcess* m_backUpLogProcess;
+    QProcess* m_cleanUpLogProcess;
     const Configurations m_configurations;
-    QQueue<QString>* m_messageQueue;
+    // 日志数据结构选用 List 容器。
+    QList<LogRecord> m_logList;
+    // 第一个未写入元素的下标
+    uint m_firstNeedWrite;
     QWaitCondition* m_waitCondition;
-    QThread* m_thread;
-    QMutex m_queueMutex;
+    // 临界资源日志队列的锁
+    QReadWriteLock m_listMutex;
+    // 临界资源日志文件的锁
     QMutex m_fileMutex;
+    QThread* m_thread;
+    QTimer* m_bakUpTimer;
+
+    friend class WriteWorker;
 };
 
+struct LogRecord
+{
+    QString name;
+    int role;
+    QDateTime timeStamp;
+    LogType type;
+    bool result;
+    QString logMsg;
+};
 };  // namespace Log
 };  // namespace KS

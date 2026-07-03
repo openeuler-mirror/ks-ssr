@@ -1,0 +1,15 @@
+{
+    "id": "tp",
+    "pages" : [
+        {
+            "pageUID" : "execute-protection",
+            "requireRoleName" : "secadm",
+            "requireDaemon" : "ssr"
+        },
+        {
+            "pageUID" : "kernel-protection",
+            "requireRoleName" : "secadm",
+            "requireDaemon" : "ssr"
+        }
+    ]
+}

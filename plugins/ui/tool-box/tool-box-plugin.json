@@ -1,0 +1,25 @@
+{
+    "id": "tool-box",
+    "pages" : [
+        {
+            "pageUID" : "access-control",
+            "requireRoleName" : "secadm",
+            "requireDaemon" : "tool-box"
+        },
+        {
+            "pageUID" : "file-shred",
+            "requireRoleName" : "secadm",
+            "requireDaemon" : "tool-box"
+        },
+        {
+            "pageUID" : "file-sign",
+            "requireRoleName" : "secadm",
+            "requireDaemon" : "tool-box"
+        },
+        {
+            "pageUID" : "privacy-cleanup",
+            "requireRoleName" : "secadm",
+            "requireDaemon" : "tool-box"
+        }
+    ]
+}

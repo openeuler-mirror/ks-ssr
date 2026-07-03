@@ -26,6 +26,23 @@
             <description>legacy login.</description>
         </method>
 
+        <method name="GetLoginRole">
+            <arg type="i" name="role" direction="out">
+                <summary>login role.</summary>
+            </arg>
+            <description>get role assosiate with user name for current connected socket.</description>
+        </method>
+
+        <method name="GetRoleName">
+            <arg type="i" name="role" direction="in">
+                <summary>role enumerate value.</summary>
+            </arg>
+            <arg type="s" name="role_name" direction="out">
+                <summary>login role id.</summary>
+            </arg>
+            <description>get role name by role enumerate value.</description>
+        </method>
+
         <method name="Logout">
             <description>logout.</description>
         </method>

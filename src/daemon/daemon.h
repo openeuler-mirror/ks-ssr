@@ -14,51 +14,48 @@
 
 #pragma once
 
-#include <QObject>
+#include <QDBusContext>
 #include <QSharedPointer>
-#include "src/daemon/br/br-dbus.h"
-#include "src/daemon/br/categories.h"
-#include "src/daemon/br/configuration.h"
-#include "src/daemon/br/plugins.h"
+
+class DaemonAdaptor;
 
 namespace KS
 {
 class LicenseProxy;
+class PluginsManager;
 
-class Daemon : public QObject
+namespace Log
+{
+class Manager;
+}
+
+class Daemon : public QObject,
+               protected QDBusContext
 {
     Q_OBJECT
+
 public:
-    Daemon();
-    virtual ~Daemon();
+    static void globalInit();
+    static void globalDeinit();
+    static Daemon *getInstance();
 
-    static Daemon *getInstance()
-    {
-        return m_instance;
-    };
-
-    static void globalInit()
-    {
-        m_instance = new Daemon();
-        m_instance->init();
-    };
-
-    static void globalDeinit()
-    {
-        BRDaemon::BRDBus::globalDeinit();
-        BRDaemon::Plugins::globalDeinit();
-        BRDaemon::Categories::globalDeinit();
-        BRDaemon::Configuration::globalDeinit();
-        delete m_instance;
-    };
-
-private:
-    void init();
     void start();
 
 private:
-    static Daemon *m_instance;
+    Daemon();
+    virtual ~Daemon();
 
+    void init();
+
+public Q_SLOTS:  // METHODS
+    QStringList GetAvailablePlugins();
+
+private:
+    static Daemon *m_instance;
+    DaemonAdaptor *m_dbusAdaptor;
     QSharedPointer<LicenseProxy> m_licenseProxy;
+    PluginsManager *m_pluginManager;
+
+    bool m_started;
 };
 }  // namespace KS

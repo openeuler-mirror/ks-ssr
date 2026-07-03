@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
+ * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
@@ -26,9 +26,13 @@
 class Defer
 {
 public:
-    Defer(std::function<void(std::string)> func, std::string fun_name) : func_(func),
-                                                                         fun_name_(fun_name) {}
-    ~Defer() { func_(fun_name_); }
+    Defer(std::function<void(std::string)> func, std::string fun_name)
+        : func_(func),
+          fun_name_(fun_name) {}
+    ~Defer()
+    {
+        func_(fun_name_);
+    }
 
 private:
     std::function<void(std::string)> func_;
@@ -90,6 +94,26 @@ private:
         QDBusConnection::systemBus().send(replyMessage);                                            \
         return val;                                                                                 \
     }
+
+#define DBUS_ERROR_REPLY(errorCode, message)                                                        \
+    {                                                                                               \
+        auto replyMessage = message.createErrorReply(QDBusError::Failed, SSR_ERROR2STR(errorCode)); \
+        QDBusConnection::systemBus().send(replyMessage);                                            \
+    }
+
+#define DBUS_REPLY_AND_RETURN(message)                   \
+    {                                                    \
+        auto replyMessage = message.createReply();       \
+        QDBusConnection::systemBus().send(replyMessage); \
+        return;                                          \
+    }
+
+#define DBUS_REPLY(message)                              \
+    {                                                    \
+        auto replyMessage = message.createReply();       \
+        QDBusConnection::systemBus().send(replyMessage); \
+    }
+
 #define BREAK_IF_FALSE(cond) \
     {                        \
         if (!(cond)) break;  \
@@ -147,4 +171,32 @@ private:
 
 #define POINTER_TO_STRING(p) ((p) ? p : QString())
 
-// #define _(text) QObject::tr(text)
+using StringHash = uint32_t;
+
+constexpr StringHash prime = 9973;
+constexpr StringHash basis = 0xCBF29CE4ul;
+constexpr StringHash hash_compile_time(char const *str, StringHash last_value = basis)
+{
+    return *str ? hash_compile_time(str + 1, (StringHash)((*str ^ last_value) * (uint64_t)prime)) : last_value;
+}
+
+inline StringHash shash(char const *str)
+{
+    StringHash ret{basis};
+
+    while (*str)
+    {
+        ret ^= *str;
+        ret *= prime;
+        str++;
+    }
+
+    return ret;
+}
+
+/// compile-time hash of string.
+/// usage: "XXX"_hash
+constexpr StringHash operator"" _hash(char const *p, size_t)
+{
+    return hash_compile_time(p);
+}

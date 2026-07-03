@@ -13,7 +13,9 @@
  */
 
 #include "src/ui/window.h"
+#include <page.h>
 #include <qt5-log-i.h>
+#include <ui-plugin-i.h>
 #include <QCloseEvent>
 #include <QDBusConnection>
 #include <QDesktopServices>
@@ -23,33 +25,20 @@
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QX11Info>
-#include "common/ssr-marcos-ui.h"
+#include "account_proxy.h"
+#include "accounts/user.h"
 #include "include/ssr-i.h"
 #include "lib/base/notification-wrapper.h"
-#include "lib/license/license-proxy.h"
+#include "lib/dbus/license-proxy.h"
+#include "lib/widgets/single-application/single-application.h"
+#include "lib/widgets/ssr-marcos-ui.h"
+#include "loading.h"
+#include "plugins-manager.h"
 #include "src/ui/about.h"
-#include "src/ui/account/manager.h"
-#include "src/ui/br/br-page.h"
-#include "src/ui/common/loading.h"
-#include "src/ui/common/single-application/single-application.h"
-#include "src/ui/daemon_proxy.h"
-#include "src/ui/dm/device-list-page.h"
-#include "src/ui/dm/device-log-page.h"
-#include "src/ui/fp/file-protection-page.h"
-#include "src/ui/log/log-page.h"
 #include "src/ui/navigation.h"
-#include "src/ui/private-box/box-page.h"
-#include "src/ui/remote/remote-page.h"
 #include "src/ui/settings/dialog.h"
 #include "src/ui/sidebar.h"
-#include "src/ui/tool-box/access-control/access-control-page.h"
-#include "src/ui/tool-box/file-shred/file-shred-page.h"
-#include "src/ui/tool-box/file-sign/file-sign-page.h"
-#include "src/ui/tool-box/privacy-cleanup/privacy-cleanup-page.h"
-#include "src/ui/tp/execute-protected-page.h"
-#include "src/ui/tp/kernel-protected-page.h"
 #include "src/ui/ui_window.h"
-#include "src/ui/vulnerability/vulnerability-page.h"
 
 namespace KS
 {
@@ -77,22 +66,36 @@ Window::Window()
       m_loading(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
-    m_dbusProxy = new DaemonProxy(SSR_DBUS_NAME,
-                                  SSR_DBUS_OBJECT_PATH,
-                                  QDBusConnection::systemBus(),
-                                  this);
-    Account::Manager::globalInit(this);
-    initNotification();
-    initWindow();
+
+    m_pages.resize(int(NavigationIndex::COUNT));
+    m_accountManager = new Account::User(this);
+    m_pluginManager = new PluginsManager(this);
+
+    connect(m_accountManager, &Account::User::loginFinished, this, &Window::initWindowContent, Qt::ConnectionType::UniqueConnection);
+    connect(
+        m_accountManager, &Account::User::softExited, this, []
+        {
+            qApp->quit();
+        },
+        Qt::ConnectionType::UniqueConnection);
+    connect(m_accountManager, &Account::User::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
+
     connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject, Qt::ConnectionType::UniqueConnection);
+
+    init();
 }
 
 Window::~Window()
 {
     delete m_ui;
-    Settings::Dialog::globalDeinit();
-    Account::Manager::globalDeinit();
+    // TODO:
+    // Settings::Dialog::globalDeinit();
     Notify::NotificationWrapper::globalDeinit();
+}
+
+void Window::start()
+{
+    m_accountManager->showLogin();
 }
 
 void Window::resizeEvent(QResizeEvent *event)
@@ -107,35 +110,76 @@ void Window::resizeEvent(QResizeEvent *event)
 
 void Window::closeEvent(QCloseEvent *event)
 {
-    if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
-    {
-        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
-        event->ignore();
-        return;
-    }
+    // TODO：
+    // if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
+    // {
+    //     POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+    //     event->ignore();
+    //     return;
+    // }
 
     TitlebarWindow::closeEvent(event);
 }
 
-void Window::login()
+void Window::init()
 {
-    connect(Account::Manager::instance(), &Account::Manager::loginFinished, this, &Window::start, Qt::ConnectionType::UniqueConnection);
-    connect(
-        Account::Manager::instance(), &Account::Manager::softExited, this, []
-        {
-            qApp->quit();
-        },
-        Qt::ConnectionType::UniqueConnection);
-    connect(Account::Manager::instance(), &Account::Manager::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
-    Account::Manager::instance()->showLogin();
+    m_accountManager->init();
+    m_pluginManager->init();
+
+    initNotification();
+    initWindow();
 }
 
-void Window::start()
+void Window::initWindowContent()
 {
+    m_accountButton->setToolTip(m_accountManager->getCurrentUserName());
+
+    initPages();
+    initNavigation();
+    switchSidebars();
     show();
-    m_accountButton->setToolTip(Account::Manager::instance()->getCurrentUserName());
-    initPageAndNavigation();
-    initSettings();
+
+    connect(m_ui->m_navigation, &Navigation::currentUIDChanged, this, &Window::switchSidebars);
+    connect(m_ui->m_sidebar, &SideBar::itemChanged, this, &Window::switchPage);
+
+    // TODO: 后面删除
+    // initSettings();
+}
+
+void Window::initPages()
+{
+    clearPages();
+
+    auto availablePages = m_pluginManager->createAvailablePages();
+    for (auto page : availablePages)
+    {
+        page->setParent(this);
+        addPage(page);
+    }
+
+    m_loading = new Loading(this);
+    m_ui->m_stackedPages->addWidget(m_loading);
+    m_ui->m_stackedPages->setCurrentIndex(0);
+}
+
+void Window::initNavigation()
+{
+    QVector<NavigationIndex> showIndexs;
+    for (int i = 0; i < m_pages.size(); ++i)
+    {
+        if (m_pages[i].size() > 0)
+        {
+            showIndexs.push_back(NavigationIndex(i));
+        }
+    }
+
+    KLOG_INFO() << "Show navigation item contains" << showIndexs;
+
+    if (showIndexs.size() > 0)
+    {
+        m_ui->m_navigation->setItems(showIndexs);
+        m_ui->m_navigation->setBtnChecked(0);
+    }
 }
 
 void Window::initNotification()
@@ -187,13 +231,13 @@ void Window::initWindow()
     auto accountMenu = new QMenu(this);
     m_accountButton->setMenu(accountMenu);
 
-    accountMenu->addAction(tr("Modify password"), this, []
+    accountMenu->addAction(tr("Modify password"), this, [this]
                            {
-                               Account::Manager::instance()->showPasswordModification();
+                               m_accountManager->showPasswordModification();
                            });
     accountMenu->addAction(tr("Logout"), this, [this]
                            {
-                               logout(Account::Manager::instance()->getCurrentUserName());
+                               logout(m_accountManager->getCurrentUserName());
                            });
 
     // 创建标题栏右侧菜单按钮
@@ -223,99 +267,12 @@ void Window::initWindow()
     layout->setAlignment(Qt::AlignRight);
 }
 
-void Window::initPageAndNavigation()
-{
-    // 移除qt designer默认创建的widget
-    while (m_ui->m_stackedPages->currentWidget() != nullptr)
-    {
-        auto currentWidget = m_ui->m_stackedPages->currentWidget();
-        m_ui->m_stackedPages->removeWidget(currentWidget);
-        delete currentWidget;
-    }
-    // 页面加载动画
-    m_loading = new Loading(this);
-    addPage(new BR::BRPage(this));
-    // TODO 暂时通过有无kss命令的方式判断是否支持可信，需考虑更好的方法
-    if (QFile::exists(KSS_CMD_PATH))
-    {
-        // 可信保护页面需判断是否加载成功
-        auto execute = new TP::ExecuteProtectedPage(this);
-        connect(
-            execute, &TP::ExecuteProtectedPage::initFinished, this, [this]
-            {
-                m_loading->setVisible(false);
-                m_ui->m_sidebar->setEnabled(true);
-                updatePage();
-            },
-            Qt::ConnectionType::UniqueConnection);
-        addPage(execute);
-        addPage(new TP::KernelProtectedPage(this));
-        addPage(new FP::FileProtectionPage(this));
-    }
-    addPage(new PrivateBox::BoxPage(this));
-    addPage(new DM::DeviceListPage(this));
-    // TODO 新增日志模块写入设备日志，旧的设备日志代码是否需要保留？若后续没有作用了在发布之前删除
-    // addPage(new DM::DeviceLogPage(this));
-    addPage(new ToolBox::FileSign(this));
-    addPage(new ToolBox::FileShredPage(this));
-    addPage(new ToolBox::PrivacyCleanupPage(this));
-    // TODO 需求变更，无需此页面，确认之后是否需要使用
-    // addPage(new ToolBox::AccessControlPage(this));
-    addPage(new Log::LogPage(this));
-    addPage(new VulnerabilityPage::VulnerabilityPage(this));
-    addPage(new RemotePage::RemotePage(this));
-
-    m_ui->m_stackedPages->addWidget(m_loading);
-    m_ui->m_stackedPages->setCurrentIndex(0);
-
-    m_ui->m_navigation->addItem(new NavigationItem(":/images/remote-manager", tr("Remote Manager")));
-    m_ui->m_navigation->addItem(new NavigationItem(":/images/baseline-reinforcement", tr("Baseline reinforcement")));
-    m_ui->m_navigation->addItem(new NavigationItem(":/images/vulnerability-fix", tr("Vulnerability Fix")));
-    // 通过页面获取是否有对应的导航栏
-    for (auto pages : m_pages.values())
-    {
-        auto navigationUID = pages.first()->getNavigationUID();
-        CONTINUE_IF_TRUE(navigationUID.isEmpty());
-
-        if (navigationUID == tr("Trusted protected"))
-        {
-            m_ui->m_navigation->addItem(new NavigationItem(":/images/trusted-protected", tr("Trusted protected")));
-        }
-        else if (navigationUID == tr("File protected"))
-        {
-            m_ui->m_navigation->addItem(new NavigationItem(":/images/file-protected", tr("File protected")));
-        }
-        else if (navigationUID == tr("Private box"))
-        {
-            m_ui->m_navigation->addItem(new NavigationItem(":/images/box-manager", tr("Private box")));
-        }
-        else if (navigationUID == tr("Device management"))
-        {
-            m_ui->m_navigation->addItem(new NavigationItem(":/images/device", tr("Device management")));
-        }
-        else if (navigationUID == tr("Tool Box"))
-        {
-            m_ui->m_navigation->addItem(new NavigationItem(":/images/tool-box", tr("Tool Box")));
-        }
-        else if (navigationUID == tr("Log audit"))
-        {
-            m_ui->m_navigation->addItem(new NavigationItem(":/images/log-audit", tr("Log audit")));
-        }
-    }
-    m_ui->m_navigation->setBtnChecked(0);
-
-    connect(m_ui->m_navigation, SIGNAL(currentUIDChanged()), this, SLOT(updatePage()), Qt::ConnectionType::UniqueConnection);
-    connect(m_ui->m_sidebar, &SideBar::itemChanged, this, &Window::updateSidebar, Qt::UniqueConnection);
-
-    updatePage();
-}
-
-void Window::initSettings()
+/*void Window::initSettings()
 {
     Settings::Dialog::globalInit(this);
     QStringList settingsSidebars;
     // 通过登入账户判断需要显示的设置页面
-    auto currentUser = Account::Manager::instance()->getCurrentUserName();
+    auto currentUser = m_accountManager->getCurrentUserName();
     if (currentUser == SSR_ACCOUNT_NAME_SYSADM)
     {
         settingsSidebars << tr("Baseline reinforcement") << tr("Interface Control");
@@ -359,24 +316,11 @@ void Window::initSettings()
             }
         },
         Qt::UniqueConnection);
-}
+}*/
 
 void Window::addPage(Page *page)
 {
-    // 通过用户权限添加页面
-    RETURN_IF_TRUE(page->getAccountRoleName() != Account::Manager::instance()->getCurrentUserName() && page->getAccountRoleName() != SSR_ACCOUNT_NAME_COMADM);
-    if (!m_pages.contains(page->getNavigationUID()))
-    {
-        QList<Page *> pages;
-        pages.append(page);
-
-        m_pages.insert(page->getNavigationUID(), pages);
-    }
-    else
-    {
-        m_pages.find(page->getNavigationUID()).value().append(page);
-    }
-
+    m_pages[int(page->getNavigationIndex())].append(page);
     m_ui->m_stackedPages->addWidget(page);
 }
 
@@ -403,6 +347,126 @@ void Window::clearSidebar()
     }
 }
 
+void Window::clearPages()
+{
+    // 移除qt designer默认创建的widget
+    while (m_ui->m_stackedPages->currentWidget() != nullptr)
+    {
+        auto currentWidget = m_ui->m_stackedPages->currentWidget();
+        m_ui->m_stackedPages->removeWidget(currentWidget);
+        delete currentWidget;
+    }
+
+    m_pages.clear();
+    m_pages.resize(int(NavigationIndex::COUNT));
+    m_loading = nullptr;
+}
+
+void Window::switchPage()
+{
+    RETURN_IF_TRUE(m_ui->m_sidebar->count() == 0)
+
+    auto selectedIndex = m_ui->m_navigation->getSelectedIndex();
+    if (selectedIndex >= NavigationIndex::COUNT)
+    {
+        KLOG_WARNING() << "The navigation index exceed limit.";
+        return;
+    }
+
+    auto pages = m_pages[selectedIndex];
+    RETURN_IF_TRUE(pages.size() == 0)
+
+    Page *matchPage = nullptr;
+
+    for (auto page : pages)
+    {
+        if (page->getSidebarUID() == m_ui->m_sidebar->getSelectedUID())
+        {
+            matchPage = page;
+            break;
+        }
+    }
+
+    if (!matchPage)
+    {
+        KLOG_WARNING() << "Switch page failed, not found match page for sidebar" << m_ui->m_sidebar->getSelectedUID();
+        return;
+    }
+
+    if (!matchPage->isInitialized())
+    {
+        m_ui->m_stackedPages->setCurrentWidget(m_loading);
+        connect(matchPage, &Page::initFinished, this, &Window::switchPage);
+    }
+    else
+    {
+        m_ui->m_stackedPages->setCurrentWidget(matchPage);
+    }
+}
+
+void Window::switchSidebars()
+{
+    // 清空侧边栏
+    clearSidebar();
+
+    // 插入侧边栏
+    auto selectedIndex = m_ui->m_navigation->getSelectedIndex();
+    if (selectedIndex >= NavigationIndex::COUNT)
+    {
+        KLOG_WARNING() << "The navigation index exceed limit.";
+        return;
+    }
+
+    auto pages = m_pages[selectedIndex];
+    if (pages.size() == 0)
+    {
+        KLOG_WARNING() << "The selected navigation";
+        return;
+    }
+
+    for (auto page : pages)
+    {
+        auto sidebarUID = page->getSidebarUID();
+        if (sidebarUID != "")
+        {
+            SidebarItem::ItemInfo itemInfo;
+            itemInfo.name = page->getSidebarUID();
+            itemInfo.icon = page->getSidebarIcon();
+            m_ui->m_sidebar->addSideBarItem(new SidebarItem(itemInfo, m_ui->m_sidebar));
+        }
+    }
+    // 更新页面 切换到第一个侧边栏
+    m_ui->m_sidebar->setCurrentRow(0);
+    m_ui->m_stackedPages->setCurrentWidget(pages.at(0));
+
+    // 没有分侧边栏则隐藏
+    if (m_ui->m_sidebar->count() == 0)
+    {
+        m_ui->m_sidebar->hide();
+    }
+    else
+    {
+        m_ui->m_sidebar->show();
+    }
+
+    // 因为侧边栏更新了，所以页面也要刷新
+    switchPage();
+
+    // TODO: 这部分应该放到插件里面处理
+    // 可信页面需要检测是否加载成功
+    // if (tr("Trusted protected") == pages->first()->getNavigationUID())
+    // {
+    //     auto page = qobject_cast<TP::ExecuteProtectedPage *>(pages->first());
+    //     hideLoading(page->getInitialized());
+    // }
+    // else
+    // {
+    //     // 其它侧边栏可用
+    //     hideLoading(true);
+    //     m_ui->m_sidebar->setEnabled(true);
+    // }
+}
+
 void Window::popupActiveDialog()
 {
     if (!m_activation)
@@ -423,10 +487,11 @@ void Window::popupActiveDialog()
 
 void Window::popupSettingsDialog()
 {
-    auto x = this->x() / 4 + this->width() / 4 + Settings::Dialog::instance()->width() / 16;
-    auto y = this->y() / 4 + this->height() / 4 + Settings::Dialog::instance()->height() / 16;
-    Settings::Dialog::instance()->move(x, y);
-    Settings::Dialog::instance()->show();
+    // TODO：
+    // auto x = this->x() / 4 + this->width() / 4 + Settings::Dialog::instance()->width() / 16;
+    // auto y = this->y() / 4 + this->height() / 4 + Settings::Dialog::instance()->height() / 16;
+    // Settings::Dialog::instance()->move(x, y);
+    // Settings::Dialog::instance()->show();
 }
 
 void Window::popupAboutDialog()
@@ -455,9 +520,9 @@ void Window::activateMetaObject()
 
     QX11Info::setAppTime(QX11Info::getTimestamp());
     // 如果没有登录，则弹出登录窗口
-    if (Account::Manager::instance()->getCurrentUserName().isEmpty())
+    if (m_accountManager->getCurrentUserName().isEmpty())
     {
-        Account::Manager::instance()->showLogin();
+        m_accountManager->showLogin();
         return;
     }
     showNormal();
@@ -465,7 +530,8 @@ void Window::activateMetaObject()
     activateWindow();
 }
 
-void Window::updatePage()
+// TODO:
+/*void Window::updatePage()
 {
     // 清空侧边栏
     clearSidebar();
@@ -513,25 +579,7 @@ void Window::updatePage()
         hideLoading(true);
         m_ui->m_sidebar->setEnabled(true);
     }
-}
-
-void Window::updateSidebar()
-{
-    RETURN_IF_TRUE(m_ui->m_sidebar->count() == 0)
-
-    auto pages = m_pages.find(m_ui->m_navigation->getSelectedUID()).value();
-    RETURN_IF_TRUE(pages.count() == 0)
-
-    for (auto page : pages)
-    {
-        if (page->getSidebarUID() == m_ui->m_sidebar->getSelectedUID())
-        {
-            // 更新页面
-            m_ui->m_stackedPages->setCurrentWidget(page);
-            break;
-        }
-    }
-}
+}*/
 
 void Window::setNotifyStatus(bool disabled)
 {
@@ -541,13 +589,14 @@ void Window::setNotifyStatus(bool disabled)
 void Window::logout(const QString &userName)
 {
     RETURN_IF_TRUE(userName.isEmpty());
-    if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
-    {
-        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
-        return;
-    }
-    Account::Manager::instance()->setLoginUserName(userName);
-    RETURN_IF_TRUE(!Account::Manager::instance()->logout());
+    // TODO：
+    // if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
+    // {
+    //     POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
+    //     return;
+    // }
+    m_accountManager->setLoginUserName(userName);
+    RETURN_IF_TRUE(!m_accountManager->logout());
 
     clearSidebar();
     while (m_ui->m_stackedPages->currentWidget() != nullptr)
@@ -563,7 +612,7 @@ void Window::logout(const QString &userName)
 
 void Window::relogin(const QString &userName)
 {
-    if (userName == Account::Manager::instance()->getCurrentUserName())
+    if (userName == m_accountManager->getCurrentUserName())
     {
         logout(userName);
     }

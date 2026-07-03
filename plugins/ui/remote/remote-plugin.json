@@ -1,0 +1,10 @@
+{
+    "id": "remote",
+    "pages" : [
+        {
+            "pageUID" : "remote-management",
+            "requireRoleName" : "sysadm",
+            "requireDaemon" : ""
+        }
+    ]
+}

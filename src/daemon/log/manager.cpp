@@ -12,7 +12,7 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "src/daemon/log/manager.h"
+#include "manager.h"
 #include <QDir>
 #include <QHostAddress>
 #include <QStringBuilder>
@@ -22,13 +22,13 @@
 #include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
 #include "lib/base/error.h"
+#include "lib/dbus/dbus-helper.h"
+#include "log_adaptor.h"
 #include "manager.h"
-#include "src/daemon/account/manager.h"
-#include "src/daemon/common/dbus-helper.h"
-#include "src/daemon/log/message.h"
-#include "src/daemon/log/write-worker.h"
-#include "src/daemon/log_adaptor.h"
+#include "message.h"
+#include "src/daemon/accounts/manager.h"
 #include "ssr-marcos.h"
+#include "write-worker.h"
 
 #define AUDITD_CONF "/etc/audit/auditd.conf"
 #define SSR_LOG_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Log"
@@ -40,10 +40,9 @@ namespace KS
 {
 namespace Log
 {
-Manager* Manager::m_logManager = nullptr;
-
-Manager::Manager()
-    : m_fileLine(0),
+Manager::Manager(IDaemonAccounts* accountManager)
+    : m_accountManager(accountManager),
+      m_fileLine(0),
       m_path(QDir::cleanPath(ABSOLUTELOGFILEPATH)),
       m_file(new QFile(m_path, this)),
       m_backUpLogProcess(new QProcess(this)),
@@ -129,20 +128,6 @@ Manager::~Manager()
     delete m_backUpLogProcess;
 }
 
-void Manager::globalInit()
-{
-    if (Manager::m_logManager == nullptr)
-    {
-        m_logManager = new Manager();
-    }
-    KLOG_WARNING() << "LogManager has been init";
-}
-
-void Manager::globalDeinit()
-{
-    delete m_logManager;
-}
-
 uint Manager::GetLogNum(const int role,
                         const time_t begin_time_stamp,
                         const time_t end_time_stamp,
@@ -157,11 +142,12 @@ uint Manager::GetLogNum(const int role,
     while (reverseIt != reverseEnd)
     {
         // 为了可读性，将判断条件取反了
-        if ((static_cast<int>(reverseIt->role) & role) == 0)
-        {
-            reverseIt++;
-            continue;
-        }
+        // TODO:
+        // if ((static_cast<int>(reverseIt->role) & role) == 0)
+        // {
+        //     reverseIt++;
+        //     continue;
+        // }
         if (reverseIt->timeStamp.toSecsSinceEpoch() < begin_time_stamp ||
             reverseIt->timeStamp.toSecsSinceEpoch() >= end_time_stamp)
         {
@@ -200,11 +186,12 @@ QStringList Manager::GetLog(const int role,
                             const uint result,
                             const QString& searchText,
                             const uint per_page,
-                            const uint page) const
+                            const uint page)
 {
-    auto callerUnique = DBusHelper::getCallerUniqueName(m_logManager);
-    auto _role = Account::Manager::m_accountManager->getRole(callerUnique);
-    if (_role == KS::Account::Manager::AccountRole::unknown_account)
+    auto callerUnique = DBusHelper::getCallerUniqueName(this);
+
+    auto _role = m_accountManager->getRole(callerUnique);
+    if (_role == AccountRole::ACCOUNT_ROLE_NOACCOUNT)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QStringList(), SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
     }
@@ -215,11 +202,11 @@ QStringList Manager::GetLog(const int role,
         KLOG_ERROR() << "per page limit must less than 100 and page index must greater than 0.";
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QStringList(), SSRErrorCode::ERROR_LOG_GET_LOG_PAGE_ERROR, this->message());
     }
-    QReadLocker locker(&m_logManager->m_listMutex);
+    QReadLocker locker(&m_listMutex);
 
     // 日志文件名称的List，排序： ks-ssr.log， ks-ssr.log.1， ks-ssr.log.2...
     // 临时变量，用于存储 Log 类型的数据，在锁释放后再序列化
-    QList<Log> tmpLogList{};
+    QList<LogRecord> tmpLogList{};
     // 需要忽略的日志数量
     auto totalOffset = (page - 1) * per_page;
 
@@ -229,11 +216,12 @@ QStringList Manager::GetLog(const int role,
     while (reverseIt != reverseEnd && static_cast<uint>(tmpLogList.size()) < per_page)
     {
         // 为了可读性，将判断条件取反了
-        if ((static_cast<int>(reverseIt->role) & role) == 0)
-        {
-            reverseIt++;
-            continue;
-        }
+        // TODO:
+        // if ((static_cast<int>(reverseIt->role) & role) == 0)
+        // {
+        //     reverseIt++;
+        //     continue;
+        // }
         if (reverseIt->timeStamp.toSecsSinceEpoch() < begin_time_stamp ||
             reverseIt->timeStamp.toSecsSinceEpoch() >= end_time_stamp)
         {
@@ -361,27 +349,52 @@ inline QStringList Manager::getLogFileList(bool isReverse) const
                             static_cast<QDir::SortFlag>(sortMode));
 }
 
-void Manager::writeLog(const Log& log)
+void Manager::writeLog(LogType logType, const QString& logMsg, bool result, const QString& dbusID)
+{
+    auto role = m_accountManager->getRole(dbusID);
+    auto name = m_accountManager->getUserName(dbusID);
+    auto timePoint = QDateTime::currentDateTime();
+    LogRecord logRecord{name, int(role), timePoint, logType, result, logMsg};
+    writeLog(logRecord);
+}
+
+void Manager::writeLog(const QString& name,
+                       int role,
+                       QDateTime timestamp,
+                       LogType logType,
+                       bool result,
+                       const QString& logMsg)
+{
+    writeLog(LogRecord{
+        .name = name,
+        .role = role,
+        .timeStamp = timestamp,
+        .type = logType,
+        .result = result,
+        .logMsg = logMsg});
+}
+
+void Manager::writeLog(const LogRecord& logRecord)
 {
     // 先将消息加入消息队列，如果日志可写则唤醒工作线程
-    QWriteLocker locker(&m_logManager->m_listMutex);
-    m_logManager->m_logList.append(log);
-    emit m_logManager->NewLogWritten(m_logManager->m_logList.size());
+    QWriteLocker locker(&this->m_listMutex);
+    this->m_logList.append(logRecord);
+    emit this->NewLogWritten(this->m_logList.size());
     // 当日志的数据结构大于本地能容纳的日志数量时，去掉最老的那一条日志，也就是第一条日志。
     // 旧日志的删除或备份由日志轮转功能保证。
-    if (static_cast<uint>(m_logManager->m_logList.size()) >
-        (m_logManager->m_configurations.m_maxLogFileLine * m_logManager->m_configurations.m_numLogs))
+    if (static_cast<uint>(this->m_logList.size()) >
+        (this->m_configurations.m_maxLogFileLine * this->m_configurations.m_numLogs))
     {
-        m_logManager->m_logList.removeFirst();
-        m_logManager->m_firstNeedWrite--;
+        this->m_logList.removeFirst();
+        this->m_firstNeedWrite--;
     }
     locker.unlock();
-    if (m_logManager->m_file == nullptr || !m_logManager->m_file->isWritable())
+    if (this->m_file == nullptr || !this->m_file->isWritable())
     {
         KLOG_WARNING() << "Cannot write log!";
         return;
     }
-    m_logManager->m_waitCondition->notify_one();
+    this->m_waitCondition->notify_one();
 }
 
 void Manager::logFileRotateInTimer()

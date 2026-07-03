@@ -17,9 +17,9 @@
 #include <QDateTime>
 #include <QWidgetAction>
 #include "config.h"
-#include "src/ui/common/date-picker/date-picker.h"
-#include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/common/table/pagination.h"
+#include "lib/widgets/date-picker/date-picker.h"
+#include "lib/widgets/ssr-marcos-ui.h"
+#include "lib/widgets/table/pagination.h"
 #include "src/ui/log_proxy.h"
 #include "src/ui/ui_log-page.h"
 #include "ssr-i.h"
@@ -48,9 +48,9 @@ LogPage::~LogPage()
     delete m_ui;
 }
 
-QString LogPage::getNavigationUID()
+NavigationIndex LogPage::getNavigationIndex()
 {
-    return tr("Log audit");
+    return NavigationIndex::LOG_AUDIT;
 }
 
 QString LogPage::getSidebarUID()

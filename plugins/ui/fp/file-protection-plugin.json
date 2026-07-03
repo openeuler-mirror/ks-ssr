@@ -1,0 +1,10 @@
+{
+    "id": "fp",
+    "pages" : [
+        {
+            "pageUID" : "file-protection",
+            "requireRoleName" : "secadm",
+            "requireDaemon" : "ssr"
+        }
+    ]
+}

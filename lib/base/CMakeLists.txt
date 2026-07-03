@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(TARGET_NAME lib-base)
+set(TARGET_NAME base)
 
 add_compile_options("-DSQLITE_HAS_CODEC")
 
