@@ -195,7 +195,7 @@ QVariant FPFilesModel::data(const QModelIndex &index, int role) const
         case FileTableField::FILE_TABLE_FIELD_NUMBER:
             return index.row() + 1;
         case FileTableField::FILE_TABLE_FIELD_FILE_NAME:
-            return QFileInfo(fileInfo.filePath).baseName();
+            return fileInfo.fileName;
         case FileTableField::FILE_TABLE_FIELD_FILE_PATH:
             return fileInfo.filePath;
         case FileTableField::FILE_TABLE_FIELD_ADD_TIME:
@@ -317,6 +317,7 @@ void FPFilesModel::updateRecord()
     {
         jsonData--;
         auto data = jsonData->toObject();
+        auto a = data.value(KSS_JSON_KEY_DATA_FILE_NAME).toString();
         auto fileInfo = FPFileInfo{.selected = false,
                                    .fileName = data.value(KSS_JSON_KEY_DATA_FILE_NAME).toString(),
                                    .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
@@ -382,8 +383,8 @@ FPFileTable::FPFileTable(QWidget *parent) : QTableView(parent),
     // 设置水平行表头
     m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_CHECKBOX, 50);
     m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_NUMBER, 100);
-    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_NAME, 150);
-    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_PATH, 450);
+    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_NAME, 200);
+    m_headerViewProxy->resizeSection(FileTableField::FILE_TABLE_FIELD_FILE_PATH, 400);
     m_headerViewProxy->setStretchLastSection(true);
     m_headerViewProxy->setSectionsMovable(false);
     m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft);
