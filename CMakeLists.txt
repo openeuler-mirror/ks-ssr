@@ -2,7 +2,35 @@ cmake_minimum_required(VERSION 3.2)
 
 project(ks-ssr VERSION 1.2)
 
-add_compile_options(-fpic -Wall)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
+
+add_compile_options(-Wall)
+
+option(EXTRA_COMPILE_CHECK "Enable extra compile check" OFF)
+# option(ENABLE_ACCOUNT "Enable account" ON) option(ENABLE_LOG "Enable log
+# support" ON)
+
+# 由于禁用日志和账户模块后编译无法通过，所以只能启用。
+set(ENABLE_ACCOUNT ON)
+set(ENABLE_LOG ON)
+
+option(ENABLE_HDMI_SUPPORT "Enable HDMI support" OFF)
+option(ENABLE_KSS "Enable KSS support" OFF)
+option(ENABLE_PRIVATE_BOX "Enable private box support" OFF)
+option(ENABLE_TOOL_BOX "Enable tool box support" OFF)
+option(ENABLE_DEVICE_MANAGER "Enable device manager support" OFF)
+option(USE_PYTHON3 "Enable tool box support" OFF)
+
+message(STATUS "EXTRA_COMPILE_CHECK: ${EXTRA_COMPILE_CHECK}")
+message(STATUS "ENABLE_ACCOUNT: ${ENABLE_ACCOUNT}")
+message(STATUS "ENABLE_HDMI_SUPPORT: ${ENABLE_HDMI_SUPPORT}")
+message(STATUS "ENABLE_KSS: ${ENABLE_KSS}")
+message(STATUS "ENABLE_LOG: ${ENABLE_LOG}")
+message(STATUS "ENABLE_PRIVATE_BOX: ${ENABLE_PRIVATE_BOX}")
+message(STATUS "ENABLE_TOOL_BOX: ${ENABLE_TOOL_BOX}")
+message(STATUS "ENABLE_DEVICE_MANAGER: ${ENABLE_DEVICE_MANAGER}")
+message(STATUS "USE_PYTHON3: ${USE_PYTHON3}")
 
 if(EXTRA_COMPILE_CHECK)
   add_compile_options(-Wextra -Wconversion -Wuninitialized)
@@ -10,9 +38,8 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-# FIXME: 应该改成与版本无关，功能相关的名字，比如 ENABLE_HDMI
-if(_345_GC_)
-  add_definitions(-D_345_GC_)
+if(ENABLE_HDMI_SUPPORT)
+  add_definitions(-DENABLE_HDMI_SUPPORT)
 endif()
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -42,7 +69,10 @@ pkg_search_module(KS_LICENSE REQUIRED ks-license)
 pkg_search_module(LIBCRYPTO REQUIRED libcrypto)
 pkg_search_module(LIBAUDIT REQUIRED audit)
 pkg_search_module(SQLCIPHER REQUIRED sqlcipher)
-pkg_search_module(LIBSELINUX REQUIRED libselinux)
+
+if(ENABLE_TOOL_BOX)
+  pkg_search_module(LIBSELINUX REQUIRED libselinux)
+endif()
 pkg_search_module(LIBNOTIFY REQUIRED libnotify)
 
 string(REGEX MATCHALL "[0-9]+" LIBNOTIFY_VERSION_LIST ${LIBNOTIFY_VERSION})
@@ -51,17 +81,6 @@ list(GET LIBNOTIFY_VERSION_LIST 1 LIBNOTIFY_MINOR)
 
 if(ENABLE_GTEST)
   pkg_search_module(GTEST REQUIRED gtest)
-endif()
-
-pkg_search_module(FMT QUIET fmt)
-if(NOT FMT_FOUND)
-  find_library(
-    FMT_LIBRARIES
-    NAMES fmt
-    PATHS /usr/lib64/)
-  if("${FMT_LIBRARIES}" STREQUAL "FMT_LIBRARIES-NOTFOUND")
-    message(FATAL_ERROR "Not found fmt")
-  endif()
 endif()
 
 # 优先使用 qt-5 的dbus工具，没有找到时寻找 qt-4 的版本。
@@ -107,7 +126,6 @@ add_subdirectory(lib)
 add_subdirectory(resources)
 add_subdirectory(src)
 add_subdirectory(plugins/python)
-add_subdirectory(plugins/po)
 add_subdirectory(data)
 
 if(ENABLE_GTEST)

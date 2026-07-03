@@ -16,7 +16,7 @@
 #include "common/ssr-marcos-ui.h"
 #include "common/user-prompt-dialog.h"
 #include "include/ssr-i.h"
-#include "src/ui/account_proxy.h"
+#include "src/ui/toolbox_dbus_proxy.h"
 #include "ui_identity-authentication.h"
 
 namespace KS
@@ -28,10 +28,10 @@ IdentityAuthentication::IdentityAuthentication(QWidget *parent)
       m_ui(new Ui::IdentityAuthentication)
 {
     m_ui->setupUi(this);
-    m_accountProxy = new AccountProxy(SSR_DBUS_NAME,
-                                      SSR_ACCOUNT_DBUS_OBJECT_PATH,
-                                      QDBusConnection::systemBus(),
-                                      this);
+    m_toolBoxProxy = new ToolBoxDbusProxy(SSR_DBUS_NAME,
+                                          SSR_ACCOUNT_DBUS_OBJECT_PATH,
+                                          QDBusConnection::systemBus(),
+                                          this);
     initConnection();
 }
 
@@ -42,7 +42,7 @@ IdentityAuthentication::~IdentityAuthentication()
 
 void IdentityAuthentication::initConnection()
 {
-    m_ui->m_twoFactor->setCheckState(m_accountProxy->GetMultiFactorAuthState() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+    m_ui->m_twoFactor->setCheckState(m_toolBoxProxy->GetMultiFactorAuthState() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     connect(m_ui->m_twoFactor, &QCheckBox::clicked, this, [this](bool checked)
             {
                 // 开启时二次确认，关闭时不提示
@@ -62,20 +62,20 @@ void IdentityAuthentication::initConnection()
                             });
                     connect(notify, &UserPromptDialog::accepted, this, [this]
                             {
-                                auto reply = m_accountProxy->SetMultiFactorAuthState(m_ui->m_twoFactor->isChecked());
+                                auto reply = m_toolBoxProxy->SetMultiFactorAuthState(m_ui->m_twoFactor->isChecked());
                                 CHECK_ERROR_FOR_DBUS_REPLY(reply);
                             });
                 }
                 else
                 {
-                    auto reply = m_accountProxy->SetMultiFactorAuthState(checked);
+                    auto reply = m_toolBoxProxy->SetMultiFactorAuthState(checked);
                     CHECK_ERROR_FOR_DBUS_REPLY(reply);
                 }
             });
-    m_ui->m_identification->setCheckState(m_accountProxy->GetUidReusable() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+    m_ui->m_identification->setCheckState(m_toolBoxProxy->GetUidReusable() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     connect(m_ui->m_identification, &QCheckBox::clicked, this, [this](bool checked)
             {
-                auto reply = m_accountProxy->SetUidReusable(checked);
+                auto reply = m_toolBoxProxy->SetUidReusable(checked);
                 CHECK_ERROR_FOR_DBUS_REPLY(reply);
             });
 }

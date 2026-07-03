@@ -18,7 +18,8 @@ namespace KS
 {
 namespace BRDaemon
 {
-Plugin::Plugin(const QString& conf_path) : conf_path_(conf_path)
+Plugin::Plugin(const QString& conf_path)
+    : conf_path_(conf_path)
 {
 }
 
@@ -89,7 +90,7 @@ bool Plugin::loadPluginModule()
     }
     case Protocol::LanguageType::Value::python:
     {
-        this->loader_ = std::make_shared<PluginPythonLoader>(QString::fromStdString(fmt::format("br.{0}", this->plugin_config_->name())));
+        this->loader_ = std::make_shared<PluginPythonLoader>(QString::fromStdString("br." + this->plugin_config_->name()));
         return this->loader_->load();
     }
     default:

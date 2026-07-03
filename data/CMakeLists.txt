@@ -22,6 +22,10 @@ if(USE_SYSTEMD)
   set(SYSTEMD_SERVICE "SystemdService=ks-ssr-daemon.service")
 endif()
 
+if(ENABLE_TOOL_BOX)
+  set(SELINUX_CONTEXT "SELinuxContext=unconfined_u:unconfined_r:unconfined_t:s0-s15:c0.c1023")
+endif()
+
 file(GLOB SERVICE_IN_FILES ./services/*.service.in)
 foreach(SERVICE_IN_FILE IN LISTS SERVICE_IN_FILES)
   string(REGEX REPLACE ".+/(.+)\\..*" "\\1" SERVICE_FILE ${SERVICE_IN_FILE})
@@ -66,7 +70,7 @@ install(
   DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/polkit-1/actions/)
 
 # conf files
-install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SSR.conf
+install(FILES ${PROJECT_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.conf
         DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d/)
 
 # box dir
@@ -88,12 +92,20 @@ install(
 install(FILES ${PROJECT_SOURCE_DIR}/data/99-ssr-device.rules
         DESTINATION /etc/udev/rules.d/)
 
+# audit rules file
+install(FILES ${PROJECT_SOURCE_DIR}/data/ks-ssr-audit.rules
+        DESTINATION /etc/audit/rules.d/)
+
 # desktop
 configure_file(${PROJECT_SOURCE_DIR}/data/ks-ssr-gui.desktop.in
                ${PROJECT_BINARY_DIR}/data/ks-ssr-gui.desktop)
-
 install(FILES ${PROJECT_BINARY_DIR}/data/ks-ssr-gui.desktop
         DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/applications/)
+
+configure_file(${PROJECT_SOURCE_DIR}/data/ks-ssr-notify.desktop.in
+               ${PROJECT_BINARY_DIR}/data/ks-ssr-notify.desktop)
+install(FILES ${PROJECT_BINARY_DIR}/data/ks-ssr-notify.desktop
+        DESTINATION /etc/xdg/autostart/)
 
 # appdata.xml
 install(FILES ${PROJECT_SOURCE_DIR}/data/ks-ssr-gui.appdata.xml
@@ -108,4 +120,7 @@ install(
 
 # iptables rules files
 install(FILES ${PROJECT_SOURCE_DIR}/data/br-iptables.rules
+        DESTINATION ${SSR_INSTALL_DATADIR}/)
+
+install(FILES ${PROJECT_SOURCE_DIR}/data/help.pdf
         DESTINATION ${SSR_INSTALL_DATADIR}/)

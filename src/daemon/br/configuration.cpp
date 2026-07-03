@@ -26,6 +26,7 @@ namespace BRDaemon
 #define BR_BASE_KEY_RESOURCE_MONITOR "resource_monitor"
 #define BR_BASE_KEY_TIME_SCAN "time_scan"
 #define BR_BASE_KEY_NOTIFICATION_STATUS "notification_status"
+#define BR_BASE_KEY_FALLBACK_STATUS "fallback_status"
 
 #define MAX_THREAD_NUM_DEFAULT 1
 
@@ -39,7 +40,9 @@ namespace BRDaemon
 
 using namespace Protocol;
 
-Configuration::Configuration(const QString& config_path) : config_path_(config_path)
+Configuration::Configuration(const QString& config_path)
+    : config_path_(config_path),
+      configuration_(nullptr)
 {
 }
 
@@ -48,7 +51,7 @@ Configuration::~Configuration()
     delete this->configuration_;
 }
 
-Configuration* Configuration::instance_ = NULL;
+Configuration* Configuration::instance_ = nullptr;
 void Configuration::globalInit(const QString& config_path)
 {
     instance_ = new Configuration(config_path);
@@ -152,6 +155,29 @@ bool Configuration::setNotificationStatus(BRNotificationStatus notification_stat
     RETURN_VAL_IF_TRUE(notification_status == this->getNotificationStatus(), true);
 
     this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_NOTIFICATION_STATUS, int32_t(notification_status));
+    return true;
+}
+
+BRFallbackStatus Configuration::getFallbackStatus()
+{
+    auto retval = this->getInteger(BR_GROUP_NAME,
+                                   BR_BASE_KEY_FALLBACK_STATUS,
+                                   BRFallbackStatus::BR_FALLBACK_STATUS_NOT_STARTED);
+
+    if (retval > BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED || retval < 0)
+    {
+        KLOG_WARNING("The strategy type is invalid. notification status: %d.", retval);
+        return BRFallbackStatus::BR_FALLBACK_STATUS_NOT_STARTED;
+    }
+
+    return BRFallbackStatus(retval);
+}
+bool Configuration::setFallbackStatus(BRFallbackStatus fallbackStatus)
+{
+    RETURN_VAL_IF_TRUE(fallbackStatus > BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED, false);
+    RETURN_VAL_IF_TRUE(fallbackStatus == this->getFallbackStatus(), true);
+
+    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_FALLBACK_STATUS, int32_t(fallbackStatus));
     return true;
 }
 
@@ -383,7 +409,7 @@ bool Configuration::writeRaToFile(QSharedPointer<Protocol::RA> ra)
     try
     {
         std::ofstream ofs(CUSTOM_RA_FILEPATH, std::ios_base::out);
-        br_ra(ofs, *ra.get());
+        br_ra(ofs, *ra.data());
         ofs.close();
     }
     catch (const std::exception& e)

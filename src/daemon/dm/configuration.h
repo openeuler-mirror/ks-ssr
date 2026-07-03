@@ -18,13 +18,14 @@
 #include <QObject>
 #include <QSettings>
 #include <QSharedPointer>
-
-class QThread;
+#include <QThread>
 
 namespace KS
 {
 namespace DM
 {
+class Worker;
+
 struct DeviceSetting
 {
 public:
@@ -101,6 +102,20 @@ private:
 
     // FIXME: 为了 HDMI 接口的特殊化处理
     bool m_isEnableHDMI;
+
+    friend Worker;
 };
+
+class Worker : public QThread
+{
+    Q_OBJECT
+
+public slots:
+    void run() override
+    {
+        Configuration::instance()->updateGrubsInThread();
+    }
+};
+
 }  // namespace DM
 }  // namespace KS

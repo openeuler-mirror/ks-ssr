@@ -9,27 +9,37 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
-
 #pragma once
 
-// #include <giomm.h>
-// #include <glib/gi18n.h>
+#include <QWidget>
 
-#include <qt5-log-i.h>
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
+namespace Ui
+{
+class IdentityAuthentication;
+}
 
-#include "config.h"
-#include "include/ssr-error-i.h"
-#include "include/ssr-i.h"
-#include "include/ssr-marcos.h"
-#include "lib/base/crypto-helper.h"
-#include "lib/base/error.h"
-#include "lib/base/misc-utils.h"
-#include "lib/base/stl-helper.h"
-#include "lib/base/str-utils.h"
-#include "lib/base/thread-pool.h"
+class ToolBoxDbusProxy;
+
+namespace KS
+{
+namespace Settings
+{
+class IdentityAuthentication : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit IdentityAuthentication(QWidget *parent = nullptr);
+    ~IdentityAuthentication();
+
+private:
+    void initConnection();
+
+private:
+    Ui::IdentityAuthentication *m_ui;
+    ToolBoxDbusProxy *m_toolBoxProxy;
+};
+}  // namespace Settings
+}  // namespace KS

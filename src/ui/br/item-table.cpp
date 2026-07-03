@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "item-table.h"
@@ -22,7 +22,8 @@
 #include <QToolTip>
 #include "include/ssr-marcos.h"
 #include "src/ui/br/progress.h"
-#include "src/ui/br/xmlutils.h"
+#include "src/ui/br/utils.h"
+#include "src/ui/common/table/table-header-proxy.h"
 
 namespace KS
 {
@@ -31,9 +32,10 @@ namespace BR
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-//分类控件
-ItemTable::ItemTable(QWidget *parent) : QTreeView(parent),
-                                        m_model(nullptr)
+// 分类控件
+ItemTable::ItemTable(QWidget *parent)
+    : QTreeView(parent),
+      m_model(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setSelectionMode(QAbstractItemView::NoSelection);
@@ -45,31 +47,33 @@ ItemTable::ItemTable(QWidget *parent) : QTreeView(parent),
     setModel(m_model);
     setItemDelegate(new ItemTableDelegate(this));
 
-    connect(this, &ItemTable::clicked, this, [this](const QModelIndex &model)
-            {
-                RETURN_IF_TRUE(model.column() != 2)
-                emit modelClicked(model);
-            });
+    connect(this, &ItemTable::clicked, this, &ItemTable::setExpandItem);
     connect(this, &ItemTable::doubleClicked, this, &ItemTable::doubleClickItem);
     connect(this, SIGNAL(entered(QModelIndex)), this, SLOT(showTail(QModelIndex)));
     connect(m_model, SIGNAL(itemChanged(QStandardItem *)), this, SLOT(setHeaderState(QStandardItem *)));
-}
-
-ItemTable::~ItemTable()
-{
+    // 监听item展开和关闭事件，设置相对应的箭头图片
+    connect(this, &ItemTable::expanded, this, &ItemTable::setItemArrow);
+    connect(this, &ItemTable::collapsed, this, &ItemTable::setItemArrow);
 }
 
 QSize ItemTable::sizeHint() const
 {
-    return QSize(800, 350);
+    return QSize(750, 350);
 }
 
-void ItemTable::setIcon(const QList<Plugins::Categories *> &list, int i)
+void ItemTable::setIcon(const QList<Category *> &list, int i)
 {
     // TODO 这里有点问题 所有model的图片都是一样的，后续可能更换图标
     // 需要根据图标名字来确认使用的图标
     auto iconName = QString(":/images/%1.png").arg(list.at(i)->getIconName());
     m_model->item(i)->setIcon(QIcon(":/images/ksg-category.png"));
+}
+
+void ItemTable::setItemArrow(const QModelIndex &model)
+{
+    QPixmap pixmap(isExpanded(model) ? ":/images/arrow-up" : ":/images/arrow-down");
+    pixmap.scaled(10, 8);
+    m_model->setItem(model.row(), 3, new QStandardItem(QIcon(pixmap), ""));
 }
 
 void ItemTable::initHeader()
@@ -80,25 +84,21 @@ void ItemTable::initHeader()
     this->setHeaderHidden(false);
     m_model->setHorizontalHeaderLabels(QStringList()
                                        << QString(tr("Reinforcement Item"))
-                                       << QString(tr("Info"))
+                                       << QString(tr("Info(Double click this column to modify the reinforcement parameters)"))
                                        << QString(tr("State"))
                                        << QString(""));
 
     m_headerProxy->setFixedHeight(24);
     m_headerProxy->resizeSection(0, 250);
-    m_headerProxy->resizeSection(1, 550);
-    m_headerProxy->resizeSection(2, 100);
-    m_headerProxy->resizeSection(3, 16);
+    m_headerProxy->resizeSection(1, 500);
+    m_headerProxy->resizeSection(2, 90);
+    m_headerProxy->resizeSection(3, 10);
     m_headerProxy->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
-    // 不可拖拽表格线
-    //m_headerProxy->sectionResizeMode(QHeaderView::Stretch);
     m_headerProxy->setStretchLastSection(true);
-    m_headerProxy->setSectionsMovable(false);
 }
 
-//根据获取的数据，设置分类列表
-void ItemTable::setItem(const QList<Plugins::Categories *> &list)
+// 根据获取的数据，设置分类列表
+void ItemTable::setItem(const QList<Category *> &list)
 {
     initHeader();
     for (int i = 0; i < list.length(); ++i)
@@ -111,19 +111,21 @@ void ItemTable::setItem(const QList<Plugins::Categories *> &list)
         QPixmap pixmap(":/images/arrow-down");
         pixmap.scaled(10, 8);
         m_model->setItem(i, 3, new QStandardItem(QIcon(pixmap), ""));
+
         setIcon(list, i);
         m_model->item(i)->setCheckable(true);
         m_model->item(i)->setAutoTristate(true);
         m_model->item(i, 2)->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        m_model->item(i, 3)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-        CONTINUE_IF_TRUE(list.at(i)->getCategory().length() == 0)
+        CONTINUE_IF_TRUE(list.at(i)->getReinforcementItem().length() == 0)
 
-        auto category = list.at(i)->getCategory();
-        for (int j = 0; j < list.at(i)->getCategory().length(); ++j)
+        auto reinforcementItem = list.at(i)->getReinforcementItem();
+        for (int j = 0; j < list.at(i)->getReinforcementItem().length(); ++j)
         {
-            CONTINUE_IF_TRUE(category.at(j)->getName() == "external-hosts-login-limit" && !QFile::exists("/etc/hosts.allow"))
-            auto labelItem = new QStandardItem(category.at(j)->getLabel());
-            auto descriptionItem = new QStandardItem(category.at(j)->getDescription());
+            CONTINUE_IF_TRUE(reinforcementItem.at(j)->getName() == "external-hosts-login-limit" && !QFile::exists("/etc/hosts.allow"))
+            auto labelItem = new QStandardItem(reinforcementItem.at(j)->getLabel());
+            auto descriptionItem = new QStandardItem(reinforcementItem.at(j)->getDescription());
             auto stateItem = new QStandardItem("-");
             labelItem->setCheckable(true);
 
@@ -174,21 +176,21 @@ item checkbox单击响应函数
 */
 void ItemTable::checkChanged(QStandardItem *item)
 {
-    //如果item是存在复选框的，那么就进行下面的操作
-    Qt::CheckState state = item->checkState();  //获取当前的选择状态
+    // 如果item是存在复选框的，那么就进行下面的操作
+    Qt::CheckState state = item->checkState();  // 获取当前的选择状态
     if (item->isAutoTristate())
     {
-        //如果item是三态的，说明可以对子目录进行全选和全不选的设置
+        // 如果item是三态的，说明可以对子目录进行全选和全不选的设置
         if (state != Qt::PartiallyChecked)
         {
-            //当前是选中状态，需要对其子项目设置为全选
+            // 当前是选中状态，需要对其子项目设置为全选
             checkAllChild(item, state == Qt::Checked ? true : false);
         }
     }
     else
     {
-        //说明是两态的，两态会对父级的三态有影响
-        //判断兄弟节点的情况
+        // 说明是两态的，两态会对父级的三态有影响
+        // 判断兄弟节点的情况
         checkChildChanged(item);
     }
 }
@@ -233,8 +235,8 @@ void ItemTable::checkAllChildRecursion(QStandardItem *item, bool check)
 // \brief 根据子节点的改变，更改父节点的选择情况
 // \param item
 //
-//此函数也是一个递归函数，首先要判断的是父级是否到达顶层
-//，到达底层作为递归的结束，然后通过函数checkSibling判断当前的兄弟节点的具体情况
+// 此函数也是一个递归函数，首先要判断的是父级是否到达顶层
+// ，到达底层作为递归的结束，然后通过函数checkSibling判断当前的兄弟节点的具体情况
 //
 void ItemTable::checkChildChanged(QStandardItem *item)
 {
@@ -271,7 +273,7 @@ void ItemTable::checkChildChanged(QStandardItem *item)
 // \return
 Qt::CheckState ItemTable::checkSibling(QStandardItem *item)
 {
-    //先通过父节点获取兄弟节点
+    // 先通过父节点获取兄弟节点
     auto parent = item->parent();
     if (nullptr == parent)
     {
@@ -309,8 +311,8 @@ Qt::CheckState ItemTable::checkSibling(QStandardItem *item)
     return Qt::Checked;
 }
 
-//根据勾选项合成json字串
-QStringList ItemTable::getString(const QList<Plugins::Categories *> &list)
+// 根据勾选项合成json字串
+QStringList ItemTable::getString(const QList<Category *> &list)
 {
     int count = 0;
     QStringList scanStr;
@@ -320,11 +322,11 @@ QStringList ItemTable::getString(const QList<Plugins::Categories *> &list)
         {
             QStandardItem *item = m_model->item(i)->child(j);
             bool checkStatus = Qt::Checked == item->checkState();
-            list.at(i)->getCategory().at(j)->setCheckStatus(checkStatus);
+            list.at(i)->getReinforcementItem().at(j)->setCheckStatus(checkStatus);
             CONTINUE_IF_TRUE(!checkStatus)
-            auto name = list.at(i)->getCategory().at(j)->getName();
+            auto name = list.at(i)->getReinforcementItem().at(j)->getName();
             scanStr.append(name);
-            //KLOG_DEBUG("scanStr = %s", name.toStdString().c_str());
+            // KLOG_DEBUG("scanStr = %s", name.toStdString().c_str());
             count++;
         }
     }
@@ -332,7 +334,7 @@ QStringList ItemTable::getString(const QList<Plugins::Categories *> &list)
     return scanStr;
 }
 
-QStringList ItemTable::getAllString(const QList<Plugins::Categories *> &categories)
+QStringList ItemTable::getAllString(const QList<Category *> &categories)
 {
     int count = 0;
     QStringList scanStr;
@@ -340,8 +342,8 @@ QStringList ItemTable::getAllString(const QList<Plugins::Categories *> &categori
     {
         for (int j = 0; j < m_model->item(i)->rowCount(); ++j)
         {
-            auto name = categories.at(i)->getCategory().at(j)->getName();
-            categories.at(i)->getCategory().at(j)->setCheckStatus(true);
+            auto name = categories.at(i)->getReinforcementItem().at(j)->getName();
+            categories.at(i)->getReinforcementItem().at(j)->setCheckStatus(true);
             scanStr.append(name);
             count++;
         }
@@ -355,19 +357,18 @@ int ItemTable::getCount()
     return m_count;
 }
 
-//更新每项的状态
-void ItemTable::updateStatus(const QList<Plugins::Categories *> &list)
+// 更新每项的状态
+void ItemTable::updateStatus(const QList<Category *> &list)
 {
     for (int i = 0; i < list.length(); ++i)
     {
-        if (list.at(i)->getCategory().length() == 0)
-            continue;
+        CONTINUE_IF_TRUE(list.at(i)->getReinforcementItem().length() == 0)
 
-        auto category = list.at(i)->getCategory();
-        for (int j = 0; j < category.length(); ++j)
+        auto reinforcementItem = list.at(i)->getReinforcementItem();
+        for (int j = 0; j < reinforcementItem.length(); ++j)
         {
-            auto stateStr = XMLUtils::getDefault()->state2Str(category.at(j)->getState());
-            auto stateColor = XMLUtils::getDefault()->state2Color(category.at(j)->getState());
+            auto stateStr = Utils::getDefault()->state2Str(reinforcementItem.at(j)->getState());
+            auto stateColor = Utils::getDefault()->state2Color(reinforcementItem.at(j)->getState());
             auto item = m_model->item(i)->child(j, 2);
             item->setText(stateStr);
 
@@ -378,7 +379,7 @@ void ItemTable::updateStatus(const QList<Plugins::Categories *> &list)
     }
 }
 
-void ItemTable::clearCheckedStatus(const QList<Plugins::Categories *> &list, BRReinforcementState state)
+void ItemTable::clearCheckedStatus(const QList<Category *> &list, BRReinforcementState state)
 {
     for (int i = 0; i < m_model->rowCount(); ++i)
     {
@@ -386,18 +387,18 @@ void ItemTable::clearCheckedStatus(const QList<Plugins::Categories *> &list, BRR
         {
             auto item = m_model->item(i)->child(j);
             CONTINUE_IF_TRUE(Qt::Checked != item->checkState())
-            list.at(i)->getCategory().at(j)->setState(state);
+            list.at(i)->getReinforcementItem().at(j)->setState(state);
         }
     }
 }
 
-void ItemTable::getProgressCount(const QList<Plugins::Categories *> &list, ProgressInfo &progressInfo)
+void ItemTable::getProgressCount(const QList<Category *> &list, ProgressInfo &progressInfo)
 {
     for (int i = 0; i < m_model->rowCount(); ++i)
     {
         for (int j = 0; j < m_model->item(i)->rowCount(); ++j)
         {
-            auto state = list.at(i)->getCategory().at(j)->getState();
+            auto state = list.at(i)->getReinforcementItem().at(j)->getState();
             if (state == BR_REINFORCEMENT_STATE_SCAN_DONE ||
                 state == BR_REINFORCEMENT_STATE_REINFORCE_DONE ||
                 (state & BR_REINFORCEMENT_STATE_SAFE) == BR_REINFORCEMENT_STATE_SAFE)
@@ -469,13 +470,6 @@ void ItemTable::setAllChecked(Qt::CheckState isChecked)
 
 void ItemTable::hideCheckBox(bool isHide)
 {
-    // 隐藏复选框时将鼠标悬浮提示一并隐藏
-    disconnect(this, SIGNAL(entered(QModelIndex)), this, SLOT(showTail(QModelIndex)));
-    if (!isHide)
-    {
-        connect(this, SIGNAL(entered(QModelIndex)), this, SLOT(showTail(QModelIndex)));
-    }
-
     m_headerProxy->hideCheckBox(isHide);
     for (int i = 0; i < m_model->rowCount(); i++)
     {
@@ -496,20 +490,19 @@ void ItemTable::hideCheckBox(bool isHide)
     }
 }
 
-void ItemTable::setAllCheckBoxEditStatus()
+void ItemTable::setAllCheckBoxEditStatus(bool isCheckBoxEdit)
 {
     // 禁用复选框时将鼠标悬浮提示一并隐藏
-    //    disconnect(this, SIGNAL(entered(QModelIndex)), this, SLOT(showTail(QModelIndex)));
-    m_headerProxy->hideCheckBox(true);
+    m_headerProxy->hideCheckBox(!isCheckBoxEdit);
     for (int i = 0; i < m_model->rowCount(); i++)
     {
-        //        m_model->item(i)->setFlags(m_model->item(i)->flags() & ~Qt::ItemFlag::ItemIsUserCheckable);
-        m_model->item(i)->setCheckable(false);
+        // m_model->item(i)->setFlags(m_model->item(i)->flags() & ~Qt::ItemFlag::ItemIsEnabled);
+        m_model->item(i)->setCheckable(isCheckBoxEdit);
         for (int j = 0; j < m_model->item(i)->rowCount(); ++j)
         {
             auto item = m_model->item(i)->child(j);
-            //            item->setFlags(item->flags() &~ Qt::ItemFlag::ItemIsUserCheckable);
-            item->setCheckable(false);
+            // item->setFlags(item->flags() & ~Qt::ItemFlag::ItemIsEnabled);
+            item->setCheckable(isCheckBoxEdit);
         }
     }
 }
@@ -525,8 +518,17 @@ void ItemTable::showTail(const QModelIndex &model)
                            this->rect(),
                            2000);
     }
-
     emit modelEntered(model);
+}
+
+void ItemTable::setExpandItem(const QModelIndex &model)
+{
+    RETURN_IF_TRUE(model.column() == 0);
+    // 屏蔽子项的单击事件， 后续有其它单击处理考虑，需要处理这段代码
+    RETURN_IF_TRUE(m_model->parent(model).isValid())
+    // 返回兄弟index，这里要设置第一列的展开状态才能被isExpanded检测到已展开
+    auto index = model.sibling(model.row(), 0);
+    setExpanded(index, !isExpanded(index));
 }
 
 void ItemTable::doubleClickItem(const QModelIndex &model)
@@ -541,12 +543,8 @@ void ItemTable::doubleClickItem(const QModelIndex &model)
         // 屏蔽子项的双击事件
         BREAK_IF_TRUE(m_model->parent(model).isValid())
         // 返回兄弟index，这里要设置第一列的展开状态才能被isExpanded检测到已展开
-        auto index = model.siblingAtColumn(0);
+        auto index = model.sibling(model.row(), 0);
         setExpanded(index, !isExpanded(index));
-        // TODO 切换箭头图片
-        QPixmap pixmap(isExpanded(index) ? ":/images/arrow-up" : ":/images/arrow-down");
-        pixmap.scaled(10, 8);
-        m_model->setItem(model.row(), 3, new QStandardItem(QIcon(pixmap), ""));
         break;
     }
     default:
@@ -574,11 +572,8 @@ void ItemTable::selectAllItem(Qt::CheckState state)
     }
 }
 
-ItemTableDelegate::ItemTableDelegate(QObject *parent) : QStyledItemDelegate(parent)
-{
-}
-
-ItemTableDelegate::~ItemTableDelegate()
+ItemTableDelegate::ItemTableDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 

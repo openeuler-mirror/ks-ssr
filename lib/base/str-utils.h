@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <fmt/format.h>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QString>
