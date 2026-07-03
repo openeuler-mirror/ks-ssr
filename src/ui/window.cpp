@@ -36,6 +36,7 @@
 #include "src/ui/device/device-page.h"
 #include "src/ui/fp/fp-page.h"
 #include "src/ui/license/license-activation.h"
+#include "src/ui/license/license-dbus.h"
 #include "src/ui/navigation.h"
 #include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
@@ -165,7 +166,7 @@ void Window::initNavigation()
 
 void Window::popupActiveDialog()
 {
-    m_activation->updateLicenseInfo();
+    m_activation->update();
     auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
     auto y = this->y() + this->height() / 4 + m_activation->height() / 4;
     m_activation->move(x, y);
