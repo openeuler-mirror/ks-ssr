@@ -45,11 +45,6 @@ void SubWindow::buildNotify(const QString &notify)
     // 可复制
     label->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
-    auto labelHBox = new QHBoxLayout(this);
-    labelHBox->addStretch();
-    labelHBox->addWidget(label);
-    labelHBox->addStretch();
-
     auto *ok = new QPushButton(tr("ok"), this);
     ok->setFixedSize(72, 36);
     ok->setObjectName("okBtn");
@@ -60,7 +55,9 @@ void SubWindow::buildNotify(const QString &notify)
     okHBox->addWidget(ok);
     okHBox->addStretch();
 
-    m_contentLayout->addLayout(labelHBox);
+//    m_contentLayout->addLayout(labelHBox);
+    m_contentLayout->addWidget(label);
+    m_contentLayout->addStretch();
     m_contentLayout->addLayout(okHBox);
 }
 
@@ -76,10 +73,10 @@ void SubWindow::initUI()
     auto vlay = new QVBoxLayout(getWindowContentWidget());
     vlay->setContentsMargins(4, 4, 4, 4);
 
-    auto cusWidget = new QWidget(this);
+    auto cusWidget = new QWidget(getWindowContentWidget());
     m_contentLayout = new QVBoxLayout(cusWidget);
     cusWidget->setObjectName("cusWidget");
-    m_contentLayout->setContentsMargins(12, 12, 12, 12);
+    m_contentLayout->setContentsMargins(24, 24, 24, 12);
 
     vlay->addWidget(cusWidget);
     //    show();
