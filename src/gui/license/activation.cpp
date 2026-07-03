@@ -61,7 +61,6 @@ Activation::~Activation()
 
 void Activation::initUI()
 {
-    setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
     setTitle(tr("Activation"));
     setButtonHints(TitlebarCloseButtonHint);
@@ -103,10 +102,11 @@ void Activation::activate()
 {
     QString errorMsg;
     auto isActivated = m_licenseProxy->activateByActivationCode(m_ui->m_activation_code->text(), errorMsg);
-    emit activated(isActivated ? tr("Activate app successful!") : errorMsg);
+    auto message = isActivated ? tr("Activate app successful!") : errorMsg;
+    POPUP_MESSAGE_DIALOG(message);
     if (isActivated)
     {
-        close();
+        hide();
     }
 }
 

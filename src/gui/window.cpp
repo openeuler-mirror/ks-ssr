@@ -65,21 +65,22 @@ Window::Window()
     : TitlebarWindow(nullptr),
       m_ui(new Ui::Window),
       m_windowContentInited(false),
-      m_activation(nullptr),
       m_loading(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
 
     m_settingsDialog = new Settings(this);
     m_workPages.resize(int(NavigationIndex::COUNT));
+    m_activation = new Activation::Activation(this);
 #ifdef ENABLE_ACCOUNTS_MANAGER
     m_user = new UserEntity(this);
 #else
     m_user = new UserFake(this);
 #endif
     m_pluginManager = new PluginsManager(this);
+    m_licenseProxy = LicenseProxy::getDefault();
 
-    connect(m_user, &User::loginFinished, this, &Window::initWindowContent);
+    connect(m_user, &User::loginFinished, this, &Window::processActivation);
     connect(
         m_user, &User::softExited, this, []
         {
@@ -134,6 +135,8 @@ void Window::initWindowContent()
         KLOG_INFO() << "The window content is already init.";
         return;
     }
+
+    disconnect(m_licenseProxy.data(), &KS::LicenseProxy::activated, this, &Window::initWindowContent);
 
     m_accountButton->setToolTip(m_user->getCurrentUserName());
     initPages();
@@ -302,7 +305,7 @@ void Window::initTitlebar()
     m_settingsAction = new QAction(tr("Settings"), this);
     connect(m_settingsAction, &QAction::triggered, this, &Window::popupSettingsDialog, Qt::UniqueConnection);
     settingMenu->addAction(m_settingsAction);
-    settingMenu->addAction(tr("Activation"), this, &Window::popupActiveDialog);
+    settingMenu->addAction(tr("Activation"), this, &Window::popupActivationDialog);
     settingMenu->addAction(tr("Help"), this, []
                            {
                                if (QFile::exists(HELP_MANUAL_PATH))
@@ -491,6 +494,19 @@ void Window::clearWorkPage()
     }
 }
 
+void Window::processActivation()
+{
+    if (m_licenseProxy->isActivated())
+    {
+        initWindowContent();
+    }
+    else
+    {
+        popupActivationDialog();
+        connect(m_licenseProxy.data(), &KS::LicenseProxy::activated, this, &Window::initWindowContent);
+    }
+}
+
 void Window::popupSettingsDialog()
 {
     auto x = this->x() / 4 + this->width() / 4 + m_settingsDialog->width() / 16;
@@ -499,18 +515,8 @@ void Window::popupSettingsDialog()
     m_settingsDialog->show();
 }
 
-void Window::popupActiveDialog()
+void Window::popupActivationDialog()
 {
-    if (!m_activation)
-    {
-        m_activation = new Activation::Activation(this);
-        connect(
-            m_activation, &Activation::Activation::activated, this, [this](const QString &message)
-            {
-                POPUP_MESSAGE_DIALOG(message);
-            },
-            Qt::UniqueConnection);
-    }
     auto x = this->x() + this->width() / 4 + m_activation->width() / 16;
     auto y = this->y() + this->height() / 4 + m_activation->height() / 16;
     m_activation->move(x, y);
