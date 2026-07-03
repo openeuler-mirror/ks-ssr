@@ -24,7 +24,7 @@ QVector<QString> StrUtils::splitLines(const QString &s)
     QVector<QString> ret;
     size_t i = 0;
     size_t line_start = 0;
-    while (i < s.length())
+    while (i < static_cast<size_t>(s.length()))
     {
         if (s[static_cast<uint32_t>(i)] == '\n')
         {
@@ -34,8 +34,8 @@ QVector<QString> StrUtils::splitLines(const QString &s)
         }
         else if (s[static_cast<uint32_t>(i)] == '\r')
         {
-            if ((i + 1 < s.length() && s[static_cast<uint32_t>(i + 1)] != '\n') ||
-                i + 1 >= s.length())
+            if ((i + 1 < static_cast<size_t>(s.length()) && s[static_cast<uint32_t>(i + 1)] != '\n') ||
+                i + 1 >= static_cast<size_t>(s.length()))
             {
                 ret.push_back(s.mid(line_start, i - line_start));
                 i++;
@@ -53,7 +53,7 @@ QVector<QString> StrUtils::splitLines(const QString &s)
             i++;
         }
     }
-    if (line_start < s.length())
+    if (line_start < static_cast<size_t>(s.length()))
     {
         ret.push_back(s.mid(line_start, s.length() - line_start));
     }
@@ -81,7 +81,7 @@ QVector<QString> StrUtils::splitWithChar(const QString &s, char delimiter, bool 
     QVector<QString> v;
     size_t start = 0;
     size_t i = 0;
-    while (i < s.length())
+    while (i < static_cast<size_t>(s.length()))
     {
         if (delimiter == s[static_cast<uint32_t>(i)])
         {
@@ -152,9 +152,9 @@ QVector<QString> StrUtils::intersect(const QVector<QString> &a1, const QVector<Q
 {
     QVector<QString> result;
 
-    for (uint32_t i = 0; i < a1.size(); ++i)
+    for (uint32_t i = 0; i < static_cast<uint32_t>(a1.size()); ++i)
     {
-        for (uint32_t j = 0; j < a2.size(); ++j)
+        for (uint32_t j = 0; j < static_cast<uint32_t>(a2.size()); ++j)
         {
             if (a1[i] == a2[j])
             {

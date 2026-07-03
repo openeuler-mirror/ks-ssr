@@ -116,8 +116,6 @@ bool FirewalldICMPTimestamp::set(const std::string &args, BRErrorCode &error_cod
 {
     try
     {
-        std::string standard_output;
-
         auto values = StrUtils::str2json(args);
         RETURN_ERROR_IF_FALSE(values[FIREWALLD_ICMP_BLOCK_KEY_TIMESTAMP_REQUEST].isBool(), BRErrorCode::ERROR_FAILED);
         auto timestamp_request = values[FIREWALLD_ICMP_BLOCK_KEY_TIMESTAMP_REQUEST].asBool();

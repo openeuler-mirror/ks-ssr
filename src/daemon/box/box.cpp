@@ -351,10 +351,9 @@ QString Box::getRandStr(uint length)
     QString md5 = hash.toHex();
     QString str;
 
-    int num = 0;
     for (uint i = 0; i < length; ++i)
     {
-        num = QRandomGenerator::global()->bounded(md5.length());
+        int num = QRandomGenerator::global()->bounded(md5.length());
         str.insert(i, md5.at(num));
     }
 

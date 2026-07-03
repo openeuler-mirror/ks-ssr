@@ -43,7 +43,7 @@ bool Plugin::init()
     }
     catch (const xml_schema::Exception& e)
     {
-        KLOG_WARNING("Failed to load file: %s: %s", this->conf_path_.toLatin1(), e.what());
+        KLOG_WARNING() << "Failed to load file: %s" << this->conf_path_.toLatin1() << ": " << e.what();
         return false;
     }
 
@@ -76,7 +76,7 @@ const Protocol::Reinforcement* Plugin::getReinforcementConfig(const std::string&
 
 bool Plugin::loadPluginModule()
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG("Plugin::loadPluginModule");
 
     auto dirname = QFileInfo(this->conf_path_).fileName();
     switch (this->plugin_config_->language_type())
@@ -93,7 +93,7 @@ bool Plugin::loadPluginModule()
         return this->loader_->load();
     }
     default:
-        KLOG_WARNING("Unsupported language type: %d.", this->plugin_config_->language_type());
+        KLOG_WARNING() << "Unsupported language type: " << this->plugin_config_->language_type();
         return false;
     }
 }

@@ -28,7 +28,6 @@ int main(int argc, char* argv[])
     klog_qt5_init(QString(), "kylinsec-session", PROJECT_NAME, a.applicationName().toLatin1());
 
     QTranslator translator;
-#pragma message("将 cmake 翻译部分完成后修改翻译文件路径")
     if (!translator.load(QLocale(), "ks-ssr-daemon", ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
     {
         KLOG_WARNING() << "Load translator failed!";

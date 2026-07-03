@@ -46,7 +46,7 @@ bool PAM::getValue(const QString &key, const QString &kv_split_pattern, QString 
     }
     else
     {
-        kv_pattern = std::move(QString("(%1[\\s]*%2[\\s]*)(\\S+)").arg(key, kv_split_pattern));
+        kv_pattern = QString("(%1[\\s]*%2[\\s]*)(\\S+)").arg(key, kv_split_pattern);
         // kv_pattern = fmt::format("({0}[\\s]*{1}[\\s]*)(\\S+)", key, kv_split_pattern);
     }
     QRegExp kv_regex(kv_pattern);
@@ -91,7 +91,7 @@ bool PAM::setValue(const QString &key,
     auto file_lock = FileLock::createExcusiveLock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
     if (!file_lock)
     {
-        KLOG_WARNING("Failed to lock file %s.", this->conf_path_.toLatin1());
+        KLOG_WARNING() << "Failed to lock file " << this->conf_path_.toLatin1();
         return false;
     }
     auto match_info = this->getMatchLine();
@@ -142,7 +142,7 @@ bool PAM::delValue(const QString &key, const QString &kv_split_pattern)
     auto file_lock = FileLock::createExcusiveLock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
     if (!file_lock)
     {
-        KLOG_WARNING("Failed to lock file %s.", this->conf_path_.toLatin1());
+        KLOG_WARNING() << "Failed to lock file " << this->conf_path_.toLatin1();
         return false;
     }
     auto match_info = this->getMatchLine();
@@ -154,7 +154,7 @@ bool PAM::delValue(const QString &key, const QString &kv_split_pattern)
     {
         auto replace_line = match_info.match_line.replace(kv_regex, "");
         match_info.content.replace(match_info.match_pos, match_info.match_line.size(), replace_line);
-        KLOG_DEBUG("Replace line: %s with %s.", match_info.match_line.toLatin1(), replace_line.toLatin1());
+        KLOG_DEBUG() << "Replace line: " << match_info.match_line.toLatin1() << ", with " << replace_line.toLatin1();
         return this->writeToFile(match_info.content);
     }
     return true;
@@ -166,7 +166,7 @@ bool PAM::addLine(const QString &fallback_line, const QString &next_line_match_r
     auto file_lock = FileLock::createExcusiveLock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
     if (!file_lock)
     {
-        KLOG_WARNING("Failed to lock file %s.", this->conf_path_.toLatin1());
+        KLOG_WARNING() << "Failed to lock file " << this->conf_path_.toLatin1();
         return false;
     }
 
@@ -177,7 +177,7 @@ bool PAM::addLine(const QString &fallback_line, const QString &next_line_match_r
     {
         auto replace_line = match_info.match_line.mid(1);
         match_info.content.replace(match_info.match_pos, match_info.match_line.size(), replace_line);
-        KLOG_DEBUG("Replace line: %s with %s.", match_info.match_line.toLatin1(), replace_line.toLatin1());
+        KLOG_DEBUG() << "Replace line: " << match_info.match_line.toLatin1() << ", with " << replace_line.toLatin1();
         this->writeToFile(match_info.content);
     }
     // 如果未匹配到行，则添加新行
@@ -196,7 +196,7 @@ bool PAM::delLine()
     auto file_lock = FileLock::createExcusiveLock(this->conf_path_, O_RDWR | O_CREAT | O_SYNC, CONF_FILE_PERMISSION);
     if (!file_lock)
     {
-        KLOG_WARNING("Failed to lock file %s.", this->conf_path_.toLatin1());
+        KLOG_WARNING() << "Failed to lock file " << this->conf_path_.toLatin1();
         return false;
     }
 
@@ -205,7 +205,7 @@ bool PAM::delLine()
     if (match_info.match_line.size() > 0 && !match_info.is_match_comment)
     {
         match_info.content.replace(match_info.match_pos, match_info.match_line.size(), "#" + match_info.match_line);
-        KLOG_DEBUG("Comment line: %s with #.", match_info.match_line.toLatin1());
+        KLOG_DEBUG() << "Comment line: " << match_info.match_line.toLatin1() << " with #.";
         this->writeToFile(match_info.content);
     }
     return true;
@@ -216,7 +216,7 @@ bool PAM::getLine(QString &line)
     auto file_lock = FileLock::createShareLock(this->conf_path_, O_RDONLY, 0);
     if (!file_lock)
     {
-        KLOG_DEBUG("Failed to create share lock for %s.", this->conf_path_.toLatin1());
+        KLOG_DEBUG() << "Failed to create share lock for " << this->conf_path_.toLatin1();
         return false;
     }
 
@@ -306,7 +306,6 @@ bool PAM::writeToFile(const QString &content)
 bool PAM::isWhitespaceInTail(const QString &str)
 {
     RETURN_VAL_IF_TRUE(str.isEmpty(), false);
-    isspace('a');
     return (isspace(str.at(str.length() - 1).toLatin1()) != 0);
 }
 

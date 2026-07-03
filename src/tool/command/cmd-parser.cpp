@@ -28,15 +28,33 @@ CmdParser::CmdParser() : option_context_(N_("FILE")),
 
 void CmdParser::init()
 {
-    this->option_group_.add_entry(MiscUtils::create_option_entry("type", N_("The configuration file type"), CONFIG_TYPE_KV "|" CONFIG_TYPE_PAM "|" CONFIG_TYPE_TABLE), this->options_.type);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("method", N_("The Operation method"), "GETVAL|SETVAL|DELVAL|GETLINE|SETLINE|DELLINE"), this->options_.method);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("key", N_("Specify the key or rule to get value"), "KEY"), this->options_.key);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("value", N_("Specify the set value")), this->options_.value);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("line-match-pattern", N_("Specify regular expression to match the line. If many lines is matched, then the first matched line is used only")), this->options_.line_match_pattern);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("split-pattern", N_("Specify regular expression to split line")), this->options_.split_pattern);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("join-str", N_("Specify string for joining fields to line")), this->options_.join_str);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("comment", N_("Specify comment string")), this->options_.comment);
-    this->option_group_.add_entry(MiscUtils::create_option_entry("new-line", N_("Add new line when the speficied line pattern is dismatch in PAM")), this->options_.new_line);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("type",
+                                                                 N_("The configuration file type"), CONFIG_TYPE_KV "|" CONFIG_TYPE_PAM "|" CONFIG_TYPE_TABLE),
+                                  this->options_.type);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("method",
+                                                                 N_("The Operation method"), "GETVAL|SETVAL|DELVAL|GETLINE|SETLINE|DELLINE"),
+                                  this->options_.method);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("key",
+                                                                 N_("Specify the key or rule to get value"), "KEY"),
+                                  this->options_.key);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("value",
+                                                                 N_("Specify the set value")),
+                                  this->options_.value);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("line-match-pattern",
+                                                                 N_("Specify regular expression to match the line. If many lines is matched, then the first matched line is used only")),
+                                  this->options_.line_match_pattern);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("split-pattern",
+                                                                 N_("Specify regular expression to split line")),
+                                  this->options_.split_pattern);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("join-str",
+                                                                 N_("Specify string for joining fields to line")),
+                                  this->options_.join_str);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("comment",
+                                                                 N_("Specify comment string")),
+                                  this->options_.comment);
+    this->option_group_.add_entry(MiscUtils::create_option_entry("new-line",
+                                                                 N_("Add new line when the speficied line pattern is dismatch in PAM")),
+                                  this->options_.new_line);
 
     this->option_group_.set_translation_domain(PROJECT_NAME);
     this->option_context_.set_translation_domain(PROJECT_NAME);

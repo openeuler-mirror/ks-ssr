@@ -59,9 +59,9 @@ public:
     virtual ~RuleRange(){};
 
     // 规则类型
-    virtual Protocol::RuleType getType() { return Protocol::RuleType::Value::RANGE; };
+    virtual Protocol::RuleType getType() override { return Protocol::RuleType::Value::RANGE; };
     // 判断该值是否符合规则
-    virtual bool match(const QJsonValue &value);
+    virtual bool match(const QJsonValue &value) override;
 
 private:
     QJsonValue min_value_;
@@ -77,7 +77,7 @@ public:
     virtual ~RuleFixed(){};
 
     // 规则类型
-    virtual Protocol::RuleType getType() { return Protocol::RuleType::Value::RANGE; };
+    virtual Protocol::RuleType getType() override { return Protocol::RuleType::Value::RANGE; };
 };
 
 class RuleEnum : public Rule
@@ -87,9 +87,9 @@ public:
     virtual ~RuleEnum(){};
 
     // 规则类型
-    virtual Protocol::RuleType getType() { return Protocol::RuleType::Value::ENUM; };
+    virtual Protocol::RuleType getType() override { return Protocol::RuleType::Value::ENUM; };
     // 判断该值是否符合规则
-    virtual bool match(const QJsonValue &value);
+    virtual bool match(const QJsonValue &value) override;
 
 private:
     QVector<QJsonValue> enum_values_;

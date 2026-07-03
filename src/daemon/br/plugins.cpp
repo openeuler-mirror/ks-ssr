@@ -73,23 +73,21 @@ QSharedPointer<BRReinforcementInterface> Plugins::getReinforcementInterface(cons
     auto plugin = this->getPlugin(plugin_name);
     if (!plugin)
     {
-        KLOG_WARNING("Plugin '%s' of the reinforcement '%s' is not found.",
-                     plugin_name.toLatin1(),
-                     reinforcement_name.toLatin1());
+        KLOG_WARNING() << "Plugin '" << plugin_name.toLatin1() << "' of the reinforcement '" << reinforcement_name.toLatin1() << "' is not found.";
         return QSharedPointer<BRReinforcementInterface>();
     }
 
     auto plugin_interface = plugin->getLoader()->getInterface();
     if (!plugin_interface)
     {
-        KLOG_WARNING("The Plugin interface for %s is NULL.", plugin_name.toLatin1());
+        KLOG_WARNING() << "The Plugin interface for " << plugin_name.toLatin1() << " is NULL.";
         return QSharedPointer<BRReinforcementInterface>();
     }
 
     auto reinforcement_interface = plugin_interface->getReinforcement(reinforcement_name);
     if (!reinforcement_interface)
     {
-        KLOG_WARNING("The reinforcement interface for %s is NULL.", reinforcement_name.toLatin1());
+        KLOG_WARNING() << "The reinforcement interface for " << reinforcement_name.toLatin1() << " is NULL.";
         return QSharedPointer<BRReinforcementInterface>();
     }
     return reinforcement_interface;
@@ -131,7 +129,7 @@ void Plugins::init()
 
 void Plugins::loadPlugins()
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG("Plugins::loadPlugins");
     this->loadPluginsFromDir(SSR_BR_PLUGIN_CPP_ROOT_DIR);
     this->loadPluginsFromDir(SSR_BR_PLUGIN_PYTHON_ROOT_DIR);
 }
@@ -190,10 +188,12 @@ bool Plugins::addPlugin(QSharedPointer<Plugin> plugin)
         auto old_plugin = this->getPluginByReinforcement(QString::fromStdString(reinforcement_name));
         if (old_plugin)
         {
-            KLOG_WARNING("The reinforcement %s is conflicted with other plugin. old plugin: %s, cur plugin: %s.",
-                         reinforcement_name.c_str(),
-                         old_plugin->getId().toLocal8Bit(),
-                         pluginId.toLocal8Bit());
+            KLOG_WARNING() << "The reinforcement "
+                           << reinforcement_name.c_str()
+                           << " is conflicted with other plugin. old plugin: "
+                           << old_plugin->getId().toLocal8Bit()
+                           << ", cur plugin: "
+                           << pluginId.toLocal8Bit();
         }
         else
         {
@@ -205,7 +205,7 @@ bool Plugins::addPlugin(QSharedPointer<Plugin> plugin)
 
 void Plugins::loadReinforcements()
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG("Plugins::loadReinforcements");
 
     // TODO: 更新优化，现有的加固项调用更新函数，这里更新后应该需要通过DBUS发送信号
     this->reinforcements_.clear();

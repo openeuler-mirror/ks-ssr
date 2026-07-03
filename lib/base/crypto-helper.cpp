@@ -91,9 +91,9 @@ QString CryptoHelper::rsaEncryptString(const QString &publicKey,
         StringSource public_source(publicKey.toStdString(), true, new Base64Decoder(new HexDecoder));
         RSAES_OAEP_SHA_Encryptor rsaEncryptor(public_source);
 
-        if (message.size() > rsaEncryptor.FixedMaxPlaintextLength())
+        if (static_cast<size_t>(message.size()) > rsaEncryptor.FixedMaxPlaintextLength())
         {
-            KLOG_WARNING("The length(%d) of message is greater than the value(%d) which FixedMaxPlaintextLength return.",
+            KLOG_WARNING("The length(%d) of message is greater than the value(%lu) which FixedMaxPlaintextLength return.",
                          message.size(),
                          rsaEncryptor.FixedMaxPlaintextLength());
             return QString();
@@ -139,11 +139,11 @@ QString CryptoHelper::rsaEncryptFile(const QString &public_filename, const QStri
         RSAES_OAEP_SHA_Encryptor pub(pub_file);
 
         RandomPool random_pool;
-        random_pool.IncorporateEntropy((const byte *)BR_RSA_SEED_DEFAULT, sizeof(BR_RSA_SEED_DEFAULT));
+        random_pool.IncorporateEntropy(reinterpret_cast<const byte *>(BR_RSA_SEED_DEFAULT), sizeof(BR_RSA_SEED_DEFAULT));
 
-        if (message.size() > pub.FixedMaxPlaintextLength())
+        if (static_cast<size_t>(message.size()) > pub.FixedMaxPlaintextLength())
         {
-            KLOG_WARNING("The length(%d) of message is greater than the value(%d) which FixedMaxPlaintextLength return.",
+            KLOG_WARNING("The length(%d) of message is greater than the value(%lu) which FixedMaxPlaintextLength return.",
                          message.size(),
                          pub.FixedMaxPlaintextLength());
             return QString();
@@ -198,7 +198,7 @@ QString CryptoHelper::aesEncrypt(const QString &message, const QString &key)
         std::string result;
         ECB_Mode<AES>::Encryption encoder;
 
-        encoder.SetKey((const byte *)key.toStdString().c_str(), key.length());
+        encoder.SetKey(reinterpret_cast<const byte *>(key.toStdString().c_str()), key.length());
         StringSource(message.toStdString(), true, new StreamTransformationFilter(encoder, new Base64Encoder(new StringSink(result))));
 
         return QString::fromStdString(result);
@@ -217,7 +217,7 @@ QString CryptoHelper::aesDecrypt(const QString &message, const QString &key)
         std::string result;
         ECB_Mode<AES>::Decryption decoder;
 
-        decoder.SetKey((const byte *)key.toStdString().c_str(), key.length());
+        decoder.SetKey(reinterpret_cast<const byte *>(key.toStdString().c_str()), key.length());
         StringSource(message.toStdString(), true, new Base64Decoder(new StreamTransformationFilter(decoder, new StringSink(result))));
 
         return QString::fromStdString(result);
@@ -244,8 +244,8 @@ QString CryptoHelper::md5File(const QString &filename)
     {
         // StringSink 偏特化了 std::string ,所以这里使用 std::string
         std::string result;
-        Weak::MD5 md5;
-        FileSource(filename.toLatin1().data(), true, new HashFilter(md5, new HexEncoder(new StringSink(result))));
+        Weak::MD5 localMd5;
+        FileSource(filename.toLatin1().data(), true, new HashFilter(localMd5, new HexEncoder(new StringSink(result))));
         return QString::fromStdString(result);
     }
     catch (const CryptoPP::Exception &e)
@@ -294,7 +294,7 @@ void CryptoHelper::generate_rsa_key(uint32_t key_length,
     try
     {
         RandomPool random_pool;
-        random_pool.IncorporateEntropy((const byte *)BR_RSA_SEED_DEFAULT, sizeof(BR_RSA_SEED_DEFAULT));
+        random_pool.IncorporateEntropy(reinterpret_cast<const byte *>(BR_RSA_SEED_DEFAULT), sizeof(BR_RSA_SEED_DEFAULT));
 
         RSAES_OAEP_SHA_Decryptor priv(random_pool, key_length);
         HexEncoder priv_file(new Base64Encoder(new FileSink(private_filename.toLatin1().data())));
@@ -359,15 +359,6 @@ bool CryptoHelper::rsaVerifyFile(const QString &public_filename,
     }
 }
 
-// static SecByteBlock get_des_key()
-// {
-//     SecByteBlock key(DES::DEFAULT_KEYLENGTH);
-//     RandomPool random_pool;
-//     random_pool.IncorporateEntropy((const byte *)BR_RSA_SEED_DEFAULT, sizeof(BR_RSA_SEED_DEFAULT));
-//     random_pool.GenerateBlock(key, key.size());
-//     return key;
-// }
-
 QString CryptoHelper::desEncrypt(const QString &message, const QString &key)
 {
     try
@@ -376,9 +367,7 @@ QString CryptoHelper::desEncrypt(const QString &message, const QString &key)
         std::string result;
         ECB_Mode<DES>::Encryption encoder;
         // 这里的key长度必须为8
-        encoder.SetKey((const byte *)key.toLatin1().data(), key.length());
-        // auto key = get_des_key();
-        // encoder.SetKey(key, key.size());
+        encoder.SetKey(reinterpret_cast<const byte *>(key.toLatin1().data()), key.length());
         StringSource(message.toLatin1().data(), true, new StreamTransformationFilter(encoder, new Base64Encoder(new StringSink(result))));
         return QString::fromStdString(result);
     }
@@ -396,7 +385,7 @@ QString CryptoHelper::desDecrypt(const QString &message, const QString &key)
         // StringSink 偏特化了 std::string ,所以这里使用 std::string
         std::string result;
         ECB_Mode<DES>::Decryption decoder;
-        decoder.SetKey((const byte *)key.toLatin1().data(), key.length());
+        decoder.SetKey(reinterpret_cast<const byte *>(key.toLatin1().data()), key.length());
         StringSource(message.toLatin1().data(), true,
                      new Base64Decoder(new StreamTransformationFilter(decoder, new StringSink(result))));
         return QString::fromStdString(result);

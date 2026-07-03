@@ -35,7 +35,7 @@ bool PluginCPPLoader::load()
 
 bool PluginCPPLoader::activate()
 {
-    KLOG_DEBUG("is activate: %d, so path: %s.", this->is_activate_, this->so_path_.toLatin1());
+    KLOG_DEBUG() << "is activate: " << this->is_activate_ << ", so path: " << this->so_path_.toLatin1();
 
     // 不能重复激活
     RETURN_VAL_IF_TRUE(this->is_activate_, true);
@@ -45,7 +45,7 @@ bool PluginCPPLoader::activate()
 
 bool PluginCPPLoader::deactivate()
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG("PluginCPPLoader::deactivate");
     // 未激活不能取消激活
     RETURN_VAL_IF_TRUE(!this->is_activate_, true);
     this->interface_->deactivate();
@@ -54,7 +54,7 @@ bool PluginCPPLoader::deactivate()
 
 bool PluginCPPLoader::load_module()
 {
-    KLOG_DEBUG("load module %s", this->so_path_.toLatin1());
+    KLOG_DEBUG() << "load module " << this->so_path_.toLatin1();
 
     this->module_ = QSharedPointer<QLibrary>(new QLibrary(this->so_path_));
 
@@ -65,13 +65,13 @@ bool PluginCPPLoader::load_module()
 
         if ((new_plugin_fun = this->module_->resolve("new_plugin")) != nullptr)
         {
-            KLOG_WARNING("Not found function 'new_plugin' in module %s.", this->so_path_.toLatin1());
+            KLOG_WARNING() << "Not found function 'new_plugin' in module " << this->so_path_.toLatin1();
             return false;
         }
 
         if ((del_plugin_fun = this->module_->resolve("delete_plugin")) != nullptr)
         {
-            KLOG_WARNING("not found function 'delete_plugin' in module %s.", this->so_path_.toLatin1());
+            KLOG_WARNING() << "Not found function 'delete_plugin' in module " << this->so_path_.toLatin1();
             return false;
         }
 
@@ -80,9 +80,7 @@ bool PluginCPPLoader::load_module()
     }
     else
     {
-        KLOG_WARNING("open module %s fail: %s.",
-                     this->so_path_.toLatin1(),
-                     this->module_ ? this->module_->errorString().toLatin1() : "unknown");
+        KLOG_WARNING() << "open module " << this->so_path_.toLatin1() << "fail: " << (this->module_.isNull() ? this->module_->errorString().toLatin1() : "unknown");
         return false;
     }
 
@@ -103,9 +101,7 @@ bool PluginPythonLoader::load()
     {
         if (!module)
         {
-            KLOG_WARNING("Failed to load module: %s, error: %s.",
-                         this->package_name_.toLatin1(),
-                         Utils::pyCatchException().toLatin1());
+            KLOG_WARNING() << "Failed to load module: " << this->package_name_.toLatin1() << " , error: " << Utils::pyCatchException().toLatin1();
             retval = false;
             break;
         }
@@ -127,7 +123,7 @@ bool PluginPythonLoader::activate()
 
 bool PluginPythonLoader::deactivate()
 {
-    KLOG_DEBUG("");
+    KLOG_DEBUG("PluginPythonLoader::deactivate");
     // 未激活不能取消激活
     RETURN_VAL_IF_TRUE(!this->is_activate_, true);
     this->interface_->deactivate();
