@@ -175,7 +175,7 @@ private:
 private:
     static Manager* m_toolBoxManager;
     QList<Group> m_osGroupInfo;
-    QList<Passwd> m_osUserInfo;
+    QMap<QString, Passwd> m_osUserInfo;
     QString m_osUserInfoJson;
     QReadWriteLock* m_osUserNameMutex;
     QFileSystemWatcher* m_userNameWatcher;
