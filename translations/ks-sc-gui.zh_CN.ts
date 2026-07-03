@@ -758,7 +758,7 @@
     <message>
         <location filename="../src/ui/settings/settings-device.cpp" line="69"/>
         <source>(Effective after restart)</source>
-        <translation>重启后生效</translation>
+        <translation>(重启后生效)</translation>
     </message>
 </context>
 <context>

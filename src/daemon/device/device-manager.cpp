@@ -15,6 +15,7 @@
 #include "src/daemon/device/device-manager.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
+#include <QDateTime>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
 #include "src/daemon/device/device-dbus.h"
