@@ -65,7 +65,7 @@
          </size>
         </property>
         <property name="text">
-         <string>Please set the pin code:</string>
+         <string>Please input the pin code:</string>
         </property>
        </widget>
       </item>

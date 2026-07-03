@@ -17,3 +17,4 @@
 #define KSC_DI_RULE_FILE "@KSC_INSTALL_DATADIR@/device/device-interface-rule.ini"
 #define KSC_DEVICE_CONNECT_LOG_FILE "@KSC_INSTALL_DATADIR@/device/device-connect.log"
 #define KSC_DI_UDEV_RULE_FILE "@KSC_DI_UDEV_RULES_FILE@"
+#define DBUS_TIMEOUT_MS 300

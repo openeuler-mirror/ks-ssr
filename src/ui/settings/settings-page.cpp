@@ -13,7 +13,8 @@
  */
 #include "settings-page.h"
 #include <QIcon>
-#include "src/ui/setup/trusted-settings.h"
+#include "src/ui/settings/settings-device.h"
+#include "src/ui/settings/settings-trusted.h"
 #include "ui_settings-page.h"
 
 namespace KS
@@ -53,15 +54,24 @@ void SettingsPage::initSidebar()
     trustedItem->setTextAlignment(Qt::AlignCenter);
     trustedItem->setSizeHint(QSize(110, 42));
 
+    auto deviceItem = new QListWidgetItem(m_ui->m_sidebar);
+    deviceItem->setText(tr("Device Interface"));
+    deviceItem->setTextAlignment(Qt::AlignCenter);
+    deviceItem->setSizeHint(QSize(110, 42));
+
     m_ui->m_sidebar->addItem(trustedItem);
+    m_ui->m_sidebar->addItem(deviceItem);
     m_ui->m_sidebar->setCurrentRow(0);
 }
 
 void SettingsPage::initSubPage()
 {
-    auto trustedSettings = new TrustedSettings(this);
+    auto trustedSettings = new SettingsTrusted(this);
+
+    auto deviceSettings = new SettingsDevice(this);
 
     m_ui->m_stacked->addWidget(trustedSettings);
+    m_ui->m_stacked->addWidget(deviceSettings);
     m_ui->m_stacked->setCurrentIndex(0);
 }
 }  // namespace KS

@@ -13,8 +13,8 @@
  */
 #pragma once
 
-#include <QWidget>
 #include <QTimer>
+#include <QWidget>
 #include "src/ui/tp/tp-execute-table.h"
 
 namespace Ui
