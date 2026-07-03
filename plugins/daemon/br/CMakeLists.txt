@@ -29,6 +29,6 @@ target_include_directories(
 
 target_link_libraries(
   ${TARGET_NAME} PRIVATE ${PYTHON_LIBRARIES} ${XERCES_LIBRARIES}
-                         ${LIBAUDIT_LIBRARIES} Qt5::DBus base)
+                         ${LIBAUDIT_LIBRARIES} Qt5::DBus base dbus)
 
 install(TARGETS ${TARGET_NAME} DESTINATION ${SSR_INSTALL_DAEMON_PLUGINDIR})
