@@ -16,6 +16,7 @@
 #include <config.h>
 #include "ssr-i.h"
 #include "ssr-marcos.h"
+#include <QSettings>
 
 namespace KS
 {

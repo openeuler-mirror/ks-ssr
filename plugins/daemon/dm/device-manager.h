@@ -19,7 +19,8 @@
 #include "device-log.h"
 #include "device-mount-monitor.h"
 #include "device.h"
-#include "sd/sd-device-monitor.h"
+#include "system-device/system-device-monitor.h"
+#include "system-device/system-device.h"
 
 namespace KS
 {
@@ -72,7 +73,7 @@ private:
     virtual ~DeviceManager();
 
 private Q_SLOTS:
-    void handleUdevEvent(SDDevice *device,
+    void handleUdevEvent(SystemDevice *device,
                          int action);
     void handleMountEvent(const DeviceMount *mount);
 
@@ -82,10 +83,10 @@ Q_SIGNALS:
 private:
     void init();
     void initDevices();
-    void addDevice(SDDevice *sdDevice);
-    void handleUdevAddEvent(SDDevice *sdDevice);
-    void handleUdevRemoveEvent(SDDevice *sdDevice);
-    void handleUdevChangeEvent(SDDevice *sdDevice);
+    void addDevice(SystemDevice *sdDevice);
+    void handleUdevAddEvent(SystemDevice *sdDevice);
+    void handleUdevRemoveEvent(SystemDevice *sdDevice);
+    void handleUdevChangeEvent(SystemDevice *sdDevice);
     void recordDeviceConnection(QSharedPointer<Device> device);
     QSharedPointer<Device> getParentDevice(const QString syspath) const;
     bool isDeviceMountPerChanged(const QSharedPointer<Device> device,
@@ -103,7 +104,7 @@ private:
     // <syspath, device>
     QMap<QString, QSharedPointer<Device>> m_devices;
     DeviceFactory *m_deviceFactory;
-    SDDeviceMonitor m_sdDeviceMonitor;
+    SystemDeviceMonitor *m_sdDeviceMonitor;
     DBus *m_deviceDBus;
     QSharedPointer<DeviceLog> m_deviceLog;
     DeviceMountMonitor m_mountMonitor;

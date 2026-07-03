@@ -21,10 +21,12 @@
 #include "dbus.h"
 #include "device-factory.h"
 #include "lib/dbus/dbus-helper.h"
-#include "sd/sd-device-enumerator.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
 #include "udev-rule-manager.h"
+#include "system-device/system-device-monitor.h"
+#include "system-device/system-device-enumerator.h"
+#include "system-device/system-device.h"
 
 namespace KS
 {
@@ -50,10 +52,12 @@ DeviceManager::DeviceManager()
     m_deviceFactory = new DeviceFactory(this);
     m_deviceDBus = new DBus(this, this);
     m_deviceLog = QSharedPointer<DeviceLog>::create();
+    m_sdDeviceMonitor = new SystemDeviceMonitor();
 }
 
 DeviceManager::~DeviceManager()
 {
+    delete m_sdDeviceMonitor;
 }
 
 void DeviceManager::init()
@@ -64,13 +68,13 @@ void DeviceManager::init()
 
     UdevRuleManager::instance();
 
-    connect(&m_sdDeviceMonitor, &SDDeviceMonitor::deviceChanged, this, &DeviceManager::handleUdevEvent);
+    connect(m_sdDeviceMonitor, &SystemDeviceMonitor::deviceChanged, this, &DeviceManager::handleUdevEvent);
     connect(&m_mountMonitor, &DeviceMountMonitor::mountChanged, this, &DeviceManager::handleMountEvent);
 }
 
 void DeviceManager::initDevices()
 {
-    SDDeviceEnumerator enumerator;
+    SystemDeviceEnumerator enumerator;
     auto devices = enumerator.getDevices();
 
     Q_FOREACH (auto device, devices)
@@ -124,7 +128,7 @@ QSharedPointer<Device> DeviceManager::getDeviceByID(const QString &id)
     return QSharedPointer<Device>();
 }
 
-void DeviceManager::addDevice(SDDevice *sdDevice)
+void DeviceManager::addDevice(SystemDevice *sdDevice)
 {
     auto syspath = sdDevice->getSyspath();
 
@@ -139,20 +143,20 @@ void DeviceManager::addDevice(SDDevice *sdDevice)
     }
 }
 
-void DeviceManager::handleUdevEvent(SDDevice *device,
+void DeviceManager::handleUdevEvent(SystemDevice *device,
                                     int action)
 {
     switch (action)
     {
-    case SD_DEVICE_ACTION_REMOVE:
+    case DEVICE_ACTION_REMOVE:
         this->handleUdevRemoveEvent(device);
         break;
 
-    case SD_DEVICE_ACTION_ADD:
+    case DEVICE_ACTION_ADD:
         this->handleUdevAddEvent(device);
         break;
 
-    case SD_DEVICE_ACTION_CHANGE:
+    case DEVICE_ACTION_CHANGE:
         this->handleUdevChangeEvent(device);
         break;
 
@@ -187,7 +191,7 @@ bool DeviceManager::isDeviceMountPerChanged(const QSharedPointer<Device> device,
 
 QString DeviceManager::getMountSyspath(const DeviceMount *mount)
 {
-    SDDeviceEnumerator enumerator;
+    SystemDeviceEnumerator enumerator;
     auto devices = enumerator.getDevices();
 
     Q_FOREACH (auto device, devices)
@@ -277,7 +281,7 @@ void DeviceManager::recordDeviceConnection(QSharedPointer<Device> device)
     m_deviceLog->addDeviceRecord(record);
 }
 
-void DeviceManager::handleUdevAddEvent(SDDevice *sdDevice)
+void DeviceManager::handleUdevAddEvent(SystemDevice *sdDevice)
 {
     auto syspath = sdDevice->getSyspath();
 
@@ -293,7 +297,7 @@ void DeviceManager::handleUdevAddEvent(SDDevice *sdDevice)
     }
 }
 
-void DeviceManager::handleUdevRemoveEvent(SDDevice *sdDevice)
+void DeviceManager::handleUdevRemoveEvent(SystemDevice *sdDevice)
 {
     auto syspath = sdDevice->getSyspath();
     auto device = m_devices.take(syspath);
@@ -305,7 +309,7 @@ void DeviceManager::handleUdevRemoveEvent(SDDevice *sdDevice)
     }
 }
 
-void DeviceManager::handleUdevChangeEvent(SDDevice *sdDevice)
+void DeviceManager::handleUdevChangeEvent(SystemDevice *sdDevice)
 {
     auto syspath = sdDevice->getSyspath();
     auto device = m_devices.value(syspath);

@@ -15,21 +15,20 @@
 #pragma once
 
 #include <QObject>
-#include "sd/sd-device.h"
+#include "system-device/system-device.h"
 
 namespace KS
 {
 namespace DM
 {
 class Device;
-
 class DeviceFactory : public QObject
 {
     Q_OBJECT
 
 public:
     DeviceFactory(QObject* parent = nullptr);
-    QSharedPointer<Device> createDevice(SDDevice* device);
+    QSharedPointer<Device> createDevice(SystemDevice* device);
 };
 }  // namespace DM
 }  // namespace KS

@@ -2,7 +2,7 @@
 Description=KylinSec SSR Daemon Service
 Requires=ksl-daemon.service
 After=ksl-daemon.service
-RefuseManualStop=yes
+@IS_REFUSE_MANUAL_STOP@
 
 [Service]
 Type=dbus

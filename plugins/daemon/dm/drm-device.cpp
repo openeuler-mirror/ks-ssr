@@ -28,7 +28,7 @@ DRMDevice::DRMDevice(const QString &syspath, QObject *parent)
 
 void DRMDevice::init()
 {
-    auto sdDevice = this->getSDDevcie();
+    auto sdDevice = this->getDevcie();
 
     auto syspath = sdDevice->getSyspath();
     auto syspathBaseName = QFileInfo(syspath).baseName();
