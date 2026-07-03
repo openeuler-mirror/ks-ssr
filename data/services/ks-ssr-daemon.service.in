@@ -1,12 +1,15 @@
 [Unit]
-Description=KylinSec SC Daemon Service
+Description=KylinSec SSR Daemon Service
 Requires=ksl-daemon.service
 After=ksl-daemon.service
+RefuseManualStop=yes
 
 [Service]
 Type=dbus
 BusName=com.kylinsec.SSR
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/ks-ssr-daemon
+Restart=on-failure
+SELinuxContext=unconfined_u:unconfined_r:unconfined_t:s0-s15:c0.c1023
 
 [Install]
 WantedBy=multi-user.target
