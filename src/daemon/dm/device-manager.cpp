@@ -17,10 +17,13 @@
 #include <QDBusConnection>
 #include <QDateTime>
 #include <QProcess>
+#include "src/daemon/account/manager.h"
+#include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/dm/dbus.h"
 #include "src/daemon/dm/device-factory.h"
 #include "src/daemon/dm/sd/sd-device-enumerator.h"
 #include "src/daemon/dm/udev-rule-manager.h"
+#include "src/daemon/log/manager.h"
 #include "ssr-i.h"
 #include "ssr-marcos.h"
 
@@ -220,16 +223,16 @@ void DeviceManager::remountDevice(const QSharedPointer<Device> device,
                                   const DeviceMount *mount)
 {
     auto permission = device->getPermission();
-    QString args = QString("-o remount,");
-    args.append(permission->write ? "rw" : "ro");
-    if (!permission->execute)
-    {
-        args.append(",noexec");
-    }
-    auto exitcode = QProcess::execute("mount", {args, mount->device, mount->path});
+    QStringList args{"-o"};
+    QString options("remount");
+    options.append(permission->write ? ",rw" : ",ro");
+    options.append(permission->execute ? "" : ",noexec");
+    args.append({options, mount->device, mount->path});
+    auto exitcode = QProcess::execute("mount", args);
     if (exitcode != 0)
     {
-        KLOG_WARNING() << "Failed to execute command " << QString("mount %1 %2 %3").arg(args, mount->device, mount->path) << ", exitcode is " << exitcode;
+        KLOG_WARNING() << "Failed to execute command: "
+                       << "mount " << args.join(' ') << ", exitcode is " << exitcode;
     }
 }
 
@@ -266,7 +269,12 @@ void DeviceManager::recordDeviceConnection(QSharedPointer<Device> device)
 
     // 以秒为单位的时间戳
     record.time = QDateTime::currentSecsSinceEpoch();
-
+    KS::Log::Log log{"sysadm", Account::Manager::AccountRole::sysadm,
+                     QDateTime::currentDateTime(), Log::Manager::LogType::DEVICE, true,
+                     tr("Device access, name is %1, type is %2")
+                         .arg(record.name.isEmpty() ? tr("Unknown device") : record.name)
+                         .arg(deviceTypeEnum2Str(record.type))};
+    KS::Log::Manager::writeLog(log);
     m_deviceLog->addDeviceRecord(record);
 }
 
@@ -344,5 +352,66 @@ bool DeviceManager::isSupportHDMIDisable()
 
     return false;
 }
+
+QString DeviceManager::interfaceTypeEnum2Str(int type)
+{
+    switch (type)
+    {
+    case INTERFACE_TYPE_OTHER:
+        return tr("Other");
+    case INTERFACE_TYPE_USB:
+        return tr("USB");
+    case INTERFACE_TYPE_BLUETOOTH:
+        return tr("Bluetooth");
+    case INTERFACE_TYPE_NET:
+        return tr("Network card");
+    case INTERFACE_TYPE_HDMI:
+        return tr("HDMI");
+    case INTERFACE_TYPE_USB_KBD:
+        return tr("Keyboard");
+    case INTERFACE_TYPE_USB_MOUSE:
+        return tr("Mouse");
+    default:
+        break;
+    }
+    return QString();
+}
+
+QString DeviceManager::deviceTypeEnum2Str(int type)
+{
+    switch (type)
+    {
+    case DEVICE_TYPE_STORAGE:
+        return "Storage";
+    case DEVICE_TYPE_CD:
+        return "CD";
+    case DEVICE_TYPE_MOUSE:
+        return "Mouse";
+    case DEVICE_TYPE_KEYBOARD:
+        return "Keyboard";
+    case DEVICE_TYPE_NET_CARD:
+        return "Network card";
+    case DEVICE_TYPE_WIRELESS_NET_CARD:
+        return "Wireless network card";
+    case DEVICE_TYPE_VIDEO:
+        return "Video";
+    case DEVICE_TYPE_AUDIO:
+        return "Audio";
+    case DEVICE_TYPE_PRINTER:
+        return "Printer";
+    case DEVICE_TYPE_HUB:
+        return "Hub";
+    case DEVICE_TYPE_COMMUNICATIONS:
+        return "Communications";
+    case DEVICE_TYPE_BLUETOOTH:
+        return "Bluetooth";
+    case DEVICE_TYPE_OTHER:
+        return "Other";
+    default:
+        break;
+    }
+    return QString();
+}
+
 }  // namespace DM
 }  // namespace KS
