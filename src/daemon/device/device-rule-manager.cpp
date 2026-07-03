@@ -183,15 +183,15 @@ void DeviceRuleManager::syncToDeviceUdevFile()
 
 QString DeviceRuleManager::ruleObj2Str(QSharedPointer<DeviceRule> rule)
 {
-    // 只有禁用的时候需要设置udev规则，启用时删除规则即可
-    if (rule->interfaceType == INTERFACE_TYPE_USB && !rule->enable)
+    if (rule->interfaceType == INTERFACE_TYPE_USB)
     {
-        return QString::asprintf("ACTION==\"*\", SUBSYSTEMS==\"usb\", \
+        return QString::asprintf("ACTION!=\"remove\", SUBSYSTEMS==\"usb\", \
 ATTRS{idVendor}==\"%s\", ATTRS{idProduct}==\"%s\", \
-MODE=\"%s\", RUN=\"/bin/sh -c 'echo 0 >/sys/$devpath/authorized'\"",
+MODE=\"%s\", RUN=\"/bin/sh -c 'echo %d >/sys/$devpath/authorized'\"",
                                  rule->idVendor.toStdString().c_str(),
                                  rule->idProduct.toStdString().c_str(),
-                                 this->getUdevModeValue(rule).toStdString().c_str());
+                                 this->getUdevModeValue(rule).toStdString().c_str(),
+                                 rule->enable);
     }
 
     return QString();
