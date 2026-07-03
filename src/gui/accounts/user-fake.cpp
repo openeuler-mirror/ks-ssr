@@ -12,13 +12,22 @@
  * Author:     tangjie02 <tangjie02@kylinsec.com.cn>
  */
 
-#include "user.h"
+#include "user-fake.h"
 
 namespace KS
 {
-User::User(QWidget *parent)
-    : QWidget(parent)
+UserFake::UserFake(QWidget *parent)
+    : User(parent)
 {
 }
 
+void UserFake::showLogin()
+{
+    emit loginFinished();
+}
+
+QString UserFake::getCurrentUserName() const
+{
+    return QString();
+}
 }  // namespace KS

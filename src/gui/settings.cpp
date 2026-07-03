@@ -68,13 +68,17 @@ void Settings::setSettingPages(const QVector<SettingPage *> &settingPages)
     // connect(reinforceSettings, &BaselineReinforcement::resetAllArgsClicked, this, &Settings::resetAllArgsClicked);
 }
 
-// TODO: 放到插件去实现
-// uint Settings::getFallbackStatus()
-// {
-//     RETURN_VAL_IF_TRUE(Account::User::instance()->getCurrentUserName() != SSR_ACCOUNT_NAME_SYSADM, BR_FALLBACK_STATUS_NOT_STARTED);
-//     auto brSettings = static_cast<BaselineReinforcement *>(m_ui->m_stacked->widget(0));
-//     return brSettings->getFallbackStatus();
-// };
+void Settings::clearSettingPages()
+{
+    m_ui->m_sidebar->clear();
+
+    while (m_ui->m_stacked->currentWidget() != nullptr)
+    {
+        auto currentWidget = m_ui->m_stacked->currentWidget();
+        m_ui->m_stacked->removeWidget(currentWidget);
+        delete currentWidget;
+    }
+}
 
 void Settings::initUI()
 {
@@ -85,30 +89,5 @@ void Settings::initUI()
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
 }
-
-// void Settings::addSubPage(const QString &sidebarName)
-// {
-//     if (sidebarName == tr("Baseline reinforcement"))
-//     {
-//         auto reinforceSettings = new BaselineReinforcement(this);
-
-//         m_ui->m_stacked->addWidget(reinforceSettings);
-//     }
-//     else if (sidebarName == tr("Trusted protect"))
-//     {
-//         auto trustedSettings = new TrustedProtected(this);
-//         m_ui->m_stacked->addWidget(trustedSettings);
-//     }
-//     else if (sidebarName == tr("Interface Control"))
-//     {
-//         auto deviceSettings = new DeviceControl(this);
-//         m_ui->m_stacked->addWidget(deviceSettings);
-//     }
-//     else if (sidebarName == tr("Identity authentication"))
-//     {
-//         auto identityAuthentication = new IdentityAuthentication(this);
-//         m_ui->m_stacked->addWidget(identityAuthentication);
-//     }
-// }
 
 }  // namespace KS

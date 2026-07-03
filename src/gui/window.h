@@ -35,11 +35,7 @@ class SideBar;
 class Loading;
 class PluginsManager;
 class WorkPage;
-
-namespace Accounts
-{
 class User;
-}
 
 class Window : public TitlebarWindow
 {
@@ -63,7 +59,6 @@ private:
     void initTitlebar();
     void addWorkPage(WorkPage *page);
     void hideLoading(bool ishide);
-    void clearSidebar();
 
     // 登录成功后显示窗口内容
     void initWindowContent();
@@ -74,6 +69,11 @@ private:
     // 根据权重的导航分类和侧边分类切换页面
     void switchWorkPage();
     void switchSidebars();
+    void clearWindowContent();
+    void clearSidebar();
+    void clearNavigation();
+    void clearPage();
+    void clearWorkPage();
 
 private slots:
     void popupSettingsDialog();
@@ -83,12 +83,10 @@ private slots:
     void activateMetaObject();
     void setNotifyStatus(bool disabled);
 
-    void logout(const QString &userName);
-    // 重新登录
-    void relogin(const QString &userName);
-
 private:
     Ui::Window *m_ui;
+    // 标记窗口内容是否初始化，避免收到重复信号多次初始化
+    bool m_windowContentInited;
     // 设置对话框
     Settings *m_settingsDialog;
     // 二维数组，第一维是NavigationCategory，第二维是Page
@@ -97,8 +95,8 @@ private:
     QPushButton *m_accountButton;
     // 设置选项，若无设置页面需隐藏这个按钮
     QAction *m_settingsAction;
-
-    Accounts::User *m_user;
+    // 用户信息
+    User *m_user;
     // 先放到这里，后面可以考虑放到更加合适的地方管理
     PluginsManager *m_pluginManager;
     // 页面加载动画

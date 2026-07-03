@@ -14,48 +14,44 @@
 
 #pragma once
 
-#include "lib/widgets/window/titlebar-window.h"
+#include "user.h"
 
-namespace Ui
-{
-class Login;
-}
+class AccountProxy;
 
-class QPushButton;
 namespace KS
 {
-class LicenseProxy;
+class PasswordModification;
 
-class Login : public TitlebarWindow
+class Login;
+
+class UserEntity : public User
 {
     Q_OBJECT
 
 public:
-    explicit Login(QWidget *parent = nullptr);
-    virtual ~Login();
+    UserEntity(QWidget *parent = nullptr);
+    virtual ~UserEntity(){};
 
-    QString getPassword() const;
-    void setPassword(const QString &password);
-    QString getAccountName() const;
-    void setAccountName(const QString &name);
-
-protected:
-    void closeEvent(QCloseEvent *event);
-
-private:
-    void initUI();
+    virtual void init();
+    // 显示修改密码界面
+    virtual void showPasswordModification();
+    // 显示登录界面
+    virtual void showLogin();
+    // 退出用户
+    virtual bool logout();
+    virtual QString getCurrentUserName() const;
 
 private slots:
-    void popupActiveDialog();
-
-signals:
-    void accepted();
-    void rejected();
+    void acceptedLogin();
+    void acceptedPasswordModification();
 
 private:
-    Ui::Login *m_ui;
-    QPushButton *m_activateStatus;
-    QSharedPointer<LicenseProxy> m_licenseProxy;
+    static UserEntity *m_instance;
+
+    AccountProxy *m_dbusProxy;
+    Login *m_login;
+    PasswordModification *m_passwordModification;
+    QString m_currentUserName;
 };
 
 }  // namespace KS

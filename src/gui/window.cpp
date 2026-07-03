@@ -27,7 +27,8 @@
 #include <QX11Info>
 #include "about.h"
 #include "account_proxy.h"
-#include "accounts/user.h"
+#include "accounts/user-entity.h"
+#include "accounts/user-fake.h"
 #include "config.h"
 #include "include/ssr-i.h"
 #include "lib/base/notification-wrapper.h"
@@ -63,6 +64,7 @@ namespace KS
 Window::Window()
     : TitlebarWindow(nullptr),
       m_ui(new Ui::Window),
+      m_windowContentInited(false),
       m_activation(nullptr),
       m_loading(nullptr)
 {
@@ -70,17 +72,20 @@ Window::Window()
 
     m_settingsDialog = new Settings(this);
     m_workPages.resize(int(NavigationIndex::COUNT));
-    m_user = new Accounts::User(this);
+#ifdef ENABLE_ACCOUNTS_MANAGER
+    m_user = new UserEntity(this);
+#else
+    m_user = new UserFake(this);
+#endif
     m_pluginManager = new PluginsManager(this);
 
-    connect(m_user, &Accounts::User::loginFinished, this, &Window::initWindowContent, Qt::ConnectionType::UniqueConnection);
+    connect(m_user, &User::loginFinished, this, &Window::initWindowContent);
     connect(
-        m_user, &Accounts::User::softExited, this, []
+        m_user, &User::softExited, this, []
         {
             qApp->quit();
-        },
-        Qt::ConnectionType::UniqueConnection);
-    connect(m_user, &Accounts::User::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
+        });
+    connect(m_user, &User::passwordChanged, this, &Window::clearWindowContent);
 
     connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject, Qt::ConnectionType::UniqueConnection);
 
@@ -110,14 +115,6 @@ void Window::resizeEvent(QResizeEvent *event)
 
 void Window::closeEvent(QCloseEvent *event)
 {
-    // TODO：实际动作是在后端运行，这个功能不知道有何意义，先注释
-    // if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
-    // {
-    //     POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
-    //     event->ignore();
-    //     return;
-    // }
-
     TitlebarWindow::closeEvent(event);
 }
 
@@ -132,12 +129,18 @@ void Window::init()
 
 void Window::initWindowContent()
 {
-    m_accountButton->setToolTip(m_user->getCurrentUserName());
+    if (m_windowContentInited)
+    {
+        KLOG_INFO() << "The window content is already init.";
+        return;
+    }
 
+    m_accountButton->setToolTip(m_user->getCurrentUserName());
     initPages();
     initNavigation();
     switchSidebars();
     show();
+    m_windowContentInited = true;
 
     connect(m_ui->m_navigation, &Navigation::currentUIDChanged, this, &Window::switchSidebars);
     connect(m_ui->m_sidebar, &SideBar::itemChanged, this, &Window::switchWorkPage);
@@ -280,7 +283,8 @@ void Window::initTitlebar()
                            });
     accountMenu->addAction(tr("Logout"), this, [this]
                            {
-                               logout(m_user->getCurrentUserName());
+                               clearWindowContent();
+                               m_user->logout();
                            });
     layout->addWidget(m_accountButton);
 #else
@@ -330,16 +334,6 @@ void Window::hideLoading(bool ishide)
 
     m_ui->m_stackedPages->setCurrentWidget(m_loading);
     m_ui->m_sidebar->setEnabled(false);
-}
-
-void Window::clearSidebar()
-{
-    auto count = m_ui->m_sidebar->count();
-    for (auto i = 0; i < count; i++)
-    {
-        auto item = m_ui->m_sidebar->takeItem(0);
-        delete item;
-    }
 }
 
 void Window::switchWorkPage()
@@ -447,6 +441,56 @@ void Window::switchSidebars()
     // }
 }
 
+void Window::clearWindowContent()
+{
+    clearSidebar();
+    clearNavigation();
+    clearPage();
+    m_accountButton->setToolTip(QString());
+    hide();
+
+    m_windowContentInited = false;
+
+    disconnect(m_ui->m_sidebar, &SideBar::itemChanged, this, &Window::switchWorkPage);
+    disconnect(m_ui->m_navigation, &Navigation::currentUIDChanged, this, &Window::switchSidebars);
+}
+
+void Window::clearSidebar()
+{
+    auto count = m_ui->m_sidebar->count();
+    for (auto i = 0; i < count; i++)
+    {
+        auto item = m_ui->m_sidebar->takeItem(0);
+        delete item;
+    }
+}
+
+void Window::clearNavigation()
+{
+    m_ui->m_navigation->clearItems();
+}
+
+void Window::clearPage()
+{
+    clearWorkPage();
+    m_settingsDialog->clearSettingPages();
+}
+
+void Window::clearWorkPage()
+{
+    while (m_ui->m_stackedPages->currentWidget() != nullptr)
+    {
+        auto currentWidget = m_ui->m_stackedPages->currentWidget();
+        m_ui->m_stackedPages->removeWidget(currentWidget);
+        delete currentWidget;
+    }
+
+    for (auto i = 0; i < m_workPages.size(); ++i)
+    {
+        m_workPages[i].clear();
+    }
+}
+
 void Window::popupSettingsDialog()
 {
     auto x = this->x() / 4 + this->width() / 4 + m_settingsDialog->width() / 16;
@@ -514,35 +558,4 @@ void Window::setNotifyStatus(bool disabled)
     Notify::NotificationWrapper::getInstance()->setNofityEnable(!disabled);
 }
 
-void Window::logout(const QString &userName)
-{
-    RETURN_IF_TRUE(userName.isEmpty());
-    // TODO：
-    // if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
-    // {
-    //     POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
-    //     return;
-    // }
-    m_user->setLoginUserName(userName);
-    RETURN_IF_TRUE(!m_user->logout());
-
-    clearSidebar();
-    while (m_ui->m_stackedPages->currentWidget() != nullptr)
-    {
-        auto currentWidget = m_ui->m_stackedPages->currentWidget();
-        m_ui->m_stackedPages->removeWidget(currentWidget);
-        delete currentWidget;
-    }
-    m_workPages.clear();
-    m_ui->m_navigation->clearItems();
-    hide();
-}
-
-void Window::relogin(const QString &userName)
-{
-    if (userName == m_user->getCurrentUserName())
-    {
-        logout(userName);
-    }
-}
 }  // namespace KS
