@@ -352,17 +352,17 @@
 <context>
     <name>KS::BoxPage</name>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="142"/>
+        <location filename="../src/ui/box/box-page.cpp" line="143"/>
         <source>Create box</source>
         <translation>创建保险箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="146"/>
+        <location filename="../src/ui/box/box-page.cpp" line="147"/>
         <source>Please confirm whether the password is consistent.</source>
         <translation>请确认两次密码是否一致。</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="148"/>
+        <location filename="../src/ui/box/box-page.cpp" line="149"/>
         <source>The input cannot be empty, please improve the information.</source>
         <translation>输入不能为空，请输入正确的信息。</translation>
     </message>
@@ -371,7 +371,7 @@
         <translation type="vanished">请确认模块是否加载！</translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="176"/>
+        <location filename="../src/ui/box/box-page.cpp" line="177"/>
         <source>Please remember this box passphrase : %1, Can be used to retrieve passwords.</source>
         <translation>请记住您的保险箱口令：%1，可用于找回密码。</translation>
     </message>
@@ -620,22 +620,22 @@
 <context>
     <name>KS::FPFilesModel</name>
     <message>
-        <location filename="../src/ui/fp/fp-file-table.cpp" line="237"/>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="236"/>
         <source>Number</source>
         <translation>序号</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/fp-file-table.cpp" line="239"/>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="238"/>
         <source>File name</source>
         <translation>文件名</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/fp-file-table.cpp" line="241"/>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="240"/>
         <source>File path</source>
         <translation>文件路径</translation>
     </message>
     <message>
-        <location filename="../src/ui/fp/fp-file-table.cpp" line="243"/>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="242"/>
         <source>Add time</source>
         <translation>添加时间</translation>
     </message>
@@ -667,17 +667,16 @@
 <context>
     <name>KS::LicenseActivation</name>
     <message>
-        <location filename="../src/ui/license/license-activation.cpp" line="69"/>
+        <location filename="../src/ui/license/license-activation.cpp" line="73"/>
         <source>Activation</source>
         <translation>软件激活</translation>
     </message>
     <message>
-        <location filename="../src/ui/license/license-activation.cpp" line="110"/>
         <source>Activate app successful!</source>
-        <translation>成功激活应用程序！</translation>
+        <translation type="vanished">成功激活应用程序！</translation>
     </message>
     <message>
-        <location filename="../src/ui/license/license-activation.cpp" line="117"/>
+        <location filename="../src/ui/license/license-activation.cpp" line="120"/>
         <source>Scan QR code to get %1</source>
         <translation>扫描获取%1</translation>
     </message>
@@ -980,7 +979,7 @@
 <context>
     <name>KS::Window</name>
     <message>
-        <location filename="../src/ui/window.cpp" line="88"/>
+        <location filename="../src/ui/window.cpp" line="92"/>
         <source>Security control</source>
         <translation>安全管控</translation>
     </message>
@@ -993,42 +992,42 @@
         <translation type="vanished">授权信息</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="115"/>
+        <location filename="../src/ui/window.cpp" line="119"/>
         <source>Unactivated</source>
         <translation>未激活</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="127"/>
+        <location filename="../src/ui/window.cpp" line="131"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="128"/>
+        <location filename="../src/ui/window.cpp" line="132"/>
         <source>Activation</source>
         <translation>软件激活</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="129"/>
+        <location filename="../src/ui/window.cpp" line="133"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="139"/>
+        <location filename="../src/ui/window.cpp" line="143"/>
         <source>Trusted protected</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="140"/>
+        <location filename="../src/ui/window.cpp" line="144"/>
         <source>File protected</source>
         <translation>文件保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="141"/>
+        <location filename="../src/ui/window.cpp" line="145"/>
         <source>Private box</source>
         <translation>私密保险箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="142"/>
+        <location filename="../src/ui/window.cpp" line="146"/>
         <source>Device management</source>
         <translation>设备管理</translation>
     </message>
@@ -1204,26 +1203,31 @@
     </message>
     <message>
         <location filename="../lib/base/error.cpp" line="77"/>
+        <source>Internal error!</source>
+        <translation>内部错误！</translation>
+    </message>
+    <message>
+        <location filename="../lib/base/error.cpp" line="80"/>
         <source>Invalid device.</source>
         <translation>无效的设备。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="80"/>
+        <location filename="../lib/base/error.cpp" line="83"/>
         <source>Invalid device permissions.</source>
         <translation>无效的设备权限。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="83"/>
+        <location filename="../lib/base/error.cpp" line="86"/>
         <source>Invalid device interface type.</source>
         <translation>无效的设备接口类型。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="86"/>
+        <location filename="../lib/base/error.cpp" line="89"/>
         <source>The graphics card does not support HDMI interface shutdown.</source>
         <translation>显卡不支持关闭HDMI接口。</translation>
     </message>
     <message>
-        <location filename="../lib/base/error.cpp" line="90"/>
+        <location filename="../lib/base/error.cpp" line="93"/>
         <source>Unknown error.</source>
         <translation>未知错误。</translation>
     </message>
@@ -1253,12 +1257,12 @@
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../src/ui/license/license-activation.cpp" line="27"/>
+        <location filename="../src/ui/license/license-activation.cpp" line="28"/>
         <source>machine code</source>
         <translation>机器码</translation>
     </message>
     <message>
-        <location filename="../src/ui/license/license-activation.cpp" line="28"/>
+        <location filename="../src/ui/license/license-activation.cpp" line="29"/>
         <source>activation code</source>
         <translation>激活码</translation>
     </message>
