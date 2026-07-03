@@ -159,7 +159,7 @@ FPFilesModel::FPFilesModel(QObject *parent) : QAbstractTableModel(parent)
                                             KSC_KSS_INIT_DBUS_OBJECT_PATH,
                                             QDBusConnection::systemBus(),
                                             this);
-    connect(m_fileProtectedProxy, &KSSDbusProxy::ProtectedFilesUpdate, this, &FPFilesModel::updateRecord);
+    connect(m_fileProtectedProxy, &KSSDbusProxy::ProtectedFilesChange, this, &FPFilesModel::updateRecord);
 
     updateRecord();
 }

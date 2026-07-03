@@ -176,7 +176,7 @@ void KSSDbus::addTPFileAfterAuthorization(const QDBusMessage &message, const QSt
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
-    emit TrustedFilesUpdate();
+    emit TrustedFilesChange();
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
@@ -190,7 +190,7 @@ void KSSDbus::removeTPFileAfterAuthorization(const QDBusMessage &message, const 
     }
 
     KSSWrapper::getDefault()->removeTrustedFile(filePath);
-    emit TrustedFilesUpdate();
+    emit TrustedFilesChange();
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
@@ -204,7 +204,7 @@ void KSSDbus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, b
     }
 
     KSSWrapper::getDefault()->prohibitUnloading(prohibited, filePath);
-    emit TrustedFilesUpdate();
+    emit TrustedFilesChange();
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
@@ -238,7 +238,7 @@ void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QSt
     QFileInfo fileInfo(filePath);
     auto fileName = fileInfo.fileName();
     KSSWrapper::getDefault()->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
-    emit ProtectedFilesUpdate();
+    emit ProtectedFilesChange();
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
@@ -252,7 +252,7 @@ void KSSDbus::removeFPFileAfterAuthorization(const QDBusMessage &message, const 
     }
 
     KSSWrapper::getDefault()->removeFile(filePath);
-    emit ProtectedFilesUpdate();
+    emit ProtectedFilesChange();
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);

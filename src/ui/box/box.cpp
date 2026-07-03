@@ -15,6 +15,7 @@
 #include "src/ui/box/box.h"
 #include <qt5-log-i.h>
 #include <QDesktopServices>
+#include <QFontMetrics>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLabel>
@@ -86,8 +87,26 @@ void Box::initBox()
     connect(m_showingIcon, &QPushButton::clicked, this, &Box::onIconBtnClick);
 
     m_showingName = new QLabel(this);
-    m_showingName->setText(m_name);
     m_showingName->setAlignment(Qt::AlignCenter);
+    m_showingName->setMaximumWidth(102);
+    // 过长使用省略号显示
+    QFontMetrics fontMetrics(this->fontMetrics());
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
+    auto fontSize = fontMetrics.horizontalAdvance(m_name);
+#else
+    auto fontSize = fontMetrics.width(m_name);
+#endif
+
+    QString str = m_name;
+    if (fontSize > m_showingName->width())
+    {
+        str = fontMetrics.elidedText(m_name, Qt::ElideRight, m_showingName->width());
+        m_showingName->setToolTip(m_name);
+    }
+
+    m_showingName->setText(str);
+
     layout->addWidget(m_showingName);
 
     setLayout(layout);

@@ -71,8 +71,8 @@ public Q_SLOTS:  // METHODS
     QString Search(const QString &path_key, uint searchType);
 Q_SIGNALS:  // SIGNALS
     void InitFinished();
-    void TrustedFilesUpdate();
-    void ProtectedFilesUpdate();
+    void TrustedFilesChange();
+    void ProtectedFilesChange();
 
 private:
     void init();

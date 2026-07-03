@@ -19,6 +19,8 @@
 
 namespace KS
 {
+#define INPUT_MAX_LENGTH 16
+
 CreateBox::CreateBox(QWidget *parent) : TitlebarWindow(parent),
                                         m_ui(new Ui::CreateBox())
 {
@@ -32,9 +34,15 @@ CreateBox::CreateBox(QWidget *parent) : TitlebarWindow(parent),
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
 
     auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
-    m_ui->m_name->setValidator(validator);
+    auto validatorName = new QRegularExpressionValidator(QRegularExpression("^[\u4E00-\u9FA5A-Za-z0-9_]+$"), this);
+    m_ui->m_name->setValidator(validatorName);
     m_ui->m_password->setValidator(validator);
     m_ui->m_confirmPassword->setValidator(validator);
+
+    // 限制输入长度
+    m_ui->m_name->setMaxLength(INPUT_MAX_LENGTH);
+    m_ui->m_password->setMaxLength(INPUT_MAX_LENGTH);
+    m_ui->m_confirmPassword->setMaxLength(INPUT_MAX_LENGTH);
 
     m_ui->m_password->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
