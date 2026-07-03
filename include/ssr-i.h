@@ -324,6 +324,14 @@ extern "C"
         ATTACK_DETECT
     };
 
+    typedef enum
+    {
+        VULNERABILITYLEVEL_CRITICAL = 0,
+        VULNERABILITYLEVEL_IMPORTANT,
+        VULNERABILITYLEVEL_MODERATE,
+        VULNERABILITYLEVEL_LOW
+    } VulnerabilityLevel;
+
 #ifdef __cplusplus
 }
 #endif
