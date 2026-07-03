@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
 #include "round-progressbar.h"
@@ -23,17 +23,16 @@ namespace KS
 {
 namespace BR
 {
-namespace Reports
-{
 RoundProgressBar::RoundProgressBar(const QString &name,
                                    int total,
                                    int conform,
                                    int inconform,
-                                   QWidget *parent) : QWidget(parent),
-                                                      m_name(name),
-                                                      m_total(total),
-                                                      m_conform(conform),
-                                                      m_inconform(inconform)
+                                   QWidget *parent)
+    : QWidget(parent),
+      m_name(name),
+      m_total(total),
+      m_conform(conform),
+      m_inconform(inconform)
 {
     initUI();
 }
@@ -49,7 +48,6 @@ void RoundProgressBar::paintEvent(QPaintEvent *)
     int height = 160;
     int size = qMin(width, height);
 
-    int m_startAngle = 315;
     const QRectF drawingRectF(8.0, 8.0, size, size);
 
     QPen pen;
@@ -70,30 +68,31 @@ void RoundProgressBar::paintEvent(QPaintEvent *)
     if (m_percent != 0)
     {
         int span = 3.6 * m_percent;
-
+        int startAngle = 315;
         painter.save();
         pen.setBrush(QColor("#f2f2f2"));
         painter.setPen(pen);
-        painter.drawArc(drawingRectF, (m_startAngle - 0) * 16, (span + 0) * 16);
+        painter.drawArc(drawingRectF, (startAngle)*16, (span + 0) * 16);
         painter.restore();
 
         painter.save();
         pen.setWidth(8);
         pen.setBrush(QColor("#f2f2f2"));
         painter.setPen(pen);
-        painter.drawArc(drawingRectF, m_startAngle * 16, span * 16);
+        painter.drawArc(drawingRectF, startAngle * 16, span * 16);
         painter.restore();
     }
 }
 
 void RoundProgressBar::initUI()
 {
-    if (m_total == 0)
-        m_percent = 0;
-    else
+    m_percent = 0;
+    if (m_total > 0)
+    {
         m_percent = m_conform / (float)m_total * 100;
+    }
 
-    sizeHint();
+    this->KS::BR::RoundProgressBar::sizeHint();
     setFixedSize(379, 250);
 
     m_percentLabel = new QLabel(this);
@@ -119,6 +118,5 @@ void RoundProgressBar::initUI()
     m_noteLabel->move(0, 220);
     m_noteLabel->setText(QString(tr("Total: %1 conform: %2 inconform: %3")).arg(m_total).arg(m_conform).arg(m_inconform));
 }
-}  // namespace Reports
 }  // namespace BR
 }  // namespace KS

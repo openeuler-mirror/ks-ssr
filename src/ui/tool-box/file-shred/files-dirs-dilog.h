@@ -12,26 +12,29 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
-#include "password-event-filter.h"
-#include <QKeyEvent>
-#include "common/ssr-marcos-ui.h"
+#pragma once
+#include <QFileDialog>
 
 namespace KS
 {
-PasswordEventFilter::PasswordEventFilter(QObject *parent)
-    : QObject(parent)
+namespace ToolBox
 {
-}
-
-bool PasswordEventFilter::eventFilter(QObject *watched, QEvent *event)
+// 继承QFileDialog，自定义accept时的处理（关闭对话框）用于同时选中文件以及文件夹使用
+class FilesDirsDilog : public QFileDialog
 {
-    if (event->type() == QEvent::KeyPress)
+    Q_OBJECT
+public:
+    FilesDirsDilog(QWidget *parent)
+        : QFileDialog(parent)
     {
-        auto keyEvent = dynamic_cast<QKeyEvent *>(event);
-        RETURN_VAL_IF_TRUE(keyEvent->matches(QKeySequence::Copy) || keyEvent->matches(QKeySequence::Paste) || keyEvent->matches(QKeySequence::Cut), true);
     }
+    virtual ~FilesDirsDilog(){};
 
-    return QObject::eventFilter(watched, event);
-}
-
+public slots:
+    void selectedAccept()
+    {
+        QDialog::accept();
+    };
+};
+}  // namespace ToolBox
 }  // namespace KS

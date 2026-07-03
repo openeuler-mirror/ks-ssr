@@ -16,8 +16,8 @@
 #include <sqlcipher/sqlite3.h>
 #include <QDir>
 #include <QTextStream>
-#include <QVector>
 #include <QVariant>
+#include <QVector>
 #include "config.h"
 
 #define PLAINTEXT_DB_PATH SSR_INSTALL_DATADIR "/ssr.dat"
@@ -26,11 +26,6 @@
 
 namespace KS
 {
-
-#pragma message("在 spec 中完成 ssr.dat 到 ssr.db 的迁移")
-#pragma message("使用 \%config 标记数据库")
-#warning "发布时记得修改密码"
-
 Database::Database()
 {
     QDir dir;
@@ -58,10 +53,11 @@ bool Database::exec(const QString& cmd, SqlDataType* const result)
     KLOG_DEBUG() << "Exec sql cmd: " << cmd;
     if (result == nullptr)
     {
-        rc = sqlite3_exec(m_db, cmd.toLatin1(), nullptr, result, nullptr);
+        rc = sqlite3_exec(m_db, cmd.toLocal8Bit(), nullptr, result, nullptr);
         return checkExec(rc, cmd);
     }
-    auto callback = [](void* callback_arg, int argc, char** argv, char** azColName) -> int {
+    auto callback = [](void* callback_arg, int argc, char** argv, char** azColName) -> int
+    {
         auto ret = reinterpret_cast<SqlDataType*>(callback_arg);
         SqlRowDataType row;
         row.reserve(argc);
@@ -72,7 +68,7 @@ bool Database::exec(const QString& cmd, SqlDataType* const result)
         ret->append(row);
         return SQLITE_OK;
     };
-    rc = sqlite3_exec(m_db, cmd.toLatin1(), callback, result, nullptr);
+    rc = sqlite3_exec(m_db, cmd.toLocal8Bit(), callback, result, nullptr);
     return checkExec(rc, cmd);
 }
 

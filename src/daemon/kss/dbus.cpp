@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
  * ks-ssr is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 #include "dbus.h"
 
@@ -26,9 +26,12 @@
 #include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
 #include "lib/base/error.h"
+#include "src/daemon/account/manager.h"
+#include "src/daemon/common/dbus-helper.h"
 #include "src/daemon/common/polkit-proxy.h"
 #include "src/daemon/kss/wrapper.h"
 #include "src/daemon/kss_dbus_adaptor.h"
+#include "src/daemon/log/manager.h"
 
 namespace KS
 {
@@ -52,7 +55,8 @@ void DBus::globalDeinit()
     }
 }
 
-DBus::DBus(QObject *parent) : QObject(parent)
+DBus::DBus(QObject *parent)
+    : QObject(parent)
 {
     m_dbusAdaptor = new KSSDbusAdaptor(this);
 
@@ -246,8 +250,15 @@ QJsonDocument DBus::trustedProtectedListToJsonDocument(const QStringList &fileLi
 
 void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
+    auto calledUniqueName = message.service();
+    // 通过后缀区分执行/内核文件
+    QFileInfo fileInfo(filePath);
+    auto isKernelFile = fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz";
     if (filePath.isEmpty())
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      isKernelFile ? tr("Failed to add kernel files,") : tr("Failed to add execute files,") + tr(" file path is empty."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
@@ -259,23 +270,39 @@ void DBus::addTPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      isKernelFile ? tr("Failed to add kernel files,") : tr("Failed to add execute files,") + tr("Internal error!"),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
 
     if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      isKernelFile ? tr("Failed to add kernel files,") : tr("Failed to add execute files,") + tr("Internal error!"),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
     emit TrustedFilesChange();
 
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    isKernelFile ? tr("Add kernel files successed. files path is %1").arg(filePath) : tr("Add execute files successed. files path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
+    auto calledUniqueName = message.service();
+    // 通过后缀区分执行/内核文件
+    QFileInfo fileInfo(fileList.at(0));
+    auto isKernelFiles = fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz";
     if (fileList.isEmpty())
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      isKernelFiles ? tr("Failed to add kernel file list,") : tr("Failed to add execute file list,") + tr("file path is empty."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     QJsonDocument jsonDataDoc = trustedProtectedListToJsonDocument(fileList);
@@ -286,38 +313,64 @@ void DBus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     if (jsonDoc.isNull())
     {
         KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      isKernelFiles ? tr("Failed to add kernel file list,") : tr("Failed to add execute file list,") + tr("Internal error!"),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message)
     }
 
     if (jsonDoc.object().value(SSR_KSS_JK_COUNT).toInt() == 0)
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      isKernelFiles ? tr("Failed to add kernel file list.") : tr("Failed to add execute file list.") + tr("Internal error!"),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TP_ADD_INVALID_FILE, message)
     }
 
     emit TrustedFilesChange();
 
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    isKernelFiles ? tr("Add kernel files successed.") : tr("Add execute files successed.") + tr(" file path is %1").arg(fileList.join(", ")),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::removeTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
+    auto calledUniqueName = message.service();
+    // 通过后缀区分执行/内核文件
+    QFileInfo fileInfo(filePath);
+    auto isKernelFile = fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz";
     if (filePath.isEmpty())
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      isKernelFile ? tr("Failed to remove kernel file,") : tr("Failed to remove execute file,") + tr("file path is empty."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     Wrapper::getDefault()->removeTrustedFile(filePath);
     emit TrustedFilesChange();
 
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    isKernelFile ? tr("Remove kernel file. files path is %1").arg(filePath) : tr("Remove execute file. files path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
+    auto calledUniqueName = message.service();
+    // 通过后缀区分执行/内核文件
+    QFileInfo fileInfo(fileList.at(0));
+    auto isKernelFiles = fileInfo.suffix() == "ko" || fileInfo.suffix() == "ko.xz";
     if (fileList.isEmpty())
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      isKernelFiles ? tr("Failed to remove kernel file list.") : tr("Failed to remove execute file list.") + tr(" file path is empty."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     QJsonDocument jsonDoc = trustedProtectedListToJsonDocument(fileList);
@@ -325,32 +378,47 @@ void DBus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const QS
 
     emit TrustedFilesChange();
 
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    isKernelFiles ? tr("Remove kernel file successed.") : tr("Remove execute file successed.") + tr(" file path is %1").arg(fileList.join(", ")),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool prohibited, const QString &filePath)
 {
+    auto calledUniqueName = message.service();
     if (filePath.isEmpty())
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::TRUSTED_PROTECTION,
+                      tr("Failed to prohibit unloading. file path is empty"),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     Wrapper::getDefault()->prohibitUnloading(prohibited, filePath);
-    // emit TrustedFilesChange();
-
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TRUSTED_PROTECTION,
+                    tr("Prohibit unloading. file path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::addFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
+    auto calledUniqueName = message.service();
     if (filePath.isEmpty())
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to add files protection, file path is empty"),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
     if (!checkFPDuplicateFiles(filePath, message))
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to add files protection. file path is %1").arg(filePath),
+                      calledUniqueName);
         return;
     }
 
@@ -360,14 +428,21 @@ void DBus::addFPFileAfterAuthorization(const QDBusMessage &message, const QStrin
     Wrapper::getDefault()->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
     emit ProtectedFilesChange();
 
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Add files protection. file path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
+    auto calledUniqueName = message.service();
     if (fileList.isEmpty())
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to add files protection, file path is empty."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
@@ -375,42 +450,64 @@ void DBus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QStri
     Wrapper::getDefault()->addFiles(QString(jsonDoc.toJson()));
 
     emit ProtectedFilesChange();
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Add files protection, file path is %1").arg(fileList.join(", ")),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::removeFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
+    auto calledUniqueName = message.service();
     if (filePath.isEmpty())
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to remove files protection, file path is empty."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
 
     Wrapper::getDefault()->removeFile(filePath);
     emit ProtectedFilesChange();
 
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Remove files protection. file path is %1").arg(filePath),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList)
 {
+    auto calledUniqueName = message.service();
     if (fileList.isEmpty())
     {
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message)
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to remove files protection, file path is empty."),
+                      calledUniqueName);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
     }
     QJsonDocument jsonDoc = fileProtectedListToJsonDocument(fileList);
     Wrapper::getDefault()->removeFiles(QString(jsonDoc.toJson()));
 
     emit ProtectedFilesChange();
+
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Remove files protection, file path is %1").arg(fileList.join(", ")),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
 
 void DBus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint type, const QString &userPin)
 {
+    auto calledUniqueName = message.service();
     if (KSS_DEFAULT_USER_PIN != userPin)
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to set storage mode."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_USER_PIN_ERROR, message)
     }
 
@@ -418,9 +515,14 @@ void DBus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint ty
 
     if (!error.isEmpty())
     {
+        SSR_LOG_ERROR(Log::Manager::LogType::FILES_PROTECTION,
+                      tr("Failed to set storage mode."),
+                      calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED, message)
     }
-
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Set storage mode. Status is %1").arg(type == SSR_KSS_TRUSTED_STORAGE_TYPE_SOFT ? tr("soft storage") : tr("hard storage")),
+                    calledUniqueName);
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
 }
@@ -428,6 +530,10 @@ void DBus::setStorageModeAfterAuthorization(const QDBusMessage &message, uint ty
 void DBus::setTrustedStatusAfterAuthorization(const QDBusMessage &message, bool status)
 {
     Wrapper::getDefault()->setTrustedStatus(status);
+    auto calledUniqueName = message.service();
+    SSR_LOG_SUCCESS(Log::Manager::LogType::FILES_PROTECTION,
+                    tr("Set trusted status is %1").arg(status ? tr("open") : tr("close")),
+                    calledUniqueName);
 
     auto replyMessage = message.createReply();
     QDBusConnection::systemBus().send(replyMessage);
