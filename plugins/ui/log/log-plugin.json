@@ -1,0 +1,10 @@
+{
+    "id": "log",
+    "workPages" : [
+        {
+            "pageUID" : "log-audit",
+            "requireRoleName" : "audadm",
+            "requireDaemon" : ""
+        }
+    ]
+}

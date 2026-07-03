@@ -30,12 +30,6 @@ qt5_add_dbus_interface(
   DAEMON_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.xml daemon_proxy)
 
 set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Log.xml
-  PROPERTIES CLASSNAME LogProxy NO_NAMESPACE true)
-qt5_add_dbus_interface(
-  LOG_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Log.xml log_proxy)
-
-set_source_files_properties(
   ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Account.xml
   PROPERTIES CLASSNAME AccountProxy NO_NAMESPACE true)
 qt5_add_dbus_interface(
@@ -89,13 +83,7 @@ add_executable(
   ${UI_H_FILES}
   ${UI_CPP_FILES}
   ${DAEMON_SRCS}
-  ${BOX_MANAGER_SRCS}
-  ${KSS_DBUS_SRCS}
-  ${LOG_SRCS}
-  ${TOOL_BOX_DBUS_SRCS}
   ${ACCOUNT_SRCS}
-  ${VULNERABILITY_SRCS}
-  ${BR_PROTOCOL_OUTPUT}
   ${QM_FILES}
   ${UI_FILES}
   "${PROJECT_SOURCE_DIR}/resources/resources.qrc")

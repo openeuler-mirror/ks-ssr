@@ -11,6 +11,10 @@ if(ENABLE_KSS)
   add_subdirectory(tp)
 endif()
 
+if(ENABLE_LOG_AUDIT)
+  add_subdirectory(log)
+endif()
+
 if(ENABLE_PRIVATE_BOX)
   add_subdirectory(private-box)
 endif()

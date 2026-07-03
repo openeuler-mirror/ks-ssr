@@ -12,16 +12,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 add_compile_options(-Wall)
 
 option(EXTRA_COMPILE_CHECK "Enable extra compile check" OFF)
-# option(ENABLE_ACCOUNT "Enable account" ON) option(ENABLE_LOG "Enable log
-# support" ON)
 
 # 由于禁用日志和账户模块后编译无法通过，所以只能启用。
-set(ENABLE_ACCOUNT ON)
 set(ENABLE_LOG ON)
 
 option(ENABLE_BR "Enable base reinforcements module" ON)
 option(ENABLE_HDMI_SUPPORT "Enable HDMI support" OFF)
 option(ENABLE_KSS "Enable KSS module" OFF)
+option(ENABLE_LOG_AUDIT "Enable log audit module" OFF)
 option(ENABLE_PRIVATE_BOX "Enable private box module" OFF)
 option(ENABLE_TOOL_BOX "Enable tool box module" OFF)
 option(ENABLE_DEVICE_MANAGER "Enable device manager module" OFF)
@@ -31,14 +29,14 @@ option(ENABLE_ACCOUNTS_MANAGER "Enable accounts manager support" OFF)
 option(USE_PYTHON3 "Enable tool box module" OFF)
 
 message(STATUS "EXTRA_COMPILE_CHECK: ${EXTRA_COMPILE_CHECK}")
-message(STATUS "ENABLE_ACCOUNT: ${ENABLE_ACCOUNT}")
 message(STATUS "ENABLE_HDMI_SUPPORT: ${ENABLE_HDMI_SUPPORT}")
 message(STATUS "ENABLE_KSS: ${ENABLE_KSS}")
-message(STATUS "ENABLE_LOG: ${ENABLE_LOG}")
+message(STATUS "ENABLE_LOG_AUDIT: ${ENABLE_LOG_AUDIT}")
 message(STATUS "ENABLE_PRIVATE_BOX: ${ENABLE_PRIVATE_BOX}")
 message(STATUS "ENABLE_TOOL_BOX: ${ENABLE_TOOL_BOX}")
 message(STATUS "ENABLE_DEVICE_MANAGER: ${ENABLE_DEVICE_MANAGER}")
 message(STATUS "ENABLE_VULNERABILITY_MANAGER: ${ENABLE_VULNERABILITY_MANAGER}")
+message(STATUS "ENABLE_ACCOUNTS_MANAGER: ${ENABLE_ACCOUNTS_MANAGER}")
 message(STATUS "USE_PYTHON3: ${USE_PYTHON3}")
 
 if(EXTRA_COMPILE_CHECK)

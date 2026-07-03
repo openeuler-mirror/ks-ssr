@@ -12,7 +12,7 @@
  * Author:     chendingjian <chendingjian@kylinsec.com.cn>
  */
 
-#include "src/ui/log/log-page.h"
+#include "log-page.h"
 #include <qt5-log-i.h>
 #include <QDateTime>
 #include <QWidgetAction>
@@ -20,9 +20,9 @@
 #include "lib/widgets/date-picker/date-picker.h"
 #include "lib/widgets/ssr-marcos-ui.h"
 #include "lib/widgets/table/pagination.h"
-#include "src/ui/log_proxy.h"
-#include "src/ui/ui_log-page.h"
+#include "log_proxy.h"
 #include "ssr-i.h"
+#include "ui_log-page.h"
 
 namespace KS
 {
