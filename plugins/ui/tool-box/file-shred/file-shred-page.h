@@ -27,7 +27,7 @@ namespace KS
 {
 namespace ToolBox
 {
-class FileShredPage : public Page
+class FileShredPage : public WorkPage
 {
     Q_OBJECT
 public:

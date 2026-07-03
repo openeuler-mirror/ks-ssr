@@ -14,11 +14,12 @@
 
 #pragma once
 
-#include <QWidget>
+#include <page.h>
+#include "progress.h"
 
 namespace Ui
 {
-class BaselineReinforcement;
+class BRSettingPage;
 }
 
 class BRDbusProxy;
@@ -28,18 +29,17 @@ namespace KS
 namespace BR
 {
 class Category;
-}  // namespace BR
 
-namespace Settings
-{
-class BaselineReinforcement : public QWidget
+class BRSettingPage : public SettingPage
 {
     Q_OBJECT
 
 public:
-    explicit BaselineReinforcement(QWidget *parent = nullptr);
-    ~BaselineReinforcement();
+    explicit BRSettingPage(QWidget *parent = nullptr);
+    virtual ~BRSettingPage();
     uint getFallbackStatus();
+
+    virtual QString getTitle();
 
 private:
     void initConnection();
@@ -60,7 +60,7 @@ signals:
     void resetAllArgsClicked();
 
 private:
-    Ui::BaselineReinforcement *m_ui;
+    Ui::BRSettingPage *m_ui;
 
     QTimer *m_timedScan;
     QList<KS::BR::Category *> m_categories = {};
@@ -68,5 +68,5 @@ private:
 
     BRDbusProxy *m_dbusProxy;
 };
-}  // namespace Settings
+}  // namespace BR
 }  // namespace KS

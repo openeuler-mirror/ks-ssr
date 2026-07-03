@@ -29,7 +29,7 @@ namespace ToolBox
 class ModifySecurityContext;
 class AddUserDialog;
 
-class FileSign : public Page
+class FileSign : public WorkPage
 {
     Q_OBJECT
 public:

@@ -33,7 +33,7 @@ namespace KS
 namespace ToolBox
 {
 FileSign::FileSign(QWidget* parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::FileSignPage),
       m_modifySecurityContext(nullptr),
       m_inputUsers(nullptr)

@@ -12,32 +12,37 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
+#pragma once
+
 #include <ui-plugin-i.h>
-#include <QMap>
-#include <QObject>
-#include <QString>
-#include <functional>
+#include "device-list-page.h"
+#include "dm-setting-page.h"
 
 namespace KS
 {
 namespace DM
 {
-class DMPlugin : public QObject,
-                 public IUIPlugin
+class DMPlugin : public UIPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID IUI_IID FILE "dm-plugin.json")
     Q_INTERFACES(KS::IUIPlugin)
 
 public:
-    DMPlugin();
+    DMPlugin()
+    {
+        m_workPageBuilder = {
+            {QString("device-management"), []() -> WorkPage*
+             {
+                 return new DeviceListPage();
+             }}};
 
-    // 创建页面
-    virtual Page* createPage(const QString& pageUID);
-
-private:
-    // <pageUID, 创建page对象的函数>
-    QMap<QString, std::function<Page*()>> m_pageBuilder;
+        m_settingPageBuilder = {
+            {QString("dm-setting"), []() -> SettingPage*
+             {
+                 return new DMSettingPage();
+             }}};
+    }
 };
 
 }  // namespace DM

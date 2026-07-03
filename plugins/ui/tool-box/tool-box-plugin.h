@@ -12,32 +12,52 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
+#pragma once
+
 #include <ui-plugin-i.h>
-#include <QMap>
-#include <QObject>
-#include <QString>
-#include <functional>
+#include "access-control/access-control-page.h"
+#include "authentication-setting-page.h"
+#include "file-shred/file-shred-page.h"
+#include "file-sign/file-sign-page.h"
+#include "privacy-cleanup/privacy-cleanup-page.h"
 
 namespace KS
 {
 namespace ToolBox
 {
-class ToolBoxPlugin : public QObject,
-                      public IUIPlugin
+class ToolBoxPlugin : public UIPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID IUI_IID FILE "tool-box-plugin.json")
     Q_INTERFACES(KS::IUIPlugin)
 
 public:
-    ToolBoxPlugin();
+    ToolBoxPlugin()
+    {
+        m_workPageBuilder = {
+            {QString("access-control"), []() -> WorkPage*
+             {
+                 return new AccessControlPage();
+             }},
+            {QString("file-shred"), []() -> WorkPage*
+             {
+                 return new FileShredPage();
+             }},
+            {QString("file-sign"), []() -> WorkPage*
+             {
+                 return new FileSign();
+             }},
+            {QString("privacy-cleanup"), []() -> WorkPage*
+             {
+                 return new PrivacyCleanupPage();
+             }}};
 
-    // 创建页面
-    virtual Page* createPage(const QString& pageUID);
-
-private:
-    // <pageUID, 创建page对象的函数>
-    QMap<QString, std::function<Page*()>> m_pageBuilder;
+        m_settingPageBuilder = {
+            {QString("authentication-setting"), []() -> SettingPage*
+             {
+                 return new AuthenticationSettingPage();
+             }}};
+    }
 };
 
 }  // namespace ToolBox

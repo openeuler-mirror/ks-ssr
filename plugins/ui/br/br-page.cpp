@@ -24,7 +24,7 @@ namespace KS
 namespace BR
 {
 BRPage::BRPage(QWidget *parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_strategyType(BR_STRATEGY_TYPE_SYSTEM)
 {
     initUI();

@@ -27,7 +27,7 @@ namespace KS
 namespace DM
 {
 DeviceLogPage::DeviceLogPage(QWidget *parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::DeviceLogPage),
       m_deviceManagerProxy(nullptr)
 {

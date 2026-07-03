@@ -31,7 +31,7 @@ namespace KS
 namespace PrivateBox
 {
 BoxPage::BoxPage(QWidget *parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::BoxPage()),
       m_createBox(nullptr)
 {

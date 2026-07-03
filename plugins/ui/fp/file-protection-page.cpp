@@ -29,7 +29,7 @@ namespace KS
 namespace FP
 {
 FileProtectionPage::FileProtectionPage(QWidget *parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::FileProtectionPage())
 {
     m_ui->setupUi(this);

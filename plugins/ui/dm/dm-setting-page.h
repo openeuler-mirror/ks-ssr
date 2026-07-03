@@ -14,31 +14,32 @@
 
 #pragma once
 
+#include <page.h>
+#include <ssr-i.h>
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QWidget>
-#include "include/ssr-i.h"
-#include "src/ui/device_manager_proxy.h"
+#include "device_manager_proxy.h"
 
 struct Interface
 {
-    Interface() = default;
     InterfaceType type;
     bool enable;
 };
 
 namespace KS
 {
-namespace Settings
+namespace DM
 {
-class RespondDialog;
-class DeviceControl : public QWidget
+class DMSettingPage : public SettingPage
 {
     Q_OBJECT
 
 public:
-    explicit DeviceControl(QWidget *parent = nullptr);
-    ~DeviceControl();
+    explicit DMSettingPage(QWidget *parent = nullptr);
+    ~DMSettingPage();
+
+    virtual QString getTitle();
 
 private:
     void initUI();
@@ -59,10 +60,9 @@ private:
     QGridLayout *m_usbLayout;
     QGridLayout *m_kbdMouseLayout;
     QWidget *m_kbdMouseContent;
-    //绑定接口控制QCheckbox以及接口类型
+    // 绑定接口控制QCheckbox以及接口类型
     QMap<InterfaceType, QCheckBox *> m_checkboxs;
     QCheckBox *m_clickedCheckbox;
-    RespondDialog *m_respondDlg;
 };
-}  // namespace Settings
+}  // namespace DM
 }  // namespace KS

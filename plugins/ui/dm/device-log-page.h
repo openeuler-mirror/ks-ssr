@@ -27,7 +27,7 @@ namespace KS
 {
 namespace DM
 {
-class DeviceLogPage : public Page
+class DeviceLogPage : public WorkPage
 {
     Q_OBJECT
 

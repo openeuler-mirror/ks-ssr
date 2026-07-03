@@ -1,6 +1,6 @@
 {
     "id": "tp",
-    "pages" : [
+    "workPages" : [
         {
             "pageUID" : "execute-protection",
             "requireRoleName" : "secadm",
@@ -8,6 +8,13 @@
         },
         {
             "pageUID" : "kernel-protection",
+            "requireRoleName" : "secadm",
+            "requireDaemon" : "ssr"
+        }
+    ],
+    "settingPages" : [
+        {
+            "pageUID" : "tp-setting",
             "requireRoleName" : "secadm",
             "requireDaemon" : "ssr"
         }

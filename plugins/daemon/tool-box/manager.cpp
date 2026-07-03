@@ -98,8 +98,8 @@ Manager::Manager()
       m_userNameWatcher(new QFileSystemWatcher(QStringList(PASSWD_FILE), this)),
       m_realTimeAlert(new RealTimeAlert()),
       m_uidReuseConfig(new QSettings(UID_REUSE_CONTROL_PATH, QSettings::IniFormat, this)),
-      m_isUidReusable(!!(m_uidReuseConfig->value(UID_REUSE_CONTROL_KEY, 0).toInt())),
-      m_db(new Database())
+      m_db(new Database()),
+      m_isUidReusable(!!(m_uidReuseConfig->value(UID_REUSE_CONTROL_KEY, 0).toInt()))
 {
     initDatabase();
     new ToolBoxAdaptor(this);

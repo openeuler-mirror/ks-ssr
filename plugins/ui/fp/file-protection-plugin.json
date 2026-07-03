@@ -1,6 +1,6 @@
 {
     "id": "fp",
-    "pages" : [
+    "workPages" : [
         {
             "pageUID" : "file-protection",
             "requireRoleName" : "secadm",

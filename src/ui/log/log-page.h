@@ -14,8 +14,8 @@
 
 #pragma once
 
+#include <page.h>
 #include <QWidget>
-#include "page.h"
 
 class LogProxy;
 
@@ -31,7 +31,7 @@ class DatePicker;
 
 namespace Log
 {
-class LogPage : public Page
+class LogPage : public WorkPage
 {
     Q_OBJECT
 

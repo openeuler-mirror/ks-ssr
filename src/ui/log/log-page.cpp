@@ -31,7 +31,7 @@ namespace Log
 #define MAX_PAGINATION_BUTTON_NUMBER 6
 
 LogPage::LogPage(QWidget *parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::LogPage())
 {
     m_ui->setupUi(this);

@@ -15,34 +15,47 @@
 #pragma once
 
 #include <page.h>
+#include <QButtonGroup>
 
 namespace Ui
 {
-class AccessControlPage;
-}  // namespace Ui
+class TPSettingPage;
+}
+
+class KSSDbusProxy;
 
 namespace KS
 {
-namespace ToolBox
+namespace TP
 {
-class AccessControlPage : public WorkPage
+class TPUserPin;
+
+class TPSettingPage : public SettingPage
 {
     Q_OBJECT
 
 public:
-    AccessControlPage(QWidget* parent = nullptr);
-    virtual ~AccessControlPage();
+    TPSettingPage(QWidget *parent = nullptr);
+    ~TPSettingPage();
 
-    virtual NavigationIndex getNavigationIndex() override;
-    virtual QString getSidebarUID() override;
-    virtual QString getSidebarIcon() override;
-    virtual QString getAccountRoleName() override;
+    virtual QString getTitle();
 
 private:
     void initUI();
+    void updateStorageMode();
+    bool checkTrustedLoadFinied();
+
+private slots:
+    void setTrustedStatus(bool checked);
+    void updateSoftRadio(bool checked);
+    void updateHardRadio(bool checked);
+    void setStorageMode();
 
 private:
-    Ui::AccessControlPage* m_ui;
+    Ui::TPSettingPage *m_ui;
+
+    TPUserPin *m_userPin;
+    KSSDbusProxy *m_kssDbusProxy;
 };
-}  // namespace ToolBox
+}  // namespace TP
 }  // namespace KS

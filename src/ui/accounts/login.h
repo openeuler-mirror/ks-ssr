@@ -25,7 +25,7 @@ class QPushButton;
 namespace KS
 {
 class LicenseProxy;
-namespace Account
+namespace Accounts
 {
 class Login : public TitlebarWindow
 {
@@ -58,5 +58,5 @@ private:
     QPushButton *m_activateStatus;
     QSharedPointer<LicenseProxy> m_licenseProxy;
 };
-}  // namespace Account
+}  // namespace Accounts
 }  // namespace KS

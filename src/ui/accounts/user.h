@@ -21,7 +21,7 @@ class AccountProxy;
 namespace KS
 {
 class PasswordModification;
-namespace Account
+namespace Accounts
 {
 class Login;
 
@@ -63,5 +63,5 @@ private:
     QString m_currentUserName;
 };
 
-}  // namespace Account
+}  // namespace Accounts
 }  // namespace KS

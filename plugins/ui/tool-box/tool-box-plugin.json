@@ -1,6 +1,6 @@
 {
     "id": "tool-box",
-    "pages" : [
+    "workPages" : [
         {
             "pageUID" : "access-control",
             "requireRoleName" : "secadm",
@@ -18,6 +18,13 @@
         },
         {
             "pageUID" : "privacy-cleanup",
+            "requireRoleName" : "secadm",
+            "requireDaemon" : "tool-box"
+        }
+    ],
+    "settingPages" : [
+        {
+            "pageUID" : "authentication-setting",
             "requireRoleName" : "secadm",
             "requireDaemon" : "tool-box"
         }

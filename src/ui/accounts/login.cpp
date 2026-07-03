@@ -28,7 +28,7 @@
 
 namespace KS
 {
-namespace Account
+namespace Accounts
 {
 Login::Login(QWidget *parent)
     : TitlebarWindow(parent),
@@ -135,5 +135,5 @@ void Login::popupActiveDialog()
     activation->show();
 }
 
-}  // namespace Account
+}  // namespace Accounts
 }  // namespace KS

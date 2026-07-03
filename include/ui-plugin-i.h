@@ -14,20 +14,59 @@
 
 #pragma once
 
+#include <QMap>
+#include <QObject>
+#include <QString>
 #include <QtPlugin>
+#include <functional>
 
 namespace KS
 {
 #define IUI_IID "com.kylinsec.ssr.ui.plugin"
 
-class Page;
+class WorkPage;
+class SettingPage;
+
 class IUIPlugin
 {
 public:
     virtual ~IUIPlugin(){};
 
-    // 创建页面
-    virtual Page* createPage(const QString& pageUID) = 0;
+    // 创建主窗口的工作页面
+    virtual WorkPage* createWorkPage(const QString& pageUID) = 0;
+    // 创建设置页面
+    virtual SettingPage* createSettingPage(const QString& pageUID) = 0;
+};
+
+class UIPlugin : public QObject,
+                 public IUIPlugin
+{
+    Q_OBJECT
+
+public:
+    virtual WorkPage* createWorkPage(const QString& pageUID)
+    {
+        auto builder = m_workPageBuilder.value(pageUID);
+        if (builder)
+        {
+            return builder();
+        }
+        return nullptr;
+    }
+    virtual SettingPage* createSettingPage(const QString& pageUID)
+    {
+        auto builder = m_settingPageBuilder.value(pageUID);
+        if (builder)
+        {
+            return builder();
+        }
+        return nullptr;
+    }
+
+protected:
+    // <pageUID, 创建page对象的函数>
+    QMap<QString, std::function<WorkPage*()>> m_workPageBuilder;
+    QMap<QString, std::function<SettingPage*()>> m_settingPageBuilder;
 };
 
 }  // namespace KS

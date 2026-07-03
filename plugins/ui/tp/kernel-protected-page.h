@@ -28,7 +28,7 @@ namespace KS
 {
 namespace TP
 {
-class KernelProtectedPage : public Page
+class KernelProtectedPage : public WorkPage
 {
     Q_OBJECT
 public:

@@ -1,8 +1,15 @@
 {
     "id": "dm",
-    "pages" : [
+    "workPages" : [
         {
             "pageUID" : "device-management",
+            "requireRoleName" : "sysadm",
+            "requireDaemon" : "dm"
+        }
+    ],
+    "settingPages" : [
+        {
+            "pageUID" : "dm-setting",
             "requireRoleName" : "sysadm",
             "requireDaemon" : "dm"
         }

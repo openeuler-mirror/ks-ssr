@@ -12,22 +12,22 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
-#include "device-control.h"
+#include "dm-setting-page.h"
 #include <QCheckBox>
 #include <QLabel>
 #include <QObject>
 #include "lib/widgets/ssr-marcos-ui.h"
 #include "lib/widgets/user-prompt-dialog.h"
-#include "src/ui/dm/utils.h"
+#include "utils.h"
 
 #define INTERFACE_TYPE_PROPERTY "interface type"
 
 namespace KS
 {
-namespace Settings
+namespace DM
 {
-DeviceControl::DeviceControl(QWidget *parent)
-    : QWidget(parent),
+DMSettingPage::DMSettingPage(QWidget *parent)
+    : SettingPage(parent),
       m_deviceManagerProxy(nullptr),
       m_gridLayout(nullptr),
       m_usbLayout(nullptr),
@@ -45,11 +45,17 @@ DeviceControl::DeviceControl(QWidget *parent)
     insertInterfaceWidget();
 }
 
-DeviceControl::~DeviceControl()
+DMSettingPage::~DMSettingPage()
 {
 }
 
-void DeviceControl::initUI()
+QString DMSettingPage::getTitle()
+{
+    // TODO: 这个名称后面要修改，不太通用
+    return tr("Interface Control");
+}
+
+void DMSettingPage::initUI()
 {
     auto vLayout = new QVBoxLayout(this);
     vLayout->setSpacing(12);
@@ -79,7 +85,7 @@ void DeviceControl::initUI()
     vLayout->addStretch(1);
 }
 
-void DeviceControl::insertInterfaceWidget()
+void DMSettingPage::insertInterfaceWidget()
 {
     RETURN_IF_TRUE(m_interfaces.size() < 1);
 
@@ -131,13 +137,13 @@ void DeviceControl::insertInterfaceWidget()
             count++;
         }
 
-        connect(stateCheckBox, &QCheckBox::clicked, this, &DeviceControl::setInterfaceState);
+        connect(stateCheckBox, &QCheckBox::clicked, this, &DMSettingPage::setInterfaceState);
     }
 
     m_kbdMouseContent->setVisible(!usbEnabled);
 }
 
-void DeviceControl::update()
+void DMSettingPage::update()
 {
     m_interfaces.clear();
     m_interfaces = getInterfaces();
@@ -154,7 +160,7 @@ void DeviceControl::update()
     }
 }
 
-QList<Interface> DeviceControl::getInterfaces()
+QList<Interface> DMSettingPage::getInterfaces()
 {
     QList<Interface> interfaces;
     auto reply = m_deviceManagerProxy->GetInterfaces();
@@ -183,11 +189,11 @@ QList<Interface> DeviceControl::getInterfaces()
     return interfaces;
 }
 
-void DeviceControl::popupMessageDialog(const QString &text)
+void DMSettingPage::popupMessageDialog(const QString &text)
 {
     auto notify = new UserPromptDialog(this);
-    connect(notify, &UserPromptDialog::accepted, this, &DeviceControl::accept);
-    connect(notify, &UserPromptDialog::rejected, this, &DeviceControl::reject);
+    connect(notify, &UserPromptDialog::accepted, this, &DMSettingPage::accept);
+    connect(notify, &UserPromptDialog::rejected, this, &DMSettingPage::reject);
     notify->setNotifyMessage(tr("Switch"), text);
     auto x = window()->x() + window()->width() / 2 - notify->width() / 2;
     auto y = window()->y() + window()->height() / 2 - notify->height() / 2;
@@ -195,7 +201,7 @@ void DeviceControl::popupMessageDialog(const QString &text)
     notify->show();
 }
 
-void DeviceControl::setInterfaceState(bool checked)
+void DMSettingPage::setInterfaceState(bool checked)
 {
     auto state = checked;
     auto stateCheckBox = qobject_cast<QCheckBox *>(sender());
@@ -216,7 +222,7 @@ void DeviceControl::setInterfaceState(bool checked)
     }
 }
 
-void DeviceControl::accept()
+void DMSettingPage::accept()
 {
     auto type = m_checkboxs.key(m_clickedCheckbox);
     auto state = m_clickedCheckbox->isChecked();
@@ -232,9 +238,9 @@ void DeviceControl::accept()
     update();
 }
 
-void DeviceControl::reject()
+void DMSettingPage::reject()
 {
     m_clickedCheckbox->setChecked(!m_clickedCheckbox->isChecked());
 }
-}  // namespace Settings
+}  // namespace DM
 }  // namespace KS

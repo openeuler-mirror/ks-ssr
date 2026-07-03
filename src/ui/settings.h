@@ -11,35 +11,43 @@
  *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
+
 #pragma once
 
-#include <QWidget>
+#include <page.h>
+#include "lib/widgets/window/titlebar-window.h"
 
 namespace Ui
 {
-class IdentityAuthentication;
+class Settings;
 }
-
-class ToolBoxDbusProxy;
-
 namespace KS
 {
-namespace Settings
-{
-class IdentityAuthentication : public QWidget
+class Settings : public TitlebarWindow
 {
     Q_OBJECT
-
 public:
-    explicit IdentityAuthentication(QWidget *parent = nullptr);
-    ~IdentityAuthentication();
+    Settings(QWidget *parent = nullptr);
+    virtual ~Settings();
+
+    void setSettingPages(const QVector<SettingPage *> &settingPages);
+
+    void addSidebars(const QStringList &sidebarNames);
+    // 获取回退状态，当退回进行中时，不允许用户退出
+    // uint getFallbackStatus();
 
 private:
-    void initConnection();
+    void initUI();
+    void initSidebar();
+    void initSubPage();
+    void addSubPage(const QString &sidebarName);
+
+signals:
+    void exportStrategyClicked();
+    void resetAllArgsClicked();
 
 private:
-    Ui::IdentityAuthentication *m_ui;
-    ToolBoxDbusProxy *m_toolBoxProxy;
+    Ui::Settings *m_ui;
 };
-}  // namespace Settings
+
 }  // namespace KS

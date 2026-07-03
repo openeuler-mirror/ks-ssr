@@ -12,32 +12,30 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
+#pragma once
+
 #include <ui-plugin-i.h>
-#include <QMap>
-#include <QObject>
-#include <QString>
-#include <functional>
+#include "file-protection-page.h"
 
 namespace KS
 {
 namespace FP
 {
-class FileProtectionPlugin : public QObject,
-                             public IUIPlugin
+class FileProtectionPlugin : public UIPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID IUI_IID FILE "file-protection-plugin.json")
     Q_INTERFACES(KS::IUIPlugin)
 
 public:
-    FileProtectionPlugin();
-
-    // 创建页面
-    virtual Page* createPage(const QString& pageUID);
-
-private:
-    // <pageUID, 创建page对象的函数>
-    QMap<QString, std::function<Page*()>> m_pageBuilder;
+    FileProtectionPlugin()
+    {
+        m_workPageBuilder = {
+            {QString("file-protection"), []() -> WorkPage*
+             {
+                 return new FileProtectionPage();
+             }}};
+    }
 };
 
 }  // namespace FP

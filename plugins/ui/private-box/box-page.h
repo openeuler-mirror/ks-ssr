@@ -32,7 +32,7 @@ namespace PrivateBox
 class BoxCreation;
 class Box;
 
-class BoxPage : public Page
+class BoxPage : public WorkPage
 {
     Q_OBJECT
 public:

@@ -25,7 +25,7 @@ namespace KS
 {
 namespace ToolBox
 {
-class PrivacyCleanupPage : public Page
+class PrivacyCleanupPage : public WorkPage
 {
     Q_OBJECT
 public:

@@ -1,6 +1,6 @@
 {
     "id": "remote",
-    "pages" : [
+    "workPages" : [
         {
             "pageUID" : "remote-management",
             "requireRoleName" : "sysadm",

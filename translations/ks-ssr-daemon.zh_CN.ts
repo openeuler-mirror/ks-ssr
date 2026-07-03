@@ -895,16 +895,16 @@
     </message>
     <message>
         <location filename="../src/ui/about.cpp" line="51"/>
-        <source>Version : V1.2</source>
-        <translation>版本号：V1.2</translation>
+        <source>Version : V1.3</source>
+        <translation>版本号：V1.3</translation>
     </message>
     <message>
-        <source>Security reinforcement sofware V1.2</source>
-        <translation type="vanished">主机安全加固软件V1.2</translation>
+        <source>Security reinforcement sofware V1.3</source>
+        <translation type="vanished">主机安全加固软件V1.3</translation>
     </message>
     <message>
-        <source>Security reinforcement sofware V1.0</source>
-        <translation type="vanished">安全加固软件V1.0</translation>
+        <source>Security reinforcement sofware V1.3</source>
+        <translation type="vanished">安全加固软件V1.3</translation>
     </message>
 </context>
 <context>

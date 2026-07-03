@@ -12,20 +12,20 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
-#include "identity-authentication.h"
-#include "common/ssr-marcos-ui.h"
-#include "common/user-prompt-dialog.h"
-#include "include/ssr-i.h"
-#include "src/ui/toolbox_dbus_proxy.h"
-#include "ui_identity-authentication.h"
+#include "authentication-setting-page.h"
+#include <ssr-i.h>
+#include "lib/widgets/ssr-marcos-ui.h"
+#include "lib/widgets/user-prompt-dialog.h"
+#include "toolbox_dbus_proxy.h"
+#include "ui_authentication-setting-page.h"
 
 namespace KS
 {
-namespace Settings
+namespace ToolBox
 {
-IdentityAuthentication::IdentityAuthentication(QWidget *parent)
-    : QWidget(parent),
-      m_ui(new Ui::IdentityAuthentication)
+AuthenticationSettingPage::AuthenticationSettingPage(QWidget *parent)
+    : SettingPage(parent),
+      m_ui(new Ui::AuthenticationSettingPage)
 {
     m_ui->setupUi(this);
     m_toolBoxProxy = new ToolBoxDbusProxy(SSR_DBUS_NAME,
@@ -35,12 +35,17 @@ IdentityAuthentication::IdentityAuthentication(QWidget *parent)
     initConnection();
 }
 
-IdentityAuthentication::~IdentityAuthentication()
+AuthenticationSettingPage::~AuthenticationSettingPage()
 {
     delete m_ui;
 }
 
-void IdentityAuthentication::initConnection()
+QString AuthenticationSettingPage::getTitle()
+{
+    return tr("Identity authentication");
+}
+
+void AuthenticationSettingPage::initConnection()
 {
     m_ui->m_twoFactor->setCheckState(m_toolBoxProxy->GetMultiFactorAuthState() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     connect(m_ui->m_twoFactor, &QCheckBox::clicked, this, [this](bool checked)
@@ -79,5 +84,5 @@ void IdentityAuthentication::initConnection()
                 CHECK_ERROR_FOR_DBUS_REPLY(reply);
             });
 }
-}  // namespace Settings
+}  // namespace ToolBox
 }  // namespace KS

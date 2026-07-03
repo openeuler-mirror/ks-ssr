@@ -25,7 +25,7 @@ namespace KS
 {
 namespace Remote
 {
-class RemotePage : public Page
+class RemotePage : public WorkPage
 {
     Q_OBJECT
 public:

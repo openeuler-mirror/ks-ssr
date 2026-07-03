@@ -34,7 +34,7 @@ namespace KS
 namespace ToolBox
 {
 FileShredPage::FileShredPage(QWidget *parent)
-    : Page(parent),
+    : WorkPage(parent),
       m_ui(new Ui::FileShredPage)
 {
     m_dbusProxy = new ToolBoxDbusProxy(SSR_DBUS_NAME,

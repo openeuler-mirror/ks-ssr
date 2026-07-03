@@ -10,8 +10,10 @@ qt5_add_dbus_interface(
   TOOL_BOX_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.ToolBox.xml
   toolbox_dbus_proxy)
 
+qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+
 add_library(${TARGET_NAME} SHARED ${TOOL_BOX_H_FILES} ${TOOL_BOX_CPP_FILES}
-                                  ${TOOL_BOX_DBUS_SRCS})
+                                  ${TOOL_BOX_DBUS_SRCS} ${UI_FILES})
 
 target_include_directories(
   ${TARGET_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}

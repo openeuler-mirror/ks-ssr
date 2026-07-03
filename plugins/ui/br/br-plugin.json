@@ -1,9 +1,16 @@
 {
     "id": "br",
-    "pages" : [
+    "workPages" : [
         {
-            "pageUID" : "baseline-reinforcement",
-            "requireRoleName" : "",
+            "pageUID" : "br",
+            "requireRoleName" : "sysadm",
+            "requireDaemon" : "br"
+        }
+    ],
+    "settingPages" : [
+        {
+            "pageUID" : "br-setting",
+            "requireRoleName" : "sysadm",
             "requireDaemon" : "br"
         }
     ]
