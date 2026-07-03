@@ -48,7 +48,7 @@ enum DevicePermissionType
     DEVICE_PERMISSION_TYPE_EXEC = (1 << 2)
 };
 
-class DevicePermission : public QWidget
+class DevicePermission : public TitlebarWindow
 {
     Q_OBJECT
 
@@ -62,6 +62,7 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event);
 
 private slots:
     void confirm();

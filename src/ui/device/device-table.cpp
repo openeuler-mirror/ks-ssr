@@ -31,6 +31,7 @@ DeviceTable::DeviceTable(QWidget *parent) : QTableView(parent)
     this->setSelectionMode(QAbstractItemView::NoSelection);
     this->setEditTriggers(QAbstractItemView::NoEditTriggers);
     this->setFocusPolicy(Qt::NoFocus);
+    this->setMouseTracking(true);
 
     // 设置Model
     m_model = new QStandardItemModel(this);
@@ -41,7 +42,7 @@ DeviceTable::DeviceTable(QWidget *parent) : QTableView(parent)
 
     // 设置水平行表头
     auto horizontalHeader = this->horizontalHeader();
-    this->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    horizontalHeader->setSectionResizeMode(QHeaderView::Fixed);
     horizontalHeader->setStretchLastSection(true);
     horizontalHeader->setSectionsMovable(false);
     horizontalHeader->setDefaultAlignment(Qt::AlignLeft);

@@ -29,8 +29,6 @@ DevicePage::DevicePage(QWidget *parent) : QWidget(parent),
     this->m_ui->setupUi(this);
     initSidebar();
     initSubPage();
-
-    connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, m_ui->m_stacked, &QStackedWidget::setCurrentIndex);
 }
 
 DevicePage::~DevicePage()
@@ -49,8 +47,10 @@ void DevicePage::paintEvent(QPaintEvent *event)
 
 void DevicePage::initSidebar()
 {
-    createSideBarItem(tr("Device List"), "");
-    createSideBarItem(tr("Connect Record"), "");
+    createSideBarItem(tr("Device List"), ":/images/device-list");
+    createSideBarItem(tr("Connect Record"), ":/images/device-record");
+
+    connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, this, &DevicePage::updatePage);
     m_ui->m_sidebar->setCurrentRow(0);
 }
 
@@ -76,6 +76,21 @@ void DevicePage::createSideBarItem(const QString &text, const QString &icon)
 
     m_ui->m_sidebar->setGridSize(QSize(166, 66));
     newItem->setData(Qt::UserRole, text);
+}
+
+void DevicePage::updatePage(int currentRow)
+{
+    //更新侧边栏item状态
+    for (auto i = 0; i < m_ui->m_sidebar->count(); i++)
+    {
+        auto customItem = qobject_cast<SidebarItem *>(m_ui->m_sidebar->itemWidget(m_ui->m_sidebar->item(i)));
+        if (i == currentRow)
+            customItem->setSelected(true);
+        else
+            customItem->setSelected(false);
+    }
+    //更新右侧页面
+    m_ui->m_stacked->setCurrentIndex(currentRow);
 }
 
 }  // namespace KS

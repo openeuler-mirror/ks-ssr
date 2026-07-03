@@ -34,6 +34,9 @@ public:
 protected:
     void paintEvent(QPaintEvent *event);
 
+private:
+    void initTableStyle();
+
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
 
