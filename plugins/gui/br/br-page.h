@@ -44,7 +44,6 @@ public:
     QString getSidebarIcon() override;
     QString getAccountRoleName() override;
     // 导出策略需要从表格中获取勾选项，设置页面中无法获取，通过信号实现
-    bool exportStrategy();
     void resetAllReinforcementArgs();
 
 private:

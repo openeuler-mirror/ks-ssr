@@ -54,6 +54,9 @@ public:
     void resetProgress();
     void stopWorkingProcess();
 
+    void hideStrategy();
+    void showStrategy();
+
 private:
     // 初始化进程时间
     void timeInit();
@@ -65,6 +68,9 @@ signals:
     void returnHomeClicked();
     void generateReportClicked();
     void exportStrategyClicked();
+    void importStrategyClicked();
+    void resetStrategyClicked();
+
     // TODO : 等待超时信号，暂未使用
     void waitTimeOut();
     void cancelClicked();

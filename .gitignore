@@ -1,5 +1,6 @@
 private
 resources/images/PDF/end.png
 resources/images/kylinsec-logo.png
-.vscode
+build
 CMakeLists.txt.user
+.vscode

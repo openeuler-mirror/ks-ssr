@@ -13,6 +13,7 @@
  */
 #include "progress.h"
 #include <QDateTime>
+#include <QMenu>
 #include <QTimer>
 #include "include/ssr-marcos.h"
 #include "progress-icon.h"
@@ -22,7 +23,7 @@ namespace KS
 {
 namespace BR
 {
-Progress::Progress(QWidget *parent)
+Progress::Progress(QWidget* parent)
     : QWidget(parent),
       m_ui(new Ui::Progress)
 {
@@ -31,6 +32,12 @@ Progress::Progress(QWidget *parent)
 
     timeInit();
     resetProgress();
+
+    QMenu* strategyMenu = new QMenu(this);
+    strategyMenu->addAction(tr("Export strategy"), this, &Progress::exportStrategyClicked);
+    strategyMenu->addAction(tr("Import strategy"), this, &Progress::importStrategyClicked);
+    strategyMenu->addAction(tr("Reset strategy"), this, &Progress::resetStrategyClicked);
+    m_ui->m_strategy->setMenu(strategyMenu);
 }
 
 Progress::~Progress()
@@ -59,8 +66,12 @@ void Progress::resetProgress()
     m_ui->m_generateReport->disconnect();
     connect(m_ui->m_generateReport, &QPushButton::clicked, this, &Progress::generateReportClicked);
 
-    m_ui->m_exportStrategy->disconnect();
-    connect(m_ui->m_exportStrategy, &QPushButton::clicked, this, &Progress::exportStrategyClicked);
+    //    m_ui->m_exportStrategy->disconnect();
+    //    connect(m_ui->m_exportStrategy, &QPushButton::clicked, this, &Progress::exportStrategyClicked);
+    //    m_ui->m_importStrategy->disconnect();
+    //    connect(m_ui->m_importStrategy, &QPushButton::clicked, this, &Progress::importStrategyClicked);
+    //    m_ui->m_resetAllArgs->disconnect();
+    //    connect(m_ui->m_resetAllArgs, &QPushButton::clicked, this, &Progress::resetStrategyClicked);
 }
 
 void Progress::timeInit()
@@ -170,6 +181,16 @@ void Progress::stopWorkingProcess()
     m_progressTimer->stop();
     m_waitTimer->setInterval(0);
     m_waitTimer->start(1000);
+}
+
+void Progress::hideStrategy()
+{
+    m_ui->m_strategy->hide();
+}
+
+void Progress::showStrategy()
+{
+    m_ui->m_strategy->show();
 }
 
 void Progress::changeProgress()

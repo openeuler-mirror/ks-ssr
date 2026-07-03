@@ -22,6 +22,8 @@
 #include "lib/widgets/ssr-marcos-ui.h"
 #include "ui_home.h"
 
+#define LOGO_PIXMAP_COUNTS 60
+
 namespace KS
 {
 namespace BR
@@ -42,13 +44,13 @@ Home::Home(QWidget *parent)
 
 Home::~Home()
 {
+    m_logoTimer.stop();
     delete m_ui;
 }
 
 void Home::init()
 {
     m_ui->m_reinforceTime->setText("");
-    m_ui->m_icon->setPixmap(QPixmap(":/images/br-banner"));
     m_ui->m_scanButton->setText(BRStandardType(m_dbusProxy->strategy_type()) == BR_STANDARD_TYPE_SYSTEM ? tr("Quick scan") : tr("Custom scan"));
     m_ui->m_scanComboBox->setItemDelegate(new QStyledItemDelegate(this));
     m_ui->m_scanComboBox->addItems(QStringList() << tr("System strategy") << tr("Custom strategy"));
@@ -72,6 +74,18 @@ void Home::init()
                     emit systemScanClicked();
                 }
             });
+
+    connect(&m_logoTimer, &QTimer::timeout, this, [this]()
+            {
+                static uint pixIndex = 0;
+                QString res = QString(":/br/res/logo-%1").arg(pixIndex++);
+                if (pixIndex > LOGO_PIXMAP_COUNTS)
+                {
+                    pixIndex = 0;
+                }
+                m_ui->m_icon->setPixmap(res);
+            });
+    m_logoTimer.start(2000 / LOGO_PIXMAP_COUNTS);
 }
 
 void Home::modfiyReinforcementTime()

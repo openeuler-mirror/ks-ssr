@@ -18,7 +18,7 @@
         <file alias="checkbox-unchecked-hover">images/checkbox-unchecked-hover.svg</file>
         <file alias="checkbox-unchecked-normal">images/checkbox-unchecked-normal.svg</file>
         <file alias="arrow-down">images/arrow-down.svg</file>
-	<file alias="arrow-up">images/arrow-up.svg</file>
+        <file alias="arrow-up">images/arrow-up.svg</file>
         <file alias="device-list">images/device-list.svg</file>
         <file alias="device-log">images/device-log.svg</file>
         <file alias="device">images/device.png</file>
@@ -77,6 +77,9 @@
         <file alias="double-arrow-right">images/double-arrow-right.svg</file>
         <file alias="user-manager">images/user-manager.svg</file>
         <file alias="remote-manager">images/remote-manager.png</file>
+        <file alias="checkbox-indeterminate-hover">images/checkbox-indeterminate-active.svg</file>
+        <file alias="checkbox-indeterminate-disabled">images/checkbox-indeterminate-disabled.svg</file>
+        <file alias="checkbox-indeterminate-hover">images/checkbox-indeterminate-hover.svg</file>
     </qresource>
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>

@@ -60,6 +60,7 @@ void Scan::usingSystemStrategy()
     m_ui->m_itemTable->setAllCheckBoxEditStatus(false);
     m_ui->m_itemTable->hideCheckBox(true);
     disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
+    m_ui->m_progress->hideStrategy();
 }
 
 void Scan::usingCustomStrategy()
@@ -72,6 +73,9 @@ void Scan::usingCustomStrategy()
     m_ui->m_itemTable->setAllCheckBoxEditStatus(true);
     m_ui->m_itemTable->hideCheckBox(false);
     m_ui->m_itemTable->setAllChecked(Qt::Unchecked);
+
+    m_ui->m_progress->showStrategy();
+
     // 所有状态重置后再修改
     resetAllReinforcementItem();
 
@@ -135,7 +139,7 @@ bool Scan::exportStrategy()
     RETURN_VAL_IF_TRUE(!checkAndSetCheckbox(), false);
 
     // 导出自定义策略，xml格式
-    auto fileName = QFileDialog::getSaveFileName(this, tr("Files"), "./br-strategy.xml", tr("strategy(*.xml)"));
+    auto fileName = QFileDialog::getSaveFileName(nullptr, tr("Files"), "./br-strategy.xml", tr("strategy(*.xml)"));
     RETURN_VAL_IF_TRUE(fileName.isEmpty(), false)
 
     // 打开要写入的文件
@@ -165,6 +169,27 @@ bool Scan::exportStrategy()
     file.close();
     fileSave.close();
     m_dbusProxy->ExportStrategy(isSuccess);
+    return true;
+}
+
+bool Scan::importStrategy()
+{
+    auto fileName = QFileDialog::getOpenFileName(nullptr, tr("Files"), "/", tr("strategy(*.xml)"));
+    if (fileName.isEmpty())
+    {
+        return false;
+    }
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+        KLOG_WARNING() << "Open files failed!";
+        POPUP_MESSAGE_DIALOG(tr("Open files failed!"))
+    }
+    auto reply = m_dbusProxy->ImportCustomRA(QString::fromUtf8(file.readAll()));
+    reply.waitForFinished();
+    POPUP_MESSAGE_DIALOG(reply.isError() ? tr("Failed to import strategy file. Please whether the file is valid!") : tr("Import succeeded!"));
+    file.close();
+
     return true;
 }
 
@@ -230,6 +255,8 @@ void Scan::initConnection()
     connect(m_ui->m_progress, &Progress::returnHomeClicked, this, &Scan::returnHomeClicked);
     connect(m_ui->m_progress, &Progress::generateReportClicked, this, &Scan::generateReport);
     connect(m_ui->m_progress, &Progress::exportStrategyClicked, this, &Scan::exportStrategy);
+    connect(m_ui->m_progress, &Progress::importStrategyClicked, this, &Scan::importStrategy);
+    connect(m_ui->m_progress, &Progress::resetStrategyClicked, this, &Scan::resetAllReinforcementItem);
     connect(m_ui->m_progress, &Progress::cancelClicked, this, &Scan::cancelProgress);
 
     connect(m_ui->m_itemTable, SIGNAL(modelEntered(QModelIndex)), this, SLOT(showErrorMessage(QModelIndex)));

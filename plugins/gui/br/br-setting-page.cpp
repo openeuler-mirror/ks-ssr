@@ -50,8 +50,8 @@ BRSettingPage::~BRSettingPage()
 
 void BRSettingPage::initConnection()
 {
-    connect(m_ui->m_importStrategy, &QPushButton::clicked, this, &BRSettingPage::importStrategy);
-    connect(m_ui->m_resetAllArgs, &QPushButton::clicked, this, &BRSettingPage::resetAllArgsClicked);
+    //    connect(m_ui->m_importStrategy, &QPushButton::clicked, this, &BRSettingPage::importStrategy);
+    //    connect(m_ui->m_resetAllArgs, &QPushButton::clicked, this, &BRSettingPage::resetAllArgsClicked);
     connect(m_ui->m_timeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &BRSettingPage::timedScanSettings);
     m_timedScan = new QTimer(this);
     connect(m_timedScan, &QTimer::timeout, this, &BRSettingPage::scan);

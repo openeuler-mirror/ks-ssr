@@ -107,15 +107,20 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="m_exportStrategy">
+    <widget class="QPushButton" name="m_strategy">
      <property name="minimumSize">
       <size>
        <width>72</width>
        <height>36</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton::menu-indicator{
+	subcontrol-position: right center;
+}</string>
+     </property>
      <property name="text">
-      <string>Export strategy</string>
+      <string>strategy</string>
      </property>
     </widget>
    </item>

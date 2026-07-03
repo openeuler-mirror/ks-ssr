@@ -61,8 +61,9 @@ public:
     void usingCustomStrategy();
     // 回到初始页面状态
     void reset();
-    // 导出策略
+    // 导出、导入策略
     bool exportStrategy();
+    bool importStrategy();
     // 重置所有加固项
     void resetAllReinforcementItem();
 
