@@ -15,7 +15,6 @@
 #include "src/daemon/device/device-configuration.h"
 #include <qt5-log-i.h>
 #include <QFile>
-#include <QFileInfo>
 #include <QMutex>
 #include <QProcess>
 #include <QTextStream>
@@ -44,10 +43,14 @@ namespace KS
 
 #define GRUB_MKCONFIG_PROGRAM "/usr/sbin/grub2-mkconfig"
 #define NMCLI_PROGRAM "/usr/bin/nmcli"
-// legacy模式下的grub配置路径
-#define GRUB_LEGACY_FILE_PATH "/etc/grub2.cfg"
-// efi模式下的grub配置路径
-#define GRUB_EFI_FILE_PATH "/etc/grub2-efi.cfg"
+// 临时文件路径
+#define TMP_PATH "/tmp/ks-sc"
+// 临时的 grub 配置文件， 用于分发至真正使用的 grub 配置文件。
+#define TMP_GRUB_CFG_FILE_PATH "/tmp/ks-sc/grub.cfg"
+// legacy 的 grub 配置路径
+#define GRUB_LEGACY_FILE_PATH "/boot/grub2/grub.cfg"
+// efi 模式下的 grub 配置路径
+#define GRUB_EFI_FILE_PATH "/boot/efi/EFI/KylinSecOS/grub.cfg"
 
 DeviceConfiguration *DeviceConfiguration::instance()
 {
@@ -162,6 +165,10 @@ DeviceConfiguration::DeviceConfiguration(QObject *parent) : QObject(parent),
     this->init();
 }
 
+DeviceConfiguration::~DeviceConfiguration()
+{
+}
+
 void DeviceConfiguration::init()
 {
     m_deviceSettings = new QSettings(KSC_DEVICE_CONFIG_FILE, QSettings::NativeFormat, this);
@@ -244,8 +251,19 @@ void DeviceConfiguration::syncInterfaceToGrubFile()
 
 void DeviceConfiguration::updateGrubsInThread()
 {
-    this->updateGrub(GRUB_LEGACY_FILE_PATH);
-    this->updateGrub(GRUB_EFI_FILE_PATH);
+    this->updateGrub(TMP_GRUB_CFG_FILE_PATH);
+    QFileInfo legacyCfgFilePath(GRUB_LEGACY_FILE_PATH);
+    QFileInfo efiCfgFilePath(GRUB_EFI_FILE_PATH);
+    if (legacyCfgFilePath.isFile())
+    {
+        QFile::remove(GRUB_LEGACY_FILE_PATH);
+        QFile::copy(TMP_GRUB_CFG_FILE_PATH, GRUB_LEGACY_FILE_PATH);
+    }
+    if (efiCfgFilePath.isFile())
+    {
+        QFile::remove(GRUB_EFI_FILE_PATH);
+        QFile::copy(TMP_GRUB_CFG_FILE_PATH, GRUB_EFI_FILE_PATH);
+    }
 }
 
 void DeviceConfiguration::checkWaitingUpdateGrubs()
@@ -343,12 +361,11 @@ void DeviceConfiguration::saveToFile(const QStringList &lines, const QString &fi
 
 void DeviceConfiguration::updateGrub(const QString &filePath)
 {
+    QDir tmpPath(TMP_PATH);
     // FIXME: 下个版本将更新 grub 配置的命令替换为 grubby ，此命令不需要检查文件是否存在。
-    auto grubFile = QFileInfo(filePath);
-    if (!grubFile.isFile())
+    if (!tmpPath.exists())
     {
-        KLOG_WARNING() << "Grub file does not exits ! : " << filePath;
-        return;
+        tmpPath.mkdir(TMP_PATH);
     }
     auto arguments = QStringList{QString("-o"), filePath};
     auto command = QString("%1 %2").arg(GRUB_MKCONFIG_PROGRAM).arg(arguments.join(' '));
