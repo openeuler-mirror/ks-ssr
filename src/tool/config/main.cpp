@@ -12,9 +12,8 @@
  * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
-#include "lib/base/base.h"
-// #include <glib/gi18n.h>
 #include <unistd.h>
+#include "lib/base/base.h"
 #include "src/tool/config/cmd-parser.h"
 
 #include <QCoreApplication>
@@ -27,7 +26,7 @@ int main(int argc, char* argv[])
 {
     QCoreApplication a(argc, argv);
     QCoreApplication::setApplicationVersion(PROJECT_VERSION);
-    klog_qt5_init(QString(), "kylinsec-system", PROJECT_NAME, a.applicationName());
+    klog_qt5_init(SSR_ZLOG_CONFIG_FILE, "kylinsec-system", PROJECT_NAME, a.applicationName());
     QTranslator translator;
     if (!translator.load(QLocale(), "ks-ssr-daemon", ".", SSR_INSTALL_TRANSLATIONDIR, ".qm"))
     {

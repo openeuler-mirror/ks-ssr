@@ -78,8 +78,9 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.conf
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/data/box
         DESTINATION ${SSR_INSTALL_DATADIR})
 
-# ini files
+# configuration files
 install(FILES ${PROJECT_SOURCE_DIR}/data/ssr.ini
+              ${PROJECT_SOURCE_DIR}/data/zlog.conf
         DESTINATION ${SSR_INSTALL_DATADIR})
 
 # device cfg file
