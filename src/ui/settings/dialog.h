@@ -14,45 +14,33 @@
 
 #pragma once
 
-#include <QListWidgetItem>
 #include <QWidget>
+#include "src/ui/common/titlebar-window.h"
 
 namespace Ui
 {
-class TPPage;
+class Dialog;
 }
-
 namespace KS
 {
-class SidebarItem;
-class KernelProtected;
-class ExecuteProtected;
-class Loading;
-
-class TPPage : public QWidget
+class Dialog : public TitlebarWindow
 {
     Q_OBJECT
 
 public:
-    TPPage(QWidget *parent = nullptr);
-    virtual ~TPPage();
-
-protected:
-    void paintEvent(QPaintEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
+    Dialog(QWidget *parent = nullptr);
+    ~Dialog();
 
 private:
+    void initUI();
     void initSidebar();
     void initSubPage();
-    void checkTrustedLoadFinied(bool initialized);
-    void createSideBarItem(const QString &text, const QString &icon);
 
-private slots:
-    void onItemClicked(QListWidgetItem *currItem);
+signals:
+    void trustedStatusChange(bool status);
 
 private:
-    Ui::TPPage *m_ui;
-    QMap<QString, SidebarItem *> m_sidebarItems;
-    Loading *m_loading;
+    Ui::Dialog *m_ui;
 };
+
 }  // namespace KS

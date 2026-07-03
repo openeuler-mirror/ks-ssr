@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FPPage</class>
- <widget class="QWidget" name="FPPage">
+ <class>KernelProtected</class>
+ <widget class="QWidget" name="KernelProtected">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,6 +12,9 @@
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -43,7 +46,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Protect critical file paths from malicious tampering and deletion</string>
+        <string>Manage kernel driver modules to prevent illegal loading and uninstallation</string>
        </property>
       </widget>
      </item>
@@ -97,13 +100,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>440</width>
+          <width>400</width>
           <height>36</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>440</width>
+          <width>400</width>
           <height>36</height>
          </size>
         </property>
@@ -113,7 +116,7 @@
        </widget>
       </item>
       <item>
-       <spacer name="spacer">
+       <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -145,6 +148,25 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="m_recertification">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>72</width>
+          <height>36</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Recertification</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="m_unprotect">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -163,19 +185,35 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QToolButton" name="m_refresh">
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
    <item>
-    <widget class="KS::FileTable" name="m_fileTable" native="true"/>
+    <widget class="KS::KernelProtectedTable" name="m_kernelTable" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KS::FileTable</class>
+   <class>KS::KernelProtectedTable</class>
    <extends>QWidget</extends>
-   <header>src/ui/fp/file-table.h</header>
+   <header>src/ui/tp/kernel-protected-table.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

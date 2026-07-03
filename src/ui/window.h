@@ -34,7 +34,7 @@ enum CategoryPageType
 
 class Navigation;
 
-class LicenseActivation;
+class Activation;
 class LicenseProxy;
 class Window : public TitlebarWindow
 {
@@ -63,7 +63,7 @@ private slots:
 
 private:
     Ui::Window *m_ui;
-    LicenseActivation *m_activation;
+    Activation *m_activation;
     QLabel *m_activateStatus;
     QSharedPointer<LicenseProxy> m_licenseProxy;
 };
