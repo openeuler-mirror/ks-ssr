@@ -156,6 +156,78 @@ void KSSDbus::init()
     }
 }
 
+QJsonDocument KSSDbus::fileProtectedListToJsonDocument(const QStringList &fileList)
+{
+    QJsonDocument document;
+    QJsonArray jsonArray;
+    for (auto filePath : fileList)
+    {
+        QFileInfo fileInfo(filePath);
+        auto fileName = fileInfo.fileName();
+        QJsonObject jsonObj{
+            {KSC_KSS_JK_DATA_FILE_NAME, fileName},
+            {KSC_KSS_JK_DATA_PATH, filePath},
+            {KSC_KSS_JK_DATA_ADD_TIME, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")}};
+
+        jsonArray.push_back(jsonObj);
+    }
+    QJsonObject jsonObj{
+        {KSC_KSS_JK_RES, 0},
+        {KSC_KSS_JK_COUNT, fileList.size()},
+        {KSC_KSS_JK_DATA, jsonArray}};
+    document.setObject(jsonObj);
+
+    return document;
+}
+
+bool KSSDbus::checkFPDuplicateFiles(const QString &filePath, const QDBusMessage &message)
+{
+    // 检测列表中是否存在相同文件
+    QJsonParseError jsonError;
+    auto jsonDoc = QJsonDocument::fromJson(KSSWrapper::getDefault()->getFiles().toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        DBUS_ERROR_REPLY_AND_RETURN_VAL(false, KSCErrorCode::ERROR_FAILED, message)
+    }
+
+    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
+    for (const auto &module : jsonModules)
+    {
+        auto jsonMod = module.toObject();
+        if (jsonMod.value(KSC_KSS_JK_DATA_PATH).toString() == filePath)
+        {
+            DBUS_ERROR_REPLY_AND_RETURN_VAL(false, KSCErrorCode::ERROR_TP_ADD_RECUR_FILE, message)
+        }
+    }
+    return true;
+}
+
+QJsonDocument KSSDbus::trustedProtectedListToJsonDocument(const QStringList &fileList)
+{
+    QJsonDocument document;
+    QJsonArray jsonArray;
+
+    for (auto filePath : fileList)
+    {
+        QJsonObject jsonObj{
+            {KSC_KSS_JK_DATA_PATH, filePath},
+            {KSC_KSS_JK_DATA_TYPE, 0},
+            {KSC_KSS_JK_DATA_STATUS, 0},
+            {KSC_KSS_JK_DATA_HASH, ""},
+            {KSC_KSS_JK_DATA_GUARD, 0}};
+
+        jsonArray.push_back(jsonObj);
+    }
+    QJsonObject jsonObj{
+        {KSC_KSS_JK_RES, 0},
+        {KSC_KSS_JK_COUNT, fileList.size()},
+        {KSC_KSS_JK_DATA, jsonArray}};
+    document.setObject(jsonObj);
+
+    return document;
+}
+
 void KSSDbus::addTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath)
 {
     if (filePath.isEmpty())
@@ -190,25 +262,7 @@ void KSSDbus::addTPFilesAfterAuthorization(const QDBusMessage &message, const QS
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
-    QJsonDocument jsonDataDoc;
-    QJsonArray dataArray;
-
-    for (auto filePath : fileList)
-    {
-        QJsonObject jsonObj{
-            {KSC_KSS_JK_DATA_PATH, filePath},
-            {KSC_KSS_JK_DATA_TYPE, 0},
-            {KSC_KSS_JK_DATA_STATUS, 0},
-            {KSC_KSS_JK_DATA_HASH, ""},
-            {KSC_KSS_JK_DATA_GUARD, 0}};
-
-        dataArray.push_back(jsonObj);
-    }
-    QJsonObject jsonObj{
-        {KSC_KSS_JK_RES, 0},
-        {KSC_KSS_JK_COUNT, fileList.size()},
-        {KSC_KSS_JK_DATA, dataArray}};
-    jsonDataDoc.setObject(jsonObj);
+    QJsonDocument jsonDataDoc = trustedProtectedListToJsonDocument(fileList);
     auto output = KSSWrapper::getDefault()->addTrustedFiles(QString(jsonDataDoc.toJson()));
 
     QJsonParseError jsonError;
@@ -250,26 +304,7 @@ void KSSDbus::removeTPFilesAfterAuthorization(const QDBusMessage &message, const
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
-    QJsonDocument jsonDoc;
-    QJsonArray dataArray;
-
-    for (auto filePath : fileList)
-    {
-        QJsonObject jsonObj{
-            {KSC_KSS_JK_DATA_PATH, filePath},
-            {KSC_KSS_JK_DATA_TYPE, 0},
-            {KSC_KSS_JK_DATA_STATUS, 0},
-            {KSC_KSS_JK_DATA_HASH, ""},
-            {KSC_KSS_JK_DATA_GUARD, 0}};
-
-        dataArray.push_back(jsonObj);
-    }
-    QJsonObject jsonObj{
-        {KSC_KSS_JK_RES, 0},
-        {KSC_KSS_JK_COUNT, fileList.size()},
-        {KSC_KSS_JK_DATA, dataArray}};
-    jsonDoc.setObject(jsonObj);
-
+    QJsonDocument jsonDoc = trustedProtectedListToJsonDocument(fileList);
     KSSWrapper::getDefault()->removeTrustedFiles(QString(jsonDoc.toJson()));
 
     emit TrustedFilesChange();
@@ -298,25 +333,11 @@ void KSSDbus::addFPFileAfterAuthorization(const QDBusMessage &message, const QSt
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
-
-    // 检测列表中是否存在相同文件
-    QJsonParseError jsonError;
-    auto jsonDoc = QJsonDocument::fromJson(KSSWrapper::getDefault()->getFiles().toUtf8(), &jsonError);
-    if (jsonDoc.isNull())
+    if (!checkFPDuplicateFiles(filePath, message))
     {
-        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_FAILED, message)
+        return;
     }
 
-    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
-    for (const auto &module : jsonModules)
-    {
-        auto jsonMod = module.toObject();
-        if (jsonMod.value(KSC_KSS_JK_DATA_PATH).toString() == filePath)
-        {
-            DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_TP_ADD_RECUR_FILE, message)
-        }
-    }
     // 添加文件
     QFileInfo fileInfo(filePath);
     auto fileName = fileInfo.fileName();
@@ -333,48 +354,8 @@ void KSSDbus::addFPFilesAfterAuthorization(const QDBusMessage &message, const QS
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
-    QJsonDocument jsonDoc;
-    QJsonArray dataArray;
 
-    for (auto filePath : fileList)
-    {
-        // 检测列表中是否存在相同文件
-        QJsonParseError jsonError;
-        auto jsonDoc = QJsonDocument::fromJson(KSSWrapper::getDefault()->getFiles().toUtf8(), &jsonError);
-        if (jsonDoc.isNull())
-        {
-            KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
-            continue;
-        }
-
-        auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
-        for (const auto &module : jsonModules)
-        {
-            auto jsonMod = module.toObject();
-            if (jsonMod.value(KSC_KSS_JK_DATA_PATH).toString() == filePath)
-            {
-                auto replyMessage = message.createErrorReply(QDBusError::Failed, KSC_ERROR2STR(KSCErrorCode::ERROR_TP_ADD_RECUR_FILE));
-                QDBusConnection::systemBus().send(replyMessage);
-                continue;
-            }
-        }
-
-        QFileInfo fileInfo(filePath);
-        auto fileName = fileInfo.fileName();
-        QJsonObject jsonObj{
-            {KSC_KSS_JK_DATA_FILE_NAME, fileName},
-            {KSC_KSS_JK_DATA_PATH, filePath},
-            {KSC_KSS_JK_DATA_ADD_TIME, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")}};
-
-        dataArray.push_back(jsonObj);
-    }
-
-    QJsonObject jsonObj{
-        {KSC_KSS_JK_RES, 0},
-        {KSC_KSS_JK_COUNT, fileList.size()},
-        {KSC_KSS_JK_DATA, dataArray}};
-    jsonDoc.setObject(jsonObj);
-
+    QJsonDocument jsonDoc = fileProtectedListToJsonDocument(fileList);
     KSSWrapper::getDefault()->addFiles(QString(jsonDoc.toJson()));
 
     emit ProtectedFilesChange();
@@ -402,26 +383,7 @@ void KSSDbus::removeFPFilesAfterAuthorization(const QDBusMessage &message, const
     {
         DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_COMMON_INVALID_ARGS, message)
     }
-    QJsonDocument jsonDoc;
-    QJsonArray dataArray;
-
-    for (auto filePath : fileList)
-    {
-        QFileInfo fileInfo(filePath);
-        auto fileName = fileInfo.fileName();
-        QJsonObject jsonObj{
-            {KSC_KSS_JK_DATA_FILE_NAME, fileName},
-            {KSC_KSS_JK_DATA_PATH, filePath},
-            {KSC_KSS_JK_DATA_ADD_TIME, ""}};
-
-        dataArray.push_back(jsonObj);
-    }
-    QJsonObject jsonObj{
-        {KSC_KSS_JK_RES, 0},
-        {KSC_KSS_JK_COUNT, fileList.size()},
-        {KSC_KSS_JK_DATA, dataArray}};
-    jsonDoc.setObject(jsonObj);
-
+    QJsonDocument jsonDoc = fileProtectedListToJsonDocument(fileList);
     KSSWrapper::getDefault()->removeFiles(QString(jsonDoc.toJson()));
 
     emit ProtectedFilesChange();
