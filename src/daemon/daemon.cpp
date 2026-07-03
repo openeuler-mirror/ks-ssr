@@ -24,6 +24,7 @@
 #include "src/daemon/log/manager.h"
 #include "src/daemon/private-box/box-manager.h"
 #include "src/daemon/tool-box/manager.h"
+#include "src/daemon/vulnerability/manager.h"
 
 namespace KS
 {
@@ -59,6 +60,10 @@ Daemon::~Daemon()
 
 #ifdef ENABLE_PRIVATE_BOX
     PrivateBox::BoxManager::globalDeinit();
+#endif
+
+#ifdef ENABLE_VULNERABILITY_MANAGER
+    VulnerabilityManager::Manager::globalDeinit();
 #endif
     BRDaemon::Configuration::globalDeinit();
     BRDaemon::Categories::globalDeinit();
@@ -118,6 +123,10 @@ void Daemon::start()
     {
         KSS::DBus::globalInit(this);
     }
+#endif
+
+#ifdef ENABLE_VULNERABILITY_MANAGER
+    VulnerabilityManager::Manager::globalInit();
 #endif
 
     BRDaemon::Configuration::globalInit(SSR_BR_INSTALL_DATADIR "/ssr.ini");

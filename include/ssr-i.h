@@ -80,6 +80,9 @@ extern "C"
 #define SSR_LOG_DBUS_NAME "com.kylinsec.SSR.Log"
 #define SSR_LOG_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Log"
 
+#define SSR_VULNERABILITY_DBUS_NAME "com.kylinsec.SSR.Vulnerability"
+#define SSR_VULNERABILITY_DBUS_OBJECT_PATH "/com/kylinsec/SSR/Vulnerability"
+
     enum SSRKSSTrustedFileType
     {
         SSR_KSS_TRUSTED_FILE_TYPE_EXECUTE = 0,

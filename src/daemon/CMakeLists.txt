@@ -111,6 +111,23 @@ if(ENABLE_DEVICE_MANAGER)
   add_compile_definitions(ENABLE_DEVICE_MANAGER)
 endif()
 
+if(ENABLE_VULNERABILITY_MANAGER)
+  file(GLOB_RECURSE SRC_VULNERABILITY_MANAGER_H_FILES ./vulnerability/*.h)
+  list(APPEND SRC_H_FILES ${SRC_VULNERABILITY_MANAGER_H_FILES})
+  file(GLOB_RECURSE SRC_VULNERABILITY_MANAGER_CPP_FILES ./vulnerability/*.cpp)
+  list(APPEND SRC_CPP_FILES ${SRC_VULNERABILITY_MANAGER_CPP_FILES})
+
+  qt5_add_dbus_adaptor(
+    VULNERABILITY_MANAGER_SRCS
+    ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml
+    ${CMAKE_SOURCE_DIR}/src/daemon/vulnerability/manager.h
+    KS::VulnerabilityManager::Manager
+    vulnerability_manager_adaptor
+    VulnerabilityManagerAdaptor)
+
+  add_compile_definitions(ENABLE_VULNERABILITY_MANAGER)
+endif()
+
 qt5_add_dbus_adaptor(
   DAEMON_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.xml
   ${CMAKE_SOURCE_DIR}/src/daemon/daemon.h KS::Daemon daemon_adaptor
@@ -153,6 +170,7 @@ add_executable(
   ${ACCOUNT_DBUS_SRCS}
   ${BR_PROTOCOL_OUTPUT}
   ${TOOL_BOX_DBUS_SRCS}
+  ${VULNERABILITY_MANAGER_SRCS}
   ${QM_FILES})
 
 target_include_directories(
