@@ -107,7 +107,6 @@ QVector<WorkPage *> PluginsManager::createAvailableWorkPages()
                 continue;
             }
 #endif
-
             // 判断后端依赖插件是否加载，否则前端不应该显示
             if (!workPageInfo.requireDaemon.isEmpty() &&
                 !availableDaemonPlugins.contains(workPageInfo.requireDaemon))
@@ -143,6 +142,7 @@ QVector<SettingPage *> PluginsManager::createAvailableSettingPages()
     {
         for (auto &settingPageInfo : pluginInfo->metaData.settingPagesInfo)
         {
+#ifdef ENABLE_ACCOUNTS_MANAGER
             // 判断登录角色是否有页面访问权限
             if (!settingPageInfo.requireRoleName.isEmpty() &&
                 settingPageInfo.requireRoleName != roleName)
@@ -150,7 +150,7 @@ QVector<SettingPage *> PluginsManager::createAvailableSettingPages()
                 KLOG_INFO() << "Ingore setting page" << settingPageInfo.pageUID << ", because of role name dismatch.";
                 continue;
             }
-
+#endif
             // 判断后端依赖插件是否加载，否则前端不应该显示
             if (!settingPageInfo.requireDaemon.isEmpty() &&
                 !availableDaemonPlugins.contains(settingPageInfo.requireDaemon))
