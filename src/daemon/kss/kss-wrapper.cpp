@@ -91,6 +91,33 @@ QString KSSWrapper::addTrustedFile(const QString &filePath)
 void KSSWrapper::removeTrustedFile(const QString &filePath)
 {
     RETURN_IF_TRUE(getInitialized() == 0)
+
+    // 需要判断内核模块是否开启防卸载
+    QJsonParseError jsonError;
+    auto jsonDoc = QJsonDocument::fromJson(getTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_KERNEL).toUtf8(), &jsonError);
+    if (jsonDoc.isNull())
+    {
+        KLOG_WARNING() << "Parser information failed: " << jsonError.errorString();
+        return;
+    }
+
+    auto jsonModules = jsonDoc.object().value(KSC_KSS_JK_DATA).toArray();
+    for (const auto &module : jsonModules)
+    {
+        auto jsonMod = module.toObject();
+        if (filePath != jsonMod.value(KSC_KSS_JK_DATA_PATH).toString())
+        {
+            continue;
+        }
+        if (jsonMod.value(KSC_KSS_JK_DATA_GUARD).toInt() != 0)
+        {
+            continue;
+        }
+
+        // path正确且防卸载开启则需先关闭防卸载
+        prohibitUnloading(false, filePath);
+    }
+    // 移除
     auto cmd = QString("%1 %2").arg(KSS_DIGEST_SCAN_REMOVE_FILE_CMD, filePath);
     execute(cmd);
 }
