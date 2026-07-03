@@ -92,6 +92,7 @@ public:
     void searchTextChanged(const QString &text);
     void updateRecord();
     QList<TrustedRecord> getExecuteRecords();
+    int getExecutetamperedNums();
 
 private:
     void mouseEnter(const QModelIndex &index);
