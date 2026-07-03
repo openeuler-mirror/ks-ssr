@@ -446,8 +446,11 @@ void KernelProtectedTable::initTableHeaderButton()
                     {
                         m_statusKeys.removeAll(action->text());
                     }
-                    // 去重
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
                     m_statusKeys = QSet<QString>::fromList(m_statusKeys).toList();
+#else
+                m_statusKeys = QSet<QString>(m_statusKeys.begin(), m_statusKeys.end()).values();
+#endif
                 }
                 filterFixedString();
             });

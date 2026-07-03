@@ -77,7 +77,7 @@ void Login::initUI()
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    setTitle(tr("Security reinforcement"));
+    setTitle(tr("Kylinsec Security reinforcement"));
     setMinimumSize(400, 320);
     setTitlebarCustomLayoutAlignHCenter(false);
     auto layout = getTitlebarCustomLayout();

@@ -76,6 +76,7 @@
         <file alias="double-arrow-left">images/double-arrow-left.svg</file>
         <file alias="double-arrow-right">images/double-arrow-right.svg</file>
         <file alias="user-manager">images/user-manager.svg</file>
+        <file alias="remote-manager">images/remote-manager.png</file>
     </qresource>
     <qresource prefix="/images/titlebar">
         <file alias="window-minimum-symbolic">images/titlebar/window-minimum-symbolic.svg</file>

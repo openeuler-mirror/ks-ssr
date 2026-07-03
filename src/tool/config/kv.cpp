@@ -33,10 +33,11 @@ namespace Config
 KV::KV(const QString &conf_path,
        const QString &kv_split_pattern,
        const QString &kv_join_str,
-       const QString &comment) : conf_path_(conf_path),
-                                 kv_split_pattern_(kv_split_pattern),
-                                 kv_join_str_(kv_join_str),
-                                 comment_(comment)
+       const QString &comment)
+    : conf_path_(conf_path),
+      kv_split_pattern_(kv_split_pattern),
+      kv_join_str_(kv_join_str),
+      comment_(comment)
 {
     if (this->kv_split_pattern_.isEmpty())
     {
@@ -88,7 +89,8 @@ bool KV::get(const QString &key, QString &value)
         if (fields[0] == key)
         {
             value = fields[1];
-            return true;
+#pragma message("临时")
+            // return true;
         }
     }
 
@@ -118,11 +120,6 @@ bool KV::set(const QString &key, const QString &value)
     QRegExp split_field_regex(this->kv_split_pattern_);
     QRegExp second_field_regex(QString("(\\s*\\S+%1)(\\S+)").arg(this->kv_split_pattern_));
 
-    // auto split_field_regex = Glib::Regex::create(this->kv_split_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
-    // auto second_field_regex = Glib::Regex::create(fmt::format("(\\s*\\S+{0})(\\S+)", this->kv_split_pattern_),
-    //                                               Glib::RegexCompileFlags::REGEX_OPTIMIZE);
-
-    bool is_matched = false;
     int32_t match_pos = 0;
     bool is_match_comment = false;
     QString match_line;
@@ -147,15 +144,13 @@ bool KV::set(const QString &key, const QString &value)
             fields = trim_line.split(split_field_regex).toVector();
         }
 
-        if (!is_matched &&
-            fields.size() == 2 &&
-            fields[0] == key &&
-            (match_line.size() == 0 || (int32_t(is_comment) <= int32_t(is_match_comment))))
+        if (fields.size() == 2 &&
+            fields[0] == key)
         {
+            // 匹配到
             match_pos = new_contents.size();
             match_line = line;
             is_match_comment = is_comment;
-            is_matched = true;
         }
 
         new_contents.append(line);
@@ -216,7 +211,6 @@ bool KV::setAll(const QString &key, const QString &value)
     file.open(QIODevice::OpenModeFlag::ReadOnly);
 
     auto contents = file.readAll();
-    // auto contents = Glib::file_get_contents(this->conf_path_);
     auto lines = StrUtils::splitLines(contents);
     for (auto line : lines)
     {
@@ -225,9 +219,6 @@ bool KV::setAll(const QString &key, const QString &value)
 
     QRegExp split_field_regex(this->kv_split_pattern_);
     QRegExp second_field_regex(QString("(\\s*\\S+%1)(\\S+)").arg(this->kv_split_pattern_));
-    // auto split_field_regex = Glib::Regex::create(this->kv_split_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
-    // auto second_field_regex = Glib::Regex::create(fmt::format("(\\s*\\S+{0})(\\S+)", this->kv_split_pattern_),
-    //                                               Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     int32_t match_pos = 0;
     bool is_match_comment = false;
@@ -254,8 +245,7 @@ bool KV::setAll(const QString &key, const QString &value)
         }
 
         if (fields.size() == 2 &&
-            fields[0] == key &&
-            (match_line.size() == 0 || (int32_t(is_comment) <= int32_t(is_match_comment))))
+            fields[0] == key)
         {
             match_pos = new_contents.size();
             match_line = line;
