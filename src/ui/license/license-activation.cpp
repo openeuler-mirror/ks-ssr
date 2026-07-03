@@ -14,6 +14,7 @@
 
 #include "license-activation.h"
 #include <kiran-log/qt5-log-i.h>
+#include <QDateTime>
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QMessageBox>

@@ -55,7 +55,7 @@ void SettingsPage::initSidebar()
     trustedItem->setSizeHint(QSize(110, 42));
 
     auto deviceItem = new QListWidgetItem(m_ui->m_sidebar);
-    deviceItem->setText(tr("Device Interface"));
+    deviceItem->setText(tr("Interface Control"));
     deviceItem->setTextAlignment(Qt::AlignCenter);
     deviceItem->setSizeHint(QSize(110, 42));
 
