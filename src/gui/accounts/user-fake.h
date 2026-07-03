@@ -38,11 +38,6 @@ public:
     };
     // 获取登录用户
     virtual QString getCurrentUserName() const;
-
-signals:
-    void softExited();
-    void loginFinished();
-    void passwordChanged(const QString &userName);
 };
 
 }  // namespace KS
