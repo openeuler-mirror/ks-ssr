@@ -1,4 +1,4 @@
-#include "device-enum-utils.h"
+#include "device-utils.h"
 
 #define ENABLE QObject::tr("Enable")
 #define DISABLE QObject::tr("Disable")
@@ -6,9 +6,9 @@
 
 namespace KS
 {
-QString DeviceEnumUtils::enum2Str(DeviceType enumVal)
+QString DeviceUtils::deviceTypeEnum2Str(DeviceType type)
 {
-    switch (enumVal)
+    switch (type)
     {
     case DEVICE_TYPE_DISK:
         return tr("Disk");
@@ -40,9 +40,9 @@ QString DeviceEnumUtils::enum2Str(DeviceType enumVal)
     return QString();
 }
 
-QString DeviceEnumUtils::enum2Str(InterfaceType enumVal)
+QString DeviceUtils::interfaceTypeEnum2Str(InterfaceType type)
 {
-    switch (enumVal)
+    switch (type)
     {
     case INTERFACE_TYPE_USB:
         return tr("USB");
@@ -60,9 +60,9 @@ QString DeviceEnumUtils::enum2Str(InterfaceType enumVal)
     return QString();
 }
 
-QString DeviceEnumUtils::enum2Str(DeviceState enumVal)
+QString DeviceUtils::deviceStateEnum2Str(DeviceState state)
 {
-    switch (enumVal)
+    switch (state)
     {
     case DEVICE_STATE_ENABLE:
         return ENABLE;
@@ -76,11 +76,25 @@ QString DeviceEnumUtils::enum2Str(DeviceState enumVal)
     return QString();
 }
 
-DeviceState DeviceEnumUtils::str2StateEnum(QString str)
+QString DeviceUtils::deviceConnectStateEnum2Str(DeviceConnectState state)
 {
-    if (str == ENABLE)
+    switch (state)
+    {
+    case DeviceConnectState::DEVICE_CONNECT_SUCCESSED:
+        return tr("Successful");
+    case DeviceConnectState::DEVICE_CONNECT_FAILED:
+        return tr("Failed");
+    default:
+        break;
+    }
+    return QString();
+}
+
+DeviceState DeviceUtils::deviceStateStr2Enum(const QString& state)
+{
+    if (state == ENABLE)
         return DeviceState::DEVICE_STATE_ENABLE;
-    else if (str == DISABLE)
+    else if (state == DISABLE)
         return DeviceState::DEVICE_STATE_DISABLE;
     else
         return DEVICE_STATE_UNAUTHORIED;
