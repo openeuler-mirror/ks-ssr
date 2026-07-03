@@ -11,8 +11,11 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#include "error.h"
+#include "lib/base/error.h"
 #include <QObject>
+
+// 据说引用此头文件后，QString 的拼接操作会延后进行，达到 StringBuilder 的效果。
+#include <QStringBuilder>
 
 namespace KS
 {
@@ -95,6 +98,88 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     }
 
     return errorDesc;
+}
+
+// 由于传递给DBus::Error的参数必须是不能被立即销毁的，因此将数据放入一个全局变量中，当然也可以放到成员变量中维护
+std::string dbus_error_message;
+
+BRError::BRError()
+{
+}
+
+QString BRError::getErrorDesc(BRErrorCode error_code)
+{
+    QString error_desc;
+    switch (error_code)
+    {
+    case BRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID:
+        error_desc = QObject::tr("The standard type is invalid.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID:
+        error_desc = QObject::tr("The strategy type is invalid.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_NOTIFICATION_STATUS_INVALID:
+        error_desc = QObject::tr("The notification status is invalid.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID:
+        error_desc = QObject::tr("The resource monitor is invalid.");
+        break;
+    case BRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED:
+    case BRErrorCode::ERROR_DAEMON_JSON2RS_FAILED:
+    case BRErrorCode::ERROR_DAEMON_RS_CONTENT_INVALID:
+        error_desc = QObject::tr("Error format for reinforcement standard.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND:
+        error_desc = QObject::tr("Reinforcement item '{0}' is not found.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING:
+    case BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING:
+        error_desc = QObject::tr("The job is running, please don't repeat the operation.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_GET_RS_FAILED:
+        error_desc = QObject::tr("The standard reinforcement configuration is not found.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_MACHINE_CODE_TRANS_FAILED:
+        error_desc = QObject::tr("Machine code error.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_ACTIVATION_CODE_INVALID:
+        error_desc = QObject::tr("Activation code error.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_CONVERT_CATEGORIES2JSON_FAILED:
+    case BRErrorCode::ERROR_DAEMON_CONVERT_PLUGINS2JSON_FAILED:
+    case BRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND:
+    case BRErrorCode::ERROR_DAEMON_PLUGIN_INTERFACE_NOT_FOUND:
+    case BRErrorCode::ERROR_DAEMON_SCAN_ALL_JOB_FAILED:
+    case BRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED:
+    case BRErrorCode::ERROR_DAEMON_SET_STANDARD_TYPE_FAILED:
+    case BRErrorCode::ERROR_DAEMON_SET_STRATEGY_TYPE_FAILED:
+    case BRErrorCode::ERROR_DAEMON_SET_TIME_SCAN_FAILED:
+    case BRErrorCode::ERROR_DAEMON_SET_NOTIFICATION_STATUS_FAILED:
+    case BRErrorCode::ERROR_PLUGIN_CONFIG_JSON_EXCEPTION:
+    case BRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID:
+    case BRErrorCode::ERROR_PLUGIN_CONFIG_REINFORCEMENT_NOTFOUND:
+    case BRErrorCode::ERROR_DAEMON_REINFORCE_RANGE_INVALID:
+    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_1:
+    case BRErrorCode::ERROR_DAEMON_CANCEL_CANNOT_CANCELLED_2:
+    case BRErrorCode::ERROR_DAEMON_CANCEL_NOTFOUND_JOB:
+    case BRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED:
+    case BRErrorCode::ERROR_PLUGIN_AUDIT_GET_JSON_ERROR:
+    case BRErrorCode::ERROR_PLUGIN_AUDIT_SET_JSON_ERROR:
+    case BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENT_FAILED:
+    case BRErrorCode::ERROR_DAEMON_GEN_REINFORCEMENTS_FAILED:
+    case BRErrorCode::ERROR_DAEMON_PLUGIN_CALL_PYTHON_FUNC_FAILED:
+        error_desc = QObject::tr("Internel error.");
+        break;
+    case BRErrorCode::ERROR_DAEMON_SOFTWARE_UNACTIVATED:
+        error_desc = QObject::tr("The software is not activated.");
+        break;
+    default:
+        error_desc = QObject::tr("Unknown error.");
+        break;
+    }
+
+    error_desc += QString(QObject::tr(" (error code: 0x%1)")).arg(QString::number((int)error_code, 16));
+    return error_desc;
 }
 
 }  // namespace KS

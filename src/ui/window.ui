@@ -156,7 +156,7 @@
   <customwidget>
    <class>KS::SideBar</class>
    <extends>QListWidget</extends>
-   <header>src/ui/common/sidebar.h</header>
+   <header>src/ui/sidebar.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -28,7 +28,7 @@ class BoxPage;
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 class BoxCreation;
 class Box;
@@ -68,5 +68,5 @@ private:
     // 所有保密箱对象
     QMap<QString, Box *> m_boxs;
 };
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

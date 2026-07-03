@@ -18,7 +18,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 #define GENERATE_PASSPHRASE_CMD "ecryptfs-add-passphrase |grep -v Passphrase |cut -d[ -f 2 |cut -d] -f 1"
 #define MOUNT_ECRYPTFS_CMD "mount -t ecryptfs"
@@ -58,5 +58,5 @@ private:
     QString m_processOutput;
     QString m_errorOutput;
 };
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

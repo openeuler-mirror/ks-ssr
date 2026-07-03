@@ -18,7 +18,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 class Boxs : public QWidget
 {
@@ -32,5 +32,5 @@ public:
     void removeBox(Box *box);
 };
 
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

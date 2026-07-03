@@ -18,7 +18,7 @@
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 class BoxImage : public QWidget
 {
@@ -33,5 +33,5 @@ private:
     QImage *m_image;
     QRect m_drawArea;  // 绘制区域
 };
-}  // namespace BOX
+}  // namespace Box
 }  // namespace KS

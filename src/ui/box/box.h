@@ -28,7 +28,7 @@ class QLabel;
 
 namespace KS
 {
-namespace BOX
+namespace Box
 {
 struct BoxInfo
 {
@@ -104,5 +104,5 @@ private:
 
     QProcess *m_process;
 };
-}  //namespace BOX
+}  //namespace Box
 }  // namespace KS
