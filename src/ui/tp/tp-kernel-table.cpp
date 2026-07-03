@@ -199,7 +199,7 @@ bool TPKernelModel::setData(const QModelIndex &index,
                             const QVariant &value,
                             int role)
 {
-//    RETURN_VAL_IF_TRUE(index.column() != 0, false)
+    //    RETURN_VAL_IF_TRUE(index.column() != 0, false)
     switch (index.column())
     {
     case 0:
@@ -232,6 +232,9 @@ void TPKernelModel::updateRecord()
 {
     beginResetModel();
     m_kernelRecords.clear();
+    // 刷新时checkbox状态清空
+    emit stateChanged(Qt::Unchecked);
+
     auto reply = m_tpDBusProxy->GetModuleFiles();
     reply.waitForFinished();
     auto files = reply.value();
@@ -263,6 +266,7 @@ void TPKernelModel::updateRecord()
             m_kernelRecords.push_back(fileRecord);
         }
     }
+
     endResetModel();
 }
 
@@ -380,7 +384,7 @@ int TPKernelTable::getKerneltamperedNums()
 
 void TPKernelTable::itemEntered(const QModelIndex &index)
 {
-//    RETURN_IF_TRUE(index.column() != KernelField::KERNEL_FIELD_FILE_PATH)
+    //    RETURN_IF_TRUE(index.column() != KernelField::KERNEL_FIELD_FILE_PATH)
     if (index.column() == KernelField::KERNEL_FIELD_FILE_PATH)
     {
         auto module = selectionModel()->model()->data(index);

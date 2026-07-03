@@ -67,15 +67,15 @@ void TPDelegate::paint(QPainter *painter,
         auto checkboxOption = option;
         initStyleOption(&checkboxOption, index);
 
-//        QStyleOptionButton checkboxStyle;
+        //        QStyleOptionButton checkboxStyle;
         QPixmap pixmap;
         auto value = index.model()->data(index, Qt::EditRole).toBool();
         pixmap.load(value ? ":/images/checkbox-checked-normal" : ":/images/checkbox-unchecked-normal");
-//        checkboxStyle.state = value ? QStyle::State_On : QStyle::State_Off;
-//        checkboxStyle.state |= QStyle::State_Enabled;
-//        checkboxStyle.iconSize = QSize(20, 20);
-//        checkboxStyle.rect = option.rect;
-//        checkboxStyle.rect.setX(option.rect.x() + 2);
+        //        checkboxStyle.state = value ? QStyle::State_On : QStyle::State_Off;
+        //        checkboxStyle.state |= QStyle::State_Enabled;
+        //        checkboxStyle.iconSize = QSize(20, 20);
+        //        checkboxStyle.rect = option.rect;
+        //        checkboxStyle.rect.setX(option.rect.x() + 2);
 
         auto widget = option.widget;
 

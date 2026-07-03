@@ -118,7 +118,7 @@ void KSS::processExited(int exitCode, QProcess::ExitStatus exitStatus)
 
     auto standardOutput = m_process->readAllStandardOutput();
 
-//    KLOG_DEBUG() << "Execute the command to successfully output: " << standardOutput;
+    //    KLOG_DEBUG() << "Execute the command to successfully output: " << standardOutput;
     m_processOutput = standardOutput;
 
     auto errordOutput = m_process->readAllStandardError();
@@ -152,14 +152,13 @@ void KSS::initTrusted()
     KLOG_INFO() << "Start kss initialisation.";
     execute(KSS_INIT_CMD);
 
-    m_kssInitThread = QThread::create([this]
-                                      {
-                                          auto process = new QProcess(this);
-                                          auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r` -b");
-                                          KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
-                                          process->start("bash", QStringList() << "-c" << cmd);
-                                          process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
-                                      });
+    m_kssInitThread = QThread::create([this] {
+        auto process = new QProcess(this);
+        auto cmd = QString("%1 %2").arg(KSS_INIT_DATA_CMD, "/boot/vmlinuz-`uname -r` -b");
+        KLOG_DEBUG() << "Start executing the command. cmd = " << cmd;
+        process->start("bash", QStringList() << "-c" << cmd);
+        process->waitForFinished(KSS_INIT_THREAD_TIMEOUT);
+    });
 
     connect(m_kssInitThread, &QThread::finished, this, &KSS::initTrustedResults);
     connect(m_kssInitThread, &QThread::finished, m_kssInitThread, &QThread::deleteLater);

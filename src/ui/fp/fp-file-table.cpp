@@ -288,6 +288,9 @@ void FPFilesModel::updateInfo()
 {
     beginResetModel();
     m_filesInfo.clear();
+    // 刷新时checkbox状态清空
+    emit stateChanged(Qt::Unchecked);
+
     auto reply = m_fileProtectedProxy->GetFiles();
     reply.waitForFinished();
     auto files = reply.value();

@@ -164,7 +164,8 @@ KS--NavigationItem QPushButton#m_icon
 }
 
 QWidget#m_contents,
-QWidget#m_deleteNotify
+QWidget#m_deleteNotify,
+KS--MaskWidget#maskWidget
 {
     background-color: #2d2d2d;
     border-radius: 6px;
