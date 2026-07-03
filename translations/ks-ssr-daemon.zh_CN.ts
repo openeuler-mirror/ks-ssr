@@ -4772,9 +4772,13 @@
 <context>
     <name>KS::ToolBox::RealTimeAlert</name>
     <message>
-        <location filename="../src/daemon/tool-box/realtime-alert.cpp" line="219"/>
         <source>Detect nmap attack, attacker ips: %1</source>
-        <translation>检测到nmap攻击，攻击者ip为%1</translation>
+        <translation type="vanished">检测到nmap攻击，攻击者ip为%1</translation>
+    </message>
+    <message>
+        <location filename="../src/daemon/tool-box/realtime-alert.cpp" line="219"/>
+        <source>Detect nmap attack from %1</source>
+        <translation>检测到主机被 %1 探测</translation>
     </message>
     <message>
         <location filename="../src/daemon/tool-box/realtime-alert.cpp" line="225"/>

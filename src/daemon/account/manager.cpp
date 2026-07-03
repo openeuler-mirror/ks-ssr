@@ -129,10 +129,10 @@ void Manager::SetUidReusable(bool enabled)
     auto role = m_accountManager->getRole(calledUniqueName);
     if (role == KS::Account::Manager::AccountRole::unknown_account)
     {
-        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, "Permission Denied", calledUniqueName);
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX, "Permission Denied", calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
-    SSR_LOG_SUCCESS(Log::Manager::LogType::ACCOUNT, enabled ? tr("Enable uid reuse") : tr("Disable uid reuse"), calledUniqueName);
+    SSR_LOG_SUCCESS(Log::Manager::LogType::TOOL_BOX, enabled ? tr("Enable uid reuse") : tr("Disable uid reuse"), calledUniqueName);
     m_isUidReusable = enabled;
     m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enabled));
     m_uidReuseConfig->sync();
@@ -314,11 +314,11 @@ void Manager::SetMultiFactorAuthState(bool enabled)
     if (role == KS::Account::Manager::AccountRole::unknown_account)
     {
         KLOG_ERROR() << "Failed to set Multi-Factor Authentication state, Permission denied";
-        SSR_LOG_ERROR(Log::Manager::LogType::ACCOUNT, "Permission Denied", calledUniqueName);
+        SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX, "Permission Denied", calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
     }
     SSR_LOG_SUCCESS(
-        Log::Manager::LogType::ACCOUNT,
+        Log::Manager::LogType::TOOL_BOX,
         enabled ? tr("Enable Multi-Factor Authentication") : tr("Disable Multi-Factor Authentication"),
         calledUniqueName);
     if (enabled)
