@@ -66,6 +66,7 @@ public:
     void update();
     void setData(const QList<DeviceInfo> &infos);
     DeviceState getState(int row);
+    QString getType(int row);
     QString getID(int row);
     QString getName(int row);
     int getPermission(int row);
