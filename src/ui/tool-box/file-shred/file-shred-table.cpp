@@ -12,8 +12,8 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
-#include "src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.h"
-#include <stdio.h>
+#include "src/ui/tool-box/file-shred/file-shred-table.h"
+// #include <stdio.h>
 #include <QApplication>
 #include <QCheckBox>
 #include <QFileInfo>
@@ -25,6 +25,7 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QToolTip>
+#include "lib/base/notification-wrapper.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/common/table/table-header-proxy.h"
 #include "src/ui/toolbox_dbus_proxy.h"
@@ -34,35 +35,31 @@ namespace KS
 {
 namespace ToolBox
 {
-enum PrivacyCleanupTableField
+enum FileShredTableField
 {
-    PRIVACY_CLEANUP_TABLE_FIELD_CHECKBOX,
-    PRIVACY_CLEANUP_TABLE_FIELD_NUMBER,
-    PRIVACY_CLEANUP_TABLE_FIELD_USER_NAME,
-    PRIVACY_CLEANUP_TABLE_FIELD_USER_TYPE,
-    PRIVACY_CLEANUP_TABLE_FIELD_LAST
+    FILE_SHRED_TABLE_FIELD_CHECKBOX,
+    FILE_SHRED_TABLE_FIELD_NUMBER,
+    FILE_SHRED_TABLE_FIELD_FILE_NAME,
+    FILE_SHRED_TABLE_FIELD_FILE_PATH,
+    FILE_SHRED_TABLE_FIELD_LAST
 };
 
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
 
-// 表格json信息key
-#define USER_NAME_JSON_KEY "name"
-#define USER_TYPE_JSON_KEY "type"
-
-PrivacyCleanupDelegate::PrivacyCleanupDelegate(QObject *parent)
+FileShredDelegate::FileShredDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
 }
 
-PrivacyCleanupDelegate::~PrivacyCleanupDelegate()
+FileShredDelegate::~FileShredDelegate()
 {
-    KLOG_DEBUG() << "The PrivacyCleanupDelegate is deleted.";
+    KLOG_DEBUG() << "The FileShredDelegate is deleted.";
 }
 
-void PrivacyCleanupDelegate::paint(QPainter *painter,
-                                   const QStyleOptionViewItem &option,
-                                   const QModelIndex &index) const
+void FileShredDelegate::paint(QPainter *painter,
+                              const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const
 {
     painter->save();
 
@@ -89,7 +86,7 @@ void PrivacyCleanupDelegate::paint(QPainter *painter,
     painter->drawPath(path);
     painter->restore();
 
-    if (index.column() == PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_CHECKBOX)
+    if (index.column() == FileShredTableField::FILE_SHRED_TABLE_FIELD_CHECKBOX)
     {
         auto checkboxOption = option;
         initStyleOption(&checkboxOption, index);
@@ -115,17 +112,17 @@ void PrivacyCleanupDelegate::paint(QPainter *painter,
     }
 }
 
-bool PrivacyCleanupDelegate::editorEvent(QEvent *event,
-                                         QAbstractItemModel *model,
-                                         const QStyleOptionViewItem &option,
-                                         const QModelIndex &index)
+bool FileShredDelegate::editorEvent(QEvent *event,
+                                    QAbstractItemModel *model,
+                                    const QStyleOptionViewItem &option,
+                                    const QModelIndex &index)
 {
     auto docorationRect = option.rect;
     auto mouseEvent = static_cast<QMouseEvent *>(event);
 
     if (event->type() == QEvent::MouseButtonPress &&
         docorationRect.contains(mouseEvent->pos()) &&
-        index.column() == PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_CHECKBOX)
+        index.column() == FileShredTableField::FILE_SHRED_TABLE_FIELD_CHECKBOX)
     {
         auto value = model->data(index, Qt::EditRole).toBool();
         model->setData(index, !value, Qt::EditRole);
@@ -134,14 +131,14 @@ bool PrivacyCleanupDelegate::editorEvent(QEvent *event,
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
-PrivacyCleanupFilterModel::PrivacyCleanupFilterModel(QObject *parent)
+FileShredFilterModel::FileShredFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
 }
 
-bool PrivacyCleanupFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+bool FileShredFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    for (auto i = 0; i < PRIVACY_CLEANUP_TABLE_FIELD_LAST; ++i)
+    for (auto i = 0; i < FILE_SHRED_TABLE_FIELD_LAST; ++i)
     {
         auto index = sourceModel()->index(sourceRow, i, sourceParent);
         auto text = sourceModel()->data(index).toString();
@@ -151,26 +148,27 @@ bool PrivacyCleanupFilterModel::filterAcceptsRow(int sourceRow, const QModelInde
     return false;
 }
 
-PrivacyCleanupModel::PrivacyCleanupModel(QObject *parent)
+FileShredModel::FileShredModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
+    m_infos = {};
 }
 
-int PrivacyCleanupModel::rowCount(const QModelIndex &parent) const
+int FileShredModel::rowCount(const QModelIndex &parent) const
 {
     return m_infos.size();
 }
 
-int PrivacyCleanupModel::columnCount(const QModelIndex &parent) const
+int FileShredModel::columnCount(const QModelIndex &parent) const
 {
-    return PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_LAST;
+    return FileShredTableField::FILE_SHRED_TABLE_FIELD_LAST;
 }
 
-QVariant PrivacyCleanupModel::data(const QModelIndex &index, int role) const
+QVariant FileShredModel::data(const QModelIndex &index, int role) const
 {
     RETURN_VAL_IF_TRUE(!index.isValid(), QVariant());
 
-    if (index.row() >= m_infos.size() || index.column() >= PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_LAST)
+    if (index.row() >= m_infos.size() || index.column() >= FileShredTableField::FILE_SHRED_TABLE_FIELD_LAST)
     {
         KLOG_WARNING() << "The index exceeds range limit.";
         return QVariant();
@@ -183,12 +181,12 @@ QVariant PrivacyCleanupModel::data(const QModelIndex &index, int role) const
     {
         switch (index.column())
         {
-        case PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_NUMBER:
+        case FileShredTableField::FILE_SHRED_TABLE_FIELD_NUMBER:
             return index.row() + 1;
-        case PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_USER_NAME:
-            return info.userName;
-        case PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_USER_TYPE:
-            return info.userType;
+        case FileShredTableField::FILE_SHRED_TABLE_FIELD_FILE_NAME:
+            return info.fileName;
+        case FileShredTableField::FILE_SHRED_TABLE_FIELD_FILE_PATH:
+            return info.filePath;
         default:
             break;
         }
@@ -198,7 +196,7 @@ QVariant PrivacyCleanupModel::data(const QModelIndex &index, int role) const
     {
         switch (index.column())
         {
-        case PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_CHECKBOX:
+        case FileShredTableField::FILE_SHRED_TABLE_FIELD_CHECKBOX:
             return info.selected;
         default:
             break;
@@ -212,7 +210,7 @@ QVariant PrivacyCleanupModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant PrivacyCleanupModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant FileShredModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Orientation::Vertical)
     {
@@ -224,12 +222,12 @@ QVariant PrivacyCleanupModel::headerData(int section, Qt::Orientation orientatio
     {
         switch (section)
         {
-        case PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_NUMBER:
+        case FileShredTableField::FILE_SHRED_TABLE_FIELD_NUMBER:
             return tr("Number");
-        case PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_USER_NAME:
-            return tr("User name");
-        case PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_USER_TYPE:
-            return tr("User type");
+        case FileShredTableField::FILE_SHRED_TABLE_FIELD_FILE_NAME:
+            return tr("Name");
+        case FileShredTableField::FILE_SHRED_TABLE_FIELD_FILE_PATH:
+            return tr("Path");
         default:
             break;
         }
@@ -239,7 +237,7 @@ QVariant PrivacyCleanupModel::headerData(int section, Qt::Orientation orientatio
     {
         switch (section)
         {
-        case PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_CHECKBOX:
+        case FileShredTableField::FILE_SHRED_TABLE_FIELD_CHECKBOX:
             return QVariant();
         }
         break;
@@ -250,9 +248,9 @@ QVariant PrivacyCleanupModel::headerData(int section, Qt::Orientation orientatio
     return QVariant();
 }
 
-bool PrivacyCleanupModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool FileShredModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    RETURN_VAL_IF_TRUE(index.column() != PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_CHECKBOX, false);
+    RETURN_VAL_IF_TRUE(index.column() != FileShredTableField::FILE_SHRED_TABLE_FIELD_CHECKBOX, false);
 
     m_infos[index.row()].selected = value.toBool();
     emit dataChanged(index, index);
@@ -264,13 +262,13 @@ bool PrivacyCleanupModel::setData(const QModelIndex &index, const QVariant &valu
     return true;
 }
 
-Qt::ItemFlags PrivacyCleanupModel::flags(const QModelIndex &index) const
+Qt::ItemFlags FileShredModel::flags(const QModelIndex &index) const
 {
-    RETURN_VAL_IF_TRUE(index.column() == PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_CHECKBOX, Qt::ItemFlag::ItemIsEnabled);
+    RETURN_VAL_IF_TRUE(index.column() == FileShredTableField::FILE_SHRED_TABLE_FIELD_CHECKBOX, Qt::ItemFlag::ItemIsEnabled);
     return Qt::ItemFlag::NoItemFlags;
 }
 
-void ToolBox::PrivacyCleanupModel::checkSelectStatus()
+void FileShredModel::checkSelectStatus()
 {
     auto state = Qt::Unchecked;
     int selectCount = 0;
@@ -281,8 +279,11 @@ void ToolBox::PrivacyCleanupModel::checkSelectStatus()
             ++selectCount;
         }
     }
-
-    if (selectCount >= m_infos.size())
+    if (selectCount == 0)
+    {
+        state = Qt::Unchecked;
+    }
+    else if (selectCount == m_infos.size())
     {
         state = Qt::Checked;
     }
@@ -294,23 +295,23 @@ void ToolBox::PrivacyCleanupModel::checkSelectStatus()
     emit stateChanged(state);
 }
 
-int PrivacyCleanupModel::getPrivacyCleanupInfosSize()
+int FileShredModel::getFileShredInfosSize()
 {
     return m_infos.size();
 }
 
-QStringList PrivacyCleanupModel::getCheckedUserName()
+QStringList FileShredModel::getCheckedPath()
 {
     QStringList list;
     for (auto info : m_infos)
     {
         CONTINUE_IF_TRUE(!info.selected);
-        list << info.userName;
+        list << info.filePath;
     }
     return list;
 }
 
-void PrivacyCleanupModel::setInfos(const QList<PrivacyCleanupInfo> &infos)
+void FileShredModel::updateFileList(const QStringList &paths)
 {
     beginResetModel();
     SCOPE_EXIT(
@@ -318,31 +319,18 @@ void PrivacyCleanupModel::setInfos(const QList<PrivacyCleanupInfo> &infos)
             endResetModel();
         });
     m_infos.clear();
-    m_infos = infos;
-    emit tableUpdated(m_infos.size());
-}
-
-void PrivacyCleanupModel::delcheckedInfos()
-{
-    beginResetModel();
-    SCOPE_EXIT(
-        {
-            endResetModel();
-        });
-    auto i = -1;
-    for (auto info : m_infos)
+    for (auto path : paths)
     {
-        i++;
-        CONTINUE_IF_TRUE(!info.selected);
-        m_infos.removeAt(i);
-        i--;
-    }
+        CONTINUE_IF_TRUE(path.isEmpty());
+        QFileInfo fileInfo(path);
 
+        m_infos.append({false, fileInfo.fileName(), path});
+    }
     checkSelectStatus();
     emit tableUpdated(m_infos.size());
 }
 
-PrivacyCleanupTable::PrivacyCleanupTable(QWidget *parent)
+FileShredTable::FileShredTable(QWidget *parent)
     : QTableView(parent),
       m_filterProxy(nullptr)
 {
@@ -354,45 +342,33 @@ PrivacyCleanupTable::PrivacyCleanupTable(QWidget *parent)
     initTable();
 }
 
-void PrivacyCleanupTable::setSearchText(const QString &text)
+void FileShredTable::setSearchText(const QString &text)
 {
     KLOG_DEBUG() << "The search text is change to " << text;
     m_filterProxy->setFilterFixedString(text);
 }
 
-void PrivacyCleanupTable::cleanCheckedUsers()
+QStringList KS::ToolBox::FileShredTable::getSelectedFiles()
 {
-    auto reply = m_dbusProxy->RemoveUser(m_model->getCheckedUserName());
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
-    RETURN_IF_TRUE(reply.isError());
-    m_model->setInfos(getTableInfos());
-    m_model->delcheckedInfos();
-    POPUP_MESSAGE_DIALOG(tr("Delete success!"));
+    return m_model->getCheckedPath();
 }
 
-QStringList PrivacyCleanupTable::getCheckedUsers() const
+void KS::ToolBox::FileShredTable::updateFileList(const QStringList &paths)
 {
-    return m_model->getCheckedUserName();
+    m_model->updateFileList(paths);
 }
 
-void PrivacyCleanupTable::initTable()
+void FileShredTable::initTable()
 {
     // 设置Model
-    m_model = new PrivacyCleanupModel(this);
-    m_model->setInfos(getTableInfos());
+    m_model = new FileShredModel(this);
     m_headerViewProxy = new TableHeaderProxy(this);
     setHorizontalHeader(m_headerViewProxy);
     setMouseTracking(true);
-    connect(m_headerViewProxy, &TableHeaderProxy::toggled, this, &PrivacyCleanupTable::checkedAllItem);
-    connect(m_model, &PrivacyCleanupModel::stateChanged, m_headerViewProxy, &TableHeaderProxy::setCheckState);
-    connect(m_model, &PrivacyCleanupModel::tableUpdated, this, &PrivacyCleanupTable::tableUpdated);
-    connect(m_dbusProxy, &ToolBoxDbusProxy::UserChanged, [this]
-            {
-                m_model->setInfos(getTableInfos());
-                emit tableUpdated(m_model->getPrivacyCleanupInfosSize());
-            });
-
-    connect(this, &PrivacyCleanupTable::entered, this, [this](const QModelIndex &index)
+    connect(m_headerViewProxy, &TableHeaderProxy::toggled, this, &FileShredTable::checkedAllItem);
+    connect(m_model, &FileShredModel::stateChanged, m_headerViewProxy, &TableHeaderProxy::setCheckState);
+    connect(m_model, &FileShredModel::tableUpdated, this, &FileShredTable::tableUpdated);
+    connect(this, &FileShredTable::entered, this, [this](const QModelIndex &index)
             {
                 RETURN_IF_TRUE(!index.isValid());
                 RETURN_IF_TRUE(index.column() > m_model->columnCount() || index.row() > m_model->rowCount());
@@ -407,19 +383,19 @@ void PrivacyCleanupTable::initTable()
                 QToolTip::showText(QCursor::pos(), mod.toString(), this, rect(), 5000);
             });
 
-    m_filterProxy = new PrivacyCleanupFilterModel(this);
+    m_filterProxy = new FileShredFilterModel(this);
     m_filterProxy->setSourceModel(qobject_cast<QAbstractItemModel *>(m_model));
     setModel(m_filterProxy);
     setShowGrid(false);
 
     // 设置Delegate
-    setItemDelegate(new PrivacyCleanupDelegate(this));
+    setItemDelegate(new FileShredDelegate(this));
 
     // 设置水平行表头
-    m_headerViewProxy->resizeSection(PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_CHECKBOX, 50);
-    m_headerViewProxy->resizeSection(PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_NUMBER, 100);
-    m_headerViewProxy->resizeSection(PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_USER_NAME, 250);
-    m_headerViewProxy->resizeSection(PrivacyCleanupTableField::PRIVACY_CLEANUP_TABLE_FIELD_USER_TYPE, 300);
+    m_headerViewProxy->resizeSection(FileShredTableField::FILE_SHRED_TABLE_FIELD_CHECKBOX, 50);
+    m_headerViewProxy->resizeSection(FileShredTableField::FILE_SHRED_TABLE_FIELD_NUMBER, 150);
+    m_headerViewProxy->resizeSection(FileShredTableField::FILE_SHRED_TABLE_FIELD_FILE_NAME, 200);
+    m_headerViewProxy->resizeSection(FileShredTableField::FILE_SHRED_TABLE_FIELD_FILE_PATH, 300);
     m_headerViewProxy->setStretchLastSection(true);
     m_headerViewProxy->setSectionsMovable(false);
     m_headerViewProxy->setDefaultAlignment(Qt::AlignLeft);
@@ -432,37 +408,12 @@ void PrivacyCleanupTable::initTable()
     verticalHeader->setDefaultSectionSize(38);
 }
 
-QList<KS::ToolBox::PrivacyCleanupInfo> PrivacyCleanupTable::getTableInfos()
+int FileShredTable::getFileShredInfosSize()
 {
-    QList<KS::ToolBox::PrivacyCleanupInfo> infos;
-    auto reply = m_dbusProxy->GetAllUsers();
-    CHECK_ERROR_FOR_DBUS_REPLY(reply);
-
-    QJsonParseError jsonError;
-    auto jsonDoc = QJsonDocument::fromJson(reply.value().toUtf8(), &jsonError);
-    if (jsonDoc.isNull())
-    {
-        KLOG_WARNING() << "Parser files Record information failed: " << jsonError.errorString();
-        return infos;
-    }
-    for (auto json : jsonDoc.array())
-    {
-        PrivacyCleanupInfo info{
-            .selected = false,
-            .userName = json.toObject().value(USER_NAME_JSON_KEY).toString(),
-            .userType = json.toObject().value(USER_TYPE_JSON_KEY).toInt() == 0 ? tr("Manager user") : tr("Normal user")};
-        infos << info;
-    }
-    KLOG_DEBUG() << "infos: " << jsonDoc;
-    return infos;
+    return m_model->getFileShredInfosSize();
 }
 
-int PrivacyCleanupTable::getPrivacyCleanupInfosSize()
-{
-    return m_model->getPrivacyCleanupInfosSize();
-}
-
-void PrivacyCleanupTable::checkedAllItem(Qt::CheckState checkState)
+void FileShredTable::checkedAllItem(Qt::CheckState checkState)
 {
     for (int i = 0; i < selectionModel()->model()->rowCount(); i++)
     {
@@ -472,6 +423,5 @@ void PrivacyCleanupTable::checkedAllItem(Qt::CheckState checkState)
         m_model->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
     }
 }
-
 }  // namespace ToolBox
 }  // namespace KS
