@@ -96,8 +96,12 @@ public:
     // 获取被篡改数
     int getKerneltamperedNums();
 
+signals:
+    void prohibitUnloadingStatusChange(bool status, const QString &path);
+
 private slots:
-    void showDetails(const QModelIndex &index);
+    void itemEntered(const QModelIndex &index);
+    void itemClicked(const QModelIndex &index);
 
 private:
     TPKernelFilterModel *m_filterProxy;

@@ -51,7 +51,7 @@ struct TrustedRecord
     QString status;
     QString md5;
     // 是否开启防卸载
-    // bool
+    bool guard;
 };
 
 class TPUtils : public QObject

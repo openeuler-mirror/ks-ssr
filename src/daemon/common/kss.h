@@ -48,13 +48,13 @@ public:
     void removeFile(const QString &filePath);
     // 获取文件保护列表
     QString getFiles();
+    void initTrusted();
 
 public Q_SLOTS:
     void processExited(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     void execute(const QString &cmd);
-    void initTrusted();
 
 private slots:
     void initTrustedResults();

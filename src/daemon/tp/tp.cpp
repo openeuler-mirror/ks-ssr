@@ -29,6 +29,7 @@ TP::TP(QObject *parent) : QObject(parent)
 {
     m_dbusAdaptor = new TPAdaptor(this);
     m_kss = new KSS(this);
+    m_kss->initTrusted();
     connect(m_kss, &KSS::initFinished, this, &TP::InitFinished);
 
     init();
@@ -54,6 +55,7 @@ QString TP::GetModuleFiles()
 
 void TP::ProhibitUnloading(bool prohibited, const QString &filePath)
 {
+    m_kss->prohibitUnloading(prohibited, filePath);
 }
 
 void TP::RemoveFile(const QString &filePath)

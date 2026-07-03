@@ -38,7 +38,8 @@ FP::~FP()
 
 void FP::AddFile(const QString &filePath)
 {
-    auto fileName = filePath.section('/', -1);
+    QFileInfo fileInfo(filePath);
+    auto fileName = fileInfo.fileName();
     //    KLOG_DEBUG() << "Add file name is " << fileName;
     m_kss->addFile(fileName, filePath, QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 }
