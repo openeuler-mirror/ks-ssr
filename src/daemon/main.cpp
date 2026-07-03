@@ -58,8 +58,6 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     KS::Daemon::globalInit();
-
     auto retval = app.exec();
-
     return retval;
 }

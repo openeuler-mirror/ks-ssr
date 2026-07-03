@@ -88,7 +88,7 @@ BoxRecord Box::getBoxInfo()
 
 int Box::delBox(const QString &currentPassword)
 {
-    int errorEode = SSRErrorCode::SUCCESS;
+    int errorEode = (int)SSRErrorCode::SUCCESS;
     // 密码认证
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
@@ -96,7 +96,7 @@ int Box::delBox(const QString &currentPassword)
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Password error!";
-        errorEode = SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
+        errorEode = (int)SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
         return errorEode;
     }
 
@@ -106,7 +106,7 @@ int Box::delBox(const QString &currentPassword)
         KLOG_DEBUG() << "The box has been mounted and cannot be deleted. uid = " << m_boxID;
 
         errorEode = umount();
-        if (errorEode != SSRErrorCode::SUCCESS)
+        if (errorEode != (int)SSRErrorCode::SUCCESS)
         {
             return errorEode;
         }
@@ -142,14 +142,14 @@ int Box::mount(const QString &currentPassword)
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Mount password error!";
-        return SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
+        return (int)SSRErrorCode::ERROR_BM_INPUT_PASSWORD_ERROR;
     }
 
     // 已挂载则返回
     if (boxInfo.mounted)
     {
         KLOG_WARNING() << "The box has been mounted and there is no need to repeat the operation. uid = " << m_boxID;
-        return SSRErrorCode::SUCCESS;
+        return (int)SSRErrorCode::SUCCESS;
     }
 
     // 挂载
@@ -160,21 +160,21 @@ int Box::mount(const QString &currentPassword)
     auto mountPath = QString("%1/%2").arg(SSR_BOX_MOUNT_DIR, boxInfo.boxName);
     if (!m_ecryptFS->mkdirBoxDir(mountPath, getUser()))
     {
-        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
 
     auto mountObjectPath = QString("%1/%2%3").arg(SSR_BOX_MOUNT_DATADIR, boxInfo.boxName, boxInfo.boxID);
     if (!m_ecryptFS->decrypt(mountObjectPath, mountPath, decryptPspr, decryptSig))
     {
-        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
 
     // 修改数据库中挂载状态
     if (!m_boxDao->modifyMountStatus(m_boxID, true))
     {
-        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
-    return SSRErrorCode::SUCCESS;
+    return (int)SSRErrorCode::SUCCESS;
 }
 
 int Box::umount(bool isForce)
@@ -185,25 +185,24 @@ int Box::umount(bool isForce)
     // 修改数据库中挂载状态
     if (!m_boxDao->modifyMountStatus(m_boxID, false))
     {
-        return SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
+        return (int)SSRErrorCode::ERROR_BM_INTERNAL_ERRORS;
     }
 
     if (!m_ecryptFS->encrypt(mountPath, isForce).isEmpty())
     {
         // 挂载失败，将数据库中的数据改回去
         m_boxDao->modifyMountStatus(m_boxID, true);
-        return SSRErrorCode::ERROR_BM_UMOUNT_FAIL;
+        return (int)SSRErrorCode::ERROR_BM_UMOUNT_FAIL;
     }
 
     m_ecryptFS->rmBoxDir(mountPath);
-    return SSRErrorCode::SUCCESS;
+    return (int)SSRErrorCode::SUCCESS;
 }
 
 bool Box::modifyBoxPassword(const QString &currentPassword, const QString &newPassword)
 {
     auto boxInfo = getBoxInfo();
     auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
-    //    auto decryptBoxPasswordChecked = CryptoHelper::rsa_decrypt(m_rsaPrivateKey, m_password);
     if (currentPassword != decryptPassword)
     {
         KLOG_WARNING() << "Password error!";
@@ -234,13 +233,13 @@ bool Box::init(int &errorCode)
 {
     if (!addToDao())
     {
-        errorCode = SSRErrorCode::ERROR_BM_MOUDLE_UNLOAD;
+        errorCode = (int)SSRErrorCode::ERROR_BM_MOUDLE_UNLOAD;
         return false;
     }
 
     if (!mkdirSourceDir())
     {
-        errorCode = SSRErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED;
+        errorCode = (int)SSRErrorCode::ERROR_BM_MKDIR_DATA_DIR_FAILED;
         return false;
     }
     return true;

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<br_plugin>
+    <name>audit</name>
+    <category>audit</category>
+    <_label>audit settings</_label>
+    <language_type>cpp</language_type>
+    <available>true</available>
+    <reinforcement>
+        <name>audit-auditd-switch</name>
+        <_label>Turn on system auditd service</_label>
+    </reinforcement>
+    <reinforcement>
+        <name>audit-logrotate-rotate</name>
+        <_label>System log save cycle</_label>
+    </reinforcement>
+</br_plugin>
