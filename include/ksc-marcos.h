@@ -16,6 +16,24 @@
 
 #include <qt5-log-i.h>
 
+#define CONNECTION(text1, text2) text1##text2
+#define CONNECT(text1, text2) CONNECTION(text1, text2)
+
+class Defer
+{
+public:
+    Defer(std::function<void(std::string)> func, std::string fun_name) : func_(func),
+                                                                         fun_name_(fun_name) {}
+    ~Defer() { func_(fun_name_); }
+
+private:
+    std::function<void(std::string)> func_;
+    std::string fun_name_;
+};
+
+// helper macro for Defer class
+#define SCOPE_EXIT(block) Defer CONNECT(_defer_, __LINE__)([&](std::string _arg_function) block, __FUNCTION__)
+
 #define RETURN_VAL_IF_FALSE(cond, val)             \
     {                                              \
         if (!(cond))                               \

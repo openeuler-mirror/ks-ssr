@@ -32,11 +32,6 @@ MessageDialog::~MessageDialog()
     //    KLOG_DEBUG() << "The MessageDialog is deleted.";
 }
 
-QVBoxLayout *MessageDialog::getContentLayout()
-{
-    return m_contentLayout;
-}
-
 void MessageDialog::setMessage(const QString &message)
 {
     setTitle(tr("Notify"));

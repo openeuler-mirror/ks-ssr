@@ -54,6 +54,10 @@
             <description>Search for trusted protection list.</description>
         </method>
 
+        <property name="Initialized" type="i" access="read">
+            <description>The ksc initialized.</description>
+        </property>
+
         <signal name="InitFinished">
             <description>Initialisation ok kss data is completed.</description>
         </signal>

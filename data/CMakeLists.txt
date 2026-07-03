@@ -18,6 +18,11 @@ install(
   DESTINATION
     ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/dbus-1/system-services)
 
+# policy file
+install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.policy.in
+        RENAME com.kylinsec.SC.policy
+        DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/polkit-1/actions/)
+
 # conf files
 install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.conf
         DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d/)

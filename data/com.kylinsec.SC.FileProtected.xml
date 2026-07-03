@@ -33,5 +33,10 @@
             </arg>
             <description>Search for files list.</description>
         </method>
+
+        <property name="Initialized" type="i" access="read">
+            <description>The ksc initialized.</description>
+        </property>
+
     </interface>
 </node>
