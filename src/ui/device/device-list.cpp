@@ -18,6 +18,7 @@
 #include <QHeaderView>
 #include <QMouseEvent>
 #include <QPainter>
+#include "include/ksc-marcos.h"
 #include "src/ui/device/device-list-delegate.h"
 #include "src/ui/device/device-permission.h"
 #include "src/ui/device/table-filter-model.h"
@@ -62,15 +63,14 @@ void DeviceList::paintEvent(QPaintEvent *event)
 
 bool DeviceList::eventFilter(QObject *watched, QEvent *event)
 {
-    auto *mouseEvent = static_cast<QMouseEvent *>(event);
-    if (watched == m_ui->m_table)
+    RETURN_VAL_IF_TRUE(watched != m_ui->m_table, false);
+
+    auto mouseEvent = static_cast<QMouseEvent *>(event);
+    //处理鼠标移出表格事件，将鼠标变为箭头
+    if (mouseEvent->type() == QEvent::Leave)
     {
-        //处理鼠标移出表格事件，将鼠标变为箭头
-        if (mouseEvent->type() == QEvent::Leave)
-        {
-            this->setCursor(Qt::ArrowCursor);
-            return true;
-        }
+        this->setCursor(Qt::ArrowCursor);
+        return true;
     }
     return false;
 }
@@ -164,6 +164,8 @@ void DeviceList::updateCursor(const QModelIndex &index)
         this->setCursor(Qt::PointingHandCursor);
     }
     else
+    {
         this->setCursor(Qt::ArrowCursor);
+    }
 }
 }  //namespace KS
