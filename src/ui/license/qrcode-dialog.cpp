@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     yuanxing <yuanxing@kylinos.com.cn>
+ * Author:     yuanxing <yuanxing@kylinsec.com.cn>
  */
 #include "qrcode-dialog.h"
 #include <QIcon>
@@ -24,8 +24,9 @@ namespace KS
 {
 namespace Activation
 {
-QRCodeDialog::QRCodeDialog(QWidget *parent) : TitlebarWindow(parent),
-                                              ui(new Ui::QRCodeDialog)
+QRCodeDialog::QRCodeDialog(QWidget *parent)
+    : TitlebarWindow(parent),
+      ui(new Ui::QRCodeDialog)
 {
     ui->setupUi(getWindowContentWidget());
     iniUI();

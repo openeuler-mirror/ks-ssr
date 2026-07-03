@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #include "src/tool/config/pam.h"
@@ -24,8 +24,9 @@ namespace KS
 namespace Config
 {
 PAM::PAM(const QString &conf_path,
-         const QString &line_match_regex) : conf_path_(conf_path),
-                                            line_match_pattern_(line_match_regex)
+         const QString &line_match_regex)
+    : conf_path_(conf_path),
+      line_match_pattern_(line_match_regex)
 {
 }
 
@@ -33,10 +34,8 @@ bool PAM::getValue(const QString &key, const QString &kv_split_pattern, QString 
 {
     QString contents;
     RETURN_VAL_IF_FALSE(FileUtils::readContentsWithLock(this->conf_path_, contents), false);
-
     auto lines = StrUtils::splitLines(contents);
     QRegExp line_match_regex(this->line_match_pattern_);
-    // auto line_match_regex = Glib::Regex::create(this->line_match_pattern_, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     QString kv_pattern;
     if (kv_split_pattern.isEmpty())
@@ -47,37 +46,28 @@ bool PAM::getValue(const QString &key, const QString &kv_split_pattern, QString 
     else
     {
         kv_pattern = QString("(%1[\\s]*%2[\\s]*)(\\S+)").arg(key, kv_split_pattern);
-        // kv_pattern = fmt::format("({0}[\\s]*{1}[\\s]*)(\\S+)", key, kv_split_pattern);
     }
     QRegExp kv_regex(kv_pattern);
-    // auto kv_regex = Glib::Regex::create(kv_pattern);
-
     QRegExp split_field_regex(kv_split_pattern);
-    // auto split_field_regex = Glib::Regex::create(kv_split_pattern, Glib::RegexCompileFlags::REGEX_OPTIMIZE);
 
     for (auto iter = lines.begin(); iter != lines.end(); ++iter)
     {
-        // Glib::MatchInfo match_info;
         auto trim_line = StrUtils::trim(*iter);
         // 忽略空行和注释行
         CONTINUE_IF_TRUE(trim_line.isEmpty() || trim_line[0] == '#');
         CONTINUE_IF_TRUE(!(line_match_regex.indexIn(*iter) != -1));
-
-        if (kv_regex.indexIn(*iter) != -1)
+        CONTINUE_IF_TRUE(kv_regex.indexIn(*iter) < 0);
+        if (!kv_split_pattern.isEmpty())
         {
-            if (!kv_split_pattern.isEmpty())
-            {
-                QVector<QString> fields = line_match_regex.cap(0).split(split_field_regex).toVector();
-                // QVector<QString> fields = split_field_regex->split(match_info.fetch(0));
-                value = fields[1].toLatin1();
-                KLOG_DEBUG("Read Line: key: %s, value: %s.", fields[0].toLocal8Bit().data(), fields[1].toLocal8Bit().data());
-            }
-            else
-            {
-                value = "true";
-            }
-            return true;
+            auto fields = kv_regex.cap(0).split(split_field_regex).toVector();
+            value = fields[1].toLatin1();
+            KLOG_DEBUG("Read Line: key: %s, value: %s.", fields[0].toLocal8Bit().toStdString().c_str(), fields[1].toLocal8Bit().toStdString().c_str());
         }
+        else
+        {
+            value = "true";
+        }
+        return true;
     }
     return true;
 }
@@ -99,33 +89,30 @@ bool PAM::setValue(const QString &key,
     if (match_info.match_line.size() > 0 && !match_info.is_match_comment)
     {
         QString kv_pattern(kv_split_pattern.isEmpty() ? QString("(%1)").arg(key) : QString("(%1[\\s]*%2[\\s]*)(\\S+)").arg(key, kv_split_pattern));
-        // auto kv_pattern = kv_split_pattern.isEmpty() ? fmt::format("({0})", key) : fmt::format("({0}[\\s]*{1}[\\s]*)(\\S+)", key, kv_split_pattern);
         QRegExp kv_regex(kv_pattern);
-        // auto kv_regex = Glib::Regex::create(kv_pattern);
         QString replace_line = match_info.match_line;
-
         if (kv_regex.indexIn(match_info.match_line) != -1)
         {
             // 修改键值对
-            if (!kv_split_pattern.isEmpty() && !value.isEmpty())
+            if (!kv_split_pattern.isEmpty())
             {
-                replace_line = match_info.match_line.replace(kv_regex, "\\1");
+                // value为空则移除关键字
+                replace_line.replace(kv_regex, value.isEmpty() ? value : "\\1" + value);
             }
         }
         else
         {
             // 添加键值对
-            if (kv_split_pattern.isEmpty())
+            if (value.isEmpty())
             {
-                replace_line += (this->isWhitespaceInTail(match_info.match_line) ? "" : " ") + key;
+                // value为空则不填加
+                KLOG_DEBUG("set value is empty, and not add key.");
+                return true;
             }
-            else if (!kv_split_pattern.isEmpty() && !value.isEmpty())
+            replace_line += (this->isWhitespaceInTail(match_info.match_line) ? "" : " ") + key;
+            if (!kv_split_pattern.isEmpty())
             {
-                replace_line += (this->isWhitespaceInTail(match_info.match_line) ? "" : " ") + key + kv_join_str + value;
-            }
-            else
-            {
-                KLOG_WARNING("Unknown situation.");
+                replace_line += kv_join_str + value;
             }
         }
 
@@ -152,7 +139,8 @@ bool PAM::delValue(const QString &key, const QString &kv_split_pattern)
         !match_info.is_match_comment &&
         kv_regex.indexIn(match_info.match_line) != -1)
     {
-        auto replace_line = match_info.match_line.replace(kv_regex, "");
+        auto match_line = match_info.match_line;
+        auto replace_line = match_line.replace(kv_regex, "");
         match_info.content.replace(match_info.match_pos, match_info.match_line.size(), replace_line);
         KLOG_DEBUG() << "Replace line: " << match_info.match_line.toLatin1() << ", with " << replace_line.toLatin1();
         return this->writeToFile(match_info.content);
@@ -234,7 +222,12 @@ PAM::MatchLineInfo PAM::getMatchLine()
     MatchLineInfo retval;
 
     QFile file(this->conf_path_);
-    file.open(QIODevice::OpenModeFlag::ReadOnly);
+
+    if (!file.open(QIODevice::OpenModeFlag::ReadOnly))
+    {
+        KLOG_WARNING() << "open file fail, error is " << file.errorString() << "path is " << conf_path_;
+        return retval;
+    }
     auto contents = file.readAll();
     auto lines = StrUtils::splitLines(contents);
     QRegExp line_match_regex(this->line_match_pattern_);
@@ -242,8 +235,6 @@ PAM::MatchLineInfo PAM::getMatchLine()
     // 寻找匹配行，如果没有匹配的非注释行可用，则使用匹配的注释行（注释将被去掉）
     for (const auto &line : lines)
     {
-        QVector<QString> fields;
-
         // 注释行判断需要包括前面的空白字符
         bool is_comment = StrUtils::startswith(line, "#");
 
@@ -269,7 +260,12 @@ PAM::MatchLineInfo PAM::addBehind(const QString &fallback_line, const QString &n
     MatchLineInfo retval;
 
     QFile file(this->conf_path_);
-    file.open(QIODevice::OpenModeFlag::NewOnly);
+
+    if (!file.open(QIODevice::OpenModeFlag::ReadOnly))
+    {
+        KLOG_WARNING() << "open file fail, error is " << file.errorString() << "path is " << conf_path_;
+        return retval;
+    }
     auto contents = file.readAll();
     auto lines = StrUtils::splitLines(contents);
     QRegExp line_match_regex(next_line_match_regex);
@@ -277,8 +273,6 @@ PAM::MatchLineInfo PAM::addBehind(const QString &fallback_line, const QString &n
     // 寻找匹配行，如果没有匹配的非注释行可用，则使用匹配的注释行（注释将被去掉）
     for (const auto &line : lines)
     {
-        QVector<QString> fields;
-
         if (line_match_regex.indexIn(line) != -1 &&
             (retval.match_line.size() == 0))
         {

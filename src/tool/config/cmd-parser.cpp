@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #include "cmd-parser.h"
@@ -93,6 +93,7 @@ int CmdParser::run(int argc, char** argv, QCoreApplication& a)
         this->parser.value("line-match-pattern"),
         this->parser.value("split-pattern"),
         this->parser.value("join-str"),
+        this->parser.value("comment"),
         this->parser.value("new-line"),
         this->parser.value("next-line-match-pattern")};
 
@@ -116,7 +117,7 @@ int CmdParser::run(int argc, char** argv, QCoreApplication& a)
     }
     else
     {
-        KLOG_FATAL(QObject::tr("Unknown file type").toLocal8Bit());
+        cerr << QObject::tr("Unknown file type").toStdString();
         return EXIT_FAILURE;
     }
 

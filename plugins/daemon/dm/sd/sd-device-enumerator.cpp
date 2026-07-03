@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangxiaoqing <wangxiaoqing@kylinos.com.cn>
+ * Author:     wangxiaoqing <wangxiaoqing@kylinsec.com.cn>
  */
 
 #include "sd-device-enumerator.h"

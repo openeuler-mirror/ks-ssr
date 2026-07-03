@@ -9,16 +9,17 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #include "lib/base/thread-pool.h"
 
 namespace KS
 {
-ThreadPool::ThreadPool(size_t thread_num) : thread_num_(thread_num),
-                                            workers_(thread_num),
-                                            stop_(false)
+ThreadPool::ThreadPool(size_t thread_num)
+    : thread_num_(thread_num),
+      workers_(thread_num),
+      stop_(false)
 {
     for (size_t i = 0; i < this->thread_num_; ++i)
     {
@@ -35,7 +36,9 @@ ThreadPool::ThreadPool(size_t thread_num) : thread_num_(thread_num),
                         std::unique_lock<std::mutex> lock(this->queue_mutex_);
                         this->condition_.wait(lock,
                                               [this, &private_tasks]
-                                              { return this->stop_ || !this->tasks_.empty() || !private_tasks.empty(); });
+                                              {
+                                                  return this->stop_ || !this->tasks_.empty() || !private_tasks.empty();
+                                              });
 
                         if (!private_tasks.empty())
                         {

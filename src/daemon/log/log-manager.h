@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #pragma once
@@ -70,6 +70,9 @@ public:
                        const QString& searchText,
                        const uint per_page,
                        const uint page);
+
+    static QString logTypeEnum2Str(LogType logType);
+    static LogType logTypeStr2Enum(const QString& logTypeStr);
 
 private:
     void backUpLog(const QStringList& targetLogList);

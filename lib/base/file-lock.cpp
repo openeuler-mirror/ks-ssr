@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
  */
 
 #include "lib/base/file-lock.h"
@@ -22,8 +22,9 @@
 
 namespace KS
 {
-FileLock::FileLock(int32_t file_descriptor, FileLockType lock_type) : file_descriptor_(file_descriptor),
-                                                                      lock_type_(lock_type)
+FileLock::FileLock(int32_t file_descriptor, FileLockType lock_type)
+    : file_descriptor_(file_descriptor),
+      lock_type_(lock_type)
 {
     int32_t lock_result = 0;
     if (this->file_descriptor_ <= 0)
