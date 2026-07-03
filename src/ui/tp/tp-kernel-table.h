@@ -71,11 +71,8 @@ public:
 signals:
     void stateChanged(Qt::CheckState checkState);
 
-public slots:
-    void onStateChanged(Qt::CheckState checkState);
-
 private:
-    void onSingleStateChanged();
+    void checkSelectStatus();
 
 private:
     KSSDbusProxy *m_tpDBusProxy;
@@ -102,6 +99,9 @@ signals:
 private slots:
     void itemEntered(const QModelIndex &index);
     void itemClicked(const QModelIndex &index);
+
+private slots:
+    void checkedAllItem(Qt::CheckState checkState);
 
 private:
     TPKernelFilterModel *m_filterProxy;

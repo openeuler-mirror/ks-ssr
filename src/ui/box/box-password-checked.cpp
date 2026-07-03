@@ -41,6 +41,7 @@ void BoxPasswordChecked::init()
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
+    setFixedSize(319, 259);
 
     m_ui->m_inputPasswd->setEchoMode(QLineEdit::Password);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]

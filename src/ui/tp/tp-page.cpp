@@ -96,16 +96,6 @@ void TPPage::checkTrustedLoadFinied(bool initialized)
     m_loading = new Loading(m_ui->m_stacked);
     RETURN_IF_TRUE(initialized)
 
-    // 暂屏蔽初始化弹窗，此弹窗与激活提示弹窗有逻辑冲突
-    // auto messgeDialog = new MessageDialog(this);
-    // messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
-    //                             "please wait a few minutes to refresh."));
-
-    // int x = this->x() + width() / 4 + messgeDialog->width() / 4;
-    // int y = this->y() + height() / 4 + messgeDialog->height() / 4;
-    // messgeDialog->move(x, y);
-    // messgeDialog->show();
-
     if (!m_loading->isVisible())
     {
         m_loading->setVisible(true);

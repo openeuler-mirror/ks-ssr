@@ -14,6 +14,7 @@
 #ifndef TRUSTEDUSERPIN_H
 #define TRUSTEDUSERPIN_H
 
+#include <QCloseEvent>
 #include <QWidget>
 #include "include/ksc-i.h"
 #include "src/ui/common/titlebar-window.h"
@@ -37,12 +38,15 @@ public:
     KSCKSSTrustedStorageType getType();
     void setType(uint type);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private:
     void initUI();
 
 signals:
     void accepted();
-    void rejected();
+    void closed();
 
 private:
     Ui::TrustedUserPin *m_ui;

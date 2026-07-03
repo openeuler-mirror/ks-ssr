@@ -123,11 +123,7 @@ void SettingsTrusted::updateSoftRadio(bool checked)
     m_userPin = new TrustedUserPin(this);
     m_userPin->setType(KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT);
     connect(m_userPin, &TrustedUserPin::accepted, this, &SettingsTrusted::setStorageMode);
-    connect(m_userPin, &TrustedUserPin::rejected, this, [this]
-            {
-                // 取消需将选中状态改回去
-                updateStorageMode();
-            });
+    connect(m_userPin, &TrustedUserPin::closed, this, &SettingsTrusted::updateStorageMode);
 
     auto x = this->x() + this->width() / 4 + m_userPin->width() / 2;
     auto y = this->y() + this->height() / 4 + m_userPin->height() / 2;
@@ -148,11 +144,7 @@ void SettingsTrusted::updateHardRadio(bool checked)
     m_userPin = new TrustedUserPin(this);
     m_userPin->setType(KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_HARD);
     connect(m_userPin, &TrustedUserPin::accepted, this, &SettingsTrusted::setStorageMode);
-    connect(m_userPin, &TrustedUserPin::rejected, this, [this]
-            {
-                // 取消需将选中状态改回去
-                updateStorageMode();
-            });
+    connect(m_userPin, &TrustedUserPin::closed, this, &SettingsTrusted::updateStorageMode);
 
     auto x = this->x() + this->width() / 4 + m_userPin->width() / 2;
     auto y = this->y() + this->height() / 4 + m_userPin->height() / 2;

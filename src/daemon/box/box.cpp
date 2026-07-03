@@ -160,14 +160,15 @@ bool Box::mount(const QString &currentPassword)
     return true;
 }
 
-void Box::umount()
+bool Box::umount()
 {
     auto boxInfo = getBoxInfo();
     QString mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
 
-    m_ecryptFS->encrypt(mountPath);
+    RETURN_VAL_IF_TRUE(!m_ecryptFS->encrypt(mountPath).isEmpty(), false)
     // 修改数据库中挂载状态
     m_boxDao->modifyMountStatus(m_boxID, false);
+    return true;
 }
 
 bool Box::modifyBoxPassword(const QString &currentPassword, const QString &newPassword)
@@ -213,14 +214,12 @@ void Box::init()
     }
 
     // 创建对应文件夹 未挂载box
-    QDir dir(KSC_BOX_MOUNT_DATADIR);
-    if (!dir.mkdir(m_name + m_boxID))  // name+uid 命名 可区分不同用户下创建的相同文件夹名称
-    {
-        KLOG_WARNING() << "Failed to create folder. name = " << m_name << " uid = " << m_boxID;
-    }
+    // name+uid 命名 可区分不同用户下创建的相同文件夹名称
+    auto dataPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DATADIR, m_name + m_boxID);
+    m_ecryptFS->mkdirBoxDir(dataPath, getUser());
 
     // 在对应调用的用户根目录创建文件夹
-    QString mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, m_name);
+    auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, m_name);
     m_ecryptFS->mkdirBoxDir(mountPath, getUser());
 }
 

@@ -14,6 +14,7 @@
 
 #include "src/ui/box/create-box.h"
 #include <qt5-log-i.h>
+#include <QRegularExpressionValidator>
 #include "src/ui/ui_create-box.h"
 
 namespace KS
@@ -29,6 +30,11 @@ CreateBox::CreateBox(QWidget *parent) : TitlebarWindow(parent),
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
+
+    auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
+    m_ui->m_name->setValidator(validator);
+    m_ui->m_password->setValidator(validator);
+    m_ui->m_confirmPassword->setValidator(validator);
 
     m_ui->m_password->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);

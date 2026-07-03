@@ -42,7 +42,7 @@ public:
     bool delBox(const QString &currentPassword);
     bool mounted();
     bool mount(const QString &currentPassword);
-    void umount();
+    bool umount();
     bool modifyBoxPassword(const QString &currentPassword, const QString &newPassword);
 
 private:

@@ -35,6 +35,7 @@ public:
 private:
     void updateInfo();
     bool checkTrustedLoadFinied(bool initialized);
+    bool isExistSelectedItem();
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
