@@ -1,4 +1,5 @@
-#include "configuration.h"
+#include "src/daemon/log/configuration.h"
+#include <QSettings>
 
 bool KS::Log::Configurations::isValid()
 {

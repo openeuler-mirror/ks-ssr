@@ -22,6 +22,7 @@
 #include "src/daemon/kss/dbus.h"
 #include "src/daemon/log/manager.h"
 #include "src/daemon/account/manager.h"
+#include "src/daemon/security-box/manager.h"
 
 namespace KS
 {
@@ -74,5 +75,6 @@ void Daemon::start()
     BRDaemon::BRDBus::globalInit(nullptr);
     Log::Manager::globalInit();
     Account::Manager::globalInit();
+    SecurityBox::Manager::globalInit();
 }
 }  // namespace KS
