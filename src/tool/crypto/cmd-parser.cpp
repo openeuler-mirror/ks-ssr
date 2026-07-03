@@ -37,40 +37,17 @@ void CmdParser::init()
     this->parser.addVersionOption();
     this->parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     this->parser.addOption({"generate-rsa-key",
-                            _("Generate public and private keys for RSA."), "path"});
+                            QObject::tr("Generate public and private keys for RSA."), "path"});
     this->parser.addOption({"decrypt-file",
-                            _("Decrypt a file."), "path"});
+                            QObject::tr("Decrypt a file."), "path"});
     this->parser.addOption({"encrypt-file",
-                            _("Encrypt a file."), "path"});
+                            QObject::tr("Encrypt a file."), "path"});
     this->parser.addOption({"public-key",
-                            _("RSA public file path."), "path"});
+                            QObject::tr("RSA public file path."), "path"});
     this->parser.addOption({"private-key",
-                            _("RSA private file path."), "path"});
+                            QObject::tr("RSA private file path."), "path"});
     this->parser.addOption({"output-file",
-                            _("Output file path."), "path"});
-    // this->option_group_.add_entry(MiscUtils::create_option_entry("version", N_("Output version infomation and exit.")),
-    //                               this->options_.show_version);
-
-    // this->option_group_.add_entry(MiscUtils::create_option_entry("generate-rsa-key", N_("Generate public and private keys for RSA.")),
-    //                               this->options_.generate_rsa_key);
-
-    // this->option_group_.add_entry(MiscUtils::create_option_entry("decrypt-file", N_("Decrypt a file.")),
-    //                               this->options_.decrypted_file);
-
-    // this->option_group_.add_entry(MiscUtils::create_option_entry("encrypt-file", N_("Encrypt a file.")),
-    //                               this->options_.encrypted_file);
-
-    // this->option_group_.add_entry(MiscUtils::create_option_entry("public-key", N_("RSA public file path.")),
-    //                               this->options_.public_filename);
-
-    // this->option_group_.add_entry(MiscUtils::create_option_entry("private-key", N_("RSA private file path.")),
-    //                               this->options_.private_filename);
-
-    // this->option_group_.add_entry(MiscUtils::create_option_entry("output-file", N_("Output file path.")),
-    //                               this->options_.output_filename);
-
-    // this->option_group_.set_translation_domain(PROJECT_NAME);
-    // this->option_context_.set_main_group(this->option_group_);
+                            QObject::tr("Output file path."), "path"});
 }
 
 int CmdParser::run(QCoreApplication& a)
