@@ -39,10 +39,10 @@ public:
     QString getNavigationUID() override;
     QString getSidebarUID() override;
     QString getSidebarIcon() override;
-    int getSelinuxType() override;
+    QString getAccountRoleName() override;
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) override;
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
