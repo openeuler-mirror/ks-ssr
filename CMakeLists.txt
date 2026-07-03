@@ -11,8 +11,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 
 add_compile_options(-Wall)
 
-option(EXTRA_COMPILE_CHECK "Enable extra compile check" OFF)
-
 # 由于禁用日志和账户模块后编译无法通过，所以只能启用。
 set(ENABLE_LOG ON)
 
@@ -28,8 +26,9 @@ option(ENABLE_REMOTE_MANAGER "Enable remote manager module" OFF)
 option(ENABLE_ACCOUNTS_MANAGER "Enable accounts manager support" OFF)
 option(USE_PYTHON3 "Enable tool box module" OFF)
 option(WITH_SYSTEMD_UDEV "device manager with systemd udev" ON)
+option(WITH_LIBDNF "vulerability manager with libdnf" ON)
 
-message(STATUS "EXTRA_COMPILE_CHECK: ${EXTRA_COMPILE_CHECK}")
+message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "ENABLE_BR: ${ENABLE_BR}")
 message(STATUS "ENABLE_HDMI_SUPPORT: ${ENABLE_HDMI_SUPPORT}")
 message(STATUS "ENABLE_KSS: ${ENABLE_KSS}")
@@ -47,8 +46,16 @@ else()
   message(STATUS "Device Manager: with libudev")
 endif()
 
-if(EXTRA_COMPILE_CHECK)
-  add_compile_options(-Wextra -Wconversion -Wuninitialized)
+if(WITH_LIBDNF)
+  message(STATUS "Device Manager: with systemd-udev")
+  add_compile_options(-DWITH_LIBDNF)
+endif()
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  # add_compile_options(-Wextra -Wconversion -Wuninitialized)
+  # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address
+  # -fno-omit-frame-pointer -static-libasan") set(LINK_FLAGS
+  # "-fsanitize=address")
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
