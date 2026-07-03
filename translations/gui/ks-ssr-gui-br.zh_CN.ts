@@ -20,53 +20,48 @@
     </message>
     <message>
         <location filename="../../plugins/gui/br/br-setting-page.ui" line="56"/>
-        <source>Export strategy</source>
-        <translation>导出策略</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="66"/>
         <source>Reset reinforcement args</source>
         <translation>重置加固配置</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="122"/>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="162"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="112"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="152"/>
         <source>Open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="132"/>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="172"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="122"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="162"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="146"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="136"/>
         <source>Bubble notification:</source>
         <translation>气泡通知：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="214"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="204"/>
         <source>Fallback to the pre reforcement status</source>
         <translation>回退到加固前状态</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="92"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="82"/>
         <source>Scheduled scan time (hours/time, 0 indicates off):</source>
         <translation>定时扫描时间（小时/次， 0表示关闭）：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="106"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="96"/>
         <source>Resource monitor:</source>
         <translation>资源监控：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="186"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="176"/>
         <source>Reinforcement fallback:</source>
         <translation>加固回退：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.ui" line="204"/>
+        <location filename="../../plugins/gui/br/br-setting-page.ui" line="194"/>
         <source>Fallback to initial state</source>
         <translation>回退到初始状态</translation>
     </message>
@@ -130,124 +125,124 @@
 <context>
     <name>KS::BR::BRSettingPage</name>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="64"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="63"/>
         <source>Resource monitor open!</source>
         <translation>资源监控已开启！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="73"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="72"/>
         <source>Resource monitor close!</source>
         <translation>资源监控已关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="81"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="80"/>
         <source>Notify open!</source>
         <translation>气泡通知已开启！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="87"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="86"/>
         <source>Notify close!</source>
         <translation>气泡通知已关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="95"/>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="113"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="94"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="112"/>
         <source>Fallback is in progress, please wait.</source>
         <translation>回退正在进行中，请等待。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="99"/>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="117"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="98"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="116"/>
         <source>Fallback</source>
         <translation>回退</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="99"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="98"/>
         <source>Are you sure you want to go back to the initialization state?</source>
         <translation>您确认要回退到初始状态？</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="117"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="116"/>
         <source>Are you sure you want to go back to the previous state?</source>
         <translation>您确认要回退到加固前的状态？</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="134"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="133"/>
         <source>Home free space less than 10%.</source>
         <translation>家目录空间不足10%。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="143"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="142"/>
         <source>Root free space less than 10%.</source>
         <translation>根目录空间不足10%。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="152"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="151"/>
         <source>The average load of a single core CPU exceeds 1.</source>
         <translation>单核CPU负载超过1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="162"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="161"/>
         <source>Memory space less than 10%.</source>
         <translation>内存空间不足10%。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="223"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="222"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="228"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="227"/>
         <source>Files</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="228"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="227"/>
         <source>strategy(*.xml)</source>
         <translation>strategy(*.xml)</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="235"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="234"/>
         <source>Open files failed!</source>
         <translation>打开文件失败！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="239"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="238"/>
         <source>Failed to import strategy file. Please whether the file is valid!</source>
         <translation>导入策略失败，请检查策略文件的合法性！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="239"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="238"/>
         <source>Import succeeded!</source>
         <translation>导入成功！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="251"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="250"/>
         <source>Scheduled scanning task has been closed!</source>
         <translation>定时扫描已关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="259"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="258"/>
         <source>Scheduled scanning task has been started, every interval %1 scan once every hour.</source>
         <translation>定时扫描任务开启，每间隔%1小时扫描一次。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="290"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="289"/>
         <source>Timed scan finished, Scaned %1, %2 conform, %3 inconform!</source>
         <translation>定时扫描任务完成，已扫描 %1项， %2项符合, %3项不符合！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="322"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="321"/>
         <source>Open resource monitoring.</source>
         <translation>资源监控已打开。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="322"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="321"/>
         <source>Close resource monitoring.</source>
         <translation>资源监控已关闭。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="339"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="338"/>
         <source>Fallback finished!</source>
         <translation>回退完成！</translation>
     </message>
@@ -321,70 +316,70 @@
     </message>
     <message>
         <location filename="../../plugins/gui/br/progress.cpp" line="52"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="148"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="156"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="151"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="159"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="83"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="86"/>
         <source>In %1, please wait...</source>
         <translation>正在%1中，请等待...</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="85"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="88"/>
         <source>Scan</source>
         <translation>扫描</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="86"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="147"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="89"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="150"/>
         <source>Reinforcement</source>
         <translation>加固</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="87"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="90"/>
         <source>Start time: %1 elapsed time: 00:00:00 progress: 0%</source>
         <translation>开始扫描时间：%1 用时：00:00:00 进度： 0%</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="91"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="94"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="104"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="179"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="107"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="182"/>
         <source>Start time: %1 elapsed time: %2 progress: %3%</source>
         <translation>开始扫描时间：%1 用时：%2 进度：%3%</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="120"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="123"/>
         <source>Scanned %1, %2 conform!</source>
         <translation>扫描完成%1项，%2项符合！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="121"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="124"/>
         <source>Reinforcement completed %1, successfully reinforced %2!</source>
         <translation>加固完成%1项，加固成功%2项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="128"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="131"/>
         <source>Scanned %1, %2 conform, %3 inconform!</source>
         <translation>扫描完成%1项，%2项符合，%3项不符合！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="132"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="135"/>
         <source>Reinforcement completed %1, successfully reinforced %2, failed %3!</source>
         <translation>加固完成%1项，加固成功%2项，失败%3项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="155"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="158"/>
         <source>GenerateReport</source>
         <translation>生成报表</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="164"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="167"/>
         <source>Start time: %1 elapsed time: %2</source>
         <translation>开始时间：%1 用时：%2</translation>
     </message>
@@ -559,29 +554,29 @@
         <translation>导出失败！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="345"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="346"/>
         <source>Please select the item to export!</source>
         <translation>请选择要导出的加固项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="395"/>
-        <location filename="../../plugins/gui/br/scan.cpp" line="434"/>
-        <location filename="../../plugins/gui/br/scan.cpp" line="456"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="396"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="435"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="457"/>
         <source>Fallback is in progress, please wait.</source>
         <translation>回退正在进行中，请等待。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="413"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="414"/>
         <source>Please check the reinforcement items to be scanned or reinforcement classification for scanning.</source>
         <translation>请勾选需要扫描的加固项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="428"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="429"/>
         <source>Please check the content to be reinforced.</source>
         <translation>请勾选要加固的项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="485"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="486"/>
         <source>Export succeeded!</source>
         <translation>导出成功！</translation>
     </message>
@@ -703,6 +698,11 @@
     </message>
     <message>
         <location filename="../../plugins/gui/br/progress.ui" line="118"/>
+        <source>Export strategy</source>
+        <translation>导出策略</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/progress.ui" line="131"/>
         <source>return</source>
         <translation>返回</translation>
     </message>

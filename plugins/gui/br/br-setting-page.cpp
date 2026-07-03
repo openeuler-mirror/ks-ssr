@@ -101,7 +101,9 @@ void BRSettingPage::initConnection()
                 userPrompt->move(x, y);
                 userPrompt->show();
                 connect(userPrompt, &UserPromptDialog::accepted, this, [this]
-                        { fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL); });
+                        {
+                            fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL);
+                        });
             });
     connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this]
             {
@@ -117,7 +119,9 @@ void BRSettingPage::initConnection()
                 userPrompt->move(x, y);
                 userPrompt->show();
                 connect(userPrompt, &UserPromptDialog::accepted, this, [this]
-                        { fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST); });
+                        {
+                            fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST);
+                        });
             });
 
     connect(m_dbusProxy, &BRDbusProxy::HomeFreeSpaceRatioLower, this, [this](const QString &spaceRatio)
