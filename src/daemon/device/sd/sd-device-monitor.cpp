@@ -35,17 +35,17 @@ SDDeviceMonitor::~SDDeviceMonitor()
     if (m_monitor)
     {
         sd_device_monitor_unref(m_monitor);
+        m_monitor = nullptr;
     }
 
     if (m_event)
     {
         sd_event_unref(m_event);
+        m_event = nullptr;
     }
 
-    if (m_socketNotify)
-    {
-        m_socketNotify->deleteLater();
-    }
+        delete m_socketNotify;
+    m_socketNotify = nullptr;
 }
 
 void SDDeviceMonitor::handleDeviceChange(sd_device *device)
@@ -70,8 +70,6 @@ void SDDeviceMonitor::handleDeviceChange(sd_device *device)
         Q_EMIT this->deviceChanged(&sdDevice, SD_DEVICE_ACTION_REMOVE);
         m_devices.remove(syspath);
     }
-
-    Q_EMIT this->deviceChanged(&sdDevice, SD_DEVICE_ACTION_CHANGE);
 }
 
 int SDDeviceMonitor::deviceMonitorHandler(sd_device_monitor *sdMonitor,
