@@ -65,8 +65,6 @@ private:
     void initBox();
     void initBoxInfo();
     void initMenu();
-
-    QWidget *buildMessageDialog(const QString &message);
     void switchMountedStatus();
     void modifyPassword();
     void delBox();

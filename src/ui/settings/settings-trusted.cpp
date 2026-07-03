@@ -13,8 +13,7 @@
  */
 #include "settings-trusted.h"
 #include "include/ksc-i.h"
-#include "include/ksc-marcos.h"
-#include "src/ui/common/message-dialog.h"
+#include "src/ui/common/ksc-marcos-ui.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/settings/trusted-user-pin.h"
 #include "ui_settings-trusted.h"
@@ -74,15 +73,10 @@ bool SettingsTrusted::checkTrustedLoadFinied()
     // 可信未初始化完成，不允许操作
     if (!m_kssDbusProxy->initialized())
     {
-        auto messgeDialog = new MessageDialog(this);
-        messgeDialog->setMessage(tr("Trusted data needs to be initialised,"
-                                    "please wait a few minutes before trying."));
-
-        int x = this->x() + width() / 4 + messgeDialog->width() / 4;
-        int y = this->y() + height() / 4 + messgeDialog->height() / 4;
-        messgeDialog->move(x, y);
-        messgeDialog->show();
-        return false;
+        POPUP_MESSAGE_DIALOG_RETURN_VAL(tr("Trusted data needs to be initialised,"
+                                           "please wait a few minutes before trying."),
+                                        false,
+                                        this);
     }
     return true;
 }
@@ -99,13 +93,7 @@ void SettingsTrusted::setTrustedStatus(bool checked)
 
     if (reply.isError())
     {
-        auto messageDialog = new MessageDialog(this);
-        messageDialog->setMessage(reply.error().message());
-
-        auto x = this->x() + this->width() / 4 + messageDialog->width() / 2;
-        auto y = this->y() + this->height() / 4 + messageDialog->height() / 2;
-        messageDialog->move(x, y);
-        messageDialog->show();
+        POPUP_MESSAGE_DIALOG(reply.error().message(), this);
         m_ui->m_switch->setChecked(!checked);
         return;
     }
@@ -158,20 +146,7 @@ void SettingsTrusted::updateHardRadio(bool checked)
 void SettingsTrusted::setStorageMode()
 {
     auto reply = m_kssDbusProxy->SetStorageMode(m_userPin->getType(), m_userPin->getUserPin());
-    reply.waitForFinished();
-
-    if (reply.isError())
-    {
-        auto messageDialog = new MessageDialog(this);
-        messageDialog->setMessage(reply.error().message());
-
-        auto x = this->x() + this->width() / 4 + messageDialog->width() / 2;
-        auto y = this->y() + this->height() / 4 + messageDialog->height() / 2;
-        messageDialog->move(x, y);
-        messageDialog->show();
-        // 错误则将选中状态改回去
-        updateStorageMode();
-        return;
-    }
+    CHECK_ERROR_FOR_DBUS_REPLY(reply, QString(""), this);
+    updateStorageMode();
 }
 }  // namespace KS

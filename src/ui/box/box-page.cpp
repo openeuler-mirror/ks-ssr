@@ -23,7 +23,7 @@
 #include "src/ui/box/box.h"
 #include "src/ui/box/create-box.h"
 #include "src/ui/box_manager_proxy.h"
-#include "src/ui/common/message-dialog.h"
+#include "src/ui/common/ksc-marcos-ui.h"
 #include "src/ui/ui_box-page.h"
 
 namespace KS
@@ -143,23 +143,9 @@ void BoxPage::newBoxClicked(bool checked)
 
     connect(m_createBox, SIGNAL(accepted()), this, SLOT(createBoxAccepted()));
     connect(m_createBox, &CreateBox::passwdInconsistent, this, [this]
-            {
-                auto messgeDialog = new MessageDialog(this);
-                messgeDialog->setMessage(tr("Please confirm whether the password is consistent."));
-                int x = window()->x() + window()->width() / 4 + messgeDialog->width() / 4;
-                int y = window()->y() + window()->height() / 4 + messgeDialog->height() / 4;
-                messgeDialog->move(x, y);
-                messgeDialog->show();
-            });
+            { POPUP_MESSAGE_DIALOG(tr("Please confirm whether the password is consistent."), this); });
     connect(m_createBox, &CreateBox::inputEmpty, this, [this]
-            {
-                auto messgeDialog = new MessageDialog(this);
-                messgeDialog->setMessage(QString(tr("The input cannot be empty, please improve the information.")));
-                int x = window()->x() + window()->width() / 4 + messgeDialog->width() / 4;
-                int y = window()->y() + window()->height() / 4 + messgeDialog->height() / 4;
-                messgeDialog->move(x, y);
-                messgeDialog->show();
-            });
+            { POPUP_MESSAGE_DIALOG(tr("The input cannot be empty, please improve the information."), this); });
 
     int x = window()->x() + window()->width() / 4 + m_createBox->width() / 4;
     int y = window()->y() + window()->height() / 4 + m_createBox->height() / 8;
@@ -179,25 +165,13 @@ void BoxPage::createBoxAccepted()
     auto boxID = reply.value();
     if (!reply.error().message().isEmpty())
     {
-        auto messgeDialog = new MessageDialog(this);
-        messgeDialog->setMessage(reply.error().message());
-        int x = window()->x() + window()->width() / 4 + messgeDialog->width() / 4;
-        int y = window()->y() + window()->height() / 4 + messgeDialog->height() / 4;
-        messgeDialog->move(x, y);
-        messgeDialog->show();
-        return;
+        POPUP_MESSAGE_DIALOG_RETURN(reply.error().message(), this);
     }
 
     auto box = new Box(boxID);
     //    m_ui->m_boxs->addBox(box);
     addBox(box);
     // 显示消息
-    auto messgeDialog = new MessageDialog(this);
-    messgeDialog->setMessage(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase));
-    messgeDialog->setFixedSize(259, 219);
-    int x = window()->x() + window()->width() / 4 + messgeDialog->width() / 4;
-    int y = window()->y() + window()->height() / 4 + messgeDialog->height() / 4;
-    messgeDialog->move(x, y);
-    messgeDialog->show();
+    POPUP_MESSAGE_DIALOG_RETURN(QString(tr("Please remember this box passphrase : %1, Can be used to retrieve passwords.")).arg(passphrase), this);
 }
 }  // namespace KS

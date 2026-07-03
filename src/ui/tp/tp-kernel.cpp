@@ -18,8 +18,7 @@
 #include <QPainter>
 #include <QWidgetAction>
 #include "ksc-i.h"
-#include "ksc-marcos.h"
-#include "src/ui/common/message-dialog.h"
+#include "src/ui/common/ksc-marcos-ui.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_tp-kernel.h"
@@ -86,6 +85,17 @@ void TPKernel::updateInfo()
     m_ui->m_tips->setText(text);
 }
 
+bool TPKernel::isExistSelectedItem()
+{
+    auto trustedInfos = m_ui->m_kernelTable->getKernelRecords();
+    for (auto trustedInfo : trustedInfos)
+    {
+        RETURN_VAL_IF_TRUE(trustedInfo.selected, true)
+    }
+
+    return false;
+}
+
 void TPKernel::searchTextChanged(const QString &text)
 {
     m_ui->m_kernelTable->searchTextChanged(text);
@@ -97,19 +107,7 @@ void TPKernel::addKernelFile(bool checked)
     RETURN_IF_TRUE(fileName.isEmpty())
 
     auto reply = m_dbusProxy->AddTrustedFile(fileName);
-    reply.waitForFinished();
-
-    if (reply.isError())
-    {
-        KLOG_WARNING() << "Failed to add files: " << reply.error().message();
-        auto messgeDialog = new MessageDialog(this);
-        messgeDialog->setMessage(reply.error().message());
-
-        int x = window()->x() + this->width() / 4 + messgeDialog->width() / 4;
-        int y = window()->y() + this->height() / 4 + messgeDialog->height() / 4;
-        messgeDialog->move(x, y);
-        messgeDialog->show();
-    }
+    CHECK_ERROR_FOR_DBUS_REPLY(reply, QString(""), this)
     updateInfo();
 }
 
@@ -134,7 +132,16 @@ void TPKernel::recertification(bool checked)
 
 void TPKernel::popDeleteNotify(bool checked)
 {
+    if (!isExistSelectedItem())
+    {
+        POPUP_MESSAGE_DIALOG_RETURN(tr("Please select the content that needs to be removed."), this)
+    }
+
     auto deleteNotify = new TableDeleteNotify(this);
+
+    int x = window()->x() + width() / 4 + deleteNotify->width() / 4;
+    int y = window()->y() + height() / 4 + deleteNotify->height() / 4;
+    deleteNotify->move(x, y);
     deleteNotify->show();
 
     connect(deleteNotify, &TableDeleteNotify::accepted, this, &TPKernel::removeKernelFile);
