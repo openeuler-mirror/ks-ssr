@@ -29,7 +29,7 @@ public:
     NavigationItem(const QString &iconName, const QString &description);
     virtual ~NavigationItem(){};
 
-    QAbstractButton *getButton() { return this->m_icon; };
+    QAbstractButton *getButton() { return m_icon; };
 
 Q_SIGNALS:
     void clicked(bool checked);

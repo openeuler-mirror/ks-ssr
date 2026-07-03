@@ -23,7 +23,7 @@ namespace KS
 SubWindow::SubWindow(QWidget *parent) : TitlebarWindow(parent),
                                         m_contentLayout(nullptr)
 {
-    this->initUI();
+    initUI();
 }
 
 SubWindow::~SubWindow()
@@ -32,15 +32,17 @@ SubWindow::~SubWindow()
 
 QVBoxLayout *SubWindow::getContentLayout()
 {
-    return this->m_contentLayout;
+    return m_contentLayout;
 }
 
 void SubWindow::buildNotify(const QString &notify)
 {
-    this->setTitle(tr("Notify"));
+    setTitle(tr("Notify"));
     auto label = new QLabel(notify, this);
     // 自动换行
     label->setWordWrap(true);
+    // 可复制
+    label->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
     auto labelHBox = new QHBoxLayout(this);
     labelHBox->addStretch();
@@ -63,14 +65,14 @@ void SubWindow::buildNotify(const QString &notify)
 
 void SubWindow::initUI()
 {
-    this->setWindowModality(Qt::ApplicationModal);
-    this->setIcon(QIcon(":/images/logo"));
-    this->setResizeable(false);
-    this->setTitleBarHeight(36);
-    this->setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    //    this->setFixedSize(300, 220);
+    setWindowModality(Qt::ApplicationModal);
+    setIcon(QIcon(":/images/logo"));
+    setResizeable(false);
+    setTitleBarHeight(36);
+    setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
+    //    setFixedSize(300, 220);
 
-    auto vlay = new QVBoxLayout(this->getWindowContentWidget());
+    auto vlay = new QVBoxLayout(getWindowContentWidget());
     vlay->setContentsMargins(4, 4, 4, 4);
 
     auto cusWidget = new QWidget(this);
@@ -79,7 +81,7 @@ void SubWindow::initUI()
     m_contentLayout->setContentsMargins(12, 12, 12, 12);
 
     vlay->addWidget(cusWidget);
-    this->show();
+    //    show();
 }
 
 void SubWindow::paintEvent(QPaintEvent *event)

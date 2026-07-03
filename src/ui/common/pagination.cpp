@@ -110,11 +110,19 @@ void Pagination::pageBtnClick()
     setCurrentPage(m_currentPage);
 }
 
-void Pagination::updatetPageBtns(int number)
+void Pagination::updatePageBtns(int number)
 {
     //只有一页（8条）时隐藏分页控件
     if (m_totalPage <= 1)
-        this->hide();
+        hide();
+    else
+    {
+    }
+}
+
+void Pagination::setSelectedBtn()
+{
+    //如果被点击的btn显示在界面中（已有选中状态），则不处理
 }
 
 }  // namespace KS

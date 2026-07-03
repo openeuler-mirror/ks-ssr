@@ -18,30 +18,31 @@
 #include <QFileDialog>
 #include "ksc-i.h"
 #include "src/ui/file_protected_proxy.h"
+#include "src/ui/trusted/table-delete-notify.h"
 #include "src/ui/ui_fp-page.h"
 
 namespace KS
 {
 FPPage::FPPage(QWidget *parent) : QWidget(parent),
-                   m_ui(new Ui::FPPage())
+                                  m_ui(new Ui::FPPage())
 {
-    this->m_ui->setupUi(this);
+    m_ui->setupUi(this);
 
-    this->m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
-                                                        KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
-                                                        QDBusConnection::systemBus(),
-                                                        this);
+    m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
+                                                  KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
+                                                  QDBusConnection::systemBus(),
+                                                  this);
     // 更新表格右上角提示信息
-    auto text = QString(tr("A total of %1 records")).arg(this->m_ui->m_fileTable->getFPFileInfos().size());
-    this->m_ui->m_tips->setText(text);
+    auto text = QString(tr("A total of %1 records")).arg(m_ui->m_fileTable->getFPFileInfos().size());
+    m_ui->m_tips->setText(text);
 
     // TODO:需要绘制颜色
-    this->m_ui->m_search->addAction(QIcon(":/images/search"), QLineEdit::ActionPosition::LeadingPosition);
+    m_ui->m_search->addAction(QIcon(":/images/search").pixmap(16, 16), QLineEdit::ActionPosition::LeadingPosition);
 
-    connect(this->m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
-    connect(this->m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
-    connect(this->m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
-    connect(this->m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(unprotectClicked(bool)));
+    connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
+    connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
+    //    connect(m_ui->m_update, SIGNAL(clicked(bool)), this, SLOT(updateClicked(bool)));
+    connect(m_ui->m_unprotect, SIGNAL(clicked(bool)), this, SLOT(unprotectClicked(bool)));
 }
 
 FPPage::~FPPage()
@@ -51,7 +52,7 @@ FPPage::~FPPage()
 
 void FPPage::searchTextChanged(const QString &text)
 {
-    this->m_ui->m_fileTable->searchTextChanged(text);
+    m_ui->m_fileTable->searchTextChanged(text);
 }
 
 void FPPage::addClicked(bool checked)
@@ -59,30 +60,39 @@ void FPPage::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     if (!fileName.isEmpty())
     {
-        this->m_fileProtectedProxy->AddFile(fileName);
-        //        this->m_ui->m_fileTable->updateInfo();
+        m_fileProtectedProxy->AddFile(fileName).waitForFinished();
+        //        m_ui->m_fileTable->updateInfo();
+        updateInfo();
     }
 }
 
-void FPPage::updateClicked(bool checked)
+void FPPage::updateInfo()
 {
-    this->m_ui->m_fileTable->updateInfo();
+    m_ui->m_fileTable->updateInfo();
     // 更新表格右上角提示信息
-    auto text = QString(tr("A total of %1 records")).arg(this->m_ui->m_fileTable->getFPFileInfos().size());
-    this->m_ui->m_tips->setText(text);
+    auto text = QString(tr("A total of %1 records")).arg(m_ui->m_fileTable->getFPFileInfos().size());
+    m_ui->m_tips->setText(text);
 }
 
 void FPPage::unprotectClicked(bool checked)
 {
-    auto trustedInfos = this->m_ui->m_fileTable->getFPFileInfos();
+    auto unprotectNotify = new TableDeleteNotify(this);
+    unprotectNotify->show();
+
+    connect(unprotectNotify, &TableDeleteNotify::accepted, this, &FPPage::unprotectAccepted);
+}
+
+void FPPage::unprotectAccepted()
+{
+    auto trustedInfos = m_ui->m_fileTable->getFPFileInfos();
     for (auto trustedInfo : trustedInfos)
     {
         if (trustedInfo.selected)
         {
-            this->m_fileProtectedProxy->RemoveFile(trustedInfo.filePath);
+            m_fileProtectedProxy->RemoveFile(trustedInfo.filePath).waitForFinished();
         }
     }
-    this->m_ui->m_fileTable->updateInfo();
+    updateInfo();
 }
 
 }  // namespace KS

@@ -49,6 +49,7 @@ struct TrustedRecord
     QString type;
     // 状态
     QString status;
+    QString md5;
     // 是否开启防卸载
     // bool
 };

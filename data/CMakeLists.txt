@@ -22,7 +22,7 @@ install(
 install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SC.conf
         DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d/)
 
-# sc sql
+# ksc sql
 install(FILES ${PROJECT_SOURCE_DIR}/data/ksc.dat
         DESTINATION ${KSC_INSTALL_DATADIR})
 

@@ -29,13 +29,13 @@ namespace KS
 
 #define BOX_NAME_KEY "name"
 #define BOX_UID_KEY "uid"
-#define BOX_ISMOUNT_KEY "isMount"
+#define BOX_ISMOUNT_KEY "mounted"
 
 BoxManager::BoxManager(QObject *parent) : QObject(parent)
 {
-    this->m_dbusAdaptor = new BoxManagerAdaptor(this);
+    m_dbusAdaptor = new BoxManagerAdaptor(this);
 
-    this->init();
+    init();
 }
 BoxManager::~BoxManager()
 {
@@ -43,24 +43,26 @@ BoxManager::~BoxManager()
 
 QString BoxManager::CreateBox(const QString &name, const QString &password)
 {
-    auto decryptPasswd = CryptoHelper::rsaDecrypt(this->m_rsaPrivateKey, password);
-    Box *box = new Box(name, decryptPasswd, getSenderUid());
+    auto decryptPasswd = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
+    auto box = new Box(name, decryptPasswd, getSenderUid());
+
+    RETURN_VAL_IF_TRUE(box->getPassphrase().isEmpty(), QString())
 
     m_boxs.insert(box->getBoxID(), box);
 
-    //    auto decryptPassphrase = CryptoHelper::rsaEncrypt(this->m_rsaPublicKey, box->getPassphrase());
+    //    auto decryptPassphrase = CryptoHelper::rsaEncrypt(m_rsaPublicKey, box->getPassphrase());
     emit BoxAdded(box->getBoxID(), box->getPassphrase());
     return box->getBoxID();
 }
 
-bool BoxManager::DelBox(const QString &box_uid, const QString &boxID)
+bool BoxManager::DelBox(const QString &boxID, const QString &password)
 {
-    auto box = m_boxs.value(box_uid);
-    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, boxID);
+    auto box = m_boxs.value(boxID);
+    auto decryptInputPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
 
     RETURN_VAL_IF_TRUE(!box->delBox(decryptInputPassword), false)
-    m_boxs.remove(box_uid);
-    emit BoxDeleted(box_uid);
+    m_boxs.remove(boxID);
+    emit BoxDeleted(boxID);
 
     return true;
 }
@@ -74,7 +76,7 @@ QString BoxManager::GetBoxByUID(const QString &boxID)
     jsonObj = QJsonObject{
         {BOX_NAME_KEY, box->getBoxName()},
         {BOX_UID_KEY, boxID},
-        {BOX_ISMOUNT_KEY, box->isMount()}};
+        {BOX_ISMOUNT_KEY, box->mounted()}};
     jsonDoc.setObject(jsonObj);
 
     return QString(jsonDoc.toJson());
@@ -97,7 +99,7 @@ QString BoxManager::GetBoxs()
         QJsonObject jsonObj{
             {BOX_NAME_KEY, box->getBoxName()},
             {BOX_UID_KEY, box->getBoxID()},
-            {BOX_ISMOUNT_KEY, box->isMount()}};
+            {BOX_ISMOUNT_KEY, box->mounted()}};
 
         jsonArr.push_back(jsonObj);
     }
@@ -110,7 +112,7 @@ bool BoxManager::IsMounted(const QString &boxID)
 {
     auto box = m_boxs.value(boxID);
 
-    return box->isMount();
+    return box->mounted();
 }
 
 bool BoxManager::ModifyBoxPassword(const QString &boxID,
@@ -178,7 +180,7 @@ void BoxManager::init()
     for (auto boxInfo : boxInfoList)
     {
         auto decryptPassword = CryptoHelper::aesDecrypt(boxInfo.encryptpassword);
-        Box *box = new Box(boxInfo.boxName, decryptPassword, boxInfo.userUid, boxInfo.boxID);
+        Box *box = new Box(boxInfo.boxName, decryptPassword, boxInfo.userUID, boxInfo.boxID);
         m_boxs.insert(boxInfo.boxID, box);
     }
 }

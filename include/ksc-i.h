@@ -30,7 +30,7 @@ extern "C"
 // BM: Box Manager
 #define KSC_BM_JK_BOX_UID "uid"
 #define KSC_BM_JK_BOX_NAME "name"
-#define KSC_BM_JK_BOX_MOUNTED "isMount"
+#define KSC_BM_JK_BOX_MOUNTED "mounted"
 
 // 可信保护相关定义
 #define KSC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH "/com/kylinsec/SC/Trusted"

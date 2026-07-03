@@ -32,11 +32,14 @@ public:
     FPPage(QWidget *parent = nullptr);
     virtual ~FPPage();
 
+private:
+    void updateInfo();
+
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void addClicked(bool checked);
-    void updateClicked(bool checked);
     void unprotectClicked(bool checked);
+    void unprotectAccepted();
 
 private:
     Ui::FPPage *m_ui;

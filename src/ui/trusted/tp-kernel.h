@@ -39,6 +39,7 @@ private Q_SLOTS:
     void addClicked(bool checked);
     void updateClicked(bool checked);
     void unprotectClicked(bool checked);
+    void unprotectAccepted();
 
 private:
     Ui::TPKernel *m_ui;

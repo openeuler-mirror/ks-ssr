@@ -41,7 +41,7 @@ public Q_SLOTS:  // METHODS
     // 创建box
     QString CreateBox(const QString &name, const QString &password);
     // 删除box
-    bool DelBox(const QString &password, const QString &boxID);
+    bool DelBox(const QString &boxID, const QString &password);
     // 通过box uid获取box
     QString GetBoxByUID(const QString &boxID);
     // 获取所有box信息
