@@ -21,6 +21,7 @@ namespace Ui
 {
 class Window;
 }
+class KSSDbusProxy;
 
 namespace KS
 {
@@ -47,11 +48,13 @@ private:
 private slots:
     void popupActiveDialog();
     void updateActivation();
+    void popupSettingsDialog();
 
 private:
     Ui::Window *m_ui;
     LicenseActivation *m_activation;
     QLabel *m_activateStatus;
     QSharedPointer<LicenseDBus> m_licenseDBus;
+    KSSDbusProxy *m_kssDbusProxy;
 };
 }  // namespace KS

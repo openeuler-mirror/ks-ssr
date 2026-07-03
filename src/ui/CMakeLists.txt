@@ -62,7 +62,9 @@ qt5_wrap_ui(
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/tp-kernel.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/tp-execute.ui
   ${CMAKE_CURRENT_SOURCE_DIR}/tp/tp-page.ui
-  ${CMAKE_CURRENT_SOURCE_DIR}/tp/table-delete-notify.ui)
+  ${CMAKE_CURRENT_SOURCE_DIR}/tp/table-delete-notify.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/setup/settings-page.ui
+  ${CMAKE_CURRENT_SOURCE_DIR}/setup/trusted-settings.ui)
 
 set(TARGET_NAME ks-sc-gui)
 

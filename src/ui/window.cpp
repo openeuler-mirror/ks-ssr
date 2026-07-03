@@ -1,17 +1,4 @@
 /**
- * @Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
- * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
- * Author:     chendingjian <chendingjian@kylinos.com.cn> 
- */
-/**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
  * ks-sc is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
@@ -27,17 +14,21 @@
 
 #include "src/ui/window.h"
 #include <qt5-log-i.h>
+#include <QDBusConnection>
 #include <QFile>
 #include <QMenu>
 #include <QMutex>
 #include <QPushButton>
 #include <QStackedWidget>
+#include "include/ksc-i.h"
 #include "src/ui/box/box-page.h"
 #include "src/ui/device/device-page.h"
 #include "src/ui/fp/fp-page.h"
+#include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/license/license-activation.h"
 #include "src/ui/license/license-dbus.h"
 #include "src/ui/navigation.h"
+#include "src/ui/setup/settings-page.h"
 #include "src/ui/tp/tp-page.h"
 #include "src/ui/ui_window.h"
 
@@ -49,10 +40,15 @@ Window::Window() : TitlebarWindow(nullptr),
                    m_ui(new Ui::Window),
                    m_activation(nullptr),
                    m_activateStatus(nullptr),
-                   m_licenseDBus(nullptr)
+                   m_licenseDBus(nullptr),
+                   m_kssDbusProxy(nullptr)
 {
     m_ui->setupUi(getWindowContentWidget());
 
+    m_kssDbusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
+                                      KSC_KSS_INIT_DBUS_OBJECT_PATH,
+                                      QDBusConnection::systemBus(),
+                                      this);
     initWindow();
     initNavigation();
     initActivation();
@@ -126,9 +122,10 @@ void Window::initWindow()
     btnForMenu->setFixedSize(QSize(16, 16));
 
     auto settingMenu = new QMenu(this);
-    auto action = settingMenu->addAction(tr("Activate Info"));
-    connect(action, &QAction::triggered, this, &Window::popupActiveDialog);
     btnForMenu->setMenu(settingMenu);
+
+    settingMenu->addAction(tr("Setup"), this, &Window::popupSettingsDialog);
+    settingMenu->addAction(tr("Activate Info"), this, &Window::popupActiveDialog);
 
     layout->addWidget(m_activateStatus);
     layout->addWidget(btnForMenu);
@@ -176,5 +173,20 @@ void Window::updateActivation()
     //设置激活对话框和激活状态标签是否可见
     m_activation->setVisible(!isActivate);
     m_activateStatus->setVisible(!isActivate);
+}
+
+void Window::popupSettingsDialog()
+{
+    auto settingsDialog = new SettingsPage(this);
+    // TODO 需要获取可信状态，settingsDialog应根据此状态设置当前swith值
+
+    // 设置可信开关
+    connect(settingsDialog, &SettingsPage::trustedStatusChange, this, [this](bool status)
+            { m_kssDbusProxy->SetTrustedStatus(status); });
+
+    auto x = this->x() + this->width() / 4 + m_activation->width() / 4;
+    auto y = this->y() + this->height() / 4 + m_activation->height() / 4;
+    settingsDialog->move(x, y);
+    settingsDialog->show();
 }
 }  // namespace KS

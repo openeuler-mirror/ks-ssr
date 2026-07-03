@@ -57,6 +57,24 @@
             <description>Remove file from protected file list.</description>
         </method>
 
+        <method name="SoftModeChecked">
+            <description>Select soft mode for root key storage method.</description>
+        </method>
+
+        <method name="HardModeChecked">
+            <arg type="s" name="user_pin" direction="in">
+                <summary>A user pin.</summary>
+            </arg>
+            <description>Select hard mode for root key storage method.</description>
+        </method>
+
+        <method name="SetTrustedStatus">
+            <arg type="b" name="status" direction="in">
+                <summary>Set trusted on or off.</summary>
+            </arg>
+            <description>Set trusted status.</description>
+        </method>
+
         <method name="Search">
             <arg type="s" name="path_key" direction="in">
                 <summary>A search key.</summary>
