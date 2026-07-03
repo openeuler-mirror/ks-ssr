@@ -11,37 +11,42 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef INPUTPASSWORD_H
-#define INPUTPASSWORD_H
+#ifndef RETRIEVEPASSWORD_H
+#define RETRIEVEPASSWORD_H
 
-#include <QWidget>
+#include "src/ui/common/titlebar-window.h"
 
 namespace Ui
 {
-class InputPassword;
+class BoxPasswordRetrieve;
 }
+
 namespace KS
 {
-class InputPassword : public QWidget
+class BoxPasswordRetrieve : public TitlebarWindow
 {
     Q_OBJECT
 
 public:
-    explicit InputPassword(QWidget *parent = nullptr);
-    ~InputPassword();
-
-    QString getInputPassword();
+    explicit BoxPasswordRetrieve(QWidget *parent = nullptr);
+    ~BoxPasswordRetrieve();
+    QString getPassphrase();
 
 private:
     void init();
 
+private slots:
+    void onOkClicked();
+
 signals:
     void accepted();
     void rejected();
+    // 输入空字符
+    void inputEmpty();
 
 private:
-    Ui::InputPassword *m_ui;
+    Ui::BoxPasswordRetrieve *m_ui;
 };
 }  // namespace KS
 
-#endif  // INPUTPASSWORD_H
+#endif  // RETRIEVEPASSWORD_H

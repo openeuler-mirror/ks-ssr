@@ -37,10 +37,10 @@ QVBoxLayout *MessageDialog::getContentLayout()
     return m_contentLayout;
 }
 
-void MessageDialog::buildNotify(const QString &notify)
+void MessageDialog::setMessage(const QString &message)
 {
     setTitle(tr("Notify"));
-    auto label = new QLabel(notify, this);
+    auto label = new QLabel(message, this);
     label->setMinimumWidth(180);
     // 自动换行
     label->setWordWrap(true);
@@ -71,7 +71,7 @@ void MessageDialog::initUI()
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    //    setFixedSize(300, 220);
+    setFixedSize(240, 200);
 
     auto vlay = new QVBoxLayout(getWindowContentWidget());
     vlay->setContentsMargins(4, 4, 4, 4);
