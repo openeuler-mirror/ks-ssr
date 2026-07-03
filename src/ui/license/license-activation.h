@@ -17,6 +17,7 @@
 #include <kylin-license/license-i.h>
 #include <QDialog>
 #include "src/ui/common/titlebar-window.h"
+#include "src/ui/license/license-dbus.h"
 
 namespace Ui
 {
@@ -25,17 +26,6 @@ class LicenseActivation;
 
 namespace KS
 {
-struct LicenseInfo
-{
-    LicenseInfo() : activationStatus(LicenseActivationStatus::LAS_LAST),
-                    expiredTime(0) {}
-
-    QString activationCode;
-    QString machineCode;
-    int activationStatus;
-    time_t expiredTime;
-};
-
 class LicenseDBus;
 class QRCodeDialog;
 class LicenseActivation : public TitlebarWindow
@@ -46,13 +36,6 @@ public:
     LicenseActivation(QWidget* parent = nullptr);
     virtual ~LicenseActivation();
     /**
-     * @brief isActivate:判断是否已授权
-     * @return true： 已授权
-     *         false：未授权/授权已过期
-     */
-    bool isActivate();
-
-    /**
      * @brief update:通过dbus获取授权信息，并将数据更新在ui界面中
      */
     void update();
@@ -62,7 +45,6 @@ protected:
 
 private:
     void initUI();
-    void getLicenseInfo();
 
 private slots:
     void activate();
@@ -71,16 +53,15 @@ private slots:
     /**
      * @brief setLicense:授权信息变化的槽函数，用于重新获取授权信息并设置在ui界面中，发送应用是否授权信号
      */
-    void setLicense();
+    void setLicense(QSharedPointer<LicenseInfo> licenseInfo);
 
 signals:
-    void activated(bool);
     void closed();
 
 private:
     Ui::LicenseActivation* m_ui;
-    LicenseDBus* m_licenseDbus;
-    LicenseInfo m_licenseInfo;
+    QSharedPointer<LicenseDBus> m_licenseDBus;
     QRCodeDialog* m_qrcodeDialog;
+    QSharedPointer<LicenseInfo> m_licenseInfo;
 };
 }  // namespace KS
