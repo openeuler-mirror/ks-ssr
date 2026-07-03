@@ -14,8 +14,8 @@
 
 #include "sd-device-monitor.h"
 #include <qt5-log-i.h>
+#include <ssr-i.h>
 #include <systemd/sd-device.h>
-#include "include/ssr-i.h"
 #include "sd-device-enumerator.h"
 
 namespace KS

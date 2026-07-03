@@ -11,9 +11,19 @@ qt5_add_dbus_adaptor(
   private_manager_adaptor
   BoxManagerAdaptor)
 
+# 更新ts文件
+set(TS_FILES
+    "${PROJECT_SOURCE_DIR}/translations/daemon/${PROJECT_NAME}-${TARGET_NAME}.zh_CN.ts"
+)
+execute_process(COMMAND lupdate-qt5 -no-obsolete ${PRIVATE_BOX_H_FILES}
+                        ${PRIVATE_BOX_CPP_FILES} -ts ${TS_FILES})
+
+# 生成qm文件，qt_create_translation会导致cmake clean把ts文件删掉
+qt5_add_translation(QM_FILES ${TS_FILES})
+
 add_library(
   ${TARGET_NAME} SHARED ${PRIVATE_BOX_H_FILES} ${PRIVATE_BOX_CPP_FILES}
-                        ${PRIVATE_BOX_MANAGER_SRCS})
+                        ${PRIVATE_BOX_MANAGER_SRCS} ${QM_FILES})
 
 target_include_directories(
   ${TARGET_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
@@ -21,4 +31,5 @@ target_include_directories(
 
 target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Sql Qt5::DBus base dbus)
 
+install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 install(TARGETS ${TARGET_NAME} DESTINATION ${SSR_INSTALL_DAEMON_PLUGINDIR})

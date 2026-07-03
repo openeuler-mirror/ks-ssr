@@ -163,7 +163,7 @@ bool ReinforcementPython::check_call_result(PyObject *py_retval, const QString &
 
     if (!py_retval || !PyTuple_Check(py_retval))
     {
-        error = QString(QObject::tr("The return value of %1 isn't tuple type")).arg(function_name);
+        error = QString(QObject::tr("The return value of %1 isn't tuple type.")).arg(function_name);
         // error = fmt::format(_("The return value of {0} isn't tuple type"), function_name);
         return false;
     }

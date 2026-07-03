@@ -118,7 +118,7 @@ bool AccountsEntity::ChangePassphrase(const QString& userName, const QString& ol
     if (!verifyPassword(userName, oldPassphrase))
     {
         KLOG_INFO() << "Password error!, failed to change passphrase";
-        SSR_LOG_ERROR(LogType::ACCOUNT, tr("Change password"), calledUniqueName);
+        SSR_LOG_ERROR(LogType::ACCOUNT, tr("Change password failed."), calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
     if (!checkPassword(CryptoHelper::rsaDecryptString(m_rsaPrivateKey, newPassphrase), userName))
@@ -134,7 +134,7 @@ bool AccountsEntity::ChangePassphrase(const QString& userName, const QString& ol
     }
     auto isSuccess = changePassword(userName, newPassphrase);
     emit PasswordChanged(userName);
-    SSR_LOG_SUCCESS(LogType::ACCOUNT, tr("Change password"), calledUniqueName);
+    SSR_LOG_SUCCESS(LogType::ACCOUNT, tr("Change password success."), calledUniqueName);
     return isSuccess;
 }
 

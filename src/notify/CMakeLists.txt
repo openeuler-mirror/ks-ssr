@@ -5,7 +5,7 @@ qt5_add_dbus_interface(
   TOOL_BOX_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.ToolBox.xml
   toolbox_dbus_proxy)
 
-set(TARGET_NAME ks-ssr-notify)
+set(TARGET_NAME ${PROJECT_NAME}-notify)
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
 qt5_create_translation(QM_FILES ${PROJECT_SOURCE_DIR}/src/notify ${TS_FILES}
                        OPTIONS -I ${PROJECT_SOURCE_DIR})
