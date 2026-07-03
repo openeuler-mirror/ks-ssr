@@ -31,12 +31,6 @@
 
 namespace KS
 {
-enum DbusInterface
-{
-    ACTIVATE_BYACTIVATIONCODE,
-    GET_LICENSE
-};
-
 class LicenseUtils : public QObject
 {
     Q_OBJECT
@@ -44,21 +38,15 @@ public:
     LicenseUtils(QObject* parent = 0);
     virtual ~LicenseUtils();
 
-    QString callInterface(DbusInterface num);
-    bool callInterface(DbusInterface num, QString args);
-
 public:
     bool creatObjectName(const QString& objectName);
     QString getLicense();
-    bool activateByActivationCode(const QString& activation_Code);
+    bool activateByActivationCode(const QString& activation_Code, QString& errorMsg);
 
 signals:
-    void standardChanged(uint type);
-    void callDbusFailed();
     void licenseChanged(bool);
 
 private slots:
     void licenseChange(bool);
-    //void callFailed();
 };
 }  // namespace KS
