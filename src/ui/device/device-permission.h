@@ -53,6 +53,7 @@ private slots:
 signals:
     void permissionChanged();
     void stateChanged();
+    void deviceChanged();
 
 private:
     Ui::DevicePermission *m_ui;

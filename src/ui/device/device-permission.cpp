@@ -68,6 +68,7 @@ void DevicePermission::setDeviceStatus(const DeviceState &status)
     {
         //由于qt5 .15.2及以上的版本设置QCombobox占位符，无法正常显示，见QTBUG - 90595，因此使用自定义QLineEdit来显示占位符
         auto line = new QLineEdit(m_ui->m_status);
+        line->setObjectName("lineEdit");
         line->setPlaceholderText(tr("Please select device status"));
         line->setReadOnly(true);
         line->installEventFilter(this);
@@ -106,9 +107,10 @@ void DevicePermission::setDevicePermission(const QString type, int permission)
     else
     {
         m_ui->m_read->setChecked(m_permissions & PERMISSION_TYPE_READ);
-        m_ui->m_write->setChecked(m_permissions & PERMISSION_TYPE_WRITE);
-        m_ui->m_exec->setChecked(m_permissions & PERMISSION_TYPE_EXEC);
+        m_ui->m_read->setDisabled(false);
     }
+    m_ui->m_write->setChecked(m_permissions & PERMISSION_TYPE_WRITE);
+    m_ui->m_exec->setChecked(m_permissions & PERMISSION_TYPE_EXEC);
 }
 
 DeviceState DevicePermission::getDeviceStatus()
@@ -158,6 +160,11 @@ void DevicePermission::confirm()
             m_permissions = permissions;
             emit permissionChanged();
         }
+    }
+
+    if (state != m_status || permissions != m_permissions)
+    {
+        emit deviceChanged();
     }
 
     hide();
