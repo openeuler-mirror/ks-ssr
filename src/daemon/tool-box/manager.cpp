@@ -318,9 +318,9 @@ void Manager::setFileKICLabel(const QDBusMessage& message, const QString& filePa
     {
         KLOG_ERROR() << "Failed to set " << filePath
                      << " security label: " << SecurityContext
-                     << "error message: " << output;
+                     << "error message: Failed to SetKic";
         SSR_LOG_ERROR(Log::Manager::LogType::TOOL_BOX,
-                      tr("Failed to set %1 kic label, error msg: %2").arg(filePath).arg(output),
+                      tr("Failed to set %1 kic label, error msg: %2").arg(filePath).arg("Failed to SetKic"),
                       calledUniqueName);
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_TOOL_BOX_FAILED_SET_KIC_CONTEXT, message);
     }

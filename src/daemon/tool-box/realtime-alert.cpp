@@ -216,7 +216,7 @@ void RealTimeAlert::processIPSetData()
     }
     RETURN_IF_TRUE(nmapAttackers.isEmpty());
     KLOG_DEBUG() << "Detect nmap attack, attacker ips: " << nmapAttackers;
-    Manager::hazardDetected(ATTACK_DETECT, tr("Detect nmap attack, attacker ips: %1").arg(nmapAttackers.join(',')));
+    Manager::hazardDetected(ATTACK_DETECT, tr("Detect nmap attack from %1").arg(nmapAttackers.join(',')));
     KS::Log::Manager::writeLog({"secadm",
                                 Account::Manager::AccountRole::secadm,
                                 QDateTime::currentDateTime(),

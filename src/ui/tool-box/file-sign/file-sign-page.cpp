@@ -112,7 +112,7 @@ void FileSign::updateTableData(const QStringList& fileList)
         }
         else
         {
-            newData[file] = {false, file, m_dbusProxy->GetUserMLSLabel(file).value(), ""};
+            newData[file] = {false, file, m_dbusProxy->GetUserMLSLabel(file).value(), tr("NULL")};
         }
     }
     m_ui->m_fileSignTable->updateData(newData);
