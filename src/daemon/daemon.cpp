@@ -16,10 +16,10 @@
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include "include/ksc-i.h"
+#include "lib/license/license-proxy.h"
 #include "src/daemon/box/box-manager.h"
 #include "src/daemon/device/device-manager.h"
 #include "src/daemon/kss/kss-dbus.h"
-#include "src/daemon/license/license-manager.h"
 
 namespace KS
 {
@@ -27,13 +27,15 @@ Daemon *Daemon::m_instance = nullptr;
 
 Daemon::Daemon() : QObject(nullptr), m_kssDBus(nullptr)
 {
-    LicenseManager::globalInit(this);
-    if (LicenseManager::instance()->activated())
+    m_licenseProxy = LicenseProxy::getDefault();
+    if (m_licenseProxy->isActivated())
     {
-        loadingDbus();
+        start();
     }
-
-    connect(LicenseManager::instance(), &LicenseManager::LicenseChanged, this, &Daemon::loadingDbus);
+    else
+    {
+        connect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
+    }
 }
 
 Daemon::~Daemon()
@@ -62,8 +64,9 @@ void Daemon::init()
     }
 }
 
-void Daemon::loadingDbus()
+void Daemon::start()
 {
+    m_licenseProxy->disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
     BoxManager::globalInit(this);
     DeviceManager::globalInit(this);
     // FIXME: 最好需要提供一个模块入口类，可以时KSSContext或者KSSManager，来管理dbus和wrapper
