@@ -40,6 +40,17 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/data/box
 install(FILES ${PROJECT_SOURCE_DIR}/data/ksc.ini
         DESTINATION ${KSC_INSTALL_DATADIR})
 
+# device cfg file
+install(
+  FILES ${PROJECT_SOURCE_DIR}/data/device-config.ini
+        ${PROJECT_SOURCE_DIR}/data/device-interface-config.ini
+        ${PROJECT_SOURCE_DIR}/data/device-connect-record.ini
+  DESTINATION ${KSC_INSTALL_DATADIR}/device)
+
+# udev cfg file
+install(FILES ${PROJECT_SOURCE_DIR}/data/99-ks-sc-device.rules
+        DESTINATION /etc/udev/rules.d/)
+
 # desktop
 configure_file(${PROJECT_SOURCE_DIR}/data/ks-sc-gui.desktop.in
                ${PROJECT_BINARY_DIR}/data/ks-sc-gui.desktop)

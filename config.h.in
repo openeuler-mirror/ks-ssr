@@ -16,7 +16,7 @@
 #define KSC_DEVICE_CONFIG_FILE "@KSC_INSTALL_DATADIR@/device/device-config.ini"
 #define KSC_DI_CONFIG_FILE "@KSC_INSTALL_DATADIR@/device/device-interface-config.ini"
 #define KSC_DI_GRUB_FILE "@CMAKE_INSTALL_FULL_SYSCONFDIR@/default/grub"
-#define KSC_DEVICE_CONNECT_LOG_FILE "@KSC_INSTALL_DATADIR@/device/device-connect.log"
+#define KSC_DEVICE_CONNECT_LOG_FILE "@KSC_INSTALL_DATADIR@/device/device-connect-record.ini"
 #define DBUS_TIMEOUT_MS 300
 #define KSC_DEVICE_USB_DESC_FILE "@KSC_DEVICE_USB_DESC_FILE@"
 #define KSC_DEVICE_SYS_MOUNT_FILE "/proc/mounts"
