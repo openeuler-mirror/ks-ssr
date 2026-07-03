@@ -50,8 +50,12 @@ public:  // PROPERTIES
 public Q_SLOTS:  // METHODS
     // 添加文件保护文件
     void AddProtectedFile(const QString &filePath);
+    // 添加文件保护文件列表
+    void AddProtectedFiles(const QStringList &fileList);
     // 添加可信保护文件
     void AddTrustedFile(const QString &filePath);
+    // 添加可信保护文件列表
+    void AddTrustedFiles(const QStringList &fileList);
     // 获取可信保护列表 @type ：可信类型(kernel/excute)
     QString GetTrustedFiles(uint type);
     // 获取文件保护列表
@@ -60,8 +64,12 @@ public Q_SLOTS:  // METHODS
     void ProhibitUnloading(bool prohibited, const QString &filePath);
     // 移除文件保护文件
     void RemoveProtectedFile(const QString &filePath);
+    // 移除文件保护文件列表
+    void RemoveProtectedFiles(const QStringList &fileList);
     // 移除可信保护文件
     void RemoveTrustedFile(const QString &filePath);
+    // 移除可信保护文件列表
+    void RemoveTrustedFiles(const QStringList &fileList);
     // 存储模式切换
     void SetStorageMode(uint type, const QString &userPin);
     // 设置可信状态
@@ -79,10 +87,14 @@ private:
 
 private:
     void addTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath);
+    void addTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList);
     void removeTPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath);
+    void removeTPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList);
     void prohibitUnloadingAfterAuthorization(const QDBusMessage &message, bool prohibited, const QString &filePath);
     void addFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath);
+    void addFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList);
     void removeFPFileAfterAuthorization(const QDBusMessage &message, const QString &filePath);
+    void removeFPFilesAfterAuthorization(const QDBusMessage &message, const QStringList &fileList);
     void setStorageModeAfterAuthorization(const QDBusMessage &message, uint type, const QString &userPin);
     void setTrustedStatusAfterAuthorization(const QDBusMessage &message, bool status);
 

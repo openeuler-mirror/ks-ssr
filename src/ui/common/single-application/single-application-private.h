@@ -38,44 +38,49 @@
 
 namespace KS
 {
-struct InstancesInfo {
+struct InstancesInfo
+{
     bool primary;
     quint32 secondary;
     qint64 primaryPid;
     char primaryUser[128];
-    quint16 checksum; // Must be the last field
+    quint16 checksum;  // Must be the last field
 };
 
-struct ConnectionInfo {
+struct ConnectionInfo
+{
     qint64 msgLen = 0;
     quint32 instanceId = 0;
     quint8 stage = 0;
 };
 
-class SingleApplicationPrivate : public QObject {
-Q_OBJECT
+class SingleApplicationPrivate : public QObject
+{
+    Q_OBJECT
 public:
-    enum ConnectionType : quint8 {
+    enum ConnectionType : quint8
+    {
         InvalidConnection = 0,
         NewInstance = 1,
         SecondaryInstance = 2,
         Reconnect = 3
     };
-    enum ConnectionStage : quint8 {
+    enum ConnectionStage : quint8
+    {
         StageHeader = 0,
         StageBody = 1,
         StageConnected = 2,
     };
     Q_DECLARE_PUBLIC(SingleApplication)
 
-    SingleApplicationPrivate(SingleApplication *q_ptr );
+    SingleApplicationPrivate(SingleApplication *q_ptr);
     ~SingleApplicationPrivate() override;
     static QString getUsername();
     void genBlockServerName();
     void initializeMemoryBlock() const;
     void startPrimary();
     void startSecondary();
-    bool connectToPrimary( int msecs, ConnectionType connectionType );
+    bool connectToPrimary(int msecs, ConnectionType connectionType);
     quint16 blockChecksum() const;
     qint64 primaryPid() const;
     QString primaryUser() const;
@@ -92,12 +97,12 @@ public:
     quint32 instanceNumber;
     QString blockServerName;
     SingleApplication::Options options;
-    QMap<QLocalSocket*, ConnectionInfo> connectionMap;
+    QMap<QLocalSocket *, ConnectionInfo> connectionMap;
     QStringList appDataList;
 
 public Q_SLOTS:
     void slotConnectionEstablished();
-    void slotDataAvailable( QLocalSocket*, quint32 );
-    void slotClientConnectionClosed( QLocalSocket*, quint32 );
+    void slotDataAvailable(QLocalSocket *, quint32);
+    void slotClientConnectionClosed(QLocalSocket *, quint32);
 };
 }  // namespace KS

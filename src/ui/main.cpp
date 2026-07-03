@@ -18,8 +18,8 @@
 #include <QFileInfo>
 #include <QTranslator>
 #include <QtGlobal>
-#include "src/ui/common/single-application/single-application.h"
 #include "config-ui.h"
+#include "src/ui/common/single-application/single-application.h"
 #include "src/ui/window.h"
 
 using namespace KS;

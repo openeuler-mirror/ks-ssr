@@ -192,6 +192,18 @@ QCheckBox::indicator:checked:pressed {
     image: url(:/images/checkbox-checked-active);
 }
 
+KS--Loading QLabel#loadingLabel
+{
+    color:#919191;
+    font-size: 12px;
+    font:NotoSansCJKsc-Regular;
+}
+
+KS--Window QPushButton#btnForMenu
+{
+    background:#2d2d2d;
+}
+
 QCheckBox::indicator:indeterminate:hover {
     image: url(:/images/checkbox-indeterminate-hover);
 }
@@ -281,6 +293,22 @@ KS--Window QLabel#activateStatus
     border-radius: 6px;
 }
 
+/* about */
+QLabel#m_info,
+QLabel#m_version
+{
+    color:#ffffff;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+}
+
+QLabel#m_license
+{
+    color:#919191;
+    font:NotoSansCJKsc-Regular;
+    font-size:10px;
+}
+
 /* message dialog */
 QWidget#messageDialog
 {
@@ -342,7 +370,18 @@ QPushButton#m_unprotect:hover
 
 QPushButton#m_unprotect
 {
-    color:red;
+    color:#FA4949;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+    border-radius:4px;
+    background:#393939;
+}
+
+QPushButton#m_unprotect:hover
+{
+    background:#464646;
+    border:4px;
+    color:#FA4949;
 }
 
 /* security box */

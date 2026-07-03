@@ -16,13 +16,12 @@
 #include <qt5-log-i.h>
 #include <QMutex>
 #include "ksc-marcos.h"
+#include "src/daemon/device/drm-device.h"
 #include "src/daemon/device/usb-device.h"
 
 namespace KS
 {
-
-DeviceFactory::DeviceFactory(QObject* parent)
-    : QObject{parent}
+DeviceFactory::DeviceFactory(QObject* parent) : QObject{parent}
 {
 }
 
@@ -32,9 +31,15 @@ QSharedPointer<Device> DeviceFactory::createDevice(SDDevice* device)
     auto devtype = device->getDevtype();
     auto syspath = device->getSyspath();
 
+    KLOG_DEBUG() << "create device for subsystem " << subsystem << ", syspath: " << syspath;
+
     if (subsystem == "usb" && devtype == "usb_device")
     {
         return QSharedPointer<USBDevice>(new USBDevice(syspath));
+    }
+    else if (subsystem == "drm")
+    {
+        return QSharedPointer<DRMDevice>(new DRMDevice(syspath));
     }
 
     return nullptr;

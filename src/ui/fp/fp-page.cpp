@@ -119,19 +119,21 @@ void FPPage::popDeleteNotify(bool checked)
     unprotectNotify->move(x, y);
     unprotectNotify->show();
 
-    connect(unprotectNotify, &TableDeleteNotify::accepted, this, &FPPage::removeProtectedFile);
+    connect(unprotectNotify, &TableDeleteNotify::accepted, this, &FPPage::removeProtectedFiles);
 }
 
-void FPPage::removeProtectedFile()
+void FPPage::removeProtectedFiles()
 {
+    QStringList fileList;
     auto trustedInfos = m_ui->m_fileTable->getFPFileInfos();
     for (auto trustedInfo : trustedInfos)
     {
         if (trustedInfo.selected)
         {
-            m_fileProtectedProxy->RemoveProtectedFile(trustedInfo.filePath).waitForFinished();
+            fileList << trustedInfo.filePath;
         }
     }
+    m_fileProtectedProxy->RemoveProtectedFiles(fileList).waitForFinished();
 }
 
 void FPPage::updateTips(int total)
