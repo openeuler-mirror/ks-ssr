@@ -39,3 +39,31 @@ macro(gen_protocol)
     DEPENDS ${PROJECT_SOURCE_DIR}/data/br-protocol.xsd
     COMMENT "generate the c++ file by br-protocol.xsd")
 endmacro()
+
+# find_package 和 pkg_search_module 会使能 ${PACKAGE}_VERSION 变量， 变量的值是 "1.2.3"
+# 格式的字符串 此函数将通过算法 1 << 16 | 2 << 8 | 3 的方式将版本号转换为 32 位的整数
+function(version_to_hash version_string version_hashed)
+
+  # 使用字符串替换分割版本号
+  string(REPLACE "." ";" version_parts ${version_string})
+  list(GET version_parts 0 major)
+  list(GET version_parts 1 minor)
+  list(GET version_parts 2 patch)
+
+  # 确保版本号是数字
+  if(NOT major MATCHES "^([0-9]+)$"
+     OR NOT minor MATCHES "^([0-9]+)$"
+     OR NOT patch MATCHES "^([0-9]+)$")
+    message(
+      WARNING
+        "Invalid version format. Please use 'X.Y.Z' where X, Y, and Z are integers."
+    )
+  endif()
+
+  # 计算哈希值
+  math(EXPR hashed_version "${major} << 16 | ${minor} << 8 | ${patch}")
+  set(${version_hashed}
+      ${hashed_version}
+      PARENT_SCOPE)
+
+endfunction()
