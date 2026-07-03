@@ -24,6 +24,14 @@ class Window;
 
 namespace KS
 {
+enum CategoryPageType
+{
+    CATEGORY_PAGE_TYPE_TP,
+    CATEGORY_PAGE_TYPE_FP,
+    CATEGORY_PAGE_TYPE_BOX,
+    CATEGORY_PAGE_TYPE_DEVICE
+};
+
 class Navigation;
 
 class LicenseActivation;
@@ -51,6 +59,7 @@ private slots:
     void popupAboutDialog();
     // 单例模式激活窗口
     void activateMetaObject();
+    void updatePage(int index);
 
 private:
     Ui::Window *m_ui;

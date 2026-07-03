@@ -110,8 +110,6 @@ DeviceLogTable::DeviceLogTable(QWidget *parent) : QTableView(parent),
                                                   KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
-    connect(m_deviceManagerProxy, &DeviceManagerProxy::DeviceChanged, this, &DeviceLogTable::update);
-
     initTable();
 }
 
@@ -218,7 +216,6 @@ void DeviceLogTable::setData(const QList<RecordInfo> &infos)
         m_model->setData(m_model->index(row, LogTableField::LOG_TABLE_FIELD_STATUS), state);
         row++;
     }
-    emit logNumChanged(infos.size());
 }
 
 int DeviceLogTable::getColCount()
