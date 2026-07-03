@@ -69,10 +69,6 @@ install(
 install(FILES ${PROJECT_SOURCE_DIR}/data/com.kylinsec.SSR.conf
         DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d/)
 
-# ssr sql
-install(FILES ${PROJECT_SOURCE_DIR}/data/ssr.dat
-        DESTINATION ${SSR_INSTALL_DATADIR})
-
 # box dir
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/data/box
         DESTINATION ${SSR_INSTALL_DATADIR})

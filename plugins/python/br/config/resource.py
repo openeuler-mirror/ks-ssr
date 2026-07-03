@@ -8,7 +8,7 @@ import br.configuration
 import br.log
 
 RESOURCE_LIMITS_CONF_PATH = "/etc/security/limits.d/90-br-config.conf"
-SELINUX_MODULES_ULIMIT_PATH = "/usr/share/ks-br-manager/br-ulimit.pp"
+SELINUX_MODULES_ULIMIT_PATH = "/usr/share/ks-ssr/br-ulimit.pp"
 PAM_CHECK_PATH = "/etc/security/limits.d/20-nproc.conf"
 
 RESOURCE_LIMITS_KEY_STACK_SOFT  = "*                soft    stack"

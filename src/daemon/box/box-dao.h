@@ -17,6 +17,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <lib/base/database.h>
 
 namespace KS
 {
@@ -73,7 +74,7 @@ private:
     bool execute(const QString &cmd);
 
 private:
-    QSqlDatabase m_boxDb;
+    Database* m_boxDb;
 };
 }  // namespace Box
 }  // namespace KS
