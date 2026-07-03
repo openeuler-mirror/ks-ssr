@@ -6,18 +6,21 @@
     <message>
         <location filename="../src/ui/tool-box/access-control/access-control-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_access-control-page.h" line="105"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_access-control-page.h" line="105"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/access-control/access-control-page.ui" line="46"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_access-control-page.h" line="106"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_access-control-page.h" line="106"/>
         <source>Access permissions prevent users from illegally operating system resources, engance system security and integrity.</source>
         <translation>访问权限 防止用户对系统资源进行非法操作，增强系统安全性和完整性</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/access-control/access-control-page.ui" line="98"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_access-control-page.h" line="107"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_access-control-page.h" line="107"/>
         <source>selinux swich(Reboot after restart)</source>
         <translation>selinux开关（重启后生效）</translation>
     </message>
@@ -35,36 +38,42 @@
     <message>
         <location filename="../src/ui/license/activation.ui" line="26"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="166"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="166"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/license/activation.ui" line="74"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="167"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="167"/>
         <source>Expired time</source>
         <translation>质保期</translation>
     </message>
     <message>
         <location filename="../src/ui/license/activation.ui" line="105"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="168"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="168"/>
         <source>Machine code</source>
         <translation>机器码</translation>
     </message>
     <message>
         <location filename="../src/ui/license/activation.ui" line="135"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="169"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="169"/>
         <source>Activation code</source>
         <translation>激活码</translation>
     </message>
     <message>
         <location filename="../src/ui/license/activation.ui" line="206"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="170"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="170"/>
         <source>Activate</source>
         <translation>激活</translation>
     </message>
     <message>
         <location filename="../src/ui/license/activation.ui" line="225"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="171"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_activation.h" line="171"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -74,24 +83,28 @@
     <message>
         <location filename="../src/ui/tool-box/file-sign/add-user-dialog.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_add-user-dialog.h" line="107"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_add-user-dialog.h" line="107"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/add-user-dialog.ui" line="68"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_add-user-dialog.h" line="108"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_add-user-dialog.h" line="108"/>
         <source>please input user name(Separated by semicolons):</source>
         <translation>请输入用户名（分号分隔）：</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/add-user-dialog.ui" line="112"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_add-user-dialog.h" line="109"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_add-user-dialog.h" line="109"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/add-user-dialog.ui" line="131"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_add-user-dialog.h" line="110"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_add-user-dialog.h" line="110"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -101,6 +114,7 @@
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="226"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="226"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -111,36 +125,42 @@
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="25"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="227"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="227"/>
         <source>Custom strategy:</source>
         <translation>自定义策略：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="43"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="228"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="228"/>
         <source>Import strategy</source>
         <translation>导入策略</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="56"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="229"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="229"/>
         <source>Export strategy</source>
         <translation>导出策略</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="66"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="230"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="230"/>
         <source>Reset reinforce args</source>
         <translation>重置加固配置</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="92"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="231"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="231"/>
         <source>Scheduled scan time (hours/time, 0 indicates off):</source>
         <translation>定时扫描时间（小时/次， 0表示关闭）：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="106"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="232"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="232"/>
         <source>Resource monitor:</source>
         <translation>资源监控：</translation>
     </message>
@@ -149,6 +169,8 @@
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="162"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="234"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="238"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="234"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="238"/>
         <source>open</source>
         <translation>打开</translation>
     </message>
@@ -157,30 +179,36 @@
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="172"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="235"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="239"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="235"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="239"/>
         <source>close</source>
         <translation>关闭</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="146"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="236"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="236"/>
         <source>Bubble notification</source>
         <translation>气泡通知：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="186"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="240"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="240"/>
         <source>Reinforcement fallback:</source>
         <translation>加固回退：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="204"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="241"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="241"/>
         <source>Fallback to initial state</source>
         <translation>回退到初始状态</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/baseline-reinforcement.ui" line="214"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="242"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_baseline-reinforcement.h" line="242"/>
         <source>Fallback to the pre reforce status</source>
         <translation>回退到加固前状态</translation>
     </message>
@@ -194,18 +222,21 @@
     <message>
         <location filename="../src/ui/private-box/box-creation.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="199"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="199"/>
         <source>Create security box</source>
         <translation>创建保险箱</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-creation.ui" line="74"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="200"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="200"/>
         <source>Name:</source>
         <translation>名称：</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-creation.ui" line="100"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="201"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="201"/>
         <source>Password:</source>
         <translation>密码：</translation>
     </message>
@@ -214,24 +245,29 @@
         <location filename="../src/ui/private-box/box-creation.ui" line="170"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="203"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="208"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="203"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="208"/>
         <source>The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16.</source>
         <translation>密码必须包含大写字母、小写字母、数字、特殊字符中的其中两种，且长度为8-16位。</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-creation.ui" line="157"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="206"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="206"/>
         <source>Confirm password:</source>
         <translation>确认密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-creation.ui" line="234"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="211"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="211"/>
         <source>OK</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-creation.ui" line="253"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="212"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-creation.h" line="212"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -241,18 +277,21 @@
     <message>
         <location filename="../src/ui/private-box/box-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-page.h" line="115"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-page.h" line="115"/>
         <source>Box manager</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-page.ui" line="71"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-page.h" line="116"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-page.h" line="116"/>
         <source>Provides data isolation, hiding and encryption protection functions</source>
         <translation>提供数据隔离、隐藏和加密保护功能</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-page.ui" line="129"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-page.h" line="117"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_box-page.h" line="117"/>
         <source>New</source>
         <translation>新建</translation>
     </message>
@@ -262,24 +301,28 @@
     <message>
         <location filename="../src/ui/private-box/box-password-checked.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-checked.h" line="107"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-checked.h" line="107"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-password-checked.ui" line="68"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-checked.h" line="108"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-checked.h" line="108"/>
         <source>please input password:</source>
         <translation>请输入密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-password-checked.ui" line="112"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-checked.h" line="109"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-checked.h" line="109"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-password-checked.ui" line="131"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-checked.h" line="110"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-checked.h" line="110"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -316,24 +359,28 @@
     <message>
         <location filename="../src/ui/private-box/box-password-retrieve.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-retrieve.h" line="114"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-retrieve.h" line="114"/>
         <source>Create security box</source>
         <translation>创建保险箱</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-password-retrieve.ui" line="62"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-retrieve.h" line="115"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-retrieve.h" line="115"/>
         <source>Please input passphrase:</source>
         <translation>请输入口令：</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-password-retrieve.ui" line="108"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-retrieve.h" line="116"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-retrieve.h" line="116"/>
         <source>OK</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/private-box/box-password-retrieve.ui" line="127"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-retrieve.h" line="117"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_box-password-retrieve.h" line="117"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -372,12 +419,14 @@
     <message>
         <location filename="../src/ui/dm/device-list-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_device-list-page.h" line="102"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_device-list-page.h" line="102"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/dm/device-list-page.ui" line="105"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_device-list-page.h" line="105"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_device-list-page.h" line="105"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
@@ -394,12 +443,14 @@
     <message>
         <location filename="../src/ui/dm/device-log-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_device-log-page.h" line="102"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_device-log-page.h" line="102"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/dm/device-log-page.ui" line="105"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_device-log-page.h" line="105"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_device-log-page.h" line="105"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
@@ -409,48 +460,56 @@
     <message>
         <location filename="../src/ui/dm/device-permission.ui" line="32"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="168"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="168"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/dm/device-permission.ui" line="76"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="169"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="169"/>
         <source>Device status:</source>
         <translation>设备状态：</translation>
     </message>
     <message>
         <location filename="../src/ui/dm/device-permission.ui" line="122"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="170"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="170"/>
         <source>Permission control:</source>
         <translation>权限控制：</translation>
     </message>
     <message>
         <location filename="../src/ui/dm/device-permission.ui" line="141"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="171"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="171"/>
         <source>read</source>
         <translation>读</translation>
     </message>
     <message>
         <location filename="../src/ui/dm/device-permission.ui" line="160"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="172"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="172"/>
         <source>write</source>
         <translation>写</translation>
     </message>
     <message>
         <location filename="../src/ui/dm/device-permission.ui" line="179"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="173"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="173"/>
         <source>exec</source>
         <translation>执行</translation>
     </message>
     <message>
         <location filename="../src/ui/dm/device-permission.ui" line="235"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="174"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="174"/>
         <source>Confirm</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/dm/device-permission.ui" line="254"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="175"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_device-permission.h" line="175"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -460,6 +519,7 @@
     <message>
         <location filename="../src/ui/settings/dialog.ui" line="26"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_dialog.h" line="71"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_dialog.h" line="71"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -492,48 +552,56 @@
     <message>
         <location filename="../src/ui/tp/execute-protected-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="143"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="143"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/execute-protected-page.ui" line="46"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="144"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="144"/>
         <source>System core component integrity protection,protection and implementation environment safety</source>
         <translation>系统可执行文件的完整性校验，保护执行环境安全</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/execute-protected-page.ui" line="66"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="145"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="145"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/execute-protected-page.ui" line="111"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="146"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="146"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/execute-protected-page.ui" line="143"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="147"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="147"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/execute-protected-page.ui" line="162"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="148"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="148"/>
         <source>Recertification</source>
         <translation>重新认证</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/execute-protected-page.ui" line="181"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="149"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="149"/>
         <source>Unprotect</source>
         <translation>移除</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/execute-protected-page.ui" line="197"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="150"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_execute-protected-page.h" line="150"/>
         <source>...</source>
         <translation></translation>
     </message>
@@ -581,36 +649,42 @@
     <message>
         <location filename="../src/ui/fp/file-protection-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="125"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="125"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/fp/file-protection-page.ui" line="46"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="126"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="126"/>
         <source>Protect critical file paths from malicious tampering and deletion</source>
         <translation>保护关键文件，防止恶意篡改、删除</translation>
     </message>
     <message>
         <location filename="../src/ui/fp/file-protection-page.ui" line="66"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="127"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="127"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/fp/file-protection-page.ui" line="111"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="128"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="128"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/fp/file-protection-page.ui" line="143"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="129"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="129"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
     <message>
         <location filename="../src/ui/fp/file-protection-page.ui" line="162"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="130"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-protection-page.h" line="130"/>
         <source>Unprotect</source>
         <translation>解除保护</translation>
     </message>
@@ -620,42 +694,49 @@
     <message>
         <location filename="../src/ui/tool-box/file-shred/file-shred-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="134"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="134"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-shred/file-shred-page.ui" line="46"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="135"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="135"/>
         <source>Completely crushing and unable to delete stubborn files and dirs</source>
         <translation>彻底粉碎无法删除的顽固文件及目录</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-shred/file-shred-page.ui" line="66"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="136"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="136"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-shred/file-shred-page.ui" line="111"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="137"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="137"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-shred/file-shred-page.ui" line="143"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="138"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="138"/>
         <source>add</source>
         <translation>添加</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-shred/file-shred-page.ui" line="162"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="139"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="139"/>
         <source>remove</source>
         <translation>移除</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-shred/file-shred-page.ui" line="181"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="140"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-shred-page.h" line="140"/>
         <source>shred</source>
         <translation>粉碎</translation>
     </message>
@@ -665,6 +746,7 @@
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="143"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="143"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -675,36 +757,42 @@
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.ui" line="46"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="144"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="144"/>
         <source>View context information and integrity labels</source>
         <translation>查看上下文信息和完整性标签</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.ui" line="66"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="145"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="145"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.ui" line="111"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="146"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="146"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.ui" line="143"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="147"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="147"/>
         <source>select users</source>
         <translation>选择用户</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.ui" line="162"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="148"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="148"/>
         <source>select files</source>
         <translation>选择文件</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.ui" line="181"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="149"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="149"/>
         <source>clean</source>
         <translation>清除</translation>
     </message>
@@ -715,6 +803,7 @@
     <message>
         <location filename="../src/ui/tool-box/file-sign/file-sign-page.ui" line="197"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="150"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_file-sign-page.h" line="150"/>
         <source>...</source>
         <translation></translation>
     </message>
@@ -724,36 +813,42 @@
     <message>
         <location filename="../src/ui/br/home.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="161"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="161"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="69"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="163"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="163"/>
         <source>Security reinforcement is protecting your computer</source>
         <translation>安全加固正在保护您的电脑</translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="76"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="164"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="164"/>
         <source>KylinSec Host Security Reinforcement Software Detects Risks in Advance to Ensure Asset Security</source>
         <translation>麒麟信安主机安全加固软件提前发现风险，保障资产安全</translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="85"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="165"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="165"/>
         <source>Latest reinforcement time:</source>
         <translation>上次加固时间：</translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="92"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="166"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="166"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/br/home.ui" line="164"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="168"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_home.h" line="168"/>
         <source>Quick Scan</source>
         <translation>快速扫描</translation>
     </message>
@@ -763,12 +858,14 @@
     <message>
         <location filename="../src/ui/settings/identity-authentication.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_identity-authentication.h" line="97"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_identity-authentication.h" line="97"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/settings/identity-authentication.ui" line="31"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_identity-authentication.h" line="98"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_identity-authentication.h" line="98"/>
         <source>Two-factor authentication(Reboot after restart)</source>
         <translation>双因子认证（重启后生效）</translation>
     </message>
@@ -779,6 +876,7 @@
     <message>
         <location filename="../src/ui/settings/identity-authentication.ui" line="68"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_identity-authentication.h" line="100"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_identity-authentication.h" line="100"/>
         <source>unique identification</source>
         <translation>唯一性标识</translation>
     </message>
@@ -839,58 +937,54 @@
         <translation>当前使用初始密码登录，请尽快修改密码！</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="135"/>
         <source>Enable uid reuse</source>
-        <translation>启用 Uid 唯一性标识功能， Uid 不可复用。</translation>
+        <translation type="vanished">启用 Uid 唯一性标识功能， Uid 不可复用。</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="135"/>
         <source>Disable uid reuse</source>
-        <translation>禁用 Uid 唯一性标识功能， Uid 可复用。</translation>
+        <translation type="vanished">禁用 Uid 唯一性标识功能， Uid 可复用。</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="322"/>
         <source>Enable Multi-Factor Authentication</source>
-        <translation>启用多因子认证功能。</translation>
+        <translation type="vanished">启用多因子认证功能。</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="322"/>
         <source>Disable Multi-Factor Authentication</source>
-        <translation>关闭多因子认证功能。</translation>
+        <translation type="vanished">关闭多因子认证功能。</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="419"/>
+        <location filename="../src/daemon/account/manager.cpp" line="125"/>
         <source>Failed to change %1&apos;s passphrase, unique name: %2, actor role: %3</source>
         <translation>修改 %1的密码失败， 标识名为%2，用户权限为%3</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="429"/>
-        <location filename="../src/daemon/account/manager.cpp" line="445"/>
+        <location filename="../src/daemon/account/manager.cpp" line="135"/>
+        <location filename="../src/daemon/account/manager.cpp" line="151"/>
         <source>Change password</source>
         <translation>修改密码失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="434"/>
+        <location filename="../src/daemon/account/manager.cpp" line="140"/>
         <source>Change password failed.</source>
         <translation>修改密码失败。</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="473"/>
+        <location filename="../src/daemon/account/manager.cpp" line="179"/>
         <source>Failed to login, because this account has been freeze</source>
         <translation>登录失败，此用户已被冻结</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="482"/>
+        <location filename="../src/daemon/account/manager.cpp" line="188"/>
         <source>Failed to login, Passwd error</source>
         <translation>登录失败，密码错误</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="491"/>
+        <location filename="../src/daemon/account/manager.cpp" line="197"/>
         <source>Login</source>
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../src/daemon/account/manager.cpp" line="513"/>
+        <location filename="../src/daemon/account/manager.cpp" line="219"/>
         <source>Logout</source>
         <translation>注销</translation>
     </message>
@@ -2186,7 +2280,7 @@
         <translation>其它</translation>
     </message>
     <message>
-        <location filename="../src/ui/dm/device-list-table.cpp" line="501"/>
+        <location filename="../src/ui/dm/device-list-table.cpp" line="506"/>
         <source>Unknown device</source>
         <translation>未知设备</translation>
     </message>
@@ -3984,42 +4078,42 @@
     <name>KS::TP::ExecuteProtectedTable</name>
     <message>
         <location filename="../src/ui/tp/execute-protected-table.cpp" line="348"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="449"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="451"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="453"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="455"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="418"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="422"/>
         <source>Type</source>
         <translation>文件类型</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="420"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="423"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="424"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="427"/>
         <source>Executable file</source>
         <translation>可执行程序</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="421"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="423"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="425"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="427"/>
         <source>Executable script</source>
         <translation>可执行脚本</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="422"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="423"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="426"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="427"/>
         <source>Dynamic library</source>
         <translation>动态库</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="447"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="451"/>
         <source>Status</source>
         <translation>当前状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="450"/>
-        <location filename="../src/ui/tp/execute-protected-table.cpp" line="451"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="454"/>
+        <location filename="../src/ui/tp/execute-protected-table.cpp" line="455"/>
         <source>Being tampered with</source>
         <translation>被篡改</translation>
     </message>
@@ -4131,24 +4225,24 @@
     <name>KS::TP::KernelProtectedTable</name>
     <message>
         <location filename="../src/ui/tp/kernel-protected-table.cpp" line="358"/>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="429"/>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="431"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="433"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="435"/>
         <source>Certified</source>
         <translation>已认证</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="427"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="431"/>
         <source>Status</source>
         <translation>当前状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="430"/>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="431"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="434"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="435"/>
         <source>Being tampered with</source>
         <translation>被篡改</translation>
     </message>
     <message>
-        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="485"/>
+        <location filename="../src/ui/tp/kernel-protected-table.cpp" line="489"/>
         <source>%1</source>
         <translation></translation>
     </message>
@@ -4437,7 +4531,7 @@
 <context>
     <name>KS::ToolBox::FileSignDelegate</name>
     <message>
-        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="470"/>
+        <location filename="../src/ui/tool-box/file-sign/file-sign-table.cpp" line="474"/>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
@@ -4484,37 +4578,37 @@
 <context>
     <name>KS::ToolBox::Manager</name>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="169"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="195"/>
         <source>Failed to set access control status, permission denied</source>
         <translation>没有权限设置访问控制开关</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="191"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="217"/>
         <source>Failed to set access control status</source>
         <translation>设置访问控制失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="197"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="223"/>
         <source>set access control status to %1</source>
         <translation>%1访问控制</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="415"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="443"/>
         <source>Failed to shred file, permission denied</source>
         <translation>没有权限粉碎文件</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="498"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="526"/>
         <source>Failed to shred file: %1</source>
         <translation>粉碎文件失败：%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="505"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="533"/>
         <source>Shred files %1</source>
         <translation>粉碎文件，文件路径为%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="533"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="561"/>
         <source>Failed to remove user, permission denied</source>
         <translation>删除用户失败，权限禁止</translation>
     </message>
@@ -4523,7 +4617,7 @@
         <translation type="vanished">删除%1用户</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="640"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="664"/>
         <source>Failed to add files to SignFile list, permission denied</source>
         <translation>添加文件到安全标记列表失败</translation>
     </message>
@@ -4532,14 +4626,14 @@
         <translation type="vanished">获取上下文失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="217"/>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="350"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="243"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="378"/>
         <source>Get files %1 mls label</source>
         <translation>获取%1的上下文</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="221"/>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="223"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="247"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="249"/>
         <source>Failed to get files %1 mls label, error msg %2</source>
         <translation></translation>
     </message>
@@ -4548,55 +4642,55 @@
         <translation type="vanished">获取完整性标签失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="248"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="274"/>
         <source>Get files %1 kic label</source>
         <translation>获取%1的完整性标签</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="252"/>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="254"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="278"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="280"/>
         <source>Failed to get files %1 kic label, error msg %2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="275"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="303"/>
         <source>Failed to set mls label, permission denied</source>
         <translation>设置安全上下文失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="287"/>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="391"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="315"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="419"/>
         <source>Failed to set %1 mls label, error msg: %2</source>
         <translation>设置%1的安全等级失败，错误消息为%2</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="294"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="322"/>
         <source>Set %1 mls label to: %2</source>
         <translation>设置%1的上下文为%2</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="311"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="339"/>
         <source>Failed to set kic label, permission denied</source>
         <translation>设置完整性标签失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="323"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="351"/>
         <source>Failed to set %1 kic label, error msg: %2</source>
         <translation>设置%1的完整性标签失败，错误消息为%2</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="329"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="357"/>
         <source>Set %1 kic label to: %2</source>
         <translation>设置%1的完整性标签为%2</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="355"/>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="357"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="383"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="385"/>
         <source>Failed to get user %1 mls label, error msg %2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="379"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="407"/>
         <source>Failed to set user mls label, permission denied</source>
         <translation>设置用户上下文失败</translation>
     </message>
@@ -4605,7 +4699,7 @@
         <translation type="vanished">设置用户上下文失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="397"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="425"/>
         <source>Set %1 user mls label to: %2</source>
         <translation>设置%1用户的上下文为%2</translation>
     </message>
@@ -4614,79 +4708,99 @@
         <translation type="vanished">粉碎%1文件失败，详情请查看日志</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="551"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="593"/>
         <source>Failed to remove user %1, error msg: %2</source>
         <translation>删除%1用户失败，错误消息为：%2</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="571"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="609"/>
         <source>Remove users: %1</source>
         <translation>删除用户：%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="662"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="686"/>
         <source>Failed to add user to object list, unknown user %1</source>
         <translation>添加用户失败，未知用户%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="677"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="701"/>
         <source>Failed to add object to object list, database error</source>
         <translation>添加对象到数据库失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="683"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="707"/>
         <source>Add obj to object list: %1</source>
         <translation>添加对象成功，对象名为%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="699"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="723"/>
         <source>Failed to remove obj from obj list, permission denied</source>
         <translation>移除对象失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="707"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="731"/>
         <source>Failed to remove file from object list, database error</source>
         <translation>从数据库中移除对象失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="713"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="737"/>
         <source>Remove file from object list: %1</source>
         <translation>移除对象：%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="755"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="779"/>
         <source>Failed to add files to ShredFile list, permission denied</source>
         <translation>添加文件粉碎列表失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="765"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="789"/>
         <source>Failed to add files to ShredFile list, database error</source>
         <translation>添加文件粉碎列表失败，数据库错误</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="771"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="795"/>
         <source>Add file to ShredFile list: %1</source>
         <translation>添加文件粉碎列表：%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="787"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="811"/>
         <source>Failed to remove file from ShredFile list, permission denied</source>
         <translation>移除文件粉碎列表失败</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="795"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="819"/>
         <source>Failed to remove file from ShredFile list, database error</source>
         <translation>移除文件粉碎列表失败，数据库错误</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="801"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="825"/>
         <source>Remove file from ShredFile list: %1</source>
         <translation>移除文件粉碎列表：%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/manager.cpp" line="911"/>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="941"/>
         <source> failed, exitCode %1, error msg: %2</source>
         <translation>失败，退出码为%1，错误消息为%2</translation>
+    </message>
+    <message>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="1317"/>
+        <source>Enable uid reuse</source>
+        <translation>启用 Uid 唯一性标识功能， Uid 不可复用。</translation>
+    </message>
+    <message>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="1317"/>
+        <source>Disable uid reuse</source>
+        <translation>禁用 Uid 唯一性标识功能， Uid 可复用。</translation>
+    </message>
+    <message>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="1340"/>
+        <source>Enable Multi-Factor Authentication</source>
+        <translation>启用多因子认证功能。</translation>
+    </message>
+    <message>
+        <location filename="../src/daemon/tool-box/manager.cpp" line="1340"/>
+        <source>Disable Multi-Factor Authentication</source>
+        <translation>关闭多因子认证功能。</translation>
     </message>
 </context>
 <context>
@@ -4765,12 +4879,12 @@
         <translation>删除成功！</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="453"/>
+        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="457"/>
         <source>Manager user</source>
         <translation>管理员用户</translation>
     </message>
     <message>
-        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="453"/>
+        <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-table.cpp" line="457"/>
         <source>Normal user</source>
         <translation>普通用户</translation>
     </message>
@@ -4782,17 +4896,17 @@
         <translation type="vanished">检测到nmap攻击，攻击者ip为%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/realtime-alert.cpp" line="219"/>
+        <location filename="../src/daemon/tool-box/realtime-alert.cpp" line="218"/>
         <source>Detect nmap attack from %1</source>
         <translation>检测到主机被 %1 探测</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/realtime-alert.cpp" line="225"/>
+        <location filename="../src/daemon/tool-box/realtime-alert.cpp" line="224"/>
         <source>Detected nmap attack! attacker ip:%1</source>
         <translation>检测到nmap攻击，攻击者ip为%1</translation>
     </message>
     <message>
-        <location filename="../src/daemon/tool-box/realtime-alert.cpp" line="296"/>
+        <location filename="../src/daemon/tool-box/realtime-alert.cpp" line="295"/>
         <source>Detected hazard behavior! msg:%1</source>
         <translation>检测到危险行为！%1</translation>
     </message>
@@ -4815,7 +4929,7 @@
     <name>KS::Window</name>
     <message>
         <location filename="../src/ui/window.cpp" line="108"/>
-        <location filename="../src/ui/window.cpp" line="536"/>
+        <location filename="../src/ui/window.cpp" line="537"/>
         <source>Fallback is in progress, please wait.</source>
         <translation>回退正在进行中，请等待。</translation>
     </message>
@@ -4855,73 +4969,83 @@
     </message>
     <message>
         <location filename="../src/ui/window.cpp" line="207"/>
+        <source>Batch reinforcement</source>
+        <translation>批量加固</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/window.cpp" line="208"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="215"/>
+        <location filename="../src/ui/window.cpp" line="216"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="270"/>
-        <location filename="../src/ui/window.cpp" line="315"/>
-        <location filename="../src/ui/window.cpp" line="333"/>
-        <location filename="../src/ui/window.cpp" line="346"/>
+        <location filename="../src/ui/window.cpp" line="271"/>
+        <location filename="../src/ui/window.cpp" line="316"/>
+        <location filename="../src/ui/window.cpp" line="334"/>
+        <location filename="../src/ui/window.cpp" line="347"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="274"/>
-        <location filename="../src/ui/window.cpp" line="276"/>
-        <location filename="../src/ui/window.cpp" line="495"/>
+        <location filename="../src/ui/window.cpp" line="275"/>
+        <location filename="../src/ui/window.cpp" line="277"/>
+        <location filename="../src/ui/window.cpp" line="496"/>
         <source>Trusted protected</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="278"/>
-        <location filename="../src/ui/window.cpp" line="280"/>
+        <location filename="../src/ui/window.cpp" line="279"/>
+        <location filename="../src/ui/window.cpp" line="281"/>
         <source>File protected</source>
         <translation>文件保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="282"/>
-        <location filename="../src/ui/window.cpp" line="284"/>
+        <location filename="../src/ui/window.cpp" line="283"/>
+        <location filename="../src/ui/window.cpp" line="285"/>
         <source>Private box</source>
         <translation>私密保险箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="286"/>
-        <location filename="../src/ui/window.cpp" line="288"/>
+        <location filename="../src/ui/window.cpp" line="287"/>
+        <location filename="../src/ui/window.cpp" line="289"/>
         <source>Device management</source>
         <translation>设备管理</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="290"/>
-        <location filename="../src/ui/window.cpp" line="292"/>
+        <location filename="../src/ui/window.cpp" line="291"/>
+        <location filename="../src/ui/window.cpp" line="293"/>
         <source>Tool Box</source>
         <translation>安全工具箱</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="294"/>
-        <location filename="../src/ui/window.cpp" line="296"/>
+        <location filename="../src/ui/window.cpp" line="295"/>
+        <location filename="../src/ui/window.cpp" line="297"/>
         <source>Log audit</source>
         <translation>日志审计</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="315"/>
+        <location filename="../src/ui/window.cpp" line="316"/>
         <source>Interface Control</source>
         <translation>接口控制</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="319"/>
+        <location filename="../src/ui/window.cpp" line="320"/>
         <source>Trusted protect</source>
         <translation>可信保护</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="319"/>
+        <location filename="../src/ui/window.cpp" line="320"/>
         <source>Identity authentication</source>
         <translation>身份鉴别</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/window.cpp" line="308"/>
+        <source>Vulnerability Fix</source>
+        <translation>漏洞修复</translation>
     </message>
 </context>
 <context>
@@ -4952,48 +5076,56 @@
     <message>
         <location filename="../src/ui/tp/kernel-protected-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="144"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="144"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/kernel-protected-page.ui" line="49"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="145"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="145"/>
         <source>Manage kernel driver modules to prevent illegal loading and uninstallation</source>
         <translation>管理内核驱动模块，阻止非法加载、卸载</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/kernel-protected-page.ui" line="69"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="146"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="146"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tp/kernel-protected-page.ui" line="114"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="147"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="147"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/kernel-protected-page.ui" line="146"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="148"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="148"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/kernel-protected-page.ui" line="165"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="149"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="149"/>
         <source>Recertification</source>
         <translation>重新认证</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/kernel-protected-page.ui" line="184"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="150"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="150"/>
         <source>Unprotect</source>
         <translation>移除</translation>
     </message>
     <message>
         <location filename="../src/ui/tp/kernel-protected-page.ui" line="200"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="151"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_kernel-protected-page.h" line="151"/>
         <source>...</source>
         <translation></translation>
     </message>
@@ -5066,12 +5198,14 @@
     <message>
         <location filename="../src/ui/log/log-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="124"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="124"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="125"/>
         <source>System user behavior audit, timely understranding of potential secutify risks</source>
-        <translation type="vanished">系统用户行为审计，及时了解潜在安全隐患</translation>
+        <translation>系统用户行为审计，及时了解潜在安全隐患</translation>
     </message>
     <message>
         <location filename="../src/ui/log/log-page.ui" line="46"/>
@@ -5082,18 +5216,21 @@
     <message>
         <location filename="../src/ui/log/log-page.ui" line="66"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="126"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="126"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/log/log-page.ui" line="134"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="127"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="127"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/log/log-page.ui" line="153"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="128"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="128"/>
         <source>Centigrade</source>
         <translation>查询</translation>
     </message>
@@ -5103,30 +5240,35 @@
     <message>
         <location filename="../src/ui/account/login.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="130"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="130"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/account/login.ui" line="58"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="131"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="131"/>
         <source>User name:</source>
         <translation>用户名：</translation>
     </message>
     <message>
         <location filename="../src/ui/account/login.ui" line="79"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="132"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="132"/>
         <source>Password:</source>
         <translation>密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/account/login.ui" line="125"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="133"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="133"/>
         <source>login</source>
         <translation>登录</translation>
     </message>
     <message>
         <location filename="../src/ui/account/login.ui" line="144"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="134"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_login.h" line="134"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -5136,30 +5278,35 @@
     <message>
         <location filename="../src/ui/tool-box/file-sign/modify-security-context.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="123"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="123"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/modify-security-context.ui" line="68"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="124"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="124"/>
         <source>Please input new security context :</source>
         <translation>请输入新的安全上下文:</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/modify-security-context.ui" line="97"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="125"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="125"/>
         <source>Please input new integrity label :</source>
         <translation>请输入新的完整性标签：</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/modify-security-context.ui" line="144"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="127"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="127"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/file-sign/modify-security-context.ui" line="163"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="128"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_modify-security-context.h" line="128"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -5169,42 +5316,49 @@
     <message>
         <location filename="../src/ui/br/reports/pdf.ui" line="72"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="262"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="262"/>
         <source>Operating system:</source>
         <translation>操作系统：</translation>
     </message>
     <message>
         <location filename="../src/ui/br/reports/pdf.ui" line="85"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="263"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="263"/>
         <source>IP:</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/br/reports/pdf.ui" line="98"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="264"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="264"/>
         <source>MAC:</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/br/reports/pdf.ui" line="111"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="265"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="265"/>
         <source>System kernel version:</source>
         <translation>系统内核版本：</translation>
     </message>
     <message>
         <location filename="../src/ui/br/reports/pdf.ui" line="124"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="266"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="266"/>
         <source>Software activation status:</source>
         <translation>软件激活状态：</translation>
     </message>
     <message>
         <location filename="../src/ui/br/reports/pdf.ui" line="259"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="273"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="273"/>
         <source>Device Information</source>
         <translation>设备信息</translation>
     </message>
     <message>
         <location filename="../src/ui/br/reports/pdf.ui" line="347"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="275"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pdf.h" line="275"/>
         <source>Pie chart of test results</source>
         <translation>检测结果饼图</translation>
     </message>
@@ -5214,24 +5368,28 @@
     <message>
         <location filename="../src/ui/common/table/pagination.ui" line="26"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pagination.h" line="99"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pagination.h" line="99"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/common/table/pagination.ui" line="72"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pagination.h" line="100"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pagination.h" line="100"/>
         <source>&lt;</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/common/table/pagination.ui" line="117"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pagination.h" line="102"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pagination.h" line="102"/>
         <source>&gt;</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/common/table/pagination.ui" line="133"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_pagination.h" line="103"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_pagination.h" line="103"/>
         <source>goto</source>
         <translation>前往</translation>
     </message>
@@ -5253,12 +5411,14 @@
     <message>
         <location filename="../src/ui/common/password-modification.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="199"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="199"/>
         <source>Modify password</source>
         <translation>修改密码</translation>
     </message>
     <message>
         <location filename="../src/ui/common/password-modification.ui" line="74"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="200"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="200"/>
         <source>Current password:</source>
         <translation>当前密码：</translation>
     </message>
@@ -5269,6 +5429,7 @@
     <message>
         <location filename="../src/ui/common/password-modification.ui" line="100"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="201"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="201"/>
         <source>New password:</source>
         <translation>新密码：</translation>
     </message>
@@ -5277,24 +5438,29 @@
         <location filename="../src/ui/common/password-modification.ui" line="170"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="203"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="208"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="203"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="208"/>
         <source>The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16.</source>
         <translation>密码必须包含大写字母、小写字母、数字、特殊字符中的其中两种，且长度为8-16位。</translation>
     </message>
     <message>
         <location filename="../src/ui/common/password-modification.ui" line="157"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="206"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="206"/>
         <source>Confirm password:</source>
         <translation>确认密码：</translation>
     </message>
     <message>
         <location filename="../src/ui/common/password-modification.ui" line="234"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="211"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="211"/>
         <source>OK</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/common/password-modification.ui" line="253"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="212"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_password-modification.h" line="212"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -5304,30 +5470,35 @@
     <message>
         <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-page.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="116"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="116"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-page.ui" line="46"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="117"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="117"/>
         <source>Clear users and their privacy information</source>
         <translation>清除用户及用户隐私信息</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-page.ui" line="66"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="118"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="118"/>
         <source>0 records in total</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-page.ui" line="111"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="119"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="119"/>
         <source>Please enter keyword search</source>
         <translation>请输入关键字搜索</translation>
     </message>
     <message>
         <location filename="../src/ui/tool-box/privacy-cleanup/privacy-cleanup-page.ui" line="143"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="120"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_privacy-cleanup-page.h" line="120"/>
         <source>clean</source>
         <translation>清除</translation>
     </message>
@@ -5337,36 +5508,42 @@
     <message>
         <location filename="../src/ui/br/progress.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="117"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="117"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/br/progress.ui" line="25"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="118"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="118"/>
         <source>Security reinforcement is protecting your computer</source>
         <translation>安全加固正在保护您的电脑</translation>
     </message>
     <message>
         <location filename="../src/ui/br/progress.ui" line="37"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="119"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="119"/>
         <source>KylinSec Host Security Reinforcement Software Detects Risks in Advance to Ensure Asset Security</source>
         <translation>麒麟信安主机安全加固软件提起发现风险，保障资产安全</translation>
     </message>
     <message>
         <location filename="../src/ui/br/progress.ui" line="47"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="120"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="120"/>
         <source>Generate report</source>
         <translation>生成报表</translation>
     </message>
     <message>
         <location filename="../src/ui/br/progress.ui" line="105"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="121"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="121"/>
         <source>Scan</source>
         <translation>开始扫描</translation>
     </message>
     <message>
         <location filename="../src/ui/br/progress.ui" line="118"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="122"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_progress.h" line="122"/>
         <source>return</source>
         <translation>返回</translation>
     </message>
@@ -5902,6 +6079,7 @@
     <message>
         <location filename="../src/ui/license/qrcode-dialog.ui" line="20"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_qrcode-dialog.h" line="80"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_qrcode-dialog.h" line="80"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -5934,18 +6112,21 @@
     <message>
         <location filename="../src/ui/br/reinforcement-items/reinforcement-args-dialog.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_reinforcement-args-dialog.h" line="101"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_reinforcement-args-dialog.h" line="101"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/br/reinforcement-items/reinforcement-args-dialog.ui" line="103"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_reinforcement-args-dialog.h" line="102"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_reinforcement-args-dialog.h" line="102"/>
         <source>reset</source>
         <translation>重置</translation>
     </message>
     <message>
         <location filename="../src/ui/br/reinforcement-items/reinforcement-args-dialog.ui" line="122"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_reinforcement-args-dialog.h" line="103"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_reinforcement-args-dialog.h" line="103"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
@@ -5974,6 +6155,7 @@
     <message>
         <location filename="../src/ui/br/scan.ui" line="20"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_scan.h" line="63"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_scan.h" line="63"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -5983,12 +6165,14 @@
     <message>
         <location filename="../src/ui/sidebar.ui" line="26"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_sidebar.h" line="74"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_sidebar.h" line="74"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/sidebar.ui" line="66"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_sidebar.h" line="76"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_sidebar.h" line="76"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
@@ -5998,6 +6182,7 @@
     <message>
         <location filename="../src/ui/br/reports/table.ui" line="97"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_table.h" line="183"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_table.h" line="183"/>
         <source>Safety Reinforcement Chart</source>
         <translation>安全加固图表</translation>
     </message>
@@ -6018,30 +6203,35 @@
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="20"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="148"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="148"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="37"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="149"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="149"/>
         <source>Trusted protected(Effective after reboot):</source>
         <translation>可信保护 （重启后生效）：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="70"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="151"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="151"/>
         <source>Root key storage method:</source>
         <translation>根密钥存储方式：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="109"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="153"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="153"/>
         <source>Soft storage</source>
         <translation>软存储</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-protected.ui" line="151"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="155"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-protected.h" line="155"/>
         <source>Hard storage</source>
         <translation>硬存储</translation>
     </message>
@@ -6051,24 +6241,28 @@
     <message>
         <location filename="../src/ui/settings/trusted-user-pin.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-user-pin.h" line="107"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-user-pin.h" line="107"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-user-pin.ui" line="68"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-user-pin.h" line="108"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-user-pin.h" line="108"/>
         <source>Please input the pin code:</source>
         <translation>请输入pin码：</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-user-pin.ui" line="112"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-user-pin.h" line="109"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-user-pin.h" line="109"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/settings/trusted-user-pin.ui" line="131"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-user-pin.h" line="110"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_trusted-user-pin.h" line="110"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -6078,24 +6272,28 @@
     <message>
         <location filename="../src/ui/common/user-prompt-dialog.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_user-prompt-dialog.h" line="109"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_user-prompt-dialog.h" line="109"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/common/user-prompt-dialog.ui" line="65"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_user-prompt-dialog.h" line="110"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_user-prompt-dialog.h" line="110"/>
         <source>text</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/common/user-prompt-dialog.ui" line="114"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_user-prompt-dialog.h" line="111"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_user-prompt-dialog.h" line="111"/>
         <source>ok</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/ui/common/user-prompt-dialog.ui" line="133"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_user-prompt-dialog.h" line="112"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_user-prompt-dialog.h" line="112"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -6105,6 +6303,7 @@
     <message>
         <location filename="../src/ui/window.ui" line="20"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_window.h" line="119"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_window.h" line="119"/>
         <source>Security reinforcement</source>
         <translation>主机安全加固</translation>
     </message>
@@ -6114,6 +6313,7 @@
     <message>
         <location filename="../src/ui/about.ui" line="14"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_about.h" line="93"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_about.h" line="93"/>
         <source>Form</source>
         <translation></translation>
     </message>
@@ -6124,6 +6324,9 @@
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_about.h" line="95"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_about.h" line="96"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/ui_about.h" line="97"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_about.h" line="95"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_about.h" line="96"/>
+        <location filename="../ninja_build/src/ui/ks-ssr-gui_autogen/include/ui_about.h" line="97"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
@@ -7168,6 +7371,47 @@ which will cause many problems!</source>
     <message>
         <source>external class</source>
         <translation type="vanished">接入类</translation>
+    </message>
+</context>
+<context>
+    <name>KS::VulnerabilityPage::VulnerabilityPage</name>
+    <message>
+        <location filename="../src/ui/vulnerability/vulnerability-page.cpp" line="29"/>
+        <location filename="../src/ui/window.cpp" line="306"/>
+        <location filename="../src/ui/window.cpp" line="308"/>
+        <source>Vulnerability Fix</source>
+        <translation>漏洞修复</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/vulnerability/vulnerability-page.cpp" line="51"/>
+        <source>Fixes vulnerability completed</source>
+        <translation>漏洞修复已完成!</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/vulnerability/vulnerability-page.cpp" line="55"/>
+        <source>Failed to fix vulnerability</source>
+        <translation>漏洞修复失败！</translation>
+    </message>
+</context>
+<context>
+    <name>VulnerabilityPage</name>
+    <message>
+        <location filename="../src/ui/vulnerability/vulnerability-page.ui" line="14"/>
+        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_vulnerability-page.h" line="142"/>
+        <source>Vulnerability manager</source>
+        <translation>漏洞管理</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/vulnerability/vulnerability-page.ui" line="173"/>
+        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_vulnerability-page.h" line="143"/>
+        <source>Detect</source>
+        <translation>检测</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/vulnerability/vulnerability-page.ui" line="205"/>
+        <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_vulnerability-page.h" line="144"/>
+        <source>Fix</source>
+        <translation>修复</translation>
     </message>
 </context>
 </TS>
