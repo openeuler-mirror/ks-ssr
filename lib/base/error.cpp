@@ -56,7 +56,7 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
         errorDesc = QObject::tr("Insufficient free space or unknown error, box creation failed.");
         break;
     case SSRErrorCode::ERROR_BM_NOT_FOUND:
-        errorDesc = QObject::tr("Box not found!");
+        errorDesc = QObject::tr("PrivateBox not found!");
         break;
     case SSRErrorCode::ERROR_BM_REPEATED_NAME:
         errorDesc = QObject::tr("The box is exist!");

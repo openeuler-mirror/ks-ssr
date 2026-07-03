@@ -17,12 +17,12 @@
 #include <QDBusConnection>
 #include "include/ssr-i.h"
 #include "lib/license/license-proxy.h"
-#include "src/daemon/box/box-manager.h"
+#include "src/daemon/private-box/box-manager.h"
 #include "src/daemon/dm/device-manager.h"
 #include "src/daemon/kss/dbus.h"
 #include "src/daemon/log/manager.h"
 #include "src/daemon/account/manager.h"
-#include "src/daemon/security-box/manager.h"
+#include "src/daemon/tool-box/manager.h"
 
 namespace KS
 {
@@ -45,7 +45,7 @@ Daemon::~Daemon()
 {
     KSS::DBus::globalDeinit();
     DM::DeviceManager::globalDeinit();
-    Box::BoxManager::globalDeinit();
+    PrivateBox::BoxManager::globalDeinit();
 }
 
 void Daemon::init()
@@ -66,7 +66,7 @@ void Daemon::init()
 void Daemon::start()
 {
     m_licenseProxy->disconnect(m_licenseProxy.data(), &LicenseProxy::licenseChanged, this, &Daemon::start);
-    Box::BoxManager::globalInit(this);
+    PrivateBox::BoxManager::globalInit(this);
     DM::DeviceManager::globalInit(this);
     KSS::DBus::globalInit(this);
     BRDaemon::Configuration::globalInit(SSR_BR_INSTALL_DATADIR "/ssr.ini");
@@ -75,6 +75,6 @@ void Daemon::start()
     BRDaemon::BRDBus::globalInit(nullptr);
     Log::Manager::globalInit();
     Account::Manager::globalInit();
-    SecurityBox::Manager::globalInit();
+    ToolBox::Manager::globalInit();
 }
 }  // namespace KS

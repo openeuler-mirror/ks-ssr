@@ -15,11 +15,11 @@ file(GLOB_RECURSE SRC_H_FILES ./*.h)
 file(GLOB_RECURSE SRC_CPP_FILES ./*.cpp)
 
 qt5_add_dbus_adaptor(
-  SECURITY_BOX_MANAGER_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.BoxManager.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/box/box-manager.h
-  KS::Box::BoxManager
-  box_manager_adaptor
+  PRIVATE_BOX_MANAGER_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.PrivateBox.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/private-box/box-manager.h
+  KS::PrivateBox::BoxManager
+  private_manager_adaptor
   BoxManagerAdaptor)
 
 qt5_add_dbus_adaptor(
@@ -51,12 +51,12 @@ qt5_add_dbus_adaptor(
   account_adaptor AccountAdaptor)
 
 qt5_add_dbus_adaptor(
-  SECURITY_BOX_DBUS_SRCS
-  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.SecurityBox.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/security-box/manager.h
-  KS::SecurityBox::Manager
-  security_box_adaptor
-  SecurityBoxAdaptor)
+  TOOL_BOX_DBUS_SRCS
+  ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.ToolBox.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/tool-box/manager.h
+  KS::ToolBox::Manager
+  tool_box_adaptor
+  ToolBoxAdaptor)
 
 set(TARGET_NAME ks-ssr-daemon)
 
@@ -68,7 +68,7 @@ add_executable(
   ${TARGET_NAME}
   ${SRC_H_FILES}
   ${SRC_CPP_FILES}
-  ${SECURITY_BOX_MANAGER_SRCS}
+  ${PRIVATE_BOX_MANAGER_SRCS}
   ${TRUSTED_MANAGER_SRCS}
   ${FILES_PROTECTED_MANAGER_SRCS}
   ${SECURITY_DEVICE_MANAGER_SRCS}
@@ -77,7 +77,7 @@ add_executable(
   ${LOG_DBUS_SRCS}
   ${ACCOUNT_DBUS_SRCS}
   ${BR_PROTOCOL_OUTPUT}
-  ${SECURITY_BOX_DBUS_SRCS}
+  ${TOOL_BOX_DBUS_SRCS}
   ${QM_FILES})
 
 target_include_directories(
