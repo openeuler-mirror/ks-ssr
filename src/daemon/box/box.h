@@ -40,9 +40,10 @@ public:
     QString retrievePassword(const QString &passphrase);
     bool delBox(const QString &currentPassword);
     bool mounted();
-    bool mount(const QString &currentPassword);
-    // isForce 是否强制umount 程序退出时，进行强制卸载
-    bool umount(bool isForce = false);
+    // 返回错误码
+    int mount(const QString &currentPassword);
+    // isForce 是否强制umount 程序退出时，进行强制卸载。返回错误码
+    int umount(bool isForce = false);
     bool modifyBoxPassword(const QString &currentPassword, const QString &newPassword);
 
     void clearMountStatus();

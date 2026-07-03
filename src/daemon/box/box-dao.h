@@ -54,7 +54,7 @@ public:
                 const QString &encryptSig,
                 int userUID);
     // 为box修改数据库中储存的挂载状态
-    void modifyMountStatus(const QString &boxID, bool mounted);
+    bool modifyMountStatus(const QString &boxID, bool mounted);
     // 为box修改数据库中储存的密码
     void modifyPasswd(const QString &boxID, const QString &encryptpassword);
     // 删除数据库中的box
