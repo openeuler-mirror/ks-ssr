@@ -153,7 +153,20 @@ void DeviceConfiguration::setIFCEnable(int type, bool enable)
     m_interfaceSettings->setValue(DI_SK_ENABLE, enable);
     m_interfaceSettings->endGroup();
 
-    this->syncInterfaceFile();
+    switch (type)
+    {
+#ifdef _345_GC_
+    case INTERFACE_TYPE_HDMI:
+        this->syncInterfaceToGrubFile();
+        break;
+#endif
+    case INTERFACE_TYPE_BLUETOOTH:
+        this->syncToBluetoothService();
+        break;
+    case INTERFACE_TYPE_NET:
+        this->syncToNMService();
+        break;
+    }
 }
 
 DeviceConfiguration::DeviceConfiguration(QObject *parent) : QObject(parent),
@@ -188,7 +201,7 @@ void DeviceConfiguration::init()
     // 当配置文件中 HDMI 配置，优先使用配置文件的配置，没有配置时默认值为 true
     m_interfaceSettings->endGroup();
 
-    this->syncInterfaceFile();
+    // this->syncInterfaceFile();
 }
 
 void DeviceConfiguration::syncInterfaceFile()
