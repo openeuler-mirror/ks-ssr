@@ -379,9 +379,12 @@ void DeviceListTable::update()
     for (auto jsonData : jsonDataArray)
     {
         auto data = jsonData.toObject();
-
+        auto usbId = data.value(KSC_DEVICE_JK_ID).toString();
         // 供应商 ID 1d6b 代表是 linux 内核提供的虚拟 usb 设备，所以不在我们管控范围内，故不予显示。
-        if (data.value(KSC_DEVICE_JK_ID).toString().startsWith("1d6b", Qt::CaseInsensitive))
+        if (usbId.startsWith("1d6b", Qt::CaseInsensitive) ||
+            // 供应商 ID 0bda 代表是 Realtek 公司提供的 usb 设备， 5411 和 0411 都是 usb 集线器的设备号，不予显示。
+            usbId.startsWith("0bda:5411", Qt::CaseInsensitive) ||
+            usbId.startsWith("0bda:0411", Qt::CaseInsensitive))
         {
             continue;
         }
@@ -389,7 +392,7 @@ void DeviceListTable::update()
         auto deviceInfo = DeviceInfo{.number = count,
                                      .name = data.value(KSC_DEVICE_JK_NAME).toString(),
                                      .type = (DeviceType)data.value(KSC_DEVICE_JK_TYPE).toInt(),
-                                     .id = data.value(KSC_DEVICE_JK_ID).toString(),
+                                     .id = usbId,
                                      .interface = (InterfaceType)data.value(KSC_DEVICE_JK_INTERFACE_TYPE).toInt(),
                                      .state = (DeviceState)data.value(KSC_DEVICE_JK_STATE).toInt(),
                                      .permission = 0};
