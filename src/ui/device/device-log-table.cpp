@@ -79,10 +79,12 @@ void DeviceLogDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         QColor color;
         if (state == SUCCESSFUL)
         {
-            color.setNamedColor("00a2ff");
+            color.setNamedColor("#00a2ff");
         }
         else
-            color.setNamedColor("d30000");
+        {
+            color.setNamedColor("#d30000");
+        }
         viewOption.palette.setColor(QPalette::Text, color);
 
         QApplication::style()->drawItemText(painter,
