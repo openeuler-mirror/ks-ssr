@@ -6,6 +6,7 @@ pkg_search_module(XERCES REQUIRED xerces-c)
 #
 file(GLOB_RECURSE BR_H_FILES ./*.h)
 file(GLOB_RECURSE BR_CPP_FILES ./*.cpp)
+file(GLOB_RECURSE BR_UI_FORMS_FILES ./*.ui)
 
 gen_protocol()
 
@@ -17,7 +18,7 @@ qt5_add_dbus_interface(
   BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml
   br_dbus_proxy)
 
-qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+qt5_wrap_ui(UI_FILES ${BR_UI_FORMS_FILES})
 
 add_library(${TARGET_NAME} SHARED ${BR_H_FILES} ${BR_CPP_FILES} ${BR_DBUS_SRCS}
                                   ${UI_FILES} ${BR_PROTOCOL_OUTPUT})

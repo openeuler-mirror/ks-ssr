@@ -16,11 +16,11 @@
 #include <qt5-log-i.h>
 #include <ssr-marcos.h>
 #include <QDBusConnection>
-#include "accounts/manager.h"
+#include "accounts/accounts-manager.h"
 #include "daemon_adaptor.h"
 #include "include/ssr-i.h"
 #include "lib/dbus/license-proxy.h"
-#include "log/manager.h"
+#include "log/log-manager.h"
 #include "plugins-manager.h"
 
 namespace KS

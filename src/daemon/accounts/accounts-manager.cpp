@@ -12,7 +12,7 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#include "manager.h"
+#include "accounts-manager.h"
 #include <daemon-log-i.h>
 #include <daemon-plugin-i.h>
 #include <qt5-log-i.h>
@@ -100,6 +100,7 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     auto role = this->getRole(calledUniqueName);
+    // TODO: 写个demo测试valueToKey
     auto roleName = g_accountsManager->accountRoleEnum2Str(role);
     if (role == AccountRole::ACCOUNT_ROLE_NOACCOUNT ||
         userName != roleName)
@@ -140,8 +141,10 @@ bool Manager::ChangePassphrase(const QString& userName, const QString& oldPassph
 
 bool Manager::Login(const QString& userName, const QString& passWord)
 {
+    // TODO: 写日志逻辑调整
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
     auto role = getRoleFromDB(userName);
+    // Log::Log log{userName, role, QDateTime::currentDateTime(), LogType::ACCOUNT, false, ""};
     if (role == AccountRole::ACCOUNT_ROLE_NOACCOUNT)
     {
         KLOG_ERROR() << "Unknown user name: " << userName << ", Unique name: " << callerUnique;
@@ -161,13 +164,8 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     if (isFreeze(userName))
     {
         KLOG_INFO() << userName << " has been freeze";
-        g_logManager->writeLog(userName,
-                               role,
-                               QDateTime::currentDateTime(),
-                               LogType::ACCOUNT,
-                               false,
-                               tr("Failed to login, because this account has been freeze"));
-
+        // log.logMsg = tr("Failed to login, because this account has been freeze");
+        // Log::Manager::writeLog(log);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_BE_FREEZE, this->message());
     }
 
@@ -175,24 +173,17 @@ bool Manager::Login(const QString& userName, const QString& passWord)
     {
         KLOG_INFO() << "Passwd error";
         updateFreezeInfo(userName);
-        g_logManager->writeLog(userName,
-                               role,
-                               QDateTime::currentDateTime(),
-                               LogType::ACCOUNT,
-                               false,
-                               tr("Failed to login, Passwd error"));
+        // log.logMsg = tr("Failed to login, Passwd error");
+        // Log::Manager::writeLog(log);
         DBUS_ERROR_REPLY_AND_RETURN_VAL(false, SSRErrorCode::ERROR_ACCOUNT_PASSWORD_ERROR, this->message());
     }
     QWriteLocker locker(&m_clientMutex);
     resetFreezeInfo(userName);
     m_clients.insert(callerUnique, {true, role, userName, DBusHelper::getCallerPid(this)});
     locker.unlock();
-    g_logManager->writeLog(userName,
-                           role,
-                           QDateTime::currentDateTime(),
-                           LogType::ACCOUNT,
-                           true,
-                           tr("Login"));
+    // log.result = true;
+    // log.logMsg = tr("Login");
+    // Log::Manager::writeLog(log);
     return true;
 }
 
@@ -304,7 +295,7 @@ void Manager::initUserInfoTable()
         KLOG_ERROR() << "Failed to create table: " USER_INFO_DB_TABLE_NAME;
         return;
     }
-    
+
     // TODO: 先硬编码，后面需要调整逻辑
     auto defaultAccounts = QStringList {"sysadm", "secadm", "audadm"};
     for (auto i = 0; i < defaultAccounts.size(); i++)

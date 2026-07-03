@@ -9,6 +9,7 @@ file(
   license/*.h
   log/*.h
   ./*.h)
+
 file(
   GLOB
   UI_CPP_FILES
@@ -18,6 +19,8 @@ file(
   license/*.cpp
   log/*.cpp
   ./*.cpp)
+
+file(GLOB UI_FORMS_FILES ./*.ui)
 
 configure_file(config-ui.h.in ${PROJECT_BINARY_DIR}/config-ui.h)
 
@@ -39,7 +42,7 @@ qt5_add_dbus_interface(
   ACCOUNT_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Account.xml
   account_proxy)
 
-qt5_wrap_ui(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+qt5_wrap_ui(UI_FILES ${UI_FORMS_FILES})
 
 set(TARGET_NAME ks-ssr-gui)
 
@@ -117,4 +120,4 @@ target_link_libraries(
           qrencode)
 
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
-install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+install(TARGETS ${TARGET_NAME} DESTINATION ${SSR_INSTALL_LIBEXECDIR})
