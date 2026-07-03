@@ -13,8 +13,8 @@
  */
 #include "settings-page.h"
 #include <QIcon>
-#include "src/ui/settings/settings-device.h"
-#include "src/ui/settings/settings-trusted.h"
+#include "src/ui/setup/device-settings.h"
+#include "src/ui/setup/trusted-settings.h"
 #include "ui_settings-page.h"
 
 namespace KS
@@ -66,9 +66,10 @@ void SettingsPage::initSidebar()
 
 void SettingsPage::initSubPage()
 {
-    auto trustedSettings = new SettingsTrusted(this);
+    auto trustedSettings = new TrustedSettings(this);
+    connect(trustedSettings, &TrustedSettings::trustedStatusChange, this, &SettingsPage::trustedStatusChange);
 
-    auto deviceSettings = new SettingsDevice(this);
+    auto deviceSettings = new DeviceSettings(this);
 
     m_ui->m_stacked->addWidget(trustedSettings);
     m_ui->m_stacked->addWidget(deviceSettings);

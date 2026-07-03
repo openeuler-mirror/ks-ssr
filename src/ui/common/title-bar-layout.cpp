@@ -114,8 +114,8 @@ void TitlebarLayout::setGeometry(const QRect &rect)
     titleLabelSize.setHeight(fontMetrics.height());
     titleLabelSize.setWidth(fontMetrics.width(m_completeTitle));
 #endif
-    /// fixme:由于QFontMetrics::width(QString,int)和QFontMetrics::boundingRect(QString)获取的字体宽度有误差(过小)，导致标题栏空间足够但被压缩
-    /// note:现在先设置lable文本为未省略的文本，再获取应该呈现的大小，再进行计算省略后的文本，会更加耗资源
+    ///fixme:由于QFontMetrics::width(QString,int)和QFontMetrics::boundingRect(QString)获取的字体宽度有误差(过小)，导致标题栏空间足够但被压缩
+    ///note:现在先设置lable文本为未省略的文本，再获取应该呈现的大小，再进行计算省略后的文本，会更加耗资源
     QLabel *labelTitle = qobject_cast<QLabel *>(m_titleLabelItem->widget());
     labelTitle->setText(m_completeTitle);
     QSize titleLabelSize = labelTitle->sizeHint();

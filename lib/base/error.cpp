@@ -34,9 +34,6 @@ QString Error::getErrorDesc(KSCErrorCode errorCode)
     case KSCErrorCode::ERROR_TP_ADD_INVALID_FILE:
         errorDesc = QObject::tr("Added file types are not supported.");
         break;
-    case KSCErrorCode::ERROR_CHANGE_STORAGE_MODE_FAILED:
-        errorDesc = QObject::tr("Failed to switch storage mode.");
-        break;
     case KSCErrorCode::ERROR_BM_DELETE_FAILED:
         errorDesc = QObject::tr("Failed to delete box.");
         break;
