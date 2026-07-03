@@ -109,6 +109,7 @@ extern "C"
         DEVICE_TYPE_PRINTER,
         DEVICE_TYPE_HUB,
         DEVICE_TYPE_COMMUNICATIONS,
+        DEVICE_TYPE_BLUETOOTH,
         DEVICE_TYPE_LAST,
     };
 
