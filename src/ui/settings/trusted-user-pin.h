@@ -11,33 +11,44 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#ifndef TRUSTEDSETTINGS_H
-#define TRUSTEDSETTINGS_H
+#ifndef TRUSTEDUSERPIN_H
+#define TRUSTEDUSERPIN_H
 
 #include <QWidget>
+#include "include/ksc-i.h"
+#include "src/ui/common/titlebar-window.h"
 
 namespace Ui
 {
-class TrustedSettings;
+class TrustedUserPin;
 }
+
 namespace KS
 {
-class TrustedSettings : public QWidget
+class TrustedUserPin : public TitlebarWindow
 {
     Q_OBJECT
 
 public:
-    TrustedSettings(QWidget *parent = nullptr);
-    ~TrustedSettings();
+    TrustedUserPin(QWidget *parent = nullptr);
+    ~TrustedUserPin();
 
-private slots:
-    void switchChanged(bool checked);
-
-signals:
-    void trustedStatusChange(bool status);
+    QString getUserPin();
+    KSCKSSTrustedStorageType getType();
+    void setType(uint type);
 
 private:
-    Ui::TrustedSettings *m_ui;
+    void initUI();
+
+signals:
+    void accepted();
+    void rejected();
+
+private:
+    Ui::TrustedUserPin *m_ui;
+
+    KSCKSSTrustedStorageType m_type;
 };
 }  // namespace KS
-#endif  // TRUSTEDSETTINGS_H
+
+#endif  // TRUSTEDUSERPIN_H

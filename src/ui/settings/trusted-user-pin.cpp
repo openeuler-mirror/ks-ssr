@@ -11,49 +11,64 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#include "table-delete-notify.h"
-#include "ui_table-delete-notify.h"
+#include "trusted-user-pin.h"
+#include "ui_trusted-user-pin.h"
 
 namespace KS
 {
-TableDeleteNotify::TableDeleteNotify(QWidget *parent) : TitlebarWindow(parent),
-                                                        m_ui(new Ui::TableDeleteNotify)
+TrustedUserPin::TrustedUserPin(QWidget *parent) : TitlebarWindow(parent),
+                                                  m_ui(new Ui::TrustedUserPin)
 {
     m_ui->setupUi(getWindowContentWidget());
 
-    init();
+    m_type = KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_NONE;
+
+    initUI();
 }
 
-TableDeleteNotify::~TableDeleteNotify()
+TrustedUserPin::~TrustedUserPin()
 {
     delete m_ui;
 }
 
-void TableDeleteNotify::init()
+QString TrustedUserPin::getUserPin()
+{
+    return m_ui->m_userPin->text();
+}
+
+KSCKSSTrustedStorageType TrustedUserPin::getType()
+{
+    return m_type;
+}
+
+void TrustedUserPin::setType(uint type)
+{
+    m_type = KSCKSSTrustedStorageType(type);
+}
+
+void TrustedUserPin::initUI()
 {
     // 页面关闭时销毁
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::ApplicationModal);
-    setTitleBarHeight(36);
-    setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
-    setFixedSize(280, 200);
     setIcon(QIcon(":/images/logo"));
+    setTitle(tr("Input pin code"));
     setResizeable(false);
-    setTitle(tr("Remove protection"));
-    m_ui->m_notify->setText(tr("The removal operation is irreversible."
-                               "Do you confirm the removal of the selected record from the whitelist?"));
-    m_ui->m_notify->setWordWrap(true);
+    setTitleBarHeight(36);
+    setFixedSize(300, 240);
+    setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
 
-    connect(m_ui->m_cancel, &QPushButton::clicked, this, &TableDeleteNotify::close);
+    connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
+            {
+                close();
+                emit rejected();
+            });
+
     connect(m_ui->m_ok, &QPushButton::clicked, this, [this]
             {
                 close();
                 emit accepted();
+                m_ui->m_userPin->setText("");
             });
-
-    int x = window()->x() + window()->width() / 2 + width() / 2;
-    int y = window()->y() + window()->height() / 2 + height() / 2;
-
-    move(x, y);
 }
 }  // namespace KS

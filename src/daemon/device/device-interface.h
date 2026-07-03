@@ -12,26 +12,34 @@
  * Author:     wangxiaoqing <wangxiaoqing@kylinos.com.cn>
  */
 
-#include "src/daemon/device/drm-device.h"
-#include <ksc-i.h>
-#include <QFileInfo>
+#pragma once
+
+#include <QObject>
+#include "src/daemon/device/device-rule-manager.h"
 
 namespace KS
 {
-DRMDevice::DRMDevice(const QString &syspath, QObject *parent) : Device(syspath, parent)
-{
-    this->init();
-}
 
-void DRMDevice::init()
-{
-    auto sdDevice = this->getSDDevcie();
+class Device;
 
-    auto syspath = sdDevice->getSyspath();
-    auto syspathBaseName = QFileInfo(syspath).baseName();
-    if (syspathBaseName.contains("HDMI"))
-    {
-        this->setInterfaceType(INTERFACE_TYPE_HDMI);
-    }
-}
+class DeviceInterface : public QObject
+{
+    Q_OBJECT
+
+public:
+    DeviceInterface(QObject* parent = nullptr);
+
+    QString getInterfaces();
+    QString getInterface(int type);
+
+    bool setInterfaceEnable(int type,
+                            bool enable);
+
+private:
+    bool
+    verifyInterface(int type);
+
+private:
+    DeviceRuleManager* m_ruleManager;
+};
 }  // namespace KS

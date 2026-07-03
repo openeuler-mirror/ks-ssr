@@ -56,6 +56,13 @@ extern "C"
         KSC_KSS_TRUSTED_FILE_TYPE_NONE
     };
 
+    enum KSCKSSTrustedStorageType
+    {
+        KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT = 0,
+        KSC_KSS_TRUSTED_STORAGE_TYPE_HARD,
+        KSC_KSS_TRUSTED_STORAGE_TYPE_NONE
+    };
+
 // 外设管理相关定义
 #define KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH "/com/kylinsec/SC/DeviceManager"
 #define KSC_DEVICE_MANAGER_DBUS_INTERFACE_NAME "com.kylinsec.SC.DeviceManager"
@@ -80,8 +87,7 @@ extern "C"
 
     enum DeviceType
     {
-        DEVICE_TYPE_UNKNOWN = 0,
-        DEVICE_TYPE_DISK,
+        DEVICE_TYPE_DISK = 0,
         DEVICE_TYPE_CD,
         DEVICE_TYPE_MOUSE,
         DEVICE_TYPE_KEYBOARD,
@@ -92,24 +98,23 @@ extern "C"
         DEVICE_TYPE_PRINTER,
         DEVICE_TYPE_HUB,
         DEVICE_TYPE_COMMUNICATIONS,
-        DEVICE_TYPE_LAST,
+        DEVICE_TYPE_UNKNOWN
     };
 
     enum InterfaceType
     {
-        INTERFACE_TYPE_UNKNOWN = 0,
-        INTERFACE_TYPE_USB,
+        INTERFACE_TYPE_USB = 0,
         INTERFACE_TYPE_BLUETOOTH,
         INTERFACE_TYPE_NET,
         INTERFACE_TYPE_HDMI,
-        INTERFACE_TYPE_LAST,
+        INTERFACE_TYPE_UNKNOWN
     };
 
     enum DeviceState
     {
-        DEVICE_STATE_UNAUTHORIED = 0,
-        DEVICE_STATE_ENABLE,
+        DEVICE_STATE_ENABLE = 0,
         DEVICE_STATE_DISABLE,
+        DEVICE_STATE_UNAUTHORIED
     };
 
     enum DeviceAction
