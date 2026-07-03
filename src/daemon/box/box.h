@@ -25,12 +25,12 @@ class Box : public QObject
 {
     Q_OBJECT
 public:
-    Box(const QString &name,
-        const QString &password,
-        uint userUID,
-        const QString &boxID = "",
-        QObject *parent = nullptr);
-    virtual ~Box(){};
+    static Box *create(const QString &name,
+                       const QString &password,
+                       uint userUID,
+                       int &errorCode,
+                       const QString &boxID = "",
+                       QObject *parent = nullptr);
 
     QString getBoxID();
     QString getBoxName();
@@ -41,14 +41,25 @@ public:
     bool delBox(const QString &currentPassword);
     bool mounted();
     bool mount(const QString &currentPassword);
-    bool umount();
+    // isForce 是否强制umount 程序退出时，进行强制卸载
+    bool umount(bool isForce = false);
     bool modifyBoxPassword(const QString &currentPassword, const QString &newPassword);
-    // 新建保险箱才需执行createBox，获取数据库中的保险箱无需进行此操作
-    bool createBox();
-    void initBoxMountStatus();
-    bool mkdirDataDir();
+
+    void clearMountStatus();
 
 private:
+    Box(const QString &name,
+        const QString &password,
+        uint userUID,
+        const QString &boxID = "",
+        QObject *parent = nullptr);
+    virtual ~Box(){};
+
+    bool init(int &errorCode);
+    // 新建保险箱才需执行addToDao，获取数据库中的保险箱无需进行此操作
+    bool addToDao();
+    bool mkdirSourceDir();
+
     QString getRandBoxUid();
     QString getRandStr(uint length);
     BoxRecord getBoxInfo();
