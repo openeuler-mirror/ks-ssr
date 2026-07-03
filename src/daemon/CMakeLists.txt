@@ -31,8 +31,8 @@ qt5_add_dbus_adaptor(
 
 qt5_add_dbus_adaptor(
   ACCOUNTS_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Account.xml
-  ${CMAKE_SOURCE_DIR}/src/daemon/accounts/accounts-manager.h KS::Accounts::Manager
-  accounts_adaptor AccountsAdaptor)
+  ${CMAKE_SOURCE_DIR}/src/daemon/accounts/accounts-manager.h
+  KS::Accounts::Manager accounts_adaptor AccountsAdaptor)
 
 qt5_add_dbus_adaptor(
   LOG_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Log.xml

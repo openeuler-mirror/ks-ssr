@@ -24,7 +24,6 @@
 #include "lib/base/error.h"
 #include "lib/dbus/dbus-helper.h"
 #include "log_adaptor.h"
-#include "manager.h"
 #include "message.h"
 #include "src/daemon/accounts/accounts-manager.h"
 #include "ssr-marcos.h"

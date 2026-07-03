@@ -12,9 +12,16 @@ install(
               WORLD_READ
   DESTINATION /usr/bin/)
 
-  install(
+install(
   FILES "${CMAKE_CURRENT_SOURCE_DIR}/ks-ssr-gui.sh"
   RENAME "ks-ssr-gui"
+  PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ
+              WORLD_READ
+  DESTINATION /usr/bin/)
+
+install(
+  FILES "${CMAKE_CURRENT_SOURCE_DIR}/ks-ssr-notify.sh"
+  RENAME "ks-ssr-notify"
   PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ
               WORLD_READ
   DESTINATION /usr/bin/)

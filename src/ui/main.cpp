@@ -19,7 +19,7 @@
 #include <QTranslator>
 #include <QtGlobal>
 #include "config-ui.h"
-#include "lib/widgets//single-application/single-application.h"
+#include "lib/widgets/single-application/single-application.h"
 #include "src/ui/window.h"
 using namespace KS;
 
