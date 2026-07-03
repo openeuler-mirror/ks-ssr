@@ -14,80 +14,77 @@
 
 #pragma once
 
-#include <QDBusContext>
-#include <QDBusObjectPath>
 #include <QMap>
 #include <QObject>
-#include "src/daemon/device/device-factory.h"
-#include "src/daemon/device/device-interface.h"
-#include "src/daemon/device/device.h"
 #include "src/daemon/device/device-log.h"
+#include "src/daemon/device/device-mount-monitor.h"
+#include "src/daemon/device/device.h"
 #include "src/daemon/device/sd/sd-device-monitor.h"
-
-class DeviceManagerAdaptor;
 
 namespace KS
 {
-class DeviceManager : public QObject,
-                      protected QDBusContext
+class DeviceFactory;
+class DeviceDBus;
+
+class DeviceManager : public QObject
 {
     Q_OBJECT
+
 public:
+    static void globalInit(QObject *parent);
+    static void globalDeinit();
+
+    static DeviceManager *instance() { return m_instance; };
+
+public:
+    // 获取所有设备信息
+    DeviceList getDevices() { return this->m_devices.values(); };
+    DeviceList getDevicesByInterface(int interfaceType);
+    // 获取特定设备信息
+    QSharedPointer<Device> getDevice(const QString &syspath) { return m_devices.value(syspath); };
+    // FIXME: 需要处理ID重复的情况
+    QSharedPointer<Device> getDeviceByID(const QString &id);
+    // 获取设备日志对象
+    QSharedPointer<DeviceLog> getDeviceLog() { return m_deviceLog; };
+
+    //检查设备挂载权限
+    void checkDeviceMount(const QSharedPointer<Device> device);
+
+private:
     DeviceManager(QObject *parent);
     virtual ~DeviceManager();
 
-public Q_SLOTS:  // METHODS
-    // 获取所有设备信息
-    QString GetDevices();
-
-    // 获取特定设备信息
-    QString GetDevice(const QString &id);
-
-    // 获取所有接口信息
-    QString GetInterfaces();
-
-    // 获取特定特定信息
-    QString GetInterface(int type);
-
-    // 修改权限
-    bool ChangePermission(const QString &id,
-                          const QString &permissions);
-
-    // 启用设备
-    bool Enable(const QString &id);
-
-    // 禁用设备
-    bool Disable(const QString &id);
-
-    // 启用设备接口
-    bool EnableInterface(int type);
-
-    // 禁用设备接口
-    bool DisableInterface(int type);
-
-    // 获取连接记录
-    QString GetRecords();
-
-private slots:
+private Q_SLOTS:
     void handleUdevEvent(SDDevice *device,
                          int action);
+    void handleMountEvent(const DeviceMount *mount);
+
+Q_SIGNALS:
+    void deviceChanged(const QString &id, int action);
 
 private:
     void init();
     void initDevices();
-    QSharedPointer<Device> findDevice(const QString &id);
     void addDevice(SDDevice *sdDevice);
     void handleUdevAddEvent(SDDevice *sdDevice);
     void handleUdevRemoveEvent(SDDevice *sdDevice);
     void handleUdevChangeEvent(SDDevice *sdDevice);
     void recordDeviceConnection(QSharedPointer<Device> device);
+    QSharedPointer<Device> getParentDevice(const QString syspath) const;
+    bool isDeviceMountPerChanged(const QSharedPointer<Device> device,
+                                 const DeviceMount *mount);
+    void remountDevice(const QSharedPointer<Device> device,
+                       const DeviceMount *mount);
+    QString getMountSyspath(const DeviceMount *mount);
 
 private:
-    DeviceManagerAdaptor *m_dbusAdaptor;
+    static DeviceManager *m_instance;
+    // <syspath, device>
     QMap<QString, QSharedPointer<Device>> m_devices;
-    DeviceFactory m_devFactory;
-    DeviceInterface m_devInterface;
-    SDDeviceMonitor m_devMonitor;
-    DeviceLog m_devLog;
+    DeviceFactory *m_deviceFactory;
+    SDDeviceMonitor m_sdDeviceMonitor;
+    DeviceDBus *m_deviceDBus;
+    QSharedPointer<DeviceLog> m_deviceLog;
+    DeviceMountMonitor m_mountMonitor;
 };
 }  // namespace KS
