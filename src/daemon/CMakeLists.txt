@@ -40,6 +40,11 @@ qt5_add_dbus_adaptor(
   ${CMAKE_SOURCE_DIR}/src/daemon/br/br-dbus.h KS::BRDaemon::BRDBus br_adaptor
   BRAdaptor)
 
+qt5_add_dbus_adaptor(
+  BR_LOG_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/com.kylinsec.SSR.Log.xml
+  ${CMAKE_SOURCE_DIR}/src/daemon/log/manager.h KS::Log::Manager log_adaptor
+  LogAdaptor)
+
 set(TARGET_NAME ks-ssr-daemon)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
@@ -56,6 +61,7 @@ add_executable(
   ${SECURITY_DEVICE_MANAGER_SRCS}
   ${KSS_DBUS_SRCS}
   ${BR_DBUS_SRCS}
+  ${BR_LOG_DBUS_SRCS}
   ${BR_PROTOCOL_OUTPUT}
   ${QM_FILES})
 
@@ -69,6 +75,7 @@ target_include_directories(
           ${PYTHON_INCLUDE_DIRS}
           ${LIBCRYPTO_INCLUDE_DIRS}
           ${LIBAUDIT_INCLUDE_DIRS}
+          ${Qt5Network_INCLUDE_DIRS}
           ${PROJECT_SOURCE_DIR})
 
 target_link_libraries(
@@ -77,6 +84,7 @@ target_link_libraries(
           Qt5::DBus
           Qt5::Sql
           Qt5::X11Extras
+          Qt5::Network
           lib-base
           lib-license
           ${KLOG_QT_LIBRARIES}

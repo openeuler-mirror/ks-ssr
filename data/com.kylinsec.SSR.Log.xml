@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+    <interface name="com.kylinsec.SSR.Log">
+        <method name="GetLog">
+            <arg type="u" name="per_page" direction="in">
+                <summary>Number of logs per page.</summary>
+            </arg>
+            <arg type="u" name="page" direction="in">
+                <summary>The index of page, one hundred logs per page.</summary>
+            </arg>
+            <arg type="as" name="logs" direction="out">
+                <summary>List of log string</summary>
+            </arg>
+            <description>Get logs, pagination.</description>
+        </method>
+
+    </interface>
+</node>
