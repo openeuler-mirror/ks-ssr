@@ -71,13 +71,13 @@ void USBDevice::init()
     m_idProduct = device->getSysattrValue("idProduct");
 
     m_product = device->getSysattrValue("product");
-    if(m_product.isNull())
+    if (m_product.isNull())
     {
         m_product = desc->getProductDesc(m_idVendor, m_idProduct);
     }
 
     m_manufacturer = device->getSysattrValue("manufacturer");
-    if(m_manufacturer.isNull())
+    if (m_manufacturer.isNull())
     {
         m_manufacturer = desc->getManufacturerDesc(m_idVendor);
     }
@@ -232,6 +232,11 @@ bool USBDevice::setEnable(bool enable)
     this->setState((rule.enable) ? DEVICE_STATE_ENABLE : DEVICE_STATE_DISABLE);
     
     return true;
+}
+
+void USBDevice::update()
+{
+    this->setType(this->parseDeviceType());
 }
 
 }  // namespace KS

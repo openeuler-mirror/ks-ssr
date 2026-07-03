@@ -49,6 +49,7 @@ public:
 
 public:
     virtual bool setEnable(bool enable);
+    virtual void update();
 
 public:
     QString getID() const;

@@ -87,7 +87,8 @@ extern "C"
 
     enum DeviceType
     {
-        DEVICE_TYPE_DISK = 0,
+        DEVICE_TYPE_UNKNOWN = 0,
+        DEVICE_TYPE_DISK,
         DEVICE_TYPE_CD,
         DEVICE_TYPE_MOUSE,
         DEVICE_TYPE_KEYBOARD,
@@ -98,23 +99,26 @@ extern "C"
         DEVICE_TYPE_PRINTER,
         DEVICE_TYPE_HUB,
         DEVICE_TYPE_COMMUNICATIONS,
-        DEVICE_TYPE_UNKNOWN
+        DEVICE_TYPE_LAST,
     };
 
     enum InterfaceType
     {
-        INTERFACE_TYPE_USB = 0,
+        INTERFACE_TYPE_UNKNOWN = 0,
+        INTERFACE_TYPE_USB,
         INTERFACE_TYPE_BLUETOOTH,
         INTERFACE_TYPE_NET,
         INTERFACE_TYPE_HDMI,
-        INTERFACE_TYPE_UNKNOWN
+        INTERFACE_TYPE_USB_KBD,
+        INTERFACE_TYPE_USB_MOUSE,
+        INTERFACE_TYPE_LAST,
     };
 
     enum DeviceState
     {
-        DEVICE_STATE_ENABLE = 0,
+        DEVICE_STATE_UNAUTHORIED = 0,
+        DEVICE_STATE_ENABLE,
         DEVICE_STATE_DISABLE,
-        DEVICE_STATE_UNAUTHORIED
     };
 
     enum DeviceAction
