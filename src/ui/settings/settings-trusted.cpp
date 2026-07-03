@@ -89,7 +89,11 @@ bool SettingsTrusted::checkTrustedLoadFinied()
 
 void SettingsTrusted::setTrustedStatus(bool checked)
 {
-    RETURN_IF_TRUE(!checkTrustedLoadFinied())
+    if (!checkTrustedLoadFinied())
+    {
+        m_ui->m_switch->setChecked(!checked);
+        return;
+    }
     auto reply = m_kssDbusProxy->SetTrustedStatus(checked);
     reply.waitForFinished();
 
@@ -102,6 +106,7 @@ void SettingsTrusted::setTrustedStatus(bool checked)
         auto y = this->y() + this->height() / 4 + messageDialog->height() / 2;
         messageDialog->move(x, y);
         messageDialog->show();
+        m_ui->m_switch->setChecked(!checked);
         return;
     }
 
@@ -110,7 +115,11 @@ void SettingsTrusted::setTrustedStatus(bool checked)
 
 void SettingsTrusted::updateSoftRadio(bool checked)
 {
-    RETURN_IF_TRUE(!checkTrustedLoadFinied())
+    if (!checkTrustedLoadFinied())
+    {
+        updateStorageMode();
+        return;
+    }
     m_userPin = new TrustedUserPin(this);
     m_userPin->setType(KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_SOFT);
     connect(m_userPin, &TrustedUserPin::accepted, this, &SettingsTrusted::setStorageMode);
@@ -131,7 +140,11 @@ void SettingsTrusted::updateSoftRadio(bool checked)
 
 void SettingsTrusted::updateHardRadio(bool checked)
 {
-    RETURN_IF_TRUE(!checkTrustedLoadFinied())
+    if (!checkTrustedLoadFinied())
+    {
+        updateStorageMode();
+        return;
+    }
     m_userPin = new TrustedUserPin(this);
     m_userPin->setType(KSCKSSTrustedStorageType::KSC_KSS_TRUSTED_STORAGE_TYPE_HARD);
     connect(m_userPin, &TrustedUserPin::accepted, this, &SettingsTrusted::setStorageMode);
