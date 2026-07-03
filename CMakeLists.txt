@@ -12,7 +12,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(SC REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets DBus LinguistTools X11Extras Sql)
-#find_package(PolkitQt5-1)
+# find_package(PolkitQt5-1)
 
 pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
 pkg_search_module(CRYPTOPP REQUIRED cryptopp)
