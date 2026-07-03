@@ -1,8 +1,11 @@
 /* common */
 
-* {
+KS--Window
+{
     font-size: 12px;
+    border-radius: 4px;
     color: white;
+    font:NotoSansCJKsc-Regular;
 }
 
 QPushButton
@@ -11,6 +14,8 @@ QPushButton
     background-color: #393939;
     border: none;
     border-radius: 4px;
+    font-size: 12px;
+    font:NotoSansCJKsc-Regular;
 }
 
 QPushButton:checked
@@ -21,6 +26,8 @@ QPushButton:checked
 QLabel
 {
     color: #FFFFFF;
+    font-size: 12px;
+    font:NotoSansCJKsc-Regular;
 }
 
 QLineEdit
@@ -28,13 +35,18 @@ QLineEdit
     background-color: #222222;
     border: 1px solid #454545;
     border-radius: 6px;
+    font-size: 12px;
+    color: white;
+    font:NotoSansCJKsc-Regular;
 }
 
 QToolTip
 {
     background-color: #FFFFFF;
     border-radius: 4px;
+    font-size: 12px;
     color: #000000;
+    font:NotoSansCJKsc-Regular;
 }
 
 
@@ -60,7 +72,7 @@ QScrollBar::handle:vertical {
     border: none;
     border-radius: 2px;
     background-color: #595959;
-    min-width: 4px;    
+    min-width: 4px;
     min-height:30px;
     margin: 0px;
 }
@@ -90,6 +102,9 @@ QTableView,
 QListWidget
 {
     background-color: transparent;
+    font-size: 12px;
+    color: white;
+    font:NotoSansCJKsc-Regular;
 }
 
 QListWidget::item
@@ -148,52 +163,11 @@ KS--NavigationItem QPushButton#m_icon
     border-radius: 6px;
 }
 
-KS--Window QWidget#m_contents
+QWidget#m_contents,
+QWidget#m_deleteNotify,
+KS--Loading#maskWidget
 {
     background-color: #2d2d2d;
-    border-radius: 6px;
-}
-
-KS--Window QPushButton#btnForMenu
-{
-    background:#2D2D2D;
-}
-KS--Window QPushButton#btnForMenu::menu-indicator
-{
-    image: url(:/images/more);
-    subcontrol-position: center center;
-    subcontrol-origin: padding;
-}
-
-KS--Window QMenu
-{
-    background-color:#2D2D2D;
-    border-radius: 6px;
-    top:10px;
-}
-KS--Window QMenu::item
-{
-    border-radius: 6px;
-    height: 30px;
-    width:100px;
-    margin:0;
-    padding-left:24px;
-}
-KS--Window QMenu::item:hover
-{
-    background-color:#393939;
-}
-
-KS--Window QMenu::item:selected
-{
-    background-color:#393939;
-}
-
-KS--Window QLabel#activateStatus
-{
-    background:rgba(255, 61, 61,255);
-    font-family: Noto Sans CJK SC regular;
-    font-size:12px;
     border-radius: 6px;
 }
 
@@ -345,6 +319,13 @@ KS--TPPage
     background-color:#222222;
 }
 
+KS--TPTableHeaderProxy
+{
+    color:#919191;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+}
+
 QStackedWidget#m_stacked
 {
     background-color:#2d2d2d;
@@ -431,7 +412,7 @@ KS--DevicePermission #m_confirm:checked
     background-color:#00a2ff;
 }
 
-KS--DevicePage QListWidget#m_sidebar
+QListWidget#m_sidebar
 {
     background-color:#2d2d2d;
     border-radius: 6px;
@@ -440,38 +421,17 @@ KS--DevicePage QListWidget#m_sidebar
     padding-right: 24px;
 }
 
-KS--DevicePage QListWidget#m_sidebar::item
+QListWidget#m_sidebar::item
 {
     border-radius: 6px;
     background:#393939;
 }
 
-KS--DevicePage QListWidget#m_sidebar::item:selected
+QListWidget#m_sidebar::item:selected
 {
     background:#00A2FF;
 }
 
-
-/*********License*****************/
-KS--Activation QWidget#m_content
-{
-    border-radius: 6px;
-    background-color:#2d2d2d;
-}
-
-KS--Activation QPushButton#m_activate
-{
-    color:#FFFFFF;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-    border-radius:4px;
-    background:#43A3F2;
-}
-
-KS--Activation QPushButton#m_activate:hover
-{
-    background:#79C3FF;
-}
 
 
 

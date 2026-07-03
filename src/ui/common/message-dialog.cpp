@@ -11,7 +11,8 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#include "sub-window.h"
+#include "message-dialog.h"
+#include <qt5-log-i.h>
 #include <QIcon>
 #include <QLabel>
 #include <QPainter>
@@ -20,22 +21,23 @@
 
 namespace KS
 {
-SubWindow::SubWindow(QWidget *parent) : TitlebarWindow(parent),
-                                        m_contentLayout(nullptr)
+MessageDialog::MessageDialog(QWidget *parent) : TitlebarWindow(parent),
+                                                m_contentLayout(nullptr)
 {
     initUI();
 }
 
-SubWindow::~SubWindow()
+MessageDialog::~MessageDialog()
 {
+    //    KLOG_DEBUG() << "The MessageDialog is deleted.";
 }
 
-QVBoxLayout *SubWindow::getContentLayout()
+QVBoxLayout *MessageDialog::getContentLayout()
 {
     return m_contentLayout;
 }
 
-void SubWindow::buildNotify(const QString &notify)
+void MessageDialog::buildNotify(const QString &notify)
 {
     setTitle(tr("Notify"));
     auto label = new QLabel(notify, this);
@@ -55,14 +57,15 @@ void SubWindow::buildNotify(const QString &notify)
     okHBox->addWidget(ok);
     okHBox->addStretch();
 
-//    m_contentLayout->addLayout(labelHBox);
     m_contentLayout->addWidget(label);
     m_contentLayout->addStretch();
-    m_contentLayout->addLayout(okHBox);
+    m_contentLayout->addWidget(ok, 0, Qt::AlignHCenter);
 }
 
-void SubWindow::initUI()
+void MessageDialog::initUI()
 {
+    // 页面关闭时销毁
+    setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
     setResizeable(false);
@@ -82,7 +85,7 @@ void SubWindow::initUI()
     //    show();
 }
 
-void SubWindow::paintEvent(QPaintEvent *event)
+void MessageDialog::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QStyleOption opt;

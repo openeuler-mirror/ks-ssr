@@ -4,88 +4,88 @@
 <context>
     <name>Box</name>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="125"/>
-        <location filename="../src/ui/box/box.cpp" line="138"/>
+        <location filename="../src/ui/box/box.cpp" line="126"/>
+        <location filename="../src/ui/box/box.cpp" line="139"/>
         <source>Lock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="125"/>
-        <location filename="../src/ui/box/box.cpp" line="138"/>
-        <location filename="../src/ui/box/box.cpp" line="188"/>
+        <location filename="../src/ui/box/box.cpp" line="126"/>
+        <location filename="../src/ui/box/box.cpp" line="139"/>
+        <location filename="../src/ui/box/box.cpp" line="187"/>
         <source>Unlock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="128"/>
-        <location filename="../src/ui/box/box.cpp" line="209"/>
+        <location filename="../src/ui/box/box.cpp" line="129"/>
+        <location filename="../src/ui/box/box.cpp" line="208"/>
         <source>Modify password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="129"/>
+        <location filename="../src/ui/box/box.cpp" line="130"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="130"/>
+        <location filename="../src/ui/box/box.cpp" line="131"/>
         <source>Retrieve the password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="215"/>
+        <location filename="../src/ui/box/box.cpp" line="214"/>
         <source>Please confirm whether the password is consistent.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="220"/>
-        <location filename="../src/ui/box/box.cpp" line="266"/>
+        <location filename="../src/ui/box/box.cpp" line="218"/>
+        <location filename="../src/ui/box/box.cpp" line="263"/>
         <source>The input cannot be empty, please improve the information.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="240"/>
+        <location filename="../src/ui/box/box.cpp" line="237"/>
         <source>Del box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="260"/>
+        <location filename="../src/ui/box/box.cpp" line="257"/>
         <source>Retrieve password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="307"/>
-        <location filename="../src/ui/box/box.cpp" line="348"/>
+        <location filename="../src/ui/box/box.cpp" line="302"/>
+        <location filename="../src/ui/box/box.cpp" line="339"/>
         <source>Password error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="312"/>
+        <location filename="../src/ui/box/box.cpp" line="306"/>
         <source>Modify success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="328"/>
+        <location filename="../src/ui/box/box.cpp" line="321"/>
         <source>Passphrase error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="333"/>
+        <location filename="../src/ui/box/box.cpp" line="325"/>
         <source>Your box password is %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="353"/>
+        <location filename="../src/ui/box/box.cpp" line="343"/>
         <source>Unlock success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="367"/>
+        <location filename="../src/ui/box/box.cpp" line="356"/>
         <source>The Password is wrong or has been mounted!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="372"/>
+        <location filename="../src/ui/box/box.cpp" line="360"/>
         <source>Delete success!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -497,14 +497,14 @@
     </message>
 </context>
 <context>
-    <name>KS::SubWindow</name>
+    <name>KS::MessageDialog</name>
     <message>
         <location filename="../src/ui/common/sub-window.cpp" line="40"/>
         <source>Notify</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/common/sub-window.cpp" line="53"/>
+        <location filename="../src/ui/common/sub-window.cpp" line="48"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
@@ -512,7 +512,7 @@
 <context>
     <name>KS::TP</name>
     <message>
-        <location filename="../src/daemon/tp/tp.cpp" line="57"/>
+        <location filename="../src/daemon/tp/tp.cpp" line="56"/>
         <source>Added file types are not supported.</source>
         <translation type="unfinished"></translation>
     </message>

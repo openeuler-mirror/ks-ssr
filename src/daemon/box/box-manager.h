@@ -41,7 +41,7 @@ public Q_SLOTS:  // METHODS
     // 创建box
     QString CreateBox(const QString &name, const QString &password, QString &passphrase);
     // 删除box
-    bool DelBox(const QString &boxID, const QString &password);
+    void DelBox(const QString &boxID, const QString &password);
     // 通过box uid获取box
     QString GetBoxByUID(const QString &boxID);
     // 获取所有box信息
@@ -49,11 +49,11 @@ public Q_SLOTS:  // METHODS
     // 通过box uid获取mount状态
     bool IsMounted(const QString &boxID);
     // 修改box的密码
-    bool ModifyBoxPassword(const QString &boxID,
+    void ModifyBoxPassword(const QString &boxID,
                            const QString &currentPassword,
                            const QString &newPassword);
     // 挂载box（解锁）
-    bool Mount(const QString &boxID, const QString &password);
+    void Mount(const QString &boxID, const QString &password);
     // 通过口令找回密码
     QString RetrievePassword(const QString &boxID, const QString &passphrase);
     // 取消挂载（加锁）

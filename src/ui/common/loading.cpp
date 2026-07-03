@@ -11,7 +11,7 @@
  *
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
-#include "mask-widget.h"
+#include "loading.h"
 #include <kiran-log/qt5-log-i.h>
 #include <QGridLayout>
 #include <QMouseEvent>
@@ -19,26 +19,16 @@
 
 namespace KS
 {
-MaskWidget::MaskWidget(QWidget *parent) : QWidget(parent), m_labLoading(nullptr)
+Loading::Loading(QWidget *parent) : QWidget(parent), m_labLoading(nullptr)
 {
     initUI();
 }
 
-void MaskWidget::setMaskVisible(bool visible)
-{
-    setVisible(visible);
-}
-
-bool MaskWidget::maskIsVisible()
-{
-    return isVisible();
-}
-
-MaskWidget::~MaskWidget()
+Loading::~Loading()
 {
 }
 
-void MaskWidget::initUI()
+void Loading::initUI()
 {
     setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
     setObjectName("maskWidget");
