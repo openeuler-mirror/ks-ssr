@@ -65,8 +65,8 @@ FileLock::~FileLock()
 }
 
 QSharedPointer<FileLock> FileLock::createShareLock(const QString &path,
-                                                     int flags,
-                                                     int mode)
+                                                   int flags,
+                                                   int mode)
 {
     auto file_descriptor = open(path.toLatin1().data(), flags, mode);
     RETURN_VAL_IF_FALSE(file_descriptor > 0, QSharedPointer<FileLock>());
@@ -76,8 +76,8 @@ QSharedPointer<FileLock> FileLock::createShareLock(const QString &path,
 }
 
 QSharedPointer<FileLock> FileLock::createExcusiveLock(const QString &path,
-                                                        int flags,
-                                                        int mode)
+                                                      int flags,
+                                                      int mode)
 {
     auto file_descriptor = open(path.toLatin1().data(), flags, mode);
     RETURN_VAL_IF_FALSE(file_descriptor > 0, QSharedPointer<FileLock>());

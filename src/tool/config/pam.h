@@ -38,7 +38,7 @@ public:
      * @param {conf_path} PAM配置路径。
      * @param {line_match_pattern}  需要操作的行，如果有多个行都匹配，则随机选择一个
      * @param {fallback_line} 如果未找到匹配行，则使用传入的缺省行
-     * @return {} 
+     * @return {}
      */
     PAM(const QString &conf_path,
         const QString &line_match_pattern);
@@ -53,9 +53,9 @@ public:
     bool getValue(const QString &key, const QString &kv_split_pattern, QString &value);
 
     bool setValue(const QString &key,
-                   const QString &kv_split_pattern,
-                   const QString &value,
-                   const QString &kv_join_str);
+                  const QString &kv_split_pattern,
+                  const QString &value,
+                  const QString &kv_join_str);
 
     bool delValue(const QString &key, const QString &kv_split_pattern);
 

@@ -12,8 +12,6 @@
  * Author:     wangyucheng <wangyucheng@kylinos.com.cn>
  */
 
-#pragma message("此文件需要调整，有较为严重的代码冗余")
-
 #define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
 #include <cryptopp/aes.h>
 #include <cryptopp/base64.h>

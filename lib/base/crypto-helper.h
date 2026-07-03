@@ -59,11 +59,11 @@ public:
 
     // rsa签名
     static bool rsaSignFile(const QString &private_filename,
+                            const QString &message_filename,
+                            const QString &signature_filename);
+    static bool rsaVerifyFile(const QString &public_filename,
                               const QString &message_filename,
                               const QString &signature_filename);
-    static bool rsaVerifyFile(const QString &public_filename,
-                                const QString &message_filename,
-                                const QString &signature_filename);
 
     // des加密和解密
     static QString desEncrypt(const QString &message, const QString &key = BR_DES_KEY);
