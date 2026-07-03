@@ -5070,10 +5070,14 @@
         <translation></translation>
     </message>
     <message>
+        <source>System user behavior audit, timely understranding of potential secutify risks</source>
+        <translation type="vanished">系统用户行为审计，及时了解潜在安全隐患</translation>
+    </message>
+    <message>
         <location filename="../src/ui/log/log-page.ui" line="46"/>
         <location filename="../build/src/ui/ks-ssr-gui_autogen/include/src/ui/ui_log-page.h" line="125"/>
-        <source>System user behavior audit, timely understranding of potential secutify risks</source>
-        <translation>系统用户行为审计，及时了解潜在安全隐患</translation>
+        <source>User behavior audit, timely understranding of potential secutify risks</source>
+        <translation>用户行为审计，及时了解潜在安全隐患</translation>
     </message>
     <message>
         <location filename="../src/ui/log/log-page.ui" line="66"/>
