@@ -43,7 +43,7 @@ private:
     explicit UdevRuleManager(QObject *parent = nullptr);
 
 private Q_SLOTS:
-    void handleDevConfigChanged();
+    void handleDevSettingChanged();
 
 private:
     void init();
