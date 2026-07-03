@@ -922,13 +922,17 @@
         <translation>安全管控</translation>
     </message>
     <message>
-        <location filename="../src/ui/window.cpp" line="125"/>
         <source>Setup</source>
-        <translation>设置</translation>
+        <translation type="vanished">设置</translation>
     </message>
     <message>
         <source>Activate Info</source>
         <translation type="vanished">授权信息</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/window.cpp" line="125"/>
+        <source>Settings</source>
+        <translation>设置</translation>
     </message>
     <message>
         <location filename="../src/ui/window.cpp" line="126"/>
