@@ -58,6 +58,9 @@ void Progress::resetProgress()
     m_ui->m_return->show();
     m_ui->m_generateReport->disconnect();
     connect(m_ui->m_generateReport, &QPushButton::clicked, this, &Progress::generateReportClicked);
+
+    m_ui->m_exportStrategy->disconnect();
+    connect(m_ui->m_exportStrategy, &QPushButton::clicked, this, &Progress::exportStrategyClicked);
 }
 
 void Progress::timeInit()

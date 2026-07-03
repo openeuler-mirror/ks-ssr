@@ -51,7 +51,6 @@ BRSettingPage::~BRSettingPage()
 void BRSettingPage::initConnection()
 {
     connect(m_ui->m_importStrategy, &QPushButton::clicked, this, &BRSettingPage::importStrategy);
-    connect(m_ui->m_exportStrategy, &QPushButton::clicked, this, &BRSettingPage::exportStrategyClicked);
     connect(m_ui->m_resetAllArgs, &QPushButton::clicked, this, &BRSettingPage::resetAllArgsClicked);
     connect(m_ui->m_timeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &BRSettingPage::timedScanSettings);
     m_timedScan = new QTimer(this);
@@ -102,9 +101,7 @@ void BRSettingPage::initConnection()
                 userPrompt->move(x, y);
                 userPrompt->show();
                 connect(userPrompt, &UserPromptDialog::accepted, this, [this]
-                        {
-                            fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL);
-                        });
+                        { fallback(BRFallbackMethod::BR_FALLBACK_METHOD_INITIAL); });
             });
     connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this]
             {
@@ -120,9 +117,7 @@ void BRSettingPage::initConnection()
                 userPrompt->move(x, y);
                 userPrompt->show();
                 connect(userPrompt, &UserPromptDialog::accepted, this, [this]
-                        {
-                            fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST);
-                        });
+                        { fallback(BRFallbackMethod::BR_FALLBACK_METHOD_LAST); });
             });
 
     connect(m_dbusProxy, &BRDbusProxy::HomeFreeSpaceRatioLower, this, [this](const QString &spaceRatio)
