@@ -42,6 +42,7 @@ public:
 
 private:
     void initPlugins();
+    void deinitPlugins();
 
 private:
     // 插件开关配置
