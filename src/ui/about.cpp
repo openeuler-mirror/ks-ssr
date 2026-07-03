@@ -48,7 +48,7 @@ void About::initUI()
     setWindowModality(Qt::ApplicationModal);
     setResizeable(false);
 
-    m_ui->m_version->setText(tr("Security reinforcement sofware V1.0"));
+    m_ui->m_version->setText(tr("Security reinforcement sofware V1.2"));
     m_ui->m_info->setText(QString("ks-ssr : %1").arg(getVersion(VERSION_FILE_PATH)));
     m_ui->m_license->setText("Copyright (c) 2023 ~ 2024 KylinSec Co. Ltd. All Rights Reserved.");
 }
