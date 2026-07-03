@@ -13,10 +13,10 @@ bool KS::Log::Configurations::isValid()
 
 KS::Log::Configurations::Configurations(const QString& configPath)
     : m_config(new QSettings(configPath, QSettings::NativeFormat, this)),
-      m_maxLogFile(m_config->value("max_log_file").toUInt()),
-      m_numLogs(m_config->value("num_logs").toUInt()),
-      m_account(m_config->value("account").toString()),
-      m_passwd(m_config->value("passwd").toString())
+      m_maxLogFile(m_config->value("log/max_log_file", 8).toUInt()),
+      m_numLogs(m_config->value("log/num_logs", 5).toUInt()),
+      m_account(m_config->value("log/account").toString()),
+      m_passwd(m_config->value("log/passwd").toString())
 {
     m_ip.setAddress(m_config->value("ip").toString());
 }
