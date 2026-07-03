@@ -48,6 +48,6 @@ private Q_SLOTS:
 private:
     Ui::TPExecute *m_ui;
 
-    TPProxy *m_dbusProxy;
+    KSSDbusProxy *m_dbusProxy;
 };
 }  // namespace KS

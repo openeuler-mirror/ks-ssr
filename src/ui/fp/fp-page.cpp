@@ -17,11 +17,12 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QSettings>
+#include <QWidgetAction>
 #include "config.h"
 #include "ksc-i.h"
 #include "ksc-marcos.h"
 #include "src/ui/common/message-dialog.h"
-#include "src/ui/file_protected_proxy.h"
+#include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_fp-page.h"
 
@@ -36,16 +37,20 @@ FPPage::FPPage(QWidget *parent) : QWidget(parent),
 {
     m_ui->setupUi(this);
 
-    m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
-                                                  KSC_FP_DBUS_OBJECT_PATH,
-                                                  QDBusConnection::systemBus(),
-                                                  this);
+    m_fileProtectedProxy = new KSSDbusProxy(KSC_DBUS_NAME,
+                                            KSC_KSS_INIT_DBUS_OBJECT_PATH,
+                                            QDBusConnection::systemBus(),
+                                            this);
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records")).arg(m_ui->m_fileTable->getFPFileInfos().size());
     m_ui->m_tips->setText(text);
 
     // TODO:需要绘制颜色
-    m_ui->m_search->addAction(QIcon(":/images/search").pixmap(16, 16), QLineEdit::ActionPosition::LeadingPosition);
+    auto searchButton = new QPushButton(m_ui->m_search);
+    searchButton->setIcon(QIcon(":/images/search"));
+    auto action = new QWidgetAction(m_ui->m_search);
+    action->setDefaultWidget(searchButton);
+    m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
     connect(m_ui->m_search, SIGNAL(textChanged(const QString &)), this, SLOT(searchTextChanged(const QString &)));
     connect(m_ui->m_add, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
@@ -69,7 +74,7 @@ void FPPage::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     if (!fileName.isEmpty())
     {
-        m_fileProtectedProxy->AddFile(fileName).waitForFinished();
+        m_fileProtectedProxy->AddFPFile(fileName).waitForFinished();
         //        m_ui->m_fileTable->updateInfo();
         updateInfo();
     }
@@ -117,7 +122,7 @@ void FPPage::unprotectAccepted()
     {
         if (trustedInfo.selected)
         {
-            m_fileProtectedProxy->RemoveFile(trustedInfo.filePath).waitForFinished();
+            m_fileProtectedProxy->RemoveFPFile(trustedInfo.filePath).waitForFinished();
         }
     }
     updateInfo();

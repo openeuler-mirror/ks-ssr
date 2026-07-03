@@ -18,18 +18,18 @@
 
 namespace Ui
 {
-class BoxPasswordRetrieve;
+class RetrieveBoxPassword;
 }
 
 namespace KS
 {
-class BoxPasswordRetrieve : public TitlebarWindow
+class RetrieveBoxPassword : public TitlebarWindow
 {
     Q_OBJECT
 
 public:
-    explicit BoxPasswordRetrieve(QWidget *parent = nullptr);
-    ~BoxPasswordRetrieve();
+    explicit RetrieveBoxPassword(QWidget *parent = nullptr);
+    ~RetrieveBoxPassword();
     QString getPassphrase();
 
 private:
@@ -45,7 +45,7 @@ signals:
     void inputEmpty();
 
 private:
-    Ui::BoxPasswordRetrieve *m_ui;
+    Ui::RetrieveBoxPassword *m_ui;
 };
 }  // namespace KS
 

@@ -18,8 +18,7 @@
 #include "include/ksc-i.h"
 #include "src/daemon/box/box-manager.h"
 // #include "src/daemon/device/device-manager.h"
-#include "src/daemon/fp/fp.h"
-#include "src/daemon/tp/tp.h"
+#include "src/daemon/kss/kss-dbus.h"
 
 namespace KS
 {
@@ -28,8 +27,7 @@ Daemon *Daemon::m_instance = nullptr;
 Daemon::Daemon() : QObject(nullptr)
 {
     m_boxManager = new BoxManager(this);
-    m_trusted = new TP(this);
-    m_fileProtected = new FP(this);
+    m_kssDBus = new KSSDbus(this);
     // m_deviceManger = new DeviceManager(this);
 }
 

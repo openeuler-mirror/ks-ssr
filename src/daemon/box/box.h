@@ -39,11 +39,11 @@ public:
     uint getUserUid();
     QString getPassphrase();
     QString retrievePassword(const QString &passphrase);
-    bool delBox(const QString &inputPassword);
+    bool delBox(const QString &currentPassword);
     bool mounted();
-    bool mount(const QString &inputPassword);
+    bool mount(const QString &currentPassword);
     void umount();
-    bool modifyBoxPassword(const QString &inputPassword, const QString &newPassword);
+    bool modifyBoxPassword(const QString &currentPassword, const QString &newPassword);
 
 private:
     void init();
