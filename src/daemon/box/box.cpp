@@ -164,7 +164,7 @@ bool Box::mount(const QString &currentPassword)
 bool Box::umount()
 {
     auto boxInfo = getBoxInfo();
-    QString mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
+    auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, boxInfo.boxName);
 
     RETURN_VAL_IF_TRUE(!m_ecryptFS->encrypt(mountPath).isEmpty(), false)
     // 修改数据库中挂载状态
@@ -189,6 +189,24 @@ bool Box::modifyBoxPassword(const QString &currentPassword, const QString &newPa
 
     m_boxDao->modifyPasswd(m_boxID, encryptPassword);
     return true;
+}
+
+void Box::initBoxMountStatus()
+{
+    // 获取系统中保险箱实际挂载状态
+    auto process = new QProcess(this);
+    process->start("bash", QStringList() << "-c"
+                                         << "df -h");
+    process->waitForFinished();
+    auto output = QString(process->readAllStandardOutput()).remove(QRegExp("\\s"));
+    m_boxDao->modifyMountStatus(m_boxID, output.contains(m_name + m_boxID));
+    // 处理终端占用目录，且在挂载状态下重启的情况，重启后实际上已经取消挂载了，但目录依然存在
+    if (!mounted())
+    {
+        auto mountPath = QString("%1/%2").arg(KSC_BOX_MOUNT_DIR, m_name);
+        m_ecryptFS->rmBoxDir(mountPath);
+    }
+    process->deleteLater();
 }
 
 void Box::init()
