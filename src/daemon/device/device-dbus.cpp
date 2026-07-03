@@ -15,8 +15,8 @@
 #include "src/daemon/device/device-dbus.h"
 #include <ksc-i.h>
 #include <qt5-log-i.h>
+#include "src/daemon/device/device-configuration.h"
 #include "src/daemon/device/device-manager.h"
-#include "src/daemon/device/device-rule-manager.h"
 #include "src/daemon/device_manager_adaptor.h"
 
 namespace KS
@@ -92,12 +92,12 @@ QString DeviceDBus::GetInterfaces()
     QJsonDocument jsonDoc;
     QJsonArray jsonArray;
 
-    auto deviceRuleManager = DeviceRuleManager::instance();
+    auto deviceConfiguration = DeviceConfiguration::instance();
     for (int type = INTERFACE_TYPE_USB; type < INTERFACE_TYPE_LAST; ++type)
     {
         QJsonObject jsonObj{
             {KSC_DI_JK_TYPE, type},
-            {KSC_DI_JK_ENABLE, deviceRuleManager->isIFCEnable(type)}};
+            {KSC_DI_JK_ENABLE, deviceConfiguration->isIFCEnable(type)}};
 
         jsonArray.append(jsonObj);
     }
@@ -112,11 +112,11 @@ QString DeviceDBus::GetInterface(int type)
     // TODO: 判断type的合法性
 
     QJsonDocument jsonDoc;
-    auto deviceRuleManager = DeviceRuleManager::instance();
+    auto deviceConfiguration = DeviceConfiguration::instance();
 
     QJsonObject jsonObj{
         {KSC_DI_JK_TYPE, type},
-        {KSC_DI_JK_ENABLE, deviceRuleManager->isIFCEnable(type)}};
+        {KSC_DI_JK_ENABLE, deviceConfiguration->isIFCEnable(type)}};
     jsonDoc.setObject(jsonObj);
 
     return QString(jsonDoc.toJson(QJsonDocument::Compact));
@@ -206,13 +206,29 @@ bool DeviceDBus::Disable(const QString &id)
 
 void DeviceDBus::EnableInterface(int type, bool enabled)
 {
-    DeviceRuleManager::instance()->setIFCEnable(type, enabled);
+    auto devConfig = DeviceConfiguration::instance();
+    devConfig->setIFCEnable(type, enabled);
+    auto interfaceType = type;
+
+    if (type == INTERFACE_TYPE_USB &&
+        enabled)
+    {
+        //开启USB口时，一起开启键盘，鼠标
+        devConfig->setIFCEnable(INTERFACE_TYPE_USB_KBD, true);
+        devConfig->setIFCEnable(INTERFACE_TYPE_USB_MOUSE, true);
+    }
+
+    if (type == INTERFACE_TYPE_USB_KBD ||
+        type == INTERFACE_TYPE_USB_MOUSE)
+    {
+        interfaceType = INTERFACE_TYPE_USB;
+    }
 
     auto devices = m_deviceManager->getDevices();
     for (auto device : devices)
     {
         //重放此接口类型的设备的Udev事件
-        if (device->getInterfaceType() == type)
+        if (device->getInterfaceType() == interfaceType)
         {
             device->trigger();
         }
