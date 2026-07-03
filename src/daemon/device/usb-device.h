@@ -37,7 +37,6 @@ public:
     USBDevice(const QString &syspath, QObject *parent = nullptr);
     virtual ~USBDevice();
     virtual int setEnable(bool enable);
-    virtual void update();
 
 private:
     void init();
@@ -47,13 +46,13 @@ private:
     int interfaceProtocol2DevcieType(const InterfaceClass &interface);
     int hidProtocol2DevcieType(const InterfaceClass &interface);
     void initPermission();
-    QString getRule();
 
 private:
     QString m_idProduct;
     QString m_idVendor;
     QString m_manufacturer;
     QString m_product;
+    QString m_uid;
 
     DeviceRule *m_DevRule;
 };

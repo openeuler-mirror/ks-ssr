@@ -11,37 +11,43 @@
  *
  * Author:     wangxiaoqing <wangxiaoqing@kylinos.com.cn>
  */
+
 #pragma once
 
-#include <systemd/sd-device.h>
+#include <QJsonObject>
 #include <QObject>
-#include <QSocketNotifier>
-#include "src/daemon/device/sd-device.h"
+#include <QSettings>
 
 namespace KS
 {
-class SdDeviceMonitor : public QObject
+struct DeviceConnectRecord
+{
+public:
+    DeviceConnectRecord() = default;
+    QString name;
+    int type;
+    qint64 time;
+    int state;
+};
+
+class Record : public QObject
 {
     Q_OBJECT
 
 public:
-    SdDeviceMonitor(QObject *parent = nullptr);
-    virtual ~SdDeviceMonitor();
-    void init();
+    Record(QObject *parent = nullptr);
+    ~Record();
 
-signals:
-    void udevSignal(SdDevice *device);
-
-public slots:
-    void sendUdevSignal(SdDevice *device);
+public:
+    void addDeviceConnectRecord(const DeviceConnectRecord &record);
+    QJsonObject toJsonObject(QSharedPointer<DeviceConnectRecord> record);
+    QList<QSharedPointer<DeviceConnectRecord>> getDeviceConnectRecords();
 
 private:
-    void recivUdevMessage(int fd);
+    QSharedPointer<DeviceConnectRecord> getDeviceConnectRecord(const QString &group);
+    void removeLastRecord();
 
 private:
-    sd_device_monitor *m_monitor;
-    sd_event *m_event;
-    QSocketNotifier *m_sn;
+    QSettings *m_settings;
 };
-
 }  // namespace KS

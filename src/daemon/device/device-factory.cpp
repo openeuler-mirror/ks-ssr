@@ -26,11 +26,11 @@ DeviceFactory::DeviceFactory(QObject* parent)
 {
 }
 
-QSharedPointer<Device> DeviceFactory::createDevice(SdDevice* device)
+QSharedPointer<Device> DeviceFactory::createDevice(SDDevice* device)
 {
-    auto subsystem = device->get_subsystem();
-    auto devtype = device->get_devtype();
-    auto syspath = device->get_syspath();
+    auto subsystem = device->getSubsystem();
+    auto devtype = device->getDevtype();
+    auto syspath = device->getSyspath();
 
     if (subsystem == "usb" && devtype == "usb_device")
     {

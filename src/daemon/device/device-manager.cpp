@@ -15,9 +15,9 @@
 #include "src/daemon/device/device-manager.h"
 #include <qt5-log-i.h>
 #include <QDBusConnection>
-#include "ksc-i.h"
-#include "ksc-marcos.h"
-#include "src/daemon/device/sd-device-enumerator.h"
+#include "sc-i.h"
+#include "sc-marcos.h"
+#include "src/daemon/device/sd/sd-device-enumerator.h"
 #include "src/daemon/device_manager_adaptor.h"
 
 namespace KS
@@ -38,52 +38,51 @@ void DeviceManager::init()
 {
     this->initDevices();
 
-    connect(&m_devMonitor, &SdDeviceMonitor::udevSignal, this, &DeviceManager::handleUdevEvent);
-
     auto connection = QDBusConnection::systemBus();
-    if (!connection.registerObject(KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH, this))
+    if (!connection.registerObject(SC_DEVICE_MANAGER_DBUS_OBJECT_PATH, this))
     {
         KLOG_ERROR() << "Failed to register object:" << connection.lastError();
     }
+
+    connect(&m_devMonitor, &SDDeviceMonitor::deviceChanged, this, &DeviceManager::handleUdevEvent);
 }
 
 void DeviceManager::initDevices()
 {
-    SdDeviceEnumerator enumerator;
-    QList<QSharedPointer<SdDevice>> list = enumerator.getDevices();
+    SDDeviceEnumerator enumerator;
+    auto devices = enumerator.getDevices();
 
-    Q_FOREACH (auto device, list)
+    Q_FOREACH (auto device, devices)
     {
-        this->addDevice(device.data());
+        this->addDevice(device);
     }
 }
 
-void DeviceManager::addDevice(SdDevice *device)
+void DeviceManager::addDevice(SDDevice *sdDevice)
 {
-    auto syspath = device->get_syspath();
+    auto syspath = sdDevice->getSyspath();
 
     RETURN_IF_TRUE(syspath.isNull())
 
-    auto dev = m_devFactory.createDevice(device);
+    auto device = m_devFactory.createDevice(sdDevice);
 
-    if (dev)
+    if (device)
     {
-        m_devMap.insert(dev->getSyspath(), dev);
-        KLOG_INFO() << "Device added with syspath " << dev->getSyspath();
+        m_devices.insert(device->getSyspath(), device);
+        KLOG_INFO() << "Device added with syspath " << device->getSyspath();
     }
 }
 
-QString DeviceManager::GetDevices()
+QString
+DeviceManager::GetDevices()
 {
-    auto devices = m_devMap.values();
+    auto devices = m_devices.values();
     QJsonDocument jsonDoc;
     QJsonArray jsonArray;
 
-    Q_FOREACH (QSharedPointer<Device> device, devices)
+    Q_FOREACH (auto device, devices)
     {
-        auto jsonObj = makeDevcieJsonInfo(device);
-
-        jsonArray.append(jsonObj);
+        jsonArray.append(device->toJsonObject());
     }
 
     jsonDoc.setArray(jsonArray);
@@ -93,16 +92,14 @@ QString DeviceManager::GetDevices()
 
 QString DeviceManager::GetDevice(const QString &id)
 {
-    auto devices = m_devMap.values();
+    auto devices = m_devices.values();
     QJsonDocument jsonDoc;
 
-    Q_FOREACH (QSharedPointer<Device> device, devices)
+    Q_FOREACH (auto device, devices)
     {
         if (device->getId() == id)
         {
-            auto jsonObj = makeDevcieJsonInfo(device);
-
-            jsonDoc.setObject(jsonObj);
+            jsonDoc.setObject(device->toJsonObject());
 
             break;
         }
@@ -111,24 +108,17 @@ QString DeviceManager::GetDevice(const QString &id)
     return QString(jsonDoc.toJson(QJsonDocument::Compact));
 }
 
-QJsonObject DeviceManager::makeDevcieJsonInfo(QSharedPointer<Device> device)
+bool DeviceManager::ChangePermission(const QString &id,
+                                     const QString &permissions)
 {
-    auto permission = device->getPermission();
-    QJsonObject jsonObj{
-        {KSC_DEVICE_KEY_ID, device->getId()},
-        {KSC_DEVICE_KEY_NAME, device->getName()},
-        {KSC_DEVICE_KEY_TYPE, device->getType()},
-        {KSC_DEVICE_KEY_INTERFACE_TYPE, device->getInterfaceType()},
-        {KSC_DEVICE_KEY_READ, permission->read},
-        {KSC_DEVICE_KEY_WRITE, permission->write},
-        {KSC_DEVICE_KEY_EXECUTE, permission->execute},
-        {KSC_DEVICE_KEY_STATE, device->getState()}};
+    auto device = this->findDevice(id);
 
-    return jsonObj;
-}
+    if (device == nullptr)
+    {
+        KLOG_ERROR() << "Failed to find device with id " << id;
+        return false;
+    }
 
-bool DeviceManager::ChangePermission(const QString &permissions)
-{
     QJsonParseError error;
     auto jsonDoc = QJsonDocument::fromJson(permissions.toLocal8Bit(), &error);
 
@@ -148,36 +138,16 @@ bool DeviceManager::ChangePermission(const QString &permissions)
 #define GET_JSON_BOOL_VALUE(obj, key) ((obj).value(key).isBool() ? (obj).value(key).toBool() : false)
 
     auto jsonObj = jsonDoc.object();
-    auto id = GET_JSON_STRING_VALUE(jsonObj, KSC_DEVICE_KEY_ID);
-    auto enable = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_KEY_ENABLE);
-
     auto permission = QSharedPointer<Permission>(new Permission{
-        .read = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_KEY_READ),
-        .write = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_KEY_WRITE),
-        .execute = GET_JSON_BOOL_VALUE(jsonObj, KSC_DEVICE_KEY_EXECUTE),
+        .read = GET_JSON_BOOL_VALUE(jsonObj, SC_DEVICE_KEY_READ),
+        .write = GET_JSON_BOOL_VALUE(jsonObj, SC_DEVICE_KEY_WRITE),
+        .execute = GET_JSON_BOOL_VALUE(jsonObj, SC_DEVICE_KEY_EXECUTE),
     });
 
 #undef GET_JSON_STRING_VALUE
 #undef GET_JSON_BOOL_VALUE
-
-    if (id == nullptr)
-    {
-        KLOG_ERROR() << "QJsonDocument can not get id with " << permissions;
-        return false;
-    }
-
-    auto device = this->findDevice(QString(id));
-
-    if (device == nullptr)
-    {
-        KLOG_ERROR() << "Failed to find device with id " << id;
-        return false;
-    }
-
     device->setPermission(permission);
-
-    auto ret = device->setEnable(enable);
-    RETURN_VAL_IF_TRUE(ret < 0, false)
+    device->setEnable(true);
 
     // 重放该设备Udev事件
     device->trigger();
@@ -185,71 +155,135 @@ bool DeviceManager::ChangePermission(const QString &permissions)
     return true;
 }
 
-void DeviceManager::handleUdevEvent(SdDevice *device)
+bool DeviceManager::Enable(const QString &id)
 {
-    RETURN_IF_TRUE(device->get_syspath().isNull());
-    auto action = device->get_action();
+    auto device = this->findDevice(id);
 
-    if (action == SD_DEVICE_ACTION_REMOVE)
+    if (device == nullptr)
     {
+        KLOG_ERROR() << "Failed to find device with id " << id;
+        return false;
+    }
+
+    device->setEnable(true);
+
+    // 重放该设备Udev事件
+    device->trigger();
+
+    return true;
+}
+
+bool DeviceManager::Disable(const QString &id)
+{
+    auto device = this->findDevice(id);
+
+    if (device == nullptr)
+    {
+        KLOG_ERROR() << "Failed to find device with id " << id;
+        return false;
+    }
+
+    device->setEnable(false);
+
+    // 重放该设备Udev事件
+    device->trigger();
+
+    return true;
+}
+
+QString DeviceManager::GetRecords()
+{
+    auto records = m_record.getDeviceConnectRecords();
+    QJsonDocument jsonDoc;
+    QJsonArray jsonArray;
+
+    Q_FOREACH (auto record, records)
+    {
+        jsonArray.append(m_record.toJsonObject(record));
+    }
+
+    jsonDoc.setArray(jsonArray);
+
+    return QString(jsonDoc.toJson(QJsonDocument::Compact));
+}
+
+void DeviceManager::handleUdevEvent(SDDevice *device,
+                                    int action)
+{
+    switch (action)
+    {
+    case SD_DEVICE_ACTION_REMOVE:
         this->handleUdevRemoveEvent(device);
-    }
-    else if (action == SD_DEVICE_ACTION_ADD)
-    {
+        break;
+
+    case SD_DEVICE_ACTION_ADD:
         this->handleUdevAddEvent(device);
-    }
-    else if (action == SD_DEVICE_ACTION_CHANGE)
-    {
+        break;
+
+    case SD_DEVICE_ACTION_CHANGE:
         this->handleUdevChangeEvent(device);
+        break;
     }
 }
 
-void DeviceManager::handleUdevAddEvent(SdDevice *device)
+void DeviceManager::recordDeviceConnected(QSharedPointer<Device> device)
 {
-    auto syspath = device->get_syspath();
+    DeviceConnectRecord record;
 
-    RETURN_IF_TRUE(m_devMap.contains(syspath));
+    record.name = device->getName();
+    record.type = device->getType();
 
-    this->addDevice(device);
+    record.state = device->getState() == DEVICE_STATE_ENABLE ? DEVICE_CONNECT_SUCCESSED : DEVICE_CONNECT_FAILED;
 
-    auto dev = m_devMap.value(syspath);
-    if (dev)
+    // 以秒为单位的时间戳
+    record.time = QDateTime::currentSecsSinceEpoch();
+
+    m_record.addDeviceConnectRecord(record);
+}
+
+void DeviceManager::handleUdevAddEvent(SDDevice *sdDevice)
+{
+    auto syspath = sdDevice->getSyspath();
+
+    RETURN_IF_TRUE(m_devices.contains(syspath));
+
+    this->addDevice(sdDevice);
+
+    auto device = m_devices.value(syspath);
+    if (device)
     {
-        Q_EMIT m_dbusAdaptor->DeviceChanged(dev->getId(), DEVICE_ACTION_ADD);
+        this->recordDeviceConnected(device);
+        Q_EMIT m_dbusAdaptor->DeviceChanged(device->getId(), DEVICE_ACTION_ADD);
     }
 }
 
-void DeviceManager::handleUdevRemoveEvent(SdDevice *device)
+void DeviceManager::handleUdevRemoveEvent(SDDevice *sdDevice)
 {
-    auto syspath = device->get_syspath();
-    auto dev = m_devMap.take(syspath);
+    auto syspath = sdDevice->getSyspath();
+    auto device = m_devices.take(syspath);
 
-    if (dev)
+    if (device)
     {
         KLOG_INFO() << "Device removed with syspath " << syspath;
-
-        Q_EMIT m_dbusAdaptor->DeviceChanged(dev->getId(), DEVICE_ACTION_REMOVE);
+        Q_EMIT m_dbusAdaptor->DeviceChanged(device->getId(), DEVICE_ACTION_REMOVE);
     }
 }
 
-void DeviceManager::handleUdevChangeEvent(SdDevice *device)
+void DeviceManager::handleUdevChangeEvent(SDDevice *sdDevice)
 {
-    auto syspath = device->get_syspath();
-    auto dev = m_devMap.value(syspath);
+    auto syspath = sdDevice->getSyspath();
+    auto device = m_devices.value(syspath);
 
-    if (dev)
+    if (device)
     {
         KLOG_INFO() << "Device changed with syspath " << syspath;
-
-        dev->update();
-
-        Q_EMIT m_dbusAdaptor->DeviceChanged(dev->getId(), DEVICE_ACTION_CHANGE);
+        Q_EMIT m_dbusAdaptor->DeviceChanged(device->getId(), DEVICE_ACTION_CHANGE);
     }
 }
 
 QSharedPointer<Device> DeviceManager::findDevice(const QString &id)
 {
-    auto devices = m_devMap.values();
+    auto devices = m_devices.values();
 
     Q_FOREACH (auto device, devices)
     {
