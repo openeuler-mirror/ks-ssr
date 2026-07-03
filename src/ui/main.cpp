@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     SingleApplication app(argc,
                           argv,
                           true,
-                          SingleApplication::Mode::System | SingleApplication::Mode::SecondaryNotification);
+                          SingleApplication::Mode::User | SingleApplication::Mode::SecondaryNotification);
 
     SingleApplication::setApplicationName(programName);
     SingleApplication::setApplicationVersion(PROJECT_VERSION);

@@ -132,6 +132,11 @@ void BoxPage::boxDeleted(const QString &boxUID)
 void BoxPage::boxChanged(const QString &boxUID)
 {
     auto box = m_boxs.value(boxUID);
+    if (!box)
+    {
+        box->deleteLater();
+        return;
+    }
     box->boxChanged();
 }
 
