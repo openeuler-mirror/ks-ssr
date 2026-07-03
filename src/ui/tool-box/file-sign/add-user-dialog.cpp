@@ -11,50 +11,47 @@
  *
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
-#include "box-password-checked.h"
+#include "add-user-dialog.h"
 #include <QRegularExpressionValidator>
+#include <QIcon>
 #include "include/ssr-i.h"
-#include "common/password-event-filter.h"
-#include "ui_box-password-checked.h"
+#include "ui_add-user-dialog.h"
 namespace KS
 {
-namespace PrivateBox
+namespace ToolBox
 {
-BoxPasswordChecked::BoxPasswordChecked(QWidget *parent)
+AddUserDialog::AddUserDialog(QWidget *parent)
     : TitlebarWindow(parent),
-      m_ui(new Ui::BoxPasswordChecked)
+      m_ui(new Ui::AddUserDialog)
 {
     m_ui->setupUi(getWindowContentWidget());
     init();
 }
 
-BoxPasswordChecked::~BoxPasswordChecked()
+AddUserDialog::~AddUserDialog()
 {
     delete m_ui;
 }
 
-QString BoxPasswordChecked::getBoxPasswordChecked()
+QStringList AddUserDialog::getUserList() const
 {
-    return m_ui->m_inputPasswd->text();
+    return m_ui->m_input->text().split(Qt::Key_Semicolon);
 }
 
-void BoxPasswordChecked::init()
+void AddUserDialog::init()
 {
     // 页面关闭时销毁
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::ApplicationModal);
     setIcon(QIcon(":/images/logo"));
+    setTitle(tr("Input user names"));
     setResizeable(false);
     setTitleBarHeight(36);
     setButtonHints(TitlebarWindow::TitlebarCloseButtonHint);
     setFixedSize(319, 259);
 
-    auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
-    m_ui->m_inputPasswd->setValidator(validator);
-    m_ui->m_inputPasswd->setEchoMode(QLineEdit::Password);
-    m_ui->m_inputPasswd->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
-    m_ui->m_inputPasswd->setContextMenuPolicy(Qt::NoContextMenu);
-    m_ui->m_inputPasswd->installEventFilter(new PasswordEventFilter(m_ui->m_inputPasswd));
+    auto validator = new QRegularExpressionValidator(QRegularExpression("[a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?([;][a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?)*"), this);
+    m_ui->m_input->setValidator(validator);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
                 close();
@@ -65,8 +62,8 @@ void BoxPasswordChecked::init()
             {
                 close();
                 emit accepted();
-                m_ui->m_inputPasswd->setText("");
+                m_ui->m_input->setText("");
             });
 }
-}  // namespace PrivateBox
+}  // namespace ToolBox
 }  // namespace KS
