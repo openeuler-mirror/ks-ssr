@@ -13,7 +13,6 @@
  */
 #include "box-password-retrieve.h"
 #include <QRegularExpressionValidator>
-#include "common/password-event-filter.h"
 #include "include/ssr-i.h"
 #include "ui_box-password-retrieve.h"
 
@@ -21,9 +20,8 @@ namespace KS
 {
 namespace PrivateBox
 {
-BoxPasswordRetrieve::BoxPasswordRetrieve(QWidget *parent)
-    : TitlebarWindow(parent),
-      m_ui(new Ui::BoxPasswordRetrieve)
+BoxPasswordRetrieve::BoxPasswordRetrieve(QWidget *parent) : TitlebarWindow(parent),
+                                                            m_ui(new Ui::BoxPasswordRetrieve)
 {
     m_ui->setupUi(getWindowContentWidget());
     init();
@@ -52,9 +50,7 @@ void BoxPasswordRetrieve::init()
     auto validator = new QRegularExpressionValidator(QRegularExpression("[^ ]*"), this);
     m_ui->m_passphrase->setValidator(validator);
     m_ui->m_passphrase->setEchoMode(QLineEdit::Password);
-    m_ui->m_passphrase->setMaxLength(SSR_PASSWORD_MAX_LENGTH);
-    m_ui->m_passphrase->setContextMenuPolicy(Qt::NoContextMenu);
-    m_ui->m_passphrase->installEventFilter(new PasswordEventFilter(m_ui->m_passphrase));
+    m_ui->m_passphrase->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
 
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
@@ -62,10 +58,10 @@ void BoxPasswordRetrieve::init()
                 emit rejected();
             });
 
-    connect(m_ui->m_ok, &QPushButton::clicked, this, &BoxPasswordRetrieve::acceptedPasswordRetrieve);
+    connect(m_ui->m_ok, &QPushButton::clicked, this, &BoxPasswordRetrieve::onOkClicked);
 }
 
-void BoxPasswordRetrieve::acceptedPasswordRetrieve()
+void BoxPasswordRetrieve::onOkClicked()
 {
     // 禁止输入空字符
     if (m_ui->m_passphrase->text().isEmpty())
@@ -78,5 +74,5 @@ void BoxPasswordRetrieve::acceptedPasswordRetrieve()
     close();
     m_ui->m_passphrase->setText("");
 }
-}  // namespace PrivateBox
+}  // namespace Box
 }  // namespace KS
