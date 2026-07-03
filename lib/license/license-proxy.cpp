@@ -31,7 +31,6 @@ LicenseProxy::LicenseProxy(QObject* parent) : QObject(parent),
                                               m_expiredTime(0)
 {
     m_objectPath = getObjectPath(LICENSE_OBJECT_NAME);
-    updateLicense();
 
     QDBusConnection::systemBus().connect(LICENSE_MANAGER_DBUS_NAME,
                                          m_objectPath,
@@ -44,6 +43,7 @@ LicenseProxy::LicenseProxy(QObject* parent) : QObject(parent),
 QSharedPointer<LicenseProxy> LicenseProxy::getDefault()
 {
     static QSharedPointer<LicenseProxy> licenseProxy = QSharedPointer<LicenseProxy>(new LicenseProxy);
+    licenseProxy->updateLicense();
     return licenseProxy;
 }
 

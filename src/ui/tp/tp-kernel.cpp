@@ -128,7 +128,8 @@ void TPKernel::recertification(bool checked)
             fileList << trustedInfo.filePath;
         }
     }
-    m_dbusProxy->AddTrustedFiles(fileList).waitForFinished();
+    auto reply = m_dbusProxy->AddTrustedFiles(fileList);
+    CHECK_ERROR_FOR_DBUS_REPLY(reply)
 }
 
 void TPKernel::popDeleteNotify(bool checked)
@@ -160,13 +161,15 @@ void TPKernel::removeKernelFiles()
             fileList << trustedInfo.filePath;
         }
     }
-    m_dbusProxy->RemoveTrustedFiles(fileList).waitForFinished();
+    auto reply = m_dbusProxy->RemoveTrustedFiles(fileList);
+    CHECK_ERROR_FOR_DBUS_REPLY(reply)
 }
 
 void TPKernel::prohibitUnloading(bool status, const QString &path)
 {
     RETURN_IF_TRUE(path.isEmpty())
-    m_dbusProxy->ProhibitUnloading(status, path).waitForFinished();
+    auto reply = m_dbusProxy->ProhibitUnloading(status, path);
+    CHECK_ERROR_FOR_DBUS_REPLY(reply)
 
     // 防卸载开关的刷新需要特殊处理，授权取消后没有进行数据操作，不会发出数据改变信号，
     // 此时前台swicth已经为open状态，因此需要手动刷新

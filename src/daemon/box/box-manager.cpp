@@ -92,9 +92,10 @@ void BoxManager::DelBox(const QString &boxID, const QString &password)
     }
 
     auto decryptedPassword = CryptoHelper::rsaDecrypt(m_rsaPrivateKey, password);
-    if (!box->delBox(decryptedPassword))
+    auto errorEode = box->delBox(decryptedPassword);
+    if (errorEode != KSCErrorCode::SUCCESS)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode::ERROR_BM_DELETE_FAILED, message())
+        DBUS_ERROR_REPLY_AND_RETURN(KSCErrorCode(errorEode), message())
     }
 
     m_boxs.remove(boxID);
