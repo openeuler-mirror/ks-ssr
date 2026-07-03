@@ -91,10 +91,10 @@ void TPPage::initSubPage()
     checkTrustedLoadFinied(execute->getInitialized());
 }
 
-void TPPage::checkTrustedLoadFinied(int initialized)
+void TPPage::checkTrustedLoadFinied(bool initialized)
 {
     m_loading = new Loading(m_ui->m_stacked);
-    RETURN_IF_TRUE(initialized != 0)
+    RETURN_IF_TRUE(initialized)
 
     // 暂屏蔽初始化弹窗，此弹窗与激活提示弹窗有逻辑冲突
     // auto messgeDialog = new MessageDialog(this);

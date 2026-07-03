@@ -39,26 +39,24 @@ public:
     virtual ~KSSDbus(){};
 
 public:  // PROPERTIES
-    Q_PROPERTY(int Initialized READ initialized)
-    int initialized() const;
+    Q_PROPERTY(bool Initialized READ initialized)
+    bool initialized() const;
 
 public Q_SLOTS:  // METHODS
     // 添加文件保护文件
-    void AddFPFile(const QString &filePath);
+    void AddProtectedFile(const QString &filePath);
     // 添加可信保护文件
-    void AddTPFile(const QString &filePath);
-    // 获取执行保护列表
-    QString GetExecuteFiles();
+    void AddTrustedFile(const QString &filePath);
+    // 获取可信保护列表 @type ：可信类型(kernel/excute)
+    QString GetTrustedFiles(uint type);
     // 获取文件保护列表
-    QString GetFPFiles();
-    // 获取内核保护列表
-    QString GetModuleFiles();
+    QString GetProtectedFiles();
     // 设置防卸载
     void ProhibitUnloading(bool prohibited, const QString &filePath);
     // 移除文件保护文件
-    void RemoveFPFile(const QString &filePath);
+    void RemoveProtectedFile(const QString &filePath);
     // 移除可信保护文件
-    void RemoveTPFile(const QString &filePath);
+    void RemoveTrustedFile(const QString &filePath);
     // 搜索 暂时保留接口 未使用
     QString Search(const QString &path_key, uint searchType);
 Q_SIGNALS:  // SIGNALS
