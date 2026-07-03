@@ -77,7 +77,8 @@ target_include_directories(
   ${TARGET_NAME}
   PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
           ${PROJECT_SOURCE_DIR}/include ${KLOG_QT5_INCLUDE_DIRS}
-          ${X11_INCLUDE_DIRS})
+          ${X11_INCLUDE_DIRS}
+          ${KS_LICENSE_INCLUDE_DIRS})
 
 target_link_libraries(
   ${TARGET_NAME} PRIVATE ${KLOG_QT5_LIBRARIES} ${X11_LIBRARIES} Qt5::DBus

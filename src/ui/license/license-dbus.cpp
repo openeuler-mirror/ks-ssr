@@ -31,7 +31,7 @@ LicenseDBus::LicenseDBus(QObject* parent) : QObject(parent),
     m_objectPath = getObjectPath(LICENSE_OBJECT_NAME);
     updateLicense();
 
-    QDBusConnection::systemBus().connect(LICENSE_HELPER_DBUS_NAME,
+    QDBusConnection::systemBus().connect(LICENSE_MANAGER_DBUS_NAME,
                                          m_objectPath,
                                          LICENSE_OBJECT_DBUS_NAME,
                                          QLatin1String(SIGNAL_LICENSE_CHANGED),
@@ -81,7 +81,7 @@ QString LicenseDBus::getObjectPath(const QString& objectName)
 
 void LicenseDBus::updateLicense()
 {
-    QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_HELPER_DBUS_NAME,
+    QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_MANAGER_DBUS_NAME,
                                                                 m_objectPath,
                                                                 LICENSE_OBJECT_DBUS_NAME,
                                                                 METHOD_GET_LICENSE);
@@ -127,7 +127,7 @@ void LicenseDBus::updateLicense()
 
 bool LicenseDBus::activateByActivationCode(const QString& activation_Code, QString& errorMsg)
 {
-    QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_HELPER_DBUS_NAME,
+    QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(LICENSE_MANAGER_DBUS_NAME,
                                                                 m_objectPath,
                                                                 LICENSE_OBJECT_DBUS_NAME,
                                                                 METHOD_ACTIVATE_BY_ACTIVATION_CODE);
