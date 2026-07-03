@@ -368,37 +368,37 @@
 <context>
     <name>KS::DeviceListTable</name>
     <message>
-        <location filename="../src/ui/device/device-list-table.cpp" line="264"/>
+        <location filename="../src/ui/device/device-list-table.cpp" line="276"/>
         <source>Number</source>
         <translation>序号</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list-table.cpp" line="265"/>
+        <location filename="../src/ui/device/device-list-table.cpp" line="277"/>
         <source>Device Name</source>
         <translation>设备名称</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list-table.cpp" line="266"/>
+        <location filename="../src/ui/device/device-list-table.cpp" line="278"/>
         <source>Device Type</source>
         <translation>设备类型</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list-table.cpp" line="267"/>
+        <location filename="../src/ui/device/device-list-table.cpp" line="279"/>
         <source>Device Id</source>
         <translation>设备ID</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list-table.cpp" line="268"/>
+        <location filename="../src/ui/device/device-list-table.cpp" line="280"/>
         <source>Interface</source>
         <translation>接口</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list-table.cpp" line="269"/>
+        <location filename="../src/ui/device/device-list-table.cpp" line="281"/>
         <source>Status</source>
         <translation>当前状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-list-table.cpp" line="270"/>
+        <location filename="../src/ui/device/device-list-table.cpp" line="282"/>
         <source>Permission</source>
         <translation>权限</translation>
     </message>
@@ -455,22 +455,22 @@
 <context>
     <name>KS::DevicePermission</name>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="38"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="39"/>
         <source>enable</source>
         <translation>启用</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="39"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="40"/>
         <source>disable</source>
         <translation>禁用</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="70"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="71"/>
         <source>Please select device status</source>
         <translation>请选择设备状态</translation>
     </message>
     <message>
-        <location filename="../src/ui/device/device-permission.cpp" line="133"/>
+        <location filename="../src/ui/device/device-permission.cpp" line="143"/>
         <source>Please select at least one permission.</source>
         <translation>请至少选择一种权限。</translation>
     </message>
@@ -666,9 +666,14 @@
 <context>
     <name>KS::SettingsDevice</name>
     <message>
-        <location filename="../src/ui/settings/settings-device.cpp" line="93"/>
+        <location filename="../src/ui/settings/settings-device.cpp" line="100"/>
         <source> (Effective after restart)</source>
         <translation> (重启后生效)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/settings/settings-device.cpp" line="212"/>
+        <source>Are you sure to close the %1 interface</source>
+        <translation>是否要关闭%1接口？</translation>
     </message>
 </context>
 <context>
@@ -687,6 +692,24 @@
         <location filename="../src/ui/settings/settings-page.cpp" line="58"/>
         <source>Interface Control</source>
         <translation>接口控制</translation>
+    </message>
+</context>
+<context>
+    <name>KS::SettingsRespondDialog</name>
+    <message>
+        <location filename="../src/ui/settings/settings-respond-dialog.cpp" line="44"/>
+        <source>Notify</source>
+        <translation>通知</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/settings/settings-respond-dialog.cpp" line="67"/>
+        <source>Confirm</source>
+        <translation>确认</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/settings/settings-respond-dialog.cpp" line="70"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
     </message>
 </context>
 <context>
