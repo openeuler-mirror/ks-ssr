@@ -420,9 +420,15 @@ KS--DevicePage
 }
 
 KS--DeviceList,
-KS--DeviceRecord
+KS--DeviceLog
 {
     background-color:#2d2d2d;
+}
+
+KS--DeviceList QLabel#m_records,
+KS--DeviceLog QLabel#m_records
+{
+    color:#919191;
 }
 
 KS--DevicePermission  QComboBox
@@ -490,6 +496,12 @@ KS--DevicePermission #m_confirm:checked
     background-color:#00a2ff;
 }
 
+KS--DevicePermission #m_confirm:disabled
+{
+    color:#919191;
+    background-color:#393939;
+}
+
 KS--DevicePage QListWidget#m_sidebar
 {
     background-color:#2d2d2d;
@@ -510,6 +522,49 @@ KS--DevicePage QListWidget#m_sidebar::item:selected
     background:#00A2FF;
 }
 
+KS--DeviceListTable::item,
+KS--DeviceLogTable:item
+{
+    padding-left:10px;
+}
+
+KS--DeviceListTable QHeaderView,
+KS--DeviceLogTable QHeaderView
+{
+    color:#919191;
+    font:NotoSansCJKsc-Regular;
+    font-size:12px;
+}
+
+KS--DeviceListTable QHeaderView::section,
+KS--DeviceLogTable QHeaderView::section
+{
+    padding-left:10px;
+}
+
+KS--DeviceSettings QCheckBox::indicator:unchecked {
+    image: url(:/images/switch-close);
+}
+
+KS--DeviceSettings QCheckBox::indicator:unchecked:hover {
+    image: url(:/images/switch-close);
+}
+
+KS--DeviceSettings QCheckBox::indicator:unchecked:pressed {
+    image: url(:/images/switch-close);
+}
+
+KS--DeviceSettings QCheckBox::indicator:checked {
+    image: url(:/images/switch-open);
+}
+
+KS--DeviceSettings QCheckBox::indicator:checked:hover {
+    image: url(:/images/switch-open);
+}
+
+KS--DeviceSettings QCheckBox::indicator:checked:pressed {
+    image: url(:/images/switch-open);
+}
 
 /*********License*****************/
 KS--LicenseActivation QWidget#m_content
@@ -531,6 +586,5 @@ KS--LicenseActivation QPushButton#m_activate:hover
 {
     background:#79C3FF;
 }
-
 
 
