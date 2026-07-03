@@ -90,7 +90,8 @@ void FileSign::openFileDialog(bool)
     RETURN_IF_TRUE(files.isEmpty());
     // 不在这里更新前台中的数据， 通过监听后台的 FileSignListChanged 信号实现前台数据更新。
     // updateTableData(files);
-    m_dbusProxy->AddObjToSecuritySign(files);
+    auto reply = m_dbusProxy->AddObjToSecuritySign(files);
+    CHECK_ERROR_FOR_DBUS_REPLY(reply);
 }
 
 QString FileSign::getAccountRoleName()
