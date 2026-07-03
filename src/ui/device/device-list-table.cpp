@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -21,7 +21,7 @@
 #include <QPainterPath>
 #include <QStyle>
 #include <QToolTip>
-#include "include/ksc-marcos.h"
+#include "include/ssr-marcos.h"
 #include "src/ui/device/device-utils.h"
 #include "src/ui/device/table-filter-model.h"
 
@@ -129,8 +129,8 @@ DeviceListTable::DeviceListTable(QWidget *parent) : QTableView(parent),
                                                     m_model(nullptr),
                                                     m_deviceManagerProxy(nullptr)
 {
-    m_deviceManagerProxy = new DeviceManagerProxy(KSC_DBUS_NAME,
-                                                  KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH,
+    m_deviceManagerProxy = new DeviceManagerProxy(SSR_DBUS_NAME,
+                                                  SSR_DEVICE_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
     initTable();
@@ -379,7 +379,7 @@ void DeviceListTable::update()
     for (auto jsonData : jsonDataArray)
     {
         auto data = jsonData.toObject();
-        auto usbId = data.value(KSC_DEVICE_JK_ID).toString();
+        auto usbId = data.value(SSR_DEVICE_JK_ID).toString();
         // 供应商 ID 1d6b 代表是 linux 内核提供的虚拟 usb 设备，所以不在我们管控范围内，故不予显示。
         if (usbId.startsWith("1d6b", Qt::CaseInsensitive) ||
             // 供应商 ID 0bda 代表是 Realtek 公司提供的 usb 设备， 5411 和 0411 都是 usb 集线器的设备号，不予显示。
@@ -390,16 +390,16 @@ void DeviceListTable::update()
         }
 
         auto deviceInfo = DeviceInfo{.number = count,
-                                     .name = data.value(KSC_DEVICE_JK_NAME).toString(),
-                                     .type = (DeviceType)data.value(KSC_DEVICE_JK_TYPE).toInt(),
+                                     .name = data.value(SSR_DEVICE_JK_NAME).toString(),
+                                     .type = (DeviceType)data.value(SSR_DEVICE_JK_TYPE).toInt(),
                                      .id = usbId,
-                                     .interface = (InterfaceType)data.value(KSC_DEVICE_JK_INTERFACE_TYPE).toInt(),
-                                     .state = (DeviceState)data.value(KSC_DEVICE_JK_STATE).toInt(),
+                                     .interface = (InterfaceType)data.value(SSR_DEVICE_JK_INTERFACE_TYPE).toInt(),
+                                     .state = (DeviceState)data.value(SSR_DEVICE_JK_STATE).toInt(),
                                      .permission = 0};
 
-        SET_DEVICE_PERMISSION(data, KSC_DEVICE_JK_READ, deviceInfo, PermissionType::PERMISSION_TYPE_READ);
-        SET_DEVICE_PERMISSION(data, KSC_DEVICE_JK_WRITE, deviceInfo, PermissionType::PERMISSION_TYPE_WRITE);
-        SET_DEVICE_PERMISSION(data, KSC_DEVICE_JK_EXECUTE, deviceInfo, PermissionType::PERMISSION_TYPE_EXEC);
+        SET_DEVICE_PERMISSION(data, SSR_DEVICE_JK_READ, deviceInfo, PermissionType::PERMISSION_TYPE_READ);
+        SET_DEVICE_PERMISSION(data, SSR_DEVICE_JK_WRITE, deviceInfo, PermissionType::PERMISSION_TYPE_WRITE);
+        SET_DEVICE_PERMISSION(data, SSR_DEVICE_JK_EXECUTE, deviceInfo, PermissionType::PERMISSION_TYPE_EXEC);
 
         m_devicesInfo.push_back(deviceInfo);
         count++;

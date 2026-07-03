@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -39,8 +39,8 @@ DeviceLog::DeviceLog(QWidget *parent) : QWidget(parent),
     action->setDefaultWidget(searchButton);
     m_ui->m_search->addAction(action, QLineEdit::ActionPosition::LeadingPosition);
 
-    m_deviceManagerProxy = new DeviceManagerProxy(KSC_DBUS_NAME,
-                                                  KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH,
+    m_deviceManagerProxy = new DeviceManagerProxy(SSR_DBUS_NAME,
+                                                  SSR_DEVICE_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
     connect(m_deviceManagerProxy, &DeviceManagerProxy::DeviceChanged, this, &DeviceLog::update);

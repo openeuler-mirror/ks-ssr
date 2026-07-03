@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -15,8 +15,8 @@
 #include "src/daemon/device/usb-device.h"
 #include <qt5-log-i.h>
 #include <QFile>
-#include "ksc-i.h"
-#include "ksc-marcos.h"
+#include "ssr-i.h"
+#include "ssr-marcos.h"
 #include "usb-device-description.h"
 
 namespace KS

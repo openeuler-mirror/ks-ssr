@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -35,7 +35,7 @@
 
 namespace KS
 {
-#define KSC_STYLE_PATH ":/styles/ksc"
+#define SSR_STYLE_PATH ":/styles/ssr"
 
 Window::Window() : TitlebarWindow(nullptr),
                    m_ui(new Ui::Window),
@@ -85,13 +85,13 @@ void Window::initActivation()
 
 void Window::initWindow()
 {
-    setTitle(tr("Security control"));
+    setTitle(tr("Security reinforcement"));
     setIcon(QIcon(":/images/logo"));
     setFixedSize(1003, 667);
     setResizeable(false);
 
     // 初始化样式表
-    QFile file(KSC_STYLE_PATH);
+    QFile file(SSR_STYLE_PATH);
     if (file.open(QIODevice::ReadOnly))
     {
         QString windowStyle = file.readAll();
@@ -99,7 +99,7 @@ void Window::initWindow()
     }
     else
     {
-        KLOG_WARNING() << "Failed to open file " << KSC_STYLE_PATH;
+        KLOG_WARNING() << "Failed to open file " << SSR_STYLE_PATH;
     }
 
     setTitlebarCustomLayoutAlignHCenter(false);

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -18,7 +18,7 @@
 #include "ui_about.h"
 namespace KS
 {
-#define VERSION_FILE_PATH KSC_INSTALL_DATADIR "/ks-sc.version"
+#define VERSION_FILE_PATH SSR_INSTALL_DATADIR "/ks-ssr.version"
 
 About::About(QWidget *parent) : TitlebarWindow(parent),
                                 m_ui(new Ui::about)
@@ -48,8 +48,8 @@ void About::initUI()
     setWindowModality(Qt::ApplicationModal);
     setResizeable(false);
 
-    m_ui->m_version->setText(tr("Security control sofware V1.0"));
-    m_ui->m_info->setText(QString("ks-sc : %1").arg(getVersion(VERSION_FILE_PATH)));
+    m_ui->m_version->setText(tr("Security reinforcement sofware V1.0"));
+    m_ui->m_info->setText(QString("ks-ssr : %1").arg(getVersion(VERSION_FILE_PATH)));
     m_ui->m_license->setText("Copyright (c) 2023 ~ 2024 KylinSec Co. Ltd. All Rights Reserved.");
 }
 

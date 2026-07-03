@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -17,8 +17,8 @@
 #include <QFile>
 #include <QTextStream>
 #include "config.h"
-#include "ksc-i.h"
-#include "ksc-marcos.h"
+#include "ssr-i.h"
+#include "ssr-marcos.h"
 
 #define PER_BIN_VALUE_READ 4     // 2的2次方
 #define PER_BIN_VALUE_WRITE 2    // 2的1次方
@@ -120,15 +120,15 @@ void UdevRuleManager::updateToFile()
 
 void UdevRuleManager::saveToFile(const QStringList &lines)
 {
-    QFile::remove(KSC_DEVICE_UDEV_RULES_FILE);
+    QFile::remove(SSR_DEVICE_UDEV_RULES_FILE);
 
     RETURN_IF_TRUE(lines.isEmpty())
 
-    QFile file(KSC_DEVICE_UDEV_RULES_FILE);
+    QFile file(SSR_DEVICE_UDEV_RULES_FILE);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        KLOG_WARNING() << "Cannot open file " << KSC_DEVICE_UDEV_RULES_FILE;
+        KLOG_WARNING() << "Cannot open file " << SSR_DEVICE_UDEV_RULES_FILE;
         return;
     }
 

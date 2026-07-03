@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -15,7 +15,7 @@
 #include "box-dao.h"
 #include <qt5-log-i.h>
 #include "config.h"
-#include "include/ksc-marcos.h"
+#include "include/ssr-marcos.h"
 
 namespace KS
 {
@@ -126,7 +126,7 @@ int BoxDao::getBoxCount()
 void BoxDao::init()
 {
     m_boxDb = QSqlDatabase::addDatabase("QSQLITE");
-    m_boxDb.setDatabaseName(KSC_INSTALL_DATADIR "/ksc.dat");  //设置数据库名称
+    m_boxDb.setDatabaseName(SSR_INSTALL_DATADIR "/ssr.dat");  //设置数据库名称
     if (!m_boxDb.open())
     {
         KLOG_ERROR() << "BoxDao open error ：" << m_boxDb.lastError();

@@ -59,7 +59,7 @@
         <file alias="window-close-symbolic">images/titlebar/window-close-symbolic.svg</file>
     </qresource>
     <qresource prefix="/styles">
-        <file alias="ksc">styles/ksc.qss</file>
+        <file alias="ssr">styles/ssr.qss</file>
         <file alias="titlebar-window">styles/titlebar-window.qss</file>
     </qresource>
 </RCC>

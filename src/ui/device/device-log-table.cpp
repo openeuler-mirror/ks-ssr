@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -20,7 +20,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyle>
-#include "include/ksc-marcos.h"
+#include "include/ssr-marcos.h"
 #include "src/ui/device/device-utils.h"
 #include "src/ui/device/table-filter-model.h"
 
@@ -106,8 +106,8 @@ DeviceLogTable::DeviceLogTable(QWidget *parent) : QTableView(parent),
                                                   m_model(nullptr),
                                                   m_deviceManagerProxy(nullptr)
 {
-    m_deviceManagerProxy = new DeviceManagerProxy(KSC_DBUS_NAME,
-                                                  KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH,
+    m_deviceManagerProxy = new DeviceManagerProxy(SSR_DBUS_NAME,
+                                                  SSR_DEVICE_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
     initTable();
@@ -174,10 +174,10 @@ void DeviceLogTable::update()
     {
         jsonData--;
         auto data = jsonData->toObject();
-        auto recordInfo = RecordInfo{.name = data.value(KSC_DCR_JK_NAME).toString(),
-                                     .type = (DeviceType)data.value(KSC_DCR_JK_TYPE).toInt(),
-                                     .time = data.value(KSC_DCR_JK_TIME).toVariant().toUInt(),
-                                     .state = (DeviceConnectState)data.value(KSC_DCR_JK_STATE).toInt()};
+        auto recordInfo = RecordInfo{.name = data.value(SSR_DCR_JK_NAME).toString(),
+                                     .type = (DeviceType)data.value(SSR_DCR_JK_TYPE).toInt(),
+                                     .time = data.value(SSR_DCR_JK_TIME).toVariant().toUInt(),
+                                     .state = (DeviceConnectState)data.value(SSR_DCR_JK_STATE).toInt()};
         m_recordsInfo.push_back(recordInfo);
     }
     setData(m_recordsInfo);

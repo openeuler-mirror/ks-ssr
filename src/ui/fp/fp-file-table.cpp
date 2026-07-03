@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -27,16 +27,16 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QToolTip>
-#include "ksc-i.h"
-#include "ksc-marcos.h"
 #include "src/ui/kss_dbus_proxy.h"
+#include "ssr-i.h"
+#include "ssr-marcos.h"
 
 namespace KS
 {
-#define KSS_JSON_KEY_DATA KSC_KSS_JK_DATA
-#define KSS_JSON_KEY_DATA_PATH KSC_KSS_JK_DATA_PATH
-#define KSS_JSON_KEY_DATA_FILE_NAME KSC_KSS_JK_DATA_FILE_NAME
-#define KSS_JSON_KEY_DATA_ADD_TIME KSC_KSS_JK_DATA_ADD_TIME
+#define KSS_JSON_KEY_DATA SSR_KSS_JK_DATA
+#define KSS_JSON_KEY_DATA_PATH SSR_KSS_JK_DATA_PATH
+#define KSS_JSON_KEY_DATA_FILE_NAME SSR_KSS_JK_DATA_FILE_NAME
+#define KSS_JSON_KEY_DATA_ADD_TIME SSR_KSS_JK_DATA_ADD_TIME
 
 enum FileTableField
 {
@@ -154,8 +154,8 @@ bool FPFilesFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
 
 FPFilesModel::FPFilesModel(QObject *parent) : QAbstractTableModel(parent)
 {
-    m_fileProtectedProxy = new KSSDbusProxy(KSC_DBUS_NAME,
-                                            KSC_KSS_INIT_DBUS_OBJECT_PATH,
+    m_fileProtectedProxy = new KSSDbusProxy(SSR_DBUS_NAME,
+                                            SSR_KSS_INIT_DBUS_OBJECT_PATH,
                                             QDBusConnection::systemBus(),
                                             this);
     connect(m_fileProtectedProxy, &KSSDbusProxy::ProtectedFilesChange, this, &FPFilesModel::updateRecord);

@@ -17,7 +17,7 @@
 #include <QLabel>
 #include <QPaintEvent>
 #include <QPainter>
-#include "include/ksc-marcos.h"
+#include "include/ssr-marcos.h"
 #include "ui_qrcode-dialog.h"
 
 namespace KS

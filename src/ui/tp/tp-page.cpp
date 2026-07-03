@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -14,13 +14,13 @@
 
 #include "src/ui/tp/tp-page.h"
 #include "config.h"
-#include "ksc-marcos.h"
 #include "src/ui/common/loading.h"
 #include "src/ui/common/message-dialog.h"
 #include "src/ui/device/sidebar-item.h"
 #include "src/ui/tp/tp-execute.h"
 #include "src/ui/tp/tp-kernel.h"
 #include "src/ui/ui_tp-page.h"
+#include "ssr-marcos.h"
 
 #include <QListWidgetItem>
 #include <QPainter>

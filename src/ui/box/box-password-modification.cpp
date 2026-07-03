@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -15,7 +15,7 @@
 #include "src/ui/box/box-password-modification.h"
 #include <QMessageBox>
 #include <QRegularExpressionValidator>
-#include "include/ksc-i.h"
+#include "include/ssr-i.h"
 #include "src/ui/ui_box-password-modification.h"
 
 namespace KS
@@ -58,9 +58,9 @@ void BoxPasswordModification::init()
     m_ui->m_confirmPassword->setValidator(validator);
 
     // 限制字符
-    m_ui->m_currentPassword->setMaxLength(KSC_BOX_PASSWORD_MAX_LENGTH);
-    m_ui->m_newPassword->setMaxLength(KSC_BOX_PASSWORD_MAX_LENGTH);
-    m_ui->m_confirmPassword->setMaxLength(KSC_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_currentPassword->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_newPassword->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_confirmPassword->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
 
     m_ui->m_currentPassword->setEchoMode(QLineEdit::Password);
     m_ui->m_newPassword->setEchoMode(QLineEdit::Password);

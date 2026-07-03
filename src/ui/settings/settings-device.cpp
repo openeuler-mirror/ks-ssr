@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -16,7 +16,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QObject>
-#include "src/ui/common/ksc-marcos-ui.h"
+#include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/device/device-utils.h"
 #include "src/ui/settings/settings-respond-dialog.h"
 
@@ -35,8 +35,8 @@ SettingsDevice::SettingsDevice(QWidget *parent) : QWidget(parent),
 {
     initUI();
 
-    m_deviceManagerProxy = new DeviceManagerProxy(KSC_DBUS_NAME,
-                                                  KSC_DEVICE_MANAGER_DBUS_OBJECT_PATH,
+    m_deviceManagerProxy = new DeviceManagerProxy(SSR_DBUS_NAME,
+                                                  SSR_DEVICE_MANAGER_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
     m_interfaces = getInterfaces();
@@ -173,8 +173,8 @@ QList<Interface> SettingsDevice::getInterfaces()
     {
         auto data = jsonData.toObject();
 
-        auto interface = Interface{.type = (InterfaceType)data.value(KSC_DI_JK_TYPE).toInt(),
-                                   .enable = data.value(KSC_DI_JK_ENABLE).toBool()};
+        auto interface = Interface{.type = (InterfaceType)data.value(SSR_DI_JK_TYPE).toInt(),
+                                   .enable = data.value(SSR_DI_JK_ENABLE).toBool()};
 
         interfaces.push_back(interface);
     }

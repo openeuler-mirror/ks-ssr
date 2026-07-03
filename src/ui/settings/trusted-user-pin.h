@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -16,7 +16,7 @@
 
 #include <QCloseEvent>
 #include <QWidget>
-#include "include/ksc-i.h"
+#include "include/ssr-i.h"
 #include "src/ui/common/titlebar-window.h"
 
 namespace Ui
@@ -35,7 +35,7 @@ public:
     ~TrustedUserPin();
 
     QString getUserPin();
-    KSCKSSTrustedStorageType getType();
+    SSRKSSTrustedStorageType getType();
     void setType(uint type);
 
 protected:
@@ -51,6 +51,6 @@ signals:
 private:
     Ui::TrustedUserPin *m_ui;
 
-    KSCKSSTrustedStorageType m_type;
+    SSRKSSTrustedStorageType m_type;
 };
 }  // namespace KS

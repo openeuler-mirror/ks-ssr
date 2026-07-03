@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -15,7 +15,7 @@
 #include "src/ui/box/create-box.h"
 #include <qt5-log-i.h>
 #include <QRegularExpressionValidator>
-#include "include/ksc-i.h"
+#include "include/ssr-i.h"
 #include "src/ui/ui_create-box.h"
 
 namespace KS
@@ -39,9 +39,9 @@ CreateBox::CreateBox(QWidget *parent) : TitlebarWindow(parent),
     m_ui->m_confirmPassword->setValidator(validator);
 
     // 限制输入长度
-    m_ui->m_name->setMaxLength(KSC_BOX_NAME_MAX_LENGTH);
-    m_ui->m_password->setMaxLength(KSC_BOX_PASSWORD_MAX_LENGTH);
-    m_ui->m_confirmPassword->setMaxLength(KSC_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_name->setMaxLength(SSR_BOX_NAME_MAX_LENGTH);
+    m_ui->m_password->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
+    m_ui->m_confirmPassword->setMaxLength(SSR_BOX_PASSWORD_MAX_LENGTH);
 
     m_ui->m_password->setEchoMode(QLineEdit::Password);
     m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);

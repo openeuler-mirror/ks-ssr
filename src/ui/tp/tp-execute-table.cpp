@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -28,10 +28,10 @@
 #include <QSpinBox>
 #include <QStandardItemModel>
 #include <QToolTip>
-#include "ksc-i.h"
-#include "ksc-marcos.h"
 #include "src/ui/kss_dbus_proxy.h"
 #include "src/ui/tp/tp-delegate.h"
+#include "ssr-i.h"
+#include "ssr-marcos.h"
 
 namespace KS
 {
@@ -48,11 +48,11 @@ enum ExecuteField
 // 执行保护列数
 #define EXECUTE_TABLE_COL 5
 
-#define KSS_JSON_KEY_DATA KSC_KSS_JK_DATA
-#define KSS_JSON_KEY_DATA_PATH KSC_KSS_JK_DATA_PATH
-#define KSS_JSON_KEY_DATA_TYPE KSC_KSS_JK_DATA_TYPE
-#define KSS_JSON_KEY_DATA_STATUS KSC_KSS_JK_DATA_STATUS
-#define KSS_JSON_KEY_DATA_HASH KSC_KSS_JK_DATA_HASH
+#define KSS_JSON_KEY_DATA SSR_KSS_JK_DATA
+#define KSS_JSON_KEY_DATA_PATH SSR_KSS_JK_DATA_PATH
+#define KSS_JSON_KEY_DATA_TYPE SSR_KSS_JK_DATA_TYPE
+#define KSS_JSON_KEY_DATA_STATUS SSR_KSS_JK_DATA_STATUS
+#define KSS_JSON_KEY_DATA_HASH SSR_KSS_JK_DATA_HASH
 
 TPExecuteFilterModel::TPExecuteFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
@@ -74,8 +74,8 @@ bool TPExecuteFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &so
 TPExecuteModel::TPExecuteModel(QObject *parent) : QAbstractTableModel(parent),
                                                   m_tpDBusProxy(nullptr)
 {
-    m_tpDBusProxy = new KSSDbusProxy(KSC_DBUS_NAME,
-                                     KSC_KSS_INIT_DBUS_OBJECT_PATH,
+    m_tpDBusProxy = new KSSDbusProxy(SSR_DBUS_NAME,
+                                     SSR_KSS_INIT_DBUS_OBJECT_PATH,
                                      QDBusConnection::systemBus(),
                                      this);
     connect(m_tpDBusProxy, &KSSDbusProxy::TrustedFilesChange, this, &TPExecuteModel::updateRecord);
@@ -231,7 +231,7 @@ void TPExecuteModel::updateRecord()
     // 刷新时checkbox状态清空
     emit stateChanged(Qt::Unchecked);
 
-    auto reply = m_tpDBusProxy->GetTrustedFiles(KSCKSSTrustedFileType::KSC_KSS_TRUSTED_FILE_TYPE_EXECUTE);
+    auto reply = m_tpDBusProxy->GetTrustedFiles(SSRKSSTrustedFileType::SSR_KSS_TRUSTED_FILE_TYPE_EXECUTE);
     auto files = reply.value();
 
     QJsonParseError jsonError;

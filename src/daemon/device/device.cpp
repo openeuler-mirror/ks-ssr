@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd.
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2
@@ -15,8 +15,8 @@
 #include "src/daemon/device/device.h"
 #include <qt5-log-i.h>
 #include <QDateTime>
-#include "ksc-i.h"
-#include "ksc-marcos.h"
+#include "ssr-i.h"
+#include "ssr-marcos.h"
 
 namespace KS
 {
@@ -128,14 +128,14 @@ QJsonObject Device::toJsonObject()
     auto permission = this->getPermission();
 
     QJsonObject jsonObj{
-        {KSC_DEVICE_JK_ID, this->getID()},
-        {KSC_DEVICE_JK_NAME, this->getName()},
-        {KSC_DEVICE_JK_TYPE, this->getType()},
-        {KSC_DEVICE_JK_INTERFACE_TYPE, this->getInterfaceType()},
-        {KSC_DEVICE_JK_READ, permission->read},
-        {KSC_DEVICE_JK_WRITE, permission->write},
-        {KSC_DEVICE_JK_EXECUTE, permission->execute},
-        {KSC_DEVICE_JK_STATE, this->getState()}};
+        {SSR_DEVICE_JK_ID, this->getID()},
+        {SSR_DEVICE_JK_NAME, this->getName()},
+        {SSR_DEVICE_JK_TYPE, this->getType()},
+        {SSR_DEVICE_JK_INTERFACE_TYPE, this->getInterfaceType()},
+        {SSR_DEVICE_JK_READ, permission->read},
+        {SSR_DEVICE_JK_WRITE, permission->write},
+        {SSR_DEVICE_JK_EXECUTE, permission->execute},
+        {SSR_DEVICE_JK_STATE, this->getState()}};
 
     return jsonObj;
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2023 ~ 2024 KylinSec Co., Ltd. 
- * ks-sc is licensed under Mulan PSL v2.
+ * ks-ssr is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2. 
  * You may obtain a copy of Mulan PSL v2 at:
  *          http://license.coscl.org.cn/MulanPSL2 
@@ -18,13 +18,13 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLineEdit>
-#include "ksc-i.h"
 #include "lib/base/crypto-helper.h"
 #include "src/ui/box/box.h"
 #include "src/ui/box/create-box.h"
 #include "src/ui/box_manager_proxy.h"
-#include "src/ui/common/ksc-marcos-ui.h"
+#include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/ui_box-page.h"
+#include "ssr-i.h"
 
 namespace KS
 {
@@ -34,8 +34,8 @@ BoxPage::BoxPage() : QWidget(nullptr),
 {
     m_ui->setupUi(this);
 
-    m_boxManagerProxy = new BoxManagerProxy(KSC_DBUS_NAME,
-                                            KSC_BOX_MANAGER_DBUS_OBJECT_PATH,
+    m_boxManagerProxy = new BoxManagerProxy(SSR_DBUS_NAME,
+                                            SSR_BOX_MANAGER_DBUS_OBJECT_PATH,
                                             QDBusConnection::systemBus(),
                                             this);
 
@@ -74,7 +74,7 @@ void BoxPage::initBoxs()
 
 Box *BoxPage::buildBox(const QJsonObject &jsonBox)
 {
-    auto boxUID = jsonBox.value(KSC_BM_JK_BOX_UID).toString();
+    auto boxUID = jsonBox.value(SSR_BM_JK_BOX_UID).toString();
     auto box = new Box(boxUID);
     return box;
 }
