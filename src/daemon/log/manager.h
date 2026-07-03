@@ -71,6 +71,9 @@ public:
                        const uint per_page,
                        const uint page);
 
+    static QString logTypeEnum2Str(LogType logType);
+    static LogType logTypeStr2Enum(const QString& logTypeStr);
+
 private:
     void backUpLog(const QStringList& targetLogList);
     void getAllLog();

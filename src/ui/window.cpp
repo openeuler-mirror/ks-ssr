@@ -109,7 +109,7 @@ void Window::resizeEvent(QResizeEvent *event)
 
 void Window::closeEvent(QCloseEvent *event)
 {
-    // TODO：
+    // TODO：实际动作是在后端运行，这个功能不知道有何意义，先注释
     // if (Settings::Dialog::instance()->getFallbackStatus() == BR_FALLBACK_STATUS_IN_PROGRESS)
     // {
     //     POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
