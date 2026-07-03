@@ -11,14 +11,14 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
-#include "src/ui/trusted/tp-execute.h"
+#include "src/ui/tp/tp-execute.h"
 #include <qt5-log-i.h>
 #include <QDir>
 #include <QFileDialog>
 #include "ksc-i.h"
 #include "ksc-marcos.h"
-#include "src/ui/trusted/table-delete-notify.h"
-#include "src/ui/trusted_proxy.h"
+#include "src/ui/tp/table-delete-notify.h"
+#include "src/ui/tp_proxy.h"
 #include "src/ui/ui_tp-execute.h"
 
 namespace KS
@@ -27,13 +27,12 @@ TPExecute::TPExecute(QWidget *parent) : QWidget(parent),
                                         m_ui(new Ui::TPExecute)
 {
     m_ui->setupUi(this);
-
-    m_trustedProtectedProxy = new TrustedProxy(KSC_DBUS_NAME,
-                                               KSC_TRUSTED_PROTECTED_DBUS_OBJECT_PATH,
-                                               QDBusConnection::systemBus(),
-                                               this);
+    m_dbusProxy = new TPProxy(KSC_DBUS_NAME,
+                              KSC_TP_DBUS_OBJECT_PATH,
+                              QDBusConnection::systemBus(),
+                              this);
     // 初始化完成自动刷新
-    connect(m_trustedProtectedProxy, SIGNAL(InitFinished()), this, SLOT(updateInfo()));
+    connect(m_dbusProxy, SIGNAL(InitFinished()), this, SLOT(updateInfo()));
     // 更新表格右上角提示信息
     auto text = QString(tr("A total of %1 records, Being tampered with %2")).arg(QString::number(m_ui->m_executeTable->getExecuteRecords().size()), QString::number(m_ui->m_executeTable->getExecutetamperedNums()));
     m_ui->m_tips->setText(text);
@@ -70,7 +69,7 @@ void TPExecute::addClicked(bool checked)
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::homePath());
     RETURN_IF_TRUE(fileName.isEmpty())
 
-    m_trustedProtectedProxy->AddFile(fileName).waitForFinished();
+    m_dbusProxy->AddFile(fileName).waitForFinished();
     updateInfo();
 }
 
@@ -94,7 +93,7 @@ void TPExecute::unprotectAccepted()
     {
         if (trustedInfo.selected)
         {
-            m_trustedProtectedProxy->RemoveFile(trustedInfo.filePath).waitForFinished();
+            m_dbusProxy->RemoveFile(trustedInfo.filePath).waitForFinished();
         }
     }
     updateInfo();

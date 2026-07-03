@@ -12,13 +12,13 @@
  * Author:     tangjie02 <tangjie02@kylinos.com.cn>
  */
 
-#include "src/ui/file-protected/fp-page.h"
+#include "src/ui/fp/fp-page.h"
 #include <qt5-log-i.h>
 #include <QDir>
 #include <QFileDialog>
 #include "ksc-i.h"
 #include "src/ui/file_protected_proxy.h"
-#include "src/ui/trusted/table-delete-notify.h"
+#include "src/ui/tp/table-delete-notify.h"
 #include "src/ui/ui_fp-page.h"
 
 namespace KS
@@ -29,7 +29,7 @@ FPPage::FPPage(QWidget *parent) : QWidget(parent),
     m_ui->setupUi(this);
 
     m_fileProtectedProxy = new FileProtectedProxy(KSC_DBUS_NAME,
-                                                  KSC_FILE_PROTECTED_DBUS_OBJECT_PATH,
+                                                  KSC_FP_DBUS_OBJECT_PATH,
                                                   QDBusConnection::systemBus(),
                                                   this);
     // 更新表格右上角提示信息

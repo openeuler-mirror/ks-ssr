@@ -12,39 +12,40 @@
  * Author:     chendingjian <chendingjian@kylinos.com.cn>
  */
 
-#pragma once
+#ifndef TPKERNELTABLE_H
+#define TPKERNELTABLE_H
 
 #include <QAbstractTableModel>
 #include <QList>
 #include <QSortFilterProxyModel>
-#include <QStyledItemDelegate>
 #include <QTableView>
 #include <QWidget>
-#include "src/ui/trusted/tp-table-header-proxy.h"
-#include "src/ui/trusted/tp-utils.h"
+#include "src/ui/tp/tp-table-header-proxy.h"
+#include "src/ui/tp/tp-utils.h"
 
-class TrustedProxy;
+class TPProxy;
 
 namespace KS
 {
-class TPExecuteFilterModel : public QSortFilterProxyModel
+class TPKernelFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
+
 public:
-    TPExecuteFilterModel(QObject *parent = nullptr);
-    virtual ~TPExecuteFilterModel(){};
+    TPKernelFilterModel(QObject *parent = nullptr);
+    virtual ~TPKernelFilterModel(){};
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 };
 
-class TPExecuteModel : public QAbstractTableModel
+class TPKernelModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    TPExecuteModel(QObject *parent = nullptr);
-    virtual ~TPExecuteModel(){};
+    TPKernelModel(QObject *parent = nullptr);
+    virtual ~TPKernelModel(){};
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -65,7 +66,7 @@ public:
 
     void updateRecord();
 
-    QList<TrustedRecord> getExecuteRecords();
+    QList<TrustedRecord> getKernelRecords();
 
 signals:
     void stateChanged(Qt::CheckState checkState);
@@ -77,30 +78,33 @@ private:
     void onSingleStateChanged();
 
 private:
-    TrustedProxy *m_trustedProtectedProxy;
-    QList<TrustedRecord> m_executeRecords;
+    TPProxy *m_tpDBusProxy;
+    QList<TrustedRecord> m_kernelRecords;
 };
 
-class TPExecuteTable : public QTableView
+class TPKernelTable : public QTableView
 {
     Q_OBJECT
 
 public:
-    TPExecuteTable(QWidget *parent = nullptr);
-    virtual ~TPExecuteTable(){};
+    TPKernelTable(QWidget *parent = nullptr);
+    virtual ~TPKernelTable(){};
 
     void searchTextChanged(const QString &text);
     void updateRecord();
-    QList<TrustedRecord> getExecuteRecords();
-    int getExecutetamperedNums();
+    QList<TrustedRecord> getKernelRecords();
+    // 获取被篡改数
+    int getKerneltamperedNums();
 
-private:
+private slots:
     void showDetails(const QModelIndex &index);
 
 private:
-    TPExecuteFilterModel *m_filterProxy;
-    TPExecuteModel *m_model;
+    TPKernelFilterModel *m_filterProxy;
+    TPKernelModel *m_model;
     TPTableHeaderProxy *m_headerViewProxy;
 };
 
 }  // namespace KS
+
+#endif  // TPKERNELTABLE_H
