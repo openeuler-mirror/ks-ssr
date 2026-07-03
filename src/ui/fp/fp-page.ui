@@ -36,6 +36,12 @@
      </property>
      <item>
       <widget class="QLabel" name="label">
+       <property name="minimumSize">
+        <size>
+         <width>420</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>Protect critical file paths from malicious tampering and deletion</string>
        </property>
