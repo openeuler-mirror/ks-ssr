@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace DM
+{
 class TableFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -31,4 +33,5 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 };
 
+}  // namespace DM
 }  // namespace KS

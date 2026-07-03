@@ -15,6 +15,7 @@
 #pragma once
 
 #include <QWidget>
+#include "src/ui/common/page.h"
 #include "src/ui/device_manager_proxy.h"
 
 namespace Ui
@@ -24,7 +25,9 @@ class DeviceLog;
 
 namespace KS
 {
-class DeviceLog : public QWidget
+namespace DM
+{
+class DeviceLog : public Page
 {
     Q_OBJECT
 
@@ -32,6 +35,11 @@ public:
     DeviceLog(QWidget *parent = nullptr);
     virtual ~DeviceLog();
     void update();
+
+    QString getNavigationUID() override;
+    QString getSidebarUID() override;
+    QString getSidebarIcon() override;
+    int getSelinuxType() override;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -43,4 +51,5 @@ private:
     Ui::DeviceLog *m_ui;
     DeviceManagerProxy *m_deviceManagerProxy;
 };
-}  //namespace KS
+}  // namespace DM
+}  // namespace KS

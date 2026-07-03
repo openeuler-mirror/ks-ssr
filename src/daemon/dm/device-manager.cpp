@@ -17,7 +17,7 @@
 #include <QDBusConnection>
 #include <QDateTime>
 #include <QProcess>
-#include "src/daemon/dm/device-dbus.h"
+#include "src/daemon/dm/dbus.h"
 #include "src/daemon/dm/device-factory.h"
 #include "src/daemon/dm/sd/sd-device-enumerator.h"
 #include "src/daemon/dm/udev-rule-manager.h"
@@ -25,6 +25,8 @@
 #include "ssr-marcos.h"
 
 namespace KS
+{
+namespace DM
 {
 DeviceManager *DeviceManager::m_instance = nullptr;
 void DeviceManager::globalInit(QObject *parent)
@@ -45,7 +47,7 @@ DeviceManager::DeviceManager(QObject *parent)
     : QObject(parent)
 {
     m_deviceFactory = new DeviceFactory(this);
-    m_deviceDBus = new DeviceDBus(this, this);
+    m_deviceDBus = new DBus(this, this);
     m_deviceLog = QSharedPointer<DeviceLog>::create();
 }
 
@@ -87,7 +89,9 @@ DeviceList DeviceManager::getDevices()
     auto devices = this->m_devices.values();
 
     // 根据连接时间进行排序
-    std::sort(devices.begin(), devices.end(), compareDeviceConnectedTime);
+    qSort(devices.begin(),
+          devices.end(),
+          compareDeviceConnectedTime);
 
     return devices;
 };
@@ -104,7 +108,9 @@ DeviceList DeviceManager::getDevicesByInterface(int interfaceType)
     }
 
     // 根据连接时间进行排序
-    std::sort(devices.begin(), devices.end(), compareDeviceConnectedTime);
+    qSort(devices.begin(),
+          devices.end(),
+          compareDeviceConnectedTime);
 
     return devices;
 }
@@ -224,10 +230,11 @@ void DeviceManager::remountDevice(const QSharedPointer<Device> device,
     {
         args.append(",noexec");
     }
-    auto exitcode = QProcess::execute("mount", {args, mount->device, mount->path});
+    auto command = QString("mount %1 %2 %3").arg(args, mount->device, mount->path);
+    auto exitcode = QProcess::execute(command);
     if (exitcode != 0)
     {
-        KLOG_WARNING() << "Failed to execute command " << QString("mount %1 %2 %3").arg(args, mount->device, mount->path) << ", exitcode is " << exitcode;
+        KLOG_WARNING() << "Failed to execute command " << command << ", exitcode is " << exitcode;
     }
 }
 
@@ -342,5 +349,5 @@ bool DeviceManager::isSupportHDMIDisable()
 
     return false;
 }
-
+}  // namespace DM
 }  // namespace KS

@@ -21,6 +21,8 @@
 
 namespace KS
 {
+namespace DM
+{
 #define USB_INTERFACE_CLASS_RESERVED 0x00
 #define USB_INTERFACE_CLASS_AUDIO 0x01
 #define USB_INTERFACE_CLASS_COMMUNICATIONS 0x02
@@ -311,5 +313,5 @@ bool USBDevice::isEnable()
 
     return state == DEVICE_STATE_ENABLE;
 }
-
+}  // namespace DM
 }  // namespace KS

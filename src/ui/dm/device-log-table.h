@@ -22,6 +22,8 @@
 
 namespace KS
 {
+namespace DM
+{
 struct RecordInfo
 {
     RecordInfo() = default;
@@ -72,4 +74,5 @@ private:
     DeviceManagerProxy *m_deviceManagerProxy;
     QList<RecordInfo> m_recordsInfo;
 };
+}  // namespace DM
 }  // namespace KS

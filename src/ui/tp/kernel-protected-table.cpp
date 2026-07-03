@@ -35,6 +35,8 @@
 
 namespace KS
 {
+namespace TP
+{
 enum KernelField
 {
     KERNEL_FIELD_CHECKBOX = 0,
@@ -261,18 +263,18 @@ void KernelProtectedModel::updateRecord()
     while (jsonData != jsonDataArray.begin())
     {
         jsonData--;
-        auto _data = jsonData->toObject();
-        auto type = TPUtils::fileTypeEnum2Str(_data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
-        auto status = TPUtils::fileStatusEnum2Str(_data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
+        auto data = jsonData->toObject();
+        auto type = Utils::fileTypeEnum2Str(data.value(KSS_JSON_KEY_DATA_TYPE).toInt());
+        auto status = Utils::fileStatusEnum2Str(data.value(KSS_JSON_KEY_DATA_STATUS).toInt());
         auto fileRecord = TrustedRecord{.selected = false,
-                                        .filePath = _data.value(KSS_JSON_KEY_DATA_PATH).toString(),
+                                        .filePath = data.value(KSS_JSON_KEY_DATA_PATH).toString(),
                                         .type = type,
                                         .status = status,
-                                        .md5 = _data.value(KSS_JSON_KEY_DATA_HASH).toString(),
-                                        .guard = _data.value(KSS_JSON_KEY_DATA_GUARD).toInt() == 0 ? false : true};
+                                        .md5 = data.value(KSS_JSON_KEY_DATA_HASH).toString(),
+                                        .guard = data.value(KSS_JSON_KEY_DATA_GUARD).toInt() == 0 ? false : true};
         m_kernelRecords.push_back(fileRecord);
     }
-    emit filesUpdate(m_kernelRecords.size());  // NOSONAR
+    emit filesUpdate(m_kernelRecords.size());
 }
 
 QList<TrustedRecord> KernelProtectedModel::getKernelRecords()
@@ -423,4 +425,5 @@ void KernelProtectedTable::checkedAllItem(Qt::CheckState checkState)
         m_model->setData(index, checkState == Qt::Checked, Qt::CheckStateRole);
     }
 }
+}  // namespace TP
 }  // namespace KS

@@ -21,6 +21,8 @@
 
 namespace KS
 {
+namespace BOX
+{
 class FlowLayout : public QLayout
 {
     Q_OBJECT
@@ -53,4 +55,5 @@ private:
     int m_vSpace;
 };
 
+}  // namespace BOX
 }  // namespace KS

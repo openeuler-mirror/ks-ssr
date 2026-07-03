@@ -24,6 +24,9 @@ class Activation;
 namespace KS
 {
 class LicenseProxy;
+
+namespace Activation
+{
 class QRCodeDialog;
 class Activation : public TitlebarWindow
 {
@@ -53,7 +56,8 @@ signals:
 
 private:
     Ui::Activation* m_ui;
-    QSharedPointer<LicenseProxy> m_licenseProxy;
+    QSharedPointer<KS::LicenseProxy> m_licenseProxy;
     QRCodeDialog* m_qrcodeDialog;
 };
+}  // namespace Activation
 }  // namespace KS

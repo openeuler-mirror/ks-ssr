@@ -24,6 +24,8 @@ class QRCodeDialog;
 
 namespace KS
 {
+namespace Activation
+{
 class QRCodeDialog : public TitlebarWindow
 {
     Q_OBJECT
@@ -44,4 +46,5 @@ private:
     Ui::QRCodeDialog *ui;
     QRcode *m_qrcode;
 };
+}  // namespace Activation
 }  // namespace KS

@@ -15,7 +15,10 @@
 #pragma once
 
 #include <QLabel>
+#include <QMap>
+#include "src/ui/common/page.h"
 #include "src/ui/common/titlebar-window.h"
+#include "src/ui/license/activation.h"
 
 namespace Ui
 {
@@ -24,17 +27,9 @@ class Window;
 
 namespace KS
 {
-enum CategoryPageType
-{
-    CATEGORY_PAGE_TYPE_TP,
-    CATEGORY_PAGE_TYPE_FP,
-    CATEGORY_PAGE_TYPE_BOX,
-    CATEGORY_PAGE_TYPE_DEVICE
-};
-
 class Navigation;
-
-class Activation;
+class SideBar;
+class Loading;
 class LicenseProxy;
 class Window : public TitlebarWindow
 {
@@ -43,7 +38,8 @@ public:
     Window();
     virtual ~Window();
 
-    static Ui::Window *instance();
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     void initActivation();
@@ -51,6 +47,9 @@ private:
     void initWindow();
     // 导航和导航项初始化
     void initNavigation();
+    void addPage(Page *page);
+    void showLoading(bool isShow);
+    void clearSidebar();
 
 private slots:
     void popupActiveDialog();
@@ -59,12 +58,16 @@ private slots:
     void popupAboutDialog();
     // 单例模式激活窗口
     void activateMetaObject();
-    void updatePage(int index);
+    void updatePage();
+    void updateSidebar();
+    //    void updatePage(int index);
 
 private:
     Ui::Window *m_ui;
-    Activation *m_activation;
+    QMap<QString, QList<Page *>> m_pages;
+    Activation::Activation *m_activation;
     QLabel *m_activateStatus;
+    Loading *m_loading;
     QSharedPointer<LicenseProxy> m_licenseProxy;
 };
 }  // namespace KS

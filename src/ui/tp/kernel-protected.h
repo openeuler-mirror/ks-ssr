@@ -16,6 +16,7 @@
 
 #include <QTimer>
 #include <QWidget>
+#include "src/ui/common/page.h"
 #include "src/ui/tp/kernel-protected-table.h"
 
 namespace Ui
@@ -25,12 +26,19 @@ class KernelProtected;
 
 namespace KS
 {
-class KernelProtected : public QWidget
+namespace TP
+{
+class KernelProtected : public Page
 {
     Q_OBJECT
 public:
     KernelProtected(QWidget *parent = nullptr);
     ~KernelProtected();
+
+    QString getNavigationUID() override;
+    QString getSidebarUID() override;
+    QString getSidebarIcon() override;
+    int getSelinuxType() override;
 
 private:
     void updateTips(int total);
@@ -53,4 +61,5 @@ private:
 
     QTimer *m_refreshTimer;
 };
+}  // namespace TP
 }  // namespace KS

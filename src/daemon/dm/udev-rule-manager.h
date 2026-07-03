@@ -21,6 +21,8 @@
 
 namespace KS
 {
+namespace DM
+{
 struct DeviceRule
 {
 public:
@@ -59,5 +61,5 @@ private:
     QList<QSharedPointer<DeviceRule>> m_rules;
     Configuration *m_deviceConfig;
 };
-
+}  // namespace DM
 }  // namespace KS

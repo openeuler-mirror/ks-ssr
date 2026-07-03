@@ -18,6 +18,8 @@
 
 namespace KS
 {
+namespace BOX
+{
 FlowLayout::FlowLayout(QWidget *parent, int margin, int hSpacing, int vSpacing) : QLayout(parent),
                                                                                   m_hSpace(hSpacing),
                                                                                   m_vSpace(vSpacing)
@@ -118,6 +120,7 @@ int FlowLayout::doLayout(const QRect &rect) const
     int top = 0;
     int right = 0;
     int bottom = 0;
+    int boxTotalHeight = 0;
 
     //    KLOG_DEBUG() << "FlowLayout rect: " << rect;
 
@@ -178,4 +181,5 @@ int FlowLayout::smartSpacing(QStyle::PixelMetric pm) const
     }
 }
 
+}  // namespace BOX
 }  // namespace KS

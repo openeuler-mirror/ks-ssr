@@ -19,10 +19,12 @@
 #include <QPainter>
 #include <QStyledItemDelegate>
 #include "src/ui/common/ssr-marcos-ui.h"
-#include "src/ui/dm/device-utils.h"
+#include "src/ui/dm/utils.h"
 #include "ui_device-permission.h"
 
 namespace KS
+{
+namespace DM
 {
 DevicePermission::DevicePermission(QWidget *parent) : TitlebarWindow(parent),
                                                       m_ui(new Ui::DevicePermission)
@@ -99,18 +101,18 @@ void DevicePermission::setDevicePermission(const QString type, int permission)
     m_permissions = permission;
 
     //针对挂载的存储设备，默认有可读权限，并且用户无法取消勾选
-    if (type == DeviceUtils::deviceTypeEnum2Str(DeviceType::DEVICE_TYPE_STORAGE))
+    if (type == Utils::deviceTypeEnum2Str(DeviceType::DEVICE_TYPE_STORAGE))
     {
-        m_permissions |= PermissionType::PERMISSION_TYPE_READ;
+        m_permissions |= PERMISSION_TYPE_READ;
         m_ui->m_read->setDisabled(true);
     }
     else
     {
         m_ui->m_read->setDisabled(false);
     }
-    m_ui->m_read->setChecked(m_permissions & PermissionType::PERMISSION_TYPE_READ);
-    m_ui->m_write->setChecked(m_permissions & PermissionType::PERMISSION_TYPE_WRITE);
-    m_ui->m_exec->setChecked(m_permissions & PermissionType::PERMISSION_TYPE_EXEC);
+    m_ui->m_read->setChecked(m_permissions & PERMISSION_TYPE_READ);
+    m_ui->m_write->setChecked(m_permissions & PERMISSION_TYPE_WRITE);
+    m_ui->m_exec->setChecked(m_permissions & PERMISSION_TYPE_EXEC);
 }
 
 DeviceState DevicePermission::getDeviceStatus()
@@ -129,15 +131,15 @@ void DevicePermission::confirm()
     bool changed = false;
     if (m_ui->m_read->isChecked())
     {
-        permissions |= PermissionType::PERMISSION_TYPE_READ;
+        permissions |= PERMISSION_TYPE_READ;
     }
     if (m_ui->m_write->isChecked())
     {
-        permissions |= PermissionType::PERMISSION_TYPE_WRITE;
+        permissions |= PERMISSION_TYPE_WRITE;
     }
     if (m_ui->m_exec->isChecked())
     {
-        permissions |= PermissionType::PERMISSION_TYPE_EXEC;
+        permissions |= PERMISSION_TYPE_EXEC;
     }
     auto state = (DeviceState)m_ui->m_status->currentData().toInt();
 
@@ -181,9 +183,9 @@ void DevicePermission::update(int index)
     //若选择禁用，还原权限
     if (state != DeviceState::DEVICE_STATE_ENABLE)
     {
-        m_ui->m_read->setChecked(m_permissions & PermissionType::PERMISSION_TYPE_READ);
-        m_ui->m_write->setChecked(m_permissions & PermissionType::PERMISSION_TYPE_WRITE);
-        m_ui->m_exec->setChecked(m_permissions & PermissionType::PERMISSION_TYPE_EXEC);
+        m_ui->m_read->setChecked(m_permissions & PERMISSION_TYPE_READ);
+        m_ui->m_write->setChecked(m_permissions & PERMISSION_TYPE_WRITE);
+        m_ui->m_exec->setChecked(m_permissions & PERMISSION_TYPE_EXEC);
     }
 }
 
@@ -212,6 +214,5 @@ bool DevicePermission::eventFilter(QObject *watched, QEvent *event)
     return false;
 }
 
+}  // namespace DM
 }  // namespace KS
-
-//  namespace KS

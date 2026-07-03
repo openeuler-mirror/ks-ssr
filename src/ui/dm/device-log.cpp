@@ -24,7 +24,9 @@
 
 namespace KS
 {
-DeviceLog::DeviceLog(QWidget *parent) : QWidget(parent),
+namespace DM
+{
+DeviceLog::DeviceLog(QWidget *parent) : Page(parent),
                                         m_ui(new Ui::DeviceLog),
                                         m_deviceManagerProxy(nullptr)
 {
@@ -33,6 +35,7 @@ DeviceLog::DeviceLog(QWidget *parent) : QWidget(parent),
 
     //设置搜索框搜索图标
     auto searchButton = new QPushButton(m_ui->m_search);
+    searchButton->setObjectName("searchButton");
     searchButton->setIcon(QIcon(":/images/search"));
     searchButton->setIconSize(QSize(16, 16));
     auto action = new QWidgetAction(m_ui->m_search);
@@ -73,10 +76,31 @@ void DeviceLog::update()
     m_ui->m_records->setText(text);
 }
 
+QString DeviceLog::getNavigationUID()
+{
+    return tr("Device management");
+}
+
+QString DeviceLog::getSidebarUID()
+{
+    return tr("Device Log");
+}
+
+QString DeviceLog::getSidebarIcon()
+{
+    return ":/images/device-log";
+}
+
+int DeviceLog::getSelinuxType()
+{
+    return 0;
+}
+
 void DeviceLog::searchTextChanged(const QString &text)
 {
     auto filterProxy = m_ui->m_table->getFilterProxy();
     filterProxy->setFilterFixedString(text);
 }
 
-}  //namespace KS
+}  // namespace DM
+}  // namespace KS

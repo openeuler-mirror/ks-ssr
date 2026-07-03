@@ -151,7 +151,7 @@
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
-     <widget class="KS::Boxs" name="m_boxs">
+     <widget class="KS::BOX::Boxs" name="m_boxs">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -167,7 +167,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KS::Boxs</class>
+   <class>KS::BOX::Boxs</class>
    <extends>QWidget</extends>
    <header>src/ui/box/boxs.h</header>
    <container>1</container>

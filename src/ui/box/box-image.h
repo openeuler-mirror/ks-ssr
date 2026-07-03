@@ -16,6 +16,10 @@
 
 #include <QWidget>
 
+namespace KS
+{
+namespace BOX
+{
 class BoxImage : public QWidget
 {
     Q_OBJECT
@@ -29,3 +33,5 @@ private:
     QImage *m_image;
     QRect m_drawArea;  // 绘制区域
 };
+}  // namespace BOX
+}  // namespace KS

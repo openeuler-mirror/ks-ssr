@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace TP
+{
 // 防卸载列数
 #define PROHIBIT_UNLOADING_COL 4
 
@@ -37,4 +39,5 @@ public:
                      const QStyleOptionViewItem &option,
                      const QModelIndex &index) override;
 };
+}  // namespace TP
 }  // namespace KS

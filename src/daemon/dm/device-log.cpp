@@ -19,6 +19,8 @@
 
 namespace KS
 {
+namespace DM
+{
 #define DCR_KYE_NAME "name"
 #define DCR_KYE_TYPE "type"
 #define DCR_KYE_STATE "state"
@@ -39,7 +41,7 @@ void DeviceLog::addDeviceRecord(const DeviceRecord &record)
 {
     removeLastDeviceLog();
 
-    m_settings->beginGroup(QString::asprintf("%lld", record.time));
+    m_settings->beginGroup(QString::asprintf("%ld", record.time));
     m_settings->setValue(DCR_KYE_NAME, record.name);
     m_settings->setValue(DCR_KYE_TYPE, record.type);
     m_settings->setValue(DCR_KYE_STATE, record.state);
@@ -97,5 +99,5 @@ void DeviceLog::removeLastDeviceLog()
 
     m_settings->remove(group);
 }
-
+}  // namespace DM
 }  // namespace KS

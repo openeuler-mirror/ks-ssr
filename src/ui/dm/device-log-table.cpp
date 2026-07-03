@@ -21,10 +21,12 @@
 #include <QPainterPath>
 #include <QStyle>
 #include "include/ssr-marcos.h"
-#include "src/ui/dm/device-utils.h"
 #include "src/ui/dm/table-filter-model.h"
+#include "src/ui/dm/utils.h"
 
 namespace KS
+{
+namespace DM
 {
 // 表格每行线条绘制的的圆角半径
 #define TABLE_LINE_RADIUS 4
@@ -206,8 +208,8 @@ void DeviceLogTable::setData(const QList<RecordInfo> &infos)
     {
         auto recordsInfo = infos.at(i);
 
-        auto type = DeviceUtils::deviceTypeEnum2Str(recordsInfo.type);
-        auto state = DeviceUtils::deviceConnectStateEnum2Str(recordsInfo.state);
+        auto type = Utils::deviceTypeEnum2Str(recordsInfo.type);
+        auto state = Utils::deviceConnectStateEnum2Str(recordsInfo.state);
         auto time = QDateTime::fromSecsSinceEpoch(recordsInfo.time).toString("yyyy/MM/dd HH:mm");
 
         m_model->setData(m_model->index(row, LogTableField::LOG_TABLE_FIELD_NAME), recordsInfo.name);
@@ -233,4 +235,5 @@ TableFilterModel *DeviceLogTable::getFilterProxy()
     return m_filterProxy;
 }
 
+}  // namespace DM
 }  // namespace KS
