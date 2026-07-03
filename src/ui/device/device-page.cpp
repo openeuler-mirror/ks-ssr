@@ -14,7 +14,7 @@
 
 #include "src/ui/device/device-page.h"
 #include "src/ui/device/device-list.h"
-#include "src/ui/device/device-record.h"
+#include "src/ui/device/device-log.h"
 #include "src/ui/device/sidebar-item.h"
 #include "src/ui/ui_device-page.h"
 
@@ -48,7 +48,7 @@ void DevicePage::paintEvent(QPaintEvent *event)
 void DevicePage::initSidebar()
 {
     createSideBarItem(tr("Device List"), ":/images/device-list");
-    createSideBarItem(tr("Connect Record"), ":/images/device-record");
+    createSideBarItem(tr("Device Log"), ":/images/device-log");
 
     connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, m_ui->m_stacked, &QStackedWidget::setCurrentIndex);
     connect(m_ui->m_sidebar, &QListWidget::currentRowChanged, this, &DevicePage::setSideBarItemStatus);
@@ -58,10 +58,10 @@ void DevicePage::initSidebar()
 void DevicePage::initSubPage()
 {
     auto *deviceList = new DeviceList(this);
-    auto *connectRecord = new DeviceRecord(this);
+    auto *deviceLog = new DeviceLog(this);
 
     m_ui->m_stacked->addWidget(deviceList);
-    m_ui->m_stacked->addWidget(connectRecord);
+    m_ui->m_stacked->addWidget(deviceLog);
 }
 
 void DevicePage::createSideBarItem(const QString &text, const QString &icon)

@@ -15,6 +15,8 @@
 #pragma once
 
 #include <QWidget>
+#include "src/ui/device/device-list-table.h"
+#include "src/ui/device_manager_proxy.h"
 
 namespace Ui
 {
@@ -34,19 +36,18 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event);
-    bool eventFilter(QObject *watched, QEvent *event);
 
 private:
-    void initTableStyle();
+    void update();
 
 private Q_SLOTS:
     void searchTextChanged(const QString &text);
     void popupEditDialog(const QModelIndex &index);
-    void updateDevice();
-    void updateCursor(const QModelIndex &index);
+    void updatePermission();
 
 private:
     Ui::DeviceList *m_ui;
     DevicePermission *m_devicePermission;
+    DeviceManagerProxy *m_deviceManagerProxy;
 };
 }  //namespace KS
