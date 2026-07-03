@@ -27,6 +27,7 @@
 #include <QX11Info>
 #include "account_proxy.h"
 #include "accounts/user.h"
+#include "config.h"
 #include "include/ssr-i.h"
 #include "lib/base/notification-wrapper.h"
 #include "lib/dbus/license-proxy.h"
@@ -69,17 +70,17 @@ Window::Window()
 
     m_settingsDialog = new Settings(this);
     m_workPages.resize(int(NavigationIndex::COUNT));
-    m_accountManager = new Accounts::User(this);
+    m_user = new Accounts::User(this);
     m_pluginManager = new PluginsManager(this);
 
-    connect(m_accountManager, &Accounts::User::loginFinished, this, &Window::initWindowContent, Qt::ConnectionType::UniqueConnection);
+    connect(m_user, &Accounts::User::loginFinished, this, &Window::initWindowContent, Qt::ConnectionType::UniqueConnection);
     connect(
-        m_accountManager, &Accounts::User::softExited, this, []
+        m_user, &Accounts::User::softExited, this, []
         {
             qApp->quit();
         },
         Qt::ConnectionType::UniqueConnection);
-    connect(m_accountManager, &Accounts::User::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
+    connect(m_user, &Accounts::User::passwordChanged, this, &Window::relogin, Qt::ConnectionType::UniqueConnection);
 
     connect(dynamic_cast<SingleApplication *>(qApp), &SingleApplication::instanceStarted, this, &Window::activateMetaObject, Qt::ConnectionType::UniqueConnection);
 
@@ -94,7 +95,7 @@ Window::~Window()
 
 void Window::start()
 {
-    m_accountManager->showLogin();
+    m_user->showLogin();
 }
 
 void Window::resizeEvent(QResizeEvent *event)
@@ -122,7 +123,7 @@ void Window::closeEvent(QCloseEvent *event)
 
 void Window::init()
 {
-    m_accountManager->init();
+    m_user->init();
     m_pluginManager->init();
 
     initNotification();
@@ -131,7 +132,7 @@ void Window::init()
 
 void Window::initWindowContent()
 {
-    m_accountButton->setToolTip(m_accountManager->getCurrentUserName());
+    m_accountButton->setToolTip(m_user->getCurrentUserName());
 
     initPages();
     initNavigation();
@@ -254,6 +255,11 @@ void Window::initWindow()
         KLOG_WARNING() << "Failed to open file " << SSR_STYLE_PATH;
     }
 
+    initTitlebar();
+}
+
+void Window::initTitlebar()
+{
     setTitlebarCustomLayoutAlignHCenter(false);
     auto layout = getTitlebarCustomLayout();
     layout->setContentsMargins(0, 0, 10, 0);
@@ -261,6 +267,7 @@ void Window::initWindow()
 
     // 创建账户管理按钮
     m_accountButton = new QPushButton(this);
+#ifdef ENABLE_ACCOUNTS_MANAGER
     m_accountButton->setObjectName("accountButton");
     m_accountButton->setFixedSize(QSize(16, 16));
 
@@ -269,12 +276,16 @@ void Window::initWindow()
 
     accountMenu->addAction(tr("Modify password"), this, [this]
                            {
-                               m_accountManager->showPasswordModification();
+                               m_user->showPasswordModification();
                            });
     accountMenu->addAction(tr("Logout"), this, [this]
                            {
-                               logout(m_accountManager->getCurrentUserName());
+                               logout(m_user->getCurrentUserName());
                            });
+    layout->addWidget(m_accountButton);
+#else
+    m_accountButton->hide();
+#endif
 
     // 创建标题栏右侧菜单按钮
     auto btnForMenu = new QPushButton(this);
@@ -298,7 +309,6 @@ void Window::initWindow()
                            });
     settingMenu->addAction(tr("About"), this, &Window::popupAboutDialog);
 
-    layout->addWidget(m_accountButton);
     layout->addWidget(btnForMenu);
     layout->setAlignment(Qt::AlignRight);
 }
@@ -489,9 +499,9 @@ void Window::activateMetaObject()
 
     QX11Info::setAppTime(QX11Info::getTimestamp());
     // 如果没有登录，则弹出登录窗口
-    if (m_accountManager->getCurrentUserName().isEmpty())
+    if (m_user->getCurrentUserName().isEmpty())
     {
-        m_accountManager->showLogin();
+        m_user->showLogin();
         return;
     }
     showNormal();
@@ -513,8 +523,8 @@ void Window::logout(const QString &userName)
     //     POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
     //     return;
     // }
-    m_accountManager->setLoginUserName(userName);
-    RETURN_IF_TRUE(!m_accountManager->logout());
+    m_user->setLoginUserName(userName);
+    RETURN_IF_TRUE(!m_user->logout());
 
     clearSidebar();
     while (m_ui->m_stackedPages->currentWidget() != nullptr)
@@ -530,7 +540,7 @@ void Window::logout(const QString &userName)
 
 void Window::relogin(const QString &userName)
 {
-    if (userName == m_accountManager->getCurrentUserName())
+    if (userName == m_user->getCurrentUserName())
     {
         logout(userName);
     }

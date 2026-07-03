@@ -14,11 +14,14 @@
 
 #include "daemon.h"
 #include <qt5-log-i.h>
+#include <ssr-i.h>
 #include <ssr-marcos.h>
 #include <QDBusConnection>
-#include "accounts/accounts-manager.h"
+#include "accounts/accounts-entity.h"
+#include "accounts/accounts-fake.h"
+#include "authentication.h"
+#include "config.h"
 #include "daemon_adaptor.h"
-#include "include/ssr-i.h"
 #include "lib/dbus/license-proxy.h"
 #include "log/log-manager.h"
 #include "plugins-manager.h"
@@ -27,8 +30,9 @@ namespace KS
 {
 Daemon *Daemon::m_instance = nullptr;
 
+// 需要给插件提供接口
 IDaemonLog *g_logManager = nullptr;
-IDaemonAccounts *g_accountsManager = nullptr;
+IDaemonAuthentication *g_daemonAuthentication = nullptr;
 
 void Daemon::globalInit()
 {
@@ -48,30 +52,25 @@ Daemon *Daemon::getInstance()
 
 Daemon::Daemon()
     : QObject(nullptr),
+      m_accounts(nullptr),
       m_started(false)
 {
     m_dbusAdaptor = new DaemonAdaptor(this);
     m_licenseProxy = LicenseProxy::getDefault();
+#ifdef ENABLE_ACCOUNTS_MANAGER
+    m_accounts = new AccountsEntity(this);
+#else
+    m_accounts = new AccountsFake(this);
+#endif
+    g_logManager = m_log = new Log::Manager(m_accounts, this);
     m_pluginManager = new PluginsManager(this);
-    g_accountsManager = new Accounts::Manager();
-    g_logManager = new Log::Manager(g_accountsManager);
+    g_daemonAuthentication = m_authentication = new Authentication(m_accounts, this);
 
     connect(m_licenseProxy.data(), &LicenseProxy::activated, this, &Daemon::start);
 }
 
 Daemon::~Daemon()
 {
-    if (g_logManager)
-    {
-        delete g_logManager;
-        g_logManager = nullptr;
-    }
-
-    if (g_accountsManager)
-    {
-        delete g_accountsManager;
-        g_accountsManager = nullptr;
-    }
 }
 
 void Daemon::init()

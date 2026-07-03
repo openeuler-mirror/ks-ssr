@@ -13,6 +13,7 @@
  */
 
 #include "dbus.h"
+#include <daemon-authentication-i.h>
 #include <daemon-log-i.h>
 #include <kylin-license/license-i.h>
 #include <libaudit.h>
@@ -26,7 +27,6 @@
 #include "configuration.h"
 #include "include/ssr-marcos.h"
 #include "lib/dbus/dbus-helper.h"
-#include "lib/dbus/polkit-proxy.h"
 #include "plugins.h"
 #include "utils.h"
 
@@ -134,8 +134,8 @@ uint BRDBus::fallbackStatus() const
     return m_configuration->getFallbackStatus();
 }
 
-CHECK_AUTH_WITH_1ARGS(BRDBus, Reinforce, reinforce, SSR_PERMISSION_AUTHENTICATION, const QStringList&);
-CHECK_AUTH_WITH_1ARGS(BRDBus, SetFallback, setFallback, SSR_PERMISSION_AUTHENTICATION, const uint32_t&)
+CHECK_AUTH_WITH_1ARGS(BRDBus, Reinforce, reinforce, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SYSADMIN}, const QStringList&);
+CHECK_AUTH_WITH_1ARGS(BRDBus, SetFallback, setFallback, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SYSADMIN}, const uint32_t&)
 
 void BRDBus::SetStandardType(const uint32_t& standardType)
 {

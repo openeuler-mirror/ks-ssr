@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <daemon-accounts-i.h>
 #include <daemon-log-i.h>
 #include <QDBusContext>
 #include <QList>
@@ -34,10 +33,7 @@ class WriteWorker;
 // Qt 自身的文件读写就有一个大小为 16384 大小的缓冲区，所以在此类中不再做缓冲
 namespace KS
 {
-namespace Accounts
-{
-class Manager;
-}
+class Accounts;
 
 namespace Log
 {
@@ -47,8 +43,9 @@ struct LogRecord;
 class Manager : public QObject, public IDaemonLog, protected QDBusContext
 {
     Q_OBJECT
+
 public:
-    Manager(IDaemonAccounts* accountManager);
+    Manager(Accounts* accounts, QObject* parent = nullptr);
     virtual ~Manager();
 
 public:
@@ -71,9 +68,6 @@ public:
                        const uint per_page,
                        const uint page);
 
-    static QString logTypeEnum2Str(LogType logType);
-    static LogType logTypeStr2Enum(const QString& logTypeStr);
-
 private:
     void backUpLog(const QStringList& targetLogList);
     void getAllLog();
@@ -86,7 +80,7 @@ Q_SIGNALS:  // SIGNALS
     void needLogRotate();
 
 private:
-    IDaemonAccounts* m_accountManager;
+    Accounts* m_accounts;
     // 当前日志文件的行数
     uint m_fileLine;
     QString m_path;

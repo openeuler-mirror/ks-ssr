@@ -98,6 +98,7 @@ QVector<WorkPage *> PluginsManager::createAvailableWorkPages()
     {
         for (auto &workPageInfo : pluginInfo->metaData.workPagesInfo)
         {
+#ifdef ENABLE_ACCOUNTS_MANAGER
             // 判断登录角色是否有页面访问权限
             if (!workPageInfo.requireRoleName.isEmpty() &&
                 workPageInfo.requireRoleName != roleName)
@@ -105,6 +106,7 @@ QVector<WorkPage *> PluginsManager::createAvailableWorkPages()
                 KLOG_INFO() << "Ingore work page" << workPageInfo.pageUID << ", because of role name dismatch.";
                 continue;
             }
+#endif
 
             // 判断后端依赖插件是否加载，否则前端不应该显示
             if (!workPageInfo.requireDaemon.isEmpty() &&

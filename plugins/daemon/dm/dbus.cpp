@@ -13,6 +13,7 @@
  */
 
 #include "dbus.h"
+#include <daemon-authentication-i.h>
 #include <daemon-log-i.h>
 #include <qt5-log-i.h>
 #include <ssr-error-i.h>
@@ -23,7 +24,6 @@
 #include "device_manager_adaptor.h"
 #include "lib/base/error.h"
 #include "lib/dbus/dbus-helper.h"
-#include "lib/dbus/polkit-proxy.h"
 
 namespace KS
 {
@@ -47,10 +47,10 @@ void DBus::init()
     connect(m_deviceManager, SIGNAL(deviceChanged(const QString &, int)), m_dbusAdaptor, SIGNAL(DeviceChanged(const QString &, int)));
 }
 
-CHECK_AUTH_WITH_2ARGS(DBus, ChangePermission, changePermission, SSR_PERMISSION_AUTHENTICATION, const QString &, const QString &)
-CHECK_AUTH_WITH_1ARGS(DBus, Enable, enable, SSR_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_1ARGS(DBus, Disable, disable, SSR_PERMISSION_AUTHENTICATION, const QString &)
-CHECK_AUTH_WITH_2ARGS(DBus, EnableInterface, enableInterface, SSR_PERMISSION_AUTHENTICATION, int, bool)
+CHECK_AUTH_WITH_2ARGS(DBus, ChangePermission, changePermission, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SYSADMIN}, const QString &, const QString &)
+CHECK_AUTH_WITH_1ARGS(DBus, Enable, enable, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SYSADMIN}, const QString &)
+CHECK_AUTH_WITH_1ARGS(DBus, Disable, disable, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SYSADMIN}, const QString &)
+CHECK_AUTH_WITH_2ARGS(DBus, EnableInterface, enableInterface, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SYSADMIN}, int, bool)
 
 QString DBus::GetDevices()
 {

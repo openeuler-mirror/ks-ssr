@@ -14,25 +14,20 @@
 
 #pragma once
 
+#include <daemon-log-i.h>
 #include <ssr-i.h>
-#include <QObject>
 #include <QString>
 
 namespace KS
 {
-class IDaemonAccounts;
-extern IDaemonAccounts *g_accountsManager;
-
-class IDaemonAccounts
+class Utils
 {
 public:
-    virtual ~IDaemonAccounts(){};
+    static QString accountRoleEnum2Str(AccountRole role);
+    static AccountRole accountRoleStr2Enum(const QString& roleStr);
 
-    virtual AccountRole getRole(const QString &dbusUniqueName) const = 0;
-    virtual AccountRole getRole(pid_t dbusPid) const = 0;
-    virtual QString getUserName(const QString &dbusUniqueName) const = 0;
-    virtual QString getUserName(pid_t dbusPid) const = 0;
-    virtual QString accountRoleEnum2Str(AccountRole role) const = 0;
-    virtual AccountRole accountRoleStr2Enum(const QString &roleStr) const = 0;
+    static QString logTypeEnum2Str(LogType logType);
+    static LogType logTypeStr2Enum(const QString& logTypeStr);
 };
+
 }  // namespace KS

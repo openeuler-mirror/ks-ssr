@@ -119,7 +119,10 @@ extern "C"
 #define SSR_DI_JK_TYPE "type"
 #define SSR_DI_JK_ENABLE "enable"
 
-#define SSR_PERMISSION_AUTHENTICATION "com.kylinsec.SSR.PermissionAuthentication"
+// 需要管理员权限
+#define SSR_POLICY_ADMINISTRATION "com.kylinsec.SSR.Administration"
+// 无权限控制
+#define SSR_POLICY_ALLOW_ACCESS "com.kylinsec.SSR.AllowAccess"
 
     enum OsUserType
     {

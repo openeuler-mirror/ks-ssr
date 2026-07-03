@@ -13,7 +13,7 @@
  */
 
 #include "manager.h"
-#include <daemon-accounts-i.h>
+#include <daemon-authentication-i.h>
 #include <daemon-log-i.h>
 #include <grp.h>
 #include <kiran-authentication-service/kas-authentication-i.h>
@@ -30,7 +30,6 @@
 #include "lib/base/database.h"
 #include "lib/base/error.h"
 #include "lib/dbus/dbus-helper.h"
-#include "lib/dbus/polkit-proxy.h"
 #include "manager.h"
 #include "realtime-alert.h"
 #include "tool_box_adaptor.h"
@@ -177,24 +176,16 @@ void Manager::initDatabase()
     }
 }
 
-CHECK_AUTH_WITH_1ARGS(Manager, SetAccessControlStatus, setAccessControlStatus, SSR_PERMISSION_AUTHENTICATION, bool);
-CHECK_AUTH_WITH_1ARGS(Manager, RemoveUser, removeUser, SSR_PERMISSION_AUTHENTICATION, const QStringList&);
-CHECK_AUTH_WITH_1ARGS(Manager, ShredFile, shredFile, SSR_PERMISSION_AUTHENTICATION, const QStringList&);
-CHECK_AUTH_WITH_2ARGS(Manager, SetFileMLSLabel, setFileMLSLabel, SSR_PERMISSION_AUTHENTICATION, const QString&, const QString&);
-CHECK_AUTH_WITH_2ARGS(Manager, SetFileKICLabel, setFileKICLabel, SSR_PERMISSION_AUTHENTICATION, const QString&, const QString&);
-CHECK_AUTH_WITH_2ARGS(Manager, SetUserMLSLabel, setUserMLSLabel, SSR_PERMISSION_AUTHENTICATION, const QString&, const QString&);
+CHECK_AUTH_WITH_1ARGS(Manager, SetAccessControlStatus, setAccessControlStatus, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, bool);
+CHECK_AUTH_WITH_1ARGS(Manager, RemoveUser, removeUser, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QStringList&);
+CHECK_AUTH_WITH_1ARGS(Manager, ShredFile, shredFile, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QStringList&);
+CHECK_AUTH_WITH_2ARGS(Manager, SetFileMLSLabel, setFileMLSLabel, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QString&, const QString&);
+CHECK_AUTH_WITH_2ARGS(Manager, SetFileKICLabel, setFileKICLabel, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QString&, const QString&);
+CHECK_AUTH_WITH_2ARGS(Manager, SetUserMLSLabel, setUserMLSLabel, SSR_POLICY_ADMINISTRATION, {ACCOUNT_ROLE_SECADMIN}, const QString&, const QString&);
 
 void Manager::setAccessControlStatus(const QDBusMessage& message, bool enable)
 {
     auto calledUniqueName = message.service();
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to set access control status, permission denied"),
-                      calledUniqueName);
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
-    }
     QProcess process{};
     process.setProgram(SED_PATH);
     QStringList arg{"-i"};
@@ -231,12 +222,6 @@ QString Manager::GetFileMLSLabel(const QString& filePath)
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_COMMON_INVALID_ARGS, this->message());
     }
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    auto userName = g_accountsManager->getUserName(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
-    }
 
     QString output;
     if (!getFileSeLabels(filePath, output, SeLabelType::MLS))
@@ -260,12 +245,6 @@ QString Manager::GetFileKICLabel(const QString& filePath)
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_COMMON_INVALID_ARGS, this->message());
     }
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    auto userName = g_accountsManager->getUserName(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
-    }
 
     QString output;
     if (!getFileSeLabels(filePath, output, SeLabelType::KIC))
@@ -291,14 +270,6 @@ void Manager::setFileMLSLabel(const QDBusMessage& message, const QString& filePa
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
     }
     auto calledUniqueName = message.service();
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to set mls label, permission denied"),
-                      calledUniqueName)
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
-    }
     QString output;
 
     if (!setFileSeLabels(filePath, SecurityContext, output, SeLabelType::MLS))
@@ -327,15 +298,6 @@ void Manager::setFileKICLabel(const QDBusMessage& message, const QString& filePa
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
     }
     auto calledUniqueName = message.service();
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to set kic label, permission denied"),
-                      calledUniqueName)
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
-    }
-
     QString output;
     if (!setFileSeLabels(filePath, SecurityContext, output, SeLabelType::KIC))
     {
@@ -362,13 +324,6 @@ QString Manager::GetUserMLSLabel(const QString& userName)
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_COMMON_INVALID_ARGS, this->message());
     }
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    auto _userName = g_accountsManager->getUserName(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        DBUS_ERROR_REPLY_AND_RETURN_VAL(QString(), SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
-    }
-
     QRegularExpression regex("(s[\\d+].*)");
     QString output;
     if (!getUserSeLabels(userName, output))
@@ -393,15 +348,6 @@ void Manager::setUserMLSLabel(const QDBusMessage& message, const QString& userNa
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
     }
     auto calledUniqueName = message.service();
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to set user mls label, permission denied"),
-                      calledUniqueName)
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
-    }
-
     QString output;
     if (!setUserSeLabels(userName, SecurityContext, output))
     {
@@ -428,15 +374,6 @@ void Manager::shredFile(const QDBusMessage& message, const QStringList& targetPa
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
     }
     auto calledUniqueName = message.service();
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    auto userName = g_accountsManager->getUserName(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to shred file, permission denied"),
-                      calledUniqueName)
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
-    }
     // 传进来的链表中可能有文件夹， 所以需要遍历所有链表， 如果其中有文件，则把文件夹下所有的内容追加至遍历内容尾
     // 类似于二叉树的中序遍历
     QStringList needShred{targetPath};
@@ -546,15 +483,6 @@ void Manager::removeUser(const QDBusMessage& message, const QStringList& userNam
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
     }
     auto calledUniqueName = message.service();
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    auto userName = g_accountsManager->getUserName(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to remove user, permission denied"),
-                      calledUniqueName)
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, message);
-    }
 
     QStringList userSpace{};
     QStringList failedToRemove{};
@@ -650,14 +578,6 @@ void Manager::AddObjToSecuritySign(const QStringList& objList)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, this->message());
     }
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to add files to SignFile list, permission denied"),
-                      calledUniqueName)
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
-    }
     // 如果传入的是用户名则校验用户是否存在
     // 筛选出用户存在的列表
     QStringList validList{};
@@ -709,14 +629,6 @@ void Manager::RemoveObjFromSecuritySign(const QStringList& objList)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, this->message());
     }
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to remove obj from obj list, permission denied"),
-                      calledUniqueName)
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
-    }
 
     if (!removeObjFromSecuritySign(objList))
     {
@@ -765,14 +677,6 @@ void Manager::AddFileToFileShred(const QStringList& fileList)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, this->message());
     }
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to add files to ShredFile list, permission denied"),
-                      calledUniqueName)
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
-    }
     constexpr const char* insertFileToFileShred = "insert OR IGNORE into " FILE_SHRED_TABLE
                                                   " values ('%1');";
     QString insertFileToFileShredDBCmd{insertFileToFileShred};
@@ -797,14 +701,6 @@ void Manager::RemoveFileFromFileShred(const QStringList& fileList)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, this->message());
     }
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role != AccountRole::ACCOUNT_ROLE_SECADMIN)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX,
-                      tr("Failed to remove file from ShredFile list, permission denied"),
-                      calledUniqueName);
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
-    }
 
     if (!removeFileFromFileShred(fileList))
     {
@@ -917,23 +813,6 @@ void Manager::updateAccountInfo(const QString&)
     // KLOG_DEBUG() << "m_osUserInfo: " << m_osUserInfo;
     endpwent();  // 关闭密码文件
 }
-
-// void Manager::processFinishedHandler(Log::Log log, const int exitCode, const QProcess::ExitStatus exitStatus, const QSharedPointer<QProcess> cmd)
-// {
-//     if (exitCode == 0)
-//     {
-//         log.result = true;
-//         KS::Log::Manager::m_logManager->writeLog(log);
-//         return;
-//     }
-//     auto errorMsg = cmd->readAllStandardOutput() + cmd->readAllStandardError();
-//     KLOG_ERROR() << "execute cmd: " << cmd->program() << " " << cmd->arguments().join(" ")
-//                  << ", exitCode: " << exitCode << ", output: " << errorMsg;
-
-//     log.result = false;
-//     log.logMsg += tr(" failed, exitCode %1, error msg: %2").arg(exitCode).arg(QString(errorMsg));
-//     KS::Log::Manager::m_logManager->writeLog(log);
-// }
 
 void Manager::hazardDetected(uint type, const QString& alertMsg)
 {
@@ -1301,12 +1180,6 @@ void Manager::enableAuthType(QList<int> authTypes)
 void Manager::SetUidReusable(bool enabled)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role == AccountRole::ACCOUNT_ROLE_NOACCOUNT)
-    {
-        SSR_LOG_ERROR(LogType::TOOL_BOX, "Permission Denied", calledUniqueName);
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
-    }
     SSR_LOG_SUCCESS(LogType::TOOL_BOX, enabled ? tr("Enable uid reuse") : tr("Disable uid reuse"), calledUniqueName);
     m_isUidReusable = enabled;
     m_uidReuseConfig->setValue(UID_REUSE_CONTROL_KEY, static_cast<int>(enabled));
@@ -1321,13 +1194,6 @@ bool Manager::GetUidReusable()
 void Manager::SetMultiFactorAuthState(bool enabled)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    auto role = g_accountsManager->getRole(calledUniqueName);
-    if (role == AccountRole::ACCOUNT_ROLE_NOACCOUNT)
-    {
-        KLOG_ERROR() << "Failed to set Multi-Factor Authentication state, Permission denied";
-        SSR_LOG_ERROR(LogType::TOOL_BOX, "Permission Denied", calledUniqueName);
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_ACCOUNT_PERMISSION_DENIED, this->message());
-    }
     SSR_LOG_SUCCESS(
         LogType::TOOL_BOX,
         enabled ? tr("Enable Multi-Factor Authentication") : tr("Disable Multi-Factor Authentication"),

@@ -25,7 +25,7 @@
 #include "lib/dbus/dbus-helper.h"
 #include "log_adaptor.h"
 #include "message.h"
-#include "src/daemon/accounts/accounts-manager.h"
+#include "src/daemon/accounts/accounts.h"
 #include "ssr-marcos.h"
 #include "write-worker.h"
 
@@ -39,8 +39,9 @@ namespace KS
 {
 namespace Log
 {
-Manager::Manager(IDaemonAccounts* accountManager)
-    : m_accountManager(accountManager),
+Manager::Manager(Accounts* accounts, QObject* parent)
+    : QObject(parent),
+      m_accounts(accounts),
       m_fileLine(0),
       m_path(QDir::cleanPath(ABSOLUTELOGFILEPATH)),
       m_file(new QFile(m_path, this)),
@@ -188,7 +189,7 @@ QStringList Manager::GetLog(const int role,
 {
     auto callerUnique = DBusHelper::getCallerUniqueName(this);
 
-    auto _role = m_accountManager->getRole(callerUnique);
+    auto _role = m_accounts->getRole(callerUnique);
     if (_role == AccountRole::ACCOUNT_ROLE_NOACCOUNT)
     {
         DBUS_ERROR_REPLY_AND_RETURN_VAL(QStringList(), SSRErrorCode::ERROR_ACCOUNT_UNKNOWN_ACCOUNT, this->message());
@@ -261,56 +262,6 @@ QStringList Manager::GetLog(const int role,
     }
     // SSR_LOG(_role, LogType::LOG, "Get Log");
     return retLogList;
-}
-
-QString Manager::logTypeEnum2Str(LogType logType)
-{
-    switch (logType)
-    {
-    case LogType::DEVICE:
-        return "DEVICE";
-    case LogType::TOOL_BOX:
-        return "TOOL_BOX";
-    case LogType::BASELINE_REINFORCEMENT:
-        return "BASELINE_REINFORCEMENT";
-    case LogType::TRUSTED_PROTECTION:
-        return "TRUSTED_PROTECTION";
-    case LogType::FILES_PROTECTION:
-        return "FILES_PROTECTION";
-    case LogType::PRIVATE_BOX:
-        return "PRIVATE_BOX";
-    case LogType::ACCOUNT:
-        return "ACCOUNT";
-    case LogType::AVC:
-        return "AVC";
-    default:
-        return "ERROR";
-    }
-}
-
-LogType Manager::logTypeStr2Enum(const QString& logTypeStr)
-{
-    switch (shash(logTypeStr.toLatin1().data()))
-    {
-    case CONNECT("DEVICE", _hash):
-        return LogType::DEVICE;
-    case CONNECT("TOOL_BOX", _hash):
-        return LogType::TOOL_BOX;
-    case CONNECT("BASELINE_REINFORCEMENT", _hash):
-        return LogType::BASELINE_REINFORCEMENT;
-    case CONNECT("TRUSTED_PROTECTION", _hash):
-        return LogType::TRUSTED_PROTECTION;
-    case CONNECT("FILES_PROTECTION", _hash):
-        return LogType::FILES_PROTECTION;
-    case CONNECT("PRIVATE_BOX", _hash):
-        return LogType::PRIVATE_BOX;
-    case CONNECT("ACCOUNT", _hash):
-        return LogType::ACCOUNT;
-    case CONNECT("AVC", _hash):
-        return LogType::AVC;
-    default:
-        return LogType::ERROR;
-    }
 }
 
 void Manager::backUpLog(const QStringList& targetLogList)
@@ -398,8 +349,8 @@ inline QStringList Manager::getLogFileList(bool isReverse) const
 
 void Manager::writeLog(LogType logType, const QString& logMsg, bool result, const QString& dbusID)
 {
-    auto role = m_accountManager->getRole(dbusID);
-    auto name = m_accountManager->getUserName(dbusID);
+    auto role = m_accounts->getRole(dbusID);
+    auto name = m_accounts->getUserName(dbusID);
     auto timePoint = QDateTime::currentDateTime();
     LogRecord logRecord{name, int(role), timePoint, logType, result, logMsg};
     writeLog(logRecord);

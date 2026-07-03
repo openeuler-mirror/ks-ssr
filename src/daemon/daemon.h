@@ -23,6 +23,8 @@ namespace KS
 {
 class LicenseProxy;
 class PluginsManager;
+class Accounts;
+class Authentication;
 
 namespace Log
 {
@@ -54,8 +56,10 @@ private:
     static Daemon *m_instance;
     DaemonAdaptor *m_dbusAdaptor;
     QSharedPointer<LicenseProxy> m_licenseProxy;
+    Accounts *m_accounts;
+    Log::Manager *m_log;
+    Authentication *m_authentication;
     PluginsManager *m_pluginManager;
-
     bool m_started;
 };
 }  // namespace KS

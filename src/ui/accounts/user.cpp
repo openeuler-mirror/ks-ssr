@@ -48,6 +48,7 @@ void User::showPasswordModification()
 
 void User::showLogin()
 {
+#ifdef ENABLE_ACCOUNT_MANAGER
     // 登录界面
     if (!m_login)
     {
@@ -55,12 +56,16 @@ void User::showLogin()
         connect(m_login, &Login::accepted, this, &User::acceptedLogin);
         connect(m_login, &Login::rejected, this, &User::softExited);
     }
+
     auto x = window()->x() + window()->width() / 2 - m_login->width() / 2;
     auto y = window()->y() + window()->height() / 2 - m_login->height() / 2;
     m_login->move(x, y);
     m_login->raise();
     m_login->activateWindow();
     m_login->show();
+#else
+    emit loginFinished();
+#endif
 }
 
 bool User::logout()
