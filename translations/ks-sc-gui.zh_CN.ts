@@ -65,19 +65,14 @@
     <name>DeviceList</name>
     <message>
         <location filename="../src/ui/device/device-list.ui" line="14"/>
-        <location filename="../build/src/ui/ui_device-list.h" line="111"/>
+        <location filename="../build/src/ui/ui_device-list.h" line="102"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-list.ui" line="105"/>
-        <location filename="../build/src/ui/ui_device-list.h" line="114"/>
+        <location filename="../build/src/ui/ui_device-list.h" line="105"/>
         <source>Please enter keyword search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../build/src/ui/ui_device-list.h" line="115"/>
-        <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -94,49 +89,49 @@
     <name>DevicePermission</name>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="32"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="127"/>
+        <location filename="../build/src/ui/ui_device-permission.h" line="163"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="76"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="128"/>
+        <location filename="../build/src/ui/ui_device-permission.h" line="164"/>
         <source>Device status:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="122"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="129"/>
+        <location filename="../build/src/ui/ui_device-permission.h" line="165"/>
         <source>Permission control:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="141"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="130"/>
+        <location filename="../build/src/ui/ui_device-permission.h" line="166"/>
         <source>read</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="160"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="131"/>
+        <location filename="../build/src/ui/ui_device-permission.h" line="167"/>
         <source>write</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="179"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="132"/>
+        <location filename="../build/src/ui/ui_device-permission.h" line="168"/>
         <source>exec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="222"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="133"/>
+        <location filename="../build/src/ui/ui_device-permission.h" line="169"/>
         <source>Confirm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/device/device-permission.ui" line="241"/>
-        <location filename="../build/src/ui/ui_device-permission.h" line="134"/>
+        <location filename="../build/src/ui/ui_device-permission.h" line="170"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -159,68 +154,39 @@
 <context>
     <name>FPPage</name>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.ui" line="14"/>
+        <location filename="../src/ui/fp/fp-page.ui" line="14"/>
         <location filename="../build/src/ui/ui_fp-page.h" line="124"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.ui" line="40"/>
+        <location filename="../src/ui/fp/fp-page.ui" line="40"/>
         <location filename="../build/src/ui/ui_fp-page.h" line="125"/>
         <source>Protect critical file paths from malicious tampering and deletion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.ui" line="60"/>
+        <location filename="../src/ui/fp/fp-page.ui" line="60"/>
         <location filename="../build/src/ui/ui_fp-page.h" line="126"/>
         <source>0 records in total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.ui" line="105"/>
+        <location filename="../src/ui/fp/fp-page.ui" line="105"/>
         <location filename="../build/src/ui/ui_fp-page.h" line="127"/>
         <source>Please enter keyword search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.ui" line="137"/>
+        <location filename="../src/ui/fp/fp-page.ui" line="137"/>
         <location filename="../build/src/ui/ui_fp-page.h" line="128"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.ui" line="156"/>
+        <location filename="../src/ui/fp/fp-page.ui" line="156"/>
         <location filename="../build/src/ui/ui_fp-page.h" line="129"/>
         <source>Unprotect</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Form</name>
-    <message>
-        <location filename="../src/ui/execution-control.ui" line="14"/>
-        <location filename="../src/ui/trusted.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/execution-control.ui" line="41"/>
-        <source>TextLabel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/execution-control.ui" line="75"/>
-        <source>Add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/execution-control.ui" line="82"/>
-        <source>Update</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/execution-control.ui" line="89"/>
-        <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -284,13 +250,12 @@
     </message>
     <message>
         <location filename="../src/ui/box/box.cpp" line="215"/>
-        <location filename="../src/ui/box/box.cpp" line="266"/>
         <source>Please confirm whether the password is consistent.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/box.cpp" line="220"/>
-        <location filename="../src/ui/box/box.cpp" line="271"/>
+        <location filename="../src/ui/box/box.cpp" line="266"/>
         <source>The input cannot be empty, please improve the information.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -305,38 +270,38 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="315"/>
-        <location filename="../src/ui/box/box.cpp" line="360"/>
+        <location filename="../src/ui/box/box.cpp" line="307"/>
+        <location filename="../src/ui/box/box.cpp" line="349"/>
         <source>Password error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="320"/>
+        <location filename="../src/ui/box/box.cpp" line="312"/>
         <source>Modify success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="339"/>
+        <location filename="../src/ui/box/box.cpp" line="328"/>
         <source>Passphrase error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="344"/>
-        <source>Retrieve success!</source>
+        <location filename="../src/ui/box/box.cpp" line="333"/>
+        <source>Your box password is %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="365"/>
+        <location filename="../src/ui/box/box.cpp" line="354"/>
         <source>Unlock success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="380"/>
+        <location filename="../src/ui/box/box.cpp" line="369"/>
         <source>The Password is wrong or has been mounted!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box.cpp" line="385"/>
+        <location filename="../src/ui/box/box.cpp" line="374"/>
         <source>Delete success!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -344,28 +309,28 @@
 <context>
     <name>KS::BoxPage</name>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="124"/>
-        <source>Please remember this box passphrase : %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/box-page.cpp" line="150"/>
+        <location filename="../src/ui/box/box-page.cpp" line="142"/>
         <source>Create box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="157"/>
+        <location filename="../src/ui/box/box-page.cpp" line="149"/>
         <source>Please confirm whether the password is consistent.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="167"/>
+        <location filename="../src/ui/box/box-page.cpp" line="159"/>
         <source>The input cannot be empty, please improve the information.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/box-page.cpp" line="199"/>
+        <location filename="../src/ui/box/box-page.cpp" line="194"/>
         <source>Please check whether ecryptfs.ko is loaded!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/box/box-page.cpp" line="208"/>
+        <source>Please remember this box passphrase  : %1, Can be used to retrieve passwords.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -507,22 +472,22 @@
 <context>
     <name>KS::FPFilesModel</name>
     <message>
-        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="236"/>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="236"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="238"/>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="238"/>
         <source>File name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="240"/>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="240"/>
         <source>File path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-file-table.cpp" line="242"/>
+        <location filename="../src/ui/fp/fp-file-table.cpp" line="242"/>
         <source>Add time</source>
         <translation type="unfinished"></translation>
     </message>
@@ -530,13 +495,13 @@
 <context>
     <name>KS::FPPage</name>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="36"/>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="73"/>
+        <location filename="../src/ui/fp/fp-page.cpp" line="36"/>
+        <location filename="../src/ui/fp/fp-page.cpp" line="73"/>
         <source>A total of %1 records</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/file-protected/fp-page.cpp" line="60"/>
+        <location filename="../src/ui/fp/fp-page.cpp" line="60"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -549,7 +514,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/common/sub-window.cpp" line="52"/>
+        <location filename="../src/ui/common/sub-window.cpp" line="53"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
@@ -557,13 +522,13 @@
 <context>
     <name>KS::TPExecute</name>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.cpp" line="38"/>
-        <location filename="../src/ui/trusted/tp-execute.cpp" line="59"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="37"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="58"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.cpp" line="70"/>
+        <location filename="../src/ui/tp/tp-execute.cpp" line="69"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -571,27 +536,27 @@
 <context>
     <name>KS::TPExecuteModel</name>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="145"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="145"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="181"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="181"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="183"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="183"/>
         <source>File path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="185"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="185"/>
         <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="187"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="187"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -599,12 +564,12 @@
 <context>
     <name>KS::TPExecuteTable</name>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="363"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="363"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute-table.cpp" line="376"/>
+        <location filename="../src/ui/tp/tp-execute-table.cpp" line="376"/>
         <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -612,13 +577,13 @@
 <context>
     <name>KS::TPKernel</name>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="38"/>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="61"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="38"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="61"/>
         <source>A total of %1 records, Being tampered with %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.cpp" line="74"/>
+        <location filename="../src/ui/tp/tp-kernel.cpp" line="74"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -626,22 +591,22 @@
 <context>
     <name>KS::TPKernelModel</name>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="143"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="143"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="179"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="179"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="181"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="181"/>
         <source>File path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="183"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="183"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -649,12 +614,12 @@
 <context>
     <name>KS::TPKernelTable</name>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="358"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="359"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel-table.cpp" line="371"/>
+        <location filename="../src/ui/tp/tp-kernel-table.cpp" line="372"/>
         <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -662,17 +627,17 @@
 <context>
     <name>KS::TPPage</name>
     <message>
-        <location filename="../src/ui/trusted/tp-page.cpp" line="63"/>
+        <location filename="../src/ui/tp/tp-page.cpp" line="63"/>
         <source>Execute protecked</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-page.cpp" line="64"/>
+        <location filename="../src/ui/tp/tp-page.cpp" line="64"/>
         <source>Kernel protecked</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-page.cpp" line="86"/>
+        <location filename="../src/ui/tp/tp-page.cpp" line="86"/>
         <source>Trusted data needs to be initialised,please wait a few minutes to refresh.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -680,37 +645,37 @@
 <context>
     <name>KS::TPUtils</name>
     <message>
-        <location filename="../src/ui/trusted/tp-utils.cpp" line="31"/>
+        <location filename="../src/ui/tp/tp-utils.cpp" line="31"/>
         <source>Unknown file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-utils.cpp" line="34"/>
+        <location filename="../src/ui/tp/tp-utils.cpp" line="34"/>
         <source>Executable file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-utils.cpp" line="37"/>
+        <location filename="../src/ui/tp/tp-utils.cpp" line="37"/>
         <source>Dynamic library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-utils.cpp" line="40"/>
+        <location filename="../src/ui/tp/tp-utils.cpp" line="40"/>
         <source>Kernel file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-utils.cpp" line="43"/>
+        <location filename="../src/ui/tp/tp-utils.cpp" line="43"/>
         <source>Executable script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-utils.cpp" line="56"/>
+        <location filename="../src/ui/tp/tp-utils.cpp" line="56"/>
         <source>Certified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-utils.cpp" line="60"/>
+        <location filename="../src/ui/tp/tp-utils.cpp" line="60"/>
         <source>Being tampered with</source>
         <translation type="unfinished"></translation>
     </message>
@@ -718,12 +683,12 @@
 <context>
     <name>KS::TableDeleteNotify</name>
     <message>
-        <location filename="../src/ui/trusted/table-delete-notify.cpp" line="37"/>
+        <location filename="../src/ui/tp/table-delete-notify.cpp" line="37"/>
         <source>Remove protection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/table-delete-notify.cpp" line="38"/>
+        <location filename="../src/ui/tp/table-delete-notify.cpp" line="38"/>
         <source>The removal operation is irreversible.Do you confirm the removal of the selected record from the whitelist?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -832,37 +797,25 @@
     <name>RetrievePassword</name>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="14"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="137"/>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="99"/>
         <source>Create security box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/box/retrieve-password.ui" line="26"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="138"/>
-        <source>passphrase:</source>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="100"/>
+        <source>Please input passphrase:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/retrieve-password.ui" line="47"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="139"/>
-        <source>new password:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/retrieve-password.ui" line="68"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="140"/>
-        <source>Confirm password:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/box/retrieve-password.ui" line="114"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="141"/>
+        <location filename="../src/ui/box/retrieve-password.ui" line="72"/>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="101"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/box/retrieve-password.ui" line="133"/>
-        <location filename="../build/src/ui/ui_retrieve-password.h" line="142"/>
+        <location filename="../src/ui/box/retrieve-password.ui" line="91"/>
+        <location filename="../build/src/ui/ui_retrieve-password.h" line="102"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -885,43 +838,43 @@
 <context>
     <name>TPExecute</name>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.ui" line="14"/>
+        <location filename="../src/ui/tp/tp-execute.ui" line="14"/>
         <location filename="../build/src/ui/ui_tp-execute.h" line="133"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.ui" line="40"/>
+        <location filename="../src/ui/tp/tp-execute.ui" line="40"/>
         <location filename="../build/src/ui/ui_tp-execute.h" line="134"/>
-        <source>Protect critical file paths from malicious tampering and deletion</source>
+        <source>System core component integrity protection,protection and implementation environment safety</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.ui" line="60"/>
+        <location filename="../src/ui/tp/tp-execute.ui" line="60"/>
         <location filename="../build/src/ui/ui_tp-execute.h" line="135"/>
         <source>0 records in total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.ui" line="105"/>
+        <location filename="../src/ui/tp/tp-execute.ui" line="105"/>
         <location filename="../build/src/ui/ui_tp-execute.h" line="136"/>
         <source>Please enter keyword search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.ui" line="137"/>
+        <location filename="../src/ui/tp/tp-execute.ui" line="137"/>
         <location filename="../build/src/ui/ui_tp-execute.h" line="137"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.ui" line="156"/>
+        <location filename="../src/ui/tp/tp-execute.ui" line="156"/>
         <location filename="../build/src/ui/ui_tp-execute.h" line="138"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-execute.ui" line="175"/>
+        <location filename="../src/ui/tp/tp-execute.ui" line="175"/>
         <location filename="../build/src/ui/ui_tp-execute.h" line="139"/>
         <source>Unprotect</source>
         <translation type="unfinished"></translation>
@@ -930,43 +883,43 @@
 <context>
     <name>TPKernel</name>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.ui" line="14"/>
+        <location filename="../src/ui/tp/tp-kernel.ui" line="14"/>
         <location filename="../build/src/ui/ui_tp-kernel.h" line="134"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.ui" line="43"/>
+        <location filename="../src/ui/tp/tp-kernel.ui" line="43"/>
         <location filename="../build/src/ui/ui_tp-kernel.h" line="135"/>
-        <source>Protect critical file paths from malicious tampering and deletion</source>
+        <source>Manage kernel driver modules to prevent illegal loading and uninstallation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.ui" line="63"/>
+        <location filename="../src/ui/tp/tp-kernel.ui" line="63"/>
         <location filename="../build/src/ui/ui_tp-kernel.h" line="136"/>
         <source>0 records in total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.ui" line="108"/>
+        <location filename="../src/ui/tp/tp-kernel.ui" line="108"/>
         <location filename="../build/src/ui/ui_tp-kernel.h" line="137"/>
         <source>Please enter keyword search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.ui" line="140"/>
+        <location filename="../src/ui/tp/tp-kernel.ui" line="140"/>
         <location filename="../build/src/ui/ui_tp-kernel.h" line="138"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.ui" line="159"/>
+        <location filename="../src/ui/tp/tp-kernel.ui" line="159"/>
         <location filename="../build/src/ui/ui_tp-kernel.h" line="139"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/tp-kernel.ui" line="178"/>
+        <location filename="../src/ui/tp/tp-kernel.ui" line="178"/>
         <location filename="../build/src/ui/ui_tp-kernel.h" line="140"/>
         <source>Unprotect</source>
         <translation type="unfinished"></translation>
@@ -975,7 +928,7 @@
 <context>
     <name>TPPage</name>
     <message>
-        <location filename="../src/ui/trusted/tp-page.ui" line="14"/>
+        <location filename="../src/ui/tp/tp-page.ui" line="14"/>
         <location filename="../build/src/ui/ui_tp-page.h" line="59"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
@@ -984,25 +937,25 @@
 <context>
     <name>TableDeleteNotify</name>
     <message>
-        <location filename="../src/ui/trusted/table-delete-notify.ui" line="14"/>
+        <location filename="../src/ui/tp/table-delete-notify.ui" line="14"/>
         <location filename="../build/src/ui/ui_table-delete-notify.h" line="109"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/table-delete-notify.ui" line="65"/>
+        <location filename="../src/ui/tp/table-delete-notify.ui" line="65"/>
         <location filename="../build/src/ui/ui_table-delete-notify.h" line="110"/>
         <source>text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/table-delete-notify.ui" line="114"/>
+        <location filename="../src/ui/tp/table-delete-notify.ui" line="114"/>
         <location filename="../build/src/ui/ui_table-delete-notify.h" line="111"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/trusted/table-delete-notify.ui" line="133"/>
+        <location filename="../src/ui/tp/table-delete-notify.ui" line="133"/>
         <location filename="../build/src/ui/ui_table-delete-notify.h" line="112"/>
         <source>cancel</source>
         <translation type="unfinished"></translation>

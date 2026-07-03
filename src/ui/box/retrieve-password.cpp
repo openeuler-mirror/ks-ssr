@@ -28,11 +28,6 @@ RetrievePassword::~RetrievePassword()
     delete m_ui;
 }
 
-QString RetrievePassword::getNewPassword()
-{
-    return m_ui->m_password->text();
-}
-
 QString RetrievePassword::getPassphrase()
 {
     return m_ui->m_passphrase->text();
@@ -41,8 +36,6 @@ QString RetrievePassword::getPassphrase()
 void RetrievePassword::init()
 {
     setWindowModality(Qt::ApplicationModal);
-    m_ui->m_password->setEchoMode(QLineEdit::Password);
-    m_ui->m_confirmPassword->setEchoMode(QLineEdit::Password);
     m_ui->m_passphrase->setEchoMode(QLineEdit::Password);
     connect(m_ui->m_cancel, &QPushButton::clicked, this, [this]
             {
@@ -56,24 +49,14 @@ void RetrievePassword::init()
 void RetrievePassword::onOkClicked()
 {
     // 禁止输入空字符
-    if (m_ui->m_password->text().isEmpty() ||
-        m_ui->m_passphrase->text().isEmpty() ||
-        m_ui->m_confirmPassword->text().isEmpty())
+    if (m_ui->m_passphrase->text().isEmpty())
     {
         emit inputEmpty();
-        return;
-    }
-    // 两次密码不一致
-    if (m_ui->m_password->text() != m_ui->m_confirmPassword->text())
-    {
-        emit passwdInconsistent();
         return;
     }
 
     emit accepted();
     close();
     m_ui->m_passphrase->setText("");
-    m_ui->m_password->setText("");
-    m_ui->m_confirmPassword->setText("");
 }
 }  // namespace KS

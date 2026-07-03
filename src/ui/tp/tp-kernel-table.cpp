@@ -220,6 +220,7 @@ void TPKernelModel::updateRecord()
     beginResetModel();
     m_kernelRecords.clear();
     auto reply = m_tpDBusProxy->GetModuleFiles();
+    reply.waitForFinished();
     auto files = reply.value();
 
     QJsonParseError jsonError;

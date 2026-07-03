@@ -68,18 +68,15 @@ uint Box::getUserUid()
 
 QString Box::getPassphrase()
 {
-    auto decryptPspr = CryptoHelper::aesDecrypt(m_boxDao->getBox(m_boxID).encryptPassphrase);
-    return decryptPspr;
+    auto decryptPassphrase = CryptoHelper::aesDecrypt(m_boxDao->getBox(m_boxID).encryptPassphrase);
+    return decryptPassphrase;
 }
 
-bool Box::retrievePassword(const QString &passphrase, const QString &newPassword)
+QString Box::retrievePassword(const QString &passphrase)
 {
-    RETURN_VAL_IF_TRUE(getPassphrase() != passphrase, false)
+    RETURN_VAL_IF_TRUE(getPassphrase() != passphrase, QString())
 
-    auto encryptPassword = CryptoHelper::aesEncrypt(newPassword);
-
-    m_boxDao->modifyPasswd(m_boxID, encryptPassword);
-    return true;
+    return CryptoHelper::aesDecrypt(m_boxDao->getBox(m_boxID).encryptpassword);
 }
 
 BoxRecord Box::getBoxInfo()
