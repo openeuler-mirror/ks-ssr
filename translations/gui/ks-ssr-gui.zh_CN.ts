@@ -43,7 +43,7 @@
     </message>
     <message>
         <location filename="../../src/gui/about.cpp" line="50"/>
-        <source>KylinSec Security reinforcement sofware V1</source>
+        <source>KylinSec Security Reinforcement sofware V1</source>
         <translation>麒麟信安主机安全加固软件V1</translation>
     </message>
     <message>
@@ -107,12 +107,12 @@
 <context>
     <name>KS::Login</name>
     <message>
-        <location filename="../../src/gui/accounts/login.cpp" line="79"/>
-        <source>Kylinsec Security reinforcement</source>
+        <location filename="../../src/gui/accounts/login.cpp" line="85"/>
+        <source>Kylinsec Security Reinforcement</source>
         <translation>麒麟信安主机安全加固</translation>
     </message>
     <message>
-        <location filename="../../src/gui/accounts/login.cpp" line="88"/>
+        <location filename="../../src/gui/accounts/login.cpp" line="94"/>
         <source>Unactivated</source>
         <translation>未激活</translation>
     </message>
@@ -234,42 +234,42 @@
 <context>
     <name>KS::Window</name>
     <message>
-        <location filename="../../src/gui/window.cpp" line="247"/>
-        <source>KylinSec Security reinforcement</source>
-        <translation>麒麟信安主机安全加固</translation>
-    </message>
-    <message>
-        <location filename="../../src/gui/window.cpp" line="230"/>
-        <source>Security reinforcement</source>
+        <location filename="../../src/gui/window.cpp" line="236"/>
+        <source>Security Reinforcement</source>
         <translation>主机安全加固</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="283"/>
+        <location filename="../../src/gui/window.cpp" line="253"/>
+        <source>KylinSec Security Reinforcement</source>
+        <translation>麒麟信安主机安全加固</translation>
+    </message>
+    <message>
+        <location filename="../../src/gui/window.cpp" line="289"/>
         <source>Modify password</source>
         <translation>修改密码</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="287"/>
+        <location filename="../../src/gui/window.cpp" line="293"/>
         <source>Logout</source>
         <translation>注销</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="305"/>
+        <location filename="../../src/gui/window.cpp" line="311"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="308"/>
+        <location filename="../../src/gui/window.cpp" line="314"/>
         <source>Activation</source>
         <translation>软件激活</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="309"/>
+        <location filename="../../src/gui/window.cpp" line="315"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="317"/>
+        <location filename="../../src/gui/window.cpp" line="323"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
@@ -727,7 +727,7 @@
     <name>Window</name>
     <message>
         <location filename="../../src/gui/window.ui" line="20"/>
-        <source>Security reinforcement</source>
+        <source>Security Reinforcement</source>
         <translation>主机安全加固</translation>
     </message>
 </context>

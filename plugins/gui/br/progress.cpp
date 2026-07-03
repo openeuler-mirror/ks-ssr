@@ -49,7 +49,7 @@ void Progress::resetProgress()
 {
     m_ui->m_icon->finishedProgress(ProgressIconStatus::PROGRESS_ICON_STATUS_INITIAL);
     m_progressTimer->stop();
-    m_ui->m_definition->setText(tr("Security reinforcement is protecting your computer"));
+    m_ui->m_definition->setText(tr("Security Reinforcement is protecting your computer"));
     m_ui->m_note->setText(tr("KylinSec Host Security Reinforcement Software Detects Risks in Advance to Ensure Asset Security"));
     m_ui->m_scan->disconnect();
     m_ui->m_scan->setText(tr("Strat scan"));

@@ -66,7 +66,10 @@
        <item>
         <widget class="QLabel" name="m_heading">
          <property name="text">
-          <string>Security reinforcement is protecting your computer</string>
+          <string>Security Reinforcement is protecting your computer</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -74,6 +77,9 @@
         <widget class="QLabel" name="m_explain">
          <property name="text">
           <string>KylinSec Host Security Reinforcement Software Detects Risks in Advance to Ensure Asset Security</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -129,7 +135,7 @@
         <widget class="QComboBox" name="m_scanComboBox">
          <property name="minimumSize">
           <size>
-           <width>100</width>
+           <width>120</width>
            <height>0</height>
           </size>
          </property>

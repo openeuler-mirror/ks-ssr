@@ -139,7 +139,8 @@ bool Scan::exportStrategy()
     RETURN_VAL_IF_TRUE(!checkAndSetCheckbox(), false);
 
     // 导出自定义策略，xml格式
-    auto fileName = QFileDialog::getSaveFileName(nullptr, tr("Files"), "./br-strategy.xml", tr("strategy(*.xml)"));
+
+    auto fileName = QFileDialog::getSaveFileName(nullptr, tr("export strategy"), "./br-strategy.xml", tr("strategy(*.xml)"));
     RETURN_VAL_IF_TRUE(fileName.isEmpty(), false)
 
     // 打开要写入的文件
@@ -174,7 +175,7 @@ bool Scan::exportStrategy()
 
 bool Scan::importStrategy()
 {
-    auto fileName = QFileDialog::getOpenFileName(nullptr, tr("Files"), "/", tr("strategy(*.xml)"));
+    auto fileName = QFileDialog::getOpenFileName(nullptr, tr("import strategy"), "/", tr("strategy(*.xml)"));
     if (fileName.isEmpty())
     {
         return false;

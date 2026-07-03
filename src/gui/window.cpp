@@ -233,7 +233,7 @@ void Window::initNavigation()
 
 void Window::initNotification()
 {
-    Notify::NotificationWrapper::globalInit(tr("Security reinforcement").toStdString());
+    Notify::NotificationWrapper::globalInit(tr("Security Reinforcement").toStdString());
     QDBusConnection::sessionBus().connect(QString(),
                                           KIRAN_SCREENSAVER_DBUS_PATH,
                                           KIRAN_SCREENSAVER_DBUS_INTERFACE,
@@ -250,7 +250,7 @@ void Window::initNotification()
 
 void Window::initWindow()
 {
-    setTitle(tr("KylinSec Security reinforcement"));
+    setTitle(tr("KylinSec Security Reinforcement"));
     setIcon(QIcon(":/images/logo"));
     setFixedSize(1003, 667);
     setResizeable(false);
@@ -515,16 +515,16 @@ void Window::processActivation()
 
 void Window::popupSettingsDialog()
 {
-    auto x = this->x() / 4 + this->width() / 4 + m_settingsDialog->width() / 16;
-    auto y = this->y() / 4 + this->height() / 4 + m_settingsDialog->height() / 16;
+    auto x = this->x() + this->width() / 2 - m_settingsDialog->width() / 2;
+    auto y = this->y() + this->height() / 2 - m_settingsDialog->height() / 2;
     m_settingsDialog->move(x, y);
     m_settingsDialog->show();
 }
 
 void Window::popupActivationDialog()
 {
-    auto x = this->x() + this->width() / 4 + m_activation->width() / 16;
-    auto y = this->y() + this->height() / 4 + m_activation->height() / 16;
+    auto x = this->x() + this->width() / 2 - m_activation->width() / 2;
+    auto y = this->y() + this->height() / 2 - m_activation->height() / 2;
     m_activation->move(x, y);
     m_activation->show();
 }
@@ -533,8 +533,8 @@ void Window::popupAboutDialog()
 {
     auto aboutDialog = new About(this);
 
-    auto x = this->x() + this->width() / 4 + aboutDialog->width() / 16;
-    auto y = this->y() + this->height() / 4 + aboutDialog->height() / 16;
+    auto x = this->x() + this->width() / 2 - aboutDialog->width() / 2;
+    auto y = this->y() + this->height() / 2 - aboutDialog->height() / 2;
     aboutDialog->move(x, y);
     aboutDialog->show();
 }
