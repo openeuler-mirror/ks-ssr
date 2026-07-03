@@ -20,10 +20,10 @@ namespace Ui
 {
 class LicenseActivation;
 }
+class LicenseManagerProxy;
 
 namespace KS
 {
-class LicenseDBus;
 class QRCodeDialog;
 class LicenseActivation : public TitlebarWindow
 {
@@ -53,7 +53,7 @@ signals:
 
 private:
     Ui::LicenseActivation* m_ui;
-    QSharedPointer<LicenseDBus> m_licenseDBus;
+    LicenseManagerProxy* m_licenseManager;
     QRCodeDialog* m_qrcodeDialog;
 };
 }  // namespace KS
