@@ -12,12 +12,12 @@
  * Author:     yuanxing <yuanxing@kylinos.com.cn>
  */
 
+#include "activation.h"
 #include <kiran-log/qt5-log-i.h>
 #include <QDateTime>
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QMessageBox>
-#include "activation.h"
 #include "lib/license/license-proxy.h"
 #include "src/ui/common/ssr-marcos-ui.h"
 #include "src/ui/license/qrcode-dialog.h"

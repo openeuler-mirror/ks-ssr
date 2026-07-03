@@ -11,12 +11,12 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+#include "delegate.h"
 #include <qt5-log-i.h>
 #include <QApplication>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
-#include "delegate.h"
 
 namespace KS
 {

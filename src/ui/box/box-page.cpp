@@ -161,8 +161,8 @@ void BoxPage::createBoxAccepted()
     // rsa加密
     auto encryptPassword = CryptoHelper::rsaEncrypt(m_boxManagerProxy->rSAPublicKey(), m_createBox->getPassword());
     auto reply = m_boxManagerProxy->CreateBox(m_createBox->getName(),
-                                                encryptPassword,
-                                                passphrase);
+                                              encryptPassword,
+                                              passphrase);
     auto boxID = reply.value();
     if (!reply.error().message().isEmpty())
     {

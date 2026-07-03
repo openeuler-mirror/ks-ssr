@@ -11,11 +11,11 @@
  * 
  * Author:     chendingjian <chendingjian@kylinos.com.cn> 
  */
+#include "respond-dialog.h"
 #include <kiran-log/qt5-log-i.h>
 #include <QCloseEvent>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include "respond-dialog.h"
 
 namespace KS
 {
