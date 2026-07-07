@@ -323,4 +323,6 @@ QString Report::genReport(const QString &savePath, const QList<QPair<QString, QS
 
     HPDF_SaveToFile(pdf, savePath.toLocal8Bit());
     HPDF_Free(pdf);
+
+    return failedReason;
 }
