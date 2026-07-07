@@ -7,15 +7,20 @@ file(GLOB CMD_CPP_FILES ./*.cpp)
 
 gen_protocol()
 
-set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml
-                            PROPERTIES CLASSNAME BRDbusProxy NO_NAMESPACE true)
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml
+  PROPERTIES CLASSNAME BRDbusProxy NO_NAMESPACE true)
 qt5_add_dbus_interface(
-  BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml br_dbus_proxy)
+  BR_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.BR.xml
+  br_dbus_proxy)
 
-set_source_files_properties(${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml
-                            PROPERTIES CLASSNAME VulnerabilityDbusProxy NO_NAMESPACE true)
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml
+  PROPERTIES CLASSNAME VulnerabilityDbusProxy NO_NAMESPACE true)
 qt5_add_dbus_interface(
-  Vulnerability_DBUS_SRCS ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml vulnerability_dbus_proxy)
+  Vulnerability_DBUS_SRCS
+  ${CMAKE_SOURCE_DIR}/data/dbus/com.kylinsec.SSR.Vulnerability.xml
+  vulnerability_dbus_proxy)
 
 set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
 
