@@ -107,6 +107,16 @@ int Command::brScan()
     return 0;
 }
 
+int Command::vulnerabilityScan()
+{
+    std::cout << tr("Scannig...").toStdString() << std::endl;
+    m_onlyScan = true;
+    m_lastPercent = 0;
+    connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ScanProgress, this, &Command::scanProgress, Qt::QueuedConnection);
+    m_dbusVulnerabilityProxy->Scan();
+    return 0;
+}
+
 int Command::reinforce(const QStringList &name)
 {
     std::cout << tr("Reinforcing...").toStdString() << std::endl;
