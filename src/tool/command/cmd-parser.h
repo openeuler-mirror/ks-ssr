@@ -37,7 +37,8 @@ struct VulnerabilityInfo
 
 struct BrInfo
 {
-    BrInfo(QString _category, QString _label) : category(_category), label(_label) {}
+    BrInfo(QString _category, QString _label)
+        : category(_category), label(_label) {}
     QString category;
     QString label;
     QString state;
