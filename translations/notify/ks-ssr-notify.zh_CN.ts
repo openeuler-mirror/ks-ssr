@@ -330,93 +330,98 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="145"/>
-        <location filename="../../lib/base/error.cpp" line="235"/>
+        <location filename="../../lib/base/error.cpp" line="144"/>
+        <source>Scan or Repair is running, please wait moment.</source>
+        <translation>扫描或者修复正在运行，请稍候。</translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/error.cpp" line="148"/>
+        <location filename="../../lib/base/error.cpp" line="238"/>
         <source>Unknown error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="164"/>
+        <location filename="../../lib/base/error.cpp" line="167"/>
         <source>The standard type is invalid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="167"/>
+        <location filename="../../lib/base/error.cpp" line="170"/>
         <source>The strategy type is invalid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="170"/>
+        <location filename="../../lib/base/error.cpp" line="173"/>
         <source>The notification status is invalid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="173"/>
+        <location filename="../../lib/base/error.cpp" line="176"/>
         <source>The resource monitor is invalid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="178"/>
+        <location filename="../../lib/base/error.cpp" line="181"/>
         <source>Error format for reinforcement standard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="181"/>
+        <location filename="../../lib/base/error.cpp" line="184"/>
         <source>Reinforcement item &apos;{0}&apos; is not found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="185"/>
+        <location filename="../../lib/base/error.cpp" line="188"/>
         <source>The job is running, please don&apos;t repeat the operation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="188"/>
+        <location filename="../../lib/base/error.cpp" line="191"/>
         <source>The fallback is can&apos;t running, please wait for the reinforcement to be completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="191"/>
+        <location filename="../../lib/base/error.cpp" line="194"/>
         <source>The standard reinforcement configuration is not found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="194"/>
+        <location filename="../../lib/base/error.cpp" line="197"/>
         <source>Machine code error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="197"/>
+        <location filename="../../lib/base/error.cpp" line="200"/>
         <source>Activation code error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="200"/>
+        <location filename="../../lib/base/error.cpp" line="203"/>
         <source>There is no historical state, please reinforce it and operation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="203"/>
+        <location filename="../../lib/base/error.cpp" line="206"/>
         <source>The subsequest configuration item scan progress has been cancelled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="207"/>
+        <location filename="../../lib/base/error.cpp" line="210"/>
         <source>The subsequest configuration item reinforcement progress has been cancelled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="229"/>
+        <location filename="../../lib/base/error.cpp" line="232"/>
         <source>Internel error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="232"/>
+        <location filename="../../lib/base/error.cpp" line="235"/>
         <source>The software is not activated.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/error.cpp" line="239"/>
+        <location filename="../../lib/base/error.cpp" line="242"/>
         <source> (error code: 0x%1)</source>
         <translation type="unfinished"></translation>
     </message>
