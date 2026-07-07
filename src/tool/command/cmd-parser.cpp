@@ -548,7 +548,7 @@ void Command::repairProgress(const QString &progress)
         QString id = cve.value("cveId").toString();
         if (!m_repairResult.contains(id))
         {
-            VulnerabilityInfo *pVu = new VulnerabilityInfo(getCveLevel(-1), QString("0"));
+            VulnerabilityInfo *pVu = new VulnerabilityInfo(id, getCveLevel(-1), QString("0"));
             m_repairResult[id] = pVu;
         }
         m_repairResult.value(id)->state = getCveState(state);
