@@ -199,6 +199,8 @@ private:
 
     // 扫描任务
     QSharedPointer<Job> m_scanJob;
+    // 记录当前扫描过程中完整的扫描结果，而不是发送信号这一次的结果
+    Protocol::JobResult m_scanJobResult;
     // 加固任务
     QSharedPointer<Job> m_reinforceJob;
 
