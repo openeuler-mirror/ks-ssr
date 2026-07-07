@@ -1085,8 +1085,8 @@ void BRDBus::processScanProgress(const JobResult& jobResult)
             }
             reinforcementResult.state(int32_t(state));
 
-            m_scanJobResult.reinforcement().push_back(reinforcementResult);
-            scanResult.reinforcement().push_back(std::move(reinforcementResult));
+            scanResult.reinforcement().push_back(reinforcementResult);
+            cacheScanResult(reinforcementResult);
         }
 
         if (m_isScanFlag)
