@@ -1,4 +1,3 @@
-
 set(TARGET_NAME base)
 
 add_definitions("-DSQLITE_HAS_CODEC")
