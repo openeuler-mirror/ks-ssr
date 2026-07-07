@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<br_rs>
+    <head>
+        <name>CUSTOM_CLASS_I_SAFETY_STANDARD</name>
+        <label>QT_TRANSLATE_NOOP_UTF8("xml", "Level I safety standard")</label>
+        <version>1.0.0</version>
+    </head>
+    <body>
+        <!-- 网络类 -->
+        <!-- 配置类 -->
+        <reinforcement>
+            <name>config-history-size</name>
+            <arg>
+                <name>HISTSIZE</name>
+                <value>1000</value>
+                <value_limits>0</value_limits>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>1000</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Number of historical commands")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-file-permissions</name>
+            <arg>
+                <name>mode-permissions-limit</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "The maximum permissions of important configuration files in the system is set to 0644")</label>
+                </layout>
+                <note>QT_TRANSLATE_NOOP_UTF8("xml", "The maximum permissions for configuration files /etc/passwd, /etc/bashrc, /etc/shadow, /etc/group, /etc/security/limits.conf, /etc/pam.d/system-auth-ac, /etc/fstab are set to 0644")</note>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-directory-permissions</name>
+            <arg>
+                <name>directory-permissions-limit</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "The maximum permission of key directories in the system is 0755")</label>
+                </layout>
+                <note>QT_TRANSLATE_NOOP_UTF8("xml", "The permissions for the/usr,/usr/bin,/usr/sbin,/usr/lib,/usr/lib64,/etc,/var directories in the system are set to 0755")</note>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-key-reboot</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Turn on composite key reboot")</label>
+                </layout>
+                <note>QT_TRANSLATE_NOOP_UTF8("xml", "The restart function is applied to the non graphical interface, and in the graphical interface, it acts as shutdown, and the function takes effect after logging out of the user.")</note>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-login-lock</name>
+            <arg>
+                <name>deny</name>
+                <value>5</value>
+                <value_limits>1</value_limits>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>5</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Password error times")</label>
+                </layout>
+            </arg>
+            <arg>
+                <name>unlock_time</name>
+                <value>60</value>
+                <value_limits>0</value_limits>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>60</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Automatic unlocking time after locking (Sec)")</label>
+                </layout>
+            </arg>
+            <arg>
+                <name>even_deny_root</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Root login failed lock")</label>
+                </layout>
+            </arg>
+            <arg>
+                <name>root_unlock_time</name>
+                <value>60</value>
+                <value_limits>0</value_limits>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>60</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Unlock time after root user locks (Sec)")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-sak-key</name>
+            <arg>
+                <name>kernel.sysrq</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Turn on SAK key")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-dmesg</name>
+            <arg>
+                <name>kernel.dmesg_restrict</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Allow administrators to view dmesg only")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-nouser-files</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "No master file in the scanning system")</label>
+                </layout>
+                <note>QT_TRANSLATE_NOOP_UTF8("xml", "Check if there are files in the /bin,/usr/bin,/sbin,/usr/sbin directories that do not belong to the user")</note>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-authority-files</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Scanning system files with 777 permissions")</label>
+                </layout>
+                 <note>QT_TRANSLATE_NOOP_UTF8("xml", "Scan files with permissions of 777 in the /bin,/usr/bin,/sbin,/usr/sbin directory")</note>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>config-suid-sgid-files</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Scan system important directory suid-sgid file")</label>
+                </layout>
+                <note>QT_TRANSLATE_NOOP_UTF8("xml", "Scan files with SUID SGID permissions in the/bin,/usr/bin,/sbin, and/usr/sbin directories of the system")</note>
+            </arg>
+        </reinforcement>
+        <!-- 审计类 -->
+        <reinforcement>
+            <name>audit-auditd-switch</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Turn on system auditd service")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>audit-auditd-rules</name>
+            <arg>
+                <name>add-path</name>
+                <value>""</value>
+                <value_limits>^\/(\w+\/?)+$</value_limits>
+                <input_example>/etc/passwd</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Add audit rules to path.")</label>
+                </layout>
+            </arg>
+            <arg>
+                <name>del-path</name>
+                <value>""</value>
+                <value_limits>^\/(\w+\/?)+$</value_limits>
+                <input_example>/etc/passwd</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Delete audit rules to path.")</label>
+                </layout>
+            </arg>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Delete all audit rules")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>audit-logrotate-rotate</name>
+            <arg>
+                <name>rotate</name>
+                <value>24</value>
+                <value_limits>0</value_limits>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <min_value>24</min_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "System log save cycle (weekly)")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>audit-logfile-permissions</name>
+            <arg>
+                <name>mode-permissions-limit</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "The maximum permission of log files and configurations is set to 0644")</label>
+                </layout>
+            </arg>
+            <arg>
+                <name>append-permissions-limit</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Log files can only be appended")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <!-- 接入类 -->
+        <reinforcement>
+            <name>external-udev-usb</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Allow to use USB device")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-udev-ttys</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>false</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Allow to use serial port device")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-accounts-null-password</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Disable null password user present")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-accounts-surplus-user</name>
+            <arg>
+                <name>enabled</name>
+                <value>false</value>
+                <value_limits>""</value_limits>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Delete lp, games, operator and adm by default")</label>
+                </layout>
+            </arg>
+            <arg>
+                <name>delete-users</name>
+                <value>""</value>
+                <value_limits>[a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?([;][a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?)*</value_limits>
+                <input_example>name1;name2...</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Add users to delete (Split with semicolon)")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-sshd-banner-info</name>
+            <arg>
+                <name>Banner</name>
+                <value>"none"</value>
+                <value_limits>(none)|(\/([\w\.]+\/?)*)</value_limits>
+                <input_example>none || /etc/issue.net</input_example>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>"none"</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Hiding operating system version information")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-hosts-login-limit</name>
+            <arg>
+                <name>allow-hosts</name>
+                <value>""</value>
+                <value_limits>(((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){1,2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?){1}(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?)*</value_limits>
+                <input_example>192.168.|192.168.1.|192.168.1.1</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "List of IP addresses that allow remote access (Split with comma)")</label>
+                </layout>
+            </arg>
+            <arg>
+                <name>deny-hosts</name>
+                <value>""</value>
+                <value_limits>(((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){1,2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?){1}(,((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){2}\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})?)*</value_limits>
+                <input_example>192.168.|192.168.1.|192.168.1.1</input_example>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "List of IP addresses for which remote access is prohibited (Split with comma)")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-profile-tmout</name>
+            <arg>
+                <name>ClientAliveInterval</name>
+                <value>300</value>
+                <value_limits>0</value_limits>
+                <rule>
+                    <type>RANGE</type>
+                    <value_range>
+                        <max_value>300</max_value>
+                    </value_range>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "If no operation is performed for more than the following time (seconds), the session exits")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+        <reinforcement>
+            <name>external-sftp-user</name>
+            <arg>
+                <name>enabled</name>
+                <value>true</value>
+                <value_limits>""</value_limits>
+                <rule>
+                    <type>FIXED</type>
+                    <value_fixed>true</value_fixed>
+                </rule>
+                <layout>
+                    <widget_type>DEFAULT</widget_type>
+                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Whether to configure sftpuser special account")</label>
+                </layout>
+            </arg>
+        </reinforcement>
+    </body>
+</br_rs>
