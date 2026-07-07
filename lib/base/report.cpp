@@ -293,13 +293,16 @@ static void makeTablePage(HPDF_Doc pdf, HPDF_Font font, const QString &tableTitl
     } while (totalRows > 0);
 }
 
-void Report::genReport(const QString &savePath, const QList<QPair<QString, QString>> &homeExtraData, const QString &tableTitle, const QList<QStringList> &tabelData)
+QString Report::genReport(const QString &savePath, const QList<QPair<QString, QString>> &homeExtraData, const QString &tableTitle, const QList<QStringList> &tabelData)
 {
+    QString failedReason;
+
     HPDF_Doc pdf = HPDF_New(error_handler, nullptr);
     if (!pdf)
     {
-        KLOG_ERROR() << "Failed to create PDF object";
-        return;
+        failedReason = "Failed to create PDF object";
+        KLOG_ERROR() << failedReason;
+        return failedReason;
     }
 
     HPDF_UseUTFEncodings(pdf);
