@@ -174,6 +174,9 @@ private:
     // 加固完成处理函数
     void finishedReinforceProgress();
 
+    // 扫描完成后,导出结果
+    void exportReport();
+
     void parseJsonParam(const Protocol::Reinforcement::ArgSequence &argSequence, QJsonObject &param);
     // 通过加固项名获取加固参数，返回值为json字符串
     QString getJsonParam(const QString &reinforceName);
