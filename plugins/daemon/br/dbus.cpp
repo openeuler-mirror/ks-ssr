@@ -473,7 +473,7 @@ void BRDBus::SetReinforcement(const QString& reinforcementXML)
     {
         std::istringstream istringStream(reinforcementXML.toStdString());
         auto rsReinforcement = Protocol::br_reinforcement(istringStream, xml_schema::Flags::dont_validate);
-        if (!this->m_configuration->setCustomRa(*rsReinforcement.get()))
+        if (!this->m_configuration->setCustomRA(*rsReinforcement.get()))
         {
             sendErrorReply(QDBusError::InternalError,
                            BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
