@@ -239,7 +239,7 @@ static void makeTableTitle(HPDF_Page page, HPDF_Font font, const QString &tableT
     {
         HPDF_Page_BeginText(page);
         HPDF_Page_SetFontAndSize(page, font, TABLE_CONTENT_FONT_SIZE);
-        QString text = "您的系统非常安全,本次检测没有发现问题项,请继续保持";
+        QString text = QObject::tr("No problems were found in this test");  //本次检测没有发现问题项
         HPDF_REAL tw = HPDF_Page_TextWidth(page, text.toLocal8Bit());
         HPDF_Page_TextOut(page, pageWidth / 2 - tw / 2, TITLE_POS_Y - CONTENT_MARGIN, text.toLocal8Bit());
         HPDF_Page_EndText(page);
