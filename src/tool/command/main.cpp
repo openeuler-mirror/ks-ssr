@@ -66,15 +66,17 @@ int main(int argc, char* argv[])
     bool reinforceEnabled = parser.isSet(reinforceOption);
     bool repairEnabled = parser.isSet(repairOption);
     bool outputEnabled = parser.isSet(outputOption);
+    bool exportEnabled = parser.isSet(exportOption);
+    QString exportPath = parser.value(exportOption);
     KS::Command::Command cmd_parser;
     cmd_parser.setFileOutput(outputEnabled);
-    if ("br" == module && (scanEnabled || reinforceEnabled))
+    if ("br" == module && (scanEnabled || reinforceEnabled || exportEnabled))
     {
         if (scanEnabled)
         {
             cmd_parser.brScan();
         }
-        else
+        else if (reinforceEnabled)
         {
             QString param = parser.value(reinforceOption);
             QStringList names;
