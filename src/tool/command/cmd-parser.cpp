@@ -285,7 +285,7 @@ void Command::outputBrResult(QString fileName)
         exit(-1);
     }
     QTextStream txtOutput(&f);
-    txtOutput.setCodec("UTF-8"); // 确保使用 UTF-8 编码
+    txtOutput.setCodec("UTF-8");  // 确保使用 UTF-8 编码
     for (const auto &key : m_brItemInfo.keys())
     {
         QString label = m_brItemInfo.value(key)->label;
