@@ -37,6 +37,7 @@ PDF::PDF(const QString &systemName,
     m_ui->m_MAC->setText(MAC);
     m_ui->m_kernel->setText(kernel);
     m_ui->m_activeStatus->setText(activeStatus);
+    m_ui->m_exportTime->setText(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 }
 
 PDF::~PDF()
