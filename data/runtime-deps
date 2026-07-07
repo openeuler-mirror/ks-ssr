@@ -117,3 +117,4 @@ libnss_sss
 libnss_systemd
 libsmime3
 libcurl
+libhpdf
