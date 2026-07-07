@@ -664,7 +664,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
                                            });
     }
     QObject::disconnect(this->m_reinforceJob.data(), &Job::processChanged, 0, 0);
-    QObject::connect(this->m_reinforceJob.data(), &Job::processChanged, this, &BRDBus::reinforceResultHandle);
+    QObject::connect(this->m_reinforceJob.data(), &Job::processChanged, this, &BRDBus::processReinforceProgress);
     QObject::disconnect(this->m_reinforceJob.data(), &Job::processFinished, 0, 0);
     QObject::connect(this->m_reinforceJob.data(), &Job::processFinished, this, &BRDBus::finishedReinforceProgress);
 
