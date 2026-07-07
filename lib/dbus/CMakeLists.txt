@@ -1,4 +1,3 @@
-
 set(TARGET_NAME dbus)
 
 file(GLOB_RECURSE DBUS_H_FILES ./*.h)
