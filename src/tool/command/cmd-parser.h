@@ -78,13 +78,16 @@ private slots:
 
 private:
     BRDbusProxy *m_dbusBRProxy;
-    VulnerabilityDbusProxy * m_dbusVulnerabilityProxy;
+    VulnerabilityDbusProxy *m_dbusVulnerabilityProxy;
+    QSharedPointer<LicenseProxy> m_licenseProxy;
     bool m_fileOutput;
     bool m_getBrJob;
+    bool m_specifyCVE;
+    bool m_onlyScan;
+    int m_lastPercent;
     QStringList m_cveIds;
     QMap<QString, BrInfo *> m_brItemInfo;
     QMap<QString, VulnerabilityInfo *> m_repairResult;
 };
 }  // namespace Command
 }  // namespace KS
-
