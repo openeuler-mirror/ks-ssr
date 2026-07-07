@@ -368,36 +368,10 @@ bool Configuration::setResourceMonitorStatus(BRResourceMonitor resource_monitor)
 void Configuration::init()
 {
     KLOG_DEBUG("Configuration::init");
-    this->configuration_ = new QSettings(this->config_path_, QSettings::NativeFormat);
-    this->loadRs();
+    this->m_settings = new QSettings(this->m_configPath, QSettings::NativeFormat);
 }
 
-void Configuration::reloadRs()
-{
-    this->loadRs();
-    emit this->rs_changed_();
-}
-
-void Configuration::loadRs()
-{
-    this->rs_ = this->getFixedRs();
-    RETURN_IF_FALSE(this->rs_);
-
-    auto ra = this->readRaFromFile();
-    // 将固定不变的加固标准部分和用户修改的自定义部分进行整合
-    auto& custom_reinforcements = ra->reinforcement();
-    for (auto custom_iter = custom_reinforcements.begin(); custom_iter != custom_reinforcements.end(); ++custom_iter)
-    {
-        auto& fixed_reinforcements = this->rs_->body().reinforcement();
-        for (auto fixed_iter = fixed_reinforcements.begin(); fixed_iter != fixed_reinforcements.end(); ++fixed_iter)
-        {
-            CONTINUE_IF_TRUE(custom_iter->name() != fixed_iter->name());
-            this->joinReinforcement((*fixed_iter), (*custom_iter));
-        }
-    }
-}
-
-QSharedPointer<Protocol::RS> Configuration::getFixedRs()
+QSharedPointer<Protocol::RS> Configuration::getFixedRS()
 {
     KLOG_DEBUG("Configuration::getFixedRs");
 
