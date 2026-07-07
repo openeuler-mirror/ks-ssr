@@ -4,19 +4,19 @@
 <context>
     <name>KS::Command::Command</name>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="342"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="384"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="299"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="341"/>
         <source>open file failed</source>
         <translation>打开文件失败</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="555"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="512"/>
         <source>No system vulnerabilities were found in this scan</source>
         <translation>本次扫描未发现系统漏洞</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="440"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="478"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="397"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="435"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
