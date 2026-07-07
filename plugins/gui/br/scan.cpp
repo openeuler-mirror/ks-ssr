@@ -492,6 +492,10 @@ void Scan::startReinforcement()
 
 void Scan::generateReport()
 {
+    // test dbus export
+    //    m_dbusProxy->ExportReport("/root/Desktop/br.pdf");
+    //    return;
+
     if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
     {
         POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
