@@ -302,22 +302,6 @@
             </arg>
         </reinforcement>
         <reinforcement>
-            <name>external-udev-ttys</name>
-            <arg>
-                <name>enabled</name>
-                <value>false</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Allow to use serial port device")</label>
-                </layout>
-            </arg>
-        </reinforcement>
-        <reinforcement>
             <name>external-accounts-null-password</name>
             <arg>
                 <name>enabled</name>
