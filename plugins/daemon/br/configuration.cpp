@@ -41,21 +41,21 @@ namespace BR
 using namespace Protocol;
 
 Configuration::Configuration(const QString& config_path)
-    : config_path_(config_path),
-      configuration_(nullptr)
+    : m_configPath(config_path),
+      m_settings(nullptr)
 {
 }
 
 Configuration::~Configuration()
 {
-    delete this->configuration_;
+    delete this->m_settings;
 }
 
-Configuration* Configuration::instance_ = nullptr;
+Configuration* Configuration::m_instance = nullptr;
 void Configuration::globalInit(const QString& config_path)
 {
-    instance_ = new Configuration(config_path);
-    instance_->init();
+    m_instance = new Configuration(config_path);
+    m_instance->init();
 }
 
 uint32_t Configuration::getMaxThreadNum()
