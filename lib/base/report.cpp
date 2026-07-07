@@ -2,6 +2,7 @@
 #include <hpdf.h>
 #include <math.h>
 #include <qt5-log-i.h>
+#include <QDateTime>
 #include <QNetworkInterface>
 #include "config.h"
 #include "include/ssr-marcos.h"
