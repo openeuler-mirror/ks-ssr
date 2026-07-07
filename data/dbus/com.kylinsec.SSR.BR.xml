@@ -181,6 +181,13 @@
             <description>Record generate report operation.</description>
         </method>
 
+        <method name="ExportReport">
+            <arg type="s" name="save_path" direction="in">
+                <summary>The report save path.</summary>
+            </arg>
+            <description>The report will be exported.</description>
+        </method>
+
         <property name="version" type="s" access="read">
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
             <description>The BR version.</description>
