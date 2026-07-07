@@ -311,7 +311,9 @@ QString Report::genReport(const QString &savePath, const QList<QPair<QString, QS
     const char *font_name = HPDF_LoadTTFontFromFile(pdf, TTF_PATH, HPDF_TRUE);
     if (!font_name)
     {
-        throw std::runtime_error("Failed to load TTF font");
+        failedReason = QString("Failed to Load TTF file:") + TTF_PATH;
+        KLOG_ERROR() << failedReason;
+        return failedReason;
     }
 
     HPDF_Font font = HPDF_GetFont(pdf, font_name, "UTF-8");
