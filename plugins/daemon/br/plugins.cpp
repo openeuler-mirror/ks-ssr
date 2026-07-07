@@ -32,9 +32,11 @@ namespace BR
       PY_MICRO_VERSION >= (micro)))
 
 Plugins::Plugins(Configuration* configuration)
-    : configuration_(configuration),
-      thread_pool_(this->configuration_->getMaxThreadNum())
+    : m_configuration(configuration),
+      m_threadPool(this->m_configuration->getMaxThreadNum())
 {
+    m_loadReinforcementTimer = new QTimer(this);
+    m_loadReinforcementTimer->setInterval(100);
 }
 
 Plugins::~Plugins()
