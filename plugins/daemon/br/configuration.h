@@ -81,18 +81,9 @@ public:
     // 前台复选框勾选调用，checkbox后台默认为false
     void setRaCheckbox(const QString& name, const bool& status);
     // 获取加固标准
-    QSharedPointer<Protocol::RS> getRs()
-    {
-        return this->rs_;
-    }
+    QSharedPointer<Protocol::RS> getRS();
     // 设置自定义加固标准
-    bool setCustomRs(const QString& encrypted_rs, BRErrorCode& error_code);
-    // 设置加固参数
-    bool setCustomRa(const Protocol::Reinforcement& rs_reinforcement);
-    // 删除加固项的自定义参数
-    void delCustomRa(const QString& name);
-    void delAllCustomRa();
-
+    bool setCustomRS(const QString& encrypted_rs, BRErrorCode& error_code);
     // 加载历史加固参数文件
     std::shared_ptr<Protocol::ReinforcementHistory> readRhFromFile(const QString path);
     // 写历史加固参数文件
