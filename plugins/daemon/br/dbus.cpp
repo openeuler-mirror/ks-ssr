@@ -969,6 +969,10 @@ void BRDBus::processScanProgress(const JobResult& jobResult)
         scanResult.job_id(jobResult.job_id);
         scanResult.job_state(this->m_scanJob->getState());
 
+        m_scanJobResult.process(jobResult.finished_operation_num * 100.0 / jobResult.sum_operation_num);
+        m_scanJobResult.job_id(jobResult.job_id);
+        m_scanJobResult.job_state(this->m_scanJob->getState());
+
         for (auto iter = jobResult.running_operations.begin(); iter != jobResult.running_operations.end(); ++iter)
         {
             auto operation = this->m_scanJob->getOperation((*iter));
