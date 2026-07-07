@@ -670,6 +670,56 @@
         <source>NEXT</source>
         <translation>下一页</translation>
     </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="72"/>
+        <source>KylinSec Co., Ltd. Contact:400-012-6606</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="85"/>
+        <source>KylinSec Co., Ltd.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="134"/>
+        <source>KylinSec Host Security Reinforcement V1 report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="140"/>
+        <source>Information overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="146"/>
+        <source>OS:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="149"/>
+        <source>kernel version:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="150"/>
+        <source>Software active state:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="150"/>
+        <source>activated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="151"/>
+        <source>Export time:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../lib/base/report.cpp" line="242"/>
+        <source>No problems were found in this test</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QRCodeDialog</name>
