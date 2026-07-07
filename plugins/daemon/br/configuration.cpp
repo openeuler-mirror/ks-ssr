@@ -336,88 +336,9 @@ bool Configuration::setCustomRS(const QString& encrypted_rs, BRErrorCode& error_
     {
         return false;
     }
-    if (this->getStandardType() == BRStandardType::BR_STANDARD_TYPE_CUSTOM)
-    {
-        this->reloadRs();
-    }
+
+    Q_EMIT RSChanged();
     return true;
-}
-
-bool Configuration::setCustomRa(const Protocol::Reinforcement& rs_reinforcement)
-{
-    auto ra = this->readRaFromFile();
-
-    bool match_reinforcement = false;
-
-    auto& reinforcements = ra->reinforcement();
-    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
-    {
-        CONTINUE_IF_TRUE(iter->name() != rs_reinforcement.name());
-        match_reinforcement = true;
-        auto& new_args = rs_reinforcement.arg();
-        for (auto new_arg_iter = new_args.begin(); new_arg_iter != new_args.end(); ++new_arg_iter)
-        {
-            auto& old_args = iter->arg();
-            for (auto old_arg_iter = old_args.begin(); old_arg_iter != old_args.end(); ++old_arg_iter)
-            {
-                CONTINUE_IF_TRUE(old_arg_iter->name() != new_arg_iter->name());
-                old_arg_iter->value(new_arg_iter->value());
-                break;
-            }
-        }
-        break;
-    }
-
-    // 如果配置中不存在加固项的自定义配置，则添加该加固项的自定义配置
-    if (!match_reinforcement)
-    {
-        Protocol::Reinforcement used_reinforcement(rs_reinforcement.name());
-
-        const auto& args = rs_reinforcement.arg();
-
-        for (auto iter = args.begin(); iter != args.end(); ++iter)
-        {
-            auto& arg = (*iter);
-            Protocol::ReinforcementArg used_arg(arg.name(), arg.value());
-            used_reinforcement.arg().push_back(used_arg);
-        }
-        ra->reinforcement().push_back(used_reinforcement);
-    }
-
-    return this->writeRaToFile(ra);
-}
-
-void Configuration::delCustomRa(const QString& name)
-{
-    KLOG_DEBUG() << "delCustomRa name = " << name.toLatin1();
-    auto ra = this->readRaFromFile();
-    bool is_del = false;
-
-    for (auto iter = ra->reinforcement().begin(); iter != ra->reinforcement().end(); ++iter)
-    {
-        if (iter->name() == name.toStdString())
-        {
-            ra->reinforcement().erase(iter);
-            is_del = true;
-            break;
-        }
-    }
-
-    if (is_del)
-    {
-        this->writeRaToFile(ra);
-    }
-}
-
-void Configuration::delAllCustomRa()
-{
-    auto ra = this->readRaFromFile();
-
-    if (ra->reinforcement().size() > 0)
-    {
-        ra->reinforcement().clear();
-        this->writeRaToFile(ra);
-    }
 }
 
 BRResourceMonitor Configuration::getResourceMonitorStatus()
