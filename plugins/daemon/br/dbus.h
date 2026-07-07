@@ -166,6 +166,14 @@ private:
 
 private:
     void init();
+    // 初始化扫描结果信息
+    void initScanResult(const QStringList &names);
+    // 初始化加固结果信息
+    void initReinforceResult(const QStringList &names);
+    // 扫描结果更新到缓存
+    void cacheScanResult(const Protocol::ReinforcementResult &reinforcementResult);
+    // 加固结果更新到缓存
+    void cacheReinforceResult(const Protocol::ReinforcementResult &reinforcementResult);
     // 扫描进度信号处理
     void processScanProgress(const JobResult &jobResult);
     // 加固进度信号处理
