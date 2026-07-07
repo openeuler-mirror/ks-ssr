@@ -18,14 +18,16 @@ qt5_add_dbus_adaptor(
 set(TS_FILES
     "${PROJECT_SOURCE_DIR}/translations/daemon/${PROJECT_NAME}-${TARGET_NAME}.zh_CN.ts"
 )
-execute_process(COMMAND lupdate-qt5 -no-obsolete ${BR_H_FILES} ${BR_CPP_FILES}
+execute_process(
+  COMMAND
+    lupdate-qt5 -no-obsolete ${BR_H_FILES} ${BR_CPP_FILES}
     ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml
     ${CMAKE_SOURCE_DIR}/data/br-categories.ini
     ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-audit.xml
     ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-config.xml
     ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-external.xml
     ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-network.xml -ts
-                        -ts ${TS_FILES})
+    -ts ${TS_FILES})
 
 # 生成qm文件，qt_create_translation会导致cmake clean把ts文件删掉
 qt5_add_translation(QM_FILES ${TS_FILES})
