@@ -225,6 +225,22 @@ font-size: 17px;
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QLabel" name="m_exportTime">
+         <property name="styleSheet">
+          <string notr="true">font: NotoSansCJKsc-Regular;
+font-size: 17px;
+ color: #1200ff;
+</string>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
