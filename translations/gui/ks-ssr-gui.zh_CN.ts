@@ -303,39 +303,6 @@
     </message>
 </context>
 <context>
-    <name>PDF</name>
-    <message>
-        <location filename="../../lib/report/pdf.ui" line="72"/>
-        <source>Operating system:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/report/pdf.ui" line="85"/>
-        <source>IP:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/report/pdf.ui" line="98"/>
-        <source>MAC:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/report/pdf.ui" line="111"/>
-        <source>System kernel version:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/report/pdf.ui" line="124"/>
-        <source>Software activation status:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/report/pdf.ui" line="320"/>
-        <source>Information overview</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>Pagination</name>
     <message>
         <location filename="../../lib/widgets/table/pagination.ui" line="26"/>
