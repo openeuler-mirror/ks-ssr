@@ -655,12 +655,22 @@
         <translation>软件激活状态：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="260"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="137"/>
+        <source>Export time:</source>
+        <translation>导出时间:</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="237"/>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="289"/>
         <source>Device Information</source>
         <translation>设备信息</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="349"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="378"/>
         <source>Pie chart of test results</source>
         <translation>检测结果饼图</translation>
     </message>
