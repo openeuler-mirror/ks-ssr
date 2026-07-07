@@ -145,10 +145,13 @@ int Command::reinforce(const QStringList &name)
     return 0;
 }
 
-void Command::repair()
+void Command::repair(const QStringList &cves)
 {
     std::cout << tr("Scannig...").toStdString() << std::endl;
-    m_cveIds = QStringList();
+    m_onlyScan = false;
+    m_lastPercent = 0;
+    m_specifyCVE = cves.isEmpty() ? false : true;
+    m_cveIds = cves;
     connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ScanProgress, this, &Command::scanProgress, Qt::QueuedConnection);
     connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::RepairProgress, this, &Command::repairProgress);
     m_dbusVulnerabilityProxy->Scan();
