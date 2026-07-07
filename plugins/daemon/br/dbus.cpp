@@ -79,8 +79,13 @@ BRDBus::BRDBus(QObject* parent)
       m_isFinishRHWrite(true),
       m_reinforceTimer(nullptr)
 {
-    this->m_dbus = new BRAdaptor(this);
-    init();
+    m_dbus = new BRAdaptor(this);
+    m_configuration = Configuration::getInstance();
+    m_categories = Categories::getInstance();
+    m_plugins = Plugins::getInstance();
+    m_resourceMonitor = new ResourceMonitor(this);
+    m_reinforceTimer = new QTimer(this);
+    m_reinforceTimer->setInterval(100);
 }
 
 BRDBus::~BRDBus()
