@@ -13,6 +13,7 @@
  */
 
 #include "pdf.h"
+#include <QDateTime>
 #include "round-progressbar.h"
 #include "ui_pdf.h"
 
