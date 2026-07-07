@@ -499,80 +499,80 @@
 <context>
     <name>KS::BR::Scan</name>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="143"/>
-        <location filename="../../plugins/gui/br/scan.cpp" line="178"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="145"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="180"/>
         <source>strategy(*.xml)</source>
         <translation>策略文件(*.xml)</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="143"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="145"/>
         <source>export strategy</source>
         <translation>导出策略</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="152"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="154"/>
         <source>Please check the file name and whether you have write permission!</source>
         <translation>请检查文件名以及您是否具有写入权限！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="162"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="164"/>
         <source>Open RA file failed!</source>
         <translation>打开内部文件失败！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="169"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="171"/>
         <source>Export successed!</source>
         <translation>导出成功！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="169"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="171"/>
         <source>Export failed!</source>
         <translation>导出失败！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="178"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="180"/>
         <source>import strategy</source>
         <translation>导入策略</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="187"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="189"/>
         <source>Open files failed!</source>
         <translation>打开文件失败！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="191"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="193"/>
         <source>Failed to import strategy file. Please whether the file is valid!</source>
         <translation>导入策略失败，请检查策略文件的合法性！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="191"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="193"/>
         <source>Import succeeded!</source>
         <translation>导入成功！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="374"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="386"/>
         <source>Please select the item to export!</source>
         <translation>请选择要导出的加固项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="424"/>
-        <location filename="../../plugins/gui/br/scan.cpp" line="463"/>
-        <location filename="../../plugins/gui/br/scan.cpp" line="485"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="436"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="475"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="501"/>
         <source>Fallback is in progress, please wait.</source>
         <translation>回退正在进行中，请等待。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="442"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="454"/>
         <source>Please check the reinforcement items to be scanned or reinforcement classification for scanning.</source>
         <translation>请勾选需要扫描的加固项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="457"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="469"/>
         <source>Please check the content to be reinforced.</source>
         <translation>请勾选要加固的项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="514"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="530"/>
         <source>Export succeeded!</source>
         <translation>导出成功！</translation>
     </message>
