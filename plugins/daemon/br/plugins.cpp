@@ -204,21 +204,46 @@ bool Plugins::addPlugin(QSharedPointer<Plugin> plugin)
         }
         else
         {
-            this->reinforcements_plugins_[QString::fromStdString(reinforcement_name)] = plugin;
+            this->m_reinforcementsPlugins[QString::fromStdString(reinforcement_name)] = plugin;
         }
     }
     return true;
+}
+
+void Plugins::idleLoadReinforcements()
+{
+    if (!m_loadReinforcementTimer->isActive())
+    {
+        m_loadReinforcementTimer->start();
+    }
 }
 
 void Plugins::loadReinforcements()
 {
     KLOG_DEBUG("Plugins::loadReinforcements");
 
-    // TODO: 更新优化，现有的加固项调用更新函数，这里更新后应该需要通过DBUS发送信号
-    this->reinforcements_.clear();
+    m_loadReinforcementTimer->stop();
 
-    auto rs = this->configuration_->getRs();
+    this->m_reinforcements.clear();
+
+    auto rs = this->m_configuration->getRS();
     RETURN_IF_FALSE(rs);
+
+    // 用自定义加固参数覆盖默认加固参数
+    auto ra = this->m_configuration->getCustomRA();
+    if (ra)
+    {
+        auto& custom_reinforcements = ra->reinforcement();
+        for (auto custom_iter = custom_reinforcements.begin(); custom_iter != custom_reinforcements.end(); ++custom_iter)
+        {
+            auto& fixed_reinforcements = rs->body().reinforcement();
+            for (auto fixed_iter = fixed_reinforcements.begin(); fixed_iter != fixed_reinforcements.end(); ++fixed_iter)
+            {
+                CONTINUE_IF_TRUE(custom_iter->name() != fixed_iter->name());
+                this->joinReinforcement((*fixed_iter), (*custom_iter));
+            }
+        }
+    }
 
     auto& reinforcements = rs->body().reinforcement();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
