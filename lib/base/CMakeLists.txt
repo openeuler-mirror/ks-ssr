@@ -39,10 +39,10 @@ target_include_directories(
          ${SQLCIPHER_INCLUDE_DIRS}
          ${Qt5Core_INCLUDE_DIRS})
 
-target_include_directories(${TARGET_NAME} PRIVATE ${CRYPTOPP_INCLUDE_DIRS})
+target_include_directories(${TARGET_NAME} PRIVATE ${CRYPTOPP_INCLUDE_DIRS} ${LIBHPDF_INCLUDE_DIR})
 
 target_link_libraries(
-  ${TARGET_NAME} PUBLIC Qt5::Core ${SQLCIPHER_LIBRARIES} ${LIBNOTIFY_LIBRARIES}
-                        ${KLOG_QT5_LIBRARIES})
+  ${TARGET_NAME} PUBLIC Qt5::Core Qt5::Network ${SQLCIPHER_LIBRARIES} ${LIBNOTIFY_LIBRARIES}
+                        ${KLOG_QT5_LIBRARIES} ${LIBHPDF_LIBRARY})
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${CRYPTOPP_LIBRARIES})
