@@ -886,6 +886,31 @@ void BRDBus::init()
         m_isFinishRHWrite = false;
         Scan(names);
     }
+
+    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::homeFreeSpaceRatio_,
+                     this, &BRDBus::homeFreeSpaceRatio);
+    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::rootFreeSpaceRatio_,
+                     this, &BRDBus::rootFreeSpaceRatio);
+    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::cpuAverageLoadRatio_,
+                     this, &BRDBus::cpuAverageLoadRatio);
+    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::memoryRemainingRatio_, this, &BRDBus::memoryRemainingRatio);
+
+    // 进程完成后，回退状态置为未开始
+    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]()
+                     {
+                         RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->m_configuration->getFallbackStatus());
+                         if (!this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
+                         {
+                             KLOG_ERROR() << "set fallback status failed.";
+                         }
+                     });
+
+    connect(this, &BRDBus::ReinforceProgress, this, &BRDBus::readReinforceItemStatus);
+    connect(this, &BRDBus::ScanProgress, this, &BRDBus::readReinforceItemStatus);
+    connect(m_plugins, &Plugins::reinforcementsChanged, [this]()
+            {
+                Q_EMIT ReinforcementsChanged();
+            });
 }
 
 void BRDBus::scanResultHandle(const JobResult& jobResult)
