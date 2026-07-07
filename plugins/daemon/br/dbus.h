@@ -15,12 +15,12 @@
 #pragma once
 
 #include <QDBusContext>
-#include <QTimer>
 #include "br-protocol.hxx"
 #include "job.h"
 #include "resource-monitor.h"
 
 class BRAdaptor;
+class QTimer;
 
 namespace KS
 {
