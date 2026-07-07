@@ -177,14 +177,9 @@
         <translation>输出结果到文件</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="90"/>
+        <location filename="../src/tool/command/main.cpp" line="101"/>
         <source>Module parameter provided error.</source>
         <translation>指定操作模块参数提供错误。</translation>
-    </message>
-    <message>
-        <location filename="../src/tool/command/main.cpp" line="50"/>
-        <source>One-click repair</source>
-        <translation>一键修复</translation>
     </message>
     <message>
         <location filename="../src/tool/command/main.cpp" line="58"/>
