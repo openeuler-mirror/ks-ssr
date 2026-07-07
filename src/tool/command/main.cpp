@@ -84,14 +84,18 @@ int main(int argc, char* argv[])
                 names = param.split(',', QString::SkipEmptyParts);
             cmd_parser.reinforce(names);
         }
+        else
+        {
+            cmd_parser.exportReport("br", exportPath);
+        }
     }
-    else if ("vulnerability" == module && (scanEnabled || repairEnabled))
+    else if ("vulnerability" == module && (scanEnabled || repairEnabled || exportEnabled))
     {
         if (scanEnabled)
         {
             cmd_parser.vulnerabilityScan();
         }
-        else
+        else if (repairEnabled)
         {
             QString param = parser.value(repairOption);
             QStringList cves;
