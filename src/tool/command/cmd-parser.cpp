@@ -320,17 +320,22 @@ void Command::outputRepairResult(QString fileName)
     if (m_repairResult.size() == 0)
         return;
 
+    auto cveList = m_repairResult.values();
+    std::sort(cveList.begin(), cveList.end(), [](const KS::Command::VulnerabilityInfo *a, const KS::Command::VulnerabilityInfo *b)
+              {
+                  return (a->score).toDouble() > (b->score).toDouble();
+              });
+
     if (!m_fileOutput)
     {
-        for (const auto &key : m_repairResult.keys())
+        for (const auto &cve : cveList)
         {
-            if (m_cveIds.indexOf(key) != 0)
-                continue;
-            QString threat_severity = m_repairResult.value(key)->threat_severity;
-            QString score = m_repairResult.value(key)->score;
-            QString state = m_onlyScan ? "" : m_repairResult.value(key)->state;
+            QString id = cve->id;
+            QString threat_severity = cve->threat_severity;
+            QString score = cve->score;
+            QString state = m_onlyScan ? "" : cve->state;
             std::string color = state.isEmpty() || state == QString(tr("succeed")) ? "\033[0m" : "\033[31m";
-            std::cout << leftJustify(key, 30).toStdString() << leftJustify(threat_severity, 20).toStdString() << leftJustify(score, 20).toStdString() << color << leftJustify(state, 20).toStdString() << "\033[0m" << std::endl;
+            std::cout << leftJustify(id, 30).toStdString() << leftJustify(threat_severity, 20).toStdString() << leftJustify(score, 20).toStdString() << color << leftJustify(state, 20).toStdString() << "\033[0m" << std::endl;
         }
 
         exit(0);
