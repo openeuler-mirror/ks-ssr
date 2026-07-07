@@ -14,17 +14,18 @@
 
 #pragma once
 
-#include <QObject>
-#include <QList>
 #include <QMap>
+#include <QObject>
+#include <QSharedPointer>
+#include "lib/dbus/license-proxy.h"
 
 class BRDbusProxy;
 class VulnerabilityDbusProxy;
 namespace KS
 {
+class LicenseProxy;
 namespace Command
 {
-
 struct VulnerabilityInfo
 {
     VulnerabilityInfo(QString _threat_severity, QString _score)
