@@ -34,14 +34,15 @@ Command::Command(QObject *parent)
       m_fileOutput(false),
       m_getBrJob(false)
 {
+    checkLicenseActive();
     m_dbusBRProxy = new BRDbusProxy(SSR_DBUS_NAME,
-                                BR_DBUS_OBJECT_PATH,
-                                QDBusConnection::systemBus(),
-                                this);
+                                    BR_DBUS_OBJECT_PATH,
+                                    QDBusConnection::systemBus(),
+                                    this);
     m_dbusVulnerabilityProxy = new VulnerabilityDbusProxy(SSR_DBUS_NAME,
-                                                      SSR_VULNERABILITY_DBUS_OBJECT_PATH,
-                                                      QDBusConnection::systemBus(),
-                                                      this);
+                                                          SSR_VULNERABILITY_DBUS_OBJECT_PATH,
+                                                          QDBusConnection::systemBus(),
+                                                          this);
 }
 
 Command::~Command()
