@@ -140,7 +140,7 @@
         </method>
 
         <method name="GetReinforceResult">
-            <arg name="result" type="s">
+            <arg name="result" type="s" direction="out">
                 <summary>The result is a json string.</summary>
             </arg>
             <description>The result contains current reinforcing info.</description>
