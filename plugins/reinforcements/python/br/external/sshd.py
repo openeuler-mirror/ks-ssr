@@ -21,10 +21,6 @@ BANNER_INFO_KEY = "Banner"
 PROFILE_CLIENT_TMOUT = "ClientAliveInterval"
 PROFILE_CLIENT_COUNT = "ClientAliveCountMax"
 
-# 用于匹配TMOUT进行修改
-PROFILE_TMOUT = "TMOUT"
-PROFILE_TMOUT_RXPORT = "export TMOUT"
-
 DEFAULT_CIPHERS = ("aes128-ctr", "aes192-ctr",
                    "aes256-ctr", "aes128-cbc", "3des-cbc")
 WEAK_CIPHERS = ("arcfour", "arcfour128", "arcfour256")
