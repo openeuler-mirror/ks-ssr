@@ -103,6 +103,10 @@ int main(int argc, char* argv[])
                 cves = param.split(',', QString::SkipEmptyParts);
             cmd_parser.repair(cves);
         }
+        else
+        {
+            cmd_parser.exportReport("vulnerability", exportPath);
+        }
     }
     else
     {
