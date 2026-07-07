@@ -7,23 +7,22 @@ file(GLOB_RECURSE BASE_CPP_FILES ./*.cpp)
 
 set(ALL_FILES ${BASE_H_FILES} ${BASE_CPP_FILES})
 
-find_path(LIBHPDF_INCLUDE_DIR
-    NAMES hpdf.h
-    PATHS /usr/include /usr/local/include
-)
+find_path(
+  LIBHPDF_INCLUDE_DIR
+  NAMES hpdf.h
+  PATHS /usr/include /usr/local/include)
 
-find_library(LIBHPDF_LIBRARY
-    NAMES hpdf
-    PATHS /usr/lib /usr/local/lib
-)
+find_library(
+  LIBHPDF_LIBRARY
+  NAMES hpdf
+  PATHS /usr/lib /usr/local/lib)
 
 if(NOT LIBHPDF_INCLUDE_DIR OR NOT LIBHPDF_LIBRARY)
-    message(FATAL_ERROR "Could not find libharu library and/or headers")
+  message(FATAL_ERROR "Could not find libharu library and/or headers")
 else()
-    message(STATUS "Found libharu: ${LIBHPDF_LIBRARY}")
-    message(STATUS "Found libharu headers: ${LIBHPDF_INCLUDE_DIR}")
+  message(STATUS "Found libharu: ${LIBHPDF_LIBRARY}")
+  message(STATUS "Found libharu headers: ${LIBHPDF_INCLUDE_DIR}")
 endif()
-
 
 add_library(${TARGET_NAME} STATIC ${ALL_FILES})
 
