@@ -1,10 +1,11 @@
 #ifndef REPORT_H
 #define REPORT_H
 #include <QList>
+#include <QObject>
 #include <QPair>
 #include <QString>
 
-class Report
+class Report : public QObject
 {
 public:
     static void genReport(const QString &savePath,
