@@ -69,7 +69,7 @@ static QString getMacPath()
 
 void addTail(HPDF_Page page, HPDF_Font font)
 {
-    QString text = "技术支持：湖南麒麟信安科技股份有限公司，联系电话：400-012-6606";
+    QString text = QObject::tr("KylinSec Co., Ltd. Contact:400-012-6606");  // 湖南麒麟信安科技股份有限公司，联系电话：400-012-6606
     // 获取页面宽度和高度
     float pageWidth = HPDF_Page_GetWidth(page);
 
