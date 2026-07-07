@@ -686,6 +686,15 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
     m_reinforceTimer->start();
 }
 
+void BRDBus::GetReinforceResult(const QString& result)
+{
+}
+
+uint BRDBus::GetReinforceStatus()
+{
+    return m_reinforceJob->getState();
+}
+
 void BRDBus::Cancel(const qlonglong& jobID)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
