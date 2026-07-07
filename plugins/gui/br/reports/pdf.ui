@@ -125,6 +125,19 @@ font-size: 17px;
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="styleSheet">
+          <string notr="true">font: NotoSansCJKsc-Regular;
+font-size: 17px;
+ color: #1200ff;
+</string>
+         </property>
+         <property name="text">
+          <string>Export time:</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
