@@ -124,6 +124,13 @@ extern "C"
 // 无权限控制
 #define SSR_POLICY_ALLOW_ACCESS "com.kylinsec.SSR.AllowAccess"
 
+#define DNF_CACHE_DIR "/var/cache/ks-ssr/metadata"
+#define DNF_SOLV_DIR "/var/cache/ks-ssr/hawkey"
+// #define DNF_REPO_DIR "/etc/yum.repos.d"
+#define DNF_REPO_DIR SSR_INSTALL_DATADIR "/yum.repos.d"
+#define DNF_LOCK_DIR "/var/run"
+#define CVE_INFO_CACHE_DIR SSR_INSTALL_DATADIR "/cve-infos"
+
     enum OsUserType
     {
         USER_TYPE_MANAGER = 0,
