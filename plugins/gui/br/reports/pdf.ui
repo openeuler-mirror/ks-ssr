@@ -253,7 +253,8 @@ font-size: 17px;
     <property name="styleSheet">
      <string notr="true">font:NotoSansCJKsc-Regular;
 font-size:17px;
-background-color: transparent;</string>
+background-color: transparent;
+color:white;</string>
     </property>
     <property name="text">
      <string>Device Information</string>
