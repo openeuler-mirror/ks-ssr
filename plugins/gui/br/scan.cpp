@@ -73,6 +73,8 @@ void Scan::usingCustomStrategy()
     m_ui->m_itemTable->setAllCheckBoxEditStatus(true);
     m_ui->m_itemTable->hideCheckBox(false);
     m_ui->m_itemTable->setAllChecked(Qt::Unchecked);
+    // 更新加固项和相关参数
+    Utils::getDefault()->ssrResetReinforcements(m_dbusProxy->GetReinforcements().value(), m_categories);
 
     // TODO：策略设置有问题，暂时关闭
     // m_ui->m_progress->showStrategy();
