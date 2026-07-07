@@ -99,7 +99,7 @@ int Command::brScan()
                 disconnect(m_dbusBRProxy, &BRDbusProxy::ScanProgress, 0, 0);
                 disconnect(m_dbusBRProxy, &BRDbusProxy::ProgressFinished, 0, 0);
                 KLOG_DEBUG() << "ProgressFinished";
-                outputBrResult("./scan_output.txt");
+                outputBrResult("./br_scan_output.txt");
             });
 
     QStringList items = getBrInfo();
