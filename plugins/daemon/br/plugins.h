@@ -65,11 +65,11 @@ public:
     // 获取使用的加固项
     QSharedPointer<Reinforcement> getReinforcement(const QString& name)
     {
-        return MapHelper::getValue(this->reinforcements_, name);
+        return MapHelper::getValue(this->m_reinforcements, name);
     }
     BRReinforcementVec getReinforcements()
     {
-        return MapHelper::getValues(this->reinforcements_);
+        return MapHelper::getValues(this->m_reinforcements);
     };
     // 获取指定分类的加固项
     BRReinforcementVec getReinforcementsByCategory(const QString& category_name);
