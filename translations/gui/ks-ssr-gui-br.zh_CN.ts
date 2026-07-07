@@ -655,12 +655,12 @@
         <translation>软件激活状态：</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="259"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="260"/>
         <source>Device Information</source>
         <translation>设备信息</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/pdf.ui" line="347"/>
+        <location filename="../../plugins/gui/br/reports/pdf.ui" line="349"/>
         <source>Pie chart of test results</source>
         <translation>检测结果饼图</translation>
     </message>
