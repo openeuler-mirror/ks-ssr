@@ -284,35 +284,6 @@
                 </layout>
             </arg>
         </reinforcement>
-        <reinforcement>
-            <name>audit-logfile-permissions</name>
-            <arg>
-                <name>mode-permissions-limit</name>
-                <value>true</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "The maximum permission of log files and configurations is set to 0644")</label>
-                </layout>
-            </arg>
-            <arg>
-                <name>append-permissions-limit</name>
-                <value>true</value>
-                <value_limits>""</value_limits>
-                <rule>
-                    <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
-                </rule>
-                <layout>
-                    <widget_type>DEFAULT</widget_type>
-                    <label>QT_TRANSLATE_NOOP_UTF8("xml", "Log files can only be appended")</label>
-                </layout>
-            </arg>
-        </reinforcement>
         <!-- 接入类 -->
         <reinforcement>
             <name>external-udev-usb</name>
