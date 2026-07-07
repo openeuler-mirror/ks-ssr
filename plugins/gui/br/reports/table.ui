@@ -73,7 +73,7 @@ font:NotoSansCJKsc-Regular;</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>:/images/PDF/head.png</pixmap>
+      <pixmap resource="../../../../resources/resources.qrc">:/images/pdf-head</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
