@@ -53,15 +53,15 @@ void Plugins::globalInit(Configuration* configuration)
 
 QSharedPointer<Plugin> Plugins::getPluginByReinforcement(const QString& name)
 {
-    auto iter = this->reinforcements_plugins_.find(name);
-    RETURN_VAL_IF_TRUE(iter == this->reinforcements_plugins_.end(), QSharedPointer<Plugin>());
+    auto iter = this->m_reinforcementsPlugins.find(name);
+    RETURN_VAL_IF_TRUE(iter == this->m_reinforcementsPlugins.end(), QSharedPointer<Plugin>());
     return iter.value().lock();
 }
 
 BRReinforcementVec Plugins::getReinforcementsByCategory(const QString& category_name)
 {
     BRReinforcementVec result;
-    for (auto iter = this->reinforcements_.begin(); iter != this->reinforcements_.end(); ++iter)
+    for (auto iter = this->m_reinforcements.begin(); iter != this->m_reinforcements.end(); ++iter)
     {
         if (iter.value()->getCategoryName() == category_name)
         {
