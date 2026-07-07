@@ -1133,6 +1133,11 @@ void BRDBus::finishedScanProgress()
     {
         emit ProgressFinished();
     }
+
+    if (!m_reportSavePath.isEmpty())
+    {
+        exportReport();
+    }
 }
 
 void BRDBus::finishedReinforceProgress()
