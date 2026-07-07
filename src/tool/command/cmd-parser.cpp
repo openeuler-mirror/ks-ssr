@@ -69,12 +69,22 @@ Command::~Command()
     m_repairResult.clear();
 }
 
+void Command::checkLicenseActive()
+{
+    m_licenseProxy = LicenseProxy::getDefault();
+    if (!m_licenseProxy->isActivated())
+    {
+        std::cout << tr("The software is not activated.").toStdString() << std::endl;
+        exit(-1);
+    }
+}
+
 void Command::setFileOutput(bool fileOutput)
 {
     m_fileOutput = fileOutput;
 }
 
-int Command::scan()
+int Command::brScan()
 {
     std::cout << tr("Scannig...").toStdString() << std::endl;
     disconnect(m_dbusBRProxy, &BRDbusProxy::ScanProgress, 0, 0);
