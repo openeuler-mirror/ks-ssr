@@ -85,7 +85,7 @@ void Home::init()
                 }
                 m_ui->m_icon->setPixmap(res);
             });
-    m_logoTimer.start(2000 / LOGO_PIXMAP_COUNTS);
+    m_logoTimer.start(6000 / LOGO_PIXMAP_COUNTS);
 }
 
 void Home::modfiyReinforcementTime()
