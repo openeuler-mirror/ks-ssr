@@ -88,7 +88,6 @@ find_package(
 pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
 pkg_search_module(CRYPTOPP REQUIRED cryptopp)
 pkg_search_module(X11 REQUIRED x11)
-pkg_search_module(LIBSYSTEMD REQUIRED libsystemd)
 pkg_search_module(KS_LICENSE REQUIRED ks-license)
 pkg_search_module(LIBCRYPTO REQUIRED libcrypto)
 pkg_search_module(SQLCIPHER REQUIRED sqlcipher)
