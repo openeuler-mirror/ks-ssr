@@ -98,17 +98,14 @@ private:
     //
     void init();
 
-    // 重新加载加固标准，这里会发送变化的信号
-    void reloadRs();
-    void loadRs();
     // 修改加固参数，重载加固项
     void reloadStrategy();
     // 加载加固标准文件(不变化的部分)
-    QSharedPointer<Protocol::RS> getFixedRs();
+    QSharedPointer<Protocol::RS> getFixedRS();
     // 加载加固参数文件
     QSharedPointer<Protocol::RA> readRaFromFile();
     // 写加固参数文件
-    bool writeRaToFile(QSharedPointer<Protocol::RA> ra);
+    bool writeRAToFile(QSharedPointer<Protocol::RA> ra);
 
     void joinReinforcement(Protocol::Reinforcement& to_r, const Protocol::Reinforcement& from_r);
 
