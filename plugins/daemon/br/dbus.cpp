@@ -1112,6 +1112,10 @@ void BRDBus::processReinforceProgress(const JobResult& jobResult)
         reinforceResult.job_id(jobResult.job_id);
         reinforceResult.job_state(this->m_reinforceJob->getState());
 
+        m_reinforceJobResult.process(jobResult.finished_operation_num * 100.0 / jobResult.sum_operation_num);
+        m_reinforceJobResult.job_id(jobResult.job_id);
+        m_reinforceJobResult.job_state(this->m_reinforceJob->getState());
+
         for (auto iter = jobResult.running_operations.begin(); iter != jobResult.running_operations.end(); ++iter)
         {
             auto operation = this->m_reinforceJob->getOperation(*iter);
