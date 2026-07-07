@@ -109,7 +109,6 @@ libnssdbm3.so
 libnss_db.so
 libnss_hesiod.so
 libnsssysinit.so
-libnssutil3.so
 libnss_dns
 libnss_files
 libnss_myhostname
