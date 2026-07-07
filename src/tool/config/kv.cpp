@@ -130,26 +130,30 @@ bool KV::set(const QString &key, const QString &value)
         QVector<QString> fields;
 
         // 注释行判断需要包括前面的空白字符
-        bool is_comment = StrUtils::startswith(line, this->comment_);
 
-        if (is_comment)
+        // 不包含以空白字符开头的行，例如/etc/logrotate.conf中rotate可能有多个，有些是以空白字符开头
+        if (line.size() > 0 && !isspace(line.at(0).toLatin1()))
         {
-            auto trim_line = StrUtils::trim(line.mid(this->comment_.size()));
-            fields = trim_line.split(split_field_regex).toVector();
-        }
-        else
-        {
-            auto trim_line = StrUtils::trim(line);
-            fields = trim_line.split(split_field_regex).toVector();
-        }
+            bool is_comment = StrUtils::startswith(line, this->comment_);
+            if (is_comment)
+            {
+                auto trim_line = StrUtils::trim(line.mid(this->comment_.size()));
+                fields = trim_line.split(split_field_regex).toVector();
+            }
+            else
+            {
+                auto trim_line = StrUtils::trim(line);
+                fields = trim_line.split(split_field_regex).toVector();
+            }
 
-        if (fields.size() == 2 &&
-            fields[0] == key)
-        {
-            // 匹配到
-            match_pos = new_contents.size();
-            match_line = line;
-            is_match_comment = is_comment;
+            if (fields.size() == 2 &&
+                fields[0] == key)
+            {
+                // 匹配到
+                match_pos = new_contents.size();
+                match_line = line;
+                is_match_comment = is_comment;
+            }
         }
 
         new_contents.append(line);
