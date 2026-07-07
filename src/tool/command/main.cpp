@@ -17,9 +17,9 @@
 #include <QCoreApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <iostream>
 #include "cmd-parser.h"
 #include "include/ssr-i.h"
-#include <iostream>
 
 using namespace KS;
 
