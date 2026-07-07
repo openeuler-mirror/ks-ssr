@@ -349,12 +349,12 @@ void Command::outputRepairResult(QString fileName)
     }
     QTextStream txtOutput(&f);
     txtOutput.setCodec("UTF-8");  // 确保使用 UTF-8 编码
-    for (const auto &key : m_repairResult.keys())
+    for (const auto &cve : cveList)
     {
-        QString threat_severity = m_repairResult.value(key)->threat_severity;
-        QString score = m_repairResult.value(key)->score;
-        QString state = m_repairResult.value(key)->state;
-        txtOutput << leftJustify(key, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << leftJustify(state, 20) << endl;
+        QString threat_severity = cve->threat_severity;
+        QString score = cve->score;
+        QString state = cve->state;
+        txtOutput << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << leftJustify(state, 20) << endl;
     }
 
     f.close();
