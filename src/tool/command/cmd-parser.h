@@ -28,8 +28,9 @@ namespace Command
 {
 struct VulnerabilityInfo
 {
-    VulnerabilityInfo(QString _threat_severity, QString _score)
-        : threat_severity(_threat_severity), score(_score) {}
+    VulnerabilityInfo(QString _id, QString _threat_severity, QString _score)
+        : id(_id), threat_severity(_threat_severity), score(_score) {}
+    QString id;
     QString threat_severity;
     QString score;
     QString state;
