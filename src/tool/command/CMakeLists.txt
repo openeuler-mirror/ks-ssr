@@ -38,26 +38,15 @@ execute_process(
 qt5_add_translation(QM_FILES ${TS_FILES})
 
 add_executable(
-  ${TARGET_NAME}
-  ${CMD_H_FILES}
-  ${CMD_CPP_FILES}
-  ${BR_DBUS_SRCS}
-  ${Vulnerability_DBUS_SRCS}
-  ${BR_PROTOCOL_OUTPUT}
-  ${QM_FILES})
+  ${TARGET_NAME} ${CMD_H_FILES} ${CMD_CPP_FILES} ${BR_DBUS_SRCS}
+                 ${Vulnerability_DBUS_SRCS} ${BR_PROTOCOL_OUTPUT} ${QM_FILES})
 
 target_include_directories(
-    ${TARGET_NAME}
-    PRIVATE ${PROJECT_SOURCE_DIR}
-    ${PROJECT_SOURCE_DIR}/include
-    ${CMAKE_BINARY_DIR})
+  ${TARGET_NAME} PRIVATE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include
+                         ${CMAKE_BINARY_DIR})
 
-target_link_libraries(
-  ${TARGET_NAME}
-  PRIVATE Qt5::DBus
-          Qt5::Core
-          ${XERCES_LIBRARIES}
-          base)
+target_link_libraries(${TARGET_NAME} PRIVATE Qt5::DBus Qt5::Core
+                                             ${XERCES_LIBRARIES} base dbus)
 
 install(FILES ${QM_FILES} DESTINATION ${SSR_INSTALL_TRANSLATIONDIR})
 
