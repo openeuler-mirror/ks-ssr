@@ -78,6 +78,7 @@ BRDBus::BRDBus(QObject* parent)
     : QObject(parent),
       m_resourceMonitorTimer(nullptr),
       m_scanJobResult(0, 0, 0),
+      m_reinforceJobResult(0, 0, 0),
       m_isScanFlag(true),
       m_isFinishRHWrite(true),
       m_reinforceTimer(nullptr)
