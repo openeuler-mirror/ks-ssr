@@ -491,7 +491,7 @@ void BRDBus::ResetReinforcement(const QString& name)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
 
-    this->m_configuration->delCustomRa(name);
+    this->m_configuration->delCustomRA(name);
     SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
                     tr("Reset reinforcement parameters. name is %1.").arg(name),
                     calledUniqueName);
