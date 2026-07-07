@@ -140,7 +140,6 @@ int Command::reinforce(const QStringList &name)
         KLOG_WARNING() << "error:" << reply.error().message();
         std::cout << tr("Reinforcement Failure").toStdString() << std::endl;
         exit(-1);
-        return -1;
     }
     return 0;
 }
