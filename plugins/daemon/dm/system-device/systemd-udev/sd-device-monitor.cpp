@@ -164,7 +164,7 @@ void SDDeviceMonitor::initDevices()
             continue;
         }
 
-        m_devices.insert(syspath, QSharedPointer<SDDevice>(new SDDevice(syspath, device->getSubsystem())));
+        m_devices.insert(syspath, QSharedPointer<SDDevice>(new SDDevice(syspath)));
     }
 }
 }  // namespace DM
