@@ -24,7 +24,17 @@ else()
   message(STATUS "Found libharu headers: ${LIBHPDF_INCLUDE_DIR}")
 endif()
 
-add_library(${TARGET_NAME} STATIC ${ALL_FILES})
+
+# 更新ts文件
+set(TS_FILES
+    "${PROJECT_SOURCE_DIR}/translations/lib/${PROJECT_NAME}-${TARGET_NAME}.zh_CN.ts"
+)
+execute_process(COMMAND lupdate-qt5 -no-obsolete ${ALL_FILES} -ts ${TS_FILES})
+
+# 生成qm文件，qt_create_translation会导致cmake clean把ts文件删掉
+qt5_add_translation(QM_FILES ${TS_FILES})
+
+add_library(${TARGET_NAME} STATIC ${ALL_FILES} ${QM_FILES})
 
 target_include_directories(
   ${TARGET_NAME}
