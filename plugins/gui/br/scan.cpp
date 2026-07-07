@@ -211,6 +211,16 @@ void Scan::parsingCategories()
     RETURN_IF_TRUE(reply.isError())
     Utils::getDefault()->jsonParsing(reply.value().toUtf8(), m_categories);
     Utils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_categories);
+
+    // 如果分类中没有加固项，则因此此分类
+    auto iter = std::remove_if(m_categories.begin(), m_categories.end(), [](Category *category)
+                               {
+                                   return category->getReinforcementItem().size() == 0;
+                               });
+    if (iter != m_categories.end())
+    {
+        m_categories.erase(iter);
+    }
 }
 
 void Scan::initUI()
