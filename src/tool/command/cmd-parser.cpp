@@ -497,8 +497,16 @@ void Command::scanProgress(const QString &progress)
             std::cout << tr("No system vulnerabilities were found in this scan").toStdString() << std::endl;
             exit(0);
         }
+
+        if (m_onlyScan)
+        {
+            outputRepairResult("./vulnerability_scan_output.txt");
+            exit(0);
+        }
+
         KLOG_DEBUG() << "CVE Ids:" << m_cveIds;
         std::cout << tr("Repairing...").toStdString() << std::endl;
+        m_lastPercent = 0;
         m_dbusVulnerabilityProxy->Repair(m_cveIds);
     }
 }
