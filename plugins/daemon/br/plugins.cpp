@@ -276,13 +276,30 @@ void Plugins::loadReinforcements()
 
         auto reinforcement = QSharedPointer<Reinforcement>(new Reinforcement(plugin->getId(), reinforcement_arg));
 
-        this->reinforcements_[QString::fromStdString(reinforcement_name)] = reinforcement;
+        this->m_reinforcements[QString::fromStdString(reinforcement_name)] = reinforcement;
+    }
+
+    Q_EMIT reinforcementsChanged();
+}
+
+void Plugins::joinReinforcement(Protocol::Reinforcement& destReinforcement,
+                                const Protocol::Reinforcement& sourceReinforcement)
+{
+    KLOG_INFO() << "Join reinforcement" << sourceReinforcement.name().c_str();
+
+    const auto& fromArgs = sourceReinforcement.arg();
+    for (auto fromArgIter = fromArgs.begin(); fromArgIter != fromArgs.end(); ++fromArgIter)
+    {
+        auto& toArgs = destReinforcement.arg();
+        for (auto toArgIter = toArgs.begin(); toArgIter != toArgs.end(); ++toArgIter)
+        {
+            CONTINUE_IF_TRUE(fromArgIter->name() != toArgIter->name());
+            KLOG_INFO() << "Modify argument " << toArgIter->value().c_str() << " to " << fromArgIter->value().c_str();
+            toArgIter->value(fromArgIter->value());
+            break;
+        }
     }
 }
 
-void Plugins::onRsChangedCb()
-{
-    this->loadReinforcements();
-}
 }  // namespace BR
 }  // namespace KS
