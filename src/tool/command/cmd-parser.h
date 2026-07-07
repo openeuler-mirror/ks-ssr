@@ -51,11 +51,13 @@ public:
     explicit Command(QObject *parent = nullptr);
     virtual ~Command();
     void setFileOutput(bool fileOutput);
-    int scan();
+    int brScan();
+    int vulnerabilityScan();
     int reinforce(const QStringList &name = QStringList());
-    void repair();
+    void repair(const QStringList &name = QStringList());
 
 private:
+    void checkLicenseActive();
     QStringList getBrInfo(const QStringList &category = QStringList());
     bool ssrJobResult(const QString &xmlString);
     int displayWidth(const QString &str);
