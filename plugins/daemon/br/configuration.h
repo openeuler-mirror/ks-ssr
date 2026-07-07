@@ -57,6 +57,13 @@ public:
     BRStrategyType getStrategyType();
     // 设置加固策略类型
     bool setStrategyType(BRStrategyType strategy_type);
+    // 获取自定义加固参数，只有在自定义策略模式下有效，系统策略返回空值
+    QSharedPointer<Protocol::RA> getCustomRA();
+    // 设置加固参数
+    bool setCustomRA(const Protocol::Reinforcement& rs_reinforcement);
+    // 删除加固项的自定义参数
+    void delCustomRA(const QString& name);
+    void delAllCustomRA();
     // 获取定时扫描时间
     int getTimeScan();
     // 设置定时扫描时间
