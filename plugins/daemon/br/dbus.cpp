@@ -437,7 +437,7 @@ void BRDBus::ResetReinforcements()
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
 
-    this->m_configuration->delAllCustomRa();
+    this->m_configuration->delAllCustomRA();
     SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
                     tr("Reset all reinforcement parameters."),
                     calledUniqueName);
