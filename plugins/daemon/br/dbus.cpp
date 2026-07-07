@@ -409,28 +409,6 @@ QString BRDBus::GetCategories()
     return QJsonDocument(jsonObject).toJson(QJsonDocument::Compact);
 }
 
-QString BRDBus::GetRS()
-{
-    std::ostringstream ostringStream;
-    auto rs = this->m_configuration->getRs();
-
-    if (!rs)
-    {
-        sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_GET_RS_FAILED));
-    }
-
-    try
-    {
-        Protocol::br_rs(ostringStream, *rs.data());
-    }
-    catch (const std::exception& e)
-    {
-        KLOG_WARNING("%s", e.what());
-        sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_GET_RS_FAILED));
-    }
-    return QString::fromStdString(ostringStream.str());
-}
-
 QString BRDBus::GetReinforcements()
 {
     std::ostringstream ostringStream;
