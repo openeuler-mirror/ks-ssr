@@ -1151,7 +1151,8 @@ void BRDBus::processReinforceProgress(const JobResult& jobResult)
                 state = BRReinforcementState::BR_REINFORCEMENT_STATE_REINFORCE_DONE;
             }
             reinforcementResult.state(int32_t(state));
-            reinforceResult.reinforcement().push_back(std::move(reinforcementResult));
+            reinforceResult.reinforcement().push_back(reinforcementResult);
+            cacheReinforceResult(reinforcementResult);
         }
         // 回退中，不关注进程信息
         if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
