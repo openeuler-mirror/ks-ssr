@@ -218,7 +218,13 @@ bool Command::ssrJobResult(const QString &xmlString)
         {
             KLOG_WARNING() << "error:" << python2Translate(reinforcement.error().get().c_str());
         }
-        m_brItemInfo.value(QString(reinforcement.name().c_str()))->state = state2Str(reinforcement.state());
+        QString name = reinforcement.name().c_str();
+        if (!m_repairResult.contains(name))
+        {
+            BrInfo *pBr = new BrInfo(QString(""), QString(""));
+            m_brItemInfo[name] = pBr;
+        }
+        m_brItemInfo.value(name)->state = state2Str(reinforcement.state());
         m_getBrJob = true;
     }
 
