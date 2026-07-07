@@ -178,7 +178,7 @@ void BRDBus::ImportCustomRS(const QString& encodedStandard)
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
 
     BRErrorCode errorCode = BRErrorCode::SUCCESS;
-    if (!this->m_configuration->setCustomRs(encodedStandard, errorCode))
+    if (!this->m_configuration->setCustomRS(encodedStandard, errorCode))
     {
         sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(errorCode));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
