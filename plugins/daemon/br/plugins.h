@@ -89,25 +89,27 @@ private:
     // 添加插件
     bool addPlugin(QSharedPointer<Plugin> plugin);
     // 加载与加固标准相关的加固项
+    void idleLoadReinforcements();
     void loadReinforcements();
-
-private slots:
-    void onRsChangedCb();
+    // 合并加固项
+    void joinReinforcement(Protocol::Reinforcement& destReinforcement,
+                           const Protocol::Reinforcement& sourceReinforcement);
 
 private:
     static Plugins* instance_;
 
-    Configuration* configuration_;
-
+    Configuration* m_configuration;
     // 线程池
-    ThreadPool thread_pool_;
+    ThreadPool m_threadPool;
 
     // 所有插件信息：<插件ID，插件>
-    QMap<QString, QSharedPointer<Plugin>> plugins_;
+    QMap<QString, QSharedPointer<Plugin>> m_plugins;
     // 正在使用的加固项信息：<加固项名称，加固信息>
-    QMap<QString, QSharedPointer<Reinforcement>> reinforcements_;
+    QMap<QString, QSharedPointer<Reinforcement>> m_reinforcements;
     // <加固项名称，插件>
-    QMap<QString, QWeakPointer<Plugin>> reinforcements_plugins_;
+    QMap<QString, QWeakPointer<Plugin>> m_reinforcementsPlugins;
+    //
+    QTimer* m_loadReinforcementTimer;
 };
 }  // namespace BR
 }  // namespace KS
