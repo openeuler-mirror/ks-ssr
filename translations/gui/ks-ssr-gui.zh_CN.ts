@@ -219,34 +219,6 @@
     </message>
 </context>
 <context>
-    <name>KS::Table</name>
-    <message>
-        <location filename="../../lib/report/table.cpp" line="31"/>
-        <source>bug id</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/report/table.cpp" line="32"/>
-        <source>level</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/report/table.cpp" line="34"/>
-        <source>score</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/report/table.cpp" line="35"/>
-        <source>release date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../lib/report/table.cpp" line="37"/>
-        <source>Technical support：Hunan KylinSec Technology Co. Ltd.,  Telephone：400-012-6606</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>KS::UserEntity</name>
     <message>
         <location filename="../../src/gui/accounts/user-entity.cpp" line="96"/>
