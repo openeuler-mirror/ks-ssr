@@ -242,7 +242,7 @@ int Command::displayWidth(const QString &str)
         }
         else
         {
-            width += 2; // Non-ASCII characters (e.g., Chinese)
+            width += 2;  // Non-ASCII characters (e.g., Chinese)
         }
     }
     return width;
