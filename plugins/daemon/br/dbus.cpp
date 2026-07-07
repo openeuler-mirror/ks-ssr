@@ -973,8 +973,49 @@ void BRDBus::init()
             });
 }
 
+void BRDBus::initScanResult(const QStringList& names)
+{
+    m_scanJobResult = Protocol::JobResult(0, 0, 0);
+    m_scanJobResult.reinforcement().clear();
+
+    for (auto& name : names)
+    {
+        m_scanJobResult.reinforcement().push_back(Protocol::ReinforcementResult(name.toStdString(), 0));
+    }
+}
+
+void BRDBus::initReinforceResult(const QStringList& names)
+{
+    m_reinforceJobResult = Protocol::JobResult(0, 0, 0);
+    m_reinforceJobResult.reinforcement().clear();
+
+    for (auto& name : names)
+    {
+        m_reinforceJobResult.reinforcement().push_back(Protocol::ReinforcementResult(name.toStdString(), 0));
+    }
+}
+
+void BRDBus::cacheScanResult(const Protocol::ReinforcementResult& reinforcementResult)
+{
+    for (auto& reinforcement : m_scanJobResult.reinforcement())
+    {
+        CONTINUE_IF_TRUE(reinforcement.name() != reinforcementResult.name());
+        reinforcement = reinforcementResult;
+    }
+}
+
+void BRDBus::cacheReinforceResult(const Protocol::ReinforcementResult& reinforcementResult)
+{
+    for (auto& reinforcement : m_reinforceJobResult.reinforcement())
+    {
+        CONTINUE_IF_TRUE(reinforcement.name() != reinforcementResult.name());
+        reinforcement = reinforcementResult;
+    }
+}
+
 void BRDBus::processScanProgress(const JobResult& jobResult)
 {
+    // 这里记录上一次信号到这一次信号的结果
     Protocol::JobResult scanResult(0, 0, 0);
     try
     {
