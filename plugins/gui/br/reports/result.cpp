@@ -201,7 +201,7 @@ bool Report::scanFilesAnalysis(QStringList &filelist, const InvalidData &invalid
     return true;
 }
 
-bool Result::scanVulnerability(QStringList &rpmlist, const InvalidData &invalidData)
+bool Report::scanVulnerability(QStringList &rpmlist, const InvalidData &invalidData)
 {
     RETURN_VAL_IF_TRUE(invalidData.vulnerabilityScanInvalidList.count() < 1, false)
     for (int i = 0; i < invalidData.vulnerabilityScanInvalidList.count(); ++i)
