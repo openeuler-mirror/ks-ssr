@@ -50,8 +50,6 @@ private:
     void init();
     QString state2Str(int state);
     QColor state2Color(int state);
-    QString getIPPath();
-    QString getMacPath();
     void createPainter(QPrinter &printer);
     void createReportHomePage(int status, const QRect &rect);
     void createReportContent(QPrinter &printer, const QList<Category *> &scanList, const InvalidData &invalidData);
