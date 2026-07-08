@@ -62,34 +62,34 @@ bool Reinforcement::matchRules(const QJsonObject &values)
 void Reinforcement::reload()
 {
     // 如果加固项未指定分类，则使用插件的分类名
-    if (!this->config_.category().present())
+    if (!this->m_config.category().present())
     {
-        auto plugin = Plugins::getInstance()->getPlugin(this->plugin_id_);
-        this->config_.category(plugin->getCategoryName());
+        auto plugin = Plugins::getInstance()->getPlugin(this->m_pluginID);
+        this->m_config.category(plugin->getCategoryName());
     }
     this->updateRules();
 }
 
 void Reinforcement::updateRules()
 {
-    this->rules_.clear();
+    this->m_rules.clear();
 
     //    this->config_.arg().
     //    Protocol::Reinforcement::
-    for (auto arg = this->config_.arg().begin(); arg != this->config_.arg().end(); ++arg)
+    for (auto arg = this->m_config.arg().begin(); arg != this->m_config.arg().end(); ++arg)
     {
         CONTINUE_IF_TRUE(!arg->rule().present());
 
         auto rule = Rule::create(arg->rule().get());
         if (rule)
         {
-            if (this->rules_.find(QString::fromStdString(arg->name())) != this->rules_.end())
+            if (this->m_rules.find(QString::fromStdString(arg->name())) != this->m_rules.end())
             {
                 KLOG_WARNING("The rule name %s is repeat.", arg->name().c_str());
             }
             else
             {
-                this->rules_[QString::fromStdString(arg->name())] = rule;
+                this->m_rules[QString::fromStdString(arg->name())] = rule;
             }
         }
         else
