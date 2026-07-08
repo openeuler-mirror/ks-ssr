@@ -157,7 +157,7 @@ void BRDBus::SetStandardType(const uint32_t& standardType)
                       tr("Failed to set standard type to %1.")
                           .arg(standardType == BR_STANDARD_TYPE_SYSTEM ? tr("system") : tr("custom")),
                       calledUniqueName);
-        sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_STANDARD_TYPE_INVALID));
         return;
     }
 
