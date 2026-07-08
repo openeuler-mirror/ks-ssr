@@ -54,7 +54,7 @@ bool PluginCPPLoader::deactivate()
     return true;
 }
 
-bool PluginCPPLoader::load_module()
+bool PluginCPPLoader::loadModule()
 {
     KLOG_DEBUG() << "load module " << this->m_soPath.toLatin1();
 
