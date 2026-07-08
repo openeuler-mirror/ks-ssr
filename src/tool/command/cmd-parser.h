@@ -66,6 +66,7 @@ private:
     int displayWidth(const QString &str);
     QString leftJustify(const QString &str, int width, QChar fillChar = ' ');
     void outputBrResult(QString fileName);
+    void outputRepairResult(QTextStream &output);
     void outputRepairResult(QString fileName);
     QString getCveLevel(int level);
     QString getCveState(int state);
