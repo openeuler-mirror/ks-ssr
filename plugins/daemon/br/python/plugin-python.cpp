@@ -288,6 +288,8 @@ void PluginPython::activate()
     } while (0);
 
     Py_XDECREF(pyReinforcements);
+
+    KLOG_INFO() << "Python plugin" << packageName << "is activated. The plugin contains reinforcements" << m_reinforcements.keys();
 }
 
 void PluginPython::deactivate()
