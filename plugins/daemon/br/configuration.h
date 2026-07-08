@@ -112,12 +112,12 @@ private:
     // 解密文件并返回字符串
     QString decryptFile(const QString& filename);
 
-    int32_t getInteger(const QString& group_name, const QString& key, int32_t default_value = 0);
-    QString getString(const QString& group_name, const QString& key);
+    int32_t getInteger(const QString& groupName, const QString& key, int32_t defaultValue = 0);
+    QString getString(const QString& groupName, const QString& key);
     // 通过group_name和key获取basename，然后返回${datadir}/basename
-    QString getDatadirFilename(const QString& group_name, const QString& key);
-    void setInteger(const QString& group_name, const QString& key, int32_t value);
-    void setString(const QString& group_name, const QString& key, const QString& value);
+    QString getDatadirFilename(const QString& groupName, const QString& key);
+    void setInteger(const QString& groupName, const QString& key, int32_t value);
+    void setString(const QString& groupName, const QString& key, const QString& value);
 
 Q_SIGNALS:
     // 加固标准发生变化
