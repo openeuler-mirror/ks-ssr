@@ -75,6 +75,7 @@ private:
     QString noop2Translate(const QString &souceTxt);
     QString categoriesLabel2Translate(const QString &souceTxt);
     QJsonObject str2jsonObject(const QString &str);
+    int getCVEsInfo();
 
 private slots:
     void scanProgress(const QString &progress);
