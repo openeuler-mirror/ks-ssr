@@ -128,17 +128,17 @@ bool PasswordComplextiy::get(std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 }
 
 // TODO:有关操作数的问题， 大于 小于 等于 大于等于 小于等于 情况如何确定？是否可以添加操作数作为参数。
-bool PasswordComplextiy::set(const std::string &args, BRErrorCode &error_code)
+bool PasswordComplextiy::set(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->password_complextiy_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
