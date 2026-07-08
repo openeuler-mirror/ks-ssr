@@ -37,10 +37,7 @@ public:
     void showTailBar();
     void addLine(const QString &name,
                  const QString &scanResult,
-                 const QString &reinforceResult,
-                 const QString &remarks,
                  const QColor &scanColor,
-                 const QColor &reinforceColor,
                  const QString &backgroundColor);
     void addScanLine(const QString &filesName,
                      const QString &scanType,
