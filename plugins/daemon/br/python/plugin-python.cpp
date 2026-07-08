@@ -248,8 +248,6 @@ void PluginPython::activate()
                 auto key = Utils::pyobjectAsString(pyKey);
                 auto value = Utils::pyobjectAsString(pyValue);
 
-                KLOG_DEBUG("key: %s, value: %s.", key.toLocal8Bit().data(), value.toLocal8Bit().data());
-
                 if (key == "name")
                 {
                     reinforcementName = value;
