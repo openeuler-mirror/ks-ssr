@@ -18,8 +18,8 @@ namespace KS
 {
 namespace BR
 {
-Plugin::Plugin(const QString& conf_path)
-    : m_confPath(conf_path)
+Plugin::Plugin(const QString& confPath)
+    : m_confPath(confPath)
 {
 }
 
