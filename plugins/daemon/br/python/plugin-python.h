@@ -67,26 +67,24 @@ public:
 
     virtual QSharedPointer<BRReinforcementInterface> getReinforcement(const QString &name) override
     {
-        return MapHelper::getValue(this->reinforcements_, name);
+        return MapHelper::getValue(this->m_reinforcements, name);
     };
 
 private:
-    void add_reinforcement(const QString &package_name,
-                           const QString &module_name,
-                           const QString &reinforcement_name,
-                           const QString &function_prefix);
+    void addReinforcement(const QString &packageName,
+                          const QString &moduleName,
+                          const QString &reinforcementName,
+                          const QString &functionPrefix);
 
-    PyObject *get_reinforcement_module(const QString &module_fullname)
+    PyObject *getReinforcementModule(const QString &moduleFullname)
     {
-        return MapHelper::getValue(this->reinforcements_modules_, module_fullname);
+        return MapHelper::getValue(this->m_reinforcementsModules, moduleFullname);
     };
 
 private:
-    PyObject *module_;
-
-    QMap<QString, QSharedPointer<BRReinforcementInterface>> reinforcements_;
-
-    QMap<QString, PyObject *> reinforcements_modules_;
+    PyObject *m_module;
+    QMap<QString, QSharedPointer<BRReinforcementInterface>> m_reinforcements;
+    QMap<QString, PyObject *> m_reinforcementsModules;
 };
 }  // namespace BR
 }  // namespace KS
