@@ -19,7 +19,7 @@ namespace KS
 namespace BR
 {
 Plugin::Plugin(const QString& conf_path)
-    : conf_path_(conf_path)
+    : m_confPath(conf_path)
 {
 }
 
