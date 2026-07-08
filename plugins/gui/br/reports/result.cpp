@@ -18,12 +18,12 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QFrame>
-#include <QNetworkInterface>
 #include <QPainter>
 #include <QSysInfo>
 #include <QVBoxLayout>
 #include <QtMath>
 #include "include/ssr-marcos.h"
+#include "lib/base/sys-info.h"
 #include "reinforcement-items/category.h"
 #include "reports/pdf.h"
 #include "reports/table.h"
