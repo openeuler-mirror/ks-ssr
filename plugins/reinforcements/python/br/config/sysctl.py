@@ -109,18 +109,12 @@ class KeyRebootSwitch:
     def open(self):
         command = '{0}'.format(COMPOSITE_KEY_REBOOT_ENABLE_CMD)
         br.utils.subprocess_not_output(command)
-        if not os.path.exists('/etc/systemd/system/ctrl-alt-del.target'):
-            br.utils.subprocess_not_output(
-                "ln -s /usr/lib/systemd/system/reboot.target /etc/systemd/system/ctrl-alt-del.target")
         rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
         br.utils.subprocess_not_output(rm_cmd)
         self.conf.set_value("1=[org.mate.SettingsDaemon.plugins.media-keys]\npower=\'\'", MODIFY_RULE_OPEN)
         self.reload_schemas()
 
     def close(self):
-        if os.path.exists('/etc/systemd/system/ctrl-alt-del.target'):
-            br.utils.subprocess_not_output(
-                "rm -rf /etc/systemd/system/ctrl-alt-del.target")
         command = '{0}'.format(COMPOSITE_KEY_REBOOT_DISABLE_CMD)
         br.utils.subprocess_not_output(command)
         rm_cmd = 'rm -rf {0}'.format(SCHEMAS_CONF_FILEPATH)
