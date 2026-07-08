@@ -98,10 +98,17 @@
         </method>
 
         <method name="SetReinforcement">
-            <arg type="s" name="reinforcement_xml" direction="in">
-                <summary>The reinforcement info.</summary>
+            <arg type="s" name="reinforcement" direction="in">
+                <summary>The reinforcement info refer to name br_reinforcement in br-protocol.xsd.</summary>
             </arg>
             <description>Set the custom reinforcement.</description>
+        </method>
+
+        <method name="SetReinforcements">
+            <arg type="s" name="reinforcements" direction="in">
+                <summary>The reinforcements info refer to name br_reinforcements in br-protocol.xsd.</summary>
+            </arg>
+            <description>Set some custom reinforcement.</description>
         </method>
 
         <method name="ResetReinforcement">
