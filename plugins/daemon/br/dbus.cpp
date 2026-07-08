@@ -350,7 +350,7 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (resourceMonitor >= BRResourceMonitor::BR_RESOURCE_MONITOR_OTHER)
     {
-        sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_RESOURCE_MONITOR_INVALID));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to set resource monitor switch."),
                       calledUniqueName);
