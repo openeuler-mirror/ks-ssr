@@ -83,13 +83,11 @@ private:
     bool addCategory(QSharedPointer<Category> category);
 
 private:
-    static Categories* instance_;
-
+    static Categories* m_instance;
     // 配置文件路径
-    QString conf_path_;
-
+    QString m_confPath;
     // 所有分类信息：<分类名，分类>
-    QMap<QString, QSharedPointer<Category>> categories_;
+    QMap<QString, QSharedPointer<Category>> m_categories;
 };
 }  // namespace BR
 }  // namespace KS
