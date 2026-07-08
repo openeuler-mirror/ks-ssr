@@ -356,12 +356,12 @@ BRResourceMonitor Configuration::getResourceMonitorStatus()
     return BRResourceMonitor(retval);
 }
 
-bool Configuration::setResourceMonitorStatus(BRResourceMonitor resource_monitor)
+bool Configuration::setResourceMonitorStatus(BRResourceMonitor resourceMonitor)
 {
-    RETURN_VAL_IF_FALSE(resource_monitor < BRResourceMonitor::BR_RESOURCE_MONITOR_OTHER, false);
-    RETURN_VAL_IF_TRUE(resource_monitor == this->getResourceMonitorStatus(), true);
+    RETURN_VAL_IF_FALSE(resourceMonitor < BRResourceMonitor::BR_RESOURCE_MONITOR_OTHER, false);
+    RETURN_VAL_IF_TRUE(resourceMonitor == this->getResourceMonitorStatus(), true);
 
-    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_RESOURCE_MONITOR, int32_t(resource_monitor));
+    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_RESOURCE_MONITOR, int32_t(resourceMonitor));
     return true;
 }
 
