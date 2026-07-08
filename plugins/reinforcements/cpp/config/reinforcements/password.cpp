@@ -152,14 +152,14 @@ bool PasswordComplextiy::set(const std::string &args, SSRErrorCode &error_code)
         }
         // if(!values[PASSWORD_COMPLEXTIY_CONF_KEY_PWQUALITY].isArray())
         // {
-        //     error_code = BRErrorCode::ERROR_FAILED;
+        //     error_code = SSRErrorCode::ERROR_FAILED;
         //     return false;
         // }
     }
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
