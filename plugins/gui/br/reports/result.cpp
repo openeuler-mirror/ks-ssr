@@ -391,7 +391,7 @@ bool Report::createVulnerabilityResults(QPrinter &printer, const InvalidData &in
     m_painter->drawPixmap(0, 0, page);
     printer.newPage();
     delete m_table;
-    m_table = new Table(this, false, is_vulnerability);
+    m_table = new PDFDetails(this, false, is_vulnerability);
     // 解析文件名与扫描类型
     QStringList rpmNameList;
     QStringList rpmResultList;
