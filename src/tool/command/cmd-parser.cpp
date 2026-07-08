@@ -44,6 +44,32 @@ Command::Command(QObject *parent)
                                                           SSR_VULNERABILITY_DBUS_OBJECT_PATH,
                                                           QDBusConnection::systemBus(),
                                                           this);
+    QDBusConnection connection = QDBusConnection::systemBus();
+    QDBusConnectionInterface *interface = connection.interface();
+    if (interface)
+    {
+        QDBusReply<QString> reply = interface->serviceOwner(SSR_DBUS_NAME);
+        if (reply.isValid())
+        {
+            KLOG_INFO() << "Service UniqueName:" << reply.value();
+            m_dbusServerWatcher->setConnection(connection);
+            m_dbusServerWatcher->setWatchMode(QDBusServiceWatcher::WatchForOwnerChange);
+            m_dbusServerWatcher->addWatchedService(reply.value());
+            connect(m_dbusServerWatcher, &QDBusServiceWatcher::serviceUnregistered, [this](const QString &service)
+                    {
+                        std::cout << tr("The background daemon service exits. The unique name of the dbus service: ").toStdString() << service.toStdString() << std::endl;
+                        exit(-1);
+                    });
+        }
+        else
+        {
+            KLOG_ERROR() << "Failed to get the UniqueName for service:" << SSR_DBUS_NAME;
+        }
+    }
+    else
+    {
+        KLOG_ERROR() << "Failed to get the DBus connection interface.";
+    }
 }
 
 Command::~Command()
