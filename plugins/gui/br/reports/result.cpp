@@ -170,7 +170,7 @@ QColor Report::state2Color(int state)
     return retColor;
 }
 
-bool Result::scanFilesAnalysis(QStringList &filelist, const InvalidData &invalidData)
+bool Report::scanFilesAnalysis(QStringList &filelist, const InvalidData &invalidData)
 {
     RETURN_VAL_IF_TRUE((invalidData.NouserFilesList.count() < 1 && invalidData.SuidSgidFilesList.count() < 1 && invalidData.AuthorityFilesList.count() < 1), false)
 
