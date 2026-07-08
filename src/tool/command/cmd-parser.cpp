@@ -333,51 +333,75 @@ void Command::outputBrResult(QString fileName)
     exit(0);
 }
 
-void Command::outputRepairResult(QString fileName)
+void Command::outputRepairResult(QTextStream &output)
 {
-    if (m_repairResult.size() == 0)
-        return;
-
     auto cveList = m_repairResult.values();
     std::sort(cveList.begin(), cveList.end(), [](const KS::Command::VulnerabilityInfo *a, const KS::Command::VulnerabilityInfo *b)
               {
                   return (a->score).toDouble() > (b->score).toDouble();
               });
 
-    if (!m_fileOutput)
-    {
-        for (const auto &cve : cveList)
-        {
-            QString id = cve->id;
-            QString threat_severity = cve->threat_severity;
-            QString score = cve->score;
-            QString state = m_onlyScan ? "" : cve->state;
-            std::string color = state.isEmpty() || state == QString(tr("succeed")) ? "\033[0m" : "\033[31m";
-            std::cout << leftJustify(id, 30).toStdString() << leftJustify(threat_severity, 20).toStdString() << leftJustify(score, 20).toStdString() << color << leftJustify(state, 20).toStdString() << "\033[0m" << std::endl;
-        }
-
-        exit(0);
-    }
-
-    QFile f(fileName);
-    if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        std::cout << tr("open file failed").toStdString() << std::endl;
-        exit(-1);
-    }
-    QTextStream txtOutput(&f);
-    txtOutput.setCodec("UTF-8");  // 确保使用 UTF-8 编码
+    output.setCodec("UTF-8");  // 确保使用 UTF-8 编码
+    QMap<QString, int> levelMap;
+    QMap<QString, int> stateMap;
+    int all = 0;
     for (const auto &cve : cveList)
     {
         QString threat_severity = cve->threat_severity;
         QString score = cve->score;
-        QString state = cve->state;
-        txtOutput << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << leftJustify(state, 20) << endl;
+        QString state = m_onlyScan ? "" : cve->state;
+        all++;
+        levelMap[threat_severity]++;
+        stateMap[state]++;
+        if (m_fileOutput)
+        {
+            output << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << leftJustify(state, 20) << endl;
+        }
+        else
+        {
+            QString color = state.isEmpty() || state == QString(tr("succeed")) ? "\033[0m" : "\033[31m";
+            output << leftJustify(cve->id, 30) << leftJustify(threat_severity, 20) << leftJustify(score, 20) << color << leftJustify(state, 20) << "\033[0m" << endl;
+        }
+    }
+    output << tr("Total number of vulnerabilities: ") << QString::number(all) << tr(" ");
+    for (const auto &key : levelMap.keys())
+    {
+        output << key << tr(": ") << QString::number(levelMap.value(key)) << tr(" ");
+    }
+    if (!m_onlyScan)
+    {
+        for (const auto &key : stateMap.keys())
+        {
+            output << key << tr(": ") << QString::number(stateMap.value(key)) << tr(" ");
+        }
     }
 
-    f.close();
-    m_repairResult.clear();
-    std::cout << tr("Results output to file ").toStdString() << fileName.toStdString() << std::endl;
+    output << endl;
+}
+
+void Command::outputRepairResult(QString fileName)
+{
+    if (m_repairResult.size() == 0)
+        return;
+
+    if (m_fileOutput)
+    {
+        QFile f(fileName);
+        if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            std::cout << tr("open file failed").toStdString() << std::endl;
+            exit(-1);
+        }
+        QTextStream txtOutput(&f);
+        outputRepairResult(txtOutput);
+        f.close();
+        std::cout << tr("Results output to file ").toStdString() << fileName.toStdString() << std::endl;
+    }
+    else
+    {
+        QTextStream txtOutput(stdout);
+        outputRepairResult(txtOutput);
+    }
 }
 
 QString Command::getCveLevel(int level)
