@@ -27,8 +27,8 @@ public:
     LogrotateRotate();
     virtual ~LogrotateRotate(){};
 
-    virtual bool get(std::string &args, BRErrorCode &error_code);
-    virtual bool set(const std::string &args, BRErrorCode &error_code);
+    virtual bool get(std::string &args, SSRErrorCode &error_code);
+    virtual bool set(const std::string &args, SSRErrorCode &error_code);
 
 private:
     std::shared_ptr<ConfigPlain> logrotate_config_;
