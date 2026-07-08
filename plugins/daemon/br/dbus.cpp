@@ -857,7 +857,7 @@ void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotSt
     // 已经在加固则返回错误
     if (this->m_reinforceJob && this->m_reinforceJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
     {
-        auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING));
+        auto replyMessage = message.createErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING));
         QDBusConnection::systemBus().send(replyMessage);
         this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
