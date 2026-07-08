@@ -212,15 +212,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Internel error.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The software is not activated.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> (error code: 0x%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
