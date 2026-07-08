@@ -40,7 +40,7 @@ public:
 class PluginCPPLoader : public PluginLoader
 {
 public:
-    PluginCPPLoader(const QString &so_path);
+    PluginCPPLoader(const QString &soPath);
     virtual ~PluginCPPLoader(){};
 
     virtual bool load() override;
