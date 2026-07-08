@@ -118,10 +118,10 @@ SysctlSourceRoute::SysctlSourceRoute()
 {
 }
 
-bool SysctlSourceRoute::get(std::string &args, BRErrorCode &error_code)
+bool SysctlSourceRoute::get(std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN);
-    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), BRErrorCode::ERROR_FAILED);
+    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
 
     try
     {
