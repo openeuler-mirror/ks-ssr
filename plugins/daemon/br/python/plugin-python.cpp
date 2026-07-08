@@ -125,7 +125,7 @@ bool ReinforcementPython::set(const QString &args, QString &error)
 #else
     char method[] = "set";
     char format[] = "(s)";
-    auto py_retval = PyObject_CallMethod(this->class_instance_, method, format, args_toLocal8Bit.data());
+    auto py_retval = PyObject_CallMethod(this->m_classInstance, method, format, args_toLocal8Bit.data());
 #endif
 
     bool retval = true;
