@@ -137,7 +137,7 @@ int Command::reinforce(const QStringList &name)
     reply.waitForFinished();
     if (reply.isError())
     {
-        KLOG_WARNING() << "error:" << reply.error().message();
+        KLOG_ERROR() << "error:" << reply.error().message();
         std::cout << tr("Reinforcement Failure").toStdString() << std::endl;
         exit(-1);
     }
