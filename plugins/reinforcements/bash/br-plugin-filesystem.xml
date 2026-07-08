@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<br_plugin>
+    <name>filesystem</name>
+    <category>filesystem</category>
+    <label>QT_TRANSLATE_NOOP("xml", "filesystem settings")</label>
+    <language_type>bash</language_type>
+    <available>true</available>
+    <reinforcement>
+        <name>c01-r001-no-owner-file</name>
+        <label>QT_TRANSLATE_NOOP("xml", "No owner file")</label>
+        <description>QT_TRANSLATE_NOOP("xml", "Check if there are files or directories in the system that do not belong to the user or group")</description>
+    </reinforcement>
+</br_plugin>
