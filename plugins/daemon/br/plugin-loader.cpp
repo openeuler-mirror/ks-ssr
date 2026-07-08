@@ -116,10 +116,10 @@ bool PluginPythonLoader::load()
 
 bool PluginPythonLoader::activate()
 {
-    KLOG_DEBUG("is activate: %d", this->is_activate_);
+    KLOG_DEBUG("is activate: %d", this->m_isActivate);
     // 不能重复激活
-    RETURN_VAL_IF_TRUE(this->is_activate_, true);
-    this->interface_->activate();
+    RETURN_VAL_IF_TRUE(this->m_isActivate, true);
+    this->m_interface->activate();
     return true;
 }
 
