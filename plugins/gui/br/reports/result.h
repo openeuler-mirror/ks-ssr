@@ -22,18 +22,18 @@ namespace KS
 namespace BR
 {
 class Category;
-class Table;
-class PDF;
+class PDFDetails;
+class PDFSummary;
 
-class Result : public QWidget
+class Report : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Result(QWidget *parent = nullptr);
-    virtual ~Result(){};
+    explicit Report(QWidget *parent = nullptr);
+    virtual ~Report(){};
 
-    static QSharedPointer<Result> getDefault();
+    static QSharedPointer<Report> getDefault();
 
     bool generateReports(const QList<Category *> &scanList, int status, const InvalidData &invalidData);
 
