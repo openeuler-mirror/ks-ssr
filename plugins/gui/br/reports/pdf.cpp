@@ -12,23 +12,23 @@
  * Author:     chendingjian <chendingjian@kylinsec.com.cn>
  */
 
-#include "pdf.h"
+#include "pdf-summary.h"
 #include <QDateTime>
 #include "round-progressbar.h"
-#include "ui_pdf.h"
+#include "ui_pdf-summary.h"
 
 namespace KS
 {
 namespace BR
 {
-PDF::PDF(const QString &systemName,
-         const QString &IP,
-         const QString &MAC,
-         const QString &kernel,
-         const QString &activeStatus,
-         QWidget *parent)
+PDFSummary::PDFSummary(const QString &systemName,
+                       const QString &IP,
+                       const QString &MAC,
+                       const QString &kernel,
+                       const QString &activeStatus,
+                       QWidget *parent)
     : QWidget(parent),
-      m_ui(new Ui::PDF)
+      m_ui(new Ui::PDFSummary)
 {
     m_ui->setupUi(this);
 
