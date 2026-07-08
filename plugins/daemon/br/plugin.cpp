@@ -79,13 +79,13 @@ bool Plugin::loadPluginModule()
 {
     KLOG_DEBUG("Plugin::loadPluginModule");
 
-    auto dirname = QFileInfo(this->m_confPath).fileName();
+    auto dirname = QFileInfo(this->m_confPath).absolutePath();
     switch (this->m_pluginConfig->language_type())
     {
     case Protocol::LanguageType::Value::cpp:
     {
-        auto so_path = QDir::cleanPath(dirname + '/' + "lib" + QString::fromStdString(this->m_pluginConfig->name()) + ".so");
-        this->m_loader = std::make_shared<PluginCPPLoader>(so_path);
+        auto soPath = QDir::cleanPath(dirname + '/' + "lib" + QString::fromStdString(this->m_pluginConfig->name()) + ".so");
+        this->m_loader = std::make_shared<PluginCPPLoader>(soPath);
         return this->m_loader->load();
     }
     case Protocol::LanguageType::Value::python:
