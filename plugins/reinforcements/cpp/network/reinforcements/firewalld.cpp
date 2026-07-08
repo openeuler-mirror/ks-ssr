@@ -50,13 +50,13 @@ bool FirewalldSwitch::get(std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s.", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
 }
 
-bool FirewalldSwitch::set(const std::string &args, BRErrorCode &error_code)
+bool FirewalldSwitch::set(const std::string &args, SSRErrorCode &error_code)
 {
     try
     {
