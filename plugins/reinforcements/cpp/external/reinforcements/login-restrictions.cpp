@@ -51,23 +51,23 @@ bool LoginRestrictions::get(const std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 }
 
-bool LoginRestrictions::set(const std::string &args, BRErrorCode &error_code)
+bool LoginRestrictions::set(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->login_restrictions_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
     try
     {
         Json::Value values = StrUtils::str2json(args);
-        RETURN_ERROR_IF_FALSE(values[LOGIN_RESTRICTIONS_CONF_KEY_ROOTLOGIN].isString(), BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_FALSE(values[LOGIN_RESTRICTIONS_CONF_KEY_ROOTLOGIN].isString(), SSRErrorCode::ERROR_FAILED);
 
         auto root_login = fmt::format("{0}", values[LOGIN_RESTRICTIONS_CONF_KEY_ROOTLOGIN].asString());
         this->login_restrictions_config_->set_value(LOGIN_RESTRICTIONS_CONF_KEY_ROOTLOGIN, root_login);
