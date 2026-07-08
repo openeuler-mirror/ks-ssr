@@ -405,7 +405,7 @@ void Command::outputRepairResult(QTextStream &output)
         }
     }
 
-    output << endl;
+    output << "\n";
 }
 
 void Command::outputRepairResult(QString fileName)
