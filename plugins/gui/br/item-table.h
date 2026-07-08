@@ -66,6 +66,9 @@ public:
     // 设置全选
     void setAllChecked(Qt::CheckState isChecked = Qt::Checked);
 
+    // 策略
+    void setStrategy(int type);
+
 private:
     void initHeader();
     void appendRow(const QList<ReinforcementItem *> &list);
