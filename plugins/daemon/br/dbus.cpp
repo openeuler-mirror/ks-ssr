@@ -1289,6 +1289,9 @@ void BRDBus::exportReport()
         }
     }
 
+    tabelData.append(tabelDataInconformity);
+    tabelData.append(tabelDataConformity);
+
     QList<QPair<QString, QString>> homeExtraData;
     auto iter = categoryMap.begin();
     while (iter != categoryMap.end())
