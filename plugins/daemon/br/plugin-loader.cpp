@@ -23,9 +23,9 @@ namespace KS
 {
 namespace BR
 {
-PluginCPPLoader::PluginCPPLoader(const QString &so_path)
-    : so_path_(so_path),
-      is_activate_(false)
+PluginCPPLoader::PluginCPPLoader(const QString &soPath)
+    : m_soPath(soPath),
+      m_isActivate(false)
 {
 }
 
