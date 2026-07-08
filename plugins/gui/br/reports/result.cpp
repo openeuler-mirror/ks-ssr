@@ -458,7 +458,7 @@ void Report::calculateRatio(const QList<Category *> &categories)
 }
 
 // picture
-bool Result::generateReports(const QList<Category *> &scanList, int status, const InvalidData &invalidData)
+bool Report::generateReports(const QList<Category *> &scanList, int status, const InvalidData &invalidData)
 {
     calculateRatio(scanList);
 
