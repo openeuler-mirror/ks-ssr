@@ -56,19 +56,19 @@ private:
 
 private:
     // so文件路径
-    QString so_path_;
+    QString m_soPath;
     // 是否已经激活
-    bool is_activate_;
+    bool m_isActivate;
 
     // QSharedPointer<Glib::Module> module_;
-    QSharedPointer<QLibrary> module_;
-    QSharedPointer<BRPluginInterface> interface_;
+    QSharedPointer<QLibrary> m_module;
+    QSharedPointer<BRPluginInterface> m_interface;
 };
 
 class PluginPythonLoader : public PluginLoader
 {
 public:
-    PluginPythonLoader(const QString &package_name);
+    PluginPythonLoader(const QString &packageName);
     virtual ~PluginPythonLoader(){};
 
 public:
