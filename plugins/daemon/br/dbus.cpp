@@ -492,6 +492,30 @@ void BRDBus::SetReinforcement(const QString& reinforcement)
     }
 }
 
+void BRDBus::SetReinforcements(const QString& reinforcements)
+{
+    try
+    {
+        std::istringstream istringStream(reinforcements.toStdString());
+        auto brReinforcements = Protocol::br_reinforcements(istringStream, xml_schema::Flags::dont_validate);
+        for (const auto& brReinforcement : brReinforcements->reinforcement())
+        {
+            if (!this->m_configuration->setCustomRA(brReinforcement))
+            {
+                sendErrorReply(QDBusError::InternalError,
+                               BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
+                break;
+            }
+        }
+    }
+    catch (const std::exception& e)
+    {
+        KLOG_WARNING("%s", e.what());
+        sendErrorReply(QDBusError::InternalError,
+                       BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
+    }
+}
+
 void BRDBus::ResetReinforcement(const QString& name)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
