@@ -124,7 +124,7 @@ QSharedPointer<Protocol::RA> Configuration::getCustomRA()
     return this->readRaFromFile();
 }
 
-bool Configuration::setCustomRA(const Protocol::Reinforcement& rs_reinforcement)
+bool Configuration::setCustomRA(const Protocol::Reinforcement& reinforcement)
 {
     if (this->getStrategyType() == BRStrategyType::BR_STRATEGY_TYPE_SYSTEM)
     {
