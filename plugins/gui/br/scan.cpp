@@ -24,7 +24,7 @@
 #include "lib/base/str-utils.h"
 #include "lib/widgets/ssr-marcos-ui.h"
 #include "reinforcement-items/reinforcement-args-dialog.h"
-#include "reports/result.h"
+#include "reports/report.h"
 #include "ui_scan.h"
 #include "utils.h"
 
