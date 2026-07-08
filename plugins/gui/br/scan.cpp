@@ -527,15 +527,11 @@ void Scan::generateReport()
                 }
             });
     // 监听进程完成后 导出报表
-    //    disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
             {
-                // disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
-                // connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
                 disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-                RETURN_IF_TRUE(!Result::getDefault()->generateReports(m_categories, m_afterReinForcementCategories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
+                RETURN_IF_TRUE(!Result::getDefault()->generateReports(categories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
                 POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
-                m_afterReinForcementCategories.clear();
                 m_dbusProxy->GenerateReport(true);
             });
     // 生成报表前扫描
