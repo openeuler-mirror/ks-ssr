@@ -458,32 +458,32 @@
         <translation>文件具有suid权限</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="342"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="350"/>
         <source>Unactivated</source>
         <translation>未激活</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="342"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="350"/>
         <source>Activated</source>
         <translation>已激活</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="471"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="479"/>
         <source>Vulnerability exists in version %1</source>
         <translation>版本号%1存在漏洞</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="534"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="542"/>
         <source>KylinSecHostReinforcementReport_%1_%2.pdf</source>
         <translation>麒麟信安主机安全加固报告_%1_%2.pdf</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="537"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="545"/>
         <source>export report</source>
         <translation>导出报告</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/result.cpp" line="537"/>
+        <location filename="../../plugins/gui/br/reports/result.cpp" line="545"/>
         <source>PDF(*.pdf)</source>
         <translation></translation>
     </message>
