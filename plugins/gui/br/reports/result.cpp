@@ -242,7 +242,7 @@ void Report::addCategoryResults(QPrinter &printer, const QList<Report::CategoryC
     // }
 }
 
-void Result::addLineToTable(QPrinter &printer, const Result::CategoryContent &categoryContent, bool &showTailFlag, int &count)
+void Report::addLineToTable(QPrinter &printer, const Report::CategoryContent &categoryContent, bool &showTailFlag, int &count)
 {
     count++;
     if (count >= TABLE_MAX_LINE)
