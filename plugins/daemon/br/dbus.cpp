@@ -201,7 +201,7 @@ void BRDBus::SetStrategyType(const uint32_t& strategyType)
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
     if (strategyType >= BRStrategyType::BR_STRATEGY_TYPE_LAST)
     {
-        sendErrorReply(QDBusError::InvalidArgs, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID));
+        sendErrorReply(QDBusError::InvalidArgs, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_STRATEGY_TYPE_INVALID));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to set strategy type."),
                       calledUniqueName);
