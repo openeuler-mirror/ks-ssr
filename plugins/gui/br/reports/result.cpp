@@ -422,7 +422,7 @@ bool Report::createVulnerabilityResults(QPrinter &printer, const InvalidData &in
             printer.newPage();
 
             delete m_table;
-            m_table = new Table(this, false, is_vulnerability);
+            m_table = new PDFDetails(this, false, is_vulnerability);
         }
         showTailFlag = (i >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
         m_table->addScanLine(rpmNameList.at(count), rpmResultList.at(count), "-", i % 2 == 1 ? "#f2f2f2" : "#ffffff");
