@@ -216,6 +216,7 @@ int Command::exportReport(QString which, QString path)
     connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ExportReportFinished, this, &Command::exportReportFinished, Qt::QueuedConnection);
 
     "br" == which ? m_dbusBRProxy->ExportReport(path) : m_dbusVulnerabilityProxy->ExportReport(path);
+    return 0;
 }
 
 QStringList Command::getBrInfo(const QStringList &category)
