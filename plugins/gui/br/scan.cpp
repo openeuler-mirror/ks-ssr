@@ -69,9 +69,7 @@ void Scan::usingCustomStrategy()
     disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     connect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
     // 修改UI界面参数以及复选框状态
-    m_ui->m_itemTable->setAllCheckBoxEditStatus(true);
-    m_ui->m_itemTable->hideCheckBox(false);
-    m_ui->m_itemTable->setAllChecked(Qt::Unchecked);
+    m_ui->m_itemTable->setStrategy(BR_STRATEGY_TYPE_CUSTOM);
     // 更新加固项和相关参数
     Utils::getDefault()->ssrResetReinforcements(m_dbusProxy->GetReinforcements().value(), m_categories);
 
