@@ -527,7 +527,7 @@ void Scan::generateReport()
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
             {
                 disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-                RETURN_IF_TRUE(!Result::getDefault()->generateReports(categories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
+                RETURN_IF_TRUE(!Report::getDefault()->generateReports(categories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
                 POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
                 m_dbusProxy->GenerateReport(true);
             });
