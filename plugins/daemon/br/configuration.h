@@ -83,16 +83,16 @@ public:
     // 获取加固标准
     QSharedPointer<Protocol::RS> getRS();
     // 设置自定义加固标准
-    bool setCustomRS(const QString& encrypted_rs, SSRErrorCode& error_code);
+    bool setCustomRS(const QString& encryptedRS, SSRErrorCode& errorCode);
     // 加载历史加固参数文件
     std::shared_ptr<Protocol::ReinforcementHistory> readRhFromFile(const QString path);
     // 写历史加固参数文件
     bool writeRhToFile(std::shared_ptr<Protocol::ReinforcementHistory> rh, const QString path);
     // 设置历史加固参数
-    bool setCustomRh(const Protocol::Reinforcement& rs_reinforcement, const QString path);
+    bool setCustomRh(const Protocol::Reinforcement& rsReinforcement, const QString path);
 
     BRResourceMonitor getResourceMonitorStatus();
-    bool setResourceMonitorStatus(BRResourceMonitor resource_monitor);
+    bool setResourceMonitorStatus(BRResourceMonitor resourceMonitor);
 
 private:
     //
