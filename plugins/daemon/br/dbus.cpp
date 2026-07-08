@@ -741,7 +741,7 @@ QString BRDBus::GetReinforceResult()
 void BRDBus::Cancel(const qlonglong& jobID)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
-    BRErrorCode errorCode = BRErrorCode::SUCCESS;
+    SSRErrorCode errorCode = SSRErrorCode::SUCCESS;
 
     if (this->m_scanJob &&
         jobID == this->m_scanJob->getId() &&
