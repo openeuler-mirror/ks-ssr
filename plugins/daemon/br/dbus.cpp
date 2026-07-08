@@ -597,7 +597,7 @@ void BRDBus::Scan(const QStringList& names)
     {
         KLOG_WARNING("%s", e.what());
         sendErrorReply(QDBusError::InternalError,
-                       BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID));
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SCAN_RANGE_INVALID));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to scan."),
                       m_scanUniqueName);
