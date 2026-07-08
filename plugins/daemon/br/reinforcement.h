@@ -44,7 +44,7 @@ public:
     void setRs(const Protocol::Reinforcement &rs);
     const Protocol::Reinforcement &getRs()
     {
-        return this->config_;
+        return this->m_config;
     };
 
     // 判断与规则是否匹配
