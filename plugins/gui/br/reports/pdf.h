@@ -25,18 +25,18 @@ namespace BR
 {
 class RoundProgressBar;
 
-class PDF : public QWidget
+class PDFSummary : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit PDF(const QString &systemName,
+    explicit PDFSummary(const QString &systemName,
                  const QString &IP,
                  const QString &MAC,
                  const QString &kernel,
                  const QString &activeStatus,
                  QWidget *parent = 0);
-    virtual ~PDF();
+    virtual ~PDFSummary();
 
     void setPieChartText(const QString name[],
                          int total[],
