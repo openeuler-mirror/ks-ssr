@@ -354,7 +354,7 @@ void Command::outputBrResult(QString fileName)
         QString state = m_brItemInfo.value(key)->state;
         if (state.isEmpty())
             continue;
-        txtOutput << leftJustify(key, 50) << leftJustify(label, 50) << leftJustify(state, 20) << endl;
+        txtOutput << leftJustify(key, 50) << leftJustify(label, 50) << leftJustify(state, 20) << "\n";
     }
     f.close();
     std::cout << tr("Results output to file ").toStdString() << fileName.toStdString() << std::endl;
