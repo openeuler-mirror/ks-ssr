@@ -186,9 +186,9 @@ bool ReinforcementPython::checkCallResult(PyObject *pyRetval, const QString &fun
     is_string = PyString_Check(py_arg2);
 #endif
 
-    if (!PyBool_Check(py_arg1) || (!PyUnicode_Check(py_arg2) && !is_string))
+    if (!PyBool_Check(pyArg1) || (!PyUnicode_Check(pyArg2) && !is_string))
     {
-        error = QString(QObject::tr("The type of tuple item returned by %1 is invalid.")).arg(function_name);
+        error = QString(QObject::tr("The type of tuple item returned by %1 is invalid.")).arg(functionName);
         // error = fmt::format(_("The type of tuple item returned by {0} is invalid."), function_name);
         return false;
     }
