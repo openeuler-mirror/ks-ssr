@@ -45,7 +45,7 @@ public:
                      const QString &backgroundColor);
 
 private:
-    Ui::Table *m_ui;
+    Ui::PDFDetails *m_ui;
 
     int m_rowHeight;
 };
