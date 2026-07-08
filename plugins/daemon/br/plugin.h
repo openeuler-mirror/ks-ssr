@@ -36,22 +36,22 @@ public:
     // 获取插件ID，由插件名称+语言拼接
     QString getId()
     {
-        return QString::fromStdString(this->plugin_config_->name() + "_" + this->plugin_config_->language_type());
+        return QString::fromStdString(this->m_pluginConfig->name() + "_" + this->m_pluginConfig->language_type());
     };
     // 获取插件名称
     std::string getName()
     {
-        return this->plugin_config_->name();
+        return this->m_pluginConfig->name();
     };
     // 插件所属分类
     std::string getCategoryName()
     {
-        return this->plugin_config_->category();
+        return this->m_pluginConfig->category();
     };
     // 获取插件加载器
     std::shared_ptr<PluginLoader> getLoader()
     {
-        return this->loader_;
+        return this->m_loader;
     };
     // 获取加固项名称列表
     std::vector<std::string> getReinforcementNames();
