@@ -50,26 +50,26 @@ public:
 
     static Categories* getInstance()
     {
-        return instance_;
+        return m_instance;
     };
 
     static void globalInit();
 
     static void globalDeinit()
     {
-        delete instance_;
+        delete m_instance;
     };
 
     // 获取分类，如果不存在则返回空指针
     QSharedPointer<Category> getCategory(const QString& name)
     {
-        return MapHelper::getValue(this->categories_, name);
+        return MapHelper::getValue(this->m_categories, name);
     };
 
     // 获取所有分类
     CategoryVec getCategories()
     {
-        return MapHelper::getValues(this->categories_);
+        return MapHelper::getValues(this->m_categories);
     };
 
 private:
