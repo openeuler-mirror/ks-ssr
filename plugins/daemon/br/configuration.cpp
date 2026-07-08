@@ -461,19 +461,19 @@ bool Configuration::writeRhToFile(std::shared_ptr<Protocol::ReinforcementHistory
     return true;
 }
 
-bool Configuration::setCustomRh(const Reinforcement& rs_reinforcement, const QString path)
+bool Configuration::setCustomRh(const Reinforcement& rsReinforcement, const QString path)
 {
     auto rh = this->readRhFromFile(path);
 
-    bool match_reinforcement = false;
+    bool matchReinforcement = false;
 
     auto& reinforcements = rh->reinforcement();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        CONTINUE_IF_TRUE(iter->name() != rs_reinforcement.name());
+        CONTINUE_IF_TRUE(iter->name() != rsReinforcement.name());
 
-        match_reinforcement = true;
-        auto& new_args = rs_reinforcement.arg();
+        matchReinforcement = true;
+        auto& new_args = rsReinforcement.arg();
         for (auto new_arg_iter = new_args.begin(); new_arg_iter != new_args.end(); ++new_arg_iter)
         {
             auto& old_args = iter->arg();
