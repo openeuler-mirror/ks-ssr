@@ -121,7 +121,7 @@ void PDFDetails::addLine(const QString &name,
     update();
 }
 
-void Table::addScanLine(const QString &filesName,
+void PDFDetails::addScanLine(const QString &filesName,
                         const QString &scanType,
                         const QString &remarks,
                         const QString &backgroundColor)
