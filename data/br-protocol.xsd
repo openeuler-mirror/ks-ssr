@@ -24,6 +24,7 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="cpp" />
             <xsd:enumeration value="python" />
+            <xsd:enumeration value="bash" />
         </xsd:restriction>
     </xsd:simpleType>
 
