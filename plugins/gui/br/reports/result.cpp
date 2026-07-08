@@ -70,7 +70,7 @@ void Report::init()
     }
 }
 
-QString Result::state2Str(int state)
+QString Report::state2Str(int state)
 {
     QString retStr;
     switch (state)
