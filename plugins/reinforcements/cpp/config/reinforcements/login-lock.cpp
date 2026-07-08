@@ -47,17 +47,17 @@ bool LoginLock::get(const std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 }
 
 // XXX：有关操作数的问题，需要对有操作数的内容进行处理。
-bool LoginLock::set(const std::string &args, BRErrorCode &error_code)
+bool LoginLock::set(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->password_complextiy_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
