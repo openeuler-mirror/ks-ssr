@@ -12,22 +12,22 @@
  * Author:     chendingjian <chendingjian@kylinsec.com.cn>
  */
 
-#include "table.h"
 #include <QFileInfo>
 #include <QSizePolicy>
 #include <QVBoxLayout>
-#include "ui_table.h"
+#include "pdf-details.h"
+#include "ui_pdf-details.h"
 
 #define MAX_HEIGHT 1122
 namespace KS
 {
 namespace BR
 {
-Table::Table(QWidget *parent,
+PDFDetails::PDFDetails(QWidget *parent,
              bool isOpenFilesScan,
              bool isScanVulnerability)
     : QWidget(parent),
-      m_ui(new Ui::Table)
+      m_ui(new Ui::PDFDetails)
 {
     m_ui->setupUi(this);
     m_rowHeight = 36;
