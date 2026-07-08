@@ -127,8 +127,8 @@ bool PluginPythonLoader::deactivate()
 {
     KLOG_DEBUG("PluginPythonLoader::deactivate");
     // 未激活不能取消激活
-    RETURN_VAL_IF_TRUE(!this->is_activate_, true);
-    this->interface_->deactivate();
+    RETURN_VAL_IF_TRUE(!this->m_isActivate, true);
+    this->m_interface->deactivate();
     return true;
 }
 }  // namespace BR
