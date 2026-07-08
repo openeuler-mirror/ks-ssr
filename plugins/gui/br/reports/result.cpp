@@ -430,7 +430,7 @@ bool Report::createVulnerabilityResults(QPrinter &printer, const InvalidData &in
     return true;
 }
 
-void Result::calculateRatio(const QList<Category *> &categories)
+void Report::calculateRatio(const QList<Category *> &categories)
 {
     int i = 0, j = 0;
     memset(m_total, 0, sizeof(m_total));
