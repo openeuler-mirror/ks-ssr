@@ -164,10 +164,10 @@ void Plugins::loadPluginsFromDir(const QString& dirname)
         {
             return;
         }
-        auto plugin_loader = plugin->getLoader();
-        if (!(plugin_loader->activate() && this->addPlugin(plugin)))
+        auto pluginLoader = plugin->getLoader();
+        if (!(pluginLoader->activate() && this->addPlugin(plugin)))
         {
-            plugin_loader->deactivate();
+            pluginLoader->deactivate();
         }
     }
 }
