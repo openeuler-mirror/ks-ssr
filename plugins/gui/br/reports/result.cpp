@@ -170,14 +170,6 @@ QColor Result::state2Color(int state)
     return retColor;
 }
 
-bool Result::generateReports(const QList<Category *> &beforeReinforcementList, const QList<Category *> &afterReinforcementList,
-                             int status,
-                             const InvalidData &invalidData)
-{
-    m_categories = beforeReinforcementList;
-    return exportReport(afterReinforcementList, status, invalidData);
-}
-
 bool Result::scanFilesAnalysis(QStringList &filelist, const InvalidData &invalidData)
 {
     RETURN_VAL_IF_TRUE((invalidData.NouserFilesList.count() < 1 && invalidData.SuidSgidFilesList.count() < 1 && invalidData.AuthorityFilesList.count() < 1), false)
