@@ -132,5 +132,33 @@ bool PluginPythonLoader::deactivate()
     this->m_interface->deactivate();
     return true;
 }
+
+PluginBashLoader::PluginBashLoader(const QString &bashRootDir)
+    : m_bashRootDir(bashRootDir),
+      m_isActivate(false)
+{
+}
+
+bool PluginBashLoader::load()
+{
+    this->m_interface = QSharedPointer<PluginBash>(new PluginBash(m_bashRootDir));
+    return true;
+}
+
+bool PluginBashLoader::activate()
+{
+    // 不能重复激活
+    RETURN_VAL_IF_TRUE(this->m_isActivate, true);
+    this->m_interface->activate();
+    return true;
+}
+
+bool PluginBashLoader::deactivate()
+{
+    // 未激活不能取消激活
+    RETURN_VAL_IF_TRUE(!this->m_isActivate, true);
+    this->m_interface->deactivate();
+    return true;
+}
 }  // namespace BR
 }  // namespace KS
