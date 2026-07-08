@@ -26,56 +26,56 @@ namespace BR
 
 ReinforcementPython::ReinforcementPython(PyObject *module,
                                          const QString &class_name)
-    : module_(module),
-      class_name_(class_name),
-      class_(NULL),
-      class_instance_(NULL),
-      valid_(false)
+    : m_module(module),
+      m_className(class_name),
+      m_class(NULL),
+      m_classInstance(NULL),
+      m_valid(false)
 {
-    Py_XINCREF(this->module_);
+    Py_XINCREF(this->m_module);
 
-    this->module_fullname_ = PyModule_GetName(this->module_);
-    this->class_ = PyObject_GetAttrString(this->module_, this->class_name_.toLocal8Bit());
+    this->m_moduleFullname = PyModule_GetName(this->m_module);
+    this->m_class = PyObject_GetAttrString(this->m_module, this->m_className.toLocal8Bit());
 
-    if (!this->class_ || !PyCallable_Check(this->class_))
+    if (!this->m_class || !PyCallable_Check(this->m_class))
     {
         KLOG_WARNING() << "Failed to get class "
-                       << this->module_fullname_.toLocal8Bit()
+                       << this->m_moduleFullname.toLocal8Bit()
                        << "."
-                       << this->class_name_.toLocal8Bit()
+                       << this->m_className.toLocal8Bit()
                        << ", class: "
-                       << this->class_
+                       << this->m_class
                        << ", error: "
                        << Utils::pyCatchException().toLocal8Bit();
         return;
     }
 
-    this->class_instance_ = PyObject_CallObject(this->class_, NULL);
+    this->m_classInstance = PyObject_CallObject(this->m_class, NULL);
 
-    if (!this->class_instance_)
+    if (!this->m_classInstance)
     {
         KLOG_WARNING() << "Failed to create object for class: "
-                       << this->class_name_.toLocal8Bit()
+                       << this->m_className.toLocal8Bit()
                        << ", error: "
                        << Utils::pyCatchException().toLocal8Bit();
         return;
     }
 
-    this->valid_ = true;
+    this->m_valid = true;
 }
 
 ReinforcementPython::~ReinforcementPython()
 {
-    Py_XDECREF(this->module_);
-    Py_XDECREF(this->class_);
+    Py_XDECREF(this->m_module);
+    Py_XDECREF(this->m_class);
 }
 
 bool ReinforcementPython::get(QString &args, QString &error)
 {
-    KLOG_DEBUG("Call get method in class %s.", this->class_name_.toLocal8Bit().data());
+    KLOG_DEBUG("Call get method in class %s.", this->m_className.toLocal8Bit().data());
     auto gstate = PyGILState_Ensure();
 #if PY_MAJOR_VERSION >= 3
-    auto py_retval = PyObject_CallMethod(this->class_instance_, "get", NULL);
+    auto py_retval = PyObject_CallMethod(this->m_classInstance, "get", NULL);
 #else
     char method[] = "get";
     char *format = NULL;
