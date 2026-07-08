@@ -23,7 +23,7 @@ class Category
 {
 public:
     Category();
-    virtual ~Category(){};
+    virtual ~Category();
 
 public:
     void setRow(int row);
