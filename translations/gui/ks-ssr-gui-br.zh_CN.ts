@@ -650,7 +650,7 @@
     <message>
         <location filename="../../plugins/gui/br/reports/pdf.ui" line="237"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf.ui" line="289"/>
