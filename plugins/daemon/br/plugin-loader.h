@@ -77,15 +77,15 @@ public:
     virtual bool deactivate() override;
     virtual QSharedPointer<BRPluginInterface> getInterface() override
     {
-        return this->interface_;
+        return this->m_interface;
     };
 
 private:
     // 包名
-    QString package_name_;
+    QString m_packageName;
     // 是否已经激活
-    bool is_activate_;
-    QSharedPointer<BRPluginInterface> interface_;
+    bool m_isActivate;
+    QSharedPointer<BRPluginInterface> m_interface;
 };
 
 }  // namespace BR
