@@ -454,7 +454,7 @@ QString BRDBus::GetReinforcement(const QString& name)
     auto reinforcement = this->m_plugins->getReinforcement(name);
     if (!reinforcement)
     {
-        sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
     }
     auto& rsReinforcement = reinforcement->getRs();
 
