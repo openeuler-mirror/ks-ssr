@@ -1260,6 +1260,9 @@ void BRDBus::exportReport()
     QList<QStringList> tabelData;
     tabelData.push_back({tr("Test Item"), tr("Result")});
 
+    QList<QStringList> tabelDataConformity;
+    QList<QStringList> tabelDataInconformity;
+
     for (auto& reinforcementResult : m_scanJobResult.reinforcement())
     {
         QString name = QString::fromStdString(reinforcementResult.name());
