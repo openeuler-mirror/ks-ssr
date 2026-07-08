@@ -160,17 +160,22 @@ void Command::repair(const QStringList &cves)
 int Command::exportReport(QString which, QString path)
 {
     KLOG_DEBUG() << which << "exportPath:" << path;
-    auto reply = "br" == which ? m_dbusBRProxy->ExportReport(path) : m_dbusVulnerabilityProxy->ExportReport(path);
-    reply.waitForFinished();
-    if (reply.isError())
-    {
-        KLOG_WARNING() << "error:" << reply.error().message();
-        std::cout << tr("Failed to export report").toStdString() << std::endl;
-        exit(-1);
-    }
+    //    auto reply = "br" == which ? m_dbusBRProxy->ExportReport(path) : m_dbusVulnerabilityProxy->ExportReport(path);
+    //    reply.waitForFinished();
+    //    if (reply.isError())
+    //    {
+    //        KLOG_WARNING() << "error:" << reply.error().message();
+    //        std::cout << tr("Failed to export report").toStdString() << std::endl;
+    //        exit(-1);
+    //    }
 
-    std::cout << tr("Export Report Success").toStdString() << std::endl;
-    exit(0);
+    //    std::cout << tr("Export Report Success").toStdString() << std::endl;
+    //    exit(0);
+
+    connect(m_dbusBRProxy, &BRDbusProxy::ExportReportFinished, this, &Command::exportReportFinished, Qt::QueuedConnection);
+    connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ExportReportFinished, this, &Command::exportReportFinished, Qt::QueuedConnection);
+
+    "br" == which ? m_dbusBRProxy->ExportReport(path) : m_dbusVulnerabilityProxy->ExportReport(path);
 }
 
 QStringList Command::getBrInfo(const QStringList &category)
