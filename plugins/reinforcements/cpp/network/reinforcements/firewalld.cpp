@@ -89,12 +89,12 @@ FirewalldICMPTimestamp::FirewalldICMPTimestamp()
 {
 }
 
-bool FirewalldICMPTimestamp::get(std::string &args, BRErrorCode &error_code)
+bool FirewalldICMPTimestamp::get(std::string &args, SSRErrorCode &error_code)
 {
     std::string standard_output;
     Json::Value values;
     std::vector<std::string> argv = {FIREWALLD_CMD_COMMAND, "--list-icmp-blocks"};
-    RETURN_ERROR_IF_TRUE(!MiscUtils::spawn_sync(argv, &standard_output), BRErrorCode::ERROR_FAILED);
+    RETURN_ERROR_IF_TRUE(!MiscUtils::spawn_sync(argv, &standard_output), SSRErrorCode::ERROR_FAILED);
     auto icmp_blocks = StrUtils::split_with_char(standard_output, ' ', true);
     auto iter = std::find(icmp_blocks.begin(), icmp_blocks.end(), FIREWALLD_ICMP_BLOCK_TIMESTAMP_REQUEST);
 
