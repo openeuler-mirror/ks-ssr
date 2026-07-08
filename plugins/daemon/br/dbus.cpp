@@ -715,7 +715,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
                 disconnect(m_reinforceTimer, &QTimer::timeout, nullptr, nullptr);
                 if (!this->m_reinforceJob->runAsync())
                 {
-                    auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED));
+                    auto replyMessage = message.createErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_CORE_REINFORCE_JOB_FAILED));
                     QDBusConnection::systemBus().send(replyMessage);
                     SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                                   tr("Failed to reinforcement."),
