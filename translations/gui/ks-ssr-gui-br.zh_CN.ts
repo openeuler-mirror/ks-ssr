@@ -915,6 +915,11 @@ which will cause many problems!</source>
         <source>Abnormal service! Please check the log information for details.</source>
         <translation>服务异常！详情请查看日志信息。</translation>
     </message>
+    <message>
+        <location filename="../../plugins/gui/br/reinforcement-items/plugins-translation.h" line="61"/>
+        <source>No related services found</source>
+        <translation>未发现相关服务</translation>
+    </message>
 </context>
 <context>
     <name>xml</name>
