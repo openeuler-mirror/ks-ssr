@@ -32,8 +32,7 @@ Command::Command(QObject *parent)
       m_dbusBRProxy(nullptr),
       m_dbusVulnerabilityProxy(nullptr),
       m_fileOutput(false),
-      m_getBrJob(false),
-      m_specifyCVE(false)
+      m_getBrJob(false)
 {
     checkLicenseActive();
     m_dbusBRProxy = new BRDbusProxy(SSR_DBUS_NAME,
