@@ -106,33 +106,33 @@ bool FirewalldICMPTimestamp::get(std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s.", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
 }
 
-bool FirewalldICMPTimestamp::set(const std::string &args, BRErrorCode &error_code)
+bool FirewalldICMPTimestamp::set(const std::string &args, SSRErrorCode &error_code)
 {
     try
     {
         auto values = StrUtils::str2json(args);
-        RETURN_ERROR_IF_FALSE(values[FIREWALLD_ICMP_BLOCK_KEY_TIMESTAMP_REQUEST].isBool(), BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_FALSE(values[FIREWALLD_ICMP_BLOCK_KEY_TIMESTAMP_REQUEST].isBool(), SSRErrorCode::ERROR_FAILED);
         auto timestamp_request = values[FIREWALLD_ICMP_BLOCK_KEY_TIMESTAMP_REQUEST].asBool();
 
         // 持久化存储，该命令不会更新运行时配置
         auto operation = fmt::format("--{0}-icmp-block=" FIREWALLD_ICMP_BLOCK_TIMESTAMP_REQUEST, timestamp_request ? "add" : "remove");
         std::vector<std::string> permanet_argv = {FIREWALLD_CMD_COMMAND, operation, "--permanent"};
-        RETURN_ERROR_IF_FALSE(MiscUtils::spawn_sync(permanet_argv), BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_FALSE(MiscUtils::spawn_sync(permanet_argv), SSRErrorCode::ERROR_FAILED);
 
         // 重新加载，让持久化配置立即生效
         std::vector<std::string> reload_argv = {FIREWALLD_CMD_COMMAND, "--reload"};
-        RETURN_ERROR_IF_FALSE(MiscUtils::spawn_sync(reload_argv), BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_FALSE(MiscUtils::spawn_sync(reload_argv), SSRErrorCode::ERROR_FAILED);
     }
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s.", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
