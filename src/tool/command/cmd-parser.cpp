@@ -576,8 +576,8 @@ void Command::scanProgress(const QString &progress)
         {
             continue;
         }
-        if (!m_specifyCVE)
-            m_cveIds << QString(cve.value("name").toString());
+
+        m_cveIds << QString(cve.value("name").toString());
         QString level = getCveLevel(cve.value("threat_severity").toInt());
         VulnerabilityInfo *pVu = new VulnerabilityInfo(cve.value("name").toString(), level, cve.value("score").toString());
         m_repairResult[cve.value("name").toString()] = pVu;
