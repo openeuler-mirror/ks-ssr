@@ -67,11 +67,11 @@ public:
     // 获取定时扫描时间
     int getTimeScan();
     // 设置定时扫描时间
-    bool setTimeScan(int time_scan);
+    bool setTimeScan(int timeScan);
     // 获取通知状态
     BRNotificationStatus getNotificationStatus();
     // 设置通知状态
-    bool setNotificationStatus(BRNotificationStatus notification_status);
+    bool setNotificationStatus(BRNotificationStatus notificationStatus);
     // 获取回退状态
     BRFallbackStatus getFallbackStatus();
     // 设置回退状态
