@@ -78,12 +78,12 @@ BRStandardType Configuration::getStandardType()
     return BRStandardType(retval);
 }
 
-bool Configuration::setStandardType(BRStandardType standard_type)
+bool Configuration::setStandardType(BRStandardType standardType)
 {
-    RETURN_VAL_IF_FALSE(standard_type < BRStandardType::BR_STANDARD_TYPE_LAST, false);
-    RETURN_VAL_IF_TRUE(standard_type == this->getStandardType(), true);
+    RETURN_VAL_IF_FALSE(standardType < BRStandardType::BR_STANDARD_TYPE_LAST, false);
+    RETURN_VAL_IF_TRUE(standardType == this->getStandardType(), true);
 
-    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_STANDARD_TYPE, int32_t(standard_type));
+    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_STANDARD_TYPE, int32_t(standardType));
     Q_EMIT RSChanged();
     return true;
 }
