@@ -333,7 +333,7 @@ void Report::createReportContent(QPrinter &printer, const QList<Category *> &sca
     m_painter->drawPixmap(0, 0, pagePixmap);
 }
 
-bool Result::createFilesScanResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag)
+bool Report::createFilesScanResults(QPrinter &printer, const InvalidData &invalidData, bool &showTailFlag)
 {
     QStringList scanList;
     bool is_scan = scanFilesAnalysis(scanList, invalidData);
