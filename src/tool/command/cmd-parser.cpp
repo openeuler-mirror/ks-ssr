@@ -31,6 +31,7 @@ Command::Command(QObject *parent)
     : QObject(parent),
       m_dbusBRProxy(nullptr),
       m_dbusVulnerabilityProxy(nullptr),
+      m_dbusServerWatcher(new QDBusServiceWatcher(this)),
       m_fileOutput(false),
       m_getBrJob(false)
 {
