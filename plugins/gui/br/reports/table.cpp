@@ -176,7 +176,7 @@ void PDFDetails::addScanLine(const QString &filesName,
     update();
 }
 
-void Table::addSpacer()
+void PDFDetails::addSpacer()
 {
     auto spacerWidget = new QWidget(this);
     spacerWidget->setObjectName("spacerWidget");
