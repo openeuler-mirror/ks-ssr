@@ -32,7 +32,7 @@ PluginCPPLoader::PluginCPPLoader(const QString &soPath)
 
 bool PluginCPPLoader::load()
 {
-    return this->load_module();
+    return this->loadModule();
 }
 
 bool PluginCPPLoader::activate()
