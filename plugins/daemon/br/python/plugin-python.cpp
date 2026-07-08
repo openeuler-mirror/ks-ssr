@@ -86,7 +86,7 @@ bool ReinforcementPython::get(QString &args, QString &error)
 
     do
     {
-        if (!this->check_call_result(py_retval, this->class_name_ + ".get", error))
+        if (!this->checkCallResult(py_retval, this->m_className + ".get", error))
         {
             retval = false;
             break;
