@@ -488,11 +488,11 @@ bool Configuration::setCustomRh(const Reinforcement& rsReinforcement, const QStr
     }
 
     // 如果配置中不存在加固项的自定义配置，则添加该加固项的自定义配置
-    if (!match_reinforcement)
+    if (!matchReinforcement)
     {
-        Protocol::Reinforcement used_reinforcement(rs_reinforcement.name());
+        Protocol::Reinforcement used_reinforcement(rsReinforcement.name());
 
-        const auto& args = rs_reinforcement.arg();
+        const auto& args = rsReinforcement.arg();
 
         for (auto iter = args.begin(); iter != args.end(); ++iter)
         {
