@@ -44,11 +44,11 @@ Plugins::~Plugins()
     Py_Finalize();
 }
 
-Plugins* Plugins::instance_ = NULL;
+Plugins* Plugins::m_instance = NULL;
 void Plugins::globalInit(Configuration* configuration)
 {
-    instance_ = new Plugins(configuration);
-    instance_->init();
+    m_instance = new Plugins(configuration);
+    m_instance->init();
 }
 
 QSharedPointer<Plugin> Plugins::getPluginByReinforcement(const QString& name)
