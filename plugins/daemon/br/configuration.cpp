@@ -319,13 +319,13 @@ QSharedPointer<Protocol::RS> Configuration::getRS()
     return this->getFixedRS();
 }
 
-bool Configuration::setCustomRS(const QString& encrypted_rs, BRErrorCode& error_code)
+bool Configuration::setCustomRS(const QString& encrypted_rs, SSRErrorCode& error_code)
 {
     // 判断自定义加固标准
     auto decrypted_rs = CryptoHelper::brDecrypt(RSA_PUBLIC_KEY_FILEPATH, encrypted_rs);
     if (decrypted_rs.isEmpty())
     {
-        error_code = BRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED;
+        error_code = SSRErrorCode::ERROR_CUSTOM_RS_DECRYPT_FAILED;
         return false;
     }
 
