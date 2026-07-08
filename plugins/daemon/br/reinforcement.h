@@ -56,11 +56,11 @@ private:
 
 private:
     // 加固项所属插件ID
-    QString plugin_id_;
+    QString m_pluginID;
     // 加固项的加固标准
-    Protocol::Reinforcement config_;
+    Protocol::Reinforcement m_config;
     // 标准的判断规则
-    QMap<QString, QSharedPointer<Rule>> rules_;
+    QMap<QString, QSharedPointer<Rule>> m_rules;
 };
 
 typedef QVector<QSharedPointer<Reinforcement>> BRReinforcementVec;
