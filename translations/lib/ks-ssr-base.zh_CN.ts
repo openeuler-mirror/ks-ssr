@@ -259,5 +259,9 @@
         <source>Scan or Repair is running, please wait moment.</source>
         <translation>扫描或者修复正在运行，请稍候。</translation>
     </message>
+    <message>
+        <source>Host:</source>
+        <translation>主机:</translation>
+    </message>
 </context>
 </TS>
