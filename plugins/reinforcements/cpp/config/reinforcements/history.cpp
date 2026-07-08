@@ -25,12 +25,12 @@ HistorySizeLimit::HistorySizeLimit()
 {
     this->history_size_limit_config_ = ConfigPlain::create(HISTORY_SIZE_LIMIT_CONF_PATH, "=");
 }
-
-bool HistorySizeLimit::get(const std::string &args, BRErrorCode &error_code)
+SSRErrorCode
+bool HistorySizeLimit::get(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->history_size_limit_config_)
     {
-        RETURN_ERROR_IF_FALSE(false, BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_FALSE(false, SSRErrorCode::ERROR_FAILED);
     }
 
     try
