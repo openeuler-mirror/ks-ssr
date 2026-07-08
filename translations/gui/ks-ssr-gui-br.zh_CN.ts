@@ -326,7 +326,7 @@
         <location filename="../../plugins/gui/br/progress.cpp" line="118"/>
         <location filename="../../plugins/gui/br/progress.cpp" line="203"/>
         <source>Start time: %1 elapsed time: %2 progress: %3%</source>
-        <translation>开始扫描时间：%1 用时：%2 进度：%3%</translation>
+        <translation>开始时间：%1 用时：%2 进度：%3%</translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/progress.cpp" line="134"/>
