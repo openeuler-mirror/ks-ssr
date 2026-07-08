@@ -124,26 +124,27 @@ class KeyRebootSwitch:
 
     def get(self):
         retdata = dict()
-        if self.status_exist():
-            retdata['enabled'] = self.status()
-        if self.status_bak():
+        if self.service_exists():
+            retdata['enabled'] = self.service_status()
+        else:
             retdata['enabled'] = False
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        if self.status_exist():
-            if not self.status() and args['enabled']:
+
+        # 针对3.3-6的处理规则，文件不存在，开关为打开是，将.bak改为ctrl-alt-del.target
+        if args['enabled'] and self.status_bak():
+            command = "mv /usr/lib/systemd/system/ctrl-alt-del.target.bak /usr/lib/systemd/system/ctrl-alt-del.target"
+            br.utils.subprocess_not_output(command)
+
+        if args['enabled'] and not self.service_exists():
+            return (False, 'No related services found')
+
+        if self.service_exists():
+            if args['enabled']:
                 self.open()
             else:
-                if args['enabled']:
-                    self.open()
-                else:
-                    self.close()
-        else:
-            # 针对3.3-6的处理规则，文件不存在，开关为打开是，将.bak改为ctrl-alt-del.target
-            if args['enabled'] and self.status_bak():
-                command = "mv /usr/lib/systemd/system/ctrl-alt-del.target.bak /usr/lib/systemd/system/ctrl-alt-del.target"
-                br.utils.subprocess_not_output(command)
+                self.close()
 
         return (True, '')
