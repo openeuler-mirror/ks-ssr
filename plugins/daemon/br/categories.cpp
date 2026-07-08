@@ -45,7 +45,7 @@ void Categories::init()
 
 void Categories::load()
 {
-    QSettings keyfile(this->conf_path_, QSettings::IniFormat);
+    QSettings keyfile(this->m_confPath, QSettings::IniFormat);
     auto groups_name = keyfile.childGroups();
 
     for (auto iter = groups_name.begin(); iter != groups_name.end(); ++iter)
