@@ -23,6 +23,18 @@ namespace KS
 class IDaemonAuthentication;
 extern IDaemonAuthentication *g_daemonAuthentication;
 
+// 由于 Qt 的 mock 机制， 如果在 cpp 中使用此功能会导致模板实例化的符号找不到， 如果需要使用必须在头文件中使用
+#define CHECK_AUTH_WITH_VARIADIC_ARGS(className, funName, callback, action, validateRole)                               \
+    template <typename... Args>                                                                                         \
+    void className::funName(Args... args)                                                                               \
+    {                                                                                                                   \
+        this->setDelayedReply(true);                                                                                    \
+        g_daemonAuthentication->checkAuthorization(action,                                                              \
+                                                   validateRole,                                                        \
+                                                   this->message(),                                                     \
+                                                   std::bind(&className::callback, this, std::forward<Args>(args)...)); \
+    }
+
 #define CHECK_AUTH(className, funName, callback, action, validateRole)                                            \
     void className::funName()                                                                                     \
     {                                                                                                             \
