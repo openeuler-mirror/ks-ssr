@@ -141,43 +141,43 @@ bool SysctlSourceRoute::get(std::string &args, SSRErrorCode &error_code)
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
 }
 
-bool SysctlSourceRoute::set(const std::string &args, BRErrorCode &error_code)
+bool SysctlSourceRoute::set(const std::string &args, SSRErrorCode &error_code)
 {
     auto redirect_vars = this->get_vars_by_pattern(SYSCTL_ACCEPT_SOURCE_ROUTE_PATTERN);
-    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), BRErrorCode::ERROR_FAILED);
+    RETURN_ERROR_IF_TRUE(redirect_vars.empty(), SSRErrorCode::ERROR_FAILED);
 
     try
     {
         auto values = StrUtils::str2json(args);
-        RETURN_ERROR_IF_TRUE(!values[SYSCTL_JSON_KEY_ENABLED].isBool(), BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_TRUE(!values[SYSCTL_JSON_KEY_ENABLED].isBool(), SSRErrorCode::ERROR_FAILED);
         auto enabled = values[SYSCTL_JSON_KEY_ENABLED].asBool();
 
         // 写入文件中
         for (const auto &var : redirect_vars)
         {
-            RETURN_ERROR_IF_FALSE(this->sysctl_config_->set_value(var.first, enabled ? "1" : "0"), BRErrorCode::ERROR_FAILED);
+            RETURN_ERROR_IF_FALSE(this->sysctl_config_->set_value(var.first, enabled ? "1" : "0"), SSRErrorCode::ERROR_FAILED);
         }
 
         // 从文件中刷新
         std::vector<std::string> argv = {SYSCTL_COMMAND, "--load", SYSCTL_CONFI_FILE};
-        RETURN_ERROR_IF_TRUE(!MiscUtils::spawn_sync(argv), BRErrorCode::ERROR_FAILED);
+        RETURN_ERROR_IF_TRUE(!MiscUtils::spawn_sync(argv), SSRErrorCode::ERROR_FAILED);
     }
     catch (const std::exception &e)
     {
         KLOG_WARNING("%s", e.what());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     catch (const Glib::Error &e)
     {
         KLOG_WARNING("%s", e.what().c_str());
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
     return true;
