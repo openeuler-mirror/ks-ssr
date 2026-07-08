@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <QDBusServiceWatcher>
 #include <QMap>
 #include <QObject>
 #include <QSharedPointer>
