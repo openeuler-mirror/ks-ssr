@@ -329,7 +329,7 @@ void BRDBus::ImportCustomRA(const QString& encodedStrategy)
     {
         remove(CUSTOM_RA_STRATEGY_FILEPATH);
         // 不知道选选哪个错误码，所以选择了 ERROR_FAILED
-        sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_FAILED));
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_FAILED));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to import custom reinforcement strategy."),
                       calledUniqueName);
