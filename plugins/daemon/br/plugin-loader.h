@@ -88,5 +88,28 @@ private:
     QSharedPointer<BRPluginInterface> m_interface;
 };
 
+class PluginBashLoader : public PluginLoader
+{
+public:
+    PluginBashLoader(const QString &bashRootDir);
+    virtual ~PluginBashLoader(){};
+
+public:
+    virtual bool load() override;
+    virtual bool activate() override;
+    virtual bool deactivate() override;
+    virtual QSharedPointer<BRPluginInterface> getInterface() override
+    {
+        return this->m_interface;
+    };
+
+private:
+    // 当前插件的bash文件所在的根路径
+    QString m_bashRootDir;
+    // 是否已经激活
+    bool m_isActivate;
+    QSharedPointer<BRPluginInterface> m_interface;
+};
+
 }  // namespace BR
 }  // namespace KS
