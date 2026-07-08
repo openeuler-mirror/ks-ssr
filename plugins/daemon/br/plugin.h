@@ -64,16 +64,13 @@ private:
 
 private:
     // 插件配置文件路径
-    QString conf_path_;
+    QString m_confPath;
     // 插件配置
-    std::unique_ptr<Protocol::Plugin> plugin_config_;
+    std::unique_ptr<Protocol::Plugin> m_pluginConfig;
     // 插件状态
     // BRPluginState state_;
     // 插件加载器
-    std::shared_ptr<PluginLoader> loader_;
-
-    // 属于该插件的加固项信息：<加固项名称，加固项信息>
-    // std::map<std::string, std::shared_ptr<BRReinforcement>> reinforcements_;
+    std::shared_ptr<PluginLoader> m_loader;
 };
 
 typedef QVector<QSharedPointer<Plugin>> BRPluginVec;
