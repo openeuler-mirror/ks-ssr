@@ -25,9 +25,9 @@ namespace BR
 #define PYTHON_PLUGIN_VAR_REINFORCEMENTS "reinforcements"
 
 ReinforcementPython::ReinforcementPython(PyObject *module,
-                                         const QString &class_name)
+                                         const QString &className)
     : m_module(module),
-      m_className(class_name),
+      m_className(className),
       m_class(NULL),
       m_classInstance(NULL),
       m_valid(false)
