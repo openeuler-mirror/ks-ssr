@@ -567,7 +567,7 @@ void BRDBus::Scan(const QStringList& names)
             if (!reinforcement_interface)
             {
                 sendErrorReply(QDBusError::InternalError,
-                               BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND));
+                               SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_PLUGIN_OF_REINFORCEMENT_NOT_FOUND));
                 SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                               tr("Failed to scan."),
                               m_scanUniqueName);
