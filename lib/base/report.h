@@ -8,10 +8,10 @@
 class Report : public QObject
 {
 public:
-    static void genReport(const QString &savePath,
-                          const QList<QPair<QString, QString>> &homeExtraData,
-                          const QString &tableTitle,
-                          const QList<QStringList> &tabelData);
+    static QString genReport(const QString &savePath,
+                             const QList<QPair<QString, QString>> &homeExtraData,
+                             const QString &tableTitle,
+                             const QList<QStringList> &tabelData);
 
 private:
     Report(){};
