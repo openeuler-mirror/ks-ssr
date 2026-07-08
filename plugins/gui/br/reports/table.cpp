@@ -46,17 +46,14 @@ Table::Table(QWidget *parent,
         m_ui->m_columnName1->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
         m_ui->m_columnName2->setText(tr("Scan results"));
         m_ui->m_columnName2->setMinimumWidth(480);
-        m_ui->m_columnName3->setText(tr("Remarks"));
-        m_ui->m_columnName4->deleteLater();
         m_ui->m_tableHeader->layout()->itemAt(3)->widget()->setVisible(false);
     }
     else
     {
         m_ui->m_columnName1->setText(tr("Test Item"));
-        m_ui->m_columnName2->setText(tr("Before reinforcement result"));
-        m_ui->m_columnName2->setMinimumWidth(240);
-        m_ui->m_columnName3->setText(tr("After reinforcement result"));
-        m_ui->m_columnName4->setText(tr("Remarks"));
+        m_ui->m_columnName2->setText(tr("Scan results"));
+        m_ui->m_columnName1->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+        m_ui->m_columnName2->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
     }
 
     m_ui->m_tailBar->setText(tr("Technical support：Hunan KylinSec Technology Co. Ltd.,  Telephone：400-012-6606"));
