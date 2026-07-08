@@ -664,7 +664,7 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         auto reinforcement = this->m_plugins->getReinforcement(name);
         if (!reinforcement)
         {
-            auto replyMessage = message.createErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
+            auto replyMessage = message.createErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
             QDBusConnection::systemBus().send(replyMessage);
             SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                           tr("Failed to reinforcement."),
