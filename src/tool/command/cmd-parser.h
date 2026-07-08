@@ -88,7 +88,6 @@ private:
     QSharedPointer<LicenseProxy> m_licenseProxy;
     bool m_fileOutput;
     bool m_getBrJob;
-    bool m_specifyCVE;
     bool m_onlyScan;
     int m_lastPercent;
     QStringList m_cveIds;
