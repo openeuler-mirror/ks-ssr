@@ -810,7 +810,7 @@ void KS::BR::BRDBus::ExportReport(const QString& savePath)
 
     if (this->m_scanJob && this->m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
     {
-        sendErrorReply(QDBusError::InternalError, BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING));
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to scan."),
                       m_scanUniqueName);
