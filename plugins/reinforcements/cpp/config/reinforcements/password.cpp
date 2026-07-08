@@ -109,11 +109,11 @@ PasswordComplextiy::PasswordComplextiy()
 }
 
 // XXX：还存在问题，参数问题，接口返回的是一个参数的vector，无法转化为key-value形式处理。
-bool PasswordComplextiy::get(std::string &args, BRErrorCode &error_code)
+bool PasswordComplextiy::get(std::string &args, SSRErrorCode &error_code)
 {
     if (!this->password_complextiy_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
