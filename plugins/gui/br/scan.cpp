@@ -503,21 +503,23 @@ void Scan::generateReport()
         return;
     }
     KLOG_DEBUG() << "generate reports !";
-    if (m_progressInfo.method == PROCESS_METHOD_FASTEN)
+
+    static QList<Category *> categories;
+    while (!categories.isEmpty())
     {
-        auto reply = m_dbusProxy->GetCategories();
-        reply.waitForFinished();
-        Utils::getDefault()->jsonParsing(reply.value().toUtf8(), m_afterReinForcementCategories);
-        Utils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), m_afterReinForcementCategories);
+        Category *p = categories.takeFirst();
+        delete p;
     }
-    // 断开scan进程连接
-    //    disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
-    // 进行一次扫描 仅获取扫描结果，不对UI进行调整
+
+    auto reply = m_dbusProxy->GetCategories();
+    reply.waitForFinished();
+    Utils::getDefault()->jsonParsing(reply.value().toUtf8(), categories);
+    Utils::getDefault()->ssrReinforcements(m_dbusProxy->GetReinforcements().value(), categories);
+
     connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult)
             {
                 ProgressInfo progressInfo;
-                // 获取加固后扫描结果
-                Utils::getDefault()->ssrJobResult(jobResult, progressInfo, m_afterReinForcementCategories, m_invalidData);
+                Utils::getDefault()->ssrJobResult(jobResult, progressInfo, categories, m_invalidData);
                 if (double(100) == progressInfo.progress)
                 {
                     // 扫描完成,断开信号
