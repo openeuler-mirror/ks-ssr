@@ -26,11 +26,11 @@ LogrotateRotate::LogrotateRotate()
     this->logrotate_config_ = ConfigPlain::create(LOGROTATE_CONF_PATH);
 }
 
-bool LogrotateRotate::get(std::string &args, BRErrorCode &error_code)
+bool LogrotateRotate::get(std::string &args, SSRErrorCode &error_code)
 {
     if (!this->logrotate_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
