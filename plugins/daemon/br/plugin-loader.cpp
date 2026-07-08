@@ -48,40 +48,40 @@ bool PluginCPPLoader::deactivate()
 {
     KLOG_DEBUG("PluginCPPLoader::deactivate");
     // 未激活不能取消激活
-    RETURN_VAL_IF_TRUE(!this->is_activate_, true);
-    this->interface_->deactivate();
+    RETURN_VAL_IF_TRUE(!this->m_isActivate, true);
+    this->m_interface->deactivate();
     return true;
 }
 
 bool PluginCPPLoader::load_module()
 {
-    KLOG_DEBUG() << "load module " << this->so_path_.toLatin1();
+    KLOG_DEBUG() << "load module " << this->m_soPath.toLatin1();
 
-    this->module_ = QSharedPointer<QLibrary>(new QLibrary(this->so_path_));
+    this->m_module = QSharedPointer<QLibrary>(new QLibrary(this->m_soPath));
 
-    if (this->module_->load())
+    if (this->m_module->load())
     {
         QFunctionPointer new_plugin_fun = nullptr;
         QFunctionPointer del_plugin_fun = nullptr;
 
-        if ((new_plugin_fun = this->module_->resolve("new_plugin")) != nullptr)
+        if ((new_plugin_fun = this->m_module->resolve("new_plugin")) != nullptr)
         {
-            KLOG_WARNING() << "Not found function 'new_plugin' in module " << this->so_path_.toLatin1();
+            KLOG_WARNING() << "Not found function 'new_plugin' in module " << this->m_soPath.toLatin1();
             return false;
         }
 
-        if ((del_plugin_fun = this->module_->resolve("delete_plugin")) != nullptr)
+        if ((del_plugin_fun = this->m_module->resolve("delete_plugin")) != nullptr)
         {
-            KLOG_WARNING() << "Not found function 'delete_plugin' in module " << this->so_path_.toLatin1();
+            KLOG_WARNING() << "Not found function 'delete_plugin' in module " << this->m_soPath.toLatin1();
             return false;
         }
 
-        this->interface_ = QSharedPointer<BRPluginInterface>((KS::BRPluginInterface *)((NewPluginFun)new_plugin_fun)(), (DelPluginFun)del_plugin_fun);
+        this->m_interface = QSharedPointer<BRPluginInterface>((KS::BRPluginInterface *)((NewPluginFun)new_plugin_fun)(), (DelPluginFun)del_plugin_fun);
         return true;
     }
     else
     {
-        KLOG_WARNING() << "open module " << this->so_path_.toLatin1() << "fail: " << (this->module_.isNull() ? this->module_->errorString().toLatin1() : "unknown");
+        KLOG_WARNING() << "open module " << this->m_soPath.toLatin1() << "fail: " << (this->m_module.isNull() ? this->m_module->errorString().toLatin1() : "unknown");
         return false;
     }
 
