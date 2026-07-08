@@ -15,6 +15,7 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
+#include "bash/plugin-bash.h"
 #include "plugin-loader.h"
 #include "python/plugin-python.h"
 #include "utils.h"
