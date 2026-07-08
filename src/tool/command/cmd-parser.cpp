@@ -573,5 +573,18 @@ void Command::repairProgress(const QString &progress)
     }
 }
 
+void Command::exportReportFinished(const QString &failed_reason)
+{
+    if (failed_reason.isEmpty())
+    {
+        std::cout << tr("Export Report Success").toStdString() << std::endl;
+    }
+    else
+    {
+        std::cout << tr("Export Report failed:").toStdString() << failed_reason.toStdString() << std::endl;
+    }
+    exit(0);
+}
+
 }  // namespace Command
 }  // namespace KS
