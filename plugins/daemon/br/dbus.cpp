@@ -1272,9 +1272,9 @@ void BRDBus::exportReport()
         iter++;
     }
 
-    Report::genReport(savePath, homeExtraData, tr("test information"), tabelData);
+    QString failedReason = Report::genReport(savePath, homeExtraData, tr("test information"), tabelData);
 
-    sendErrorReply(QDBusError::NoError, "Export report successed");
+    emit ExportReportFinished(failedReason);
 }
 
 void BRDBus::parseJsonParam(const Protocol::Reinforcement::ArgSequence& argSequence, QJsonObject& param)
