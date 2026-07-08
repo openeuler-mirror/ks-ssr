@@ -52,11 +52,11 @@ public:
     // 获取标准类型
     BRStandardType getStandardType();
     // 设置标准类型
-    bool setStandardType(BRStandardType standard_type);
+    bool setStandardType(BRStandardType standardType);
     // 获取加固策略类型
     BRStrategyType getStrategyType();
     // 设置加固策略类型
-    bool setStrategyType(BRStrategyType strategy_type);
+    bool setStrategyType(BRStrategyType strategyType);
     // 获取自定义加固参数，只有在自定义策略模式下有效，系统策略返回空值
     QSharedPointer<Protocol::RA> getCustomRA();
     // 设置加固参数
