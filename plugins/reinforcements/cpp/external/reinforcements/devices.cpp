@@ -32,11 +32,11 @@ DeviceSwitch::DeviceSwitch()
     this->device_config_ = ConfigPlain::create(DEVICE_CONF_PATH, "\\s*=\\s*", "=");
 }
 
-bool DeviceSwitch::get(const std::string &args, BRErrorCode &error_code)
+bool DeviceSwitch::get(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->device_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
