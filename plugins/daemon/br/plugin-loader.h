@@ -48,7 +48,7 @@ public:
     virtual bool deactivate() override;
     virtual QSharedPointer<BRPluginInterface> getInterface() override
     {
-        return this->interface_;
+        return this->m_interface;
     };
 
 private:
