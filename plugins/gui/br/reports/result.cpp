@@ -120,7 +120,7 @@ QString Report::state2Str(int state)
     return retStr;
 }
 
-QColor Result::state2Color(int state)
+QColor Report::state2Color(int state)
 {
     QColor retColor;
     switch (state)
