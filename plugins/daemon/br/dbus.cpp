@@ -555,7 +555,7 @@ void BRDBus::Scan(const QStringList& names)
             if (!reinforcement)
             {
                 sendErrorReply(QDBusError::InternalError,
-                               BR_ERROR2STR(BRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
+                               SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_REINFORCEMENT_NOTFOUND));
                 SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                               tr("Failed to scan."),
                               m_scanUniqueName);
