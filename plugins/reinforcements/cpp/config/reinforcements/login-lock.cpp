@@ -28,11 +28,11 @@ LoginLock::LoginLock()
     this->login_lock_config_ = ConfigPAM::create(LOGIN_LOCK_CONF_KEY_TALLY);
 }
 
-bool LoginLock::get(const std::string &args, BRErrorCode &error_code)
+bool LoginLock::get(const std::string &args, SSRErrorCode &error_code)
 {
     if (!this->password_complextiy_config_)
     {
-        error_code = BRErrorCode::ERROR_FAILED;
+        error_code = SSRErrorCode::ERROR_FAILED;
         return false;
     }
 
