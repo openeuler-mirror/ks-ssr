@@ -249,35 +249,35 @@ void Plugins::loadReinforcements()
     auto& reinforcements = rs->body().reinforcement();
     for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
     {
-        auto& reinforcement_arg = (*iter);
-        auto reinforcement_name = reinforcement_arg.name();
-        auto plugin = this->getPluginByReinforcement(QString::fromStdString(reinforcement_name));
+        auto& reinforcementArg = (*iter);
+        auto reinforcementName = reinforcementArg.name();
+        auto plugin = this->getPluginByReinforcement(QString::fromStdString(reinforcementName));
 
         // 加固标准中的加固项如果没有插件支持，则不添加
         if (!plugin)
         {
-            KLOG_WARNING("The reinforcement %s is unsupported by any plugin.", reinforcement_name.c_str());
+            KLOG_WARNING("The reinforcement %s is unsupported by any plugin.", reinforcementName.c_str());
             continue;
         }
 
-        auto reinforcement_noarg = plugin->getReinforcementConfig(reinforcement_name);
-        if (!reinforcement_noarg)
+        auto reinforcementNoArg = plugin->getReinforcementConfig(reinforcementName);
+        if (!reinforcementNoArg)
         {
-            KLOG_WARNING("The config of reinforcement %s is empty.", reinforcement_name.c_str());
+            KLOG_WARNING("The config of reinforcement %s is empty.", reinforcementName.c_str());
             continue;
         }
 
         // 添加加固项的基本信息（分类和标签）
-        if (reinforcement_noarg->category().present())
+        if (reinforcementNoArg->category().present())
         {
-            reinforcement_arg.category(reinforcement_noarg->category().get());
+            reinforcementArg.category(reinforcementNoArg->category().get());
         }
-        reinforcement_arg.label(reinforcement_noarg->label());
-        reinforcement_arg.description(reinforcement_noarg->description());
+        reinforcementArg.label(reinforcementNoArg->label());
+        reinforcementArg.description(reinforcementNoArg->description());
 
-        auto reinforcement = QSharedPointer<Reinforcement>(new Reinforcement(plugin->getId(), reinforcement_arg));
+        auto reinforcement = QSharedPointer<Reinforcement>(new Reinforcement(plugin->getId(), reinforcementArg));
 
-        this->m_reinforcements[QString::fromStdString(reinforcement_name)] = reinforcement;
+        this->m_reinforcements[QString::fromStdString(reinforcementName)] = reinforcement;
     }
 
     Q_EMIT reinforcementsChanged();
