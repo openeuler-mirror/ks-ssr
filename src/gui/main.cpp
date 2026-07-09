@@ -24,6 +24,8 @@
 #include "lib/widgets/single-application/single-application.h"
 #include "window.h"
 
+#define TTF_PATH SSR_INSTALL_DATADIR "/AlibabaPuHuiTi-3-55-Regular.ttf"
+
 using namespace KS;
 
 int main(int argc, char *argv[])
