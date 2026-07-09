@@ -76,6 +76,11 @@ class PermissionSetting:
 
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 
 class DirectoryPermissionSetting:
     def __init__(self):
