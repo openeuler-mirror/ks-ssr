@@ -12,10 +12,10 @@
  * Author:     chendingjian <chendingjian@kylinsec.com.cn>
  */
 
+#include "pdf-details.h"
 #include <QFileInfo>
 #include <QSizePolicy>
 #include <QVBoxLayout>
-#include "pdf-details.h"
 #include "ui_pdf-details.h"
 
 #define MAX_HEIGHT 1122
