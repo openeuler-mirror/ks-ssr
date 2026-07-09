@@ -307,24 +307,6 @@ void BRDBus::SetNotificationStatus(const uint32_t& notificationStatus)
                     calledUniqueName);
 }
 
-void BRDBus::SetFallbackStatus(const uint32_t& fallbackStatus)
-{
-    if (fallbackStatus > BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED)
-    {
-        sendErrorReply(QDBusError::InvalidArgs,
-                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_FALLBACK_STATUS_INVALID));
-        return;
-    }
-    RETURN_IF_TRUE(fallbackStatus == this->m_configuration->getFallbackStatus());
-
-    if (!this->m_configuration->setFallbackStatus(BRFallbackStatus(fallbackStatus)))
-    {
-        sendErrorReply(QDBusError::InternalError,
-                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_FALLBACK_STATUS_FAILED));
-        return;
-    }
-}
-
 void BRDBus::ImportCustomRA(const QString& encodedStrategy)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
