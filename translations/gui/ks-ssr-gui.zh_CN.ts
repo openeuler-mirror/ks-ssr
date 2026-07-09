@@ -365,14 +365,6 @@
     </message>
 </context>
 <context>
-    <name>PolkitProxy</name>
-    <message>
-        <location filename="../../lib/dbus/polkit-proxy.cpp" line="218"/>
-        <source>Authorization failed.</source>
-        <translation>认证失败。</translation>
-    </message>
-</context>
-<context>
     <name>QObject</name>
     <message>
         <location filename="../../lib/base/error.cpp" line="34"/>
