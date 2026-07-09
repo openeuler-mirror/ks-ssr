@@ -37,8 +37,8 @@ Context::Context()
     m_configuration = new Configuration(SSR_INSTALL_DATADIR "/ssr.ini", this);
     m_categories = new Categories(this);
     m_plugins = new Plugins(m_configuration, this);
-    m_jobManager = new JobManager(m_configuration, m_plugins, this);
-    m_dbus = new BRDBus(m_configuration, m_categories, m_plugins, m_jobManager, this);
+    m_jobDispatcher = new JobDispatcher(m_configuration, m_plugins, this);
+    m_dbus = new BRDBus(m_configuration, m_categories, m_plugins, m_jobDispatcher, this);
 }
 
 Context::~Context()
