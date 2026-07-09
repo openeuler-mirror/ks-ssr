@@ -75,17 +75,23 @@ void Home::init()
                 }
             });
 
+    // 动画载入
+    for (int i = 0; i <= LOGO_PIXMAP_COUNTS; i++)
+    {
+        QString res = QString(":/br/image/logo/%1").arg(i);
+        m_logoPixVec.append(res);
+    }
+
     connect(&m_logoTimer, &QTimer::timeout, this, [this]()
             {
                 static uint pixIndex = 0;
-                QString res = QString(":/br/image/logo/%1").arg(pixIndex++);
                 if (pixIndex > LOGO_PIXMAP_COUNTS)
                 {
                     pixIndex = 0;
                 }
-                m_ui->m_icon->setPixmap(res);
+                m_ui->m_icon->setPixmap(m_logoPixVec.at(pixIndex++));
             });
-    m_logoTimer.start(6000 / LOGO_PIXMAP_COUNTS);
+    m_logoTimer.start(12000 / LOGO_PIXMAP_COUNTS);
 }
 
 void Home::modfiyReinforcementTime()
