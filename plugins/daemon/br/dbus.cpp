@@ -643,401 +643,56 @@ void BRDBus::GenerateReport(bool operationResult)
             calledUniqueName);
 }
 
-void KS::BR::BRDBus::ExportReport(const QString& savePath)
+void BRDBus::ExportReport(const QString& savePath)
 {
-    KLOG_INFO() << savePath;
-    QStringList names;
-    auto reinforcements = this->m_plugins->getReinforcements();
-    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
-    {
-        auto& rsReinforcement = (*iter)->getRs();
-        names.push_back(QString::fromStdString(rsReinforcement.name()));
-    }
-
-    if (this->m_scanJob && this->m_scanJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
+    if (m_jobManager->getScanStatus() == BRJobState::BR_JOB_STATE_RUNNING)
     {
         sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to scan."),
-                      m_scanUniqueName);
-    }
-    else
-    {
-        KLOG_INFO() << "ExportReport Scan";
-
-        m_reportSavePath = savePath;
-        Scan(names);
-    }
-}
-
-void BRDBus::setFallback(const QDBusMessage& message, const uint32_t& snapshotStatus)
-{
-    SCOPE_EXIT(
-        {
-            QDBusConnection::systemBus().send(message.createReply());
-        });
-    auto calledUniqueName = message.service();
-
-    KLOG_INFO("Set fallback. snapshotStatus: %d.", snapshotStatus);
-    RETURN_IF_TRUE(snapshotStatus == BRFallbackMethod::BR_FALLBACK_METHOD_OTHER);
-    QStringList names_rh;
-    auto reinforcements = this->m_plugins->getReinforcements();
-    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
-    {
-        auto& rsReinforcement = (*iter)->getRs();
-        names_rh.push_back(QString::fromStdString(rsReinforcement.name()));
-    }
-    if (names_rh.empty())
-    {
-        // 需回退的加固项为空 不需要进行加固了 reinforce Finish
-        emit ProgressFinished();
-        this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
-        auto replyMessage = message.createReply();
-        QDBusConnection::systemBus().send(replyMessage);
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to set fallback."),
-                      calledUniqueName);
+                      tr("Failed to export report."),
+                      message().service());
         return;
     }
 
+    if (!m_jobManager->scanAll())
+    {
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_FAILED));
+        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
+                      tr("Failed to export report."),
+                      message().service());
+        return;
+    }
+
+    m_exportReportConnection = connect(m_jobManager, &JobManager::scanFinished,
+                                       std::bind(&BRDBus::exportReport, this, savePath));
+}
+
+void BRDBus::fallback(const QDBusMessage& message, const uint32_t& snapshotStatus)
+{
     // 已经在加固则返回错误
-    if (this->m_reinforceJob && this->m_reinforceJob->getState() == BRJobState::BR_JOB_STATE_RUNNING)
+    if (m_jobManager->getFallbackStatus() == BRJobState::BR_JOB_STATE_RUNNING)
     {
-        auto replyMessage = message.createErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_REINFORCE_IS_RUNNING));
-        QDBusConnection::systemBus().send(replyMessage);
-        this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("Failed to set fallback."),
-                      calledUniqueName);
-        return;
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BR_FALLBACK_IS_RUNNING, message);
     }
 
-    m_fallbackMethod = BRFallbackMethod(snapshotStatus);
-    reinforce(message, names_rh);
-    SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
-                    tr("Set fallback. snapshot status is %1.").arg(snapshotStatus == BR_FALLBACK_METHOD_INITIAL ? tr("init") : tr("pre")),
-                    calledUniqueName);
-    m_fallbackMethod = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
+    m_fallbackUniqueName = message.service();
+    if (!m_jobManager->fallback(snapshotStatus))
+    {
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message);
+    }
+
+    connect(m_jobManager, &JobManager::fallbackFinished, this, &BRDBus::processFallbackFinished);
+    QDBusConnection::systemBus().send(message.createReply());
 }
 
-void BRDBus::writeScanResultLog()
+void BRDBus::processScanProgress(const QString& progress)
 {
-    int successCount = 0;
-    int failCount = 0;
-    // 扫描完成时，根据结果写日志
-    for (auto name : m_jobResult.keys())
-    {
-        // 成功
-        if (m_jobResult.value(name) == static_cast<int32_t>(BR_REINFORCEMENT_STATE_SAFE | BR_REINFORCEMENT_STATE_SCAN_DONE))
-        {
-            successCount++;
-            continue;
-        }
-        if (m_jobResult.value(name) == static_cast<int32_t>(BR_REINFORCEMENT_STATE_UNSAFE | BR_REINFORCEMENT_STATE_SCAN_DONE))
-        {
-            failCount++;
-            continue;
-        }
-    }
-    SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
-                    tr("Scan success %1, safe %2, unsafe %3.")
-                        .arg(QString::number(successCount + failCount), QString::number(successCount), QString::number(failCount)),
-                    m_scanUniqueName);
+    Q_EMIT ScanProgress(progress);
 }
 
-void BRDBus::writeReinforcementResultLog()
+void BRDBus::processReinforceProgress(const QString& progress)
 {
-    int successCount = 0;
-    int failCount = 0;
-    // 加固完成时，根据结果写日志
-    for (auto name : m_jobResult.keys())
-    {
-        // 成功
-        if (static_cast<BRReinforcementState>(m_jobResult.value(name)) == BR_REINFORCEMENT_STATE_REINFORCE_DONE)
-        {
-            successCount++;
-            continue;
-        }
-        if (static_cast<BRReinforcementState>(m_jobResult.value(name)) == BR_REINFORCEMENT_STATE_REINFORCE_ERROR)
-        {
-            failCount++;
-            continue;
-        }
-    }
-    if (successCount == 0)
-    {
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("%1 reinforcements fail.")
-                          .arg(QString::number(failCount)),
-                      m_reforceUniqueName);
-    }
-    else if (failCount != 0 && successCount != 0)
-    {
-        SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
-                      tr("%1 reinforcements success, %2 fail.")
-                          .arg(QString::number(successCount), QString::number(failCount)),
-                      m_reforceUniqueName);
-    }
-    else
-    {
-        SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
-                        tr("%1 reinforcement success.")
-                            .arg(QString::number(successCount)),
-                        m_reforceUniqueName);
-    }
-}
-
-void BRDBus::init()
-{
-    QDBusConnection dbusConnection = QDBusConnection::systemBus();
-    if (!dbusConnection.registerObject(BR_DBUS_OBJECT_PATH, this))
-    {
-        KLOG_ERROR() << "Register Service error:" << dbusConnection.lastError().message();
-        return;
-    }
-
-    if (m_configuration->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
-    {
-        m_resourceMonitorTimer = new QTimer(this);
-        QObject::connect(this->m_resourceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
-        m_resourceMonitorTimer->start(RESOURCEMONITORMS);
-    }
-
-    // 服务启动时自动扫描一次，获取系统默认配置存入rh-first文件
-    if (!QFile::exists(RH_BR_OPERATE_DATA_FIRST))
-    {
-        QStringList names;
-        auto reinforcements = this->m_plugins->getReinforcements();
-        for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
-        {
-            auto& rsReinforcement = (*iter)->getRs();
-            names.push_back(QString::fromStdString(rsReinforcement.name()));
-        }
-        m_isScanFlag = false;
-        m_isFinishRHWrite = false;
-        Scan(names);
-    }
-
-    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::homeFreeSpaceRatio_,
-                     this, &BRDBus::homeFreeSpaceRatio);
-    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::rootFreeSpaceRatio_,
-                     this, &BRDBus::rootFreeSpaceRatio);
-    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::cpuAverageLoadRatio_,
-                     this, &BRDBus::cpuAverageLoadRatio);
-    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::memoryRemainingRatio_, this, &BRDBus::memoryRemainingRatio);
-
-    // 进程完成后，回退状态置为未开始
-    QObject::connect(this, &BRDBus::ProgressFinished, this, [this]()
-                     {
-                         RETURN_IF_TRUE(BR_FALLBACK_STATUS_NOT_STARTED == this->m_configuration->getFallbackStatus());
-                         if (!this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_NOT_STARTED))
-                         {
-                             KLOG_ERROR() << "set fallback status failed.";
-                         }
-                     });
-
-    connect(this, &BRDBus::ReinforceProgress, this, &BRDBus::readReinforceItemStatus);
-    connect(this, &BRDBus::ScanProgress, this, &BRDBus::readReinforceItemStatus);
-    connect(m_plugins, &Plugins::reinforcementsChanged, [this]()
-            {
-                Q_EMIT ReinforcementsChanged();
-            });
-}
-
-void BRDBus::initScanResult(const QStringList& names)
-{
-    m_scanJobResult = Protocol::JobResult(0, 0, 0);
-    m_scanJobResult.reinforcement().clear();
-
-    for (auto& name : names)
-    {
-        m_scanJobResult.reinforcement().push_back(Protocol::ReinforcementResult(name.toStdString(), 0));
-    }
-}
-
-void BRDBus::initReinforceResult(const QStringList& names)
-{
-    m_reinforceJobResult = Protocol::JobResult(0, 0, 0);
-    m_reinforceJobResult.reinforcement().clear();
-
-    for (auto& name : names)
-    {
-        m_reinforceJobResult.reinforcement().push_back(Protocol::ReinforcementResult(name.toStdString(), 0));
-    }
-}
-
-void BRDBus::cacheScanResult(const Protocol::ReinforcementResult& reinforcementResult)
-{
-    for (auto& reinforcement : m_scanJobResult.reinforcement())
-    {
-        CONTINUE_IF_TRUE(reinforcement.name() != reinforcementResult.name());
-        reinforcement = reinforcementResult;
-    }
-}
-
-void BRDBus::cacheReinforceResult(const Protocol::ReinforcementResult& reinforcementResult)
-{
-    for (auto& reinforcement : m_reinforceJobResult.reinforcement())
-    {
-        CONTINUE_IF_TRUE(reinforcement.name() != reinforcementResult.name());
-        reinforcement = reinforcementResult;
-    }
-}
-
-void BRDBus::processScanProgress(const JobResult& jobResult)
-{
-    // 这里记录上一次信号到这一次信号的结果
-    Protocol::JobResult scanResult(0, 0, 0);
-    try
-    {
-        scanResult.process(jobResult.finished_operation_num * 100.0 / jobResult.sum_operation_num);
-        scanResult.job_id(jobResult.job_id);
-        scanResult.job_state(this->m_scanJob->getState());
-
-        m_scanJobResult.process(jobResult.finished_operation_num * 100.0 / jobResult.sum_operation_num);
-        m_scanJobResult.job_id(jobResult.job_id);
-        m_scanJobResult.job_state(this->m_scanJob->getState());
-
-        for (auto iter = jobResult.running_operations.begin(); iter != jobResult.running_operations.end(); ++iter)
-        {
-            auto operation = this->m_scanJob->getOperation((*iter));
-
-            Protocol::ReinforcementResult reinforcementResult(std::string(), 0);
-            reinforcementResult.name(operation->reinforcement_name.toStdString());
-            reinforcementResult.state(BRReinforcementState::BR_REINFORCEMENT_STATE_SCANNING);
-            reinforcementResult.args("");
-            scanResult.reinforcement().push_back(reinforcementResult);
-            cacheScanResult(reinforcementResult);
-        }
-
-        for (auto iter = jobResult.current_finished_operations.begin(); iter != jobResult.current_finished_operations.end(); ++iter)
-        {
-            auto& operationResult = (*iter);
-            auto operation = this->m_scanJob->getOperation(operationResult.operation_id);
-            Protocol::ReinforcementResult reinforcementResult(std::string(), 0);
-
-            reinforcementResult.name(operation->reinforcement_name.toStdString());
-
-            BRReinforcementState state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNKNOWN;
-            const auto resultValues = StrUtils::str2jsonObject(operationResult.result);
-            // 如果结果为空应该时任务被取消了，如果在收到客户端的任务取消命令时操作已经在执行，结果也可能不为空，所以这里不能通过任务是否被取消的状态来判断
-            if (resultValues.isEmpty())
-            {
-                state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNSCAN;
-                reinforcementResult.args("");
-            }
-            else if (resultValues[JOB_ERROR_STR].isString())
-            {
-                state = BRReinforcementState::BR_REINFORCEMENT_STATE_SCAN_ERROR;
-                reinforcementResult.args("");
-                reinforcementResult.error(resultValues[JOB_ERROR_STR].toString().toStdString());
-            }
-            else
-            {
-                state = BRReinforcementState::BR_REINFORCEMENT_STATE_SCAN_DONE;
-                reinforcementResult.args(StrUtils::json2str(resultValues).toStdString());
-            }
-            auto reinforcement = this->m_plugins->getReinforcement(operation->reinforcement_name);
-            updateRH(operation->reinforcement_name, resultValues[JOB_RETURN_VALUE].toObject());
-
-            if ((state & BRReinforcementState::BR_REINFORCEMENT_STATE_SCAN_DONE) != 0 &&
-                reinforcement &&
-                reinforcement->matchRules(resultValues[JOB_RETURN_VALUE].toObject()))
-            {
-                state = BRReinforcementState(state | BRReinforcementState::BR_REINFORCEMENT_STATE_SAFE);
-            }
-            else
-            {
-                // 保留未扫描状态，否则扫描结果仅为符合和不符合了
-                if (state != BRReinforcementState::BR_REINFORCEMENT_STATE_UNSCAN)
-                {
-                    state = BRReinforcementState(state | BRReinforcementState::BR_REINFORCEMENT_STATE_UNSAFE);
-                }
-            }
-            reinforcementResult.state(int32_t(state));
-
-            scanResult.reinforcement().push_back(reinforcementResult);
-            cacheScanResult(reinforcementResult);
-        }
-
-        if (m_isScanFlag)
-        {
-            std::ostringstream ostringStream;
-            Protocol::br_job_result(ostringStream, scanResult);
-            emit ScanProgress(QString(ostringStream.str().c_str()));
-        }
-    }
-    catch (const std::exception& e)
-    {
-        KLOG_WARNING("%s.", e.what());
-        return;
-    }
-}
-
-void BRDBus::processReinforceProgress(const JobResult& jobResult)
-{
-    Protocol::JobResult reinforceResult(0, 0, 0);
-    try
-    {
-        reinforceResult.process(jobResult.finished_operation_num * 100.0 / jobResult.sum_operation_num);
-        reinforceResult.job_id(jobResult.job_id);
-        reinforceResult.job_state(this->m_reinforceJob->getState());
-
-        m_reinforceJobResult.process(jobResult.finished_operation_num * 100.0 / jobResult.sum_operation_num);
-        m_reinforceJobResult.job_id(jobResult.job_id);
-        m_reinforceJobResult.job_state(this->m_reinforceJob->getState());
-
-        for (auto iter = jobResult.running_operations.begin(); iter != jobResult.running_operations.end(); ++iter)
-        {
-            auto operation = this->m_reinforceJob->getOperation(*iter);
-            Protocol::ReinforcementResult reinforcementResult(std::string(), 0);
-
-            reinforcementResult.name(operation->reinforcement_name.toStdString());
-            reinforcementResult.state(BRReinforcementState::BR_REINFORCEMENT_STATE_REINFORCING);
-            reinforceResult.reinforcement().push_back(reinforcementResult);
-            cacheReinforceResult(reinforcementResult);
-        }
-
-        for (auto iter = jobResult.current_finished_operations.begin(); iter != jobResult.current_finished_operations.end(); ++iter)
-        {
-            auto& operationResult = (*iter);
-            auto operation = this->m_reinforceJob->getOperation(operationResult.operation_id);
-            Protocol::ReinforcementResult reinforcementResult(std::string(), 0);
-
-            reinforcementResult.name(operation->reinforcement_name.toStdString());
-
-            BRReinforcementState state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNKNOWN;
-            auto resultValues = StrUtils::str2jsonObject(operationResult.result);
-            if (resultValues.isEmpty())
-            {
-                state = BRReinforcementState::BR_REINFORCEMENT_STATE_UNREINFORCE;
-            }
-            else if (resultValues[JOB_ERROR_STR].isString())
-            {
-                state = BRReinforcementState::BR_REINFORCEMENT_STATE_REINFORCE_ERROR;
-                reinforcementResult.error(resultValues[JOB_ERROR_STR].toString().toStdString());
-            }
-            else
-            {
-                state = BRReinforcementState::BR_REINFORCEMENT_STATE_REINFORCE_DONE;
-            }
-            reinforcementResult.state(int32_t(state));
-            reinforceResult.reinforcement().push_back(reinforcementResult);
-            cacheReinforceResult(reinforcementResult);
-        }
-        // 回退中，不关注进程信息
-        if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
-        {
-            std::ostringstream ostringStream;
-            Protocol::br_job_result(ostringStream, reinforceResult);
-            emit ReinforceProgress(QString(ostringStream.str().c_str()));
-        }
-    }
-    catch (const std::exception& e)
-    {
-        KLOG_WARNING("%s.", e.what());
-        return;
-    }
+    Q_EMIT ReinforceProgress(progress);
 }
 
 bool BRDBus::setResourceMonitor()
