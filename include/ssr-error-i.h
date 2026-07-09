@@ -34,7 +34,8 @@ extern "C"
         ERROR_CUSTOM_RS_DECRYPT_FAILED,
         ERROR_CORE_REINFORCE_JOB_FAILED,
 
-        // deamon
+        // plugins
+        // plugin br
         ERROR_DAEMON_STANDARD_TYPE_INVALID = 0x0200,
         ERROR_DAEMON_SET_STANDARD_TYPE_FAILED,
         ERROR_DAEMON_STRATEGY_TYPE_INVALID,
