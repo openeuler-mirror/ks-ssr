@@ -313,13 +313,13 @@ void BRSettingPage::setMonitorStatus(bool isOpen)
 
 void BRSettingPage::fallback(int status)
 {
-    auto reply = m_dbusProxy->Fallback(BRFallbackMethod(status));
+    auto reply = m_dbusProxy->Rollback(BRFallbackMethod(status));
     CHECK_ERROR_FOR_DBUS_REPLY_AND_RETURN(reply);
 
-    connect(m_dbusProxy, &BRDbusProxy::FallbackFinished, this, [this]
+    connect(m_dbusProxy, &BRDbusProxy::RollbackFinished, this, [this]
             {
-                POPUP_MESSAGE_DIALOG(tr("Fallback finished!"));
-                disconnect(m_dbusProxy, &BRDbusProxy::FallbackFinished, 0, 0);
+                POPUP_MESSAGE_DIALOG(tr("Rollback finished!"));
+                disconnect(m_dbusProxy, &BRDbusProxy::RollbackFinished, 0, 0);
             });
 }
 }  // namespace BR
