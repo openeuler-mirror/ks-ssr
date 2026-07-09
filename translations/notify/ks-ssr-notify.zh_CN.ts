@@ -425,57 +425,57 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="33"/>
+        <location filename="../../lib/base/report.cpp" line="47"/>
         <source>KylinSec Co., Ltd. Contact:400-012-6606</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="46"/>
+        <location filename="../../lib/base/report.cpp" line="60"/>
         <source>KylinSec Co., Ltd.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="95"/>
+        <location filename="../../lib/base/report.cpp" line="109"/>
         <source>KylinSec Host Security Reinforcement V1 report</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="101"/>
+        <location filename="../../lib/base/report.cpp" line="115"/>
         <source>Information overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="107"/>
+        <location filename="../../lib/base/report.cpp" line="121"/>
         <source>OS:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="108"/>
+        <location filename="../../lib/base/report.cpp" line="122"/>
         <source>Host:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="111"/>
+        <location filename="../../lib/base/report.cpp" line="125"/>
         <source>kernel version:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="112"/>
+        <location filename="../../lib/base/report.cpp" line="126"/>
         <source>Software active state:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="112"/>
+        <location filename="../../lib/base/report.cpp" line="126"/>
         <source>activated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="113"/>
+        <location filename="../../lib/base/report.cpp" line="127"/>
         <source>Export time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../lib/base/report.cpp" line="204"/>
+        <location filename="../../lib/base/report.cpp" line="218"/>
         <source>No problems were found in this test</source>
         <translation type="unfinished"></translation>
     </message>
