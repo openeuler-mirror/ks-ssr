@@ -476,7 +476,6 @@ KS--DM--DevicePermission  QComboBox
     padding-left:12px;
     padding-right:12px;
     combobox-popup:0;
-    color:#ffffff;
 }
 
 KS--DM--DevicePermission QComboBox QAbstractItemView {
