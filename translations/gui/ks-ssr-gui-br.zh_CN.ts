@@ -264,6 +264,40 @@
     </message>
 </context>
 <context>
+    <name>KS::BR::PDFDetails</name>
+    <message>
+        <location filename="../../plugins/gui/br/reports/pdf-details.cpp" line="37"/>
+        <source>Scan Item</source>
+        <translation type="unfinished">扫描项</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/reports/pdf-details.cpp" line="39"/>
+        <source>Scan Type</source>
+        <translation type="unfinished">扫描类型</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/reports/pdf-details.cpp" line="45"/>
+        <source>Scan rpm name</source>
+        <translation type="unfinished">rpm包名</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/reports/pdf-details.cpp" line="47"/>
+        <location filename="../../plugins/gui/br/reports/pdf-details.cpp" line="54"/>
+        <source>Scan results</source>
+        <translation type="unfinished">扫描结果</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/reports/pdf-details.cpp" line="53"/>
+        <source>Test Item</source>
+        <translation type="unfinished">检测项</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/reports/pdf-details.cpp" line="59"/>
+        <source>Technical support：Hunan KylinSec Technology Co. Ltd.,  Telephone：400-012-6606</source>
+        <translation type="unfinished">技术支持：湖南麒麟信安科技股份有限公司，联系电话：400-012-6606</translation>
+    </message>
+</context>
+<context>
     <name>KS::BR::Progress</name>
     <message>
         <location filename="../../plugins/gui/br/progress.cpp" line="37"/>
