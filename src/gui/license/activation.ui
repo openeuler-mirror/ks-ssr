@@ -205,6 +205,9 @@
           <property name="text">
            <string>Activate</string>
           </property>
+          <property name="okStyle" stdset="0">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
