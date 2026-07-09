@@ -126,9 +126,6 @@ KS--HeaderButtonDelegate::menu-indicator
 /* SideBar */
 KS--SideBar
 {
-    font-size: 12px;
-    color: white;
-    font:NotoSansCJKsc-Regular;
     background-color:#2d2d2d;
     border-radius: 6px;
     padding-left: 10px;
