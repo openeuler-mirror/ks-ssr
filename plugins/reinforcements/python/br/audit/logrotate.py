@@ -21,3 +21,8 @@ class Rotate:
         rotate_config = br.configuration.KV(LOGROTATE_CONF_PATH)
         rotate_config.set_value('rotate', "" if not str(args[ROTATE_ARG_ROTATE]) else int(args[ROTATE_ARG_ROTATE]))
         return (True, '')
+
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
