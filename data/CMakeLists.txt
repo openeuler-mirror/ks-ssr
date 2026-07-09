@@ -56,7 +56,7 @@ add_custom_target(
 
 install(
   FILES ${PROJECT_BINARY_DIR}/data/br-system-rs.encrypted
-  DESTINATION ${SSR_INSTALL_DATADIR}/
+  DESTINATION ${SSR_BR_INSTALL_DATADIR}/
   RENAME br-system-rs)
 
 install(
