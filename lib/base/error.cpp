@@ -56,9 +56,7 @@ QString Error::getErrorDesc(SSRErrorCode errorCode)
     case ERROR_DAEMON_REINFORCEMENT_NOTFOUND:
         errorDesc = QObject::tr("Reinforcement item '{0}' is not found.");
         break;
-    case ERROR_DAEMON_SCAN_IS_RUNNING:
-    case ERROR_DAEMON_REINFORCE_IS_RUNNING:
-    case ERROR_BR_FALLBACK_IS_RUNNING:
+    case ERROR_BR_JOB_IS_RUNNING:
         errorDesc = QObject::tr("The job is running, please don't repeat the operation.");
         break;
     case ERROR_DAEMON_FALLBACK_CANNOT_RUNNING:
