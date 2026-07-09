@@ -253,7 +253,7 @@
     </message>
     <message>
         <source>KylinSec Co., Ltd.</source>
-        <translation>湖南麒麟信安科技股份有限公司</translation>
+        <translation>湖南麒麟信安科技股份有限公司。</translation>
     </message>
     <message>
         <source>Scan or Repair is running, please wait moment.</source>
