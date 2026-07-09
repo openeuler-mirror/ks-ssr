@@ -14,11 +14,8 @@
 
 #include "br-plugin.h"
 #include <QCoreApplication>
-#include "categories.h"
-#include "configuration.h"
-#include "dbus.h"
+#include "context.h"
 #include "lib/base/misc-utils.h"
-#include "plugins.h"
 
 namespace KS
 {
