@@ -288,6 +288,11 @@ class USB(DRIVERS):
 
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 
 class TTYS(UDev):
     def get(self):
