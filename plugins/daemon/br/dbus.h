@@ -129,14 +129,14 @@ public Q_SLOTS:
     // 获取当前加固结果
     virtual QString GetReinforceResult();
 
+    // 设置回退，回退到初始状态/回退到上一次的状态
+    virtual void Fallback(const uint32_t &snapshot);
+
+    // 获取当前回退状态
+    virtual uint GetFallbackStatus();
+
     // 取消一个任务
     virtual void Cancel(const qlonglong &jobID);
-
-    // 设置回退，回退到初始状态/回退到上一次的状态
-    virtual void SetFallback(const uint32_t &snapshot);
-
-    // 设置回退状态 退回进行中/回退未开始/回退完成
-    virtual void SetFallbackStatus(const uint32_t &fallbackStatus);
 
     // 通知后端发生导出 加固策略/报表 操作，由后端记录日志。
     void ExportStrategy(bool);
