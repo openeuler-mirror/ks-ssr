@@ -714,36 +714,9 @@ QPushButton#m_passwordNote
     background-color: transparent;
 }
 
-/******  remote manager  ******/
-KS--Remote--RemotePage #check_baseline,#check_repair
-{
-    color: white;
-}
-
-KS--Remote--RemotePage QPushButton#btn_select,QPushButton#btn_excute
-{
-    color:#FFFFFF;
-    font-size:12px;
-    border-radius:4px;
-    background:#43A3F2;
-}
-
 KS--Remote--RemotePage QWidget#widget_reinforce,QWidget#widget_repair
 {
     background-color: #393939;
     border-radius: 6px;
 }
 
-KS--Remote--RemotePage QPushButton#btn_cancel,QPushButton#btn_return
-{
-    background-color: #393939;
-    outline: none;
-    border: 0px;
-    border-radius: 4px;
-    color:#FFFFFF;
-}
-
-KS--Remote--RemotePage QPushButton#btn_cancel:hover,QPushButton#btn_return:hover
-{
-    background-color: #464646;
-}
