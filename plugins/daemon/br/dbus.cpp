@@ -740,7 +740,7 @@ void BRDBus::exportReport(const QString& savePath)
     QList<QStringList> tabelDataConformity;
     QList<QStringList> tabelDataInconformity;
 
-    auto scanJobResult = m_jobManager->getScanResult();
+    auto scanJobResult = m_jobDispatcher->getScanResult();
     for (auto& reinforcementResult : scanJobResult.reinforcement())
     {
         QString name = QString::fromStdString(reinforcementResult.name());
