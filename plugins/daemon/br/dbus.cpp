@@ -102,11 +102,34 @@ BRDBus::~BRDBus()
     }
 }
 
-BRDBus* BRDBus::m_instance = nullptr;
-void BRDBus::globalInit(QObject* parent)
+void BRDBus::init()
 {
-    m_instance = new BRDBus(parent);
-    m_instance->init();
+    QDBusConnection dbusConnection = QDBusConnection::systemBus();
+    if (!dbusConnection.registerObject(BR_DBUS_OBJECT_PATH, this))
+    {
+        KLOG_ERROR() << "Register Service error:" << dbusConnection.lastError().message();
+        return;
+    }
+
+    if (m_configuration->getResourceMonitorStatus() == BRResourceMonitor::BR_RESOURCE_MONITOR_OPEN)
+    {
+        m_resourceMonitorTimer = new QTimer(this);
+        QObject::connect(this->m_resourceMonitorTimer, &QTimer::timeout, this, &BRDBus::setResourceMonitor);
+        m_resourceMonitorTimer->start(RESOURCEMONITORMS);
+    }
+
+    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::homeFreeSpaceRatio_,
+                     this, &BRDBus::homeFreeSpaceRatio);
+    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::rootFreeSpaceRatio_,
+                     this, &BRDBus::rootFreeSpaceRatio);
+    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::cpuAverageLoadRatio_,
+                     this, &BRDBus::cpuAverageLoadRatio);
+    QObject::connect(this->m_resourceMonitor, &ResourceMonitor::memoryRemainingRatio_, this, &BRDBus::memoryRemainingRatio);
+
+    connect(m_plugins, &Plugins::reinforcementsChanged, [this]()
+            {
+                Q_EMIT ReinforcementsChanged();
+            });
 }
 
 uint BRDBus::notificationStatus() const
