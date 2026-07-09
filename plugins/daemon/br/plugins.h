@@ -72,8 +72,6 @@ Q_SIGNALS:
     void reinforcementsChanged();
 
 private:
-    // 初始化
-    void init();
     // 加载所有插件配置
     void loadPlugins();
     void loadPluginsFromDir(const QString& dirname);
