@@ -20,7 +20,7 @@ namespace KS
 {
 namespace BR
 {
-#define CIRCLE_SPEED_MS 50
+#define CIRCLE_SPEED_MS 200
 static int angle;
 ProgressIcon::ProgressIcon(QWidget *parent)
     : QWidget(parent)
