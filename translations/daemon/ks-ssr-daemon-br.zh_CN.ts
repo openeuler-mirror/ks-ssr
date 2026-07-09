@@ -227,7 +227,7 @@
     <message>
         <location filename="../../plugins/daemon/br/dbus.cpp" line="1305"/>
         <source>test information</source>
-        <translation>检测信息</translation>
+        <translation>扫描信息</translation>
     </message>
     <message>
         <location filename="../../plugins/daemon/br/dbus.cpp" line="852"/>
