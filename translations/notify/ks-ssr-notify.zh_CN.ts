@@ -495,7 +495,7 @@
         <translation type="unfinished">ok</translation>
     </message>
     <message>
-        <location filename="../../lib/widgets/user-prompt-dialog.ui" line="133"/>
+        <location filename="../../lib/widgets/user-prompt-dialog.ui" line="136"/>
         <source>cancel</source>
         <translation type="unfinished"></translation>
     </message>
