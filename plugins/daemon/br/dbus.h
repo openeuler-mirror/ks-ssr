@@ -160,47 +160,29 @@ Q_SIGNALS:  // SIGNALS
 
 private:
     void reinforce(const QDBusMessage &message, const QStringList &names);
-    void setFallback(const QDBusMessage &message, const uint32_t &snapshot);
-    void writeScanResultLog();
-    void writeReinforcementResultLog();
+    void fallback(const QDBusMessage &message, const uint32_t &snapshot);
 
 private:
-    void init();
-    // 初始化扫描结果信息
-    void initScanResult(const QStringList &names);
-    // 初始化加固结果信息
-    void initReinforceResult(const QStringList &names);
-    // 扫描结果更新到缓存
-    void cacheScanResult(const Protocol::ReinforcementResult &reinforcementResult);
-    // 加固结果更新到缓存
-    void cacheReinforceResult(const Protocol::ReinforcementResult &reinforcementResult);
     // 扫描进度信号处理
-    void processScanProgress(const JobResult &jobResult);
+    void processScanProgress(const QString &progress);
     // 加固进度信号处理
-    void processReinforceProgress(const JobResult &jobResult);
+    void processReinforceProgress(const QString &progress);
     // 资源监控开启/关闭
     bool setResourceMonitor();
     // 进程完成处理函数
-    void finishedScanProgress();
+    void processScanFinished();
     // 加固完成处理函数
-    void finishedReinforceProgress();
-
+    void processReinforceFinished();
+    // 回退完成处理函数
+    void processFallbackFinished();
     // 扫描完成后,导出结果
-    void exportReport();
-
-    void parseJsonParam(const Protocol::Reinforcement::ArgSequence &argSequence, QJsonObject &param);
-    // 通过加固项名获取加固参数，返回值为json字符串
-    QString getJsonParam(const QString &reinforceName);
-    // 更新rh文件
-    void updateRH(const QString &reinforceName, const QJsonObject &resultReturnValue);
-    // 读取加固项状态
-    void readReinforceItemStatus(const QString &jobResult);
-
+    void exportReport(const QString &savePath);
     void homeFreeSpaceRatio(float spaceRatio);
     void rootFreeSpaceRatio(float spaceRatio);
     void cpuAverageLoadRatio(float loadRatio);
     void memoryRemainingRatio(float memoryRatio);
-
+    // 校验加固项名称是否合法
+    bool validateReinforcementNames(const QStringList &reinforcementNames);
     // 翻译
     QString python2Translate(const QString &souceTxt);
     QString noop2Translate(const QString &souceTxt);
