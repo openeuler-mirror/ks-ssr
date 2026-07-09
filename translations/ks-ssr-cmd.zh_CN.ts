@@ -65,7 +65,17 @@
         <translation>低危</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="686"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="682"/>
+        <source>Vulnerability </source>
+        <translation>漏洞 </translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="682"/>
+        <source> does not exist</source>
+        <translation> 不存在</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="696"/>
         <source>Export Report failed:</source>
         <translation>导出报表失败：</translation>
     </message>
