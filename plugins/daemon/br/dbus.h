@@ -114,26 +114,20 @@ public Q_SLOTS:
     // 扫描指定加固项
     virtual void Scan(const QStringList &names);
 
-    // 获取当前扫描状态
-    virtual uint GetScanStatus();
-
     // 获取当前扫描结果，只有在扫描中才会获取到信息，主要用于网络版断线重连时可以获取到当前扫描中的详细信息
     virtual QString GetScanResult();
 
     // 对加固项进行加固
     virtual void Reinforce(const QStringList &names);
 
-    // 获取当前加固状态
-    virtual uint GetReinforceStatus();
-
     // 获取当前加固结果
     virtual QString GetReinforceResult();
 
     // 设置回退，回退到初始状态/回退到上一次的状态
-    virtual void Fallback(const uint32_t &snapshot);
+    virtual void Rollback(const uint32_t &snapshot);
 
-    // 获取当前回退状态
-    virtual uint GetFallbackStatus();
+    // 获取调度状态，包含扫描、加固、回退等
+    uint GetDispatchStatus();
 
     // 取消一个任务
     virtual void Cancel(const qlonglong &jobID);
