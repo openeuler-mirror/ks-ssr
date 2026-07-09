@@ -174,12 +174,12 @@ bool Configuration::setCustomRA(const Protocol::Reinforcement& reinforcement)
     return this->writeRAToFile(ra);
 }
 
-void Configuration::delCustomRA(const QString& name)
+bool Configuration::delCustomRA(const QString& name)
 {
     if (this->getStrategyType() == BRStrategyType::BR_STRATEGY_TYPE_SYSTEM)
     {
         KLOG_WARNING() << "Current is system strategy, so not allow to delete custom reinforcement arguments";
-        return;
+        return false;
     }
 
     auto ra = this->readRaFromFile();
