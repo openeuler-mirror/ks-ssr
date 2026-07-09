@@ -451,7 +451,7 @@ QStackedWidget#m_stacked
 {
     background-color:#2d2d2d;
     border-radius: 6px;
-    color: #ffffff;
+    color: white;
 }
 
 
