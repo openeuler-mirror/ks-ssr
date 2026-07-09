@@ -1,0 +1,67 @@
+
+QWidget
+{
+    background-color: transparent;
+    color: white;
+}
+
+QGroupBox
+{
+    background-color: transparent;
+    border: 0px;
+}
+
+QLabel
+{
+    font-size: 15px;
+}
+
+QPushButton
+{
+    background-color: transparent;
+    border: 0px;
+    color: #00a2ff;
+    font-size: 13px;
+}
+
+QPushButton:hover
+{
+    color: #79C3FF;
+
+}
+
+QRadioButton
+{
+    background-color: transparent;
+    color: white;
+    font-size: 13px;
+}
+QRadioButton::indicator:checked
+{
+    image: url(:/images/radio-checked);
+}
+QRadioButton::indicator:unchecked
+{
+    image: url(:/images/radio-unchecked);
+}
+
+QSpinBox
+{
+    height: 36px;
+    background-color: #222222;
+    border: 1px solid #454545;
+    border-radius: 6px;
+    padding-left:12px;
+    padding-right:12px;
+    combobox-popup:0;
+    font-size: 12px;
+    color: white;
+}
+
+QSpinBox::up-button,
+QSpinBox::down-button
+{
+    width : 0px;
+    height : 0px;
+    border : 0px;
+}
