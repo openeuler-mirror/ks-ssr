@@ -566,46 +566,35 @@ void BRDBus::reinforce(const QDBusMessage& message, const QStringList& names)
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_COMMON_INVALID_ARGS, message);
     }
 
-    // 已经在扫描则返回错误
-    if (m_jobManager->getScanStatus() == BRJobState::BR_JOB_STATE_RUNNING)
+    if (m_jobDispatcher->getState() != BRDispatchState::BR_DISPATCH_STATE_IDLE)
     {
-        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING, message);
+        DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_BR_JOB_IS_RUNNING, message);
     }
 
     m_reforceUniqueName = message.service();
-    if (!m_jobManager->reinforce(names))
+    if (!m_jobDispatcher->reinforce(names))
     {
         DBUS_ERROR_REPLY_AND_RETURN(SSRErrorCode::ERROR_FAILED, message);
     }
 
-    connect(m_jobManager, &JobManager::reinforceProgress, this, &BRDBus::processReinforceProgress);
-    connect(m_jobManager, &JobManager::reinforceFinished, this, &BRDBus::processReinforceFinished);
+    connect(m_jobDispatcher, &JobDispatcher::reinforceProgress, this, &BRDBus::processReinforceProgress);
+    connect(m_jobDispatcher, &JobDispatcher::reinforceFinished, this, &BRDBus::processReinforceFinished);
     QDBusConnection::systemBus().send(message.createReply());
-}
-
-uint BRDBus::GetReinforceStatus()
-{
-    return m_jobManager->getReinforceStatus();
 }
 
 QString BRDBus::GetReinforceResult()
 {
-    auto reinforceResult = m_jobManager->getReinforceResult();
+    auto reinforceResult = m_jobDispatcher->getReinforceResult();
     std::ostringstream ostringStream;
     Protocol::br_job_result(ostringStream, reinforceResult);
     return QString(ostringStream.str().c_str());
-}
-
-uint BRDBus::GetFallbackStatus()
-{
-    return m_jobManager->getFallbackStatus();
 }
 
 void BRDBus::Cancel(const qlonglong& jobID)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
 
-    if (!m_jobManager->cancel(jobID))
+    if (!m_jobDispatcher->cancel(jobID))
     {
         sendErrorReply(QDBusError::Failed, SSR_ERROR2STR(SSRErrorCode::ERROR_FAILED));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
