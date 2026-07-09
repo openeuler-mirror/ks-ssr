@@ -6,17 +6,17 @@
     <message>
         <location filename="../../lib/widgets/date-picker/calendar-widget.cpp" line="248"/>
         <source>confirm</source>
-        <translation type="unfinished"></translation>
+        <translation>确认</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/date-picker/calendar-widget.cpp" line="252"/>
         <source>now</source>
-        <translation type="unfinished"></translation>
+        <translation>现在</translation>
     </message>
     <message>
         <location filename="../../lib/widgets/date-picker/calendar-widget.cpp" line="275"/>
         <source>%1year%2mouth</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 年 %1 月</translation>
     </message>
 </context>
 <context>
