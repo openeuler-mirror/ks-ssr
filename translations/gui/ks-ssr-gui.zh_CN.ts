@@ -29,7 +29,7 @@
         <translation>激活</translation>
     </message>
     <message>
-        <location filename="../../src/gui/license/activation.ui" line="225"/>
+        <location filename="../../src/gui/license/activation.ui" line="228"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
