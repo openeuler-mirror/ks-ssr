@@ -342,12 +342,6 @@ bool Configuration::setResourceMonitorStatus(BRResourceMonitor resourceMonitor)
     return true;
 }
 
-void Configuration::init()
-{
-    KLOG_DEBUG("Configuration::init");
-    this->m_settings = new QSettings(this->m_configPath, QSettings::NativeFormat);
-}
-
 QSharedPointer<Protocol::RS> Configuration::getFixedRS()
 {
     KLOG_DEBUG("Configuration::getFixedRs");
