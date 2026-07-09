@@ -32,20 +32,10 @@ class Configuration : public QObject
 {
     Q_OBJECT
 public:
-    Configuration(const QString& configPath);
+    Configuration(const QString& configPath, QObject* parent = nullptr);
     virtual ~Configuration();
 
-    static Configuration* getInstance()
-    {
-        return m_instance;
-    };
-
-    static void globalInit(const QString& configPath);
-
-    static void globalDeinit()
-    {
-        delete m_instance;
-    };
+    void init();
 
     // 获取最大线程数
     uint32_t getMaxThreadNum();
