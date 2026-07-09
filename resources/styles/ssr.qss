@@ -517,7 +517,6 @@ KS--DM--DevicePermission #m_groupBox
 
 KS--DM--DevicePermission #m_groupBox QCheckBox
 {
-   color:#ffffff;
    background-color:#393939;
    border: none;
    border-radius: 6px;
