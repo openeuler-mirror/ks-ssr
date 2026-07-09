@@ -267,7 +267,15 @@ extern "C"
         // 加固中
         BR_REINFORCEMENT_STATE_REINFORCING = (1 << 8),
         // 加固完成
-        BR_REINFORCEMENT_STATE_REINFORCE_DONE = (1 << 9)
+        BR_REINFORCEMENT_STATE_REINFORCE_DONE = (1 << 9),
+        // 未回退
+        BR_REINFORCEMENT_STATE_UNBACKUP = (1 << 10),
+        // 回退中
+        BR_REINFORCEMENT_STATE_BACKUPING = (1 << 11),
+        // 回退错误
+        BR_REINFORCEMENT_STATE_BACKUP_ERROR = (1 << 12),
+        // 回退完成
+        BR_REINFORCEMENT_STATE_BACKUP_DONE = (1 << 13),
     };
 
     // 加固类型
