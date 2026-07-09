@@ -75,14 +75,14 @@ static int _audit_log(int type, int rc, const char* op)
 BRDBus::BRDBus(Configuration* configuration,
                Categories* categories,
                Plugins* plugins,
-               JobManager* jobManager,
+               JobDispatcher* jobDispatcher,
                QObject* parent)
     : QObject(parent),
       m_resourceMonitorTimer(nullptr),
       m_configuration(configuration),
       m_categories(categories),
       m_plugins(plugins),
-      m_jobManager(jobManager),
+      m_jobDispatcher(jobDispatcher),
       m_isScanFlag(true),
       m_reinforceTimer(nullptr)
 {
