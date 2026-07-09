@@ -403,8 +403,6 @@ QTableView#m_fileTable > QWidget
 QLabel#m_tips
 {
     color:#919191;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
 }
 
 /* trusted protected */
