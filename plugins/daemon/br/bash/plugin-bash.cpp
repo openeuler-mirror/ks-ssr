@@ -43,6 +43,18 @@ bool ReinforcementBash::set(const QString &args, QString &error)
     return retval == 0;
 }
 
+bool ReinforcementBash::backup(QString &args, QString &error)
+{
+    auto retval = QProcess::execute(m_bashFilePath, QStringList{"backup"});
+    return retval == 0;
+}
+
+bool ReinforcementBash::rollback(const QString &args, QString &error)
+{
+    auto retval = QProcess::execute(m_bashFilePath, QStringList{"rollback"});
+    return retval == 0;
+}
+
 PluginBash::PluginBash(const QString &bashRootDir)
     : m_bashRootDir(bashRootDir)
 {
