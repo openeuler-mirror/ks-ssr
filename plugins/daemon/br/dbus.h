@@ -40,7 +40,7 @@ public:
     BRDBus(Configuration *configuration,
            Categories *categories,
            Plugins *plugins,
-           JobManager *jobManager,
+           JobDispatcher *jobDispatcher,
            QObject *parent);
     virtual ~BRDBus();
 
