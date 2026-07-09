@@ -53,9 +53,14 @@ public:
     {
         return MapHelper::getValue(this->m_reinforcements, name);
     }
+    // 获取所有加固项名称
+    QStringList getReinforcementNames()
+    {
+        return m_reinforcements.keys();
+    };
     BRReinforcementVec getReinforcements()
     {
-        return MapHelper::getValues(this->m_reinforcements);
+        return m_reinforcements.values();
     };
     // 获取指定分类的加固项
     BRReinforcementVec getReinforcementsByCategory(const QString& category_name);
