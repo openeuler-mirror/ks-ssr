@@ -34,18 +34,13 @@ bool BRPlugin::isAvailable()
 void BRPlugin::activate()
 {
     m_translator = MiscUtils::installTranslator(QString("%1-%2").arg(QCoreApplication::applicationName()).arg("br"));
-    Configuration::globalInit(SSR_INSTALL_DATADIR "/ssr.ini");
-    Categories::globalInit();
-    Plugins::globalInit(Configuration::getInstance());
-    BRDBus::globalInit(nullptr);
+
+    Context::globalInit();
 }
 
 void BRPlugin::deactivate()
 {
-    BRDBus::globalDeinit();
-    Plugins::globalDeinit();
-    Categories::globalDeinit();
-    Configuration::globalDeinit();
+    Context::globalDeinit();
     MiscUtils::removeTranslator(m_translator);
 }
 }  // namespace BR
