@@ -42,22 +42,18 @@ public:
     bool scanAll();
     // 扫描指定加固项
     bool scan(const QStringList &names);
-    // 获取当前扫描状态
-    uint getScanStatus();
     // 获取当前扫描结果，只有在扫描中才会获取到信息，主要用于网络版断线重连时可以获取到当前扫描中的详细信息
     Protocol::JobResult getScanResult();
     // 全量加固
     bool reinforceAll();
     // 对加固项进行加固
     bool reinforce(const QStringList &names);
-    // 获取当前加固状态
-    uint getReinforceStatus();
     // 获取当前加固结果
     Protocol::JobResult getReinforceResult();
     // 回退
-    bool fallback(int method);
-    // 获取当前回退状态
-    uint getFallbackStatus();
+    bool rollback(int method);
+    // 获取调度状态
+    BRDispatchState getState();
     // 取消一个任务
     bool cancel(const qlonglong &jobID);
 
