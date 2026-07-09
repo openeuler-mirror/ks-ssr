@@ -111,7 +111,7 @@ void BRSettingPage::initConnection()
                     POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
                     return;
                 }
-                auto userPrompt = new UserPromptDialog(this);
+                auto userPrompt = new UserPromptDialog(parentWidget());
                 userPrompt->setNotifyMessage(tr("Fallback"), tr("Are you sure you want to go back to the previous state?"));
                 auto x = window()->x() + window()->width() / 2 - userPrompt->width() / 2;
                 auto y = window()->y() + window()->height() / 2 - userPrompt->height() / 2;
