@@ -29,25 +29,11 @@ class Plugins : public QObject
 {
     Q_OBJECT
 public:
-    Plugins(Configuration* configuration);
+    Plugins(Configuration* configuration, QObject* parent = nullptr);
     virtual ~Plugins();
 
-    static Plugins* getInstance()
-    {
-        return m_instance;
-    };
-
-    static void globalInit(Configuration* configuration);
-
-    static void globalDeinit()
-    {
-        delete m_instance;
-    };
-
-    ThreadPool& getThreadPool()
-    {
-        return this->m_threadPool;
-    }
+    // 初始化
+    void init();
 
     // 获取所有插件信息
     BRPluginVec getPlugins()
