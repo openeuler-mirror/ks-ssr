@@ -314,17 +314,6 @@ extern "C"
         BR_FALLBACK_METHOD_OTHER
     };
 
-    // 回退状态
-    enum BRFallbackStatus
-    {
-        // 回退未开始
-        BR_FALLBACK_STATUS_NOT_STARTED = 0,
-        // 回退进行中
-        BR_FALLBACK_STATUS_IN_PROGRESS,
-        // 回退完成
-        BR_FALLBACK_STATUS_IS_FINISHED
-    };
-
     enum LOGAlertType
     {
         HAZARD_BEHAVIOR,
