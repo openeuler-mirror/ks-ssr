@@ -193,20 +193,10 @@ private:
     Configuration *m_configuration;
     Categories *m_categories;
     Plugins *m_plugins;
+    JobManager *m_jobManager;
     ResourceMonitor *m_resourceMonitor;
-
-    // 扫描任务
-    QSharedPointer<Job> m_scanJob;
-    // 记录当前扫描过程中完整的扫描结果，而不是发送信号这一次的结果
-    Protocol::JobResult m_scanJobResult;
-    // 加固任务
-    QSharedPointer<Job> m_reinforceJob;
-    // 记录当前加固过程中完整的结果，而不是发送信号这一次的结果
-    Protocol::JobResult m_reinforceJobResult;
-
     // 激活信息
     QJsonValue m_licenseValues;
-
     // 加固前需要进行一次扫描，用于判断是否这次扫描是否为正常调用dbus接口的扫描
     bool m_isScanFlag;
     // 首次扫描的rh文件是否写入完成
