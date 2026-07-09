@@ -315,15 +315,12 @@ QPushButton#activateStatus
 {
     background:rgba(255, 61, 61,255);
     font-family: Noto Sans CJK SC regular;
-    font-size:12px;
     border-radius: 6px;
 }
 
 KS--Loading QLabel#loadingLabel
 {
     color:#919191;
-    font-size: 12px;
-    font:NotoSansCJKsc-Regular;
 }
 
 KS--Window QPushButton#btnForMenu
