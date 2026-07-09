@@ -29,13 +29,13 @@ namespace BR
 
 #define MAX_THREAD_NUM_DEFAULT 1
 
-#define SYSTEM_RS_FILEPATH SSR_INSTALL_DATADIR "/br-system-rs"
-#define CUSTOM_RS_FILEPATH SSR_INSTALL_DATADIR "/br-custom-rs"
+#define SYSTEM_RS_FILEPATH SSR_BR_INSTALL_DATADIR "/br-system-rs"
+#define CUSTOM_RS_FILEPATH SSR_BR_INSTALL_DATADIR "/br-custom-rs"
 
-#define CUSTOM_RA_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra.xml"
-#define CUSTOM_RA_STRATEGY_FILEPATH SSR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
-#define RH_BR_DATDIR SSR_INSTALL_DATADIR "/ReinforcementHistory"
-#define RSA_PUBLIC_KEY_FILEPATH SSR_INSTALL_DATADIR "/br-public.key"
+#define CUSTOM_RA_FILEPATH SSR_BR_INSTALL_DATADIR "/br-custom-ra.xml"
+#define CUSTOM_RA_STRATEGY_FILEPATH SSR_BR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
+#define RH_BR_DATDIR SSR_BR_INSTALL_DATADIR "/ReinforcementHistory"
+#define RSA_PUBLIC_KEY_FILEPATH SSR_BR_INSTALL_DATADIR "/br-public.key"
 
 using namespace Protocol;
 
