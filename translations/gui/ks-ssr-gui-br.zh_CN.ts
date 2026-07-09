@@ -630,53 +630,53 @@
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="72"/>
         <source>Operating system:</source>
-        <translation type="unfinished">操作系统：</translation>
+        <translation>操作系统：</translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="85"/>
         <source>Host:</source>
-        <translation type="unfinished">主机:</translation>
+        <translation>主机:</translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="98"/>
         <source>IP:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="111"/>
         <source>MAC:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="124"/>
         <source>System kernel version:</source>
-        <translation type="unfinished">系统内核版本：</translation>
+        <translation>系统内核版本：</translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="137"/>
         <source>Software activation status:</source>
-        <translation type="unfinished">软件激活状态：</translation>
+        <translation>软件激活状态：</translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="150"/>
         <source>Export time:</source>
-        <translation type="unfinished">导出时间:</translation>
+        <translation>导出时间:</translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="186"/>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="266"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="318"/>
         <source>Device Information</source>
-        <translation type="unfinished">设备信息</translation>
+        <translation>设备信息</translation>
     </message>
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-summary.ui" line="407"/>
         <source>Pie chart of test results</source>
-        <translation type="unfinished">检测结果饼图</translation>
+        <translation>检测结果饼图</translation>
     </message>
 </context>
 <context>
