@@ -526,7 +526,7 @@
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../lib/widgets/user-prompt-dialog.ui" line="133"/>
+        <location filename="../../lib/widgets/user-prompt-dialog.ui" line="136"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
