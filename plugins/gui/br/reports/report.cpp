@@ -321,7 +321,7 @@ void Report::createReportContent(QPrinter &printer, const QList<Category *> &sca
     addCategoryResults(printer, categoryContents, flag);
 
     // 扫描文件结果
-    createFilesScanResults(printer, invalidData, flag);
+    // createFilesScanResults(printer, invalidData, flag);
 
     // 漏洞扫描结果
     //    auto isVulnerability = createVulnerabilityResults(printer, invalidData, flag);
