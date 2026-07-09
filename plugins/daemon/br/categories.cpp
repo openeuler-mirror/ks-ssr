@@ -25,17 +25,11 @@ namespace BR
 #define BR_CATEGORY_KEY_ICON_NAME "icon_name"
 #define BR_CATEGORY_KEY_PRIORITY "priority"
 
-Categories::Categories()
+Categories::Categories(QObject* parent)
+    : QObject(parent)
 {
     this->m_confPath = QDir::cleanPath(SSR_INSTALL_DATADIR "/" BR_CATEGORIES_BASENAME);
     // this->conf_path_ = Glib::build_filename(SSR_INSTALL_DATADIR, BR_CATEGORIES_BASENAME);
-}
-
-Categories* Categories::m_instance = NULL;
-void Categories::globalInit()
-{
-    m_instance = new Categories();
-    m_instance->init();
 }
 
 void Categories::init()
