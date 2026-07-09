@@ -206,12 +206,11 @@ private:
     BRAdaptor *m_dbus;
     QString m_scanUniqueName;
     QString m_reforceUniqueName;
-    // <QString, int32_t> : <reinforceName, status>
-    QMap<QString, int32_t> m_jobResult;
+    QString m_fallbackUniqueName;
     // 加固前需要进行一次扫描，定时监听扫描进程完成后再进行加固
     QTimer *m_reinforceTimer;
-    // 报表保存路径
-    QString m_reportSavePath;
+    // 导出报表前扫描完成信号连接
+    QMetaObject::Connection m_exportReportConnection;
 };
 }  // namespace BR
 }  // namespace KS
