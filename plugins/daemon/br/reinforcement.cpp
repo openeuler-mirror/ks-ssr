@@ -65,7 +65,8 @@ void Reinforcement::reload()
     // 如果加固项未指定分类，则使用插件的分类名
     if (!this->m_config.category().present())
     {
-        auto plugin = Plugins::getInstance()->getPlugin(this->m_pluginID);
+        auto plugins = Context::getInstance()->getPlugins();
+        auto plugin = plugins->getPlugin(this->m_pluginID);
         this->m_config.category(plugin->getCategoryName());
     }
     this->updateRules();
