@@ -18,6 +18,7 @@
 #include <QSharedPointer>
 #include <QTimer>
 
+#include "context.h"
 #include "job.h"
 #include "plugins.h"
 
