@@ -16,6 +16,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QFileInfo>
+#include <QFontDatabase>
 #include <QScreen>
 #include <QTranslator>
 #include <QtGlobal>
