@@ -115,6 +115,9 @@
             <arg type="s" name="name" direction="in">
                 <summary>The reinforcement name.</summary>
             </arg>
+            <arg type="b" name="result" direction="out">
+                <summary>The reinforcement result.</summary>
+            </arg>
             <description>Reset the reinforcemnt info to default value.</description>
         </method>
 
