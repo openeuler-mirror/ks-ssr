@@ -622,7 +622,7 @@
     <message>
         <location filename="../../plugins/gui/br/reports/pdf-details.ui" line="98"/>
         <source>Safety Reinforcement Chart</source>
-        <translation type="unfinished">安全加固图表</translation>
+        <translation>安全加固图表</translation>
     </message>
 </context>
 <context>
