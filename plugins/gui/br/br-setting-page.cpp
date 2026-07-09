@@ -104,7 +104,7 @@ void BRSettingPage::initConnection()
             });
     connect(m_ui->m_fallbackPrevious, &QPushButton::clicked, this, [this]
             {
-                if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
+                if (m_dbusProxy->GetFallbackStatus() == BRJobState::BR_JOB_STATE_IDLE)
                 {
                     POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
                     return;
