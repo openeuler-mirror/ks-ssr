@@ -42,23 +42,15 @@ struct Category
 
 typedef QVector<QSharedPointer<Category>> CategoryVec;
 
-class Categories
+class Categories : public QObject
 {
+    Q_OBJECT
+
 public:
-    Categories();
+    Categories(QObject* parent = nullptr);
     virtual ~Categories(){};
-
-    static Categories* getInstance()
-    {
-        return m_instance;
-    };
-
-    static void globalInit();
-
-    static void globalDeinit()
-    {
-        delete m_instance;
-    };
+    // 初始化
+    void init();
 
     // 获取分类，如果不存在则返回空指针
     QSharedPointer<Category> getCategory(const QString& name)
