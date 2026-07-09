@@ -399,24 +399,14 @@ bool Configuration::writeRAToFile(QSharedPointer<Protocol::RA> ra)
     return true;
 }
 
-std::shared_ptr<Protocol::ReinforcementHistory> Configuration::readRhFromFile(const QString path)
+QSharedPointer<Protocol::ReinforcementHistory> Configuration::readRhFromFile(const QString& path)
 {
-    RETURN_VAL_IF_TRUE(!QFileInfo(path).isFile(),
-                       std::make_shared<ReinforcementHistory>());
-
-    try
-    {
-        return std::make_shared<Protocol::ReinforcementHistory>(*br_rh(path.toStdString(),
-                                                                       xml_schema::Flags::dont_validate));
-    }
-    catch (const std::exception& e)
-    {
-        KLOG_WARNING("%s", e.what());
-    }
-    return std::make_shared<Protocol::ReinforcementHistory>();
+    RETURN_VAL_IF_TRUE(!QFileInfo(path).isFile(), QSharedPointer<ReinforcementHistory>());
+    return QSharedPointer<Protocol::ReinforcementHistory>(new Protocol::ReinforcementHistory(*br_rh(path.toStdString(),
+                                                                                                    xml_schema::Flags::dont_validate)));
 }
 
-bool Configuration::writeRhToFile(std::shared_ptr<Protocol::ReinforcementHistory> rh, const QString path)
+bool Configuration::writeRhToFile(QSharedPointer<Protocol::ReinforcementHistory> rh, const QString path)
 {
     try
     {
