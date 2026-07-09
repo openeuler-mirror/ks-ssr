@@ -210,22 +210,22 @@
         <translation>结果</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1272"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="1275"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1276"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="1280"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1296"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="1301"/>
         <source>total:%1 conformity:%2 conformity:%3</source>
         <translation>总计:%1 符合:%2 不符合:%3</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="1300"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="1305"/>
         <source>test information</source>
         <translation>检测信息</translation>
     </message>
