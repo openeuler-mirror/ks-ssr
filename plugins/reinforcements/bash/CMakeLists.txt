@@ -1,4 +1,3 @@
-
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/filesystem
                   ${CMAKE_CURRENT_SOURCE_DIR}/utils
         DESTINATION ${SSR_BR_PLUGIN_BASH_ROOT_DIR})
