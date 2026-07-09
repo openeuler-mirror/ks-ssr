@@ -706,43 +706,36 @@ bool BRDBus::setResourceMonitor()
     return true;
 }
 
-void BRDBus::finishedScanProgress()
+void BRDBus::processScanFinished()
 {
-    // 根据结果写日志，处于回退中和加固前的扫描不需要写
-    if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus() && m_isScanFlag)
-    {
-        writeScanResultLog();
-    }
-    m_isScanFlag = true;
-    m_isFinishRHWrite = true;
-    // 回退中，不关注扫描完成
-    if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
-    {
-        emit ProgressFinished();
-    }
-
-    if (!m_reportSavePath.isEmpty())
-    {
-        exportReport();
-    }
-}
-
-void BRDBus::finishedReinforceProgress()
-{
-    // 根据结果写日志，回退不需要写
-    if (BR_FALLBACK_STATUS_IN_PROGRESS != this->m_configuration->getFallbackStatus())
-    {
-        writeReinforcementResultLog();
-    }
-    this->m_configuration->setFallbackStatus(BR_FALLBACK_STATUS_IS_FINISHED);
-    m_isScanFlag = true;
+    disconnect(m_jobManager, &JobManager::scanProgress, this, &BRDBus::processScanProgress);
+    disconnect(m_jobManager, &JobManager::scanFinished, this, &BRDBus::processScanFinished);
+    // 记录扫描日志
+    SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT, tr("Scan finished."), m_scanUniqueName);
     emit ProgressFinished();
+    emit ScanFinished();
 }
 
-void BRDBus::exportReport()
+void BRDBus::processReinforceFinished()
 {
-    QString savePath = m_reportSavePath;
-    m_reportSavePath.clear();
+    disconnect(m_jobManager, &JobManager::reinforceProgress, this, &BRDBus::processReinforceProgress);
+    disconnect(m_jobManager, &JobManager::reinforceFinished, this, &BRDBus::processReinforceFinished);
+    // 记录加固完成日志
+    SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT, tr("Reinforcement finished."), m_reforceUniqueName);
+    emit ProgressFinished();
+    emit ReinforceFinished();
+}
+
+void BRDBus::processFallbackFinished()
+{
+    disconnect(m_jobManager, &JobManager::fallbackFinished, this, &BRDBus::processFallbackFinished);
+    SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT, tr("Fallback finished."), m_fallbackUniqueName);
+    emit FallbackFinished();
+}
+
+void BRDBus::exportReport(const QString& savePath)
+{
+    disconnect(m_exportReportConnection);
 
     CategoryVec categoryVec = m_categories->getCategories();
     QMap<QString, QPair<int, int>> categoryMap;
