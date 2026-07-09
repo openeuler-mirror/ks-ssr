@@ -26,7 +26,7 @@ class Reinforcement
 {
 public:
     Reinforcement() = delete;
-    Reinforcement(const QString &plugin_id,
+    Reinforcement(const QString &pluginID,
                   const Protocol::Reinforcement &rs);
     virtual ~Reinforcement(){};
 
