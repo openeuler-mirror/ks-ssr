@@ -331,13 +331,21 @@ extern "C"
         ATTACK_DETECT
     };
 
-    typedef enum
+    enum VulnerabilityLevel
     {
         VULNERABILITYLEVEL_CRITICAL = 0,
         VULNERABILITYLEVEL_IMPORTANT,
         VULNERABILITYLEVEL_MODERATE,
         VULNERABILITYLEVEL_LOW
-    } VulnerabilityLevel;
+    };
+
+    enum TaskType : int
+    {
+        TASKTYPE_SCAN = 0,
+        TASKTYPE_REPAIR,
+        TASKTYPE_EXPORT_REPORT,
+        TASKTYPE_IDLE
+    };
 
 #ifdef __cplusplus
 }
