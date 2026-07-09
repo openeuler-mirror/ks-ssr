@@ -11,7 +11,7 @@ endforeach()
 
 install(FILES ${PROJECT_SOURCE_DIR}/data/br-categories.ini
               ${PROJECT_SOURCE_DIR}/data/br-public.key
-        DESTINATION ${SSR_INSTALL_DATADIR}/)
+        DESTINATION ${SSR_BR_INSTALL_DATADIR}/)
 
 # service files
 if(USE_SYSTEMD)
