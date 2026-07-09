@@ -81,9 +81,6 @@ public:
     bool setResourceMonitorStatus(BRResourceMonitor resourceMonitor);
 
 private:
-    //
-    void init();
-
     // 修改加固参数，重载加固项
     void reloadStrategy();
     // 加载加固标准文件(不变化的部分)
