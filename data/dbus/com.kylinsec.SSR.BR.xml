@@ -242,6 +242,29 @@
             <description>Emit when the reinforcement progress is changed.</description>
         </signal>
 
+        <signal name="FallbackProgress">
+            <arg name="progress" type="s">
+                <summary>The progress is a json string.</summary>
+            </arg>
+            <description>Emit when the reinforcement progress is changed.</description>
+        </signal>
+
+        <signal name="ScanFinished">
+            <description>Scan finished.</description>
+        </signal>
+
+        <signal name="ReinforceFinished">
+            <description>Reinforce finished.</description>
+        </signal>
+
+        <signal name="FallbackFinished">
+            <description>Fallback finished.</description>
+        </signal>
+
+        <signal name="ProgressFinished">
+            <description>Scan or reinforce finished. the signal is deprecated, use ScanFinished, ReinforceFinished and FallbackFinished instead.</description>
+        </signal>
+
         <signal name="ReinforcementsChanged">
             <description>The reinforcement item is changed, call function GetReinforcements to get newest.</description>
         </signal>
