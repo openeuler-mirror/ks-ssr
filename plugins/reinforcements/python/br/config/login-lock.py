@@ -21,6 +21,7 @@ LOGIN_LOCK_CONF_KEY_FAILLOCK_AUTHSUCC_REGEX = "auth\\s+sufficient\\s+pam_failloc
 LOGIN_LOCK_CONF_KEY_FAILLOCK_REGEX = "account\\s+required\\s+pam_faillock.so"
 
 LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN = "auth\\s+required\\s+pam_faildelay.so"
+LOGIN_LOCK_CONF_PREAUTH_NEXT_MATCH_LINE_PATTERN2 = "auth\\s+sufficient\\s+pam_fprintd.so"
 LOGIN_LOCK_CONF_AUTHFAIL_NEXT_MATCH_LINE_PATTERN = "auth\\s+requisite\\s+pam_succeed_if.so"
 LOGIN_LOCK_CONF_AUTHSUCC_NEXT_MATCH_LINE_PATTERN = "auth\\s+requisite\\s+pam_succeed_if.so"
 LOGIN_LOCK_CONF_KEY_FAILLOCK_PATTERN = "account\\s+required\\s+pam_unix.so"
