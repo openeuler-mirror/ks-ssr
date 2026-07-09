@@ -625,8 +625,7 @@ KS--User QComboBox QAbstractItemView::item
     padding-left:10px;
 }
 
-KS--BR--ArgHandle QComboBox QAbstractItemView::item:hover,
-KS--BR--ArgHandle QComboBox QAbstractItemView::item:selected,
+
 KS--User QComboBox QAbstractItemView::item:hover,
 KS--User QComboBox QAbstractItemView::item:selected
 {
