@@ -436,11 +436,6 @@ bool Scan::checkAndSetCheckbox()
 
 void Scan::startScan()
 {
-    if (m_dbusProxy->fallback_status() == BRFallbackStatus::BR_FALLBACK_STATUS_IN_PROGRESS)
-    {
-        POPUP_MESSAGE_DIALOG(tr("Fallback is in progress, please wait."));
-        return;
-    }
     // 设置页面定时扫描时会操作这个信号，为保证不起冲突，每次扫描时断开后重新连接
     //    disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), nullptr, nullptr);
     connect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
