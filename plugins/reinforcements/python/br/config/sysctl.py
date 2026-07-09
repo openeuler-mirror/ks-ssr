@@ -83,6 +83,11 @@ class Dmesg:
 
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 
 class KeyRebootSwitch:
     def __init__(self):
