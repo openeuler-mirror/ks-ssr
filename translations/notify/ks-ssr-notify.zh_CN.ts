@@ -129,7 +129,7 @@
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../lib/widgets/password-modification.ui" line="253"/>
+        <location filename="../../lib/widgets/password-modification.ui" line="256"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
