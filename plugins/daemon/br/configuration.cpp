@@ -39,8 +39,9 @@ namespace BR
 
 using namespace Protocol;
 
-Configuration::Configuration(const QString& configPath)
-    : m_configPath(configPath),
+Configuration::Configuration(const QString& configPath, QObject* parent)
+    : QObject(parent),
+      m_configPath(configPath),
       m_settings(nullptr)
 {
 }
