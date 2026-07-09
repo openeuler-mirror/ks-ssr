@@ -51,6 +51,7 @@ private:
     BRDbusProxy *m_dbusProxy;
 
     QTimer m_logoTimer;
+    QVector<QPixmap> m_logoPixVec;
 };
 }  // namespace BR
 }  // namespace KS
