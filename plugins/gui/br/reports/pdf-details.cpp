@@ -24,8 +24,8 @@ namespace KS
 namespace BR
 {
 PDFDetails::PDFDetails(QWidget *parent,
-             bool isOpenFilesScan,
-             bool isScanVulnerability)
+                       bool isOpenFilesScan,
+                       bool isScanVulnerability)
     : QWidget(parent),
       m_ui(new Ui::PDFDetails)
 {
