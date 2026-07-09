@@ -116,7 +116,7 @@ public Q_SLOTS:
     virtual void SetReinforcements(const QString &reinforcements);
 
     // 重置指定的加固项
-    virtual void ResetReinforcement(const QString &name);
+    virtual bool ResetReinforcement(const QString &name);
 
     // 扫描指定加固项
     virtual void Scan(const QStringList &names);
