@@ -62,7 +62,7 @@ public:
     // 设置加固参数
     bool setCustomRA(const Protocol::Reinforcement& reinforcement);
     // 删除加固项的自定义参数
-    void delCustomRA(const QString& name);
+    bool delCustomRA(const QString& name);
     void delAllCustomRA();
     // 获取定时扫描时间
     int getTimeScan();
