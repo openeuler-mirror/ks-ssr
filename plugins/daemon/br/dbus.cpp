@@ -628,16 +628,16 @@ void BRDBus::GenerateReport(bool operationResult)
 
 void BRDBus::ExportReport(const QString& savePath)
 {
-    if (m_jobManager->getScanStatus() == BRJobState::BR_JOB_STATE_RUNNING)
+    if (m_jobDispatcher->getState() != BRDispatchState::BR_DISPATCH_STATE_IDLE)
     {
-        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SCAN_IS_RUNNING));
+        sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_BR_JOB_IS_RUNNING));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to export report."),
                       message().service());
         return;
     }
 
-    if (!m_jobManager->scanAll())
+    if (!m_jobDispatcher->scanAll())
     {
         sendErrorReply(QDBusError::InternalError, SSR_ERROR2STR(SSRErrorCode::ERROR_FAILED));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
