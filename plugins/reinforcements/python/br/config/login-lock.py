@@ -138,3 +138,9 @@ class LoginLock:
         self.set_root_unlock_time(args[LOGIN_LOCK_CONF_KEY_ROOT_UNLOCK_TIME])
 
         return (True, '')
+
+    def backup(self):
+        return self.get();
+
+    def rollback(self, args_json):
+        return self.set(args_json)
