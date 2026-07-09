@@ -120,11 +120,11 @@ install(
   FILES ${PROJECT_SOURCE_DIR}/data/br-sshd-port.pp
         ${PROJECT_SOURCE_DIR}/data/br-sshd-sftp.pp
         ${PROJECT_SOURCE_DIR}/data/br-ulimit.pp
-  DESTINATION ${SSR_INSTALL_DATADIR}/)
+  DESTINATION ${SSR_BR_INSTALL_DATADIR}/)
 
 # iptables rules files
 install(FILES ${PROJECT_SOURCE_DIR}/data/br-iptables.rules
-        DESTINATION ${SSR_INSTALL_DATADIR}/)
+        DESTINATION ${SSR_BR_INSTALL_DATADIR}/)
 
 install(FILES ${PROJECT_SOURCE_DIR}/data/help.pdf
         DESTINATION ${SSR_INSTALL_DATADIR}/)
