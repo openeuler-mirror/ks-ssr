@@ -196,11 +196,10 @@ private:
     // 首次扫描的rh文件是否写入完成
     bool m_isFinishRHWrite;
 
-    BRFallbackMethod m_fallbackMethod = BRFallbackMethod::BR_FALLBACK_METHOD_OTHER;
     BRAdaptor *m_dbus;
     QString m_scanUniqueName;
     QString m_reforceUniqueName;
-    QString m_fallbackUniqueName;
+    QString m_rollbackUniqueName;
     // 加固前需要进行一次扫描，定时监听扫描进程完成后再进行加固
     QTimer *m_reinforceTimer;
     // 导出报表前扫描完成信号连接
