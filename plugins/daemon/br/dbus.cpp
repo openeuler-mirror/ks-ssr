@@ -757,7 +757,8 @@ void BRDBus::exportReport(const QString& savePath)
     QList<QStringList> tabelDataConformity;
     QList<QStringList> tabelDataInconformity;
 
-    for (auto& reinforcementResult : m_scanJobResult.reinforcement())
+    auto scanJobResult = m_jobManager->getScanResult();
+    for (auto& reinforcementResult : scanJobResult.reinforcement())
     {
         QString name = QString::fromStdString(reinforcementResult.name());
         QString label = this->m_plugins->getReinforcement(name)->getLabel();
