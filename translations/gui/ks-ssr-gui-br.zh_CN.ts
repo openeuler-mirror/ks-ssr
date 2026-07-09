@@ -110,99 +110,99 @@
 <context>
     <name>KS::BR::BRSettingPage</name>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="60"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="62"/>
         <source>Resource monitor open!</source>
         <translation>资源监控已开启！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="69"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="71"/>
         <source>Resource monitor close!</source>
         <translation>资源监控已关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="77"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="79"/>
         <source>Notify open!</source>
         <translation>气泡通知已开启！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="83"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="85"/>
         <source>Notify close!</source>
         <translation>气泡通知已关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="91"/>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="109"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="93"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="111"/>
         <source>Fallback is in progress, please wait.</source>
         <translation>回退正在进行中，请等待。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="95"/>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="113"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="97"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="115"/>
         <source>Fallback</source>
         <translation>回退</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="95"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="97"/>
         <source>Are you sure you want to go back to the initialization state?</source>
         <translation>您确认要回退到初始状态？</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="113"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="115"/>
         <source>Are you sure you want to go back to the previous state?</source>
         <translation>您确认要回退到加固前的状态？</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="130"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="132"/>
         <source>Home free space less than 10%.</source>
         <translation>家目录空间不足10%。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="139"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="141"/>
         <source>Root free space less than 10%.</source>
         <translation>根目录空间不足10%。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="148"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="150"/>
         <source>The average load of a single core CPU exceeds 1.</source>
         <translation>单核CPU负载超过1。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="158"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="160"/>
         <source>Memory space less than 10%.</source>
         <translation>内存空间不足10%。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="219"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="233"/>
         <source>Baseline reinforcement</source>
         <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="230"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="244"/>
         <source>Scheduled scanning task has been closed!</source>
         <translation>定时扫描已关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="238"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="252"/>
         <source>Scheduled scanning task has been started, every interval %1 scan once every hour.</source>
         <translation>定时扫描任务开启，每间隔%1小时扫描一次。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="269"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="283"/>
         <source>Timed scan finished, Scaned %1, %2 conform, %3 inconform!</source>
         <translation>定时扫描任务完成，已扫描 %1项， %2项符合, %3项不符合！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="301"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="315"/>
         <source>Open resource monitoring.</source>
         <translation>资源监控已打开。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="301"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="315"/>
         <source>Close resource monitoring.</source>
         <translation>资源监控已关闭。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="318"/>
+        <location filename="../../plugins/gui/br/br-setting-page.cpp" line="332"/>
         <source>Fallback finished!</source>
         <translation>回退完成！</translation>
     </message>
