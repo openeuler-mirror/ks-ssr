@@ -264,29 +264,6 @@ bool Configuration::setNotificationStatus(BRNotificationStatus notificationStatu
     return true;
 }
 
-BRFallbackStatus Configuration::getFallbackStatus()
-{
-    auto retval = this->getInteger(BR_GROUP_NAME,
-                                   BR_BASE_KEY_FALLBACK_STATUS,
-                                   BRFallbackStatus::BR_FALLBACK_STATUS_NOT_STARTED);
-
-    if (retval > BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED || retval < 0)
-    {
-        KLOG_WARNING("The strategy type is invalid. notification status: %d.", retval);
-        return BRFallbackStatus::BR_FALLBACK_STATUS_NOT_STARTED;
-    }
-
-    return BRFallbackStatus(retval);
-}
-bool Configuration::setFallbackStatus(BRFallbackStatus fallbackStatus)
-{
-    RETURN_VAL_IF_TRUE(fallbackStatus > BRFallbackStatus::BR_FALLBACK_STATUS_IS_FINISHED, false);
-    RETURN_VAL_IF_TRUE(fallbackStatus == this->getFallbackStatus(), true);
-
-    this->setInteger(BR_GROUP_NAME, BR_BASE_KEY_FALLBACK_STATUS, int32_t(fallbackStatus));
-    return true;
-}
-
 bool Configuration::checkRaStrategy()
 {
     try
