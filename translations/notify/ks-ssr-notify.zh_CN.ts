@@ -77,22 +77,22 @@
     <message>
         <location filename="../../lib/widgets/table/pagination.ui" line="26"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../lib/widgets/table/pagination.ui" line="72"/>
         <source>&lt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../lib/widgets/table/pagination.ui" line="117"/>
         <source>&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../lib/widgets/table/pagination.ui" line="133"/>
         <source>goto</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
