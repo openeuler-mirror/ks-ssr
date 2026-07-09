@@ -516,14 +516,15 @@ void BRDBus::SetReinforcements(const QString& reinforcements)
     }
 }
 
-void BRDBus::ResetReinforcement(const QString& name)
+bool BRDBus::ResetReinforcement(const QString& name)
 {
     auto calledUniqueName = DBusHelper::getCallerUniqueName(this);
 
-    this->m_configuration->delCustomRA(name);
     SSR_LOG_SUCCESS(LogType::BASELINE_REINFORCEMENT,
                     tr("Reset reinforcement parameters. name is %1.").arg(name),
                     calledUniqueName);
+
+    return this->m_configuration->delCustomRA(name);
 }
 
 void BRDBus::Scan(const QStringList& names)
