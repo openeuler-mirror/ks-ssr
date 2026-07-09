@@ -350,157 +350,20 @@ KS--Settings QListWidget::item:selected
     background-color: #00a2ff;
 }
 
-KS--BR--BRSettingPage
-{
-    background-color: transparent;
-    color: white;
-}
-
-KS--BR--BRSettingPage QGroupBox
-{
-    background-color: transparent;
-    border: 0px;
-}
-
-KS--BR--BRSettingPage QPushButton
-{
-    background-color: transparent;
-    border: 0px;
-    color: #00a2ff;
-}
-
-KS--BR--BRSettingPage QPushButton:hover
-{
-    color: #79C3FF;
-}
-
-KS--BR--BRSettingPage QRadioButton
-{
-    background-color: transparent;
-    color: white;
-}
-KS--BR--BRSettingPage QRadioButton::indicator:checked
-{
-    image: url(:/images/radio-checked);
-}
-KS--BR--BRSettingPage QRadioButton::indicator:unchecked
-{
-    image: url(:/images/radio-unchecked);
-}
-
-
-/* about */
-QLabel#m_info,
-QLabel#m_version
-{
-    color:#ffffff;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-}
-
 QLabel#m_license
 {
     color:#919191;
-    font:NotoSansCJKsc-Regular;
+
     font-size:10px;
 }
 
 /* message dialog */
 QWidget#messageDialog
 {
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
     background-color: #2d2d2d;
     border-radius: 6px;
 }
 
-/* default QPushButton */
-QPushButton#okBtn,
-QPushButton#passwdOkBtn,
-QPushButton#m_ok,
-QPushButton#m_add,
-QPushButton#m_newBox,
-QPushButton#m_scanButton,
-QPushButton#m_scan,
-QPushButton#m_activate,
-QPushButton#m_confirm,
-QPushButton#m_selectFile,
-QPushButton#m_selectUser,
-QPushButton#m_centigrade,
-KS--DM--DMSettingPage #MessageWindow QPushButton#confirm
-{
-    color:#FFFFFF;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-    border-radius:4px;
-    background:#43A3F2;
-}
-
-QPushButton#okBtn:hover,
-QPushButton#passwdOkBtn:hover,
-QPushButton#m_ok:hover,
-QPushButton#m_add:hover,
-QPushButton#m_newBox:hover,
-QPushButton#m_scanButton:hover,
-QPushButton#m_scan:hover,
-QPushButton#m_activate:hover,
-QPushButton#m_confirm:hover,
-QPushButton#m_selectFile:hover,
-QPushButton#m_selectUser:hover,
-QPushButton#m_centigrade:hover,
-KS--DM--DMSettingPage #MessageWindow QPushButton#confirm:hover
-{
-    background:#79C3FF;
-    border:4px;
-}
-
-/* normal QPushButton */
-QPushButton#passwdCancelBtn,
-QPushButton#m_cancel,
-QPushButton#m_recertification,
-QPushButton#m_return,
-QPushButton#m_reset,
-QPushButton#m_remove
-KS--DM--DMSettingPage #MessageWindow QPushButton#cancel
-{
-    color:#FFFFFF;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-    border-radius:4px;
-    background:#393939;
-}
-
-QPushButton#passwdCancelBtn:hover,
-QPushButton#m_cancel:hover,
-QPushButton#m_recertification:hover,
-QPushButton#m_return:hover,
-QPushButton#m_reset:hover,
-QPushButton#m_remove:hover,
-KS--DM--DMSettingPage #MessageWindow QPushButton#cancel:hover
-{
-    background:#464646;
-    border:4px;
-}
-
-QPushButton#m_unprotect,
-QPushButton#m_clean,
-QPushButton#m_shred
-{
-    color:#FA4949;
-    font:NotoSansCJKsc-Regular;
-    font-size:12px;
-    border-radius:4px;
-    background:#393939;
-}
-
-QPushButton#m_unprotect:hover,
-QPushButton#m_clean:hover,
-QPushButton#m_shred:hover
-{
-    background:#464646;
-    border:4px;
-    color:#FA4949;
-}
 
 /* security box */
 QMenu#m_popupMenu
