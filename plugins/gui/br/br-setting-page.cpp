@@ -24,6 +24,8 @@
 #include "ui_br-setting-page.h"
 #include "utils.h"
 
+#define STYLE_PATH ":/br/style/setting-page.qss"
+
 namespace KS
 {
 namespace BR
