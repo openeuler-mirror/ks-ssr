@@ -65,8 +65,8 @@ public:
     // 获取指定分类的加固项
     BRReinforcementVec getReinforcementsByCategory(const QString& category_name);
 
-    QSharedPointer<BRReinforcementInterface> getReinforcementInterface(const QString& plugin_name,
-                                                                       const QString& reinforcement_name);
+    QSharedPointer<BRReinforcementInterface> getReinforcementInterface(const QString& pluginName,
+                                                                       const QString& reinforcementName);
 
 Q_SIGNALS:
     void reinforcementsChanged();
