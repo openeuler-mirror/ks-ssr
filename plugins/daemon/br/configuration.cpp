@@ -263,33 +263,6 @@ bool Configuration::setNotificationStatus(BRNotificationStatus notificationStatu
     return true;
 }
 
-bool Configuration::checkRaStrategy()
-{
-    try
-    {
-        std::make_shared<Protocol::RA>(*br_ra(CUSTOM_RA_STRATEGY_FILEPATH, xml_schema::Flags::dont_validate));
-    }
-    catch (const std::exception& e)
-    {
-        KLOG_WARNING("%s", e.what());
-        return false;
-    }
-
-    return true;
-}
-
-void Configuration::setRaCheckbox(const QString& name, const bool& status)
-{
-    auto ra = this->readRaFromFile();
-    auto& reinforcements = ra->reinforcement();
-    for (auto iter = reinforcements.begin(); iter != reinforcements.end(); ++iter)
-    {
-        if (name.toStdString() == iter->name())
-            iter->checkbox().set(status);
-    }
-    writeRAToFile(ra);
-}
-
 QSharedPointer<Protocol::RS> Configuration::getRS()
 {
     return this->getFixedRS();
