@@ -122,6 +122,35 @@ void Window::resizeEvent(QResizeEvent *event)
 
 void Window::closeEvent(QCloseEvent *event)
 {
+    for (auto &pages : m_workPages)
+    {
+        for (auto &page : pages)
+        {
+            if (!page->checkCanExit())
+            {
+                // 弹窗阻止退出
+                auto messageDialog = new KS::MessageDialog(this, true);
+                messageDialog->setMessage(tr("Closing the software will interrupt the ongoing task. Are you sure to shut down?"));
+                adjustWidgetPosition(messageDialog);
+                bool ret = messageDialog->exec();
+                if (ret)
+                {
+                    // 终止任务
+                    if (!stopPageTask())
+                    {
+                        event->ignore();
+                        return;
+                    }
+                }
+                else
+                {
+                    event->ignore();
+                    return;
+                }
+            }
+        }
+    }
+
     TitlebarWindow::closeEvent(event);
 }
 
