@@ -686,6 +686,11 @@ void Command::repairProgress(const QString &progress)
     // 进度
     int percent = progressJson.value("progress").toInt();
     auto errorMessage = progressJson.value("errorMessage").toVariant().toString();
+    if (-1 == percent)
+    {
+        std::cout << tr("Repair stop by manually cancel!").toStdString();
+        exit(0);
+    }
     if (m_lastPercent != percent)
     {
         m_lastPercent = percent;
