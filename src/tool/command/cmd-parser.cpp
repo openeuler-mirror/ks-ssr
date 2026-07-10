@@ -631,6 +631,10 @@ void Command::scanProgress(const QString &progress)
     }
     if (100 == percent)
     {
+        //        QSet<QString> uniqueItems = QSet<QString>(m_cveIds.begin(), m_cveIds.end());
+        QSet<QString> uniqueItems = QSet<QString>::fromList(m_cveIds);
+        m_cveIds = uniqueItems.values();
+
         if (m_cveIds.isEmpty())
         {
             std::cout << tr("No system vulnerabilities were found in this scan").toStdString() << std::endl;
