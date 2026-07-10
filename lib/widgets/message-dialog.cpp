@@ -72,14 +72,12 @@ void MessageDialog::initUI(bool canGetResult, const int &width, const int &heigh
     vlay->addWidget(cusWidget);
 
     setTitle(tr("Notify"));
-    m_messageLabel = new QLabel(this);
-    m_messageLabel->setMinimumWidth(180);
-    // 自动换行
-    m_messageLabel->setWordWrap(true);
+    m_messageBrowser = new QTextBrowser(this);
+    m_messageBrowser->setMinimumWidth(180);
     // 可复制
-    m_messageLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    m_messageBrowser->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
-    contentLayout->addWidget(m_messageLabel);
+    contentLayout->addWidget(m_messageBrowser);
     contentLayout->addStretch();
 
     auto *ok = new QPushButton(tr("ok"), this);
