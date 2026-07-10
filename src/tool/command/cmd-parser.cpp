@@ -186,7 +186,7 @@ void Command::repair(const QStringList &cves)
     if (cves.isEmpty())
     {
         std::cout << tr("Scannig...").toStdString() << std::endl;
-        connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ScanProgress, this, &Command::scanProgress, Qt::QueuedConnection);
+        connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::ScanProgress, this, &Command::scanProgress);
         m_dbusVulnerabilityProxy->Scan();
     }
     else
