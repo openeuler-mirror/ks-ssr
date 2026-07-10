@@ -804,7 +804,8 @@ void BRDBus::exportReport(const QString& savePath)
         iter++;
     }
 
-    QString failedReason = Report::genReport(savePath, homeExtraData, tr("test information"), tabelData);
+    QList<uint> colWidth{260, 260};
+    QString failedReason = Report::genReport(savePath, homeExtraData, tr("test information"), tabelData, colWidth);
 
     emit ExportReportFinished(failedReason);
 }
