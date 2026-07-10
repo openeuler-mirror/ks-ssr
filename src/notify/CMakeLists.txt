@@ -13,7 +13,7 @@ file(GLOB_RECURSE NOTIFY_CPP_FILES ./*.cpp)
 # 更新ts文件
 set(TS_FILES
     "${PROJECT_SOURCE_DIR}/translations/notify/${TARGET_NAME}.zh_CN.ts")
-execute_process(COMMAND lupdate-qt5 -no-obsolete ${PROJECT_SOURCE_DIR}/lib
+execute_process(COMMAND lupdate-qt5 -no-obsolete
                         ${NOTIFY_H_FILES} ${NOTIFY_CPP_FILES} -ts ${TS_FILES})
 
 # 生成qm文件，qt_create_translation会导致cmake clean把ts文件删掉
