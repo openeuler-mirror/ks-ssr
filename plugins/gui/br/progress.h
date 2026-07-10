@@ -64,6 +64,8 @@ private:
     void timeInit();
     void completeProcess(ProgressInfo info);
 
+    void adjustWidgetPosition(QWidget *widget);
+
 signals:
     void scanClicked();
     void reinforcementClicked();
