@@ -495,6 +495,46 @@ QStringList Utils::ssrSetReinforcement(const QString &xmlString, QList<Category 
     return retStringList;
 }
 
+QString Utils::ssrGetReinforcements(const QString &xmlString, QList<Category *> &categoriesList)
+{
+    RETURN_VAL_IF_TRUE(xmlString == "", "")
+
+    std::istringstream istringStream(xmlString.toStdString());
+    auto rsReinforcements = KS::Protocol::br_reinforcements(istringStream, xml_schema::Flags::dont_validate);
+    auto &rsReinforcement = rsReinforcements.get()->reinforcement();
+
+    int count = 0, index = 0;
+    for (auto &iter : rsReinforcement)
+    {
+        count++;
+        if (count > categoriesList.at(index)->getReinforcementItem().length())
+        {
+            count = 1;
+            ++index;
+        }
+        auto str = QString(iter.name().c_str());
+        auto reinforcementItem = categoriesList.at(index)->find(str);
+        CONTINUE_IF_TRUE(reinforcementItem == nullptr)
+
+        for (auto &arg : iter.arg())
+        {
+            auto categoryArgs = reinforcementItem->find(arg.name().c_str());
+            CONTINUE_IF_TRUE(categoryArgs == nullptr)
+            arg.value(categoryArgs->jsonValue.toVariant().toString().toStdString());
+        }
+
+        auto checkArg = reinforcementItem->getCheckStatus();
+        iter.checkbox(checkArg);
+    }
+
+    std::ostringstream ostring_stream;
+    KS::Protocol::br_reinforcements(ostring_stream, *rsReinforcements.get());
+    std::string str = ostring_stream.str();
+    QString retXml = QString::fromStdString(str);
+
+    return retXml;
+}
+
 KS::Protocol::RA::ReinforcementSequence Utils::raAnalysis(const QString &filePath)
 {
     RETURN_VAL_IF_TRUE(!QFile::exists(filePath) || filePath == "", KS::Protocol::RA::ReinforcementSequence();)
