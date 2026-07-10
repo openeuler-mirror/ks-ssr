@@ -148,38 +148,6 @@
     </message>
 </context>
 <context>
-    <name>KS::Pagination</name>
-    <message>
-        <location filename="../../lib/widgets/table/pagination.cpp" line="52"/>
-        <source>Input page</source>
-        <translation>输入页数</translation>
-    </message>
-</context>
-<context>
-    <name>KS::PasswordModification</name>
-    <message>
-        <location filename="../../lib/widgets/password-modification.cpp" line="46"/>
-        <source>Modify Password - %1</source>
-        <translation>修改密码 - %1</translation>
-    </message>
-    <message>
-        <location filename="../../lib/widgets/password-modification.cpp" line="97"/>
-        <location filename="../../lib/widgets/password-modification.cpp" line="105"/>
-        <source>The password must contain two types of lowercase letters, uppercase letters, numbers, and special characters, with a length of 8-16.</source>
-        <translation>密码必须包含大写字母、小写字母、数字、特殊字符中的其中两种，且长度为8-16位。</translation>
-    </message>
-    <message>
-        <location filename="../../lib/widgets/password-modification.cpp" line="119"/>
-        <source>The input cannot be empty, please improve the information.</source>
-        <translation>输入不能为空，请输入正确的信息。</translation>
-    </message>
-    <message>
-        <location filename="../../lib/widgets/password-modification.cpp" line="125"/>
-        <source>Please confirm whether the password is consistent.</source>
-        <translation>请确认两次密码是否一致。</translation>
-    </message>
-</context>
-<context>
     <name>KS::Settings</name>
     <message>
         <location filename="../../src/gui/settings.cpp" line="85"/>
