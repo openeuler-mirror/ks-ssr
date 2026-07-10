@@ -79,24 +79,6 @@
     </message>
 </context>
 <context>
-    <name>KS::CalendarWidget</name>
-    <message>
-        <location filename="../../lib/widgets/date-picker/calendar-widget.cpp" line="248"/>
-        <source>confirm</source>
-        <translation>确认</translation>
-    </message>
-    <message>
-        <location filename="../../lib/widgets/date-picker/calendar-widget.cpp" line="252"/>
-        <source>now</source>
-        <translation>现在</translation>
-    </message>
-    <message>
-        <location filename="../../lib/widgets/date-picker/calendar-widget.cpp" line="275"/>
-        <source>%1year%2mouth</source>
-        <translation>%1年%2月</translation>
-    </message>
-</context>
-<context>
     <name>KS::Loading</name>
     <message>
         <location filename="../../src/gui/loading.cpp" line="54"/>
