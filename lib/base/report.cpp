@@ -403,15 +403,18 @@ static void makeTablePage(HPDF_Doc pdf, HPDF_Font font, const QString &tableTitl
         float table_width = pageWidth - CONTENT_MARGIN * 2;
         float table_height = TABLE_LINE_HEIGHT * rows;
 
+        // 画表格
         draw_table(page, table_x, table_y, table_width, table_height, rows, cols);
-        add_table_data(page, font, table_x, table_y, table_width, table_height, rows, cols, tabelData.mid(curRowIndex, rows), hasFirstRow);
+        // 填充表格数据
+        add_table_data(page, font, table_x, table_y, table_width, table_height, rows, cols, tabelData.mid(curRowIndex, rows), hasFirstRow, colWidth);
+
         hasFirstRow = false;
         curRowIndex += rows;
-
+#endif
     } while (totalRows > 0);
 }
 
-QString Report::genReport(const QString &savePath, const QList<QPair<QString, QString>> &homeExtraData, const QString &tableTitle, const QList<QStringList> &tabelData)
+QString Report::genReport(const QString &savePath, const QList<QPair<QString, QString>> &homeExtraData, const QString &tableTitle, const QList<QStringList> &tabelData, const QList<uint> &colWidth)
 {
     QString failedReason;
 
