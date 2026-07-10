@@ -97,7 +97,7 @@ private slots:
     void startScan();
     void startReinforcement();
     void generateReport();
-    void cancelProgress();
+
     // table
     void showErrorMessage(const QModelIndex &model);
     void popReinforcecmentDialog(const QModelIndex &model);
