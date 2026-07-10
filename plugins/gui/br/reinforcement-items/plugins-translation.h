@@ -59,6 +59,7 @@ private:
         Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "sshd.services is not running!"));
         Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Abnormal service! Please check the log information for details."));
         Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "No related services found"));
+        Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "PAM is not configured with a faillock, please manually configure it"));
     };
     ~PluginsTranslation(){};
 
