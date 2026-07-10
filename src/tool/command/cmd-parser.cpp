@@ -85,6 +85,11 @@ Command::~Command()
         delete m_dbusVulnerabilityProxy;
         m_dbusVulnerabilityProxy = nullptr;
     }
+    if (m_dbusServerWatcher)
+    {
+        delete m_dbusServerWatcher;
+        m_dbusServerWatcher = nullptr;
+    }
     for (auto iter = m_brItemInfo.begin(); iter != m_brItemInfo.end(); ++iter)
     {
         delete iter.value();
