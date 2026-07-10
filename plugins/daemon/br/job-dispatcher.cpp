@@ -181,11 +181,6 @@ bool JobDispatcher::rollback(int method)
     for (const auto& rhReinforcement : rh->reinforcement())
     {
         auto name = QString(rhReinforcement.name().c_str());
-        if (!m_configuration->setCustomRA(rhReinforcement))
-        {
-            KLOG_ERROR() << "Fallback reinforcement to custom reinforcement argument failed for" << name;
-        }
-
         auto reinforcement = this->m_plugins->getReinforcement(name);
         if (!reinforcement)
         {
