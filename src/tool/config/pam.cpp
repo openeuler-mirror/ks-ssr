@@ -88,7 +88,7 @@ bool PAM::setValue(const QString &key,
 
     if (match_info.match_line.size() > 0 && !match_info.is_match_comment)
     {
-        QString kv_pattern(kv_split_pattern.isEmpty() ? QString("(%1)").arg(key) : QString("(%1[\\s]*%2[\\s]*)(\\S+)").arg(key, kv_split_pattern));
+        QString kv_pattern(kv_split_pattern.isEmpty() ? QString("(%1)").arg(key) : QString("([\\s]%1[\\s]*%2[\\s]*)(\\S+)").arg(key, kv_split_pattern));
         QRegExp kv_regex(kv_pattern);
         QString replace_line = match_info.match_line;
         if (kv_regex.indexIn(match_info.match_line) != -1)
