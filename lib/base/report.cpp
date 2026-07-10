@@ -429,20 +429,21 @@ QString Report::genReport(const QString &savePath, const QList<QPair<QString, QS
     HPDF_UseUTFEncodings(pdf);
     HPDF_SetCurrentEncoder(pdf, "UTF-8");
     // 字体
-    const char *font_name = HPDF_LoadTTFontFromFile(pdf, TTF_PATH, HPDF_TRUE);
-    if (!font_name)
+    const char *fontName = HPDF_LoadTTFontFromFile(pdf, TTF_PATH, HPDF_TRUE);
+    if (!fontName)
     {
         failedReason = QString("Failed to Load TTF file:") + TTF_PATH;
         KLOG_ERROR() << failedReason;
         return failedReason;
     }
 
-    HPDF_Font font = HPDF_GetFont(pdf, font_name, "UTF-8");
+    HPDF_Font font = HPDF_GetFont(pdf, fontName, "UTF-8");
 
     makeHomePage(pdf, font, homeExtraData);
-    makeTablePage(pdf, font, tableTitle, tabelData);
+    makeTablePage(pdf, font, tableTitle, tabelData, colWidth);
 
     HPDF_SaveToFile(pdf, savePath.toLocal8Bit());
+
     HPDF_Free(pdf);
 
     return failedReason;
