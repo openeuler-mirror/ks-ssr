@@ -366,7 +366,7 @@ void BRDBus::SetResourceMonitorSwitch(const uint32_t& resourceMonitor)
 
     if (!this->m_configuration->setResourceMonitorStatus(BRResourceMonitor(resourceMonitor)))
     {
-        sendErrorReply(QDBusError::InvalidArgs, SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_RESOURCE_MONITOR_FAILED));
+        sendErrorReply(QDBusError::InvalidArgs, SSR_ERROR2STR(SSRErrorCode::ERROR_PLUGIN_BR_SET_RESOURCE_MONITOR_FAILED));
         SSR_LOG_ERROR(LogType::BASELINE_REINFORCEMENT,
                       tr("Failed to set resource monitor switch."),
                       calledUniqueName);
