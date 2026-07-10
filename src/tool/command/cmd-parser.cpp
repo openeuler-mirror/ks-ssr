@@ -639,7 +639,7 @@ void Command::scanProgress(const QString &progress)
 
         if (m_onlyScan)
         {
-            outputRepairResult("./vulnerability_scan_output.txt");
+            outputRepairResult();
             exit(0);
         }
 
