@@ -40,7 +40,7 @@ signals:
     void finished();
 
 private:
-    QLabel *m_messageLabel;
+    QTextBrowser *m_messageBrowser;
 
     bool m_result;
 };
