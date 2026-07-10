@@ -485,14 +485,14 @@ void BRDBus::SetReinforcement(const QString& reinforcement)
         if (!this->m_configuration->setCustomRA(*brReinforcement.get()))
         {
             sendErrorReply(QDBusError::InternalError,
-                           SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
+                           SSR_ERROR2STR(SSRErrorCode::ERROR_PLUGIN_BR_SET_REINFORCEMENT_FAILED));
         }
     }
     catch (const std::exception& e)
     {
         KLOG_WARNING("%s", e.what());
         sendErrorReply(QDBusError::InternalError,
-                       SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
+                       SSR_ERROR2STR(SSRErrorCode::ERROR_PLUGIN_BR_SET_REINFORCEMENT_FAILED));
     }
 }
 
