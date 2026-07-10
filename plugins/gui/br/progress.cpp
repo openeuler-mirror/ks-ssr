@@ -187,6 +187,19 @@ void Progress::completeProcess(ProgressInfo info)
     }
 }
 
+void Progress::adjustWidgetPosition(QWidget* widget)
+{
+    QObject* p = this;
+    while (p->parent())
+    {
+        p = p->parent();
+    }
+    QWidget* topParentWidget = (QWidget*)p;
+    QRect rect = topParentWidget->geometry();
+    widget->move(rect.x() + (rect.width() - widget->width()) / 2,
+                 rect.y() + ((rect.height() - widget->height()) / 2));
+}
+
 void Progress::stopWorkingProcess()
 {
     m_ui->m_note->setText(QString(tr("Start time: %1 elapsed time: %2"))
