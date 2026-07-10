@@ -40,7 +40,7 @@ struct ProgressInfo
     int successCount = 0;
     int failureCount = 0;
     double progress;
-    ProcessMethod method = PROCESS_METHOD_SCAN;
+    ProcessMethod method = PROCESS_METHOD_STANDBY;
 };
 
 class Progress : public QWidget
