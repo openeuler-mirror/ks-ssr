@@ -519,14 +519,13 @@ void Scan::startReinforcement()
     CHECK_ERROR_FOR_DBUS_REPLY(reply);
     RETURN_IF_TRUE(reply.isError());
     // 设置页面回退会进行加固，为保证不起冲突，每次加固时断开后重新连接
-    //    disconnect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), nullptr, nullptr);
-    connect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
+    connect(m_dbusProxy, &BRDbusProxy::ReinforceProgress, this, &Scan::runProgress);
     m_progressInfo.method = PROCESS_METHOD_FASTEN;
     clearState();
     m_ui->m_itemTable->clearCheckedStatus(m_categories, BR_REINFORCEMENT_STATE_UNREINFORCE);
     m_ui->m_progress->updateProgressUI(m_progressInfo.method);
     m_ui->m_progress->updateProgress(m_progressInfo);
-    disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
+    disconnect(m_ui->m_itemTable, &ItemTable::modifyItemArgsClicked, this, &Scan::popReinforcecmentDialog);
     update();
 }
 
