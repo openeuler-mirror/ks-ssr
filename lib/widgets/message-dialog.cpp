@@ -65,11 +65,58 @@ void MessageDialog::initUI(bool canGetResult)
     vlay->setContentsMargins(4, 4, 4, 4);
 
     auto cusWidget = new QWidget(getWindowContentWidget());
-    m_contentLayout = new QVBoxLayout(cusWidget);
+    auto contentLayout = new QVBoxLayout(cusWidget);
     cusWidget->setObjectName("messageDialog");
-    m_contentLayout->setContentsMargins(24, 24, 24, 24);
+    contentLayout->setContentsMargins(24, 24, 24, 24);
 
     vlay->addWidget(cusWidget);
+
+    setTitle(tr("Notify"));
+    m_messageLabel = new QLabel(this);
+    m_messageLabel->setMinimumWidth(180);
+    // 自动换行
+    m_messageLabel->setWordWrap(true);
+    // 可复制
+    m_messageLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+
+    contentLayout->addWidget(m_messageLabel);
+    contentLayout->addStretch();
+
+    auto *ok = new QPushButton(tr("ok"), this);
+    ok->setFixedSize(72, 36);
+    ok->setProperty("okStyle", QVariant(true));
+    if (!canGetResult)
+    {
+        // 页面关闭时销毁
+        setAttribute(Qt::WA_DeleteOnClose);
+
+        connect(ok, &QPushButton::clicked, this, &MessageDialog::close);
+        contentLayout->addWidget(ok, 0, Qt::AlignHCenter);
+    }
+    else
+    {
+        auto *cancel = new QPushButton(tr("cancel"), this);
+        cancel->setFixedSize(72, 36);
+
+        connect(ok, &QPushButton::clicked, [this]()
+                {
+                    m_result = true;
+                    this->close();
+                    emit finished();
+                });
+
+        connect(cancel, &QPushButton::clicked, [this]()
+                {
+                    m_result = false;
+                    this->close();
+                    emit finished();
+                });
+
+        auto btnLayout = new QHBoxLayout(cusWidget);
+        btnLayout->addWidget(ok);
+        btnLayout->addWidget(cancel);
+        contentLayout->addLayout(btnLayout);
+    }
 }
 
 void MessageDialog::paintEvent(QPaintEvent *event)
