@@ -179,11 +179,21 @@ bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categ
     std::istringstream istringStream(xmlString.toStdString());
     auto rsReinforcements = KS::Protocol::br_reinforcements(istringStream, xml_schema::Flags::dont_validate);
     auto rsReinforcement = rsReinforcements.get()->reinforcement();
+    // 先清理原有数据，因为存入categoriesList时是追加
+    for (auto categories : categoriesList)
+    {
+        categories->clear();
+    }
 
     for (auto iter : rsReinforcement)
     {
         QString str = iter.name().c_str();
-        iter.checkbox().set(false);
+        // 除导入策略外,其他地方也会使用,不需要勾选框
+        // 当前仅导入策略需要联动界面勾选框
+        if (!withCheckBox)
+        {
+            iter.checkbox().set(false);
+        }
         auto reinforcementItem = new ReinforcementItem;
         reinforcementItem->setName(iter.name().c_str());
 
