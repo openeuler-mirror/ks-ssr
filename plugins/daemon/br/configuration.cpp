@@ -198,7 +198,7 @@ bool Configuration::delCustomRA(const QString& name)
         return this->writeRAToFile(ra);
     }
 
-    return false;
+    return true;
 }
 
 void Configuration::delAllCustomRA()
