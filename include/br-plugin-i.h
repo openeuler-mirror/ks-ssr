@@ -52,6 +52,18 @@ class DLLEXPORT BRReinforcementInterface
 {
 public:
     /**
+     * @brief 初始化
+     * @return {*} 如果初始化成功则返回true，否则返回false
+     */
+    virtual bool init() = 0;
+
+    /**
+     * @brief 是否初始化
+     * @return {*} 如果已经初始化则返回true，否则放回false
+     */
+    virtual bool isInit() = 0;
+
+    /**
      * @brief 获取系统配置
      * @param {string} args 系统配置参数
      * @param {string} error 如果出错则返回错误字符串
