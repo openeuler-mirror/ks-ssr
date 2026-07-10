@@ -349,9 +349,48 @@ static void makeTablePage(HPDF_Doc pdf, HPDF_Font font, const QString &tableTitl
             return;
         }
 
+        // 表格标题
         makeTableTitle(page, font, tableTitle);
+
         HPDF_Page_SetFontAndSize(page, font, TABLE_CONTENT_FONT_SIZE);
 
+        // 一行一行画
+        // 计算换行后的高度和文本
+        // 画一行表格
+        // 画一行数据
+
+        int minY = TAIL_POS_Y + 10;
+        int curY = tableY;
+        while (minY < curY && totalRows > 0)
+        {
+            // 简单点,直接获取第2位的数据高度
+            QStringList curRowData = tabelData.at(curRowIndex);
+
+            HPDF_REAL rowHeight = 0;
+
+            for (int col = 0; col < curRowData.size(); col++)
+            {
+                WrappedTextResult wrapped_text = wrap_text(page, curRowData[col], font, TABLE_CONTENT_FONT_SIZE, colWidth[col] - 4);
+                if (wrapped_text.total_height > rowHeight)
+                {
+                    rowHeight = wrapped_text.total_height;
+                }
+            }
+
+            // 换页
+            if (minY > curY - rowHeight)
+            {
+                break;
+            }
+
+            draw_table(page, font, TABLE_CONTENT_FONT_SIZE, tableX, curY, curRowData, colWidth);
+
+            curY -= rowHeight;
+            curRowIndex++;
+            totalRows--;
+        }
+
+#if 0
         int rows = TABLE_LINE_PER_PAGE;
         int cols = tabelData.at(0).size();
         if (rows >= totalRows)
