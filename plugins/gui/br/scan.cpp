@@ -522,6 +522,7 @@ void Scan::generateReport()
     // 监听进程完成后 导出报表
     connect(m_dbusProxy, &BRDbusProxy::ProgressFinished, this, [this]
             {
+                m_progressInfo.method = PROCESS_METHOD_STANDBY;
                 disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
                 RETURN_IF_TRUE(!Report::getDefault()->generateReports(categories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
                 POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
