@@ -418,7 +418,6 @@ void Scan::adjustWidgetPosition(QWidget *widget)
 
 void Scan::startScan()
 {
-    // 设置页面定时扫描时会操作这个信号，为保证不起冲突，每次扫描时断开后重新连接
     connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, &Scan::runProgress);
     m_progressInfo.method = PROCESS_METHOD_SCAN;
     clearState();
