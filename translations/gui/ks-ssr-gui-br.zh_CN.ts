@@ -300,101 +300,106 @@
 <context>
     <name>KS::BR::Progress</name>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="37"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="38"/>
         <source>Export strategy</source>
         <translation>导出策略</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="38"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="39"/>
         <source>Import strategy</source>
         <translation>导入策略</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="39"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="40"/>
         <source>Reset strategy</source>
         <translation>重置策略</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="52"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="44"/>
+        <source>Reset all parameters to default values. Continue?</source>
+        <translation>重置策略会将所有加固项配置参数全部重置为默认值，是否继续？</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/progress.cpp" line="66"/>
         <source>Security Reinforcement is protecting your computer</source>
         <translation>安全加固正在保护您的电脑</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="53"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="67"/>
         <source>KylinSec Host Security Reinforcement Software Detects Risks in Advance to Ensure Asset Security</source>
         <translation>麒麟信安主机安全加固软件提前发现风险，保障资产安全</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="55"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="69"/>
         <source>Strat scan</source>
         <translation>开始扫描</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="59"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="162"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="170"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="73"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="176"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="184"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="97"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="111"/>
         <source>In %1, please wait...</source>
         <translation>正在%1中，请等待...</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="99"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="113"/>
         <source>Scan</source>
         <translation>扫描</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="100"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="161"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="114"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="175"/>
         <source>Reinforcement</source>
         <translation>加固</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="101"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="115"/>
         <source>Start time: %1 elapsed time: 00:00:00 progress: 0%</source>
         <translation>开始时间：%1 用时：00:00:00 进度： 0%</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="105"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="119"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="118"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="203"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="132"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="230"/>
         <source>Start time: %1 elapsed time: %2 progress: %3%</source>
         <translation>开始时间：%1 用时：%2 进度：%3%</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="134"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="148"/>
         <source>Scanned %1, %2 conform!</source>
         <translation>扫描完成%1项，%2项符合！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="135"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="149"/>
         <source>Reinforcement completed %1, successfully reinforced %2!</source>
         <translation>加固完成%1项，加固成功%2项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="142"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="156"/>
         <source>Scanned %1, %2 conform, %3 inconform!</source>
         <translation>扫描完成%1项，%2项符合，%3项不符合！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="146"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="160"/>
         <source>Reinforcement completed %1, successfully reinforced %2, failed %3!</source>
         <translation>加固完成%1项，加固成功%2项，失败%3项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="169"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="183"/>
         <source>GenerateReport</source>
         <translation>生成报表</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="178"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="205"/>
         <source>Start time: %1 elapsed time: %2</source>
         <translation>开始时间：%1 用时：%2</translation>
     </message>
