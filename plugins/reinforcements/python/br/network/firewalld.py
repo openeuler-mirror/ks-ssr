@@ -369,6 +369,11 @@ class IcmpTimestamp(Firewall):
 
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 # 禁止主机被Traceroute检测
 
 
@@ -407,3 +412,8 @@ class Traceroute(Firewall):
         self.save_iptables_rule()
 
         return (True, '')
+
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
