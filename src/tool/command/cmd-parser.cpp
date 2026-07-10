@@ -693,6 +693,14 @@ void Command::repairProgress(const QString &progress)
         {
             std::cout << tr("Vulnerability ").toStdString() << cveStr << tr(" does not exist").toStdString() << std::endl;
         }
+        if (-1 == percent)
+        {
+            std::cout << "Repair stop by manually cancel!";
+        }
+        if (!errorMessage.isEmpty())
+        {
+            std::cout << "error: " << errorMessage.toStdString() << std::endl;
+        }
         exit(0);
     }
 }
