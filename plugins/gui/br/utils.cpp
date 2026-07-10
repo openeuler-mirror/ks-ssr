@@ -171,7 +171,7 @@ void Utils::jsonParsing(const QByteArray &categoriesJson, QList<Category *> &cat
     }
 }
 
-bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categoriesList)
+bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categoriesList, bool withCheckBox)
 {
     RETURN_VAL_IF_TRUE(xmlString == "", false)
 
