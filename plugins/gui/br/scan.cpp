@@ -131,6 +131,11 @@ void Scan::usingCustomStrategy()
 
 void Scan::reset()
 {
+    disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
+    disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
+
+    m_progressInfo.method = PROCESS_METHOD_STANDBY;
+
     m_ui->m_progress->resetProgress();
 }
 
