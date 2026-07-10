@@ -674,6 +674,7 @@ void Command::repairProgress(const QString &progress)
 
     // 进度
     int percent = progressJson.value("progress").toInt();
+    auto errorMessage = progressJson.value("errorMessage").toVariant().toString();
     if (m_lastPercent != percent)
     {
         m_lastPercent = percent;
