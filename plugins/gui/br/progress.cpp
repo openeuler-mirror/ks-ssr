@@ -16,6 +16,7 @@
 #include <QMenu>
 #include <QTimer>
 #include "include/ssr-marcos.h"
+#include "lib/widgets/message-dialog.h"
 #include "progress-icon.h"
 #include "ui_progress.h"
 
