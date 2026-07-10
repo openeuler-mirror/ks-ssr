@@ -67,7 +67,7 @@ void Reinforcement::reload()
     {
         auto plugins = Context::getInstance()->getPlugins();
         auto plugin = plugins->getPlugin(this->m_pluginID);
-        this->m_config.category(plugin->getCategoryName());
+        this->m_config.category(plugin->getCategoryName().toStdString());
     }
     this->updateRules();
 }
