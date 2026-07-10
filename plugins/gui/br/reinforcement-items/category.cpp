@@ -32,6 +32,15 @@ Category::~Category()
     }
 }
 
+void Category::clear()
+{
+    while (!m_reinforcementItems.isEmpty())
+    {
+        ReinforcementItem *p = m_reinforcementItems.takeFirst();
+        delete p;
+    }
+}
+
 void Category::setRow(int row)
 {
     m_row = row;
