@@ -542,19 +542,38 @@ void Window::processActivation()
     }
 }
 
+bool Window::stopPageTask()
+{
+    for (auto &pages : m_workPages)
+    {
+        for (auto &page : pages)
+        {
+            if (!page->stopTask())
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+void Window::adjustWidgetPosition(QWidget *widget)
+{
+    auto x = this->x() + this->width() / 2 - widget->width() / 2;
+    auto y = this->y() + this->height() / 2 - widget->height() / 2;
+    widget->move(x, y);
+}
+
 void Window::popupSettingsDialog()
 {
-    auto x = this->x() + this->width() / 2 - m_settingsDialog->width() / 2;
-    auto y = this->y() + this->height() / 2 - m_settingsDialog->height() / 2;
-    m_settingsDialog->move(x, y);
+    adjustWidgetPosition(m_settingsDialog);
     m_settingsDialog->show();
 }
 
 void Window::popupActivationDialog()
 {
-    auto x = this->x() + this->width() / 2 - m_activation->width() / 2;
-    auto y = this->y() + this->height() / 2 - m_activation->height() / 2;
-    m_activation->move(x, y);
+    adjustWidgetPosition(m_settingsDialog);
     m_activation->show();
 }
 
