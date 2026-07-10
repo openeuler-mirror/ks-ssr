@@ -15,20 +15,20 @@
 #include <qt5-log-i.h>
 #include <QEventLoop>
 #include <QIcon>
-#include <QLabel>
 #include <QPainter>
 #include <QPushButton>
 #include <QStyleOption>
+#include <QTextBrowser>
 #include <QVBoxLayout>
 
 namespace KS
 {
-MessageDialog::MessageDialog(QWidget *parent, bool canGetResult)
+MessageDialog::MessageDialog(QWidget *parent, bool canGetResult, const int &width, const int &height)
     : TitlebarWindow(parent),
-      m_messageLabel(nullptr),
+      m_messageBrowser(nullptr),
       m_result(false)
 {
-    initUI(canGetResult);
+    initUI(canGetResult, width, height);
 }
 
 MessageDialog::~MessageDialog()
