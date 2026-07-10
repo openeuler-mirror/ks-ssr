@@ -342,10 +342,9 @@ void Scan::argReset(const QString &categoryName, const QString &argName)
 {
     auto reply = m_dbusProxy->ResetReinforcement(categoryName);
     reply.waitForFinished();
-    auto retValue = reply.value();
-    if (reply.isError() || !retValue)
+    if (reply.isError())
     {
-        POPUP_MESSAGE_DIALOG(tr("Failed to reset arg!\nError message:%1\nreturn value:%2").arg(reply.error().message()).arg(retValue));
+        POPUP_MESSAGE_DIALOG(tr("Failed to reset arg! Error message:%1").arg(reply.error().message()));
         return;
     }
 
