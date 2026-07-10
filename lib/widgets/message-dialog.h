@@ -24,18 +24,24 @@ class MessageDialog : public TitlebarWindow
 {
     Q_OBJECT
 public:
-    MessageDialog(QWidget *parent = nullptr);
+    MessageDialog(QWidget *parent = nullptr, bool canGetResult = false);
     virtual ~MessageDialog();
 
     void setMessage(const QString &message);
+    bool exec();
 
 private:
-    void initUI();
+    void initUI(bool canGetResult);
 
 protected:
     void paintEvent(QPaintEvent *event);
 
+signals:
+    void finished();
+
 private:
-    QVBoxLayout *m_contentLayout;
+    QLabel *m_messageLabel;
+
+    bool m_result;
 };
 }  // namespace KS
