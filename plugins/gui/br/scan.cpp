@@ -552,6 +552,7 @@ void Scan::generateReport()
     connect(m_dbusProxy, &BRDbusProxy::ScanProgress, this, [this](const QString &jobResult)
             {
                 ProgressInfo progressInfo;
+                progressInfo.method = PROCESS_METHOD_SCAN;
                 Utils::getDefault()->ssrJobResult(jobResult, progressInfo, categories, m_invalidData);
                 if (double(100) == progressInfo.progress)
                 {
