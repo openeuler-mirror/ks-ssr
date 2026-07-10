@@ -81,12 +81,6 @@ public Q_SLOTS:
     // 设置通知状态
     virtual void SetNotificationStatus(const uint32_t &notificationStatus);
 
-    // 设置自定义加固策略
-    virtual void ImportCustomRA(const QString &encodedStrategy);
-
-    // 设置复选框状态
-    virtual void SetCheckBox(const QString &reinforcementName, const bool &checkboxStatus);
-
     // 设置资源监控开关
     virtual void SetResourceMonitorSwitch(const uint32_t &resourceMonitor);
 
