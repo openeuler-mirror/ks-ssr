@@ -54,7 +54,7 @@ public:
         return this->m_loader;
     };
     // 获取加固项名称列表
-    std::vector<std::string> getReinforcementNames();
+    QStringList getReinforcementNames();
     // 获取加固项配置
     const Protocol::Reinforcement* getReinforcementConfig(const std::string& name);
 
