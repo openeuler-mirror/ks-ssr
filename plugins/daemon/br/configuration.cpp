@@ -33,7 +33,6 @@ namespace BR
 #define CUSTOM_RS_FILEPATH SSR_BR_INSTALL_DATADIR "/br-custom-rs"
 
 #define CUSTOM_RA_FILEPATH SSR_BR_INSTALL_DATADIR "/br-custom-ra.xml"
-#define CUSTOM_RA_STRATEGY_FILEPATH SSR_BR_INSTALL_DATADIR "/br-custom-ra-strategy.xml"
 #define RH_BR_DATDIR SSR_BR_INSTALL_DATADIR "/ReinforcementHistory"
 #define RSA_PUBLIC_KEY_FILEPATH SSR_BR_INSTALL_DATADIR "/br-public.key"
 
