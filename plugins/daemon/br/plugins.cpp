@@ -102,30 +102,30 @@ BRReinforcementVec Plugins::getReinforcementsByCategory(const QString& category_
     return result;
 }
 
-QSharedPointer<BRReinforcementInterface> Plugins::getReinforcementInterface(const QString& plugin_name,
-                                                                            const QString& reinforcement_name)
+QSharedPointer<BRReinforcementInterface> Plugins::getReinforcementInterface(const QString& pluginName,
+                                                                            const QString& reinforcementName)
 {
-    auto plugin = this->getPlugin(plugin_name);
+    auto plugin = this->getPlugin(pluginName);
     if (!plugin)
     {
-        KLOG_WARNING() << "Plugin '" << plugin_name.toLatin1() << "' of the reinforcement '" << reinforcement_name.toLatin1() << "' is not found.";
+        KLOG_WARNING() << "Plugin '" << pluginName.toLatin1() << "' of the reinforcement '" << reinforcementName.toLatin1() << "' is not found.";
         return QSharedPointer<BRReinforcementInterface>();
     }
 
-    auto plugin_interface = plugin->getLoader()->getInterface();
-    if (!plugin_interface)
+    auto pluginInterface = plugin->getLoader()->getInterface();
+    if (!pluginInterface)
     {
-        KLOG_WARNING() << "The Plugin interface for " << plugin_name.toLatin1() << " is NULL.";
+        KLOG_WARNING() << "The Plugin interface for " << pluginName.toLatin1() << " is NULL.";
         return QSharedPointer<BRReinforcementInterface>();
     }
 
-    auto reinforcement_interface = plugin_interface->getReinforcement(reinforcement_name);
-    if (!reinforcement_interface)
+    auto reinforcementInterface = pluginInterface->getReinforcement(reinforcementName);
+    if (!reinforcementInterface)
     {
-        KLOG_WARNING() << "The reinforcement interface for " << reinforcement_name.toLatin1() << " is NULL.";
+        KLOG_WARNING() << "The reinforcement interface for " << reinforcementName.toLatin1() << " is NULL.";
         return QSharedPointer<BRReinforcementInterface>();
     }
-    return reinforcement_interface;
+    return reinforcementInterface;
 }
 
 void Plugins::loadPlugins()
