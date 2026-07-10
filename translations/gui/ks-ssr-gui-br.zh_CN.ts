@@ -590,29 +590,27 @@
         <translation>导入成功！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="343"/>
-        <source>Failed to reset arg!
-Error message:%1
-return value:%2</source>
-        <translation>重置参数失败!\n错误信息:%1\n返回值:%2</translation>
+        <location filename="../../plugins/gui/br/scan.cpp" line="347"/>
+        <source>Failed to reset arg! Error message:%1</source>
+        <translation>重置失败! 错误信息:%1</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="391"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="395"/>
         <source>Please select the item to export!</source>
         <translation>请选择要导出的加固项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="454"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="458"/>
         <source>Please check the reinforcement items to be scanned or reinforcement classification for scanning.</source>
         <translation>请勾选需要扫描的加固项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="469"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="473"/>
         <source>Please check the content to be reinforced.</source>
         <translation>请勾选要加固的项。</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/scan.cpp" line="523"/>
+        <location filename="../../plugins/gui/br/scan.cpp" line="528"/>
         <source>Export succeeded!</source>
         <translation>导出成功！</translation>
     </message>
