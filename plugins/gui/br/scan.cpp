@@ -687,8 +687,8 @@ void Scan::runProgress(const QString &jobResult)
             emit reinforcementFinished();
         }
 
-        disconnect(m_dbusProxy, SIGNAL(ScanProgress(QString)), this, SLOT(runProgress(QString)));
-        disconnect(m_dbusProxy, SIGNAL(ReinforceProgress(QString)), this, SLOT(runProgress(QString)));
+        disconnect(m_dbusProxy, &BRDbusProxy::ScanProgress, 0, 0);
+        disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
 
         m_progressInfo.method = PROCESS_METHOD_STANDBY;
     }
