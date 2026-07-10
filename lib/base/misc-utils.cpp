@@ -70,6 +70,7 @@ void MiscUtils::removeTranslator(QTranslator*& translator)
     if (translator)
     {
         QCoreApplication::removeTranslator(translator);
+        delete translator;
         translator = nullptr;
     }
 }
