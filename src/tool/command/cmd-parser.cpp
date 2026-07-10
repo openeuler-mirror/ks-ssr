@@ -687,7 +687,7 @@ void Command::repairProgress(const QString &progress)
             cveStr = cveStr + cve.toStdString() + ",";
         }
         cveStr = cveStr.substr(0, cveStr.size() - 1) + "\"";
-        outputRepairResult("./vulnerability_repair_output.txt");
+        outputRepairResult();
         if (!m_notExistCVE.isEmpty())
         {
             std::cout << tr("Vulnerability ").toStdString() << cveStr << tr(" does not exist").toStdString() << std::endl;
