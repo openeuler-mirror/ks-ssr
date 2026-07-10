@@ -61,6 +61,11 @@ class IcmpRedirect(Sysctl):
         self.load_from_system()
         return (True, '')
 
+    def backup(self):
+        return self.get()
+    def rollback(self, args_json):
+        return self.set(args_json)
+
 
 # IP源路由
 class SourceRoute(Sysctl):
