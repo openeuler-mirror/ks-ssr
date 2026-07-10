@@ -17,6 +17,7 @@
 #include "progress.h"
 #include "reinforcement-items/category.h"
 
+class QDBusServiceWatcher;
 class BRDbusProxy;
 
 namespace Ui
