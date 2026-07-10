@@ -347,7 +347,8 @@ void Command::outputBrResult()
 
         exit(0);
     }
-
+    QString timeStr = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss");
+    QString fileName = QString(tr("KylinSecHostReinforcementReport_%1_%2_%3.txt")).arg(QSysInfo::machineHostName()).arg(getIPPath()).arg(timeStr);
     QFile f(fileName);
     if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
     {
