@@ -13,6 +13,7 @@
  */
 #include "scan.h"
 #include <kylin-license/license-i.h>
+#include <QDBusServiceWatcher>
 #include <QFileDialog>
 #include <QJsonDocument>
 #include <QJsonObject>
