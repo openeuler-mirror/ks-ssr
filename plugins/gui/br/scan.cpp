@@ -89,7 +89,7 @@ void Scan::reset()
 
 bool Scan::exportStrategy()
 {
-    RETURN_VAL_IF_TRUE(!checkAndSetCheckbox(), false);
+    checkAndSetCheckbox();
 
     // 导出自定义策略，xml格式
 
