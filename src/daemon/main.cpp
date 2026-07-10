@@ -58,6 +58,14 @@ int main(int argc, char *argv[])
     KS::Daemon::globalInit();
     KS::Daemon::getInstance()->start();
     auto retval = app.exec();
+
+    // 卸载翻译
+    for (auto translator : translatorList)
+    {
+        MiscUtils::removeTranslator(translator);
+    }
+
     KS::Daemon::globalDeinit();
+
     return retval;
 }
