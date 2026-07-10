@@ -67,6 +67,9 @@ public:
     // 重置所有加固项
     void resetAllReinforcementItem();
 
+    bool checkCanExit();
+    bool cancelProgress();
+
 signals:
     void returnHomeClicked();
     // 加固完成信号，用于修改home页面上一次加固时间
