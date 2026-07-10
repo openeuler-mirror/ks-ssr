@@ -16,7 +16,7 @@
 
 #include "window/titlebar-window.h"
 
-class QLabel;
+class QTextBrowser;
 namespace KS
 {
 // 自定义消息对话框，统一提示信息对话框
