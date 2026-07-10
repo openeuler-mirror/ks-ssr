@@ -167,7 +167,7 @@ static void draw_table(HPDF_Page page, float x, float y, float width, float heig
     }
 }
 
-static void add_table_data(HPDF_Page page, HPDF_Font font, float x, float y, float width, float height, int rows, int cols, const QList<QStringList> &tabelData, bool hasFirstRow)
+static void add_table_data(HPDF_Page page, HPDF_Font font, float x, float y, float width, float height, int rows, int cols, const QList<QStringList> &tabelData, bool hasFirstRow, const QList<uint> &colWidth)
 {
     float cell_width = width / cols;
     float cell_height = height / rows;
