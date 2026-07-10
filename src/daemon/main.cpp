@@ -16,9 +16,9 @@
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QFileInfo>
-#include <QTranslator>
 #include <QtGlobal>
 #include "config.h"
+#include "lib/base/misc-utils.h"
 #include "src/daemon/daemon.h"
 
 using namespace KS;
