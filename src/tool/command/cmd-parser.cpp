@@ -417,13 +417,15 @@ void Command::outputRepairResult(QTextStream &output)
     output << "\n";
 }
 
-void Command::outputRepairResult(QString fileName)
+void Command::outputRepairResult()
 {
     if (m_repairResult.size() == 0)
         return;
 
     if (m_fileOutput)
     {
+        QString timeStr = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss");
+        QString fileName = QString(tr("KylinSecHostReinforcementReport_%1_%2_%3.txt")).arg(QSysInfo::machineHostName()).arg(getIPPath()).arg(timeStr);
         QFile f(fileName);
         if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
         {
