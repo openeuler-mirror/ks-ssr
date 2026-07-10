@@ -514,7 +514,7 @@ void BRDBus::SetReinforcements(const QString& reinforcements)
             if (!this->m_configuration->setCustomRA(brReinforcement))
             {
                 sendErrorReply(QDBusError::InternalError,
-                               SSR_ERROR2STR(SSRErrorCode::ERROR_DAEMON_SET_REINFORCEMENT_FAILED));
+                               SSR_ERROR2STR(SSRErrorCode::ERROR_PLUGIN_BR_SET_REINFORCEMENT_FAILED));
                 break;
             }
         }
