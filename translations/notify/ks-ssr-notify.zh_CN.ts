@@ -4,7 +4,7 @@
 <context>
     <name>KS::Notify::Notify</name>
     <message>
-        <location filename="../../src/notify/notify.cpp" line="31"/>
+        <location filename="../../src/notify/notify.cpp" line="28"/>
         <source>Security Reinforcement</source>
         <translation>主机安全加固</translation>
     </message>
