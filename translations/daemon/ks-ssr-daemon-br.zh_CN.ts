@@ -213,7 +213,7 @@
         <translation>总计:%1 符合:%2 不符合:%3</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/dbus.cpp" line="807"/>
+        <location filename="../../plugins/daemon/br/dbus.cpp" line="808"/>
         <source>test information</source>
         <translation>扫描信息</translation>
     </message>
