@@ -30,7 +30,7 @@ ReinforcementPython::ReinforcementPython(PyObject *module,
       m_className(className),
       m_class(NULL),
       m_classInstance(NULL),
-      m_valid(false)
+      m_isInited(false)
 {
     Py_XINCREF(this->m_module);
 
