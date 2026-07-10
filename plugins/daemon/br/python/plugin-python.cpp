@@ -49,6 +49,17 @@ ReinforcementPython::ReinforcementPython(PyObject *module,
                        << Utils::pyCatchException().toLocal8Bit();
         return;
     }
+}
+
+ReinforcementPython::~ReinforcementPython()
+{
+    Py_XDECREF(this->m_module);
+    Py_XDECREF(this->m_class);
+}
+
+bool ReinforcementPython::init()
+{
+    RETURN_VAL_IF_TRUE(isInit(), true);
 
     this->m_classInstance = PyObject_CallObject(this->m_class, NULL);
 
