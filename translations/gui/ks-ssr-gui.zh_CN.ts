@@ -100,19 +100,6 @@
     </message>
 </context>
 <context>
-    <name>KS::MessageDialog</name>
-    <message>
-        <location filename="../../lib/widgets/message-dialog.cpp" line="38"/>
-        <source>Notify</source>
-        <translation>提示</translation>
-    </message>
-    <message>
-        <location filename="../../lib/widgets/message-dialog.cpp" line="46"/>
-        <source>ok</source>
-        <translation>确认</translation>
-    </message>
-</context>
-<context>
     <name>KS::Navigation</name>
     <message>
         <location filename="../../src/gui/navigation.cpp" line="68"/>
