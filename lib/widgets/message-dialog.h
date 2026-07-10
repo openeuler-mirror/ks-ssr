@@ -24,14 +24,14 @@ class MessageDialog : public TitlebarWindow
 {
     Q_OBJECT
 public:
-    MessageDialog(QWidget *parent = nullptr, bool canGetResult = false);
+    MessageDialog(QWidget *parent = nullptr, bool canGetResult = false, const int &width = 280, const int &height = 240);
     virtual ~MessageDialog();
 
     void setMessage(const QString &message);
     bool exec();
 
 private:
-    void initUI(bool canGetResult);
+    void initUI(bool canGetResult, const int &width, const int &height);
 
 protected:
     void paintEvent(QPaintEvent *event);
