@@ -37,7 +37,20 @@ Progress::Progress(QWidget* parent)
     QMenu* strategyMenu = new QMenu(this);
     strategyMenu->addAction(tr("Export strategy"), this, &Progress::exportStrategyClicked);
     strategyMenu->addAction(tr("Import strategy"), this, &Progress::importStrategyClicked);
-    strategyMenu->addAction(tr("Reset strategy"), this, &Progress::resetStrategyClicked);
+    strategyMenu->addAction(tr("Reset strategy"), [this]()
+                            {
+                                // 弹窗阻止
+                                auto messageDialog = new KS::MessageDialog(this, true);
+                                messageDialog->setMessage(tr("Reset all parameters to default values. Continue?"));
+                                adjustWidgetPosition(messageDialog);
+                                bool ret = messageDialog->exec();
+                                delete messageDialog;
+                                if (!ret)
+                                {
+                                    return;
+                                }
+                                emit resetStrategyClicked();
+                            });
     m_ui->m_strategy->setMenu(strategyMenu);
 }
 
