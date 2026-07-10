@@ -59,7 +59,7 @@ void Scan::usingSystemStrategy()
     KLOG_DEBUG() << "use system strategy.";
     resetAllReinforcementItem();
     m_ui->m_itemTable->setStrategy(BR_STRATEGY_TYPE_SYSTEM);
-    disconnect(m_ui->m_itemTable, SIGNAL(modifyItemArgsClicked(QModelIndex)), this, SLOT(popReinforcecmentDialog(QModelIndex)));
+    disconnect(m_ui->m_itemTable, &ItemTable::modifyItemArgsClicked, this, &Scan::popReinforcecmentDialog);
     m_ui->m_progress->hideStrategy();
 }
 
