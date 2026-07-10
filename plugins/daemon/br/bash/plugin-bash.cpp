@@ -23,7 +23,6 @@ namespace KS
 {
 namespace BR
 {
-
 #define REINFORCEMENTS_CONFIG_NAME "reinforcements.json"
 
 ReinforcementBash::ReinforcementBash(const QString &bashFilePath)
