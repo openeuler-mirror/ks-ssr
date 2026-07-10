@@ -26,6 +26,8 @@ public:
     virtual ~Category();
 
 public:
+    void clear();
+
     void setRow(int row);
     void setName(const QString &name);
     void setLabel(const QString &label);
