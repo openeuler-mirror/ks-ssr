@@ -27,7 +27,9 @@ namespace BR
 enum ProcessMethod
 {
     PROCESS_METHOD_SCAN,
-    PROCESS_METHOD_FASTEN
+    PROCESS_METHOD_FASTEN,
+
+    PROCESS_METHOD_STANDBY
 };
 
 struct ProgressInfo
