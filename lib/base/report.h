@@ -25,7 +25,8 @@ public:
     static QString genReport(const QString &savePath,
                              const QList<QPair<QString, QString>> &homeExtraData,
                              const QString &tableTitle,
-                             const QList<QStringList> &tabelData);
+                             const QList<QStringList> &tabelData,
+                             const QList<uint> &colWidth);
 
 private:
     Report(){};
