@@ -627,13 +627,7 @@ QString JobDispatcher::reinforcementArgXml2Str(const KS::Protocol::Reinforcement
     QJsonObject jsonArgs;
     for (auto iter = args.begin(); iter != args.end(); ++iter)
     {
-        QString inputExample = iter->input_example() != nullptr ? iter->input_example().get().c_str() : "";
-
-        // FIXME:这是什么特殊逻辑？无法理解
-        // str2jsonValue中的类型转换没法区分line输入纯数字和数字输入框spin输入的纯数字，都会被转为double类型，这里需要进行判断,
-        // 如果存在inputExample则肯定为line输入的纯数字，参数应该为str类型
-        jsonArgs.insert(iter->name().c_str(), inputExample.isEmpty() ? StrUtils::str2jsonValue(iter->value())
-                                                                     : QJsonValue::fromVariant(iter->value().c_str()));
+        jsonArgs.insert(iter->name().c_str(), StrUtils::str2jsonValue(iter->value()));
     }
     return StrUtils::json2str(jsonArgs);
 }
