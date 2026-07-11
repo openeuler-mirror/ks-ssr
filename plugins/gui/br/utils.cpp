@@ -227,8 +227,8 @@ bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categ
                                       arg.layout().get().widget_type(),
                                       arg.value_limits().get().c_str(),
                                       arg.input_example() != nullptr ? arg.input_example().get().c_str() : "",
-                                      noop2Translate(defaultLabel),
-                                      noop2Translate(defaultNote));
+                                      defaultLabel,
+                                      defaultNote);
         }
 
         QString defaultLabel;
