@@ -76,10 +76,11 @@ class PermissionSetting:
                 if mode != (mode & ~EXCLUDE_MODE):
                     os.chmod(mode_file, mode & ~EXCLUDE_MODE)
 
-        return (True, '')
+        return (True, "")
 
     def backup(self):
         return self.get()
+
     def rollback(self, args_json):
         return self.set(args_json)
 
