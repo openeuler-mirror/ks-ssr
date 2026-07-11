@@ -24,7 +24,79 @@
 
 using namespace KS;
 
-int main(int argc, char* argv[])
+QString leftJustify(const QString &str, int width)
+{
+    QChar fillChar = ' ';
+    int strWidth = 0;
+    for (const QChar &ch : str)
+    {
+        if (ch.unicode() < 128)
+        {
+            strWidth += 1;
+        }
+        else
+        {
+            strWidth += 2;
+        }
+    }
+    if (strWidth >= width)
+    {
+        return str;
+    }
+    return str + QString(width - strWidth, fillChar);
+}
+
+void helpTextOut(QString helpText, QString firstLine = "", bool removeDoubleLine = false)
+{
+    QTextStream cerr(stderr);
+    auto textList = helpText.split("\n");
+
+    if (!firstLine.isEmpty())
+    {
+        auto oldFirstLine = textList.first();
+        auto firstLineList = oldFirstLine.split(" ").mid(0, 2);
+        firstLineList.append(firstLine);
+
+        textList.replace(0, firstLineList.join(" "));
+    }
+
+    // 移除　--help
+    QStringList newTextList;
+    for (auto text : textList)
+    {
+        if (!text.contains("--help"))
+        {
+            newTextList.append(text);
+        }
+    }
+    // 移除　空的Options
+    // 前后为空
+    for (int i = 0; i < newTextList.size(); i++)
+    {
+        if ("Options:" == newTextList.at(i) &&
+            i - 1 >= 0 &&
+            i + 1 < newTextList.size() &&
+            newTextList.at(i - 1).isEmpty() &&
+            newTextList.at(i + 1).isEmpty())
+        {
+            newTextList.removeAt(i);
+            newTextList.removeAt(i);  // 随后的空行也移除
+            break;
+        }
+    }
+
+    if (removeDoubleLine)
+    {
+        for (auto &text : newTextList)
+        {
+            text.remove("--");
+        }
+    }
+
+    cerr << newTextList.join("\n");
+}
+
+int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
     klog_qt5_init(SSR_ZLOG_CONFIG_FILE, "kylinsec-session", PROJECT_NAME, app.applicationName().toLatin1());
