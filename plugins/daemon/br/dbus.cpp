@@ -708,12 +708,6 @@ void BRDBus::exportReport(const QString& savePath)
 
     CategoryVec categoryVec = m_categories->getCategories();
     QMap<QString, QPair<int, int>> categoryMap;
-    // 动态翻译
-    static const QMap<QString, const char*> categoryTR = {
-        {"config", QT_TR_NOOP("config")},
-        {"network", QT_TR_NOOP("network")},
-        {"audit", QT_TR_NOOP("audit")},
-        {"external", QT_TR_NOOP("external")}};
 
     for (auto& category : categoryVec)
     {
