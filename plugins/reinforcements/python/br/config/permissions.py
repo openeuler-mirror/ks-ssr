@@ -129,62 +129,63 @@ class DirectoryPermissionSetting:
                 if mode != (mode & EXCLUDE_DIRECTORY_MODE):
                     os.chmod(mode_file, EXCLUDE_DIRECTORY_MODE)
 
-        return (True, '')
+        return (True, "")
 
     def backup(self):
         return self.get()
+
     def rollback(self, args_json):
         return self.set(args_json)
 
 
 class UmaskLimit:
     def __init__(self):
-        self.conf_profile = br.configuration.KV(UMASK_LIMIT_PROFILE_PATH)
-        self.conf_bashrc = br.configuration.KV(UMASK_LIMIT_BASHRC_PATH)
+        pass
+
+    # 判断文件是否已经存在umask配置
+    def exist_umask(self, file):
+        ret = br.utils.subprocess_has_output("grep \"^umask \" {0}".format(file))
+        return len(ret) > 0
+
 
     def get(self):
         retdata = dict()
-        key = 'enabled'
-        profile_value = self.conf_profile.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
-        bashrc_value = self.conf_bashrc.get_value(UMASK_LIMIT_CONF_KEY_UMASK)
-        retdata[key] = "" if not bashrc_value else int(bashrc_value)
-        # 如果profile中有值，则以profile为准
-        if profile_value:
-            retdata[key] = int(profile_value)
-        # 为了使022这个权限为不符合，按照现在的比对标准，22为符合，因此获取值设置为222
-        if str(retdata[key]) and "22" in str(retdata[key]):
-            retdata[key] = int(222)
-
+        retdata["umask"] = br.utils.subprocess_has_output("bash -l umask")
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
         args = json.loads(args_json)
-        umask_value = args['enabled']
-        if not umask_value:
-            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '')
-            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '')
-            umask_value = "0"
 
-        if int(umask_value) == 27:
-            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
-            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '027')
-        if int(umask_value) == 22:
-            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
-            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
-        if int(umask_value) == 222:
-            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
-            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '022')
-        if int(umask_value) == 77:
-            self.conf_profile.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
-            self.conf_bashrc.set_all_value(UMASK_LIMIT_CONF_KEY_UMASK, '077')
-        
-        cmd = "source" + " " + UMASK_LIMIT_BASHRC_PATH + " " + UMASK_LIMIT_PROFILE_PATH
-        limit_open_command = '{0}'.format(cmd)
-        br.utils.subprocess_not_output(limit_open_command)
+        if self.exist_umask("/etc/profile"):
+            return (False, "umask is already defined in /etc/profile, please delete it first.")
 
-        return (True, '')
+        if self.exist_umask("/etc/bashrc"):
+            return (False, "umask is already defined in /etc/bashrc, please delete it first.")
+
+        if os.path.exists(UMASK_PROFILE_SH_PATH):
+            os.remove(UMASK_PROFILE_SH_PATH)
+        if os.path.exists(UMASK_PROFILE_CSH_PATH):
+            os.remove(UMASK_PROFILE_CSH_PATH)
+
+        if args["umask"] != None and len(args["umask"]) == 4:
+            br.utils.subprocess_not_output(
+                'echo "umask {0}" >> {1}'.format(args["umask"], UMASK_PROFILE_SH_PATH)
+            )
+            br.utils.subprocess_not_output(
+                'echo "umask {0}" >> {1}'.format(args["umask"], UMASK_PROFILE_CSH_PATH)
+            )
+        return (True, "")
 
     def backup(self):
-        return self.get()
+        retdata = dict()
+        with open(UMASK_PROFILE_SH_PATH, "r") as file:
+            lines = file.readlines()
+            for line in lines:
+                if line.startswith("umask"):
+                    umask_value = line.split(" ")[1].strip()
+                    retdata["umask"] = int(umask_value)
+                    break
+        return (True, json.dumps(retdata))
+
     def rollback(self, args_json):
         return self.set(args_json)
