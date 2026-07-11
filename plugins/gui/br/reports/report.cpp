@@ -293,7 +293,7 @@ void Report::createReportHomePage(int status, const QRect &rect)
 void Report::createReportContent(QPrinter &printer, const QList<Category *> &scanList, const InvalidData &invalidData)
 {
     bool flag = false;
-    m_table = new PDFDetails(this);
+    m_pdfDetails = new PDFDetails(this);
 
     QList<CategoryContent> categoryContents;
     for (auto category : scanList)
