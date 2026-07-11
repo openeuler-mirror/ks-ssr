@@ -14,6 +14,7 @@
 #include "cmd-parser.h"
 #include <unistd.h>
 #include <QJsonObject>
+#include <QSharedPointer>
 #include <QTextCodec>
 #include <iostream>
 #include "br-protocol.hxx"
