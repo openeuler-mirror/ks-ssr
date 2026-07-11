@@ -50,25 +50,30 @@ public:
     virtual ~Command();
     void setFileOutput(bool fileOutput);
     int brScan();
+    int brReinforce(const QStringList &name = QStringList());
+    int brExport(const QString &filePath);
     int vulnerabilityScan();
-    int reinforce(const QStringList &name = QStringList());
-    void repair(const QStringList &name = QStringList());
-    int exportReport(QString which, QString path);
+    int vulnerabilityRepair(const QStringList &name = QStringList());
+    int vulnerabilityExport(const QString &filePath);
 
 private:
     void checkLicenseActive();
-    QStringList getBrInfo(const QStringList &category = QStringList());
-    bool ssrJobResult(const QString &xmlString);
-    int displayWidth(const QString &str);
+    void addDbusServerWatcher();
+    void moduleBrInit();
+    void moduleVulnerabilityInit();
+    void brOutputResult(QTextStream &output);
+    void vulnerabilityOutputResult(QTextStream &output);
+    void outputResult(QTextStream &output, ModuleType type);
+    void outputMethodProcess(ModuleType type);
+    int checkExportPath(const QString &filePath);
+    int getCVEsInfo(const QStringList &name);
+    int brJobResultProcess(const QString &xmlString);
+    QStringList getReinforcements(const QStringList &specifyList = QStringList());
     QString leftJustify(const QString &str, int width, QChar fillChar = ' ');
-    void outputBrResult();
-    void outputRepairResult(QTextStream &output);
-    void outputRepairResult();
     QString getCveLevel(int level);
     QString getCveState(int state);
     QString state2Str(int state);
     QJsonObject str2jsonObject(const QString &str);
-    int getCVEsInfo();
 
 private slots:
     void scanProgress(const QString &progress);
