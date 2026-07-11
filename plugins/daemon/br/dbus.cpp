@@ -731,12 +731,12 @@ void BRDBus::exportReport(const QString& savePath)
         if ((state & BR_REINFORCEMENT_STATE_SAFE) == 1)
         {
             stateStr = QString(tr("Conformity"));
-            tabelDataConformity.push_back({noop2Translate(label), stateStr});
+            tabelDataConformity.push_back({label, stateStr});
         }
         else
         {
             stateStr = QString(tr("Inconformity"));
-            tabelDataInconformity.push_back({noop2Translate(label), stateStr});
+            tabelDataInconformity.push_back({label, stateStr});
         }
 
         auto category = this->m_plugins->getReinforcement(name)->getCategoryName();
