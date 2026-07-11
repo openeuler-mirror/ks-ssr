@@ -4,3 +4,4 @@ resources/images/kylinsec-logo.png
 build
 CMakeLists.txt.user
 .vscode
+.idea
