@@ -582,7 +582,7 @@ void Window::popupAboutDialog()
 {
     auto aboutDialog = new About(this);
 
-    adjustWidgetPosition(m_settingsDialog);
+    adjustWidgetPosition(aboutDialog);
     aboutDialog->show();
 }
 
