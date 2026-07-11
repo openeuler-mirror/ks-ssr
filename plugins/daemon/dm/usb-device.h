@@ -24,7 +24,8 @@ namespace DM
 struct InterfaceClass
 {
 public:
-    InterfaceClass() = default;
+    InterfaceClass()
+        : bInterfaceClass(0), bInterfaceSubClass(0), bInterfaceProtocol(0);
     int bInterfaceClass;
     int bInterfaceSubClass;
     int bInterfaceProtocol;
