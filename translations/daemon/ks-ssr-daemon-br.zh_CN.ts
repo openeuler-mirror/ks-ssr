@@ -1099,8 +1099,8 @@ which will cause many problems!</source>
     </message>
     <message>
         <location filename="../../data/br-system-rs.xml" line="836"/>
-        <source>Add audit rules to path.</source>
-        <translation>添加审计规则。</translation>
+        <source>Add audit rules to path</source>
+        <translation>添加审计规则</translation>
     </message>
     <message>
         <location filename="../../data/br-system-rs.xml" line="854"/>
