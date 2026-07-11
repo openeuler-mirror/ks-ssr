@@ -53,8 +53,8 @@ public:
     QSharedPointer<SystemDevice> getDevcie();
     qint64 getConnectedTime();
 
-    void setID(QString &id);
-    void setName(QString &name);
+    void setID(const QString &id);
+    void setName(const QString &name);
     void setType(int type);
     void setInterfaceType(int type);
     void setState(int state);
