@@ -599,9 +599,10 @@ void Scan::popReinforcecmentDialog(const QModelIndex &model)
         auto indexCategories = model.parent().row();
         auto indexCategory = model.row();
         auto args = m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory)->getArgs();
+        auto name = m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory)->getName();
         for (auto arg : args)
         {
-            m_customArgsDialog->addLine(m_categories.at(indexCategories)->getReinforcementItem().at(indexCategory)->getName(),
+            m_customArgsDialog->addLine(name,
                                         arg->name,
                                         arg->label,
                                         arg->valueLimits,
