@@ -125,6 +125,7 @@ void ItemTable::setItem(const QList<Category *> &list)
             CONTINUE_IF_TRUE(reinforcementItem.at(j)->getName() == "external-hosts-login-limit" && !QFile::exists("/etc/hosts.allow"))
             auto labelItem = new QStandardItem(reinforcementItem.at(j)->getLabel());
             auto descriptionItem = new QStandardItem(reinforcementItem.at(j)->getDescription());
+            descriptionItem->setToolTip(reinforcementItem.at(j)->getDescription());
             auto stateItem = new QStandardItem("-");
             labelItem->setCheckable(true);
 
