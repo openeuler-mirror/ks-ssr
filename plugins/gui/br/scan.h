@@ -103,8 +103,6 @@ private slots:
     void startReinforcement();
     void generateReport();
 
-    // table
-    void showErrorMessage(const QModelIndex &model);
     void popReinforcecmentDialog(const QModelIndex &model);
     // dbus
     void runProgress(const QString &jobResult);
