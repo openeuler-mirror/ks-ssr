@@ -171,7 +171,10 @@ private:
 
 #define POINTER_TO_STRING(p) ((p) ? p : QString())
 
-#define KS_VERSION_CHECK(ssr_dep_version_check_major, ssr_dep_version_check_minor, ssr_dep_version_check_patch) ((ssr_dep_version_check_major << 16) | (ssr_dep_version_check_minor << 8) | (ssr_dep_version_check_patch))
+#define KS_VERSION_CHECK(ssr_dep_version_check_major, \
+                         ssr_dep_version_check_minor, \
+                         ssr_dep_version_check_patch) \
+    ((ssr_dep_version_check_major << 16) | (ssr_dep_version_check_minor << 8) | (ssr_dep_version_check_patch))
 
 using StringHash = uint32_t;
 
