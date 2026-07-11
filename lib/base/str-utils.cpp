@@ -152,11 +152,19 @@ QJsonValue StrUtils::str2jsonValue(const std::string &str)
 
 QJsonValue StrUtils::str2jsonValue(const QString &str)
 {
-    RETURN_VAL_IF_TRUE(str.isEmpty(), QJsonValue::fromVariant(str));
+    // 空类型
+    if (str.compare("null", Qt::CaseSensitive) == 0)
+    {
+        return QJsonValue::Null;
+    }
+
+    // bool类型
     if (str.compare("true", Qt::CaseSensitive) == 0 || str.compare("false", Qt::CaseSensitive) == 0)
     {
         return QJsonValue::fromVariant((str.compare("true", Qt::CaseSensitive) == 0));
     }
+
+    // Double类型
     bool isInt = true;
     for (const auto it : str)
     {
