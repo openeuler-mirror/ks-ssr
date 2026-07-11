@@ -237,30 +237,25 @@
 <context>
     <name>KS::BR::ItemTable</name>
     <message>
-        <location filename="../../plugins/gui/br/item-table.cpp" line="86"/>
+        <location filename="../../plugins/gui/br/item-table.cpp" line="85"/>
         <source>Reinforcement Item</source>
         <translation>加固项</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/item-table.cpp" line="87"/>
-        <location filename="../../plugins/gui/br/item-table.cpp" line="490"/>
+        <location filename="../../plugins/gui/br/item-table.cpp" line="86"/>
+        <location filename="../../plugins/gui/br/item-table.cpp" line="502"/>
         <source>Info(Double click this column to modify the reinforcement parameters)</source>
         <translation>说明（双击修改加固项参数）</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/item-table.cpp" line="88"/>
+        <location filename="../../plugins/gui/br/item-table.cpp" line="87"/>
         <source>State</source>
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/item-table.cpp" line="480"/>
+        <location filename="../../plugins/gui/br/item-table.cpp" line="492"/>
         <source>Info</source>
         <translation>说明</translation>
-    </message>
-    <message>
-        <location filename="../../plugins/gui/br/item-table.cpp" line="542"/>
-        <source>Double click this column to modify the reinforcement parameters</source>
-        <translation>双击此列修改加固参数</translation>
     </message>
 </context>
 <context>
