@@ -314,10 +314,10 @@ void Report::createReportContent(QPrinter &printer, const QList<Category *> &sca
     // 漏洞扫描结果
     //    auto isVulnerability = createVulnerabilityResults(printer, invalidData, flag);
 
-    m_table->addSpacer();
-    m_table->showTailBar();
+    m_pdfDetails->addSpacer();
+    m_pdfDetails->showTailBar();
 
-    auto pagePixmap = m_table->grab(m_table->rect());
+    auto pagePixmap = m_pdfDetails->grab(m_pdfDetails->rect());
     m_painter->drawPixmap(0, 0, pagePixmap);
 }
 
