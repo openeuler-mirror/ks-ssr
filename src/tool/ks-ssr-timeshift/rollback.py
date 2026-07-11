@@ -29,13 +29,21 @@ class RollBack(object):
     def __init__(self, conf_path):
         self._conf_path = conf_path
         self.store_path = ""
-        self.vmlinux = "/boot/vmlinuz-rollback"
+        # 用于系统还原的vmlinuz
+        self.vmlinuz = "/boot/vmlinuz-rollback"
+        # 用于系统还原的initramfs
         self.initrd = "/boot/initramfs-rollback.img"
-        self.ssr_env_dir = "/usr/share/ks-ssr/scripts/"
+        # 存放rollback时所需脚本文件
+        self.ssr_env_dir = "/usr/share/ks-ssr/timeshift"
+        # 存放需打包进initrd中的脚本文件
         self.opt_ssr_dir = "/opt/ks-ssr/ks-ssr"
+        # rollback模块是否打包进initrd的标志文件
         self.ssr_tag_dracut = "/opt/ks-ssr/.ks-ssr_dracut_flag"
+        # initrd中是否集成服务文件的标志文件
         self.ssr_tag_service = "/opt/ks-ssr/.need_service"
+        # centos6下base模块的init文件，centos6_init_scripts会对其进行修改
         self.centos6_dracut_init = "/usr/share/dracut/modules.d/99base/init"
+        # centos6下特殊处理base模块
         self.centos6_init_scripts = "/usr/share/dracut/modules.d/99ksssr/centos6-init.sh"
 
         self._get_default_conf_section()
