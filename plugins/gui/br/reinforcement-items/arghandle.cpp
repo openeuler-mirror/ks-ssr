@@ -321,7 +321,7 @@ QString ArgHandle::getLabel()
 
 bool ArgHandle::valueCheck()
 {
-    if (m_widgetType == KS::Protocol::WidgetType::Value::DATETIME && m_itemKey != "config-umask-limit")
+    if (m_widgetType == KS::Protocol::WidgetType::Value::DATETIME)
     {
         if (m_spinBox->value() < m_valueLimits.toInt())
         {
