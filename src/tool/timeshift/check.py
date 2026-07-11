@@ -132,6 +132,6 @@ def main(config):
     if not proc_lock():
         logger.warning("There is a ks-ssr-timeshift process running,exit!")
         exit(1)
-    setup_logger_b(current_log, 'KSSSRLogger')
+    setup_logger_b(current_log, 'KSSSRLogger', False)
     check_obj = Check(conf_path=config)
     check_obj.run()
