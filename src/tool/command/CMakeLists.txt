@@ -27,13 +27,7 @@ set(TS_FILES "${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}.zh_CN.ts")
 execute_process(
   COMMAND
     lupdate-qt5 -no-obsolete ${CMD_H_FILES} ${CMD_CPP_FILES}
-    ${CMAKE_SOURCE_DIR}/data/br-system-rs.xml
-    ${CMAKE_SOURCE_DIR}/data/br-categories.ini
-    ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-audit.xml
-    ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-config.xml
-    ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-external.xml
-    ${CMAKE_SOURCE_DIR}/plugins/reinforcements/python/br-plugin-network.xml -ts
-    ${TS_FILES})
+    -ts ${TS_FILES})
 
 qt5_add_translation(QM_FILES ${TS_FILES})
 
