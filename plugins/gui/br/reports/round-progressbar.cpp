@@ -96,7 +96,6 @@ void RoundProgressBar::initUI()
     setFixedSize(379, 250);
 
     m_percentLabel = new QLabel(this);
-    m_percentLabel->setObjectName("m_percentLabel");
     m_percentLabel->setFixedSize(379, 40);
     m_percentLabel->setAlignment(Qt::AlignCenter);
     m_percentLabel->move(0, 70);
