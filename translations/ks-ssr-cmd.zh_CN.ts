@@ -10,7 +10,7 @@
         <translation>打开文件失败</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="647"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="619"/>
         <source>No system vulnerabilities were found in this scan</source>
         <translation>本次扫描未发现系统漏洞</translation>
     </message>
