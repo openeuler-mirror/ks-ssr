@@ -242,8 +242,6 @@ void Scan::initConnection()
     connect(m_ui->m_progress, &Progress::importStrategyClicked, this, &Scan::importStrategy);
     connect(m_ui->m_progress, &Progress::resetStrategyClicked, this, &Scan::resetAllReinforcementItem);
     connect(m_ui->m_progress, &Progress::cancelClicked, this, &Scan::cancelProgress);
-
-    connect(m_ui->m_itemTable, &ItemTable::modelEntered, this, &Scan::showErrorMessage);
 }
 
 void Scan::resetAllReinforcementItem()
