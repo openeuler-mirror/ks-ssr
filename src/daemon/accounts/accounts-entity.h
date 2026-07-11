@@ -104,7 +104,7 @@ public:  // PROPERTIES
         return AccountRole::ACCOUNT_ROLE_NOACCOUNT;
     }
 
-    virtual QString getUserName(const QString& dbusUniqueName) const
+    virtual QString getUserName(const QString& dbusUniqueName) const override
     {
         QReadLocker locker(&m_clientMutex);
         auto it = m_clients.find(dbusUniqueName);
