@@ -161,11 +161,11 @@ class RollBack(object):
         self._centos6_rb_init()
         self._gen_flags()
 
-        if not os.path.exists(self.vmlinux) or not os.path.exists(self.initrd):
-            self._generate_vmlinux()
+        if not os.path.exists(self.vmlinuz) or not os.path.exists(self.initrd):
+            self._generate_vmlinuz()
             self._generate_initrd()
         else:
-            logger.info("Apply existed vmlinz: %s, initramfs: %s" % (self.vmlinux, self.initrd))
+            logger.info("Apply existed vmlinz: %s, initramfs: %s" % (self.vmlinuz, self.initrd))
 
         # TODO 验证一下上面代码中的退出函数，程序退出后，标志文件是否会被删除
         if os.path.exists(self.ssr_tag_dracut):
