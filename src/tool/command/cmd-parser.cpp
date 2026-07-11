@@ -697,23 +697,7 @@ void Command::repairProgress(const QString &progress)
     }
     if (100 == percent)
     {
-        if (!errorMessage.isEmpty())
-        {
-            std::cout << tr("error: ").toStdString() << errorMessage.toStdString() << std::endl;
-            exit(0);
-        }
-        outputRepairResult();
-        // std::string cveStr = "\"";
-        // for (const auto &cve : m_notExistCVE)
-        // {
-        //     cveStr = cveStr + cve.toStdString() + ",";
-        // }
-        // cveStr = cveStr.substr(0, cveStr.size() - 1) + "\"";
-        // if (!m_notExistCVE.isEmpty())
-        // {
-        //     std::cout << tr("Vulnerability ").toStdString() << cveStr << tr(" does not exist").toStdString() << std::endl;
-        // }
-        exit(0);
+        outputMethodProcess(MODULE_VULNERABILITY);
     }
 }
 
