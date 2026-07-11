@@ -1,0 +1,11 @@
+[Unit]
+Description=OS Rollback
+DefaultDependencies=no
+Requires=initrd-root-fs.target
+After=initrd-fs.target
+Before=initrd.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ssr-rollback rollback --force
+ExecStartPost=/usr/sbin/reboot
