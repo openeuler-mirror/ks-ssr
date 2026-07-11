@@ -685,6 +685,11 @@ void Command::repairProgress(const QString &progress)
         std::cout << tr("Repair stop by manually cancel!").toStdString();
         exit(0);
     }
+    if (!errorMessage.isEmpty())
+    {
+        std::cout << tr("error: ").toStdString() << errorMessage.toStdString() << std::endl;
+        exit(0);
+    }
     if (m_lastPercent != percent)
     {
         m_lastPercent = percent;
