@@ -1,0 +1,135 @@
+/**
+ * Copyright (c) 2024 ~ 2025 KylinSec Co., Ltd.
+ * ks-ssr is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
+ */
+
+#include <libdnf/libdnf.h>
+
+#include "dnf-package-advisory-ref.h"
+#include "dnf-package-advisory.h"
+
+#include <QList>
+#include <QString>
+
+#if (KS_DEP_LIBDNF_VERSION < KS_VERSION_CHECK(0, 65, 0))
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+    void dnf_advisory_free(DnfAdvisory* advisory)
+    {
+        g_object_unref(advisory);
+    }
+
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+namespace KS
+{
+namespace Vulnerability
+{
+namespace PackageManager
+{
+DnfPackageAdvisory::DnfPackageAdvisory()
+    : m_advisory(QSharedPointer<::DnfAdvisory>(nullptr, dnf_advisory_free))
+{
+}
+
+DnfPackageAdvisory::DnfPackageAdvisory(::DnfAdvisory* advisory)
+    : m_advisory(QSharedPointer<::DnfAdvisory>(advisory, dnf_advisory_free))
+{
+}
+
+DnfPackageAdvisory::DnfPackageAdvisory(const DnfPackageAdvisory& other)
+{
+    *this = other;
+}
+
+DnfPackageAdvisory::DnfPackageAdvisory(DnfPackageAdvisory&& other)
+{
+    *this = std::forward<DnfPackageAdvisory&&>(other);
+}
+
+DnfPackageAdvisory& DnfPackageAdvisory::operator=(const DnfPackageAdvisory& other)
+{
+    m_advisory = other.m_advisory;
+    return *this;
+}
+
+DnfPackageAdvisory& DnfPackageAdvisory::operator=(DnfPackageAdvisory&& other)
+{
+    m_advisory = other.m_advisory;
+    other.m_advisory.clear();
+    return *this;
+}
+
+DnfPackageAdvisory::~DnfPackageAdvisory()
+{
+}
+
+QList<DnfPackageAdvisoryRef> DnfPackageAdvisory::getRefs() const
+{
+    QList<DnfPackageAdvisoryRef> ret{};
+    auto refs = dnf_advisory_get_references(m_advisory.data());
+    for (uint i = 0; i < refs->len; i++)
+    {
+        auto ref = (::DnfAdvisoryRef*)g_ptr_array_index(refs, i);
+        ret.append(DnfPackageAdvisoryRef(ref));
+    }
+    g_ptr_array_free(refs, FALSE);
+    return ret;
+}
+
+QList<DnfPackageAdvisory::DnfAdvisoryPkg> DnfPackageAdvisory::getPkgList() const
+{
+    QList<DnfPackageAdvisory::DnfAdvisoryPkg> ret{};
+    auto pkgs = dnf_advisory_get_packages(m_advisory.data());
+    for (uint i = 0; i < pkgs->len; i++)
+    {
+        auto _pkg = (::DnfAdvisoryPkg*)g_ptr_array_index(pkgs, i);
+        DnfPackageAdvisory::DnfAdvisoryPkg pkg = {
+            .name = QString(dnf_advisorypkg_get_name(_pkg)),
+            .evr = QString(dnf_advisorypkg_get_evr(_pkg)),
+            .arch = QString(dnf_advisorypkg_get_arch(_pkg)),
+            .fileName = QString(dnf_advisorypkg_get_filename(_pkg))};
+        ret.append(pkg);
+    }
+    g_ptr_array_free(pkgs, TRUE);
+    return ret;
+}
+
+QString DnfPackageAdvisory::getTitle() const
+{
+    return QString(dnf_advisory_get_title(m_advisory.data()));
+}
+
+QString DnfPackageAdvisory::getId() const
+{
+    return QString(dnf_advisory_get_id(m_advisory.data()));
+}
+
+int DnfPackageAdvisory::getKind() const
+{
+    return static_cast<int>(dnf_advisory_get_kind(m_advisory.data()));
+}
+
+bool DnfPackageAdvisory::isSecurity() const
+{
+    return (getKind() == DNF_ADVISORY_KIND_SECURITY);
+}
+
+}  // namespace PackageManager
+}  // namespace Vulnerability
+}  // namespace KS
