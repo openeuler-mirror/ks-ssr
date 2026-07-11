@@ -358,15 +358,171 @@ void Command::outputMethodProcess(ModuleType type)
             exit(-1);
         }
         QTextStream txtOutput(&f);
-        outputRepairResult(txtOutput);
+        outputResult(txtOutput, type);
         f.close();
         std::cout << tr("Results output to file ").toStdString() << fileName.toStdString() << std::endl;
     }
     else
     {
         QTextStream txtOutput(stdout);
-        outputRepairResult(txtOutput);
+        outputResult(txtOutput, type);
     }
+
+    exit(0);
+}
+
+int Command::checkExportPath(const QString &filePath)
+{
+    KLOG_INFO() << "exportPath:" << filePath;
+    if (!filePath.endsWith(".pdf"))
+    {
+        std::cout << tr("File name suffix error, please end with .pdf").toStdString() << std::endl;
+        return -1;
+    }
+    QFileInfo fileInfo(filePath);
+    QDir dir(fileInfo.absolutePath());
+    if (!dir.exists())
+    {
+        std::cout << tr("The specified directory does not exist").toStdString() << std::endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+int Command::getCVEsInfo(const QStringList &name)
+{
+    auto reply = m_dbusVulnerabilityProxy->GetCVEsInfo(name);
+    reply.waitForFinished();
+    if (reply.isError())
+    {
+        std::cout << tr("Failed to get CVE information, error message: ").toStdString() << reply.error().message().toStdString() << std::endl;
+        return -1;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply.value().toLocal8Bit());
+    if (!document.isArray())
+    {
+        std::cout << tr("The return data is not a JSON array").toStdString() << std::endl;
+        return -1;
+    }
+
+    QJsonArray jsonArray = document.array();
+    for (const QJsonValue &value : jsonArray)
+    {
+        if (!value.isObject())
+        {
+            KLOG_DEBUG() << "JSON array item is not an object";
+            continue;
+        }
+
+        QJsonObject jsonObject = value.toObject();
+        QString name = jsonObject["name"].toString();
+        if (name.isEmpty())
+        {
+            continue;
+        }
+        OutputInfo *pInfo = new OutputInfo(name);
+        pInfo->secondColumn = getCveLevel(jsonObject["threat_severity"].toInt());
+        pInfo->thirdColumn = jsonObject["score"].toString();
+        m_outputInfo[name] = pInfo;
+    }
+    KLOG_INFO() << m_outputInfo.keys();
+    return 0;
+}
+
+int Command::brJobResultProcess(const QString &xmlString)
+{
+    if (xmlString.isEmpty())
+        return -1;
+
+    std::istringstream istringStream(xmlString.toStdString());
+    auto jobResult = KS::Protocol::br_job_result(istringStream, xml_schema::Flags::dont_validate);
+    for (auto reinforcement : jobResult->reinforcement())
+    {
+        if (reinforcement.error())
+        {
+            KLOG_WARNING() << "error:" << reinforcement.error().get().c_str();
+        }
+        QString name = reinforcement.name().c_str();
+        if (!m_outputInfo.contains(name))
+        {
+            OutputInfo *pInfo = new OutputInfo(name);
+            m_outputInfo[name] = pInfo;
+        }
+        m_outputInfo.value(name)->state = state2Str(reinforcement.state());
+    }
+
+    return 0;
+}
+
+QStringList Command::getReinforcements(const QStringList &specifyList)
+{
+    QStringList ret;
+    auto reply = m_dbusBRProxy->GetReinforcements();
+    reply.waitForFinished();
+    if (reply.isError() || reply.value() == "")
+    {
+        KLOG_WARNING() << "error:" << reply.error().message();
+        return ret;
+    }
+
+    const QString xmlString = reply.value();
+    QLocale local;
+    std::istringstream istringStream(xmlString.toStdString());
+    auto rsReinforcements = KS::Protocol::br_reinforcements(istringStream, xml_schema::Flags::dont_validate);
+    auto rsReinforcement = rsReinforcements.get()->reinforcement();
+    for (auto iter : rsReinforcement)
+    {
+        QString defaultLabel;
+        for (auto label : iter.label())
+        {
+            if (!label.lang())
+            {
+                defaultLabel = QString(label.c_str());
+                continue;
+            }
+
+            if (local.name().toStdString() == label.lang().get())
+            {
+                defaultLabel = QString(label.c_str());
+            }
+        }
+
+        QString name = iter.name().c_str();
+        if (!specifyList.isEmpty() && specifyList.indexOf(name) == -1)
+        {
+            continue;
+        }
+        OutputInfo *pInfo = new OutputInfo(name);
+        pInfo->secondColumn = defaultLabel;
+        m_outputInfo[name] = pInfo;
+        ret << name;
+    }
+    KLOG_INFO() << ret;
+    return ret;
+}
+
+QString Command::leftJustify(const QString &str, int width, QChar fillChar)
+{
+    int strWidth = 0;
+    for (const QChar &ch : str)
+    {
+        if (ch.unicode() < 128)
+        {
+            strWidth += 1;
+        }
+        else
+        {
+            strWidth += 2;
+        }
+    }
+    if (strWidth >= width)
+    {
+        return str;
+    }
+
+    return str + QString(width - strWidth, fillChar);
 }
 
 QString Command::getCveLevel(int level)
