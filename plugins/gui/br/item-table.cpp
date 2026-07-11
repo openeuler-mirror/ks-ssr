@@ -367,14 +367,26 @@ void ItemTable::updateStatus(const QList<Category *> &list)
         auto reinforcementItem = list.at(i)->getReinforcementItem();
         for (int j = 0; j < reinforcementItem.length(); ++j)
         {
-            auto stateStr = Utils::getDefault()->state2Str(reinforcementItem.at(j)->getState());
-            auto stateColor = Utils::getDefault()->state2Color(reinforcementItem.at(j)->getState());
+            int state = reinforcementItem.at(j)->getState();
+            auto stateStr = Utils::getDefault()->state2Str(state);
+            auto stateColor = Utils::getDefault()->state2Color(state);
+
             auto item = m_model->item(i)->child(j, 2);
             item->setText(stateStr);
 
             QBrush brush;
             brush.setColor(stateColor);
             item->setForeground(brush);
+
+            if (BR_REINFORCEMENT_STATE_REINFORCE_ERROR == state ||
+                BR_REINFORCEMENT_STATE_SCAN_ERROR == state)
+            {
+                item->setToolTip(reinforcementItem.at(j)->getErrorMessage());
+            }
+            else
+            {
+                item->setToolTip("");
+            }
         }
     }
 }
