@@ -110,12 +110,12 @@
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="703"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="675"/>
         <source>error: </source>
         <translation>错误： </translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="725"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="697"/>
         <source>Export Report Success</source>
         <translation>导出报表成功</translation>
     </message>
