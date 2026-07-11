@@ -33,4 +33,3 @@ if not sys.argv[1:]:
     sys.exit(1)
 
 tooloptions = args_handler.parse_args(sys.argv[1:])
-
