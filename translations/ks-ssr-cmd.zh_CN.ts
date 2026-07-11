@@ -247,49 +247,59 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="43"/>
+        <location filename="../src/tool/command/main.cpp" line="118"/>
         <source>This tool is mainly used in non-graphical system scenarios as a command line alternative to ks-ssr-gui.</source>
         <translation>该工具主要用于非图形系统场景下，作为替代ks-ssr-gui的命令行工具。</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="45"/>
-        <source>Specify the operation module, br - baseline hardening, vulnerability - vulnerability fixing.</source>
-        <translation>指定操作模块，br-基线加固、vulnerability-漏洞修复。</translation>
+        <location filename="../src/tool/command/main.cpp" line="129"/>
+        <source>baseline hardening</source>
+        <translation>基线加固</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="47"/>
+        <location filename="../src/tool/command/main.cpp" line="130"/>
+        <source>vulnerability fixing</source>
+        <translation>漏洞修复</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/main.cpp" line="146"/>
         <source>One-click scanning</source>
         <translation>一键扫描</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="49"/>
+        <location filename="../src/tool/command/main.cpp" line="147"/>
         <source>name - Specify reinforcement items to be reinforced, multiple reinforcement items are separated by comma; All - One-click reinforcement</source>
         <translation>name - 指定加固项加固，多个加固项用逗号分隔；All - 一键加固</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="51"/>
+        <location filename="../src/tool/command/main.cpp" line="149"/>
         <source>name - specify the vulnerability to fix, multiple vulnerabilities are separated by commas; All - One-click repair</source>
         <translation>name - 指定漏洞修复，多个漏洞用逗号分隔；All - 一键修复</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="53"/>
+        <location filename="../src/tool/command/main.cpp" line="151"/>
         <source>Output results to file</source>
         <translation>输出结果到文件</translation>
     </message>
     <message>
-        <location filename="../src/tool/command/main.cpp" line="55"/>
+        <location filename="../src/tool/command/main.cpp" line="163"/>
+        <source>The current selection is br.</source>
+        <translation>当前选择的是基线加固。</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/main.cpp" line="194"/>
+        <source>The current selection is vulnerability.</source>
+        <translation>当前选择的是漏洞修复。</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/main.cpp" line="224"/>
+        <source>Invalid module!</source>
+        <translation>无效模块！</translation>
+    </message>
+    <message>
+        <location filename="../src/tool/command/main.cpp" line="150"/>
         <source>Export the report. Input pdf file path</source>
         <translation>导出报表。传入 pdf 文件路径</translation>
-    </message>
-    <message>
-        <location filename="../src/tool/command/main.cpp" line="115"/>
-        <source>Module parameter provided error.</source>
-        <translation>指定操作模块参数提供错误。</translation>
-    </message>
-    <message>
-        <location filename="../src/tool/command/main.cpp" line="61"/>
-        <source>Error: Module not provided.</source>
-        <translation>未提供操作模块。</translation>
     </message>
 </context>
 </TS>
