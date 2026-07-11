@@ -174,11 +174,20 @@ QJsonValue StrUtils::str2jsonValue(const QString &str)
             break;
         }
     }
-    if (isInt)
+    if (isInt && str.size() > 0)
     {
         return QJsonValue::fromVariant(str.toInt());
     }
-    return QJsonValue::fromVariant(str.toLocal8Bit());
+
+    // 字符串类型
+    if (str.startsWith('"') && str.endsWith('"'))
+    {
+        return QJsonValue::fromVariant(str.mid(1, str.size() - 2));
+    }
+
+    // 未知类型
+    KLOG_WARNING() << str << "is unknown value, treat it as string type";
+    return QJsonValue::fromVariant(str);
 }
 
 bool StrUtils::startswith(const QString &str, const QString &prefix)
