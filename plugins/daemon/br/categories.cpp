@@ -52,7 +52,7 @@ void Categories::load()
         auto category = QSharedPointer<Category>(new Category());
         category->name = group_name;
         // 据了解头文件包含 QStringBuilder 会改变 QString 的 operator+ 的行为,但是没有验证过,如果出现性能问题再优化
-        category->label = keyfile.value(group_name + '/' + BR_CATEGORY_KEY_LABEL).toString();
+        category->label = categoriesLabel2Translate(keyfile.value(group_name + '/' + BR_CATEGORY_KEY_LABEL).toString());
         category->description = keyfile.value(group_name + '/' + BR_CATEGORY_KEY_DESCRIPTION).toString();
         category->icon_name = keyfile.value(group_name + '/' + BR_CATEGORY_KEY_ICON_NAME).toString();
         category->priority = keyfile.value(group_name + '/' + BR_CATEGORY_KEY_PRIORITY).toInt();
