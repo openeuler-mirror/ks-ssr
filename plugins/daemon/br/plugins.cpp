@@ -15,6 +15,7 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
+#include <QCoreApplication>
 #include <QTimer>
 #include "configuration.h"
 #include "plugins.h"
