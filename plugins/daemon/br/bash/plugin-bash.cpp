@@ -65,9 +65,9 @@ bool ReinforcementBash::rollback(const QString &args, QString &error)
 }
 
 PluginBash::PluginBash(const QString &bashRootDir)
-    : m_bashRootDir(bashRootDir)
+    : m_bashRootDir(bashRootDir),
+      m_reinforcementConfigPath(QDir::cleanPath(QString("%1/%2").arg(bashRootDir).arg(REINFORCEMENTS_CONFIG_NAME)))
 {
-    m_reinforcementConfigPath = QDir::cleanPath(QString("%1/%2").arg(bashRootDir).arg(REINFORCEMENTS_CONFIG_NAME));
 }
 
 void PluginBash::activate()
