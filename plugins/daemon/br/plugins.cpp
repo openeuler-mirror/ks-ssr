@@ -353,5 +353,23 @@ void Plugins::joinReinforcement(Protocol::Reinforcement& destReinforcement,
     }
 }
 
+QString Plugins::noop2Translate(const QString& souceTxt)
+{
+    auto tmpSouce = souceTxt;
+    auto tmpList = tmpSouce.split("\"");
+    QStringList translateList;
+    for (auto key : tmpList)
+    {
+        if (key.isEmpty() || key == "," || key == ", " || key == "QT_TRANSLATE_NOOP(" || key == "QT_TRANSLATE_NOOP_UTF8(" || key == ")")
+            continue;
+        key.remove(QRegExp("^ +\\s*"));
+        translateList << key;
+    }
+
+    if (translateList.size() != 2)
+        return souceTxt;
+    return qApp->translate(translateList[0].toUtf8(), translateList[1].toUtf8());
+}
+
 }  // namespace BR
 }  // namespace KS
