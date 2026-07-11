@@ -177,100 +177,121 @@ static void makeTableTitle(HPDF_Page page,
 typedef struct
 {
     QStringList lines;
-    int total_height;
+    int totalHeight;
 } WrappedTextResult;
 
-WrappedTextResult wrap_text(HPDF_Page page, QString text, HPDF_Font font, HPDF_REAL font_size, HPDF_REAL max_width)
+WrappedTextResult wrapText(HPDF_Page page,
+                           QString text,
+                           HPDF_Font font,
+                           HPDF_REAL fontSize,
+                           HPDF_REAL maxWidth)
 {
-    HPDF_REAL line_height = HPDF_Font_GetCapHeight(font) * font_size / 1000 + 4;  // 行高
-    HPDF_REAL total_height = 0;
+    HPDF_REAL lineHeight = HPDF_Font_GetCapHeight(font) * fontSize / 1000 + 4;  // 行高
+    HPDF_REAL totalHeight = 0;
 
     // 保存每行文本
     QStringList lines;
 
     QByteArray ba = text.toLocal8Bit();
-    HPDF_UINT text_length = ba.size();
+    HPDF_UINT textLength = ba.size();
     uint curIndex = 0;
 
-    while (curIndex < text_length)
+    while (curIndex < textLength)
     {
-        HPDF_UINT break_index = HPDF_Page_MeasureText(page, text.mid(curIndex).toLocal8Bit().data(), max_width, HPDF_FALSE, NULL);
-        if (break_index == 0)
+        HPDF_UINT breakIndex = HPDF_Page_MeasureText(page, text.mid(curIndex).toLocal8Bit().data(), maxWidth, HPDF_FALSE, NULL);
+        if (breakIndex == 0)
         {
             break;
         }
 
         // 保存当前行
-        lines.append(QString::fromLocal8Bit(ba.mid(curIndex, break_index)));
-        curIndex += break_index;
+        lines.append(QString::fromLocal8Bit(ba.mid(curIndex, breakIndex)));
+        curIndex += breakIndex;
 
-        total_height += line_height;
+        totalHeight += lineHeight;
     }
 
-    total_height += line_height;
+    totalHeight += lineHeight;
 
     WrappedTextResult result;
     result.lines = lines;
-    result.total_height = total_height + 1;  // 计算的是浮点,此处加1
+    result.totalHeight = totalHeight + 1;  // 计算的是浮点,此处加1
     return result;
 }
 
 // 绘制单元格内的文本
-void draw_text_in_cell(HPDF_Page page, const char *text, HPDF_Font font, HPDF_REAL font_size, HPDF_REAL x, HPDF_REAL y, HPDF_REAL cell_width, HPDF_REAL cell_height)
+void draw_text_in_cell(HPDF_Page page,
+                       const char *text,
+                       HPDF_Font font,
+                       HPDF_REAL fontSize,
+                       HPDF_REAL x,
+                       HPDF_REAL y,
+                       HPDF_REAL cell_width,
+                       HPDF_REAL cell_height)
 {
-    WrappedTextResult wrapped_text = wrap_text(page, text, font, font_size, cell_width - 4);  // 留出一些内边距
-    HPDF_REAL line_height = HPDF_Font_GetCapHeight(font) * font_size / 1000 + 4;              // 行高
-    //    HPDF_REAL text_y = y - 1 - font_size;                                                     // 从单元格顶部留出一些内边距
-    HPDF_REAL text_y = y - line_height;
+    WrappedTextResult wrappedText = wrapText(page, text, font, fontSize, cell_width - 4);  // 留出一些内边距
+    HPDF_REAL lineHeight = HPDF_Font_GetCapHeight(font) * fontSize / 1000 + 4;             // 行高
+    //    HPDF_REAL textY = y - 1 - fontSize;                                                     // 从单元格顶部留出一些内边距
+    HPDF_REAL textY = y - lineHeight;
 
-    for (int i = 0; i < wrapped_text.lines.size(); i++)
+    for (int i = 0; i < wrappedText.lines.size(); i++)
     {
         HPDF_Page_BeginText(page);
-        HPDF_Page_MoveTextPos(page, x + 2, text_y);  // 从单元格左边留出一些内边距
-        HPDF_Page_ShowText(page, wrapped_text.lines[i].toLocal8Bit().data());
+        HPDF_Page_MoveTextPos(page, x + 2, textY);  // 从单元格左边留出一些内边距
+        HPDF_Page_ShowText(page, wrappedText.lines[i].toLocal8Bit().data());
         HPDF_Page_EndText(page);
-        text_y -= line_height;
+        textY -= lineHeight;
     }
 }
 
 // 绘制表格
-void draw_table(HPDF_Page page, HPDF_Font font, HPDF_REAL font_size, HPDF_REAL start_x, HPDF_REAL start_y, QStringList data, const QList<uint> &colWidth)
+void drawTable(HPDF_Page page,
+               HPDF_Font font,
+               HPDF_REAL fontSize,
+               HPDF_REAL startX,
+               HPDF_REAL startY,
+               QStringList data,
+               const QList<uint> &colWidth)
 {
-    HPDF_Page_SetFontAndSize(page, font, font_size);
+    HPDF_Page_SetFontAndSize(page, font, fontSize);
     HPDF_Page_SetLineWidth(page, 0.5);
 
     // 计算每行的高度
-    HPDF_REAL row_height = 0;
+    HPDF_REAL rowHeight = 0;
 
-    HPDF_REAL max_height = 0;
+    HPDF_REAL maxHeight = 0;
     for (int col = 0; col < data.size(); col++)
     {
-        WrappedTextResult wrapped_text = wrap_text(page, data[col], font, TABLE_CONTENT_FONT_SIZE, colWidth[col] - 4);
-        if (wrapped_text.total_height > max_height)
+        WrappedTextResult wrappedText = wrapText(page, data[col], font, TABLE_CONTENT_FONT_SIZE, colWidth[col] - 4);
+        if (wrappedText.totalHeight > maxHeight)
         {
-            max_height = wrapped_text.total_height;
+            maxHeight = wrappedText.totalHeight;
         }
     }
-    row_height = max_height;
+    rowHeight = maxHeight;
 
     // 绘制表格
-    HPDF_REAL x = start_x;
+    HPDF_REAL x = startX;
     for (int col = 0; col < data.size(); col++)
     {
-        HPDF_REAL y = start_y - row_height;
+        HPDF_REAL y = startY - rowHeight;
 
         // 绘制单元格边框
-        HPDF_Page_Rectangle(page, x, y, colWidth[col], row_height);
+        HPDF_Page_Rectangle(page, x, y, colWidth[col], rowHeight);
         HPDF_Page_Stroke(page);
 
         // 绘制单元格内的文本
-        draw_text_in_cell(page, data[col].toLocal8Bit().data(), font, TABLE_CONTENT_FONT_SIZE, x, start_y, colWidth[col], row_height);
+        draw_text_in_cell(page, data[col].toLocal8Bit().data(), font, TABLE_CONTENT_FONT_SIZE, x, startY, colWidth[col], rowHeight);
 
         x += colWidth[col];
     }
 }
 
-static void makeTablePage(HPDF_Doc pdf, HPDF_Font font, const QString &tableTitle, const QList<QStringList> &tabelData, const QList<uint> &colWidth)
+static void makeTablePage(HPDF_Doc pdf,
+                          HPDF_Font font,
+                          const QString &tableTitle,
+                          const QList<QStringList> &tabelData,
+                          const QList<uint> &colWidth)
 {
     int totalRows = tabelData.size();
     int curRowIndex = 0;
