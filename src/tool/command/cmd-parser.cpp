@@ -291,7 +291,7 @@ bool Command::ssrJobResult(const QString &xmlString)
     {
         if (reinforcement.error() != nullptr)
         {
-            KLOG_WARNING() << "error:" << python2Translate(reinforcement.error().get().c_str());
+            KLOG_WARNING() << "error:" << reinforcement.error().get().c_str();
         }
         QString name = reinforcement.name().c_str();
         if (!m_brItemInfo.contains(name))
