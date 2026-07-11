@@ -11,7 +11,7 @@
     </reinforcement>
     <reinforcement>
         <name>audit-auditd-rules</name>
-        <_label>Add audit rules to path.</_label>
+        <_label>Add audit rules to path</_label>
     </reinforcement>
     <reinforcement>
         <name>audit-logrotate-rotate</name>
