@@ -171,9 +171,6 @@ private:
     void memoryRemainingRatio(float memoryRatio);
     // 校验加固项名称是否合法
     bool validateReinforcementNames(const QStringList &reinforcementNames);
-    // 翻译
-    QString python2Translate(const QString &souceTxt);
-    QString noop2Translate(const QString &souceTxt);
 
 private:
     static BRDBus *m_instance;
