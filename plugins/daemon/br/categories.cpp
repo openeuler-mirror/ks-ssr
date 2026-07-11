@@ -73,5 +73,10 @@ bool Categories::addCategory(QSharedPointer<Category> category)
     this->m_categories[category->name] = category;
     return true;
 }
+
+QString Categories::categoriesLabel2Translate(const QString& souceTxt)
+{
+    return qApp->translate("ini", souceTxt.toUtf8());
+}
 }  // namespace BR
 }  // namespace KS
