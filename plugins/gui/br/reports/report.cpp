@@ -374,12 +374,12 @@ bool Report::createVulnerabilityResults(QPrinter &printer, const InvalidData &in
     bool is_vulnerability = scanVulnerability(vulnerabilityList, invalidData);
     RETURN_VAL_IF_FALSE(is_vulnerability, false);
 
-    m_table->addSpacer();
-    QPixmap page = m_table->grab(m_table->rect());
+    m_pdfDetails->addSpacer();
+    QPixmap page = m_pdfDetails->grab(m_pdfDetails->rect());
     m_painter->drawPixmap(0, 0, page);
     printer.newPage();
-    delete m_table;
-    m_table = new PDFDetails(this, false, is_vulnerability);
+    delete m_pdfDetails;
+    m_pdfDetails = new PDFDetails(this, false, is_vulnerability);
     // 解析文件名与扫描类型
     QStringList rpmNameList;
     QStringList rpmResultList;
