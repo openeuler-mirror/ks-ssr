@@ -634,10 +634,11 @@ void Command::scanProgress(const QString &progress)
             continue;
         }
 
-        m_cveIds << QString(cve.value("name").toString());
-        QString level = getCveLevel(cve.value("threat_severity").toInt());
-        VulnerabilityInfo *pVu = new VulnerabilityInfo(cve.value("name").toString(), level, cve.value("score").toString());
-        m_repairResult[cve.value("name").toString()] = pVu;
+        auto name = cve.value("name").toString();
+        OutputInfo *pInfo = new OutputInfo(name);
+        pInfo->secondColumn = getCveLevel(cve.value("threat_severity").toInt());
+        pInfo->thirdColumn = cve.value("score").toString();
+        m_outputInfo[name] = pInfo;
     }
 
     int percent = progressJson.value("progress").toInt();
