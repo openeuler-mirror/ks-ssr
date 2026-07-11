@@ -450,8 +450,11 @@ bool Report::generateReports(const QList<Category *> &scanList, int status, cons
 {
     calculateRatio(scanList);
 
-    auto file = QString(tr("KylinSecHostReinforcementReport_%1_%2.pdf")).arg(QSysInfo::machineHostName()).arg(getIPPath());
+    QString timeStr = QDateTime::currentDateTime().toString("yyyyMMddHHmmss");
+    auto file = tr("KylinSecHostReinforcementReport_%1_%2_%3.pdf").arg(QSysInfo::machineHostName()).arg(getIPPath()).arg(timeStr);
+
     auto fileName = QFileDialog::getSaveFileName(nullptr, tr("export report"), file, tr("PDF(*.pdf)"));
+
     RETURN_VAL_IF_TRUE(fileName == "", false)
     // 定义打印机 631端口被禁用可能会导致阻塞
     QPrinter printerPixmap(QPrinter::ScreenResolution);
