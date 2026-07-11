@@ -71,29 +71,31 @@ void addWatermark(HPDF_Page page, HPDF_Font font)
     // HPDF_Page_SetAlphaFill(page, opacity);
 
     // Get page dimensions
-    float page_width = HPDF_Page_GetWidth(page);
-    float page_height = HPDF_Page_GetHeight(page);
+    float pageWidth = HPDF_Page_GetWidth(page);
+    float pageHeight = HPDF_Page_GetHeight(page);
 
     // Rotate text
-    HPDF_Page_Concat(page, cos(angle), sin(angle), -sin(angle), cos(angle), page_width / 2, page_height / 2);
+    HPDF_Page_Concat(page, cos(angle), sin(angle), -sin(angle), cos(angle), pageWidth / 2, pageHeight / 2);
 
     // Set font and size
     HPDF_Page_SetFontAndSize(page, font, 50);
 
     // Calculate text width and height for centering
-    float text_width = HPDF_Page_TextWidth(page, text.toLocal8Bit());
-    float text_height = 50;  // Same as font size
+    float textWidth = HPDF_Page_TextWidth(page, text.toLocal8Bit());
+    float textHeight = 50;  // Same as font size
 
     // Draw the text
     HPDF_Page_BeginText(page);
-    HPDF_Page_TextOut(page, -text_width / 2, -text_height / 2, text.toLocal8Bit());
+    HPDF_Page_TextOut(page, -textWidth / 2, -textHeight / 2, text.toLocal8Bit());
     HPDF_Page_EndText(page);
 
     // Restore the previous graphic state
     HPDF_Page_GRestore(page);
 }
 
-static void makeHomePage(HPDF_Doc pdf, HPDF_Font font, const QList<QPair<QString, QString>> &homeExtraData)
+static void makeHomePage(HPDF_Doc pdf,
+                         HPDF_Font font,
+                         const QList<QPair<QString, QString>> &homeExtraData)
 {
     HPDF_Page page = HPDF_AddPage(pdf);
     HPDF_Page_SetSize(page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT);  // A4,横向纵向
