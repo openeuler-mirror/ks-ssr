@@ -264,6 +264,7 @@ bool ReinforcementPython::rollback(const QString &args, QString &error)
 bool ReinforcementPython::checkCallResult(PyObject *pyRetval, const QString &functionName, QString &error)
 {
     error = Utils::pyCatchException();
+    error = python2Translate(error);
     if (!error.isEmpty())
     {
         KLOG_DEBUG() << "check result error, and error message is " << error << " function name is " << functionName;
