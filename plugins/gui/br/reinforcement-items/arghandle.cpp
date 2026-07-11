@@ -150,6 +150,7 @@ void ArgHandle::initSwitch(const QJsonValue &jsonValue)
     // 给QCombobox设置代理才能设置下拉列表项的高度
     auto delegate = new QStyledItemDelegate(this);
     m_comboBox->setItemDelegate(delegate);
+    // TODO:后台增加一个字段来支持列表类型
     if (m_itemKey == "config-umask-limit")
     {
         m_comboBox->addItem("027");
