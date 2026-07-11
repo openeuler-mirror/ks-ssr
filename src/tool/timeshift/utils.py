@@ -10,6 +10,7 @@ import fcntl
 # 默认的一些日志配置
 LEVEL = logging.DEBUG
 LOG_BASE_DIR = "/var/log/kylinsec/ks-ssr/"
+CHECK_LOG_FILE = os.path.join(LOG_BASE_DIR, "ks-ssr-check.log-{datetime}")
 BACKUP_LOG_FILE = os.path.join(LOG_BASE_DIR, "ks-ssr-backup.log-{datetime}")
 ROLLBACK_LOG_FILE = os.path.join(LOG_BASE_DIR, "ks-ssr-rollback.log-{datetime}")
 TMP_BACKUP_LOG = "/tmp/ks-ssr-backup"
