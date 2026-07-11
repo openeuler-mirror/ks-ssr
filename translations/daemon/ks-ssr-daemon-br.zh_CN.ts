@@ -321,6 +321,16 @@ which will cause many problems!</source>
         <source>PAM is not configured with a faillock, please manually configure it</source>
         <translation>PAM未配置faillock，请手动配置</translation>
     </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="72"/>
+        <source>umask is already defined in /etc/profile, please delete it first.</source>
+        <translation>umask已经在/etc/profile中定义，请先删除。</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="73"/>
+        <source>umask is already defined in /etc/bashrc, please delete it first.</source>
+        <translation>umask已经在/etc/bashrc中定义，请先删除。</translation>
+    </message>
 </context>
 <context>
     <name>xml</name>
