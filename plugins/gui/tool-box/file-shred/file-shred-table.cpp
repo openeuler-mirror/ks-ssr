@@ -148,9 +148,8 @@ bool FileShredFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &so
 }
 
 FileShredModel::FileShredModel(QObject *parent)
-    : QAbstractTableModel(parent)
+    : QAbstractTableModel(parent), m_infos({})
 {
-    m_infos = {};
 }
 
 int FileShredModel::rowCount(const QModelIndex &parent) const
