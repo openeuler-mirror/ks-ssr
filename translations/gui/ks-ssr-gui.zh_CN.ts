@@ -171,47 +171,47 @@
 <context>
     <name>KS::Window</name>
     <message>
-        <location filename="../../src/gui/window.cpp" line="133"/>
+        <location filename="../../src/gui/window.cpp" line="131"/>
         <source>Closing the software will interrupt the ongoing task. Are you sure to shut down?</source>
         <translation>关闭软件将会中断正在进行的任务，是否确认关闭？</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="265"/>
+        <location filename="../../src/gui/window.cpp" line="264"/>
         <source>Security Reinforcement</source>
         <translation>主机安全加固</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="282"/>
+        <location filename="../../src/gui/window.cpp" line="281"/>
         <source>KylinSec Security Reinforcement</source>
         <translation>麒麟信安主机安全加固</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="318"/>
+        <location filename="../../src/gui/window.cpp" line="317"/>
         <source>Modify password</source>
         <translation>修改密码</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="322"/>
+        <location filename="../../src/gui/window.cpp" line="321"/>
         <source>Logout</source>
         <translation>注销</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="340"/>
+        <location filename="../../src/gui/window.cpp" line="339"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="343"/>
+        <location filename="../../src/gui/window.cpp" line="342"/>
         <source>Activation</source>
         <translation>软件激活</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="344"/>
+        <location filename="../../src/gui/window.cpp" line="343"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../../src/gui/window.cpp" line="352"/>
+        <location filename="../../src/gui/window.cpp" line="351"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
