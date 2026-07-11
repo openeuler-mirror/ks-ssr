@@ -26,7 +26,8 @@ namespace DM
 struct DeviceRule
 {
 public:
-    DeviceRule() = default;
+    DeviceRule()
+        : read(false), write(fasle), execute(false), interfaceType(0);
     QString idVendor;
     QString idProduct;
     bool read;
