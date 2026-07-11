@@ -90,7 +90,7 @@ public:  // PROPERTIES
         return it->role;
     }
 
-    virtual AccountRole getRole(pid_t dbusPid) const
+    virtual AccountRole getRole(pid_t dbusPid) const override
     {
         QReadLocker locker(&m_clientMutex);
         for (const auto& client : m_clients)
