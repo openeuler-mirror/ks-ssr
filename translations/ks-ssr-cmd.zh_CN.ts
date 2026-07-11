@@ -170,13 +170,13 @@
         <translation>输出结果到文件 </translation>
     </message>
     <message>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="637"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="609"/>
         <source>Scan progress </source>
         <translation>扫描进度 </translation>
     </message>
     <message>
         <location filename="../src/tool/command/cmd-parser.cpp" line="196"/>
-        <location filename="../src/tool/command/cmd-parser.cpp" line="658"/>
+        <location filename="../src/tool/command/cmd-parser.cpp" line="630"/>
         <source>Repairing...</source>
         <translation>正在修复...</translation>
     </message>
