@@ -239,21 +239,21 @@ void Report::addLineToTable(QPrinter &printer, const Report::CategoryContent &ca
         addNewPainterPage(printer);
     }
     showTailFlag = (count >= TABLE_SHOW_TAIL_MAX_LINE) ? true : false;
-    m_table->addLine(categoryContent.itemName,
-                     state2Str(categoryContent.scanStatus),
-                     state2Color(categoryContent.scanStatus),
-                     count % 2 == 1 ? "#f2f2f2" : "#ffffff");
+    m_pdfDetails->addLine(categoryContent.itemName,
+                          state2Str(categoryContent.scanStatus),
+                          state2Color(categoryContent.scanStatus),
+                          count % 2 == 1 ? "#f2f2f2" : "#ffffff");
 }
 
 void Report::addNewPainterPage(QPrinter &printer)
 {
-    m_table->addSpacer();
-    auto page = m_table->grab(m_table->rect());
+    m_pdfDetails->addSpacer();
+    auto page = m_pdfDetails->grab(m_pdfDetails->rect());
     m_painter->drawPixmap(0, 0, page);
     printer.newPage();
 
-    delete m_table;
-    m_table = new PDFDetails(this);
+    delete m_pdfDetails;
+    m_pdfDetails = new PDFDetails(this);
 }
 
 void Report::createPainter(QPrinter &printer)
