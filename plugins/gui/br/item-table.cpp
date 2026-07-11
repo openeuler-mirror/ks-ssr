@@ -545,20 +545,6 @@ void ItemTable::setAllCheckBoxEditStatus(bool isCheckBoxEdit)
     }
 }
 
-void ItemTable::showTail(const QModelIndex &model)
-{
-    QToolTip::hideText();
-    if (!model.parent().isValid() && (model.column() == 1) && m_model->item(model.row())->isCheckable())
-    {
-        QToolTip::showText(QCursor::pos(),
-                           tr("Double click this column to modify the reinforcement parameters"),
-                           this,
-                           this->rect(),
-                           2000);
-    }
-    emit modelEntered(model);
-}
-
 void ItemTable::setExpandItem(const QModelIndex &model)
 {
     RETURN_IF_TRUE(model.column() == 0);
