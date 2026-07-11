@@ -20,6 +20,8 @@ g_lock_fd = -1
 KS_SSR_PID = "/run/lock/ks-ssr.lock"
 LOCKDIR = "/run/lock/"
 
+BASE_DIR_64 = "/usr/lib64/ks-ssr/timeshift"
+
 
 def get_logging_config(level, console, log_file):
     """
