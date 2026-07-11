@@ -8,7 +8,6 @@
 ├── data
 │   ├── box
 │   ├── dbus
-│   ├── distribution-actuator
 │   ├── runtime
 │   └── services
 ├── include
