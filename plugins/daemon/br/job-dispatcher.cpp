@@ -33,9 +33,9 @@ JobDispatcher::JobDispatcher(Configuration* configuration, Plugins* plugins, QOb
       m_configuration(configuration),
       m_plugins(plugins),
       m_jobResult(0, 0, 0),
-      m_state(BRDispatchState::BR_DISPATCH_STATE_IDLE)
+      m_state(BRDispatchState::BR_DISPATCH_STATE_IDLE),
+      m_job(Job::create())
 {
-    m_job = Job::create();
 }
 
 void JobDispatcher::init()
