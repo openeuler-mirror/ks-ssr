@@ -533,34 +533,6 @@ QString Command::state2Str(int state)
     return retStr;
 }
 
-QString Command::python2Translate(const QString &souceTxt)
-{
-    return qApp->translate("python", souceTxt.toUtf8());
-}
-
-QString Command::noop2Translate(const QString &souceTxt)
-{
-    auto tmpSouce = souceTxt;
-    auto tmpList = tmpSouce.split("\"");
-    QStringList translateList;
-    for (auto key : tmpList)
-    {
-        if (key.isEmpty() || key == "," || key == ", " || key == "QT_TRANSLATE_NOOP(" || key == "QT_TRANSLATE_NOOP_UTF8(" || key == ")")
-            continue;
-        key.remove(QRegExp("^ +\\s*"));
-        translateList << key;
-    }
-
-    if (translateList.size() != 2)
-        return souceTxt;
-    return qApp->translate(translateList[0].toUtf8(), translateList[1].toUtf8());
-}
-
-QString Command::categoriesLabel2Translate(const QString &souceTxt)
-{
-    return qApp->translate("ini", souceTxt.toUtf8());
-}
-
 QJsonObject Command::str2jsonObject(const QString &str)
 {
     auto doc = QJsonDocument::fromJson(str.toLocal8Bit());
