@@ -13,6 +13,7 @@
  */
 
 #include "categories.h"
+#include <QCoreApplication>
 #include <QStringBuilder>
 
 namespace KS
