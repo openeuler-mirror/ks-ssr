@@ -12,9 +12,9 @@ logger = logging.getLogger(__name__)
 current_log = CHECK_LOG_FILE.format(datetime=datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m%d-%H%M"))
 
 
-def setup_logger(log_file=None, name='KSSSRLogger'):
+def setup_logger(log_file=None, name='KSSSRLogger', console=False):
     global logger
-    logger = change_log_config(LEVEL, True, log_file if log_file else current_log, name)
+    logger = change_log_config(LEVEL, console, log_file if log_file else current_log, name)
 
 
 class Check(Backup):
