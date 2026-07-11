@@ -3,8 +3,8 @@ import os.path
 import sys
 import struct
 
-BASE_DIR_64 = "/usr/lib64/ks-ssr/plugins/python/timeshift"
-BASE_DIR_32 = "/usr/lib/ks-ssr/plugins/python/timeshift"
+BASE_DIR_64 = "/usr/lib64/ks-ssr/timeshift"
+BASE_DIR_32 = "/usr/lib/ks-ssr/timeshift"
 
 if struct.calcsize("P") * 8 == 64:
     BASE_DIR = BASE_DIR_64
