@@ -60,26 +60,11 @@ Command::~Command()
         delete m_dbusServerWatcher;
         m_dbusServerWatcher = nullptr;
     }
-    for (auto iter = m_brItemInfo.begin(); iter != m_brItemInfo.end(); ++iter)
+    for (auto iter = m_outputInfo.begin(); iter != m_outputInfo.end(); ++iter)
     {
         delete iter.value();
     }
-    m_brItemInfo.clear();
-    for (auto iter = m_repairResult.begin(); iter != m_repairResult.end(); ++iter)
-    {
-        delete iter.value();
-    }
-    m_repairResult.clear();
-}
-
-void Command::checkLicenseActive()
-{
-    m_licenseProxy = LicenseProxy::getDefault();
-    if (!m_licenseProxy->isActivated())
-    {
-        std::cout << tr("The software is not activated.").toStdString() << std::endl;
-        exit(-1);
-    }
+    m_outputInfo.clear();
 }
 
 void Command::setFileOutput(bool fileOutput)
