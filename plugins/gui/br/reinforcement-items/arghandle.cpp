@@ -96,7 +96,7 @@ void ArgHandle::initDefault(const QJsonValue &jsonValue)
         initSwitch(jsonValue);
         break;
     default:
-        KLOG_DEBUG() << "error value type!";
+        KLOG_WARNING() << "error value type!";
     }
 }
 
