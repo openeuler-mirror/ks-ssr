@@ -359,6 +359,8 @@ extern "C"
     {
         TASKTYPE_SCAN = 0,
         TASKTYPE_REPAIR,
+        TASKTYPE_BACKUP,
+        TASKTYPE_ROLLBACK,
         TASKTYPE_EXPORT_REPORT,
         TASKTYPE_IDLE
     };
