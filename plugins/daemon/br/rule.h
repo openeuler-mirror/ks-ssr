@@ -110,5 +110,26 @@ private:
     QVector<QJsonValue> m_enumValues;
 };
 
+class RuleMask : public Rule
+{
+public:
+    RuleMask(const QJsonValue &value);
+    virtual ~RuleMask(){};
+
+    // 规则类型
+    virtual Protocol::RuleType getType() override
+    {
+        return Protocol::RuleType::Value::MASK;
+    };
+    // 判断该值是否符合规则
+    virtual bool match(const QJsonValue &value) override;
+
+private:
+    int jsonValue2Int(const QJsonValue &value);
+
+private:
+    QJsonValue m_maskValue;
+};
+
 }  // namespace BR
 }  // namespace KS
