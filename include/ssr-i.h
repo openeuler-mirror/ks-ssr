@@ -377,6 +377,13 @@ extern "C"
         INSTALLPACKAGEACTION_LAST
     };
 
+    enum cacheStatus : int
+    {
+        CACHE_UNAVAILABLE = -1,
+        CACHE_AVAILABLE,
+        CACHE_USING
+    };
+
 #ifdef __cplusplus
 }
 #endif
