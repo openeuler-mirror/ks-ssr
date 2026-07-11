@@ -220,14 +220,7 @@ void ArgHandle::initInteger(const QJsonValue &jsonValue)
 void ArgHandle::changedIntArgs(int value)
 {
     m_widgetType = KS::Protocol::WidgetType::Value::DATETIME;
-    if (m_itemKey == "config-umask-limit")
-    {
-        emit valueChanged(m_itemKey, m_argName, m_comboBox->itemText(value), m_widgetType);
-    }
-    else
-    {
-        emit valueChanged(m_itemKey, m_argName, QString::number(value), m_widgetType);
-    }
+    emit valueChanged(m_itemKey, m_argName, QString::number(value), m_widgetType);
 }
 
 void ArgHandle::changedBoolArgs(int index)
