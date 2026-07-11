@@ -38,8 +38,8 @@ class USBDevice : public Device
 public:
     USBDevice(const QString &syspath, QObject *parent = nullptr);
     virtual ~USBDevice();
-    virtual bool setEnable(bool enable);
-    virtual void update();
+    virtual bool setEnable(bool enable) override;
+    virtual void update() override;
 
 private:
     void init();
