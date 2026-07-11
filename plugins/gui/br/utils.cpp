@@ -539,30 +539,5 @@ KS::Protocol::RA::ReinforcementSequence Utils::raAnalysis(const QString &filePat
     return ra->reinforcement();
 }
 
-QString Utils::categoriesLabel2Translate(const QString &souceTxt)
-{
-    return qApp->translate("ini", souceTxt.toUtf8());
-}
-
-QString Utils::python2Translate(const QString &souceTxt)
-{
-    return qApp->translate("python", souceTxt.toUtf8());
-}
-
-QString Utils::noop2Translate(const QString &souceTxt)
-{
-    auto tmpSouce = souceTxt;
-    auto tmpList = tmpSouce.split("\"");
-    QStringList translateList;
-    for (auto key : tmpList)
-    {
-        CONTINUE_IF_TRUE(key.isEmpty() || key == "," || key == ", " || key == "QT_TRANSLATE_NOOP(" || key == "QT_TRANSLATE_NOOP_UTF8(" || key == ")")
-        key.remove(QRegExp("^ +\\s*"));
-        translateList << key;
-    }
-
-    RETURN_VAL_IF_TRUE(translateList.size() != 2, souceTxt)
-    return qApp->translate(translateList[0].toUtf8(), translateList[1].toUtf8());
-}
 }  // namespace BR
 }  // namespace KS
