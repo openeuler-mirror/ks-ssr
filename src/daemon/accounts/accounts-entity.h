@@ -78,7 +78,7 @@ public:  // PROPERTIES
         return m_rsaPublicKey;
     };
 
-    virtual AccountRole getRole(const QString& dbusUniqueName) const
+    virtual AccountRole getRole(const QString& dbusUniqueName) const override
     {
         QReadLocker locker(&m_clientMutex);
         auto it = m_clients.find(dbusUniqueName);
