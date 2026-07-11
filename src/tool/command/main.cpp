@@ -111,83 +111,115 @@ int main(int argc, char *argv[])
         app.installTranslator(&translator);
     }
 
+    QTextStream cerr(stderr);
+
     QCommandLineParser parser;
     parser.setApplicationDescription(QObject::tr("This tool is mainly used in non-graphical system scenarios as a command line alternative to ks-ssr-gui."));
     parser.addHelpOption();
-    QCommandLineOption moduleOption("module", QObject::tr("Specify the operation module, br - baseline hardening, vulnerability - vulnerability fixing."), QString("br|vulnerability"));
-    parser.addOption(moduleOption);
-    QCommandLineOption scanOption("scan", QObject::tr("One-click scanning"));
-    parser.addOption(scanOption);
-    QCommandLineOption reinforceOption("reinforce", QObject::tr("name - Specify reinforcement items to be reinforced, multiple reinforcement items are separated by comma; All - One-click reinforcement"), "name", "All");
-    parser.addOption(reinforceOption);
-    QCommandLineOption repairOption("repair", QObject::tr("name - specify the vulnerability to fix, multiple vulnerabilities are separated by commas; All - One-click repair"), "name", "All");
-    parser.addOption(repairOption);
-    QCommandLineOption outputOption("output", QObject::tr("Output results to file"));
-    parser.addOption(outputOption);
-    QCommandLineOption exportOption("export", QObject::tr("Export the report. Input pdf file path"), QString("save_path"));
-    parser.addOption(exportOption);
-    parser.process(app);
-    QString module = parser.value(moduleOption);
-    if (module.isEmpty())
+
+    QCommandLineOption brOption("br", QObject::tr("baseline hardening"));
+    QCommandLineOption vulnerabilityOption("vulnerability", QObject::tr("vulnerability fixing"));
+
+    parser.addOption(brOption);
+    parser.addOption(vulnerabilityOption);
+
+    QStringList args = app.arguments();
+    args.removeFirst();  // 程序名称移除
+    if (args.isEmpty())
     {
-        std::cout << QObject::tr("Error: Module not provided.").toStdString() << std::endl;
-        parser.showHelp(0);
+        helpTextOut(parser.helpText(), "", true);
         return 1;
     }
 
-    bool scanEnabled = parser.isSet(scanOption);
-    bool reinforceEnabled = parser.isSet(reinforceOption);
-    bool repairEnabled = parser.isSet(repairOption);
-    bool outputEnabled = parser.isSet(outputOption);
-    bool exportEnabled = parser.isSet(exportOption);
-    QString exportPath = parser.value(exportOption);
-    exportPath = QDir(QDir::currentPath()).absoluteFilePath(exportPath);
+    QCommandLineOption scanOption("scan", QObject::tr("One-click scanning"));
+    QString reinforceDes = QObject::tr("name - Specify reinforcement items to be reinforced, multiple reinforcement items are separated by comma; All - One-click reinforcement");
+    QCommandLineOption reinforceOption("reinforce", reinforceDes, "name", "All");
+    QCommandLineOption repairOption("repair", QObject::tr("name - specify the vulnerability to fix, multiple vulnerabilities are separated by commas; All - One-click repair"), "name", "All");
+    QCommandLineOption exportOption("export", QObject::tr("Export the report. Input pdf file path"), QString("save_path"));
+    QCommandLineOption outputOption("output", QObject::tr("Output results to file"));
+
+    const QString subCommand = args.first();
+    int ret = -1;
     KS::Command::Command cmd_parser;
-    cmd_parser.setFileOutput(outputEnabled);
-    if ("br" == module && (scanEnabled || reinforceEnabled || exportEnabled))
+    if (subCommand == "br")
     {
-        if (scanEnabled)
+        // 重新定义一个　QCommandLineParser，原因：addOption历史记录会在helpText()中打印
+        QCommandLineParser parser;
+        parser.setApplicationDescription(QObject::tr("The current selection is br."));
+        parser.addHelpOption();
+
+        // -- 或　-　都可以
+        parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
+
+        parser.addOption(scanOption);
+        parser.addOption(reinforceOption);
+        parser.addOption(exportOption);
+        parser.addOption(outputOption);
+        parser.parse(app.arguments());
+        cmd_parser.setFileOutput(parser.isSet(outputOption));
+        if (parser.isSet(scanOption))
         {
-            cmd_parser.brScan();
+            ret = cmd_parser.brScan();
         }
-        else if (reinforceEnabled)
+        else if (parser.isSet(reinforceOption))
         {
             QString param = parser.value(reinforceOption);
-            QStringList names;
-            if ("All" != param)
-                names = param.split(',', QString::SkipEmptyParts);
-            cmd_parser.reinforce(names);
+            QStringList names = "All" == param ? QStringList() : param.split(',', QString::SkipEmptyParts);
+            ret = cmd_parser.brReinforce(names);
+        }
+        else if (parser.isSet(exportOption))
+        {
+            ret = cmd_parser.brExport(parser.value(exportOption));
         }
         else
         {
-            cmd_parser.exportReport("br", exportPath);
+            helpTextOut(parser.helpText(), "br [options]");
         }
     }
-    else if ("vulnerability" == module && (scanEnabled || repairEnabled || exportEnabled))
+    else if (subCommand == "vulnerability")
     {
-        if (scanEnabled)
+        QCommandLineParser parser;
+        parser.setApplicationDescription(QObject::tr("The current selection is vulnerability."));
+        parser.addHelpOption();
+
+        // -- 或　-　都可以
+        parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
+
+        parser.addOption(scanOption);
+        parser.addOption(repairOption);
+        parser.addOption(exportOption);
+        parser.addOption(outputOption);
+        parser.parse(app.arguments());
+        cmd_parser.setFileOutput(parser.isSet(outputOption));
+        if (parser.isSet(scanOption))
         {
-            cmd_parser.vulnerabilityScan();
+            ret = cmd_parser.vulnerabilityScan();
         }
-        else if (repairEnabled)
+        else if (parser.isSet(repairOption))
         {
             QString param = parser.value(repairOption);
-            QStringList cves;
-            if ("All" != param)
-                cves = param.split(',', QString::SkipEmptyParts);
-            cmd_parser.repair(cves);
+            QStringList names = "All" == param ? QStringList() : param.split(',', QString::SkipEmptyParts);
+            ret = cmd_parser.vulnerabilityRepair(names);
+        }
+        else if (parser.isSet(exportOption))
+        {
+            ret = cmd_parser.vulnerabilityExport(parser.value(exportOption));
         }
         else
         {
-            cmd_parser.exportReport("vulnerability", exportPath);
+            helpTextOut(parser.helpText(), "vulnerability [options]");
         }
     }
     else
     {
-        std::cout << QObject::tr("Module parameter provided error.").toStdString() << std::endl;
-        parser.showHelp(0);
+        cerr << QObject::tr("Invalid module!") << Qt::endl;
+        helpTextOut(parser.helpText(), "", true);
         return 1;
     }
 
+    if (-1 == ret)
+    {
+        return 1;
+    }
     return app.exec();
 }
