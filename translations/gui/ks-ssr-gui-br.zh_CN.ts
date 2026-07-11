@@ -87,14 +87,14 @@
 <context>
     <name>KS::BR::ArgHandle</name>
     <message>
-        <location filename="../../plugins/gui/br/reinforcement-items/arghandle.cpp" line="161"/>
-        <location filename="../../plugins/gui/br/reinforcement-items/arghandle.cpp" line="275"/>
+        <location filename="../../plugins/gui/br/reinforcement-items/arghandle.cpp" line="153"/>
+        <location filename="../../plugins/gui/br/reinforcement-items/arghandle.cpp" line="229"/>
         <source>Yes</source>
         <translation>是</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reinforcement-items/arghandle.cpp" line="162"/>
-        <location filename="../../plugins/gui/br/reinforcement-items/arghandle.cpp" line="276"/>
+        <location filename="../../plugins/gui/br/reinforcement-items/arghandle.cpp" line="154"/>
+        <location filename="../../plugins/gui/br/reinforcement-items/arghandle.cpp" line="230"/>
         <source>No</source>
         <translation>否</translation>
     </message>
