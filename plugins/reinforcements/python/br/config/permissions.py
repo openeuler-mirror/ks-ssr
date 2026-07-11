@@ -91,7 +91,8 @@ class DirectoryPermissionSetting:
         self.conf.read(PERMISSIONS_INI_FILEPATH)
         try:
             self.mode_filelist = self.conf.get(
-                FILE_GROUP_PERMISSIONS, FPK_MODE_DIRECTORY_LIST).split(';')
+                FILE_GROUP_PERMISSIONS, FPK_MODE_DIRECTORY_LIST
+            ).split(";")
         except Exception as e:
             self.mode_filelist = list()
             br.log.debug(str(e))
