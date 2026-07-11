@@ -201,46 +201,16 @@ void ArgHandle::initInteger(const QJsonValue &jsonValue)
     auto labelLayout = buildLabelLayout();
     auto widget = new QWidget(this);
     auto hlayout = new QHBoxLayout(widget);
-    // TODO :  对config-umask-limit做了特殊处理， 看有无更好的方法
-    if (m_itemKey == "config-umask-limit")
-    {
-        m_comboBox = new ComboBox(this);
-        // 给QCombobox设置代理才能设置下拉列表项的高度
-        auto delegate = new QStyledItemDelegate(this);
-        m_comboBox->setItemDelegate(delegate);
 
-        m_comboBox->addItem("027");
-        m_comboBox->addItem("022");
-        m_comboBox->addItem("077");
-        if (jsonValue.toInt() == m_comboBox->itemText(0).toInt())
-        {
-            m_comboBox->setCurrentIndex(0);
-        }
-        else if (jsonValue.toInt() == m_comboBox->itemText(1).toInt())
-        {
-            m_comboBox->setCurrentIndex(1);
-        }
-        else if (jsonValue.toInt() == m_comboBox->itemText(2).toInt())
-        {
-            m_comboBox->setCurrentIndex(2);
-        }
+    m_spinBox = new SpinBox(this);
+    // 利用规则，只对最小值进行限制，不限制最大值的情况。
+    m_spinBox->setRange(0, 99999);
+    m_spinBox->setGroupSeparatorShown(false);
+    m_spinBox->setValue(jsonValue.toInt());
 
-        connect(m_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changedIntArgs(int)));
+    connect(m_spinBox, SIGNAL(valueChanged(int)), this, SLOT(changedIntArgs(int)));
 
-        hlayout->addWidget(m_comboBox);
-    }
-    else
-    {
-        m_spinBox = new SpinBox(this);
-        // 利用规则，只对最小值进行限制，不限制最大值的情况。
-        m_spinBox->setRange(0, 99999);
-        m_spinBox->setGroupSeparatorShown(false);
-        m_spinBox->setValue(jsonValue.toInt());
-
-        connect(m_spinBox, SIGNAL(valueChanged(int)), this, SLOT(changedIntArgs(int)));
-
-        hlayout->addWidget(m_spinBox);
-    }
+    hlayout->addWidget(m_spinBox);
     hlayout->setContentsMargins(0, 0, 0, 0);
     layout->addLayout(labelLayout);
     layout->addWidget(widget);
