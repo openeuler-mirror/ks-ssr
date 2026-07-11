@@ -246,7 +246,7 @@ bool Utils::ssrReinforcements(const QString &xmlString, QList<Category *> &categ
                 defaultLabel = QString(label.c_str());
             }
         }
-        reinforcementItem->setLabel(noop2Translate(defaultLabel));
+        reinforcementItem->setLabel(defaultLabel);
 
         QString defaultDescription;
         for (auto description : iter.description())
