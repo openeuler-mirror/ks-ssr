@@ -19,7 +19,6 @@
 #include <QJsonDocument>
 #include <QPainter>
 #include <QPainterPath>
-#include <QToolTip>
 #include "include/ssr-marcos.h"
 #include "lib/widgets/table/table-header-proxy.h"
 #include "progress.h"
