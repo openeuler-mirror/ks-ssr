@@ -26,7 +26,8 @@ namespace DM
 struct DeviceMount
 {
 public:
-    DeviceMount() = default;
+    DeviceMount()
+        : read(false), write(false), execute(false);
     // 设备文件
     QString device;
     // 设备挂载位置
