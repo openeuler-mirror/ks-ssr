@@ -114,10 +114,10 @@ class Backup(object):
             if not all([backup_dir, store_path]):
                 return False, 2, 'backup_dir:%s or store_path:%s is not exists' % (backup_dir, store_path)
 
-            backup_dir_list = backup_dir.split(';')
+            backup_dir_list = backup_dir.split(',')
             exclude_dir_list = []
             if exclude_dir:
-                exclude_dir_list = exclude_dir.split(';')
+                exclude_dir_list = exclude_dir.split(',')
 
             for back_path in backup_dir_list:
                 back_path = str(back_path).strip().rstrip('/')
