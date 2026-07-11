@@ -131,4 +131,3 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/help.pdf
 
 install(FILES ${PROJECT_SOURCE_DIR}/data/AlibabaPuHuiTi-3-55-Regular.ttf
         DESTINATION ${SSR_INSTALL_DATADIR}/)
-
