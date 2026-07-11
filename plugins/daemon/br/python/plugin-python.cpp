@@ -50,6 +50,25 @@ ReinforcementPython::ReinforcementPython(PyObject *module,
                        << Utils::pyCatchException().toLocal8Bit();
         return;
     }
+
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Device busy, please pop up!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Please contact the admin."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop service!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Abnormal service!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Please close SELinux and use it!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "No such file or directory."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Failed to execute command. Please check the log information for details."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "UsePAM is not recommended to be closed,\nwhich will cause many problems!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop firewalld service!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop bluetooth service!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop cups service!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop avahi service!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop rpcbind service!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Unable to stop smb service!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "sshd.services is not running!"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Abnormal service! Please check the log information for details."));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "No related services found"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "PAM is not configured with a faillock, please manually configure it"));
 }
 
 ReinforcementPython::~ReinforcementPython()
