@@ -420,110 +420,110 @@
 <context>
     <name>KS::BR::Report</name>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="67"/>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="105"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="68"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="106"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="70"/>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="101"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="71"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="102"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="73"/>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="103"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="74"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="104"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="76"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="77"/>
         <source>Not Scanned</source>
         <translation>未扫描</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="79"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="80"/>
         <source>Scannig...</source>
         <translation>正在扫描...</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="82"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="83"/>
         <source>Scan Failed</source>
         <translation>扫描失败</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="85"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="86"/>
         <source>Scan Complete</source>
         <translation>扫描完成</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="88"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="89"/>
         <source>Unreinforcement</source>
         <translation>未加固</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="91"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="92"/>
         <source>Reinforcing...</source>
         <translation>正在加固...</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="94"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="95"/>
         <source>Reinforcement Failure</source>
         <translation>加固失败</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="97"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="98"/>
         <source>Reinforced</source>
         <translation>加固成功</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="168"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="169"/>
         <source>No master file</source>
         <translation>无属主文件</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="174"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="175"/>
         <source>Files with 777 permissions</source>
         <translation>文件具有777权限</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="185"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="186"/>
         <source>Files with sgid permission</source>
         <translation>文件具有sgid权限</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="187"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="188"/>
         <source>Files with suid permission</source>
         <translation>文件具有suid权限</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="279"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="280"/>
         <source>Unactivated</source>
         <translation>未激活</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="279"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="280"/>
         <source>Activated</source>
         <translation>已激活</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="390"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="391"/>
         <source>Vulnerability exists in version %1</source>
         <translation>版本号%1存在漏洞</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="454"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="455"/>
         <source>KylinSecHostReinforcementReport_%1_%2_%3.pdf</source>
         <translation>麒麟信安主机安全加固报告_%1_%2_%3.pdf</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="456"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="457"/>
         <source>export report</source>
         <translation>导出报告</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/reports/report.cpp" line="456"/>
+        <location filename="../../plugins/gui/br/reports/report.cpp" line="457"/>
         <source>PDF(*.pdf)</source>
         <translation></translation>
     </message>
