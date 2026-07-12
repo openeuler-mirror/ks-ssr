@@ -707,7 +707,7 @@ which will cause many problems!</source>
         <translation>限制dmesg信息权限</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="755"/>
+        <location filename="../../data/br-system-rs.xml" line="687"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-config.xml" line="65"/>
         <source>File directory default permission</source>
         <translation>文件目录缺省权限</translation>
