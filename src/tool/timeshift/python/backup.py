@@ -411,11 +411,11 @@ class Backup(object):
             status2, err_code2, err_msg2 = self.execute_backup()
             if status2 is False:
                 self.clean(self.store_path)
-                logger.critical("err_code[%s], err_detail[%s]" % (err_code2, err_msg2))
+                logger.critical(critical_msg.format(code=err_code2, detail=err_msg2))
                 sys.exit(1)
 
         except (Exception, SystemExit, KeyboardInterrupt) as e:
-            logger.error("The backup process failed")
+            logger.error("The backup process failed, error: %s" % (str(e)))
             sys.exit(1)
 
         # 创建完成标识
