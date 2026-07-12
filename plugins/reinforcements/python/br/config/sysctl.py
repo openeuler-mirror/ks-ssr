@@ -44,15 +44,17 @@ class SAKKey:
         value = ""
         if str(args[SAK_KEY_SWITCH_CONF_KEY_SYSRQ]):
             value = "1" if bool(args[SAK_KEY_SWITCH_CONF_KEY_SYSRQ]) else "0"
-        self.conf.set_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ, value)
         if len(self.conf_sys.get_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ)) != 0:
             self.conf_sys.set_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ, value)
-        br.utils.subprocess_not_output('{0} --system'.format(SYSCTL_PATH))
+        self.conf.set_value(SAK_KEY_SWITCH_CONF_KEY_SYSRQ, value)
 
-        return (True, '')
+        br.utils.subprocess_not_output("{0} --system".format(SYSCTL_PATH))
+
+        return (True, "")
 
     def backup(self):
         return self.get()
+
     def rollback(self, args_json):
         return self.set(args_json)
 
