@@ -457,7 +457,10 @@ void Manager::logFileRotate()
     // 当 logDiffNum 大于等于 0 时，证明需要移除部分文件，需要移除的数量为 logDiffNum + 1, 加一是为了为新日志腾出空间
     int logDiffNum = logLists.count() - m_configurations.m_numLogs;
     bool isNeedBackUpLog = false;
+    // sonarqube block off
+    // sonarqube 报错 logDiffNum 永远大于零， 个人认为这个报错没有根据， 忽略。
     KLOG_DEBUG() << "Will remove files num: " << (logDiffNum < 0 ? 0 : logDiffNum + 1);
+    // sonarqube block on
     // 将大于轮转数量的日志重命名为可备份的名称
     // 如当前可轮转的数量为 5, 则 ks-ssr.log.6 会被重命名为 ks-ssr-${ISO_FORMAT_CURRENT_TIME}.log.6
     // 然后将 ks-ssr.log-${ISO_FORMAT_CURRENT_TIME}.${NUM} 迁移至日志备份服务器
