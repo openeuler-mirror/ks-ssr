@@ -97,6 +97,16 @@ QString DeviceLogPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SYSADM;
 }
 
+bool DeviceLogPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool DeviceLogPage::stopTask()
+{
+    return true;
+}
+
 void DeviceLogPage::searchTextChanged(const QString &text)
 {
     auto filterProxy = m_ui->m_table->getFilterProxy();
