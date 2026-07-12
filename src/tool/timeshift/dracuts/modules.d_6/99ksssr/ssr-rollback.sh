@@ -120,7 +120,7 @@ function get_filter_list()
         return $INVALID_CONFIG
     fi
 
-    exclude_dir_list=$(echo $EXCLUDE_DIR | awk -F ';' '{for(i=1;i<=NF;i++){print $i}}' | awk '{gsub(/^\s+|\s+$/, "");print}')
+    exclude_dir_list=$(echo $EXCLUDE_DIR | awk -F ',' '{for(i=1;i<=NF;i++){print $i}}' | awk '{gsub(/^\s+|\s+$/, "");print}')
     for exclude_dir_tmp in $exclude_dir_list
     do
         get_dir_name_and_depth $exclude_dir_tmp
