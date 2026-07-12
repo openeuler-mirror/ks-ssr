@@ -448,6 +448,11 @@ void DnfContext::initDnf()
     {
         KLOG_ERROR() << "Failed to load system repo! error message: " << error->message;
     }
+
+    /* set up the sack for packages that should only ever be installed, never updated */
+    dnf_sack_set_installonly(m_dnfSack, dnf_context_get_installonly_pkgs(m_dnfCtx));
+    /* set the installonly limit one higher than usual to avoid removing any kernels during system upgrades */
+    dnf_sack_set_installonly_limit(m_dnfSack, dnf_context_get_installonly_limit(m_dnfCtx) + 1);
 }
 
 void DnfContext::getCveInfo()
