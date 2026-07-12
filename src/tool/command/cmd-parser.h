@@ -92,6 +92,8 @@ private:
     BRDbusProxy *m_dbusBRProxy;
     VulnerabilityDbusProxy *m_dbusVulnerabilityProxy;
     QMap<QString, OutputInfo *> m_outputInfo;
+
+    QString m_backupDetails;
 };
 }  // namespace Command
 }  // namespace KS
