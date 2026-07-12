@@ -395,15 +395,16 @@ UpdatePackageResult DnfContext::installPackages(QList<DnfPackage>& pkgList)
     return {"", true};
 }
 
-void DnfContext::initSack()
+void DnfContext::initDnf()
 {
-    KLOG_DEBUG() << "init Sack";
+    KLOG_DEBUG() << "init";
     if (m_dnfSack)
     {
         g_object_unref(m_dnfSack);
     }
-    g_autoptr(GError) error = nullptr;
     GPtrArray* repos = nullptr;
+    g_autoptr(GError) error = nullptr;
+
     m_dnfSack = dnf_sack_new();
     dnf_sack_set_cachedir(m_dnfSack, dnf_context_get_solv_dir(m_dnfCtx));
     dnf_sack_set_rootdir(m_dnfSack, dnf_context_get_install_root(m_dnfCtx));
