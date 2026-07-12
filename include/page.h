@@ -65,7 +65,7 @@ public:
     virtual QString getAccountRoleName() = 0;
 
     // 确认是否能退出
-    virtual bool checkCanExit() = 0;
+    virtual bool isTaskRunning() = 0;
     virtual bool stopTask() = 0;
 Q_SIGNALS:
     void initFinished();
