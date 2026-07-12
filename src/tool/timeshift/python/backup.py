@@ -297,6 +297,7 @@ class Backup(object):
             return False, 9, msg, {'backup_path_free_space': free_dist, 'backup_spend_space': need_dist_usage}
 
         return True, 0, '', {'backup_path_free_space': free_dist, 'backup_spend_space': need_dist_usage}
+    # sonarqube block on
 
     @staticmethod
     def boot_path_check():
