@@ -127,7 +127,7 @@ class Check(Backup):
                 exit(1)
 
         except (Exception, SystemExit, KeyboardInterrupt) as e:
-            logger.error("The backup process failed")
+            logger.error("The backup process failed, error: %s" % (str(e)))
         finally:
             if self.store_path and self.check_done_flag:
                 if os.path.exists(self.store_path) and os.path.exists(self.check_done_flag):
