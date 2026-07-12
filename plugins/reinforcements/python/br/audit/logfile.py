@@ -65,8 +65,8 @@ class Permissions:
             self.mode_filelist = list()
             self.append_filelist = list()
             br.log.debug(str(e))
+    
     # 日志权限
-
     def set_log_permissions(self, arg1, arg2):
         if not arg1:
             return
