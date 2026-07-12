@@ -95,7 +95,11 @@ DnfContext::DnfContext()
                 emit m_dnfCtxManager->cacheInvalidate();
             });
 
-    QObject::connect(this, &DnfContext::cacheInvalidate, &DnfContext::updateCache);
+    QObject::connect(this, &DnfContext::cacheInvalidate, [this]
+                     {
+                         std::thread t{std::bind(&PackageManager::DnfContext::updateCache, this)};
+                         t.detach();
+                     });
     QObject::connect(this, &DnfContext::cacheInvalidate, &DnfContext::getCveInfo);
     updateCache();
     getCveInfo();
