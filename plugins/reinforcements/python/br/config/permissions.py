@@ -29,9 +29,30 @@ EXCLUDE_DIRECTORY_MODE = (
 
 PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT = "mode-permissions-limit"
 PERMISSIONS_ARG_MODE_DIRECTORY_PERMISSIONS_LIMIT = "directory-permissions-limit"
+ST_MODE = "st-mode"
 
 UMASK_PROFILE_SH_PATH = "/etc/profile.d/br-config-umask.sh"
 UMASK_PROFILE_CSH_PATH = "/etc/profile.d/br-config-umask.csh"
+
+def get_mode(mode_files):
+    st_mode = ""
+    for mode_file in mode_files:
+        if not os.access(mode_file, os.F_OK):
+            continue
+        mode = os.stat(mode_file).st_mode
+        if st_mode:
+            st_mode += ";"
+        st_mode += mode_file + ";" + str(mode)
+    return st_mode
+
+
+def set_mode(mode_data):
+    mode_info = mode_data.split(";")
+    for i in range(0, len(mode_info), 2):
+        if i + 1 < len(mode_info):
+            if not os.access(mode_info[i], os.F_OK):
+                continue
+            os.chmod(mode_info[i], int(mode_info[i+1]))
 
 
 class PermissionSetting:
