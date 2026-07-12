@@ -57,6 +57,16 @@ QString PrivacyCleanupPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SECADM;
 }
 
+bool PrivacyCleanupPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool PrivacyCleanupPage::stopTask()
+{
+    return true;
+}
+
 void PrivacyCleanupPage::initUI()
 {
     // 更新表格右上角提示信息
