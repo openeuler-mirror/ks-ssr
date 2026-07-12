@@ -86,14 +86,25 @@ DnfContext::DnfContext()
     g_signal_connect(m_dnfCtx, "invalidate",
                      G_CALLBACK(static_cast<dnfCacheInvalidateCBType>(dnfCacheInvalidateCB)), nullptr);
 
+    m_repoWatcher->addPath(DNF_REPO_DIR);
+    connect(m_repoWatcher, &QFileSystemWatcher::directoryChanged, [](const QString&)
+            {
+                KLOG_DEBUG() << "repo changed";
+                dnf_repo_loader_invalidate(dnf_context_get_repo_loader(m_dnfCtxManager->getDnfContext()));
+                emit m_dnfCtxManager->cacheInvalidate();
+            });
+
     QObject::connect(this, &DnfContext::cacheInvalidate, &DnfContext::updateCache);
+    QObject::connect(this, &DnfContext::cacheInvalidate, &DnfContext::getCveInfo);
     updateCache();
+    getCveInfo();
 }
 
 DnfContext::~DnfContext()
 {
     g_object_unref(m_dnfCtx);
     g_object_unref(m_dnfSack);
+    delete m_repoWatcher;
 }
 
 void DnfContext::globalInit()
