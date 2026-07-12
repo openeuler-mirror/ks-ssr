@@ -37,7 +37,7 @@ class DnfPackageAdvisory;
 class DnfPackage
 {
 public:
-    DnfPackage();
+    DnfPackage() = default;
     DnfPackage(::DnfPackage* _dnfPackage);
     DnfPackage(::DnfSack*, const char*);
     DnfPackage(const DnfPackage& other);
