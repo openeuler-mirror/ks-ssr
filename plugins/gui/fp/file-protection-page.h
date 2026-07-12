@@ -38,6 +38,8 @@ public:
     QString getSidebarUID() override;
     QString getSidebarIcon() override;
     QString getAccountRoleName() override;
+    bool isTaskRunning() override;
+    bool stopTask() override;
 
 private:
     bool checkTrustedLoadFinied(bool initialized);
