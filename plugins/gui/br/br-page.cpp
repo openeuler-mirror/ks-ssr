@@ -53,9 +53,9 @@ QString BRPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SYSADM;
 }
 
-bool BRPage::checkCanExit()
+bool BRPage::isTaskRunning()
 {
-    return m_scan->checkCanExit();
+    return m_scan->isTaskRunning();
 }
 
 bool BRPage::stopTask()
