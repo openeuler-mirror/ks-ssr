@@ -310,18 +310,24 @@ void Command::addDbusServerWatcher()
 
 void Command::moduleBrInit()
 {
-    m_dbusBRProxy = new BRDbusProxy(SSR_DBUS_NAME,
-                                    BR_DBUS_OBJECT_PATH,
-                                    QDBusConnection::systemBus(),
-                                    this);
+    if (!m_dbusBRProxy)
+    {
+        m_dbusBRProxy = new BRDbusProxy(SSR_DBUS_NAME,
+                                        BR_DBUS_OBJECT_PATH,
+                                        QDBusConnection::systemBus(),
+                                        this);
+    }
 }
 
 void Command::moduleVulnerabilityInit()
 {
-    m_dbusVulnerabilityProxy = new VulnerabilityDbusProxy(SSR_DBUS_NAME,
-                                                          SSR_VULNERABILITY_DBUS_OBJECT_PATH,
-                                                          QDBusConnection::systemBus(),
-                                                          this);
+    if (!m_dbusVulnerabilityProxy)
+    {
+        m_dbusVulnerabilityProxy = new VulnerabilityDbusProxy(SSR_DBUS_NAME,
+                                                              SSR_VULNERABILITY_DBUS_OBJECT_PATH,
+                                                              QDBusConnection::systemBus(),
+                                                              this);
+    }
 }
 
 void Command::brOutputResult(QTextStream &output)
