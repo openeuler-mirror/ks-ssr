@@ -25,7 +25,7 @@ struct InterfaceClass
 {
 public:
     InterfaceClass()
-        : bInterfaceClass(0), bInterfaceSubClass(0), bInterfaceProtocol(0);
+        : bInterfaceClass(0), bInterfaceSubClass(0), bInterfaceProtocol(0){};
     int bInterfaceClass;
     int bInterfaceSubClass;
     int bInterfaceProtocol;
