@@ -16,6 +16,7 @@
 #define __KS_SSR_DNF_CONTEXT_H
 
 #include <include/ssr-marcos.h>
+#include <QMutex>
 #include <QObject>
 
 #if (KS_DEP_LIBDNF_VERSION < KS_VERSION_CHECK(0, 65, 0))
