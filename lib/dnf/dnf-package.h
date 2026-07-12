@@ -17,6 +17,8 @@
 
 #include <ssr-marcos.h>
 #include <QString>
+#include "dnf-package-advisory-ref.h"
+#include "dnf-package-advisory.h"
 
 struct _DnfPackage;
 typedef _DnfPackage DnfPackage;
