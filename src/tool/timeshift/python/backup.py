@@ -430,6 +430,8 @@ def main(config):
     setup_logger_r(current_log, 'KSSSRLogger_BACKUP')
 
     ssr_backup = Backup(conf_path=config)
+    # 开始监听SIGTERM信号
+    signal.signal(signal.SIGTERM, ssr_backup.signal_handler)
     ssr_backup.run()
 
     # 执行生成rollback内核的动作
