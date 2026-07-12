@@ -604,7 +604,7 @@ which will cause many problems!</source>
         <translation>防止通过电邮接收到恶意软件和受到非法攻击</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="354"/>
+        <location filename="../../data/br-system-rs.xml" line="301"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-config.xml" line="15"/>
         <source>Number of historical commands</source>
         <translation>历史命令条数</translation>
