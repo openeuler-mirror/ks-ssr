@@ -41,6 +41,8 @@ public:
     virtual QString getSidebarIcon() override;
     virtual QString getAccountRoleName() override;
     void updateTableData(const QStringList& fileList);
+    bool isTaskRunning() override;
+    bool stopTask() override;
 
 private:
     void initConnection();
