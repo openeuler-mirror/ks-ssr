@@ -19,16 +19,11 @@ def setup_logger(log_file=None, name='KSSSRLogger', console=False):
 
 
 class Check(Backup):
-    def __init__(self, conf_path):
+    def __init__(self, conf_path, check_result):
         super(Check, self).__init__(conf_path)
-        self.result = {
-            "result": "",  # SUCCESS FAILED WARNING
-            "msg": "",
-            "boot": 0.0,  # /boot分区剩余空间(MB)
-            "backup_file_size": 0.0,  # 备份文件所需占用的空间(MB)
-            "remaining_space_size": 0.0  # 备份目录所在分区的剩余空间(MB)
-        }
+        self.result = check_result
         self.check_done_flag = None
+        self.is_terminal = False
 
     @staticmethod
     def boot_path_check():
