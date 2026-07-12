@@ -686,7 +686,7 @@ which will cause many problems!</source>
         <translation>限制系统关键资源大小</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="723"/>
+        <location filename="../../data/br-system-rs.xml" line="655"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-config.xml" line="55"/>
         <source>Turn on SAK key</source>
         <translation>开启SAK键</translation>
