@@ -708,65 +708,65 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="60"/>
-        <location filename="../../plugins/gui/br/utils.cpp" line="100"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="56"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="96"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="63"/>
-        <location filename="../../plugins/gui/br/utils.cpp" line="94"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="59"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="90"/>
         <source>Conformity</source>
         <translation>符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="66"/>
-        <location filename="../../plugins/gui/br/utils.cpp" line="96"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="62"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="92"/>
         <source>Inconformity</source>
         <translation>不符合</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="69"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="65"/>
         <source>Not Scanned</source>
         <translation>未扫描</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="72"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="68"/>
         <source>Scannig...</source>
         <translation>正在扫描...</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="84"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="80"/>
         <source>Reinforcing...</source>
         <translation>正在加固...</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="75"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="71"/>
         <source>Scan Failed</source>
         <translation>扫描失败</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="78"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="74"/>
         <source>Scan Complete</source>
         <translation>扫描完成</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="81"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="77"/>
         <source>Unreinforcement</source>
         <translation>未加固</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="87"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="83"/>
         <source>Reinforcement Failure</source>
         <translation>加固失败</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="90"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="86"/>
         <source>Reinforced</source>
         <translation>加固成功</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/utils.cpp" line="98"/>
+        <location filename="../../plugins/gui/br/utils.cpp" line="94"/>
         <source>Unscan</source>
         <translation>未扫描</translation>
     </message>
