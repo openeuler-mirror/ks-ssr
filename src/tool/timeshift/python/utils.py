@@ -227,6 +227,7 @@ def mkdir_p(path):
             pass
         else:
             raise
+# sonarqube block on
 
 
 def proc_lock():
