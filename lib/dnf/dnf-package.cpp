@@ -14,14 +14,12 @@
 
 #include <libdnf/libdnf.h>
 
-#include "dnf-context.h"
-#include "dnf-package-advisory-ref.h"
-#include "dnf-package-advisory.h"
-#include "dnf-package.h"
-
 #include <qt5-log-i.h>
 #include <QList>
 #include <QString>
+
+#include "dnf-context.h"
+#include "dnf-package.h"
 
 // libdnf 在 0.11.0 版本是用 c 实现， 需要注意符号粉碎规则。
 #if (KS_DEP_LIBDNF_VERSION <= KS_VERSION_CHECK(0, 15, 0))
