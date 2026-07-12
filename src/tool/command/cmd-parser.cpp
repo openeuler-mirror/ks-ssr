@@ -282,6 +282,28 @@ int Command::vulnerabilityExport(const QString &filePath)
     return 0;
 }
 
+int Command::checkBackup()
+{
+    auto replyInfo = m_dbusVulnerabilityProxy->GetBackUpInfo();
+    replyInfo.waitForFinished();
+    if (replyInfo.isError())
+    {
+        std::cout << tr("Get backup info failure, error message: ").toStdString() << replyInfo.error().message().toStdString() << std::endl;
+        return -1;
+    }
+    QJsonObject backupJson = StrUtils::str2jsonObject(replyInfo);
+
+    QString backupPath = backupJson.value("path").toString();
+    int backupSize = backupJson.value("size").toInt();
+
+    if (backupJson.isEmpty() || backupPath.isEmpty() || 0 == backupSize)
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
 void Command::checkLicenseActive()
 {
     QSharedPointer<LicenseProxy> licenseProxy = LicenseProxy::getDefault();
