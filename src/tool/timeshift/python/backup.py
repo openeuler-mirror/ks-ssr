@@ -380,15 +380,22 @@ class Backup(object):
             return status, err_code, msg
         return True, 0, ''
 
+    def signal_handler(self, signal_code, frame):
+        logger.error('Received kill signal: %s' % signal_code)
+        for pid in self.pid_list:
+            os.killpg(pid, signal.SIGTERM)
+
+        sys.exit(1)
+
     def run(self):
         logger.info("Start the backup process...")
-
+        critical_msg = "err_code[{code}], err_detail[{detail}]"
         try:
             # 生成备份路径并校验
             logger.info("Start generate and check backup path")
             status, err_code, err_msg = self.generate_and_check_backup_path()
             if status is False:
-                logger.critical("err_code[%s], err_detail[%s]" % (err_code, err_msg))
+                logger.critical(critical_msg.format(code=err_code, detail=err_msg))
                 sys.exit(1)
 
             self.generate_backup_exclude_map()
