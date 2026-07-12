@@ -403,7 +403,7 @@ class Backup(object):
             logger.info("Start backup check")
             status1, err_code1, err_msg1 = self.backup_check()
             if status1 is False:
-                logger.critical("err_code[%s], err_detail[%s]" % (err_code1, err_msg1))
+                logger.critical(critical_msg.format(code=err_code1, detail=err_msg1))
                 sys.exit(1)
 
             # 执行备份(已经执行过的，删除备份路径文件)
