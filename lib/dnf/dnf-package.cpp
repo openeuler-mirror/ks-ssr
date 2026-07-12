@@ -43,12 +43,6 @@ namespace Vulnerability
 {
 namespace PackageManager
 {
-DnfPackage::DnfPackage()
-    : m_dnfPackage(nullptr),
-      m_dnfSack(nullptr)
-{
-}
-
 DnfPackage::DnfPackage(::DnfPackage* _dnfPackage)
     : m_dnfPackage((::DnfPackage*)g_object_ref((gpointer)_dnfPackage)),
       m_dnfSack((::DnfSack*)g_object_ref(dnf_package_get_sack(m_dnfPackage)))
