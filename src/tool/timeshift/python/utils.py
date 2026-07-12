@@ -103,71 +103,73 @@ def execute_cmd(cmd, logger, print_log=True, pid_list=None):
     return True, 0, result
 
 
-def calculate_free_space_by_df(path, logger):
+def calculate_free_space_by_df(path, logger, pid_list=None):
+    msg = 'Failed to calculate the {check_path} free size'
     if not os.path.exists(path):
         return False, 1, 'Failed to calculate the %s free size, path is not exists' % path
 
     try:
         free_dist_cmd = "df %s | awk 'NR==2{print $4}' | sed 's/G//g'" % path
-        status, err_code, free_space = execute_cmd(free_dist_cmd, logger)
+        status, err_code, free_space = execute_cmd(free_dist_cmd, logger, pid_list=pid_list)
         if status is not True:
-            return False, 2, 'Failed to calculate the %s free size' % path
+            return False, 2, msg.format(check_path=path)
 
         if not free_space:
             # 兼容centerOS6
             free_dist_cmd = "df %s | awk 'NR==3{print $3}' | sed 's/G//g'" % path
-            status, err_code, free_space = execute_cmd(free_dist_cmd, logger)
+            status, err_code, free_space = execute_cmd(free_dist_cmd, logger, pid_list=pid_list)
             if status is not True:
-                return False, 3, 'Failed to calculate the %s free size' % path
+                return False, 3, msg.format(check_path=path)
 
         free_space = int(free_space)
     except Exception as e:
         logger.warning(e)
-        return False, 4, 'Failed to calculate the %s free size' % path
+        return False, 4, msg.format(check_path=path)
 
     logger.info("Compute %s free space(%s)" % (path, free_space))
     return True, 0, free_space
 
 
-def calculate_total_space_by_df(path, logger):
+def calculate_total_space_by_df(path, logger, pid_list=None):
+    msg = 'Failed to calculate the {check_path} total size'
     if not os.path.exists(path):
         return False, 1, 'Failed to calculate the %s total size, path is not exists' % path
 
     try:
         total_dist_cmd = "df %s | awk 'NR==2{print $2}' | sed 's/G//g'" % path
-        status, err_code, total_space = execute_cmd(total_dist_cmd, logger)
+        status, err_code, total_space = execute_cmd(total_dist_cmd, logger, pid_list=pid_list)
         if status is not True:
-            return False, 2, 'Failed to calculate the %s total size' % path
+            return False, 2, msg.format(check_path=path)
 
         if not total_space:
             # 兼容centerOS6
             total_dist_cmd = "df %s | awk 'NR==3{print $1}' | sed 's/G//g'" % path
-            status, err_code, total_space = execute_cmd(total_dist_cmd, logger)
+            status, err_code, total_space = execute_cmd(total_dist_cmd, logger, pid_list=pid_list)
             if status is not True:
-                return False, 3, 'Failed to calculate the %s total size' % path
+                return False, 3, msg.format(check_path=path)
 
         total_space = int(total_space)
     except Exception as e:
         logger.warning(e)
-        return False, 4, 'Failed to calculate the %s total size' % path
+        return False, 4, msg.format(check_path=path)
 
     logger.info("Compute %s total size(%s)" % (path, total_space))
     return True, 0, total_space
 
 
-def calculate_partition_by_df(path, logger):
+def calculate_partition_by_df(path, logger, pid_list=None):
     if not os.path.exists(path):
         return False, 1, 'Failed to calculate the %s partition info, path is not exists' % path
 
     partition_cmd = "df %s | awk 'NR==2{print $6}' | sed 's/G//g'" % path
-    status, err_code, partition_info = execute_cmd(partition_cmd, logger)
+    status, err_code, partition_info = execute_cmd(partition_cmd, logger, pid_list=pid_list)
     if status is not True:
         return False, 2, 'Failed to calculate the %s partition info' % path
 
     if not partition_info:
         # 兼容centerOS6
         partition_cmd = "df %s | awk 'NR==3{print $5}' | sed 's/G//g'" % path
-        status, err_code, partition_info = execute_cmd(partition_cmd, logger)
+        status, err_code, partition_info = execute_cmd(partition_cmd, logger, pid_list=pid_list)
         if status is not True:
             return False, 3, 'Failed to calculate the %s partition info' % path
 
