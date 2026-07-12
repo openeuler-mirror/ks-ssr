@@ -531,7 +531,7 @@
 <context>
     <name>KS::BR::RoundProgressBar</name>
     <message>
-        <location filename="../../plugins/gui/br/reports/round-progressbar.cpp" line="119"/>
+        <location filename="../../plugins/gui/br/reports/round-progressbar.cpp" line="116"/>
         <source>Total: %1 conform: %2 inconform: %3</source>
         <translation>总计：%1 符合：%2 不符合：%3</translation>
     </message>
