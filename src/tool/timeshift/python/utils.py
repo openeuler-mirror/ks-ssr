@@ -177,19 +177,19 @@ def calculate_partition_by_df(path, logger, pid_list=None):
     return True, 0, partition_info
 
 
-def calculate_used_space_by_du(path, logger):
+def calculate_used_space_by_du(path, logger, pid_list=None):
     if not os.path.exists(path):
         return False, 1, 'Failed to calculate the %s used size, path is not exists' % path
 
     try:
         used_dist_cmd = "du -s %s | awk 'NR==1{print $1}'" % path
-        status, err_code, used_space = execute_cmd(used_dist_cmd, logger)
+        status, err_code, used_space = execute_cmd(used_dist_cmd, logger, pid_list=pid_list)
         if status is not True:
             return False, 2, 'Failed to calculate the %s used size' % path
 
         used_space = int(used_space)
     except Exception as e:
-        return False, 3, 'Failed to calculate the %s used size' % path
+        return False, 3, 'Failed to calculate the %s used size, error: %s' % (path, str(e))
 
     return True, 0, used_space
 
