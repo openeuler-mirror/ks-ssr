@@ -77,6 +77,16 @@ QString BoxPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_COMADM;
 }
 
+bool BoxPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool BoxPage::stopTask()
+{
+    return true;
+}
+
 void BoxPage::initBoxs()
 {
     QJsonParseError jsonError;
