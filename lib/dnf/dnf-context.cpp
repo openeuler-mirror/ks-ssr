@@ -319,16 +319,16 @@ UpdatePackageResult DnfContext::installPackages(QList<DnfPackage>& pkgList)
     };
 
     g_signal_connect(trState, "percentage-changed",
-                     G_CALLBACK((percentageChangedCBType)percentageChangedCB),
+                     G_CALLBACK(static_cast<percentageChangedCBType>(percentageChangedCB)),
                      nullptr);
     g_signal_connect(trState, "action-changed",
-                     G_CALLBACK((actionChangedTypeCBType)actionChangedTypeCB),
+                     G_CALLBACK(static_cast<actionChangedTypeCBType>(actionChangedTypeCB)),
                      nullptr);
     g_signal_connect(trState, "allow-cancel-changed",
-                     G_CALLBACK((allowCancelChangedCBType)allowCancelChangedCB),
+                     G_CALLBACK(static_cast<allowCancelChangedCBType>(allowCancelChangedCB)),
                      nullptr);
     g_signal_connect(trState, "package-progress-changed",
-                     G_CALLBACK((packageProgressChangedCBType)packageProgressChangedCB),
+                     G_CALLBACK(static_cast<packageProgressChangedCBType>(packageProgressChangedCB)),
                      nullptr);
 
     if (!dnf_state_set_steps(trState, &error,
