@@ -243,8 +243,11 @@ def proc_lock():
         return True
 
 
-def runcmd(command):
-    ret = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+def runcmd(command, pid_list=None):
+    ret = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                           stdin=subprocess.PIPE, preexec_fn=os.setsid)
+    if isinstance(pid_list, set):
+        pid_list.add(ret.pid)
     stdout, stderr = ret.communicate()
     return (
         stdout.decode('utf-8').strip("\n"), stderr.decode('utf-8')
