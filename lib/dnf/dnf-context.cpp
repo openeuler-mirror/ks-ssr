@@ -399,31 +399,37 @@ void DnfContext::initSack()
     if (!dnf_sack_setup(m_dnfSack, DNF_SACK_SETUP_FLAG_NONE, &error))
     {
         KLOG_ERROR() << "Failed to init sack! error message: " << error->message;
+        g_free(m_dnfSack);
+        m_dnfSack = nullptr;
         return;
     }
-    if (!(repos = dnf_repo_loader_get_repos(dnf_context_get_repo_loader(m_dnfCtx), &error)))
+    if ((repos = dnf_repo_loader_get_repos(dnf_context_get_repo_loader(m_dnfCtx), &error)))
+    {
+        for (uint i = 0; i < repos->len; i++)
+        {
+            auto dnfState = dnf_state_new();
+            auto repo = (::DnfRepo*)g_ptr_array_index(repos, i);
+            g_clear_error(&error);
+            if (!dnf_sack_add_repo(m_dnfSack, repo, 0,
+                                   static_cast<DnfSackAddFlags>(DNF_SACK_ADD_FLAG_NONE | DNF_SACK_ADD_FLAG_FILELISTS | DNF_SACK_ADD_FLAG_UPDATEINFO),
+                                   dnfState,
+                                   &error))
+            {
+                KLOG_ERROR() << "Failed to load repo" << dnf_repo_get_id(repo)
+                             << "error message: " << error->message;
+                continue;
+            }
+            KLOG_DEBUG() << "Load repo: " << dnf_repo_get_id(repo);
+            g_object_unref(dnfState);
+        }
+        g_ptr_array_unref(repos);
+        g_clear_error(&error);
+    }
+    else
     {
         KLOG_ERROR() << "Failed to get repos! error message: " << error->message;
     }
-    for (uint i = 0; i < repos->len; i++)
-    {
-        auto dnfState = dnf_state_new();
-        auto repo = (::DnfRepo*)g_ptr_array_index(repos, i);
-        g_clear_error(&error);
-        if (!dnf_sack_add_repo(m_dnfSack, repo, 0,
-                               static_cast<DnfSackAddFlags>(DNF_SACK_ADD_FLAG_NONE | DNF_SACK_ADD_FLAG_FILELISTS | DNF_SACK_ADD_FLAG_UPDATEINFO),
-                               dnfState,
-                               &error))
-        {
-            KLOG_ERROR() << "Failed to load repo" << dnf_repo_get_id(repo)
-                         << "error message: " << error->message;
-            continue;
-        }
-        KLOG_DEBUG() << "Load repo: " << dnf_repo_get_id(repo);
-        g_object_unref(dnfState);
-    }
-    g_ptr_array_unref(repos);
-    g_clear_error(&error);
+
     if (!dnf_sack_load_system_repo(m_dnfSack, NULL,
                                    DNF_SACK_LOAD_FLAG_BUILD_CACHE,
                                    &error))
