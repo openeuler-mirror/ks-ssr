@@ -6,13 +6,24 @@ import struct
 BASE_DIR_64 = "/usr/lib64/ks-ssr/timeshift"
 BASE_DIR_32 = "/usr/lib/ks-ssr/timeshift"
 
+PATH_DIR_64 = os.path.join(os.path.dirname(BASE_DIR_64), 'bin')
+# LD_LIBRARY_PATH_DIR_64 = os.path.join(os.path.dirname(BASE_DIR_64), 'lib64')
+
+PATH_DIR_32 = os.path.join(os.path.dirname(BASE_DIR_32), 'bin')
+# LD_LIBRARY_PATH_DIR_32 = os.path.join(os.path.dirname(BASE_DIR_32), 'lib32')
+
+
+
 if struct.calcsize("P") * 8 == 64:
     BASE_DIR = BASE_DIR_64
+    os.environ['PATH'] = "{0}:{1}".format(PATH_DIR_64, os.environ['PATH'])
 else:
     if os.path.exists(BASE_DIR_64):
         BASE_DIR = BASE_DIR_64
+        os.environ['PATH'] = "{0}:{1}".format(PATH_DIR_64, os.environ['PATH'])
     else:
         BASE_DIR = BASE_DIR_32
+        os.environ['PATH'] = "{0}:{1}".format(PATH_DIR_32, os.environ['PATH'])
 
 sys.path.insert(0, BASE_DIR)
 
