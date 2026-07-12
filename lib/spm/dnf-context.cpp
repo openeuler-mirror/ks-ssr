@@ -25,8 +25,9 @@
 #include <QJsonObject>
 #include <QProcess>
 #include <QString>
-#include <thread>
 #include <atomic>
+#include <thread>
+#include "lib/base/QThreadWrapper.hpp"
 
 #include "dnf-context.h"
 #include "dnf-package-advisory.h"
