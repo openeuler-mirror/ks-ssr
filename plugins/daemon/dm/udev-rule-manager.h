@@ -27,7 +27,7 @@ struct DeviceRule
 {
 public:
     DeviceRule()
-        : read(false), write(fasle), execute(false), interfaceType(0);
+        : read(false), write(false), execute(false), interfaceType(0){};
     QString idVendor;
     QString idProduct;
     bool read;
