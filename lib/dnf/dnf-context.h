@@ -52,6 +52,7 @@ class QReadWriteLock;
 class QJsonObject;
 class QStringList;
 class QProcess;
+class QFileSystemWatcher;
 
 enum InstallPackageAction : int;
 
