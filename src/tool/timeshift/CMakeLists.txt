@@ -5,11 +5,11 @@ install(
 install(
   DIRECTORY
     ${PROJECT_SOURCE_DIR}/src/tool/timeshift/dracuts/modules.d_6/99ksssr/
-  DESTINATION /usr/share/dracut/modules.d/)
+  DESTINATION /usr/share/dracut/modules.d/99ksssr)
 
 install(
   DIRECTORY ${PROJECT_SOURCE_DIR}/src/tool/timeshift/dracuts/modules.d/99ksssr/
-  DESTINATION /usr/lib/dracut/modules.d/)
+  DESTINATION /usr/lib/dracut/modules.d/99ksssr)
 
 install(
   DIRECTORY ${PROJECT_SOURCE_DIR}/src/tool/timeshift/python/
