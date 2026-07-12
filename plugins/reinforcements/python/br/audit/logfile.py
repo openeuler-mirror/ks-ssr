@@ -113,35 +113,78 @@ class Permissions:
         self.set_log_permissions(args[PERMISSIONS_ARG_MODE_PERMISSIONS_LIMIT],
                                args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT])
         if args[PERMISSIONS_ARG_APPEND_PERMISSIONS_LIMIT]:
-            output = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, MESSAGES_FILE_PATH, LOGFILE_CONF_FILEPATH))
             output_kssrmanager = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, KS_BR_MANAGER_STR, LOGFILE_CONF_FILEPATH))
-            if len(output) == 0 and len(output_kssrmanager) == 0:
-                br.utils.subprocess_not_output('echo \'{0}\'    >> {1}'.format(
-                    LOGFILE_ROTETE_CONF, LOGFILE_CONF_FILEPATH))
-            elif len(output_kssrmanager) == 0 and len(output) != 0:
-                br.utils.subprocess_not_output(
-                    'sed -i \'s/{0}/ /g\' {1}'.format("\/var\/log\/messages", LOGFILE_CONF_FILEPATH))
-                br.utils.subprocess_not_output('echo \'{0}\'    >> {1}'.format(
-                    LOGFILE_ROTETE_CONF, LOGFILE_CONF_FILEPATH))
+            if len(output_kssrmanager) == 0:
+                for file_path in MESSAGES_FILE_PATH:
+                    output = br.utils.subprocess_has_output(FORMAT_STR.format(GREP_CMD, file_path, LOGFILE_CONF_FILEPATH))
+                    if len(output) != 0:
+                        # 这里有问题，应该是将后面的{}中的内容也一起清掉
+                        # br.utils.subprocess_not_output(
+                        #     'sed -i \'s/{0}//g\' {1}'.format(file_path.replace("/", "\/"), LOGFILE_CONF_FILEPATH))
+                        
+                        # 匹配 xxx{xxx}
+                        #br.utils.subprocess_not_output("sed -i ':a;N;$!ba;s/{0}[ \t\r\n]*{[^}]*}//g' {1}".format(file_path.replace("/", "\/"), LOGFILE_CONF_FILEPATH))
 
-            br.utils.subprocess_not_output(
-                'sudo chattr +a {0}'.format(MESSAGES_FILE_PATH))
+                        with open(LOGFILE_CONF_FILEPATH, 'r') as file:
+                            content = file.read()
+
+                        file_path_pattern = re.escape(file_path) + r'[ \t\r\n]*{[^}]*}'
+                        pattern = re.compile(file_path_pattern)
+
+                        content = pattern.sub('', content)
+                        with open(LOGFILE_CONF_FILEPATH, 'w') as file:
+                            file.write(content)
+
+                        
+                        # 匹配 xxx
+                        br.utils.subprocess_not_output('sed -i \'/{0}/d\' {1}'.format(file_path.replace("/", "\/"), LOGFILE_CONF_FILEPATH))
+                    
+                    if os.path.isfile(file_path):
+                        br.utils.subprocess_not_output(
+                            'sudo chattr +a {0}'.format(file_path))
+
+                    new_conf = LOGFILE_ROTETE_CONF.format(file_path)
+                    br.utils.subprocess_not_output('echo \'{0}\'    >> {1}'.format(new_conf, LOGFILE_CONF_FILEPATH))
+
         else:
+            # 删除 ### KSBRManager ### 包含的内容
             output = br.utils.subprocess_has_output(
                 'grep -rn "{0}" {1} | cut -f1 -d:'.format(KS_BR_MANAGER_STR, LOGFILE_CONF_FILEPATH))
             if len(output) != 0:
                 line = output.split()
-                br.utils.subprocess_not_output(
-                    'sed -i \'{0},{1}d\' {2}'.format(line[0], line[1], LOGFILE_CONF_FILEPATH))
-                br.utils.subprocess_not_output(
-                    'sed -i "1i{0}" {1}'.format(MESSAGES_FILE_PATH, LOGFILE_CONF_FILEPATH))
-
-            br.utils.subprocess_not_output(
-                'sudo chattr -a {0}'.format(MESSAGES_FILE_PATH))
+                # 逆序遍历，从文件底部开始删除
+                for i in range(len(line) - 1, -1, -2):
+                    if i - 1 >= 0:
+                        br.utils.subprocess_not_output(
+                            'sed -i \'{0},{1}d\' {2}'.format(line[i-1], line[i], LOGFILE_CONF_FILEPATH))
+                        
+                for file_path in MESSAGES_FILE_PATH:
+                    br.utils.subprocess_not_output(
+                        'sed -i "1i{0}" {1}'.format(file_path, LOGFILE_CONF_FILEPATH))
+                    
+            for file_path in MESSAGES_FILE_PATH:
+                if os.path.isfile(file_path):
+                    br.utils.subprocess_not_output(
+                        'sudo chattr -a {0}'.format(file_path))
 
         return (True, '')
 
     def backup(self):
-        return self.get()
+        retdata = dict()
+
+        with open(LOGFILE_CONF_FILEPATH, 'r') as file:
+            raw_data = file.read()
+        retdata[RAW_DATA] = raw_data
+
+        return (True, json.dumps(retdata))
+    
     def rollback(self, args_json):
-        return self.set(args_json)
+        args = json.loads(args_json)
+        
+        if RAW_DATA in args:
+            with open(LOGFILE_CONF_FILEPATH, 'w') as file:
+                file.write(args[RAW_DATA])
+        else:
+            return self.set(args_json)
+        
+        return (True, '')
