@@ -84,12 +84,15 @@ def change_log_config(level, console, log_file, name='KSSSRLogger'):
     return logging.getLogger(name)
 
 
-def execute_cmd(cmd, logger, print_log=True):
+def execute_cmd(cmd, logger, print_log=True, pid_list=None):
     try:
         if print_log:
             logger.debug('run_cmd: %s' % cmd)
-        rst = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE).communicate()
+        process = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, preexec_fn=os.setsid)
+        if isinstance(pid_list, set):
+            pid_list.add(process.pid)
+        rst = process.communicate()
         if not rst[0]:
             return False, 1, None
 
