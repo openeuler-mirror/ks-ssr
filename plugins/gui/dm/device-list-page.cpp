@@ -97,6 +97,16 @@ QString DeviceListPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SYSADM;
 }
 
+bool DeviceListPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool DeviceListPage::stopTask()
+{
+    return true;
+}
+
 void DeviceListPage::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
