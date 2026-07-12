@@ -635,7 +635,7 @@ which will cause many problems!</source>
         <translation>限制系统关键目录权限</translation>
     </message>
     <message>
-        <location filename="../../data/br-system-rs.xml" line="404"/>
+        <location filename="../../data/br-system-rs.xml" line="351"/>
         <location filename="../../plugins/reinforcements/python/br-plugin-config.xml" line="30"/>
         <source>Turn on composite key reboot</source>
         <translation>开启组合键重启</translation>
