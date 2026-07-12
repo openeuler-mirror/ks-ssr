@@ -211,6 +211,19 @@ int Command::rollback()
 int Command::vulnerabilityRepair(const QStringList &name)
 {
     moduleVulnerabilityInit();
+
+    // 查询是否备份过，否则提醒并且中断修复
+    int checkResult = checkBackup();
+    if (1 == checkResult)
+    {
+        std::cout << tr("Please make a backup before repairing").toStdString() << std::endl;
+        return -1;
+    }
+    else if (-1 == checkResult)
+    {
+        return -1;
+    }
+
     connect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::RepairProgress, this, &Command::repairProgress);
     if (name.isEmpty())
     {
