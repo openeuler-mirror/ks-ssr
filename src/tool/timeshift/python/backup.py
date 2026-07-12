@@ -166,7 +166,7 @@ class Backup(object):
                     _cmd = 'rsync -av %s %s %s' % (bak_path, exclude_cmd, self.store_path)
                 else:
                     _cmd = 'rsync -av %s %s' % (bak_path, self.store_path)
-                status, err_code, rst = execute_cmd(_cmd, logger)
+                status, err_code, rst = execute_cmd(_cmd, logger, pid_list=self.pid_list)
                 self.write_progress(bak_path)
                 if status is not True:
                     logger.error("backup dir %s failed!" % bak_path)
