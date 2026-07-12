@@ -20,6 +20,7 @@
 #include <qt5-log-i.h>
 #include <ssr-i.h>
 #include <QDir>
+#include <QFileSystemWatcher>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QProcess>
