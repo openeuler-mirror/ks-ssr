@@ -348,6 +348,7 @@ class Backup(object):
 
         logger.info("The backup path did not detected a Read-only mount points.")
         return True, 0, '', need_umount_list
+    # sonarqube block on
 
     def check_backup_path(self):
         if os.path.exists(self.store_path):
