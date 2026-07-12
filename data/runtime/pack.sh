@@ -25,14 +25,14 @@ for libdep in $(cat ${sourcedir}/data/runtime/requires/lib64); do
     cp $dep_path ${lib_installdir}
 done
 
-# for bindep in $(cat ${sourcedir}/data/runtime/requires/bin); do
-#     dep_path=/usr/bin/$bindep
-#     if [ -z "$dep_path" ];then
-#         echo "WARNING: miss libdep: ${libdep}"
-#         continue;
-#     fi
-#     cp $dep_path ${bin_installdir}
-# done
+for bindep in $(cat ${sourcedir}/data/runtime/requires/bin); do
+    if ! dep_path=$(which ${bindep} 2>/dev/null);then
+        echo "WARNING: miss bindep: ${bindep}"
+        continue
+    fi
+    cp $dep_path ${bin_installdir}
+    patchelf --force-rpath --set-rpath "/usr/lib64/ks-ssr/lib64" ${bin_installdir}/$bindep
+done
 
 set -x
 QT_PLUGINS_PATH="/usr/lib64/qt5/plugins/"
