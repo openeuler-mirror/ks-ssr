@@ -93,6 +93,9 @@ void MessageDialog::initUI(bool canGetResult, const int &width, const int &heigh
     }
     else
     {
+        // 直接关闭事件结果传不出来，此处不显示关闭按钮
+        setButtonHints(0);
+
         auto *cancel = new QPushButton(tr("cancel"), this);
         cancel->setFixedSize(72, 36);
 
