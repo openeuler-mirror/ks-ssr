@@ -36,3 +36,6 @@ done
 set -x
 QT_PLUGINS_PATH="/usr/lib64/qt5/plugins/"
 cp -r ${QT_PLUGINS_PATH}/* ${qtplugins_installdir}/
+
+GIO_MODULES_PATH="/usr/lib64/gio/modules/"
+cp -r ${GIO_MODULES_PATH}/* ${gio_modules_installdir}/
