@@ -36,6 +36,8 @@ public:
     virtual QString getSidebarUID() override;
     virtual QString getSidebarIcon() override;
     virtual QString getAccountRoleName() override;
+    virtual bool isTaskRunning() override;
+    virtual bool stopTask() override;
 
 private:
     void initUI();
