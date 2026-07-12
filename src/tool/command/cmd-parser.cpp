@@ -781,5 +781,59 @@ void Command::exportReportFinished(const QString &failed_reason)
     exit(0);
 }
 
+void Command::rollBackProgress(const QString &progress)
+{
+    QJsonObject progressJson = StrUtils::str2jsonObject(progress);
+    auto errorMessage = progressJson.value("errorMessage").toString();
+
+    if (!errorMessage.isEmpty())
+    {
+        std::cout << tr("Rollback error:").toStdString() + errorMessage.toStdString() << std::endl;
+        exit(0);
+    }
+}
+
+void Command::backupProgress(const QString &progress)
+{
+    QJsonObject progressJson = StrUtils::str2jsonObject(progress);
+
+    if (progressJson.contains("details"))
+    {
+        auto details = progressJson.value("details").toString();
+
+        std::cout << details.mid(m_backupDetails.size()).toStdString();
+    }
+
+    auto errorMessage = progressJson.value("errorMessage").toString();
+    if (!errorMessage.isEmpty())
+    {
+        disconnect(m_dbusVulnerabilityProxy, &VulnerabilityDbusProxy::BackUpProgress, nullptr, nullptr);
+        std::cout << std::endl
+                  << tr("Backup failed! Please check log!").toStdString() << std::endl
+                  << errorMessage.toStdString()
+                  << std::endl;
+        exit(-1);
+    }
+
+    if (progressJson.contains("progress"))
+    {
+        auto progressValue = progressJson.value("progress").toInt();
+        if (100 == progressValue)
+        {
+            std::cout << std::endl
+                      << tr("Backup finished!").toStdString()
+                      << std::endl;
+            exit(0);
+        }
+        else
+        {
+            std::cout << tr("Backup progress:").toStdString()
+                      << progressValue
+                      << "%"
+                      << std::endl;
+        }
+    }
+}
+
 }  // namespace Command
 }  // namespace KS
