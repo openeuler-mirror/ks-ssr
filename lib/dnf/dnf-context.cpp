@@ -84,7 +84,7 @@ DnfContext::
         emit m_dnfCtxManager->cacheInvalidate();
     };
     g_signal_connect(m_dnfCtx, "invalidate",
-                     G_CALLBACK((dnfCacheInvalidateCBType)dnfCacheInvalidateCB), nullptr);
+                     G_CALLBACK(static_cast<dnfCacheInvalidateCBType>(dnfCacheInvalidateCB)), nullptr);
 
     QObject::connect(this, &DnfContext::cacheInvalidate, &DnfContext::updateCache);
     updateCache();
