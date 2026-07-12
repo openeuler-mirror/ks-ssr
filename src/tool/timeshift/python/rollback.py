@@ -10,7 +10,7 @@ try:
         import configparser
     elif sys.version_info.major == 2:
         import ConfigParser as configparser
-except:
+except ImportError:
     # python 2.6版本sys.version_info是一个元组
     import ConfigParser as configparser
 
