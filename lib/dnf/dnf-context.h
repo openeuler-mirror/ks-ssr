@@ -134,20 +134,20 @@ private:
     QList<DnfPackage> getPackageDeps(const DnfPackage&);
 
 private:
-    ::DnfContext* m_dnfCtx;
-    ::DnfSack* m_dnfSack;
+    ::DnfContext* m_dnfCtx{nullptr};
+    ::DnfSack* m_dnfSack{nullptr};
 
     // 再一次升级中可能会出现多次缓存失效的情况， 为了避免多次更新缓存， 在这里记录缓存失效次数
     // 1. 在构建缓存(initSack) 时获取一次 m_cacheStatus 在结束更新时对比， 如果一样证明在更新时没有更多的缓存失效， 则表明当前缓存最新。 如果不一致， 证明在构建缓存时又有缓存失效， 则重新构建缓存。
     // 2. 此变量同时用于记录缓存状态， 如果小于0， 则表明缓存当前不可用， 需要等待。
-    std::atomic<int> m_cacheStatus;
+    std::atomic<int> m_cacheStatus{0};
 
     // 如果此变量为 true， 则表示缓存需要更新， 此时调用 holdCache 会阻塞。
-    std::atomic<int> m_cacheNeedUpdate;
-    std::atomic<::DnfState*> m_installState;
-    ::GCancellable* volatile m_installCancellable;
-    std::atomic<bool> m_isCancel;
-    bool m_installFinishedWithCancel;
+    std::atomic<int> m_cacheNeedUpdate{0};
+    std::atomic<::DnfState*> m_installState{nullptr};
+    ::GCancellable* volatile m_installCancellable{nullptr};
+    std::atomic<bool> m_isCancel{false};
+    bool m_installFinishedWithCancel{false};
 };
 }  // namespace PackageManager
 }  // namespace Vulnerability
