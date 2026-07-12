@@ -102,6 +102,16 @@ QString KernelProtectedPage::getAccountRoleName()
     return SSR_ACCOUNT_NAME_SECADM;
 }
 
+bool KernelProtectedPage::isTaskRunning()
+{
+    return false;  // 暂不支持
+}
+
+bool KernelProtectedPage::stopTask()
+{
+    return true;
+}
+
 void KernelProtectedPage::updateTips(int total)
 {
     // 更新表格右上角提示信息
