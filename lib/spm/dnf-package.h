@@ -1,0 +1,82 @@
+/**
+ * Copyright (c) 2024 ~ 2025 KylinSec Co., Ltd.
+ * ks-ssr is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     wangyucheng <wangyucheng@kylinsec.com.cn>
+ */
+
+#ifndef __KS_SSR_DNF_PACKAGE_H
+#define __KS_SSR_DNF_PACKAGE_H
+
+#include <ssr-marcos.h>
+#include <QString>
+#include "dnf-package-advisory-ref.h"
+#include "dnf-package-advisory.h"
+
+struct _DnfPackage;
+typedef _DnfPackage DnfPackage;
+struct _DnfSack;
+typedef _DnfSack DnfSack;
+
+namespace KS
+{
+namespace Vulnerability
+{
+namespace PackageManager
+{
+class DnfPackageAdvisory;
+
+// 必须显示定义此类的 5 种构造函数， 否则 QList 在添加元素时会将其视为平凡类型直接 memcpy， 导致 glib 类引用计数不填加。
+class DnfPackage
+{
+public:
+    DnfPackage() = default;
+    DnfPackage(::DnfPackage* _dnfPackage);
+    DnfPackage(::DnfSack*, const char*);
+    DnfPackage(const DnfPackage& other);
+    DnfPackage(DnfPackage&& other);
+    DnfPackage& operator=(const DnfPackage& other);
+    DnfPackage& operator=(DnfPackage&& other);
+    virtual ~DnfPackage();
+    QString getName() const;
+    QString getVersion() const;
+    QString getArch() const;
+    QString getRepoName() const;
+    QString getSourceRpm() const;
+    const QList<DnfPackageAdvisory>& getAdvisories() const;
+    const QList<DnfPackageAdvisoryRef>& getAdvisoriesRef() const;
+    const QList<DnfPackageAdvisory::DnfAdvisoryPkg>& getUpdatesPkgs() const;
+    QStringList getCveIds() const;
+    bool isDownloaded() const;
+    QString downLoadPkg(const QString& directory = QString());
+    ::DnfPackage* getDnfPackage();
+    // do not free sack
+    ::DnfSack* getDnfSack();
+    static void downLoadPkgs(QList<DnfPackage>&, const QString& directory = QString());
+    static DnfPackage getLatestPkg(const QList<DnfPackage>&);
+
+private:
+    void init();
+
+private:
+    ::DnfPackage* m_dnfPackage{nullptr};
+    // 在 package 中管理 sack 是因为 ::DnfSack 初始化时并不会对 sack 的引用加一
+    // 导致 package 还存在时, sack 已经被析构
+    ::DnfSack* m_dnfSack{nullptr};
+    QList<DnfPackageAdvisory> m_advisories;
+    QList<DnfPackageAdvisoryRef> m_advisoryRef;
+    QList<DnfPackageAdvisory::DnfAdvisoryPkg> m_upgradesPackages;
+};
+
+}  // namespace PackageManager
+}  // namespace Vulnerability
+}  // namespace KS
+
+#endif

@@ -7,9 +7,11 @@ lib_installdir=${buildroot}/usr/lib64/ks-ssr/lib64
 bin_installdir=${buildroot}/usr/lib64/ks-ssr/bin
 plugins_installdir=${lib_installdir}/plugins
 qtplugins_installdir=${plugins_installdir}/qt/plugins/
+gio_modules_installdir=${lib_installdir}/gio/modules
 
 mkdir -p ${lib_installdir}
 mkdir -p ${qtplugins_installdir}
+mkdir -p ${gio_modules_installdir}
 
 set +x
 DEPS_PATH_LIST=$(ldconfig -p | grep -oP '/[^ ]*')
