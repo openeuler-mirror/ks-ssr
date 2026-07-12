@@ -498,6 +498,8 @@ void DnfContext::getCveInfo()
         }
         g_strfreev(baseUrlForFree);
     }
+
+    emit cveInfoUpdated();
 }
 
 void DnfContext::updateCache()
