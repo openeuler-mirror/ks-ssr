@@ -190,6 +190,8 @@ int main(int argc, char *argv[])
         parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
 
         parser.addOption(scanOption);
+        parser.addOption(backupOption);
+        parser.addOption(rollbackOption);
         parser.addOption(repairOption);
         parser.addOption(exportOption);
         parser.addOption(outputOption);
