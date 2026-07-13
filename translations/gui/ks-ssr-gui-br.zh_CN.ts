@@ -243,7 +243,7 @@
     </message>
     <message>
         <location filename="../../plugins/gui/br/item-table.cpp" line="86"/>
-        <location filename="../../plugins/gui/br/item-table.cpp" line="502"/>
+        <location filename="../../plugins/gui/br/item-table.cpp" line="501"/>
         <source>Info(Double click this column to modify the reinforcement parameters)</source>
         <translation>说明（双击修改加固项参数）</translation>
     </message>
