@@ -226,7 +226,7 @@ void Configuration::syncInterfaceToGrubFile()
 
     // 生成grub选项
     auto hdmiNames = getHDMINames();
-    // FIXME: 为了 HDMI 接口的特殊化处理
+    // 为了 HDMI 接口的特殊化处理
     // auto enabled = isIFCEnable(InterfaceType::INTERFACE_TYPE_HDMI);
     if (!m_isEnableHDMI && hdmiNames.size() != 0)
     {
