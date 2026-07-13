@@ -19,10 +19,10 @@
 #include <functional>
 
 template <typename T>
-struct function_traits;
+struct FunctionTraits;
 
 template <typename ReturnType, typename... Args>
-struct function_traits<ReturnType(Args...)>
+struct FunctionTraits<ReturnType(Args...)>
 {
     using return_type = ReturnType;
     using function_type = ReturnType(Args...);
