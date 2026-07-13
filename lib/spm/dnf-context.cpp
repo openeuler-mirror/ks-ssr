@@ -444,10 +444,6 @@ void DnfContext::initDnf()
     }
     if ((repos = dnf_repo_loader_get_repos(dnf_context_get_repo_loader(m_dnfCtx), &error)))
     {
-#if (KS_DEP_LIBDNF_VERSION >= KS_VERSION_CHECK(0, 15, 0))
-        // 在 .repo 文件中配置了 module_hotfixes=1 的源， 那么其 module 中的包会被当作普通包看待，可以被搜索，被解析成依赖关系
-        dnf_sack_filter_modules(m_dnfSack, repos, dnf_context_get_install_root(m_dnfCtx), nullptr);
-#endif
         for (uint i = 0; i < repos->len; i++)
         {
             auto dnfState = dnf_state_new();
