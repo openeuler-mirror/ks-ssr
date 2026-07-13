@@ -218,7 +218,11 @@ bool LicenseProxy::getActivateStatus(const QString& objectName)
 
 bool LicenseProxy::isActivated()
 {
+#if ENABLE_ACTIVATION
     return m_isActivated;
+#else
+    return true;
+#endif
 }
 
 QString LicenseProxy::getActivationCode()
