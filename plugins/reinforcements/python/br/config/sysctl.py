@@ -243,14 +243,23 @@ class KeyRebootSwitch:
 
     def get(self):
         retdata = dict()
+        retdata["enabled"] = False
         # 判断centos版本是否是6.x
         if br.utils.is_cent_os_6():
             retdata["enabled"] = self.get_on_centos_6()
         else:
-            if self.service_exists():
-                retdata["enabled"] = self.service_status()
-            else:
+            if (
+                self.systemd_reboot_key_service_exists()
+                and self.systemd_reboot_key_service_status()
+            ):
+                retdata["enabled"] = True
+                # 如果服务使能了，直接返回
+                return (True, json.dumps(retdata))
+
+            # 处理glib schemas
+            if os.path.exists(SCHEMAS_REBOOT_KEY_CONF_FILE):
                 retdata["enabled"] = False
+
         return (True, json.dumps(retdata))
 
     def set(self, args_json):
