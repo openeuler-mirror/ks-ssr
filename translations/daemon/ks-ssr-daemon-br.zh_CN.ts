@@ -190,17 +190,17 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="331"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="332"/>
         <source>The return value of %1 isn&apos;t tuple type.</source>
         <translation>返回值%1不是个 tuple 类型。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="339"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="340"/>
         <source>The number of tuple returned by %1 is less than 2.</source>
         <translation>%1 返回的 tuple 编号小于2。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="356"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="357"/>
         <source>The type of tuple item returned by %1 is invalid.</source>
         <translation>%1 所返回的 tuple 类型是非法的。</translation>
     </message>
