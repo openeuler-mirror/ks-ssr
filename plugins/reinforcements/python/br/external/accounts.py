@@ -378,14 +378,12 @@ class SurplusUser:
             delete_flag = False
 
             if args[SURPLUS_DELETE_ENABLED]:
-                if DEAFULT_DELETE_USERS.__contains__(
-                    pwdent.pw_name
-                ):
+                if DEAFULT_DELETE_USERS.__contains__(pwdent.pw_name):
                     delete_flag = True
-                
+
             if delete_users.__contains__(pwdent.pw_name):
                 delete_flag = True
-            
+
             if delete_flag:
                 br.log.debug(str(pwdent.pw_name))
                 if pwdent.pw_uid != 0:
