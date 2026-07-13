@@ -31,10 +31,15 @@ COMPOSITE_KEY_REBOOT_ENABLE_CMD = "systemctl   unmask   ctrl-alt-del.target"
 # 设置时，需要设置现有用户的快捷键，同时设置后续新用户的默认快捷键
 # 另外 红帽官方文档介绍的 /etc/init/control-alt-delete.conf 和 /etc/inittab，也要设置，配置的是命令行的快捷键（即/etc/init/control-alt-delete.override内容）
 # 详见：https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/deployment_guide/disabling-rebooting-using-ctrl-alt-del
+
+# 判断后台进程是否启动
+CHECK_GCONFD_PROC = "pgrep gconfd-2"
+# gconf 获取命令
 GCONF_GET_REBOOT_KEYBINDING = (
     "sudo -u {} gconftool-2 --get /apps/gnome_settings_daemon/keybindings/power"
 )
 DEFAULT_REBOOT_KEYBINDING = "<Control><Alt>Delete"
+# gconf 设置命令
 GCONF_SET_REBOOT_KEYBINDING = 'sudo -u {} gconftool-2 --set /apps/gnome_settings_daemon/keybindings/power --type string "{}"'
 KEYBINDING_POWER = "power"
 
