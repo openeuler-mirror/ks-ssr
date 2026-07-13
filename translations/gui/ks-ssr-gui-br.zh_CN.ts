@@ -348,7 +348,7 @@
     </message>
     <message>
         <location filename="../../plugins/gui/br/progress.cpp" line="114"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="175"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="201"/>
         <source>Reinforcement</source>
         <translation>加固</translation>
     </message>
