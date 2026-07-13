@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from br.systemd import SwitchBase
+from br.service_manager import SwitchBase
+from br.service_manager import SERVICE_AUTOSTART
 import json
 import os
 import re
@@ -14,6 +15,7 @@ AUDIT_WATCH_PATH_KEY = "watch-path"
 
 # 系统审计服务
 class Switch(SwitchBase):
+
     def __init__(self):
         super(Switch, self).__init__("auditd")
 
@@ -46,7 +48,9 @@ class Rules:
             'echo "{0}" >> {1}'.format(rule, AUDIT_RULES_PATH)
         )
         # 执行命令临时生效
-        br.utils.subprocess_has_output_ignore_error_handling("auditctl {0}".format(rule))
+        br.utils.subprocess_has_output_ignore_error_handling(
+            "auditctl {0}".format(rule)
+        )
 
     def get(self):
         retdata = dict()
