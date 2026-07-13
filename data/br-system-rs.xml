@@ -656,14 +656,14 @@
             <name>config-dmesg</name>
             <arg>
                 <name>kernel.dmesg_restrict</name>
-                <value>true</value>
-                <value_limits>""</value_limits>
+                <value>"1"</value>
+                <value_limits>([01])</value_limits>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>true</value_fixed>
+                    <value_fixed>1</value_fixed>
                 </rule>
                 <layout>
-                    <widget_type>DEFAULT</widget_type>
+                    <widget_type>TEXT</widget_type>
                     <label>QT_TRANSLATE_NOOP_UTF8("xml", "Allow administrators to view dmesg only")</label>
                 </layout>
             </arg>
