@@ -111,41 +111,41 @@ class Systemd(ServiceManager):
 
     def unmask(self):
         try:
-            output = self.__call_result('unmask')
+            output = self.__call_result("unmask")
             br.log.debug(output)
         except Exception as e:
             br.log.debug(e)
             return (False, str(e))
 
     def restart(self):
-        self.__call_noresult('restart')
+        self.__call_noresult("restart")
 
     def reload(self):
-        self.__call_noresult('reload')
+        self.__call_noresult("reload")
 
     def is_enable(self):
-        actived = self.__call_result('is-enabled')
-        return actived == 'enabled'
+        actived = self.__call_result("is-enabled")
+        return actived == "enabled"
 
     def enable(self):
         if self.is_enable():
             return
-        self.__call_noresult('enable')
+        self.__call_noresult("enable")
 
     def disable(self):
         if not self.is_enable():
             return
-        self.__call_noresult('disable')
+        self.__call_noresult("disable")
 
 
 class Initd(ServiceManager):
 
     def __call_noresult(self, action):
-        command = 'service {1} {0}'.format(action, self.service)
+        command = "service {1} {0}".format(action, self.service)
         br.utils.subprocess_not_output(command)
 
     def __call_result(self, action):
-        command = 'service {1} {0}'.format(action, self.service)
+        command = "service {1} {0}".format(action, self.service)
         return br.utils.subprocess_has_output(command)
 
     def exist(self):
