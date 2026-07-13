@@ -231,138 +231,138 @@
 <context>
     <name>python</name>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="54"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="62"/>
         <source>Device busy, please pop up!</source>
         <translation>设备忙碌，请弹出设备！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="55"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="63"/>
         <source>Please contact the admin.</source>
         <translation>请联系管理员。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="56"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="64"/>
         <source>Unable to stop service!</source>
         <translation>服务无法停止！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="57"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="65"/>
         <source>Abnormal service!</source>
         <translation>服务异常！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="58"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="66"/>
         <source>Please close SELinux and use it!</source>
         <translation>请关闭selinux使用！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="59"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="67"/>
         <source>No such file or directory.</source>
         <translation>文件或目录未找到。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="60"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="68"/>
         <source>Failed to execute command. Please check the log information for details.</source>
         <translation>执行命令失败，详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="61"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="69"/>
         <source>UsePAM is not recommended to be closed,
 which will cause many problems!</source>
         <translation>不建议关闭UsePAM，这将导致许多问题！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="62"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="70"/>
         <source>Unable to stop firewalld service!</source>
         <translation>firewalld服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="63"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="71"/>
         <source>Unable to stop bluetooth service!</source>
         <translation>蓝牙服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="64"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="72"/>
         <source>Unable to stop cups service!</source>
         <translation>cups服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="65"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="73"/>
         <source>Unable to stop avahi service!</source>
         <translation>avahi服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="66"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="74"/>
         <source>Unable to stop rpcbind service!</source>
         <translation>rpcbind服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="67"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="75"/>
         <source>Unable to stop smb service!</source>
         <translation>smb服务无法关闭！</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="68"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="76"/>
         <source>sshd.services is not running!</source>
         <translation>sshd 后台服务没有运行!</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="69"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="77"/>
         <source>Abnormal service! Please check the log information for details.</source>
         <translation>服务异常！详情请查看日志信息。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="70"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="78"/>
         <source>No related services found</source>
         <translation>未发现相关服务</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="71"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="79"/>
         <source>PAM is not configured with a faillock, please manually configure it</source>
         <translation>PAM未配置faillock，请手动配置</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="72"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="80"/>
         <source>umask is already defined in /etc/profile, please delete it first.</source>
         <translation>umask已经在/etc/profile中定义，请先删除。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="73"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="81"/>
         <source>umask is already defined in /etc/bashrc, please delete it first.</source>
         <translation>umask已经在/etc/bashrc中定义，请先删除。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="74"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="82"/>
         <source>HISTSIZE is already defined in other files, please delete it first.</source>
         <translation>HISTSIZE已经在其他文件中定义，请先删除。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="75"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="83"/>
         <source>Rollback failed, please check the value of HISTSIZE.</source>
         <translation>回退失败，请检查HISTSIZE的值。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="76"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="84"/>
         <source>&apos;the maximum stack size&apos; or &apos;the maximum resident set size&apos; is already defined in other files, please delete it first.</source>
         <translation>&apos;最大栈限制&apos;或&apos;最大驻留集限制&apos;已经在其他文件中定义，请先删除。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="77"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="85"/>
         <source>Please remove all USB storage devices before dis/enable USB storage.</source>
         <translation>在禁/启用 USB 存储设备之前请移除所有的 USB 存储设备。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="78"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="86"/>
         <source>Please remove all cdrom devices before dis/enable cdrom.</source>
         <translation>在禁/启用 cdrom 存储设备之前请移除所有的 cdrom 存储设备。</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="79"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="87"/>
         <source>Not in effect, {} is set elsewhere</source>
         <translation>未生效，{}在其他地方定义了</translation>
     </message>
     <message>
-        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="80"/>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="88"/>
         <source>TMOUT has defined outside of /etc/profile, please remove it first.</source>
         <translation>TMOUT已经在/etc/profile之外定义，请先删除。</translation>
     </message>
