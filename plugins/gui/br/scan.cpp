@@ -300,6 +300,7 @@ void Scan::clearState()
             break;
         }
     }
+    m_progressInfo.isCanceled = false;
 }
 
 void Scan::flushProgressInfo()
