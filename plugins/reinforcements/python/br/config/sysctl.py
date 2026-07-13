@@ -273,14 +273,14 @@ class KeyRebootSwitch:
                 command = "mv /usr/lib/systemd/system/ctrl-alt-del.target.bak /usr/lib/systemd/system/ctrl-alt-del.target"
                 br.utils.subprocess_not_output(command)
 
-            if args["enabled"] and not self.service_exists():
+            if args["enabled"] and not self.systemd_reboot_key_service_exists():
                 return (False, "No related services found")
 
-            if self.service_exists():
-                if args["enabled"]:
-                    self.open()
-                else:
-                    self.close()
+            # 其他系统处理glib schemas
+            if args["enabled"]:
+                self.open()
+            else:
+                self.close()
 
         return (True, "")
 
