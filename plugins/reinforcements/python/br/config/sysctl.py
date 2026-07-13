@@ -318,15 +318,16 @@ class KeyRebootSwitch:
     def rollback(self, args_json):
         if br.utils.is_cent_os_6():
             args = json.loads(args_json)
-            # 处理 override 文件
-            if ETC_INIT_REBOOT_CONF_OVERRIDE in args:
-                value = args[ETC_INIT_REBOOT_CONF_OVERRIDE]
-                br.utils.subprocess_not_output(
-                    "echo {} > {}".format(value, ETC_INIT_REBOOT_CONF_OVERRIDE)
-                )
-            else:
-                br.utils.subprocess_not_output(ENABLE_ETC_INIT_REBOOT_CONF)
-            args.pop(ETC_INIT_REBOOT_CONF_OVERRIDE, None)
+            # 处理 ETC_INIT_REBOOT_CONF 文件
+            if ETC_INIT_REBOOT_CONF in args:
+                encoded_bytes = args[ETC_INIT_REBOOT_CONF].encode("utf-8")
+                decoded_bytes = base64.b64decode(encoded_bytes)
+                decoded_string = decoded_bytes.decode("utf-8")
+
+                with open(ETC_INIT_REBOOT_CONF, "w") as file:
+                    file.write(decoded_string)
+
+            args.pop(ETC_INIT_REBOOT_CONF, None)
 
             if len(br.utils.subprocess_has_output(CHECK_GCONFD_PROC)):
                 # 处理默认配置
