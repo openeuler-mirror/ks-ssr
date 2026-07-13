@@ -267,7 +267,9 @@ class KeyRebootSwitch:
         args = json.loads(args_json)
         # 判断centos版本是否是6.x
         if br.utils.is_cent_os_6():
-            self.set_on_centos_6(args["enabled"])
+            error_msg = self.set_on_centos_6(args["enabled"])
+            if len(error_msg):
+                return (False, error_msg)
         else:
             # 针对3.3-6的处理规则，文件不存在，开关为打开是，将.bak改为ctrl-alt-del.target
             if args["enabled"] and self.status_bak():
