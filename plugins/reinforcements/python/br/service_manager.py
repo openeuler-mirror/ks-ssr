@@ -236,7 +236,7 @@ class SwitchBase(object):
                         return (False, "Unable to stop service!")
                     # self.systemd_proxy.kill()
                     self.systemd_proxy.disable()
-            return (True, '')
+            return (True, "")
         except Exception as e:
             br.log.error(str(e))
             return (False, "Abnormal service!")
