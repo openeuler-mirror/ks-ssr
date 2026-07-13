@@ -9,9 +9,9 @@ import logging
 import signal
 
 try:
-    if sys.version_info.major == 3:
+    if sys.version_info[0] == 3:
         import configparser
-    elif sys.version_info.major == 2:
+    elif sys.version_info[0] == 2:
         import ConfigParser as configparser
 except ImportError:
     # python 2.6版本sys.version_info是一个元组
@@ -54,7 +54,7 @@ class Backup(object):
 
         # 初始化进度文件
         with open(self.progress_file, "w") as fd:
-            fd.write("0\n")
+            fd.write("0")
 
     def _get_default_conf_section(self, section_name):
         if self.is_path_exists(self._conf_path)[0] is False:
@@ -281,7 +281,7 @@ class Backup(object):
                         need_rpm_backup = True
 
                     if need_rpm_backup:
-                        status, err_code, spend_space_rst = calculate_used_space_by_du(line, logger)
+                        status, err_code, spend_space_rst = calculate_used_space_by_du(line, logger, is_check_rpm_file=True)
                         if status is not True:
                             return False, 7, spend_space_rst, None
 
