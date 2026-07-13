@@ -73,14 +73,14 @@
             <name>config-sak-key</name>
             <arg>
                 <name>kernel.sysrq</name>
-                <value>false</value>
-                <value_limits>""</value_limits>
+                <value>"0"</value>
+                <value_limits>([1-4]?[0-9]{1,2}|50[0-9]|51[0-1])</value_limits>
                 <rule>
                     <type>FIXED</type>
-                    <value_fixed>false</value_fixed>
+                    <value_fixed>"0"</value_fixed>
                 </rule>
                 <layout>
-                    <widget_type>DEFAULT</widget_type>
+                    <widget_type>TEXT</widget_type>
                     <label>QT_TRANSLATE_NOOP_UTF8("xml", "Turn on SAK key")</label>
                 </layout>
             </arg>
