@@ -69,6 +69,9 @@ void ArgHandle::init(const QJsonValue &jsonValue, KS::Protocol::WidgetType::Valu
     case KS::Protocol::WidgetType::Value::DATETIME:
         initInteger(jsonValue);
         break;
+    case KS::Protocol::WidgetType::Value::COMBOBOX:
+        initCombobox(jsonValue);
+        break;
     case KS::Protocol::WidgetType::Value::DEFAULT:
         initDefault(jsonValue);
         break;
@@ -165,6 +168,35 @@ void ArgHandle::initSwitch(const QJsonValue &jsonValue)
     this->show();
 }
 
+void ArgHandle::initCombobox(const QJsonValue &jsonValue)
+{
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    auto labelLayout = buildLabelLayout();
+
+    auto widget = new QWidget(this);
+    auto hlayout = new QHBoxLayout(widget);
+    m_comboBox = new ComboBox(this);
+    // 给QCombobox设置代理才能设置下拉列表项的高度
+    auto delegate = new QStyledItemDelegate(this);
+    m_comboBox->setItemDelegate(delegate);
+
+    QStringList items = m_valueLimits.split("|");
+    m_comboBox->addItems(items);
+    m_comboBox->setCurrentIndex(jsonValue.toInt());
+    m_comboBox->setToolTip(m_valueLimits);
+
+    connect(m_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changedComboboxIndex(int)));
+
+    hlayout->addWidget(m_comboBox);
+    hlayout->setContentsMargins(0, 0, 0, 0);
+    layout->addLayout(labelLayout);
+    layout->addWidget(widget);
+
+    this->setLayout(layout);
+    this->show();
+}
+
 void ArgHandle::initText(const QJsonValue &jsonValue)
 {
     // 由于std::string的特性，传入的字符串会带一个双引号，在QJsonValue中string类型不需要双引号
@@ -240,6 +272,12 @@ void ArgHandle::changedBoolArgs(int index)
     emit valueChanged(m_itemKey, m_argName, boolText, m_widgetType);
 }
 
+void ArgHandle::changedComboboxIndex(int index)
+{
+    m_widgetType = KS::Protocol::WidgetType::COMBOBOX;
+    emit valueChanged(m_itemKey, m_argName, QString::number(index), m_widgetType);
+}
+
 void ArgHandle::changedStringArgs(const QString &str)
 {
     if (str.isEmpty())
@@ -295,6 +333,9 @@ void ArgHandle::setValue(const QJsonValue &jsonValue)
         m_lineEdit->setText(value);
         break;
     }
+    case KS::Protocol::WidgetType::COMBOBOX:
+        m_comboBox->setCurrentIndex(jsonValue.toInt());
+        break;
     case KS::Protocol::WidgetType::DEFAULT:
         confirmType(jsonValue);
         break;
