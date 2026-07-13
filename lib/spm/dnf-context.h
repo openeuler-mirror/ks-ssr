@@ -19,7 +19,7 @@
 #include <QMutex>
 #include <QObject>
 
-#if (KS_DEP_LIBDNF_VERSION < KS_VERSION_CHECK(0, 65, 0))
+#if (KS_DEP_LIBDNF_VERSION < KS_VERSION_CHECK(0, 15, 0))
 struct _HyGoal;
 typedef struct _HyGoal* HyGoal;
 #else
@@ -87,6 +87,7 @@ public:
     static void globalDeinit();
     QList<DnfRepo> getRepos();
     DnfRepo getRepoById(const QString& id);
+    QString getPreRepairInfo(QList<DnfPackage>&);
     QList<DnfPackage> getPackagesFromRepo(DnfRepo&);
     QList<DnfPackage> getInstalledPackages();
     QList<DnfPackage> getUpgradesPackages();
@@ -124,6 +125,7 @@ private:
     void updateCache();
     void holdCache();
     void releaseCache();
+    QString processGoalResult(HyGoal);
 
     /**
      * @brief rpm transaction to commit package(rpm install package)
