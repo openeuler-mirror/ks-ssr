@@ -59,11 +59,13 @@ def info(*args):
 def warning(*args):
     try:
         try:
-            klog.debug(
-                ' '.join(map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args))
+            klog.warning(
+                " ".join(
+                    map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args)
+                )
             )
         except:
-            klog.debug(' '.join(map(lambda x: x, args)))
+            klog.warning(" ".join(map(lambda x: x, args)))
     except:
         klog.error(str(traceback.format_exc()))
 
