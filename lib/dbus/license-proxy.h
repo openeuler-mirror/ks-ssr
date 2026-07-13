@@ -35,6 +35,8 @@ public:
      */
     QString getObjectPath(const QString& objectName);
 
+    void updateObjectPath();
+
     /**
      * @brief updateLicense:更新授权信息
      */
