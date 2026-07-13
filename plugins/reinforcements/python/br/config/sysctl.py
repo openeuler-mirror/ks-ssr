@@ -365,9 +365,14 @@ class KeyRebootSwitch:
                 # 处理各个用户
                 for key in args:
                     value = args[key]
-                    br.utils.subprocess_not_output(
-                        GCONF_SET_REBOOT_KEYBINDING.format(key, value)
-                    )
+                    if value == UNSET_VALUE:
+                        br.utils.subprocess_not_output(
+                            GCONF_UNSET_REBOOT_KEYBINDING.format(key)
+                        )
+                    else:
+                        br.utils.subprocess_not_output(
+                            GCONF_SET_REBOOT_KEYBINDING.format(key, value)
+                        )
             else:
                 # 不存在gconf服务时，触发警告
                 br.log.warning(
