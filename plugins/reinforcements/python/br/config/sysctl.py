@@ -17,9 +17,11 @@ SAK_KEY_SWITCH_CONF_KEY_SYSRQ = "kernel.sysrq"
 DMESG_SWITCH_CONF_KEY_SYSRQ = "kernel.dmesg_restrict"
 
 # 开关机快捷键 systemd
+# -f 强制覆盖, 是因为centos8.5没有-f时,会报ctrl-alt-del.target已存在，ctrl-alt-del.target是reboot.target的符号链接，应该是centos8.5的bug
+# https://www.linuxtechi.com/disable-reboot-using-ctrl-alt-del-keys/
 SYSTEMD_REBOOT_KEY_STATUS = "systemctl   status  ctrl-alt-del.target"
-SYSTEMD_REBOOT_KEY_DISABLE = "systemctl   mask   ctrl-alt-del.target"
-SYSTEMD_REBOOT_KEY_ENABLE = "systemctl   unmask   ctrl-alt-del.target"
+SYSTEMD_REBOOT_KEY_DISABLE = "systemctl   mask   ctrl-alt-del.target -f"
+SYSTEMD_REBOOT_KEY_ENABLE = "systemctl   unmask   ctrl-alt-del.target -f"
 
 # 开关机快捷键 dconf
 # 新版本的系统配置的是dconf快捷键 （centos7(gnome)、centos8(gnome)、kylinsec(mate)）
