@@ -84,7 +84,10 @@ Window::Window()
                 POPUP_MESSAGE_DIALOG(message);
             });
 
-    connect(m_user, &User::loginFinished, this, &Window::processActivation);
+    // 此处不需要判断是否激活，执行特定操作时才判断
+    // connect(m_user, &User::loginFinished, this, &Window::processActivation);
+    connect(m_user, &User::loginFinished, this, &Window::initWindowContent);
+
     connect(
         m_user, &User::softExited, this, []
         {
@@ -339,7 +342,9 @@ void Window::initTitlebar()
     m_settingsAction = new QAction(tr("Settings"), this);
     connect(m_settingsAction, &QAction::triggered, this, &Window::popupSettingsDialog, Qt::UniqueConnection);
     settingMenu->addAction(m_settingsAction);
+#if ENABLE_ACTIVATION
     settingMenu->addAction(tr("Activation"), this, &Window::popupActivationDialog);
+#endif
     settingMenu->addAction(tr("Help"), this, []
                            {
                                if (QFile::exists(HELP_MANUAL_PATH))
