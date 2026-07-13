@@ -223,23 +223,27 @@ class KeyRebootSwitch:
         keybinding = DEFAULT_REBOOT_KEYBINDING
         if not is_enable:
             keybinding = ""
+        if len(br.utils.subprocess_has_output(CHECK_GCONFD_PROC)):
+            # 现有用户设置
+            for user_home in os.listdir("/home"):
+                user_path = os.path.join("/home", user_home)
+                if os.path.isdir(user_path):
+                    command = GCONF_SET_REBOOT_KEYBINDING.format(user_home, keybinding)
+                    br.utils.subprocess_not_output(command)
 
-        # 现有用户设置
-        for user_home in os.listdir("/home"):
-            user_path = os.path.join("/home", user_home)
-            if os.path.isdir(user_path):
-                command = GCONF_SET_REBOOT_KEYBINDING.format(user_home, keybinding)
-                br.utils.subprocess_not_output(command)
+            # root设置
+            command = GCONF_SET_REBOOT_KEYBINDING.format("root", keybinding)
+            br.utils.subprocess_not_output(command)
 
-        # root设置
-        command = GCONF_SET_REBOOT_KEYBINDING.format("root", keybinding)
-        br.utils.subprocess_not_output(command)
+            # 新用户和没有自定义该设置的用户
+            command = DEFAULT_GCONF_SET_REBOOT_KEYBINDING.format(keybinding)
+            br.utils.subprocess_not_output(command)
 
-        # 新用户和没有自定义该设置的用户
-        command = 'gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/gnome_settings_daemon/keybindings/power "{}"'.format(
-            keybinding
-        )
-        br.utils.subprocess_not_output(command)
+        else:
+            # 不存在gconf服务时，触发警告
+            br.log.warning(
+                "gconfd-2 do not running, We will not check gconf reboot keybinding"
+            )
 
         # 命令行
         if is_enable:
