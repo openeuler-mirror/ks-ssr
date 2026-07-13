@@ -45,11 +45,13 @@ def debug(*args):
 def info(*args):
     try:
         try:
-            klog.debug(
-                ' '.join(map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args))
+            klog.info(
+                " ".join(
+                    map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args)
+                )
             )
         except:
-            klog.debug(' '.join(map(lambda x: x, args)))
+            klog.info(" ".join(map(lambda x: x, args)))
     except:
         klog.error(str(traceback.format_exc()))
 
