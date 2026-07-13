@@ -6,14 +6,6 @@ import br.utils
 import br.log
 import os
 
-# 修改schemas默认值
-SCHEMAS_CONF_FILEPATH = "/usr/share/glib-2.0/schemas/98-br-config.gschema.override"
-RELOAD_SCHEMAS_CMD = "glib-compile-schemas /usr/share/glib-2.0/schemas"
-
-MODIFY_RULE_CLOSE = "[org.mate.SettingsDaemon.plugins.media-keys]\npower=''"
-MODIFY_RULE_OPEN = (
-    "[org.mate.SettingsDaemon.plugins.media-keys]\npower='<Control><Alt>Delete'"
-)
 # 源码https://gitlab.com/procps-ng/procps/-/blob/master/src/sysctl.c
 # 源码中先加载 */sysctl.d 下的配置，最后加载 /etc/sysctl.conf
 # 与手册不一致，手册中写的 */sysctl.d 会覆盖/etc/sysctl.conf，实际不会
