@@ -366,6 +366,11 @@ which will cause many problems!</source>
         <source>TMOUT has defined outside of /etc/profile, please remove it first.</source>
         <translation>TMOUT已经在/etc/profile之外定义，请先删除。</translation>
     </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="89"/>
+        <source>Please set a password for empty password account</source>
+        <translation>请为空密码账户设置密码</translation>
+    </message>
 </context>
 <context>
     <name>xml</name>
