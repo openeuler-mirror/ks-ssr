@@ -620,6 +620,11 @@ void DnfContext::cancelInstall()
 void DnfContext::holdCache()
 {
     m_cacheLock->lock();
+    int updateCache = 1;
+    if (m_cacheNeedUpdate.compare_exchange_strong(updateCache, 0))
+    {
+        initDnf();
+    }
 }
 
 void DnfContext::releaseCache()
