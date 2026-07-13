@@ -190,25 +190,11 @@ class KeyRebootSwitch:
             )
 
         # 命令行
-        # 不存在override
-        if not os.path.exists(ETC_INIT_REBOOT_CONF_OVERRIDE):
-            # 默认配置被删除
-            if not os.path.exists(ETC_INIT_REBOOT_CONF):
-                return False
-            # 默认配置被修改，没有重启功能
-            if not len(br.utils.subprocess_has_output(CHECK_ETC_INIT_REBOOT_CONF)):
-                return False
+        # 默认配置存在重启功能
+        if len(br.utils.subprocess_has_output(CHECK_ETC_INIT_REBOOT_CONF)):
             return True
-        # 存在override，但是是重启命令
-        if len(br.utils.subprocess_has_output(CHECK_ETC_INIT_REBOOT_CONF_OVERRIDE)):
-            return True
-        # 存在override，存在exec，不是重启命令
-        if len(
-            br.utils.subprocess_has_output(CHECK_ETC_INIT_REBOOT_CONF_OVERRIDE_HAS_EXEC)
-        ):
-            return False
-        # 其他无意义的字符串
-        return True
+
+        return False
 
     def set_on_centos_6(self, is_enable):
         keybinding = DEFAULT_REBOOT_KEYBINDING
