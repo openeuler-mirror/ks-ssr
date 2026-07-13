@@ -259,7 +259,7 @@ void Scan::resetAllReinforcementItem()
 
 bool Scan::isTaskRunning()
 {
-    return PROCESS_METHOD_STANDBY != m_progressInfo.method;
+    return PROCESS_METHOD_STANDBY != m_progressInfo.method && !m_progressInfo.isCanceled;
 }
 
 void Scan::clearInvalidData()
