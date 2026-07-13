@@ -87,6 +87,7 @@ ReinforcementPython::ReinforcementPython(PyObject *module,
     Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Not in effect, {} is set elsewhere"));
     Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "TMOUT has defined outside of /etc/profile, please remove it first."));
     Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "Please set a password for empty password account"));
+    Q_ASSERT(QT_TRANSLATE_NOOP_UTF8("python", "do not detect /etc/init/control-alt-delete.conf.bak, pleace check."));
 }
 
 ReinforcementPython::~ReinforcementPython()
