@@ -19,6 +19,26 @@ class Switch(SwitchBase):
     def __init__(self):
         super(Switch, self).__init__("auditd")
 
+    # 特例化回滚函数是因为 auditd 服务启动后无法通过 systemctl 停止， 只能通过 service 来 停止。
+    # 所以无论当前环境的服务管理命令是什么，都使用 service 来停止 auditd。
+    def rollback(self, args_json):
+        args = json.loads(args_json)
+        try:
+            if args[self.key]:
+                if self.systemd_proxy.exist():
+                    self.systemd_proxy.start()
+            else:
+                if self.systemd_proxy.exist():
+                    br.utils.subprocess_not_output("service auditd stop")
+            if args[SERVICE_AUTOSTART]:
+                self.systemd_proxy.enable()
+            else:
+                self.systemd_proxy.disable()
+            return (True, "")
+        except Exception as e:
+            br.log.error(str(e))
+            return (False, "Abnormal service!")
+
 
 class Rules:
     def __init__(self):
