@@ -1,6 +1,11 @@
+# -*- coding: utf-8 -*-
+
+import traceback
+
 try:
     import klog
 except Exception:
+
     class klog:
         @staticmethod
         def debug(msg):
@@ -24,20 +29,62 @@ except Exception:
 
 
 def debug(*args):
-    klog.debug(' '.join(map(str, args)))
+    try:
+        try:
+            klog.debug(
+                " ".join(
+                    map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args)
+                )
+            )
+        except:
+            klog.debug(" ".join(map(lambda x: x, args)))
+    except:
+        klog.error(str(traceback.format_exc()))
 
 
 def info(*args):
-    klog.info(' '.join(map(str, args)))
+    try:
+        try:
+            klog.debug(
+                ' '.join(map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args))
+            )
+        except:
+            klog.debug(' '.join(map(lambda x: x, args)))
+    except:
+        klog.error(str(traceback.format_exc()))
 
 
 def warning(*args):
-    klog.warning(' '.join(map(str, args)))
+    try:
+        try:
+            klog.debug(
+                ' '.join(map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args))
+            )
+        except:
+            klog.debug(' '.join(map(lambda x: x, args)))
+    except:
+        klog.error(str(traceback.format_exc()))
 
 
 def error(*args):
-    klog.error(' '.join(map(str, args)))
+    try:
+        try:
+            klog.debug(
+                ' '.join(map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args))
+            )
+        except:
+            klog.debug(' '.join(map(lambda x: x, args)))
+    except:
+        klog.error(str(traceback.format_exc()))
 
 
 def fatal(*args):
-    klog.fatal(' '.join(map(str, args)))
+    try:
+        try:
+            klog.debug(
+                ' '.join(map(lambda x: x.encode(encoding="utf-8", errors="ignore"), args))
+            )
+        except:
+            klog.debug(' '.join(map(lambda x: x, args)))
+    except:
+        klog.error(str(traceback.format_exc()))
