@@ -371,6 +371,11 @@ which will cause many problems!</source>
         <source>Please set a password for empty password account</source>
         <translation>请为空密码账户设置密码</translation>
     </message>
+    <message>
+        <location filename="../../plugins/daemon/br/python/plugin-python.cpp" line="90"/>
+        <source>do not detect /etc/init/control-alt-delete.conf.bak, pleace check.</source>
+        <translation>没有检测到/etc/init/control-alt-delete.conf.bak，请校验。</translation>
+    </message>
 </context>
 <context>
     <name>xml</name>
