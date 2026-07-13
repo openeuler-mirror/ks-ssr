@@ -110,7 +110,6 @@ libnss_db
 libnss_hesiod
 libnsssysinit
 libnss_dns
-libnss_files
 libnss_myhostname
 libnss_mymachines
 libnss_sss
