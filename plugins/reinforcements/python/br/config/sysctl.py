@@ -98,8 +98,8 @@ class Sysctl(object):
 
     def set(self, args_json):
         args = json.loads(args_json)
-        value = self.get_value()
-        self.conf.set_value(self.key, int(args[self.key]))
+        value = int(args[self.key])
+        self.conf.set_value(self.key, value)
         check_value = self.get_value()
         if check_value != value:
             return (False, "Not in effect, {} is set elsewhere".format(self.key))
