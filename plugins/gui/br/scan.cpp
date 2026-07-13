@@ -22,6 +22,7 @@
 #include "include/ssr-i.h"
 #include "include/ssr-marcos.h"
 #include "lib/base/str-utils.h"
+#include "lib/dbus/license-proxy.h"
 #include "lib/widgets/ssr-marcos-ui.h"
 #include "reinforcement-items/reinforcement-args-dialog.h"
 #include "reports/report.h"
@@ -84,6 +85,7 @@ void Scan::reset()
     disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
 
     m_progressInfo.method = PROCESS_METHOD_STANDBY;
+    m_progressInfo.isCanceled = false;
 
     m_ui->m_progress->resetProgress();
 }
@@ -509,7 +511,9 @@ void Scan::generateReport()
             {
                 m_progressInfo.method = PROCESS_METHOD_STANDBY;
                 disconnect(m_dbusProxy, &BRDbusProxy::ProgressFinished, 0, 0);
-                RETURN_IF_TRUE(!Report::getDefault()->generateReports(categories, LicenseActivationStatus::LAS_ACTIVATED, m_invalidData))
+                auto isActivated = KS::LicenseProxy::getDefault()->isActivated();
+                auto activatedState = isActivated ? LicenseActivationStatus::LAS_ACTIVATED : LicenseActivationStatus::LAS_UNACTIVATED;
+                RETURN_IF_TRUE(!Report::getDefault()->generateReports(categories, activatedState, m_invalidData))
                 POPUP_MESSAGE_DIALOG(tr("Export succeeded!"))
                 m_dbusProxy->GenerateReport(true);
             });
