@@ -256,7 +256,6 @@ QList<DnfPackage> DnfContext::getLatestPackagesWithCveIds(const QStringList& cve
     }
     *cveIdsPtrIt = nullptr;
     if ((dnfError = hy_query_filter_in(hyQuery, HY_PKG_ADVISORY_CVE, HY_EQ, cveIdsPtr)))
-    // if ((dnfError = hy_query_filter(hyQuery, HY_PKG_ADVISORY_CVE, HY_EQ, cveId.toLocal8Bit().data())))
     {
         KLOG_WARNING() << "Failed to add advisory cve query filter, dnf Error number: " << dnfError;
     }
