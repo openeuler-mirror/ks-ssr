@@ -176,17 +176,27 @@ class KeyRebootSwitch:
         self.reload_schemas()
 
     def get_on_centos_6(self):
-        # 现有用户
-        for user_home in os.listdir("/home"):
-            user_path = os.path.join("/home", user_home)
-            if os.path.isdir(user_path):
-                command = GCONF_GET_REBOOT_KEYBINDING.format(user_home)
-                if len(br.utils.subprocess_has_output(command)):
-                    return True
-        # root
-        command = GCONF_GET_REBOOT_KEYBINDING.format("root")
-        if len(br.utils.subprocess_has_output(command)):
-            return True
+        if len(br.utils.subprocess_has_output(CHECK_GCONFD_PROC)):
+            # 现有用户
+            for user_home in os.listdir("/home"):
+                user_path = os.path.join("/home", user_home)
+                if os.path.isdir(user_path):
+                    command = GCONF_GET_REBOOT_KEYBINDING.format(user_home)
+                    if len(br.utils.subprocess_has_output(command)):
+                        return True
+            # root
+            command = GCONF_GET_REBOOT_KEYBINDING.format("root")
+            if len(br.utils.subprocess_has_output(command)):
+                return True
+            # 默认配置
+            if len(br.utils.subprocess_has_output(DEFAULT_GCONF_GET_REBOOT_KEYBINDING)):
+                return True
+
+        else:
+            # 不存在gconf服务时，触发警告
+            br.log.warning(
+                "gconfd-2 do not running, We will not check gconf reboot keybinding"
+            )
 
         # 命令行
         # 不存在override
