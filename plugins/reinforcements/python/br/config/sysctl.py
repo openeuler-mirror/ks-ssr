@@ -288,17 +288,30 @@ class KeyRebootSwitch:
     def backup(self):
         if br.utils.is_cent_os_6():
             retdata = dict()
-            # 现有用户
-            for user_home in os.listdir("/home"):
-                user_path = os.path.join("/home", user_home)
-                if os.path.isdir(user_path):
-                    command = GCONF_GET_REBOOT_KEYBINDING.format(user_home)
-                    value = br.utils.subprocess_has_output(command)
-                    retdata[user_home] = value
-            # root
-            command = GCONF_GET_REBOOT_KEYBINDING.format("root")
-            value = br.utils.subprocess_has_output(command)
-            retdata["root"] = value
+            if len(br.utils.subprocess_has_output(CHECK_GCONFD_PROC)):
+                # 现有用户
+                for user_home in os.listdir("/home"):
+                    user_path = os.path.join("/home", user_home)
+                    if os.path.isdir(user_path):
+                        command = GCONF_GET_REBOOT_KEYBINDING.format(user_home)
+                        value = br.utils.subprocess_has_output(command)
+                        retdata[user_home] = value
+                # root
+                command = GCONF_GET_REBOOT_KEYBINDING.format("root")
+                value = br.utils.subprocess_has_output(command)
+                retdata["root"] = value
+
+                # 默认配置
+                value = br.utils.subprocess_has_output(
+                    DEFAULT_GCONF_GET_REBOOT_KEYBINDING
+                )
+                retdata[DEFAULT_GCONF] = value
+
+            else:
+                # 不存在gconf服务时，触发警告
+                br.log.warning(
+                    "gconfd-2 do not running, We will not check gconf reboot keybinding"
+                )
 
             # override
             if os.path.exists(ETC_INIT_REBOOT_CONF_OVERRIDE):
