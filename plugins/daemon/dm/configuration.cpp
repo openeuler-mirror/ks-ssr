@@ -143,7 +143,7 @@ void Configuration::setIFCEnable(int type, bool enable)
     QString group = QString::asprintf("interface%d", type);
 
 #ifdef ENABLE_HDMI_SUPPORT
-    // FIXME: 由于 HDMI 接口的禁用需要修改内核参数导致的特殊处理，下个版本将内核参数修改的操作改成开机和关机时自动运行
+    // 由于 HDMI 接口的禁用需要修改内核参数导致的特殊处理，下个版本将内核参数修改的操作改成开机和关机时自动运行
     if (type == INTERFACE_TYPE_HDMI)
     {
         m_isEnableHDMI = enable;
