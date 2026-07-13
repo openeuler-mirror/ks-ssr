@@ -538,7 +538,7 @@ bool Scan::cancelProgress()
 
     m_ui->m_progress->stopWorkingProcess();
 
-    m_progressInfo.method = PROCESS_METHOD_STANDBY;
+    m_progressInfo.isCanceled = true;
 
     return true;
 }
