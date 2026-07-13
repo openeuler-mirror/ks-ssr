@@ -540,21 +540,8 @@ void DnfContext::getCveInfo()
 
 void DnfContext::updateCache()
 {
-    // 只有一个线程更新缓存， 将 m_cacheNeedUpdate 更新为 1 的线程负责更新缓存(如果当前有任务正在使用缓存， 那么也只有这个线程阻塞)， 其他线程退出。
-    int updateCacheThread = 0;
-    if (m_cacheNeedUpdate.compare_exchange_strong(updateCacheThread, 1))
-    {
-        m_cacheLock->lock();
-    }
-    else
-    {
-        // 登记当前更新缓存任务数量lock();
-        return;
-    }
-    KLOG_DEBUG() << "updateCache!";
-    initDnf();
-    m_cacheNeedUpdate.fetch_sub(1);
-    m_cacheLock->unlock();
+    int UpdateCache = 0;
+    m_cacheNeedUpdate.compare_exchange_strong(UpdateCache, 1);
 }
 
 InstallPackageAction DnfContext::dnfStateActionWrapper(int action)
