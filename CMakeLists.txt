@@ -29,6 +29,9 @@ option(ENABLE_ACCOUNTS_MANAGER "Enable accounts manager support" OFF)
 option(USE_PYTHON3 "Enable tool box module" OFF)
 option(WITH_SYSTEMD_UDEV "device manager with systemd udev" ON)
 option(WITH_LIBDNF "vulerability manager with libdnf" ON)
+option(ENABLE_DEFAULT_CVE_REPO "Enable default cve repo" OFF)
+option(ENABLE_GUI "Enable gui" ON)
+option(ENABLE_ACTIVATION "whether need actived" ON)
 
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "ENABLE_BR: ${ENABLE_BR}")
@@ -41,6 +44,7 @@ message(STATUS "ENABLE_DEVICE_MANAGER: ${ENABLE_DEVICE_MANAGER}")
 message(STATUS "ENABLE_VULNERABILITY_MANAGER: ${ENABLE_VULNERABILITY_MANAGER}")
 message(STATUS "ENABLE_ACCOUNTS_MANAGER: ${ENABLE_ACCOUNTS_MANAGER}")
 message(STATUS "USE_PYTHON3: ${USE_PYTHON3}")
+message(STATUS "ENABLE_DEFAULT_CVE_REPO: ${ENABLE_DEFAULT_CVE_REPO}")
 if(WITH_SYSTEMD_UDEV)
   message(STATUS "Device Manager: with systemd-udev")
   add_definitions(-DWITH_SYSTEMD_UDEV)
@@ -71,8 +75,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(SSR REQUIRED)
 find_package(PkgConfig REQUIRED)
+find_package(SSR REQUIRED)
 find_package(
   Qt5
   COMPONENTS Core
