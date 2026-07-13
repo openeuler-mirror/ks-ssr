@@ -60,6 +60,10 @@ if(WITH_LIBDNF)
   add_definitions(-DWITH_LIBDNF)
 endif()
 
+if(ENABLE_ACTIVATION)
+  add_definitions(-DENABLE_ACTIVATION)
+endif()
+
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   # add_compile_options(-Wextra -Wconversion -Wuninitialized)
   # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address
