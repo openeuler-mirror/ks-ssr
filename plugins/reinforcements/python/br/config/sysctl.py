@@ -14,12 +14,25 @@ SAK_KEY_SWITCH_CONF_SYS_FILE = "/etc/sysctl.conf"
 SAK_KEY_SWITCH_CONF_KEY_SYSRQ = "kernel.sysrq"
 DMESG_SWITCH_CONF_KEY_SYSRQ = "kernel.dmesg_restrict"
 
-COMPOSITE_KEY_REBOOT_STATUS_CMD = "systemctl   status  ctrl-alt-del.target"
-COMPOSITE_KEY_REBOOT_DISABLE_CMD = "systemctl   mask   ctrl-alt-del.target"
-COMPOSITE_KEY_REBOOT_ENABLE_CMD = "systemctl   unmask   ctrl-alt-del.target"
+# 开关机快捷键 systemd
+SYSTEMD_REBOOT_KEY_STATUS = "systemctl   status  ctrl-alt-del.target"
+SYSTEMD_REBOOT_KEY_DISABLE = "systemctl   mask   ctrl-alt-del.target"
+SYSTEMD_REBOOT_KEY_ENABLE = "systemctl   unmask   ctrl-alt-del.target"
 
-# centos6 开关机快捷键：
-# centos6配置的是gnome快捷键，使用gconftool-2进行配置，注销生效
+# 开关机快捷键 dconf
+# 新版本的系统配置的是dconf快捷键 （centos7(gnome)、centos8(gnome)、kylinsec(mate)）
+SCHEMAS_REBOOT_KEY_CONF_FILE = (
+    "/usr/share/glib-2.0/schemas/98-br-config.gschema.override"
+)
+SCHEMAS_RELOAD = "glib-compile-schemas /usr/share/glib-2.0/schemas"
+SCHEMAS_REBOOT_KEY_DISABLE = (
+    "echo -e \"[org.mate.SettingsDaemon.plugins.media-keys]\npower=''\n[org.gnome.settings-daemon.plugins.media-keys]\nlogout=''\" > "
+    + SCHEMAS_REBOOT_KEY_CONF_FILE
+)
+SCHEMAS_REBOOT_KEY_ENABLE = "rm -f " + SCHEMAS_REBOOT_KEY_CONF_FILE
+
+# 开关机快捷键 gconf
+# centos6桌面配置的是gnome（gconf）快捷键，使用gconftool-2进行配置，注销生效
 # 设置时，需要设置现有用户的快捷键，同时设置后续新用户的默认快捷键
 # 另外 红帽官方文档介绍的 /etc/init/control-alt-delete.conf 和 /etc/inittab，也要设置，配置的是命令行的快捷键（即/etc/init/control-alt-delete.override内容）
 # 详见：https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/deployment_guide/disabling-rebooting-using-ctrl-alt-del
