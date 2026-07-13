@@ -32,7 +32,7 @@ struct FunctionTraits<ReturnType(Args...)>
 };
 
 template <typename Callable>
-struct function_traits : function_traits<decltype(&Callable::operator())>
+struct FunctionTraits : FunctionTraits<decltype(&Callable::operator())>
 {
 };
 
