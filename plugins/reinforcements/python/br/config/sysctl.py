@@ -225,7 +225,7 @@ class KeyRebootSwitch:
         if is_enable:
             br.utils.subprocess_not_output(ENABLE_ETC_INIT_REBOOT_CONF)
         else:
-            if not os.path.exists(ETC_INIT_REBOOT_CONF_BAK):  # 不存在备份，先备份
+            if not os.path.exists(ETC_INIT_REBOOT_BAK_CONF):  # 不存在备份，先备份
                 br.utils.subprocess_not_output(ETC_INIT_REBOOT_CONF_BAK)
             br.utils.subprocess_not_output(DISABLE_ETC_INIT_REBOOT_CONF)
 
