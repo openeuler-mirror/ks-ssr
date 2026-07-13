@@ -364,37 +364,47 @@
     </message>
     <message>
         <location filename="../../plugins/gui/br/progress.cpp" line="132"/>
-        <location filename="../../plugins/gui/br/progress.cpp" line="230"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="256"/>
         <source>Start time: %1 elapsed time: %2 progress: %3%</source>
         <translation>开始时间：%1 用时：%2 进度：%3%</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="148"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="150"/>
         <source>Scanned %1, %2 conform!</source>
         <translation>扫描完成%1项，%2项符合！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="149"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="151"/>
         <source>Reinforcement completed %1, successfully reinforced %2!</source>
         <translation>加固完成%1项，加固成功%2项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="156"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="160"/>
+        <source>Scanned %1, %2 conform, %3 inconform, %4 unscan!</source>
+        <translation>扫描完成%1项，%2项符合，%3项不符合，%4项未扫描！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/progress.cpp" line="169"/>
+        <source>Reinforcement completed %1, successfully reinforced %2, failed %3, unreinforce %4!</source>
+        <translation>加固完成%1项，加固成功%2项，失败%3项，未加固 %4项！</translation>
+    </message>
+    <message>
+        <location filename="../../plugins/gui/br/progress.cpp" line="178"/>
         <source>Scanned %1, %2 conform, %3 inconform!</source>
         <translation>扫描完成%1项，%2项符合，%3项不符合！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="160"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="182"/>
         <source>Reinforcement completed %1, successfully reinforced %2, failed %3!</source>
         <translation>加固完成%1项，加固成功%2项，失败%3项！</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="183"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="209"/>
         <source>GenerateReport</source>
         <translation>生成报表</translation>
     </message>
     <message>
-        <location filename="../../plugins/gui/br/progress.cpp" line="205"/>
+        <location filename="../../plugins/gui/br/progress.cpp" line="231"/>
         <source>Start time: %1 elapsed time: %2</source>
         <translation>开始时间：%1 用时：%2</translation>
     </message>
