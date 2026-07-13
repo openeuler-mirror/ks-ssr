@@ -1,5 +1,55 @@
 find_program(INTLTOOL-MERGE NAMES "intltool-merge" REQUIRED)
 
+# 此功能用于客户使用， 打包时获取 cve 元数据并打进包中， 允许用户在不配源的情况下进行漏洞扫描。
+if(ENABLE_VULNERABILITY_MANAGER AND ENABLE_DEFAULT_CVE_REPO)
+  # 查找 wget 命令
+  find_program(WGET NAMES "wget" REQUIRED)
+  message(
+    STATUS
+      "execute process : wget -r -c -nH -np -R \"index*\"  http://192.168.120.89/repos/CentOS7.9/x86_64/os/x86_64/repodata/"
+  )
+  # 在 cmake 中执行命令 wget -r -c -nH -np -R "index*"
+  # http://192.168.120.89/repos/CentOS7.9/x86_64/updates/x86_64/repodata/
+  execute_process(
+    COMMAND
+      ${WGET} -q -r -c -nH -np -nd -R "index*"
+      http://192.168.120.89/repos/CentOS7.9/x86_64/os/x86_64/repodata/ -P
+      default-repos/os/x86_64/repodata
+    RESULT_VARIABLE result
+    ERROR_VARIABLE error_var)
+  # 判断 result 是否不等于 0
+  if(result)
+    message(
+      WARNING
+        "Failed to wget default Vulnerability repo with error: ${error_var}")
+  endif()
+
+  message(
+    STATUS
+      "execute process : wget -r -c -nH -np -R \"index*\"  http://192.168.120.89/repos/CentOS7.9/x86_64/updates/x86_64/repodata/"
+  )
+  execute_process(
+    COMMAND
+      ${WGET} -q -r -c -nH -np -nd -R "index*"
+      http://192.168.120.89/repos/CentOS7.9/x86_64/updates/x86_64/repodata/ -P
+      default-repos/updates/x86_64/repodata
+    RESULT_VARIABLE result
+    ERROR_VARIABLE error_var)
+  if(result)
+    message(
+      WARNING
+        "Failed to wget default Vulnerability repo with error: ${error_var}")
+  endif()
+
+  configure_file(${CMAKE_SOURCE_DIR}/data/vulnerability/default.repo.in
+                 ${CMAKE_BINARY_DIR}/data/vulnerability/default.repo)
+
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/default-repos
+          DESTINATION ${SSR_VULNERABILITY_INSTALL_DATADIR}/)
+
+  install(FILES ${CMAKE_BINARY_DIR}/data/vulnerability/default.repo
+          DESTINATION ${SSR_VULNERABILITY_INSTALL_DATADIR}/yum.repos.d/)
+endif()
 # ini files
 file(GLOB INI_IN_FILES ./*.ini.in)
 
@@ -13,27 +63,31 @@ install(FILES ${PROJECT_SOURCE_DIR}/data/br-categories.ini
               ${PROJECT_SOURCE_DIR}/data/br-public.key
         DESTINATION ${SSR_BR_INSTALL_DATADIR}/)
 
-# service files
-if(USE_SYSTEMD)
-  set(SYSTEM_UNIT_DIR "/usr/lib/systemd/system")
-  pkg_get_variable(SYSTEM_UNIT_DIR systemd systemdsystemunitdir)
-  install(FILES ${PROJECT_BINARY_DIR}/data/services/ks-ssr-daemon.service
-          DESTINATION ${SYSTEM_UNIT_DIR})
-  set(SYSTEMD_SERVICE "SystemdService=ks-ssr-daemon.service")
-endif()
+# systemd service files
+install(FILES ${PROJECT_BINARY_DIR}/data/services/systemd/ks-ssr-daemon.service
+        DESTINATION ${SYSTEM_UNIT_DIR})
+
+# initd service files
+install(
+  FILES ${PROJECT_SOURCE_DIR}/data/services/initd/ks-ssr-daemon
+  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+  DESTINATION ${INITD_SERVICE_DIR})
 
 if(ENABLE_TOOL_BOX)
   set(SELINUX_CONTEXT
       "SELinuxContext=unconfined_u:unconfined_r:unconfined_t:s0-s15:c0.c1023")
   set(IS_REFUSE_MANUAL_STOP "RefuseManualStop=yes")
-
 endif()
 
-file(GLOB SERVICE_IN_FILES ./services/*.service.in)
+if(ENABLE_ACTIVATION)
+  set(SYSTEM_SERVICE_DEP "ksl-daemon.service ")
+endif()
+
+file(GLOB SERVICE_IN_FILES ./services/systemd/*.service.in)
 foreach(SERVICE_IN_FILE IN LISTS SERVICE_IN_FILES)
   string(REGEX REPLACE ".+/(.+)\\..*" "\\1" SERVICE_FILE ${SERVICE_IN_FILE})
   configure_file(${SERVICE_IN_FILE}
-                 ${PROJECT_BINARY_DIR}/data/services/${SERVICE_FILE})
+                 ${PROJECT_BINARY_DIR}/data/services/systemd/${SERVICE_FILE})
 endforeach()
 
 # xml files
@@ -60,7 +114,7 @@ install(
   RENAME br-system-rs)
 
 install(
-  FILES ${PROJECT_BINARY_DIR}/data/services/com.kylinsec.SSR.service
+  FILES ${PROJECT_BINARY_DIR}/data/services/systemd/com.kylinsec.SSR.service
   DESTINATION
     ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/dbus-1/system-services)
 
