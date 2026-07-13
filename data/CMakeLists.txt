@@ -183,6 +183,8 @@ if(ENABLE_GUI)
   install(FILES ${PROJECT_SOURCE_DIR}/data/ks-ssr-gui.appdata.xml
           DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/metainfo/)
 
-  install(FILES ${PROJECT_SOURCE_DIR}/data/AlibabaPuHuiTi-3-55-Regular.ttf
-          DESTINATION ${SSR_INSTALL_DATADIR}/)
 endif()
+
+# required by report export
+install(FILES ${PROJECT_SOURCE_DIR}/data/AlibabaPuHuiTi-3-55-Regular.ttf
+        DESTINATION ${SSR_INSTALL_DATADIR}/)
