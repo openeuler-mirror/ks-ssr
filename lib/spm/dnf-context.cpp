@@ -40,8 +40,6 @@
 
 KS::Vulnerability::PackageManager::DnfContext* KS::Vulnerability::PackageManager::DnfContext::m_dnfCtxManager = nullptr;
 
-// extern void dnf_repo_loader_invalidate(DnfRepoLoader* self);
-
 typedef void (*percentageChangedCBType)(DnfState*, uint);
 typedef void (*actionChangedTypeCBType)(DnfState*, DnfStateAction, const char*);
 typedef void (*allowCancelChangedCBType)(DnfState*, bool);
