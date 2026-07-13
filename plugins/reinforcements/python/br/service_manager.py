@@ -203,14 +203,15 @@ class Initd(ServiceManager):
         )
 
     def enable(self):
-        br.utils.subprocess_not_output('chkconfig --add {0}'.format(self.service))
+        br.utils.subprocess_not_output("chkconfig --add {0}".format(self.service))
+        br.utils.subprocess_not_output("chkconfig {0} on".format(self.service))
 
     def disable(self):
-        br.utils.subprocess_not_output('chkconfig --del {0}'.format(self.service))
+        br.utils.subprocess_not_output("chkconfig --del {0}".format(self.service))
 
 
 class SwitchBase(object):
-    def __init__(self, service, key='enabled'):
+    def __init__(self, service, key="enabled"):
         self.systemd_proxy = ServiceManagerProxy(service)
         self.key = key
 
